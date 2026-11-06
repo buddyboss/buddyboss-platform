@@ -178,7 +178,7 @@ class BB_License_Manager {
 
 			if ( $cloudflare_detected ) {
 				// Cloudflare rate limit detected - store extended block (60 minutes).
-				bb_error_log(
+				bboss_error_log(
 					'BuddyBoss: Cloudflare rate limit detected - blocking for 60 minutes',
 					true
 				);
@@ -246,7 +246,7 @@ class BB_License_Manager {
 					$reset_info = sprintf( ' - Reset in %d seconds', $retry_after );
 				}
 
-				bb_error_log(
+				bboss_error_log(
 					sprintf(
 						'Rate limit exceeded (remaining: %s)%s',
 						null !== $remaining ? $remaining : 'N/A',
@@ -271,7 +271,7 @@ class BB_License_Manager {
 				// For 429 errors without reset time, use default 1 hour window.
 				$final_reset_time = time() + HOUR_IN_SECONDS;
 				$source           = 'default_429_window';
-				bb_error_log( 'BuddyBoss: 429 error without reset time - using 1 hour default', true );
+				bboss_error_log( 'BuddyBoss: 429 error without reset time - using 1 hour default', true );
 			}
 
 			// Build rate limit data.
@@ -428,7 +428,7 @@ class BB_License_Manager {
 			$response = self::container()->get( LicenseActivations::class )->deactivate( $license_key, $domain );
 		} catch ( \Exception $e ) {
 			self::disable_header_capture();
-			bb_error_log( sprintf( 'License deactivation API exception: %s', $e->getMessage() ), true );
+			bboss_error_log( sprintf( 'License deactivation API exception: %s', $e->getMessage() ), true );
 			throw new \Exception( esc_html__( 'License deactivation failed. Please try again.', 'buddyboss' ) );
 		}
 
@@ -460,7 +460,7 @@ class BB_License_Manager {
 		self::clear_activation_transient();
 		self::flush_license_dependent_caches();
 
-		bb_error_log( 'BuddyBoss: License deactivated', true );
+		bboss_error_log( 'BuddyBoss: License deactivated', true );
 	}
 
 	/**
@@ -518,7 +518,7 @@ class BB_License_Manager {
 		self::enable_header_capture();
 
 		try {
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: Attempting license activation - Product: %s, Domain: %s',
 					$product,
@@ -530,7 +530,7 @@ class BB_License_Manager {
 			return self::container()->get( LicenseActivations::class )->activate( $product, $license_key, $domain );
 		} catch ( \Exception $e ) {
 			self::disable_header_capture();
-			bb_error_log( sprintf( 'License activation API exception: %s', $e->getMessage() ), true );
+			bboss_error_log( sprintf( 'License activation API exception: %s', $e->getMessage() ), true );
 			throw new \Exception(
 				esc_html__( 'License activation failed. Please check your license key and try again. If the problem persists, contact support.', 'buddyboss' )
 			);
@@ -555,7 +555,7 @@ class BB_License_Manager {
 
 		self::track_failed_activation();
 
-		bb_error_log(
+		bboss_error_log(
 			sprintf(
 				'BuddyBoss: License activation failed - Code: %d, Message: %s, Product: %s',
 				$error_code,
@@ -594,7 +594,7 @@ class BB_License_Manager {
 	private static function handle_activation_error_422( $errors, $plugin_connector ): void {
 		if ( is_array( $errors ) && isset( $errors['product'] ) ) {
 			$plugin_connector->clearDynamicPluginId();
-			bb_error_log( 'Cleared orphaned plugin ID (422)', true );
+			bboss_error_log( 'Cleared orphaned plugin ID (422)', true );
 
 			throw new \Exception(
 				esc_html__( 'License activation failed: The stored product ID did not match your license. Please try activating again with your license key.', 'buddyboss' )
@@ -615,15 +615,15 @@ class BB_License_Manager {
 			$reset_time   = $rate_limit_data['reset'];
 			$backoff_time = max( 0, $reset_time - time() );
 			$wait_minutes = ceil( $backoff_time / 60 );
-			bb_error_log( 'Using API reset time', true );
+			bboss_error_log( 'Using API reset time', true );
 		} else {
 			$backoff_time = self::get_backoff_wait_time();
 			$reset_time   = time() + $backoff_time;
 			$wait_minutes = ceil( $backoff_time / 60 );
-			bb_error_log( 'Using calculated backoff time', true );
+			bboss_error_log( 'Using calculated backoff time', true );
 		}
 
-		bb_error_log(
+		bboss_error_log(
 			sprintf(
 				'Wait %d minutes (reset: %s)',
 				$wait_minutes,
@@ -681,7 +681,7 @@ class BB_License_Manager {
 
 			self::reset_failed_attempts();
 
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: License activated successfully - Product: %s, Domain: %s',
 					$plugin_id,
@@ -691,7 +691,7 @@ class BB_License_Manager {
 			);
 		} catch ( \Exception $e ) {
 			self::disable_header_capture();
-			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
+			bboss_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
 			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
 		}
 	}
@@ -733,7 +733,7 @@ class BB_License_Manager {
 				$notices->remove( 'license_key_overwritten' );
 			}
 		} catch ( \Throwable $e ) {
-			bb_error_log( sprintf( 'BuddyBoss: could not clear license notices: %s', $e->getMessage() ), true );
+			bboss_error_log( sprintf( 'BuddyBoss: could not clear license notices: %s', $e->getMessage() ), true );
 		}
 
 		self::flush_license_dependent_caches();
@@ -745,17 +745,17 @@ class BB_License_Manager {
 	 * @since BuddyBoss 3.5.1
 	 */
 	private static function flush_license_dependent_caches(): void {
-		if ( function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
-			bb_clear_placeholder_cache_on_license_change();
+		if ( function_exists( 'bboss_clear_placeholder_cache_on_license_change' ) ) {
+			bboss_clear_placeholder_cache_on_license_change();
 		}
 
-		if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
-			bb_flush_field_upgrades_cache_full();
+		if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) ) {
+			bboss_flush_field_upgrades_cache_full();
 		}
 
 		// A queued Add-ons update kept while the license was not entitled can run now.
-		if ( function_exists( 'bb_retry_queued_addons_bundle_update_soon' ) ) {
-			bb_retry_queued_addons_bundle_update_soon();
+		if ( function_exists( 'bboss_retry_queued_addons_bundle_update_soon' ) ) {
+			bboss_retry_queued_addons_bundle_update_soon();
 		}
 	}
 
@@ -785,7 +785,7 @@ class BB_License_Manager {
 			// Registered as a FACTORY, so this resolves a fresh instance.
 			self::container()->get( ActivationTransient::class )->delete();
 		} catch ( \Throwable $e ) {
-			bb_error_log( sprintf( 'BuddyBoss: could not clear activation transient: %s', $e->getMessage() ), true );
+			bboss_error_log( sprintf( 'BuddyBoss: could not clear activation transient: %s', $e->getMessage() ), true );
 		}
 	}
 
@@ -831,7 +831,7 @@ class BB_License_Manager {
 		// This preserves API calls for the actual activation attempt.
 		$failed_attempts = self::get_rate_limit_transient( 'failed_attempts' );
 		if ( $failed_attempts && (int) $failed_attempts > 0 ) {
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: Skipping pre-activation validation - %d recent failed attempts, preserving API calls',
 					$failed_attempts
@@ -849,7 +849,7 @@ class BB_License_Manager {
 			// Check if we're currently in a rate limit block (reset time is in the future).
 			if ( $reset_time > 0 && $current_time < $reset_time ) {
 				$wait_minutes = ceil( max( 0, $reset_time - $current_time ) / 60 );
-				bb_error_log(
+				bboss_error_log(
 					sprintf(
 						'Skipping pre-validation - rate limited until %s (%d minutes)',
 						gmdate( 'Y-m-d H:i:s', $reset_time ),
@@ -864,7 +864,7 @@ class BB_License_Manager {
 			$remaining = isset( $rate_limit_data['remaining'] ) ? (int) $rate_limit_data['remaining'] : null;
 			if ( null !== $remaining && $remaining <= 1 ) {
 				// Too close to rate limit - skip validation to preserve API call for activation.
-				bb_error_log(
+				bboss_error_log(
 					sprintf(
 						'Skipping pre-validation - only %d requests remaining',
 						$remaining
@@ -884,7 +884,7 @@ class BB_License_Manager {
 
 				// If validation gets a 429, we're rate limited - store this info and block activation.
 				if ( 429 === $error_code ) {
-					bb_error_log( 'Validation encountered rate limit - blocking activation', true );
+					bboss_error_log( 'Validation encountered rate limit - blocking activation', true );
 
 					// Track this as a failed attempt.
 					self::track_failed_activation();
@@ -898,17 +898,17 @@ class BB_License_Manager {
 						$backoff_time = max( 0, $reset_time - time() );
 						$source       = isset( $rate_limit_data['source'] ) ? $rate_limit_data['source'] : 'unknown';
 
-						bb_error_log( 'Using API reset time', true );
+						bboss_error_log( 'Using API reset time', true );
 					} else {
 						$backoff_time = self::get_backoff_wait_time();
 						$reset_time   = time() + $backoff_time;
 
-						bb_error_log( 'Using calculated backoff time', true );
+						bboss_error_log( 'Using calculated backoff time', true );
 					}
 
 					$wait_minutes = (int) ceil( $backoff_time / 60 );
 
-					bb_error_log(
+					bboss_error_log(
 						sprintf(
 							'Rate limit detected during validation - wait time: %d seconds (%d minutes)',
 							$backoff_time,
@@ -917,7 +917,7 @@ class BB_License_Manager {
 						true
 					);
 
-					bb_error_log(
+					bboss_error_log(
 						sprintf(
 							'Reset time: %s (Unix: %d)',
 							gmdate( 'Y-m-d H:i:s', $reset_time ),
@@ -954,7 +954,7 @@ class BB_License_Manager {
 				}
 
 				// Don't block activation on other validation errors - let the activation endpoint handle it.
-				bb_error_log(
+				bboss_error_log(
 					sprintf(
 						'BuddyBoss: Pre-activation validation failed to fetch license (non-blocking): %s',
 						$response->getErrorMessage()
@@ -969,7 +969,7 @@ class BB_License_Manager {
 				// Check if product field exists.
 				if ( null !== $actual_product && '' !== $actual_product ) {
 
-					bb_error_log(
+					bboss_error_log(
 						sprintf(
 							'BuddyBoss: License product validation - Expected: %s, Actual: %s',
 							$product_id,
@@ -979,7 +979,7 @@ class BB_License_Manager {
 
 					// If product doesn't match, this is likely an orphaned plugin ID.
 					if ( $actual_product !== $product_id ) {
-						bb_error_log(
+						bboss_error_log(
 							sprintf(
 								'BuddyBoss: Product mismatch detected before activation - clearing orphaned plugin ID'
 							),
@@ -1008,7 +1008,7 @@ class BB_License_Manager {
 			}
 		} catch ( \Exception $e ) {
 			// Don't block activation on validation errors - let the activation endpoint handle it.
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: Pre-activation validation exception (non-blocking): %s',
 					$e->getMessage()
@@ -1653,7 +1653,7 @@ class BB_License_Manager {
 			// List all possible plugin IDs that might have stored data.
 			$all_plugin_ids = array(
 				$current_plugin_id,
-				PLATFORM_EDITION,
+				BBOSS_PLATFORM_EDITION,
 				'bb-platform-pro-1-site',
 				'bb-platform-pro-2-sites',
 				'bb-platform-pro-5-sites',
@@ -1686,7 +1686,7 @@ class BB_License_Manager {
 			self::delete_rate_limit_transient( 'failed_attempts' );
 
 			// Log the reset action.
-			bb_error_log( 'License settings reset by user - all mothership data cleared', true );
+			bboss_error_log( 'License settings reset by user - all mothership data cleared', true );
 
 			wp_send_json_success(
 				array(
@@ -1694,7 +1694,7 @@ class BB_License_Manager {
 				)
 			);
 		} catch ( \Exception $e ) {
-			bb_error_log( sprintf( 'Error resetting license: %s', $e->getMessage() ), true );
+			bboss_error_log( sprintf( 'Error resetting license: %s', $e->getMessage() ), true );
 			// Don't expose internal errors to users via AJAX response.
 			wp_send_json_error(
 				__( 'Failed to reset license settings. Please try again or contact support if the problem persists.', 'buddyboss' )
@@ -1723,7 +1723,7 @@ class BB_License_Manager {
 		// Check for invalid reset time (0 or very old timestamp).
 		// Unix epoch (0) or timestamps more than 1 year old indicate corrupted data.
 		if ( $reset_time <= 0 || $reset_time < ( $current_time - YEAR_IN_SECONDS ) ) {
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: Invalid rate limit data detected (reset: %d) - clearing corrupted data',
 					$reset_time
@@ -1734,7 +1734,7 @@ class BB_License_Manager {
 			return true; // Clear invalid data and proceed.
 		}
 
-		bb_error_log(
+		bboss_error_log(
 			sprintf(
 				'BuddyBoss: Checking rate limit - Source: %s, Remaining: %d, Reset at: %s (Unix: %d), Current: %s (Unix: %d)',
 				$source,
@@ -1750,7 +1750,7 @@ class BB_License_Manager {
 		if ( $current_time >= $reset_time ) {
 			self::delete_rate_limit_transient( 'rate_limit' );
 			self::delete_rate_limit_transient( 'failed_attempts' ); // Reset backoff counter.
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: Rate limit window EXPIRED - Reset time %s has passed. Cleared rate limit and failed attempts counter.',
 					gmdate( 'Y-m-d H:i:s', $reset_time )
@@ -1766,7 +1766,7 @@ class BB_License_Manager {
 			$wait_time    = max( 0, $reset_time - $current_time );
 			$wait_minutes = max( 1, ceil( $wait_time / 60 ) );
 
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'Rate limit exceeded - Wait %d minutes (reset: %s)',
 					$wait_minutes,
@@ -1830,7 +1830,7 @@ class BB_License_Manager {
 		// Cast to string for PHP 8+ compatibility (maybe_serialize can return scalars).
 		$serialized_string = is_string( $serialized ) ? $serialized : (string) $serialized;
 		if ( strlen( $serialized_string ) > 2048 ) {
-			bb_error_log( 'Rate limit data exceeds maximum size (2KB)', true );
+			bboss_error_log( 'Rate limit data exceeds maximum size (2KB)', true );
 			return false;
 		}
 

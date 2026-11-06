@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $class_name The class name to load.
  */
-function bb_drm_autoloader( $class_name ) {
+function bboss_drm_autoloader( $class_name ) {
 	// Only autoload classes in our namespace.
 	if ( strpos( $class_name, 'BuddyBoss\\Core\\Admin\\DRM\\' ) !== 0 ) {
 		return;
@@ -41,7 +41,7 @@ function bb_drm_autoloader( $class_name ) {
 }
 
 // Register the autoloader.
-spl_autoload_register( 'bb_drm_autoloader' );
+spl_autoload_register( 'bboss_drm_autoloader' );
 
 // Explicitly require core classes as they're always needed.
 require_once __DIR__ . '/class-bb-drm-helper.php';

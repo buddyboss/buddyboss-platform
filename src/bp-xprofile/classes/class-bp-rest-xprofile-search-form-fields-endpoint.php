@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_XProfile_Search_Form_Fields_Endpoint class
+ * BP REST: BBoss_REST_XProfile_Search_Form_Fields_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
+class BBoss_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -23,8 +23,8 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->profile->id . '/search';
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->profile->id . '/search';
 	}
 
 	/**
@@ -67,7 +67,7 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 	public function get_items( $request ) {
 
 		if ( empty( $request['form_id'] ) ) {
-			$args['form_id'] = bp_profile_search_main_form();
+			$args['form_id'] = bboss_profile_search_main_form();
 		}
 
 		/**
@@ -81,7 +81,7 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_xprofile_search_form_fields_get_items_query_args', $args, $request );
 
 		// Actually, query it.
-		$f = bp_profile_search_escaped_form_data( $args['form_id'] );
+		$f = bboss_profile_search_escaped_form_data( $args['form_id'] );
 
 		if ( ! empty( $f->fields ) ) {
 			foreach ( $f->fields as $k => $field ) {
@@ -129,7 +129,7 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 */
-		return apply_filters( 'bp_profile_search_main_form', ( function_exists( 'bp_disable_advanced_profile_search' ) ? ! bp_disable_advanced_profile_search() : false ), $request );
+		return apply_filters( 'bp_profile_search_main_form', ( function_exists( 'bboss_disable_advanced_profile_search' ) ? ! bboss_disable_advanced_profile_search() : false ), $request );
 	}
 
 	/**
@@ -177,3 +177,11 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_xprofile_search_form_fields_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_XProfile_Search_Form_Fields_Endpoint', false ) || interface_exists( 'BBoss_REST_XProfile_Search_Form_Fields_Endpoint', false ) || trait_exists( 'BBoss_REST_XProfile_Search_Form_Fields_Endpoint', false ) ) && ! class_exists( 'BP_REST_XProfile_Search_Form_Fields_Endpoint', false ) && ! interface_exists( 'BP_REST_XProfile_Search_Form_Fields_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_XProfile_Search_Form_Fields_Endpoint', 'BP_REST_XProfile_Search_Form_Fields_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

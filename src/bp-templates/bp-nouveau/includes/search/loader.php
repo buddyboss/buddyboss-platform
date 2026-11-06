@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Search {
+class BBoss_Nouveau_Search {
 	/**
 	 * Constructor
 	 *
@@ -56,9 +56,9 @@ class BP_Nouveau_Search {
 	protected function setup_actions() {
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_search_enqueue_scripts' );
 
-		if ( function_exists( 'bp_is_messages_component' ) ) {
+		if ( function_exists( 'bboss_is_messages_component' ) ) {
 			// Include the autocomplete JS for composing a message.
-			if ( bp_is_messages_component() && bp_is_current_action( 'compose' ) ) {
+			if ( bboss_is_messages_component() && bboss_is_current_action( 'compose' ) ) {
 				// After bp_nouveau_search_enqueue_scripts (10), so the bp-nouveau-search handle exists to attach to.
 				add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_search_messages_autocomplete_init_jsblock', 20 );
 			}
@@ -80,12 +80,12 @@ class BP_Nouveau_Search {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_search( $bp_nouveau = null ) {
+function bboss_nouveau_search( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->search = new BP_Nouveau_search();
+	$bp_nouveau->search = new BBoss_Nouveau_Search();
 }
 
 add_action( 'bp_nouveau_includes', 'bp_nouveau_search', 10, 1 );

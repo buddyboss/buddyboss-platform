@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 <h2 class="screen-heading change-avatar-screen">
 	<?php
-	if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
+	if ( ! (int) bboss_get_option( 'bp-disable-avatar-uploads' ) ) {
 		esc_html_e( 'Change Profile Photo', 'buddyboss' );
 	} else {
 		esc_html_e( 'Profile Photo', 'buddyboss' );
@@ -24,10 +24,10 @@ defined( 'ABSPATH' ) || exit;
 </h2>
 
 <?php
-bp_nouveau_member_hook( 'before', 'avatar_upload_content' );
+bboss_nouveau_member_hook( 'before', 'avatar_upload_content' );
 
-$avatar_admin_step = bp_get_avatar_admin_step();
-if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
+$avatar_admin_step = bboss_get_avatar_admin_step();
+if ( ! (int) bboss_get_option( 'bp-disable-avatar-uploads' ) ) {
 	?>
 	<p class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
@@ -52,10 +52,10 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 			</p>
 
 			<?php
-			if ( bp_get_user_has_avatar() ) {
+			if ( bboss_get_user_has_avatar() ) {
 				?>
 				<p class="bp-help-text"><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-				<p><a class="button edit" href="<?php bp_avatar_delete_link(); ?>"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></a></p>
+				<p><a class="button edit" href="<?php bboss_avatar_delete_link(); ?>"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></a></p>
 				<?php
 			}
 		}
@@ -63,12 +63,12 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 		if ( 'crop-image' === $avatar_admin_step ) {
 			?>
 			<p class="bp-help-text screen-header"><?php esc_html_e( 'Crop Your New Profile Photo', 'buddyboss' ); ?></p>
-			<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddyboss' ); ?>" />
+			<img src="<?php bboss_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddyboss' ); ?>" />
 			<div id="avatar-crop-pane">
-				<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Profile photo preview', 'buddyboss' ); ?>" />
+				<img src="<?php bboss_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Profile photo preview', 'buddyboss' ); ?>" />
 			</div>
 			<input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Image', 'buddyboss' ); ?>" />
-			<input type="hidden" name="image_src" id="image_src" value="<?php bp_avatar_to_crop_src(); ?>" />
+			<input type="hidden" name="image_src" id="image_src" value="<?php bboss_avatar_to_crop_src(); ?>" />
 			<input type="hidden" id="x" name="x" />
 			<input type="hidden" id="y" name="y" />
 			<input type="hidden" id="w" name="w" />
@@ -86,7 +86,7 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 	 *
 	 * @since BuddyPress 2.3.0
 	 */
-	bp_avatar_get_templates();
+	bboss_avatar_get_templates();
 
 } else {
 	?>
@@ -97,4 +97,4 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 	<?php
 }
 
-bp_nouveau_member_hook( 'after', 'avatar_upload_content' );
+bboss_nouveau_member_hook( 'after', 'avatar_upload_content' );

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_advanced_register_telemetry_fields() {
+function bboss_advanced_register_telemetry_fields() {
 
 	$feature_id = 'advanced';
 	$panel_id   = 'telemetry';
@@ -27,7 +27,7 @@ function bb_advanced_register_telemetry_fields() {
 	// SECTION: Telemetry
 	// =========================================================================
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		$feature_id,
 		$panel_id,
 		'advanced_telemetry',
@@ -40,7 +40,7 @@ function bb_advanced_register_telemetry_fields() {
 	// Telemetry descriptions per mode — legacy shows different description text
 	// dynamically when the user switches between radio buttons. React uses
 	// `option_descriptions` so SettingsForm updates the description on select change.
-	$current_mode = bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
+	$current_mode = bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
 
 	$option_descriptions = array(
 		// @bbwt-com-start telemetry-complete
@@ -53,7 +53,7 @@ function bb_advanced_register_telemetry_fields() {
 	// Field 1: Telemetry Reporting Mode.
 	// Options match legacy (Complete / Anonymous / Disable telemetry); builds
 	// without "complete" reporting offer Anonymous and Disable only.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'advanced_telemetry',
@@ -63,7 +63,7 @@ function bb_advanced_register_telemetry_fields() {
 			'description'         => $option_descriptions[ $current_mode ] ?? $option_descriptions['disable'],
 			'type'                => 'select',
 			'default'             => $current_mode,
-			'sanitize_callback'   => 'bb_advanced_sanitize_telemetry_reporting',
+			'sanitize_callback'   => 'bboss_advanced_sanitize_telemetry_reporting',
 			'option_descriptions' => $option_descriptions,
 			'options'             => array(
 				// @bbwt-com-start telemetry-complete

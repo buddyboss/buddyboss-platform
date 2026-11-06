@@ -21,28 +21,28 @@ use memberpress\courses\lib;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Readylaunch_Memberpress_Courses_Helper {
+class BBoss_Readylaunch_Memberpress_Courses_Helper {
 
 	/**
 	 * The single instance of the class.
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @var BB_Readylaunch_Memberpress_Courses_Helper
+	 * @var BBoss_Readylaunch_Memberpress_Courses_Helper
 	 */
 	protected static $instance = null;
 
 	/**
-	 * Main BB_Readylaunch_Memberpress_Courses_Helper Instance.
+	 * Main BBoss_Readylaunch_Memberpress_Courses_Helper Instance.
 	 *
-	 * Ensures only one instance of BB_Readylaunch_Memberpress_Courses_Helper is loaded or can be loaded.
+	 * Ensures only one instance of BBoss_Readylaunch_Memberpress_Courses_Helper is loaded or can be loaded.
 	 *
 	 * @since  BuddyBoss 2.9.00
 	 * @static
 	 *
-	 * @return BB_Readylaunch_Memberpress_Courses_Helper - Main instance.
+	 * @return BBoss_Readylaunch_Memberpress_Courses_Helper - Main instance.
 	 */
-	public static function instance(): BB_Readylaunch_Memberpress_Courses_Helper {
+	public static function instance(): BBoss_Readylaunch_Memberpress_Courses_Helper {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -58,7 +58,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	public function __construct() {
 		// Constructor can be used for initialization if needed.
 
-		if ( bb_is_readylaunch_enabled() && ! empty( bp_get_option( 'bb_rl_enabled_pages' )['courses'] ) ) {
+		if ( bboss_is_readylaunch_enabled() && ! empty( bboss_get_option( 'bb_rl_enabled_pages' )['courses'] ) ) {
 
 			if ( helpers\App::is_classroom() ) {
 				// Remove MemberPress admin bar hiding hook.
@@ -163,7 +163,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	public function bb_rl_meprlms_add_script() {
 		global $post;
 
-		if ( ! bb_is_readylaunch_enabled() ) {
+		if ( ! bboss_is_readylaunch_enabled() ) {
 			return;
 		}
 
@@ -314,7 +314,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	public function dequeue_pro_frontend_styles() {
 		// Only dequeue if ReadyLaunch is enabled.
-		if ( bb_is_readylaunch_enabled() ) {
+		if ( bboss_is_readylaunch_enabled() ) {
 			wp_dequeue_style( 'bb-meprlms-frontend' );
 			wp_dequeue_script( 'bb-meprlms-frontend' );
 		}
@@ -330,7 +330,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @return array The modified array of paths.
 	 */
 	public function bb_rl_mpcs_add_template_paths( $paths ) {
-		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress' );
+		$readylaunch_path = trailingslashit( bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress' );
 		array_unshift( $paths, $readylaunch_path );
 		return $paths;
 	}
@@ -345,7 +345,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @return array The modified array of paths.
 	 */
 	public function bb_rl_mpcs_add_assignments_template_paths( $paths ) {
-		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/assignments' );
+		$readylaunch_path = trailingslashit( bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/assignments' );
 		array_unshift( $paths, $readylaunch_path );
 		return $paths;
 	}
@@ -360,7 +360,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @return array The modified array of paths.
 	 */
 	public function bb_rl_mpcs_add_gradebook_template_paths( $paths ) {
-		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/gradebook' );
+		$readylaunch_path = trailingslashit( bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/gradebook' );
 		array_unshift( $paths, $readylaunch_path );
 		return $paths;
 	}
@@ -375,7 +375,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 * @return array The modified array of paths.
 	 */
 	public function bb_rl_mpcs_add_quizzes_template_paths( $paths ) {
-		$readylaunch_path = trailingslashit( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/quizzes' );
+		$readylaunch_path = trailingslashit( bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/quizzes' );
 		array_unshift( $paths, $readylaunch_path );
 		return $paths;
 	}
@@ -760,8 +760,8 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 
 			<?php
 			if ( 0 !== (int) $args['avatar_size'] ) {
-				if ( function_exists( 'bp_core_get_user_domain' ) ) {
-					$user_link = bp_core_get_user_domain( $comment->user_id );
+				if ( function_exists( 'bboss_core_get_user_domain' ) ) {
+					$user_link = bboss_core_get_user_domain( $comment->user_id );
 				} else {
 					$user_link = get_comment_author_url( $comment );
 				}
@@ -859,7 +859,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 					)
 				)
 			) {
-				$template = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/courses/comments.php';
+				$template = bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/memberpress/courses/comments.php';
 			}
 		}
 		return $template;

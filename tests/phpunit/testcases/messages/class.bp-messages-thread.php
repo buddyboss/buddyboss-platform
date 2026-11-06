@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group BP_Messages_Thread
+ * @group BBoss_Messages_Thread
  * @group messages
  */
 class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
@@ -20,7 +20,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		new BP_Messages_Thread( $message->thread_id );
+		new BBoss_Messages_Thread( $message->thread_id );
 
 		$thread_id = $message->thread_id;
 		$before = null;
@@ -62,7 +62,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$m2 = $message_2->id;
 
 		// now get thread by DESC
-		$thread = new BP_Messages_Thread( $message_1->thread_id, 'DESC' );
+		$thread = new BBoss_Messages_Thread( $message_1->thread_id, 'DESC' );
 
 		// assert!
 		$this->assertEquals(
@@ -94,7 +94,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'content' => 'bar'
 		) );
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user( array(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user( array(
 			'user_id' => $u3,
 			'search_terms' => 'ar',
 		) );
@@ -139,7 +139,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 	/**
 	 * @group get_current_threads_for_user
-	 * @expectedDeprecated BP_Messages_Thread::get_current_threads_for_user
+	 * @expectedDeprecated BBoss_Messages_Thread::get_current_threads_for_user
 	 * @deprecated 3.1.1 no more sendbox
 	 */
 	// public function test_get_current_threads_for_user_with_old_args() {
@@ -182,7 +182,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'subject' => 'Foo',
 		) );
 
-		$thread = new BP_Messages_Thread( $message->thread_id );
+		$thread = new BBoss_Messages_Thread( $message->thread_id );
 		$recipients = $thread->get_recipients();
 
 		$num_queries = $wpdb->num_queries;
@@ -208,7 +208,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'subject' => 'Foo',
 		) );
 
-		$thread = new BP_Messages_Thread( $message->thread_id );
+		$thread = new BBoss_Messages_Thread( $message->thread_id );
 		$recipients = $thread->get_recipients();
 
 		// Verify that the cache is populated.
@@ -216,7 +216,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$recipients_cached = $thread->get_recipients();
 		$this->assertEquals( $num_queries, $wpdb->num_queries );
 
-		messages_new_message( array(
+		bboss_messages_new_message( array(
 			'sender_id' => $u2,
 			'thread_id' => $message->thread_id,
 			'recipients' => array( $u1 ),
@@ -248,7 +248,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$t1 = $message->thread_id;
 
-		$thread = new BP_Messages_Thread( $t1 );
+		$thread = new BBoss_Messages_Thread( $t1 );
 		$recipients = $thread->get_recipients();
 
 		// Verify that the cache is populated.
@@ -256,7 +256,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$recipients_cached = $thread->get_recipients();
 		$this->assertEquals( $num_queries, $wpdb->num_queries );
 
-		messages_delete_thread( $t1 );
+		bboss_messages_delete_thread( $t1 );
 
 		// Cache should be empty.
 		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $t1, 'bp_messages' ) );
@@ -280,7 +280,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$t1 = $message->thread_id;
 
-		$thread = new BP_Messages_Thread( $t1 );
+		$thread = new BBoss_Messages_Thread( $t1 );
 		$recipients = $thread->get_recipients();
 
 		// Verify that the cache is populated.
@@ -288,7 +288,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$recipients_cached = $thread->get_recipients();
 		$this->assertEquals( $num_queries, $wpdb->num_queries );
 
-		messages_delete_thread( array( $t1 ) );
+		bboss_messages_delete_thread( array( $t1 ) );
 
 		// Cache should be empty.
 		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $t1, 'bp_messages' ) );
@@ -312,7 +312,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$t1 = $message->thread_id;
 
-		$thread = new BP_Messages_Thread( $t1 );
+		$thread = new BBoss_Messages_Thread( $t1 );
 		$recipients = $thread->get_recipients();
 
 		// Verify that the cache is populated.
@@ -325,7 +325,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$this->set_current_user( $u2 );
 		$this->assertSame( 1, (int) $recipients_cached[ $u2 ]->unread_count );
 
-		messages_mark_thread_read( $t1 );
+		bboss_messages_mark_thread_read( $t1 );
 
 		/*
 		 * The stale entry must be gone. Hooks on mark-as-read reload the thread's
@@ -363,11 +363,11 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		// A recipient warms the shared cache.
 		$this->set_current_user( $u2 );
-		$this->assertNotEmpty( BP_Messages_Thread::get_messages( $message->thread_id ) );
+		$this->assertNotEmpty( BBoss_Messages_Thread::get_messages( $message->thread_id ) );
 
 		// An outsider gets nothing, even on a cache hit.
 		$this->set_current_user( $u3 );
-		$this->assertSame( array(), BP_Messages_Thread::get_messages( $message->thread_id ) );
+		$this->assertSame( array(), BBoss_Messages_Thread::get_messages( $message->thread_id ) );
 
 		$this->set_current_user( $current_user );
 	}
@@ -395,13 +395,13 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		// The outsider reads first, on a cold cache.
 		$this->set_current_user( $u3 );
-		$this->assertSame( array(), BP_Messages_Thread::get_messages( $message->thread_id ) );
+		$this->assertSame( array(), BBoss_Messages_Thread::get_messages( $message->thread_id ) );
 
 		// An empty array cached by an older version is treated as a miss.
 		wp_cache_set( "{$message->thread_id}10", array(), 'bp_messages_threads' );
 
 		$this->set_current_user( $u2 );
-		$this->assertNotEmpty( BP_Messages_Thread::get_messages( $message->thread_id ) );
+		$this->assertNotEmpty( BBoss_Messages_Thread::get_messages( $message->thread_id ) );
 
 		$this->set_current_user( $current_user );
 	}
@@ -424,7 +424,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$t1 = $message->thread_id;
 
-		$thread = new BP_Messages_Thread( $t1 );
+		$thread = new BBoss_Messages_Thread( $t1 );
 		$recipients = $thread->get_recipients();
 
 		// Verify that the cache is populated.
@@ -435,7 +435,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		// Mark thread as unread
 		$current_user = get_current_user_id();
 		$this->set_current_user( $u2 );
-		messages_mark_thread_unread( $t1 );
+		bboss_messages_mark_thread_unread( $t1 );
 
 		// Cache should be empty.
 		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $t1, 'bp_messages' ) );
@@ -459,18 +459,18 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$t1 = $message->thread_id;
 
 		// save recipient ID
-		$thread = new BP_Messages_Thread( $t1 );
+		$thread = new BBoss_Messages_Thread( $t1 );
 		$r1 = wp_list_pluck( $thread->recipients, 'id' );
 		$r1 = array_pop( $r1 );
 
-		$this->assertEquals( $r1, BP_Messages_Thread::check_access( $t1, $u1 ) );
+		$this->assertEquals( $r1, BBoss_Messages_Thread::check_access( $t1, $u1 ) );
 	}
 
 	/**
 	 * @group check_access
 	 */
 	public function test_check_access_invalid_thread() {
-		$this->assertEquals( null, BP_Messages_Thread::check_access( 999, 1 ) );
+		$this->assertEquals( null, BBoss_Messages_Thread::check_access( 999, 1 ) );
 	}
 
 	/**
@@ -488,14 +488,14 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$t1 = $message->thread_id;
 
-		$this->assertEquals( $t1, BP_Messages_Thread::is_valid( $t1 ) );
+		$this->assertEquals( $t1, BBoss_Messages_Thread::is_valid( $t1 ) );
 	}
 
 	/**
 	 * @group is_valid
 	 */
 	public function test_is_valid_invalid_thread() {
-		$this->assertEquals( null, BP_Messages_Thread::is_valid( 999 ) );
+		$this->assertEquals( null, BBoss_Messages_Thread::is_valid( 999 ) );
 	}
 
 	/**
@@ -505,7 +505,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		$date = bp_core_current_time();
+		$date = bboss_core_current_time();
 
 		$message = self::factory()->message->create_and_get( array(
 			'sender_id' => $u1,
@@ -517,7 +517,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$t1 = $message->thread_id;
 
-		$thread = new BP_Messages_Thread( $t1 );
+		$thread = new BBoss_Messages_Thread( $t1 );
 
 		$this->assertNotNull( $thread->last_message_id );
 		$this->assertEquals( 'Foo', $thread->last_message_subject );
@@ -532,7 +532,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 	public function test_existing_thread_should_get_the_latest() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
@@ -564,7 +564,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$this->assertTrue($message->thread_id !== $message2->thread_id);
 		$this->assertTrue($message->thread_id === $message3->thread_id);
 
-		$existing_thread_id = BP_Messages_Message::get_existing_thread( [ $u2 ], $u1 );
+		$existing_thread_id = BBoss_Messages_Message::get_existing_thread( [ $u2 ], $u1 );
 		$this->assertEquals($message->thread_id, $existing_thread_id);
 
 		// now add a new message
@@ -620,15 +620,15 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$this->set_current_user( $u1 );
 
-		messages_delete_thread($message->thread_id);
+		bboss_messages_delete_thread($message->thread_id);
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user([
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user([
 			'user_id' => $u1,
 		]);
 
 		$this->assertEquals([$message3->thread_id, $message2->thread_id], wp_list_pluck($threads['threads'], 'thread_id'));
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user([
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user([
 			'user_id' => $u1,
 			'search_terms' => get_user_by('id', $u2)->display_name
 		]);
@@ -696,7 +696,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$this->set_current_user( $u1 );
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user([
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user([
 			'user_id' => $u1,
 			'search_terms' => get_user_by('id', $u2)->display_name
 		]);
@@ -735,7 +735,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'content' => 'foo'
 		) );
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user([
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user([
 			'user_id' => $u1,
 			'search_terms' => 'foo'
 		]);
@@ -771,14 +771,14 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		) );
 
 		// user 1 should see the first message as start date
-		$this->assertEquals( $first_date, BP_Messages_Thread::get_messages_started( $message->thread_id ) );
+		$this->assertEquals( $first_date, BBoss_Messages_Thread::get_messages_started( $message->thread_id ) );
 
 		// user 2 should see the first message as start date
 		$this->set_current_user( $u2 );
-		$this->assertEquals( $first_date, BP_Messages_Thread::get_messages_started( $message->thread_id ) );
+		$this->assertEquals( $first_date, BBoss_Messages_Thread::get_messages_started( $message->thread_id ) );
 
 		// if user 2 delete the thread
-		messages_delete_thread($message->thread_id);
+		bboss_messages_delete_thread($message->thread_id);
 
 		// a new message is posted
 		$message3 = self::factory()->message->create_and_get( array(
@@ -788,11 +788,11 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		) );
 
 		// user 2 should see the last message as start date
-		$this->assertEquals( $after_date, BP_Messages_Thread::get_messages_started( $message->thread_id ) );
+		$this->assertEquals( $after_date, BBoss_Messages_Thread::get_messages_started( $message->thread_id ) );
 
 		// user 1 should see the first message as start date
 		$this->set_current_user( $u1 );
-		$this->assertEquals( $first_date, BP_Messages_Thread::get_messages_started( $message->thread_id ) );
+		$this->assertEquals( $first_date, BBoss_Messages_Thread::get_messages_started( $message->thread_id ) );
 
 		$this->set_current_user( $current_user );
 	}
@@ -822,10 +822,10 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
 		) );
 
-		messages_delete_thread($message->thread_id);
+		bboss_messages_delete_thread($message->thread_id);
 
-		BP_Messages_Thread::$noCache = true;
-		$thread = new BP_Messages_Thread($message->thread_id);
+		BBoss_Messages_Thread::$noCache = true;
+		$thread = new BBoss_Messages_Thread($message->thread_id);
 
 		$this->assertEmpty( $thread->messages );
 		$this->assertEquals( 0, $thread->total_messages );

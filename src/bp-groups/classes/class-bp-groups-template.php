@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.2.0
  */
 #[\AllowDynamicProperties]
-class BP_Groups_Template {
+class BBoss_Groups_Template {
 
 	/**
 	 * The loop iterator.
@@ -126,11 +126,11 @@ class BP_Groups_Template {
 	/**
 	 * Constructor method.
 	 *
-	 * @see BP_Groups_Group::get() for an in-depth description of arguments.
+	 * @see BBoss_Groups_Group::get() for an in-depth description of arguments.
 	 *
 	 * @param array $args {
 	 *     Array of arguments. Accepts all arguments accepted by
-	 *     {@link BP_Groups_Group::get()}. In cases where the default
+	 *     {@link BBoss_Groups_Group::get()}. In cases where the default
 	 *     values of the params differ, they have been discussed below.
 	 *     @type int $per_page Default: 20.
 	 *     @type int $page Default: 1.
@@ -160,7 +160,7 @@ class BP_Groups_Template {
 				11 => 'page_arg',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $args );
 		} else {
 			$args = reset( $args );
 		}
@@ -191,27 +191,27 @@ class BP_Groups_Template {
 			'update_admin_cache' => false,
 		);
 
-		$r = bp_parse_args( $args, $defaults, 'groups_template' );
+		$r = bboss_parse_args( $args, $defaults, 'groups_template' );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		if ( bp_current_user_can( 'bp_moderate' ) || ( is_user_logged_in() && $user_id == bp_loggedin_user_id() ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) || ( is_user_logged_in() && $user_id == bboss_loggedin_user_id() ) ) {
 			$show_hidden = true;
 		}
 
 		if ( 'invites' == $type ) {
-			$this->groups = groups_get_invites_for_user( $user_id, $this->pag_num, $this->pag_page, $exclude );
+			$this->groups = bboss_groups_get_invites_for_user( $user_id, $this->pag_num, $this->pag_page, $exclude );
 		} elseif ( 'single-group' == $type ) {
 			$this->single_group = true;
 
-			if ( groups_get_current_group() ) {
-				$group = groups_get_current_group();
+			if ( bboss_groups_get_current_group() ) {
+				$group = bboss_groups_get_current_group();
 
 			} else {
-				$group = groups_get_group( BP_Groups_Group::get_id_from_slug( $r['slug'] ) );
+				$group = bboss_groups_get_group( BBoss_Groups_Group::get_id_from_slug( $r['slug'] ) );
 			}
 
 			// Backwards compatibility - the 'group_id' variable is not part of the
@@ -226,7 +226,7 @@ class BP_Groups_Template {
 			$this->groups = array( $group );
 
 		} else {
-			$this->groups = groups_get_groups(
+			$this->groups = bboss_groups_get_groups(
 				array(
 					'type'               => $type,
 					'order'              => $order,
@@ -290,7 +290,7 @@ class BP_Groups_Template {
 				$this->pag_arg => '%#%',
 			);
 
-			if ( defined( 'DOING_AJAX' ) && true === (bool) DOING_AJAX ) {
+			if ( defined( 'BBOSS_DOING_AJAX' ) && true === (bool) BBOSS_DOING_AJAX ) {
 				$base = remove_query_arg( 's', wp_get_referer() );
 			} else {
 				$base = '';
@@ -303,7 +303,7 @@ class BP_Groups_Template {
 			);
 
 			if ( ! empty( $search_terms ) ) {
-				$query_arg              = bp_core_get_component_search_query_arg( 'groups' );
+				$query_arg              = bboss_core_get_component_search_query_arg( 'groups' );
 				$add_args[ $query_arg ] = urlencode( $search_terms );
 			}
 
@@ -327,7 +327,7 @@ class BP_Groups_Template {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @see bp_has_groups()
+	 * @see bboss_has_groups()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -368,13 +368,13 @@ class BP_Groups_Template {
 	/**
 	 * Whether there are groups left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_groups()} as part of the while loop
+	 * This method is used by {@link bboss_groups()} as part of the while loop
 	 * that controls iteration inside the groups loop, eg:
-	 *     while ( bp_groups() ) { ...
+	 *     while ( bboss_groups() ) { ...
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @see bp_groups()
+	 * @see bboss_groups()
 	 *
 	 * @return bool True if there are more groups to show, otherwise false.
 	 */
@@ -400,13 +400,13 @@ class BP_Groups_Template {
 	/**
 	 * Set up the current group inside the loop.
 	 *
-	 * Used by {@link bp_the_group()} to set up the current group data
+	 * Used by {@link bboss_the_group()} to set up the current group data
 	 * while looping, so that template tags used during that iteration make
 	 * reference to the current member.
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @see bp_the_group()
+	 * @see bboss_the_group()
 	 */
 	function the_group() {
 		$this->in_the_loop = true;

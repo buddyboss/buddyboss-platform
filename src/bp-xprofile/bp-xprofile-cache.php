@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array $field_ids XProfile field IDs.
  * @return array
  */
-function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array() ) {
+function bboss_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array() ) {
 	$uncached_fields = array();
 
 	foreach ( $field_ids as $field_id ) {
@@ -38,14 +38,14 @@ function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array(
 /**
  * Slurp up xprofilemeta for a specified set of profile objects.
  *
- * We do not use bp_update_meta_cache() for the xprofile component. This is
+ * We do not use bboss_update_meta_cache() for the xprofile component. This is
  * because the xprofile component has three separate object types (group,
  * field, and data) and three corresponding cache groups. Using the technique
- * in bp_update_meta_cache(), pre-fetching would take three separate database
+ * in bboss_update_meta_cache(), pre-fetching would take three separate database
  * queries. By grouping them together, we can reduce the required queries to
  * one.
  *
- * This function is called within a bp_has_profile() loop.
+ * This function is called within a bboss_has_profile() loop.
  *
  * @since BuddyPress 2.0.0
  *
@@ -53,7 +53,7 @@ function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array(
  *                          object type ('group', 'field', 'data').
  * @return bool
  */
-function bp_xprofile_update_meta_cache( $object_ids = array() ) {
+function bboss_xprofile_update_meta_cache( $object_ids = array() ) {
 	static $xprofile_update_meta_cache = array();
 	global $wpdb;
 
@@ -62,7 +62,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Define the array where uncached object IDs will be stored.
 	$uncached_object_ids = array(
@@ -93,7 +93,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 		$object_type_ids = wp_parse_id_list( $object_ids[ $object_type ] );
 
 		// Get non-cached IDs for each object type.
-		$uncached_object_ids[ $object_type ] = bp_get_non_cached_ids( $object_type_ids, $cache_groups[ $object_type ] );
+		$uncached_object_ids[ $object_type ] = bboss_get_non_cached_ids( $object_type_ids, $cache_groups[ $object_type ] );
 
 		// Set the flag to do the meta query.
 		if ( ! empty( $uncached_object_ids[ $object_type ] ) && ( false === $do_query ) ) {
@@ -166,7 +166,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 		}
 
 		// Add to the cache array.
-		$cache[ $otype ][ $oid ][ $okey ][] = bb_xprofile_safe_unserialize( $ovalue ); // Object injection guard.
+		$cache[ $otype ][ $oid ][ $okey ][] = bboss_xprofile_safe_unserialize( $ovalue ); // Object injection guard.
 	}
 
 	// Loop through data and cache to the appropriate object.
@@ -189,7 +189,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
  *
  * @param object $group_obj Groub object to clear.
  */
-function xprofile_clear_profile_groups_object_cache( $group_obj ) {
+function bboss_xprofile_clear_profile_groups_object_cache( $group_obj ) {
 	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $group_obj->id, 'bp_xprofile_groups' );
 	// Invalidates the per-profile-type keys of bp_profile_get_field_groups() too.
@@ -204,9 +204,9 @@ add_action( 'xprofile_group_after_save', 'xprofile_clear_profile_groups_object_c
  *
  * @since BuddyPress 2.0.0
  *
- * @param BP_XProfile_Field $field_obj Field object cache to delete.
+ * @param BBoss_XProfile_Field $field_obj Field object cache to delete.
  */
-function xprofile_clear_profile_field_object_cache( $field_obj ) {
+function bboss_xprofile_clear_profile_field_object_cache( $field_obj ) {
 
 	// Clear default visibility level cache.
 	wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
@@ -231,7 +231,7 @@ add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_objec
  * @since BuddyPress 2.4.0
  * @since BuddyBoss [BBVERSION] Also invalidates the cached profile field groups.
  */
-function bp_xprofile_clear_member_type_cache() {
+function bboss_xprofile_clear_member_type_cache() {
 	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
 
 	// Which fields each profile type sees has changed.
@@ -244,9 +244,9 @@ add_action( 'bp_xprofile_field_set_member_type', 'bp_xprofile_clear_member_type_
  *
  * @since BuddyPress 2.0.0
  *
- * @param BP_XProfile_ProfileData $data_obj Field data object to delete.
+ * @param BBoss_XProfile_ProfileData $data_obj Field data object to delete.
  */
-function xprofile_clear_profiledata_object_cache( $data_obj ) {
+function bboss_xprofile_clear_profiledata_object_cache( $data_obj ) {
 	wp_cache_delete( "{$data_obj->user_id}:{$data_obj->field_id}", 'bp_xprofile_data' );
 	wp_cache_delete( 'bp_xprofile_field_get_type_' . $data_obj->field_id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $data_obj->field_id, 'bp_xprofile' );
@@ -270,7 +270,7 @@ add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cac
  *
  * @since BuddyPress 2.0.0
  */
-function xprofile_clear_fullname_field_id_cache() {
+function bboss_xprofile_clear_fullname_field_id_cache() {
 	wp_cache_delete( 'fullname_field_id', 'bp_xprofile' );
 }
 add_action( 'update_option_bp-xprofile-fullname-field-name', 'xprofile_clear_fullname_field_id_cache' );
@@ -283,13 +283,13 @@ add_action( 'update_option_bp-xprofile-fullname-field-name', 'xprofile_clear_ful
  *                              field is deleted, and clears the field meta from its real cache
  *                              group (xprofile_field_meta, was xprofile_meta).
  *
- * @param int|BP_XProfile_Field $field A field ID or a field object.
+ * @param int|BBoss_XProfile_Field $field A field ID or a field object.
  * @return bool False on failure.
  */
-function bp_xprofile_clear_field_cache( $field ) {
+function bboss_xprofile_clear_field_cache( $field ) {
 	if ( is_numeric( $field ) ) {
 		$field_id = (int) $field;
-	} elseif ( $field instanceof BP_XProfile_Field ) {
+	} elseif ( $field instanceof BBoss_XProfile_Field ) {
 		$field_id = (int) $field->id;
 	}
 
@@ -314,8 +314,8 @@ add_action( 'xprofile_field_after_delete', 'bp_xprofile_clear_field_cache' );
  *
  * @since BuddyPress 2.8.0
  */
-function bp_xprofile_reset_fields_by_name_cache_incrementor() {
-	bp_core_reset_incrementor( 'bp_xprofile_fields_by_name' );
+function bboss_xprofile_reset_fields_by_name_cache_incrementor() {
+	bboss_core_reset_incrementor( 'bp_xprofile_fields_by_name' );
 }
 add_action( 'xprofile_field_before_save', 'bp_xprofile_reset_fields_by_name_cache_incrementor' );
 

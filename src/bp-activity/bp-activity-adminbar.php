@@ -17,26 +17,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return null Null if user does not have access to editing functionality.
  */
-function bp_activity_admin_menu() {
+function bboss_activity_admin_menu() {
 	global $wp_admin_bar;
 
 	// Only show if viewing a single activity item.
-	if ( ! bp_is_single_activity() ) {
+	if ( ! bboss_is_single_activity() ) {
 		return;
 	}
 
 	// Only show this menu to super admins
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
 
 	$activity_edit_link = add_query_arg(
 		array(
 			'page'   => 'bp-activity',
-			'aid'    => bp_current_action(),
+			'aid'    => bboss_current_action(),
 			'action' => 'edit',
 		),
-		bp_get_admin_url( 'admin.php' )
+		bboss_get_admin_url( 'admin.php' )
 	);
 
 	// Add the top-level Edit Activity button.

@@ -16,33 +16,33 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	/**
 	 * Singleton under test.
 	 *
-	 * @var BB_Support_Access
+	 * @var BBoss_Support_Access
 	 */
 	protected $sa;
 
 	/**
-	 * Ensure the BB_Support_Access singleton (and its query filter) is loaded.
+	 * Ensure the BBoss_Support_Access singleton (and its query filter) is loaded.
 	 */
 	public function set_up() {
 		parent::set_up();
 
-		if ( ! class_exists( 'BB_Support_Access' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
+		if ( ! class_exists( 'BBoss_Support_Access' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
 		}
 
 		// Self-boots and registers the bp_user_query_uid_clauses filter.
-		$this->sa = BB_Support_Access::instance();
+		$this->sa = BBoss_Support_Access::instance();
 	}
 
 	/**
 	 * Clean up request state and HTTP/veto filters between tests.
 	 */
 	public function tear_down() {
-		unset( $_GET[ BB_Support_Access::QUERY_VAR ] );
+		unset( $_GET[ BBoss_Support_Access::QUERY_VAR ] );
 		remove_all_filters( 'pre_http_request' );
 		remove_all_filters( 'wp_redirect' );
 		remove_all_filters( 'bb_support_access_allow_login' );
-		bp_delete_option( BB_Support_Access::OPTION );
+		bboss_delete_option( BBoss_Support_Access::OPTION );
 
 		parent::tear_down();
 	}
@@ -57,8 +57,8 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	protected function create_support_user() {
 		$user_id = self::factory()->user->create(
 			array(
-				'user_login'   => BB_Support_Access::USER_LOGIN,
-				'user_email'   => BB_Support_Access::USER_EMAIL,
+				'user_login'   => BBoss_Support_Access::USER_LOGIN,
+				'user_email'   => BBoss_Support_Access::USER_EMAIL,
 				'display_name' => 'BuddyBoss Support',
 				'role'         => 'administrator',
 			)
@@ -79,7 +79,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 		$query = (string) wp_parse_url( $url, PHP_URL_QUERY );
 		parse_str( $query, $args );
 
-		return isset( $args[ BB_Support_Access::QUERY_VAR ] ) ? (string) $args[ BB_Support_Access::QUERY_VAR ] : '';
+		return isset( $args[ BBoss_Support_Access::QUERY_VAR ] ) ? (string) $args[ BBoss_Support_Access::QUERY_VAR ] : '';
 	}
 
 	/**
@@ -88,7 +88,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	protected function expire_grant_now() {
 		$data            = $this->sa->get_data();
 		$data['expires'] = time() - HOUR_IN_SECONDS;
-		bp_update_option( BB_Support_Access::OPTION, $data );
+		bboss_update_option( BBoss_Support_Access::OPTION, $data );
 	}
 
 	/**
@@ -125,13 +125,13 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	/* Member-query exclusion ------------------------------------------------- */
 
 	/**
-	 * The support account must not appear in a BP_User_Query result set.
+	 * The support account must not appear in a BBoss_User_Query result set.
 	 */
 	public function test_support_user_excluded_from_user_query() {
 		$support_id = $this->create_support_user();
 		$regular_id = self::factory()->user->create();
 
-		$q       = new BP_User_Query();
+		$q       = new BBoss_User_Query();
 		$results = is_array( $q->results ) ? array_values( $q->results ) : array();
 		$ids     = wp_list_pluck( $results, 'ID' );
 
@@ -145,7 +145,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	public function test_no_support_user_does_not_alter_results() {
 		$regular_id = self::factory()->user->create();
 
-		$q       = new BP_User_Query();
+		$q       = new BBoss_User_Query();
 		$results = is_array( $q->results ) ? array_values( $q->results ) : array();
 		$ids     = wp_list_pluck( $results, 'ID' );
 
@@ -157,7 +157,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	 */
 	public function test_exclusion_filter_registered() {
 		$this->assertNotFalse(
-			has_filter( 'bp_user_query_uid_clauses', array( BB_Support_Access::instance(), 'exclude_from_user_query' ) ),
+			has_filter( 'bp_user_query_uid_clauses', array( BBoss_Support_Access::instance(), 'exclude_from_user_query' ) ),
 			'bp_user_query_uid_clauses exclusion filter should be registered.'
 		);
 	}
@@ -179,7 +179,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 		$before = time();
 		$result = $this->sa->enable();
 
-		$expected = $before + ( BB_Support_Access::DEFAULT_DAYS * DAY_IN_SECONDS );
+		$expected = $before + ( BBoss_Support_Access::DEFAULT_DAYS * DAY_IN_SECONDS );
 		$this->assertEqualsWithDelta( $expected, $result['expires'], 5 );
 	}
 
@@ -212,7 +212,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 		$before = time();
 		$result = $this->sa->enable( 999 );
 
-		$expected = $before + ( BB_Support_Access::DEFAULT_DAYS * DAY_IN_SECONDS );
+		$expected = $before + ( BBoss_Support_Access::DEFAULT_DAYS * DAY_IN_SECONDS );
 
 		// Allow a few seconds of clock drift during the call.
 		$this->assertEqualsWithDelta( $expected, $result['expires'], 5 );
@@ -242,7 +242,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 		self::factory()->user->create(
 			array(
 				'user_login' => 'real-admin',
-				'user_email' => BB_Support_Access::USER_EMAIL,
+				'user_email' => BBoss_Support_Access::USER_EMAIL,
 				'role'       => 'administrator',
 			)
 		);
@@ -290,7 +290,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 			3
 		);
 
-		$_GET[ BB_Support_Access::QUERY_VAR ] = $token;
+		$_GET[ BBoss_Support_Access::QUERY_VAR ] = $token;
 		$this->sa->handle_login();
 
 		$this->assertSame( $this->sa->get_data()['support_user_id'], $gate_user, 'Valid token must reach the gate with the support user.' );
@@ -323,7 +323,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 			}
 		);
 
-		$_GET[ BB_Support_Access::QUERY_VAR ] = 'not-the-real-token';
+		$_GET[ BBoss_Support_Access::QUERY_VAR ] = 'not-the-real-token';
 		$this->sa->handle_login();
 
 		$this->assertFalse( $gate_reached, 'An invalid token must never reach the auth gate.' );
@@ -351,7 +351,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 			3
 		);
 
-		$_GET[ BB_Support_Access::QUERY_VAR ] = $token;
+		$_GET[ BBoss_Support_Access::QUERY_VAR ] = $token;
 		$this->sa->handle_login();
 
 		$this->assertFalse( $gate_reached, 'An expired grant must not authenticate.' );
@@ -377,7 +377,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 			3
 		);
 
-		$_GET[ BB_Support_Access::QUERY_VAR ] = $token;
+		$_GET[ BBoss_Support_Access::QUERY_VAR ] = $token;
 		$this->sa->handle_login();
 
 		$this->assertFalse( $gate_reached, 'A revoked token must not authenticate.' );
@@ -466,8 +466,8 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 	/**
 	 * On multisite, a grant enabled while acting on a non-root blog must be
 	 * stored on — and read back from — the root blog. The login/read path only
-	 * ever looks at the root blog (get_data() -> bp_get_option() ->
-	 * get_blog_option( bp_get_root_blog_id() )), so a write pinned to the current
+	 * ever looks at the root blog (get_data() -> bboss_get_option() ->
+	 * get_blog_option( bboss_get_root_blog_id() )), so a write pinned to the current
 	 * blog would land where nothing reads it and the grant would surface as
 	 * inactive. Regression guard for the root-blog switch in save()/with_lock().
 	 *
@@ -478,7 +478,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 			$this->markTestSkipped( 'Test requires a multisite install.' );
 		}
 
-		$root_blog_id = bp_get_root_blog_id();
+		$root_blog_id = bboss_get_root_blog_id();
 		$other_blog   = self::factory()->blog->create();
 		$this->assertNotSame( $root_blog_id, $other_blog, 'The secondary blog must differ from the root blog.' );
 
@@ -498,13 +498,13 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 
 			// It is physically stored on the root blog...
 			$this->assertNotEmpty(
-				get_blog_option( $root_blog_id, BB_Support_Access::OPTION ),
+				get_blog_option( $root_blog_id, BBoss_Support_Access::OPTION ),
 				'The grant must be persisted on the root blog.'
 			);
 
 			// ...and never leaks onto the current (non-root) blog.
 			$this->assertFalse(
-				get_blog_option( $other_blog, BB_Support_Access::OPTION ),
+				get_blog_option( $other_blog, BBoss_Support_Access::OPTION ),
 				'The grant must not be written to the non-root blog.'
 			);
 
@@ -515,7 +515,7 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 				'disable() on a non-root blog must revoke the root-blog grant.'
 			);
 			$this->assertFalse(
-				get_blog_option( $root_blog_id, BB_Support_Access::OPTION ),
+				get_blog_option( $root_blog_id, BBoss_Support_Access::OPTION ),
 				'disable() must delete the grant from the root blog.'
 			);
 		} finally {

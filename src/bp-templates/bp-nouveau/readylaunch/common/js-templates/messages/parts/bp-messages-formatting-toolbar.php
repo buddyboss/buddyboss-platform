@@ -13,11 +13,11 @@ defined( 'ABSPATH' ) || exit;
 
 <script type="text/html" id="tmpl-whats-new-formatting-toolbar">
 
-<?php if ( ! bp_is_active( 'media' ) ) : ?>
+<?php if ( ! bboss_is_active( 'media' ) ) : ?>
 <div class="media-off">
 <?php endif; ?>
 
-	<?php if ( bp_is_active( 'media' ) ) : ?>
+	<?php if ( bboss_is_active( 'media' ) ) : ?>
 
 		<div class="bb-rl-separator"></div>
 
@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<?php endif; ?>
 
-<?php if ( ! bp_is_active( 'media' ) ) : ?>
+<?php if ( ! bboss_is_active( 'media' ) ) : ?>
 </div>
 <?php endif; ?>
 

@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Search_CPT' ) ) :
+if ( ! class_exists( 'BBoss_Search_CPT' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search posts class
 	 */
-	class BP_Search_CPT extends Bp_Search_Type {
+	class BBoss_Search_CPT extends BBoss_Search_Type {
 		private $cpt_name;
 		private $search_type;
 
@@ -87,7 +87,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			$tax        = array();
 			$taxonomies = get_object_taxonomies( $this->cpt_name );
 			foreach ( $taxonomies as $taxonomy ) {
-				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->cpt_name ) ) {
+				if ( bboss_is_search_post_type_taxonomy_enable( $taxonomy, $this->cpt_name ) ) {
 					$tax[] = $taxonomy;
 				}
 			}
@@ -165,7 +165,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 					'posts_per_page' => 20,
 				)
 			);
-			$template = bp_locate_template( "search/loop/{$this->cpt_name}.php" ) ? "loop/{$this->cpt_name}" : 'loop/post';
+			$template = bboss_locate_template( "search/loop/{$this->cpt_name}.php" ) ? "loop/{$this->cpt_name}" : 'loop/post';
 
 			if ( $qry->have_posts() ) {
 				while ( $qry->have_posts() ) {
@@ -174,7 +174,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 						'id'    => get_the_ID(),
 						'type'  => $this->search_type,
 						'title' => get_the_title(),
-						'html'  => bp_search_buffer_template_part( $template, $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( $template, $template_type, false ),
 					);
 
 					$this->search_results['items'][ get_the_ID() ] = $result;

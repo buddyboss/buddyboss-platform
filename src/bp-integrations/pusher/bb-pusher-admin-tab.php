@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.1.4
  */
-class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+class BBoss_Pusher_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 
 	/**
 	 * Current section.
@@ -54,12 +54,12 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function register_admin_script() {
 
-		$active_tab = bp_core_get_admin_active_tab();
+		$active_tab = bboss_core_get_admin_active_tab();
 
 		if ( 'bb-pusher' === $active_tab ) {
 			$min     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			$rtl_css = is_rtl() ? '-rtl' : '';
-			wp_enqueue_style( 'bb-pusher-admin', bb_pusher_integration_url( '/assets/css/bb-pusher-admin' . $rtl_css . $min . '.css' ), false, buddypress()->version );
+			wp_enqueue_style( 'bb-pusher-admin', bboss_pusher_integration_url( '/assets/css/bb-pusher-admin' . $rtl_css . $min . '.css' ), false, bboss()->version );
 		}
 
 		parent::register_admin_script();
@@ -181,7 +181,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			);
 		} elseif (
 			function_exists( 'bb_platform_pro' ) &&
-			version_compare( bb_platform_pro()->version, bb_pro_pusher_version(), '<' )
+			version_compare( bb_platform_pro()->version, bboss_pro_pusher_version(), '<' )
 		) {
 			$fields['bb_pusher_settings_section']['infos'] = array(
 				'title'             => esc_html__( 'Notes', 'buddyboss' ),
@@ -205,7 +205,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			<a class="button" target="_blank" href="
 			<?php
 				echo esc_url(
-					bp_get_admin_url(
+					bboss_get_admin_url(
 						add_query_arg(
 							array(
 								'page'    => 'bp-help',
@@ -266,7 +266,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					__( 'Please update %1$s to version %2$s to use Pusher on your site.', 'buddyboss' )
 				),
 				'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>',
-				esc_html( bb_pro_pusher_version() )
+				esc_html( bboss_pro_pusher_version() )
 			) .
 			'</p>';
 	}
@@ -299,3 +299,11 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$this->bp_custom_do_settings_sections( $this->tab_name );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_Pusher_Admin_Integration_Tab', false ) || interface_exists( 'BBoss_Pusher_Admin_Integration_Tab', false ) || trait_exists( 'BBoss_Pusher_Admin_Integration_Tab', false ) ) && ! class_exists( 'BB_Pusher_Admin_Integration_Tab', false ) && ! interface_exists( 'BB_Pusher_Admin_Integration_Tab', false ) ) {
+	class_alias( 'BBoss_Pusher_Admin_Integration_Tab', 'BB_Pusher_Admin_Integration_Tab' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

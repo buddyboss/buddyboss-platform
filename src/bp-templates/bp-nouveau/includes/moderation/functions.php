@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array The same array with the specific moderation scripts.
  */
-function bp_nouveau_moderation_register_scripts( $scripts = array() ) {
+function bboss_nouveau_moderation_register_scripts( $scripts = array() ) {
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
 	}
@@ -37,7 +37,7 @@ function bp_nouveau_moderation_register_scripts( $scripts = array() ) {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_nouveau_moderation_enqueue_scripts() {
+function bboss_nouveau_moderation_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-moderation' );
 }
@@ -51,7 +51,7 @@ function bp_nouveau_moderation_enqueue_scripts() {
  *
  * @return array         The same array with specific strings for the messages UI if needed.
  */
-function bp_nouveau_moderation_localize_scripts( $params = array() ) {
+function bboss_nouveau_moderation_localize_scripts( $params = array() ) {
 
 	//initialize moderation vars because it is used globally
 	$params['moderation'] = array(

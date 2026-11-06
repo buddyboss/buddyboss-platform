@@ -3,7 +3,7 @@
  * The template for profile search
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,7 +17,7 @@ $options = array(
 
 // 3rd section: display the search form
 
-$search_form_data = bp_profile_search_escaped_form_data( $form_id );
+$search_form_data = bboss_profile_search_escaped_form_data( $form_id );
 ?>
 
 <aside id="bp-profile-search-form-outer" class="bp-profile-search-widget widget">
@@ -148,16 +148,16 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										esc_html__( 'Select Year', 'buddyboss' )
 									);
 
-										$date_range_type = bp_xprofile_get_meta( $field->id, 'field', 'range_type', true );
+										$date_range_type = bboss_xprofile_get_meta( $field->id, 'field', 'range_type', true );
 
 									if ( 'relative' === $date_range_type ) {
-										$range_relative_start = bp_xprofile_get_meta( $field->id, 'field', 'range_relative_start', true );
-										$range_relative_end   = bp_xprofile_get_meta( $field->id, 'field', 'range_relative_end', true );
+										$range_relative_start = bboss_xprofile_get_meta( $field->id, 'field', 'range_relative_start', true );
+										$range_relative_end   = bboss_xprofile_get_meta( $field->id, 'field', 'range_relative_end', true );
 										$start                = gmdate( 'Y' ) - abs( $range_relative_start );
 										$end                  = gmdate( 'Y' ) + $range_relative_end;
 									} elseif ( 'absolute' === $date_range_type ) {
-										$start = bp_xprofile_get_meta( $field->id, 'field', 'range_absolute_start', true );
-										$end   = bp_xprofile_get_meta( $field->id, 'field', 'range_absolute_end', true );
+										$start = bboss_xprofile_get_meta( $field->id, 'field', 'range_absolute_start', true );
+										$end   = bboss_xprofile_get_meta( $field->id, 'field', 'range_absolute_end', true );
 									} else {
 										$start = gmdate( 'Y' ) - 50;// 50 years ago
 										$end   = gmdate( 'Y' ) + 50;// 50 years in future
@@ -274,7 +274,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 							$km          = __( 'km', 'buddyboss' );
 							$miles       = __( 'miles', 'buddyboss' );
 							$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-							$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
+							$icon_url    = bboss()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
 							$icon_title  = __( 'get current location', 'buddyboss' );
 							?>
 

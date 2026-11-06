@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Report_List_Table extends WP_List_Table {
+class BBoss_Moderation_Report_List_Table extends WP_List_Table {
 
 	/**
 	 * What type of view is being displayed?
@@ -88,7 +88,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function no_items() {
-		$tab = bb_filter_input_string( INPUT_GET, 'tab' );
+		$tab = bboss_filter_input_string( INPUT_GET, 'tab' );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			esc_html_e( 'This member has not been reported by any members.', 'buddyboss' );
 		} else {
@@ -111,11 +111,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function prepare_items() {
 
 		$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
-		$moderation_content_type = bb_filter_input_string( INPUT_GET, 'content_type' );
-		$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
+		$moderation_content_type = bboss_filter_input_string( INPUT_GET, 'content_type' );
+		$moderation_request_data = new BBoss_Moderation( $moderation_id, $moderation_content_type );
 
 		if ( empty( $moderation_request_data->id ) ) {
-			$moderation_request_data = new BP_Moderation( $moderation_id, BP_Moderation_Members::$moderation_type_report );
+			$moderation_request_data = new BBoss_Moderation( $moderation_id, BBoss_Moderation_Members::$moderation_type_report );
 		}
 
 		// Set current page.
@@ -127,7 +127,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		if ( 'blocked' === $this->view ) {
 			$args = array( 'user_repoted' => false );
 		}
-		$reporters = BP_Moderation::get_moderation_reporters( $moderation_request_data->id, $args );
+		$reporters = BBoss_Moderation::get_moderation_reporters( $moderation_request_data->id, $args );
 
 		$total_item  = ( ! empty( $reporters ) ) ? count( $reporters ) : 0;
 		$total_pages = ceil( $total_item / $per_page );
@@ -201,7 +201,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 
-		$tab = bb_filter_input_string( INPUT_GET, 'tab' );
+		$tab = bboss_filter_input_string( INPUT_GET, 'tab' );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			$columns = array(
 				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
@@ -258,7 +258,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @param array $item loop item.
 	 */
 	public function column_reporter( $item = array() ) {
-		printf( '<strong><a target="_blank" href="%s">%s %s</a></strong>', esc_url( BP_Moderation_Members::get_permalink( $item['user_id'] ) ), get_avatar( $item['user_id'], '32' ), esc_html( bp_core_get_userlink( $item['user_id'], true ) ) );
+		printf( '<strong><a target="_blank" href="%s">%s %s</a></strong>', esc_url( BBoss_Moderation_Members::get_permalink( $item['user_id'] ) ), get_avatar( $item['user_id'], '32' ), esc_html( bboss_core_get_userlink( $item['user_id'], true ) ) );
 
 	}
 

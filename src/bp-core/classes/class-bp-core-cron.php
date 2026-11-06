@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
-class BP_Core_Cron {
+class BBoss_Core_Cron {
 
 	/**
 	 * Crons.
@@ -29,9 +29,9 @@ class BP_Core_Cron {
 	 * @since BuddyBoss 1.7.0
 	 *
 	 * @static object $instance
-	 * @see bp_core_cron()
+	 * @see bboss_core_cron()
 	 *
-	 * @return BP_Core_Cron|null The one true BP_Core_Cron.
+	 * @return BBoss_Core_Cron|null The one true BBoss_Core_Cron.
 	 */
 	public static function instance() {
 
@@ -40,7 +40,7 @@ class BP_Core_Cron {
 
 		// Only run these methods if they haven't been run previously.
 		if ( null === $instance ) {
-			$instance = new BP_Core_Cron();
+			$instance = new BBoss_Core_Cron();
 			$instance->setup_actions();
 		}
 
@@ -65,14 +65,14 @@ class BP_Core_Cron {
 	 *
 	 * @param string $hook       Action hook to execute when the event is run.
 	 * @param string $callback   Function to execute when the hook is run.
-	 * @param string $recurrence How often the event should subsequently recur. See bp_core_cron_schedules() for accepted values.
+	 * @param string $recurrence How often the event should subsequently recur. See bboss_core_cron_schedules() for accepted values.
 	 *
 	 * @return bool True if cron is scheduled, otherwise false.
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function add( $hook, $callback, $recurrence ) {
 		// Check if recurrence is good to go for bb or not.
-		if ( ! in_array( $recurrence, array_keys( bp_core_cron_schedules() ), true ) ) {
+		if ( ! in_array( $recurrence, array_keys( bboss_core_cron_schedules() ), true ) ) {
 			return false;
 		}
 

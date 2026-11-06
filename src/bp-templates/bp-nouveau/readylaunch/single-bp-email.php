@@ -6,7 +6,7 @@
  * It provides a responsive email layout with customizable appearance settings.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -41,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$settings = bp_email_get_appearance_settings();
+$settings = bboss_email_get_appearance_settings();
 
 ?><!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -289,7 +289,7 @@ $settings = bp_email_get_appearance_settings();
 						 */
 						do_action( 'bp_before_email_header' );
 
-						$blog_name     = bp_get_option( 'blogname' );
+						$blog_name     = bboss_get_option( 'blogname' );
 						$attachment_id = isset( $settings['logo'] ) ? $settings['logo'] : '';
 
 						if ( ! empty( $attachment_id ) ) {
@@ -323,10 +323,10 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_before_email_recipient' );
 
 						// echo bp_get_option( 'blogname' ).
-						if ( bp_is_email_customizer() ) {
-							echo '{{recipient.name}} <img src="' . esc_url( apply_filters( 'bp_email_customizer_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+						if ( bboss_is_email_customizer() ) {
+							echo '{{recipient.name}} <img src="' . esc_url( apply_filters( 'bp_email_customizer_default_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 						} else {
-							bp_email_the_salutation( $settings );
+							bboss_email_the_salutation( $settings );
 						}
 
 						/**
@@ -342,7 +342,7 @@ $settings = bp_email_get_appearance_settings();
 			<!-- Email Header : END -->
 
 			<!-- Email Body : BEGIN -->
-			<?php if ( bp_is_email_customizer() ) { ?>
+			<?php if ( bboss_is_email_customizer() ) { ?>
 
 			<!-- Start Table -->
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" width="100%" style="border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
@@ -366,7 +366,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td valign="middle" width="10%" style="vertical-align: middle;">
 									<a href="#" target="_blank">
-										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss' ); ?>" src="<?php echo esc_url( apply_filters( 'bp_email_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
+										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss' ); ?>" src="<?php echo esc_url( apply_filters( 'bp_email_default_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
 									</a>
 									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
 								</td>

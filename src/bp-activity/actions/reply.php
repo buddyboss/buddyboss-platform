@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool False on failure.
  */
-function bp_activity_action_post_comment() {
-	if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'reply' ) ) {
+function bboss_activity_action_post_comment() {
+	if ( ! is_user_logged_in() || ! bboss_is_activity_component() || ! bboss_is_current_action( 'reply' ) ) {
 		return false;
 	}
 
@@ -43,11 +43,11 @@ function bp_activity_action_post_comment() {
 	$content = apply_filters( 'bp_activity_post_comment_content', $_POST[ 'ac_input_' . $activity_id ] );
 
 	if ( empty( $content ) ) {
-		bp_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss' ), 'error' );
-		bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
+		bboss_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss' ), 'error' );
+		bboss_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 	}
 
-	$comment_id = bp_activity_new_comment(
+	$comment_id = bboss_activity_new_comment(
 		array(
 			'content'     => $content,
 			'activity_id' => $activity_id,
@@ -56,11 +56,11 @@ function bp_activity_action_post_comment() {
 	);
 
 	if ( ! empty( $comment_id ) ) {
-		bp_core_add_message( __( 'Reply Posted!', 'buddyboss' ) );
+		bboss_core_add_message( __( 'Reply Posted!', 'buddyboss' ) );
 	} else {
-		bp_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddyboss' ), 'error' );
 	}
 
-	bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
+	bboss_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 }
 add_action( 'bp_actions', 'bp_activity_action_post_comment' );

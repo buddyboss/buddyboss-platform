@@ -10,7 +10,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BBP_Akismet' ) ) :
+if ( ! class_exists( 'BBoss_BBP_Akismet' ) ) :
 	/**
 	 * Loads Akismet extension
 	 *
@@ -19,7 +19,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 	 * @package bbPress
 	 * @subpackage Akismet
 	 */
-	class BBP_Akismet {
+	class BBoss_BBP_Akismet {
 
 		/**
 		 * The main bbPress Akismet loader
@@ -87,11 +87,11 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		 *
 		 * @uses get_userdata() To get the user data
 		 * @uses bbp_filter_anonymous_user_data() To get anonymous user data
-		 * @uses bbp_get_topic_permalink() To get the permalink of the topic
-		 * @uses bbp_get_reply_url() To get the permalink of the reply
-		 * @uses bbp_current_author_ip() To get the IP address of the current user
-		 * @uses BBP_Akismet::maybe_spam() To check if post is spam
-		 * @uses BBP_Akismet::get_user_roles() To get the role(s) of the current user
+		 * @uses bboss_bbp_get_topic_permalink() To get the permalink of the topic
+		 * @uses bboss_bbp_get_reply_url() To get the permalink of the reply
+		 * @uses bboss_bbp_current_author_ip() To get the IP address of the current user
+		 * @uses BBoss_BBP_Akismet::maybe_spam() To check if post is spam
+		 * @uses BBoss_BBP_Akismet::get_user_roles() To get the role(s) of the current user
 		 * @uses do_action() To call the 'bbp_akismet_spam_caught' hook
 		 * @uses add_filter() To call the 'bbp_new_reply_pre_set_terms' hook
 		 *
@@ -104,7 +104,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			$post_permalink = '';
 
 			// Post is not published
-			if ( bbp_get_public_status_id() !== $post_data['post_status'] ) {
+			if ( bboss_bbp_get_public_status_id() !== $post_data['post_status'] ) {
 				return $post_data;
 			}
 
@@ -117,7 +117,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 			// Get user data
 			$userdata       = get_userdata( $post_data['post_author'] );
-			$anonymous_data = bbp_filter_anonymous_post_data();
+			$anonymous_data = bboss_bbp_filter_anonymous_post_data();
 
 			// Author is anonymous
 			if ( ! empty( $anonymous_data ) ) {
@@ -157,7 +157,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				'referrer'             => isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
 				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
 				'user_ID'              => $post_data['post_author'],
-				'user_ip'              => bbp_current_author_ip(),
+				'user_ip'              => bboss_bbp_current_author_ip(),
 				'user_role'            => $this->get_user_roles( $post_data['post_author'] ),
 			);
 
@@ -181,7 +181,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				do_action( 'bbp_akismet_spam_caught' );
 
 				// This is spam
-				$post_data['post_status'] = bbp_get_spam_status_id();
+				$post_data['post_status'] = bboss_bbp_get_spam_status_id();
 
 				// We don't want your spam tags here
 				add_filter( 'bbp_new_reply_pre_set_terms', array( $this, 'filter_post_terms' ), 1, 3 );
@@ -216,11 +216,11 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		 * @uses get_post() To get the post object
 		 * @uses get_the_author_meta() To get the author meta
 		 * @uses get_post_meta() To get the post meta
-		 * @uses bbp_get_user_profile_url() To get a user's profile url
+		 * @uses bboss_bbp_get_user_profile_url() To get a user's profile url
 		 * @uses get_permalink() To get the permalink of the post_parent
-		 * @uses BBP_Akismet::get_user_roles() To get the role(s) of the post_author
-		 * @uses bbp_current_author_ip() To get the IP address of the current user
-		 * @uses BBP_Akismet::maybe_spam() To submit the post as ham or spam
+		 * @uses BBoss_BBP_Akismet::get_user_roles() To get the role(s) of the post_author
+		 * @uses bboss_bbp_current_author_ip() To get the IP address of the current user
+		 * @uses BBoss_BBP_Akismet::maybe_spam() To submit the post as ham or spam
 		 * @uses update_post_meta() To update the post meta with some Akismet data
 		 * @uses do_action() To call the 'bbp_akismet_submit_spam_post' and 'bbp_akismet_submit_ham_post' hooks
 		 *
@@ -265,7 +265,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			}
 
 			// Bail if we're spamming, but the post_status isn't spam
-			if ( ( 'spam' === $request_type ) && ( bbp_get_spam_status_id() !== $_post->post_status ) ) {
+			if ( ( 'spam' === $request_type ) && ( bboss_bbp_get_spam_status_id() !== $_post->post_status ) ) {
 				return;
 			}
 
@@ -274,7 +274,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				'comment_approved'     => $_post->post_status,
 				'comment_author'       => $_post->post_author ? get_the_author_meta( 'display_name', $_post->post_author ) : get_post_meta( $post_id, '_bbp_anonymous_name', true ),
 				'comment_author_email' => $_post->post_author ? get_the_author_meta( 'email', $_post->post_author ) : get_post_meta( $post_id, '_bbp_anonymous_email', true ),
-				'comment_author_url'   => $_post->post_author ? bbp_get_user_profile_url( $_post->post_author ) : get_post_meta( $post_id, '_bbp_anonymous_website', true ),
+				'comment_author_url'   => $_post->post_author ? bboss_bbp_get_user_profile_url( $_post->post_author ) : get_post_meta( $post_id, '_bbp_anonymous_website', true ),
 				'comment_content'      => $_post->post_content,
 				'comment_date'         => $_post->post_date,
 				'comment_ID'           => $post_id,
@@ -293,7 +293,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			}
 
 			// Add the reporter IP address
-			$post_data['reporter_ip'] = bbp_current_author_ip();
+			$post_data['reporter_ip'] = bboss_bbp_current_author_ip();
 
 			// Add some reporter info
 			if ( is_object( $current_user ) ) {
@@ -439,7 +439,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		 * @uses get_userdata() To get the user data
 		 * @uses bbp_filter_anonymous_user_data() To get anonymous user data
 		 * @uses update_post_meta() To update post meta with Akismet data
-		 * @uses BBP_Akismet::update_post_history() To update post Akismet history
+		 * @uses BBoss_BBP_Akismet::update_post_history() To update post Akismet history
 		 */
 		public function update_post_meta( $post_id = 0, $_post = false ) {
 
@@ -465,7 +465,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 				// Get user data
 				$userdata       = get_userdata( $_post->post_author );
-				$anonymous_data = bbp_filter_anonymous_post_data();
+				$anonymous_data = bboss_bbp_filter_anonymous_post_data();
 
 				// More checks
 				if ( intval( $as_submitted['comment_post_ID'] ) === intval( $_post->post_parent )
@@ -481,7 +481,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 						$this->update_post_history( $post_id, esc_html__( 'Akismet caught this post as spam', 'buddyboss' ), 'check-spam' );
 
 						// If post_status isn't the spam status, as expected, leave a note
-						if ( bbp_get_spam_status_id() !== $_post->post_status ) {
+						if ( bboss_bbp_get_spam_status_id() !== $_post->post_status ) {
 							/* translators: %s: new post status. */
 							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 						}
@@ -494,7 +494,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 						$this->update_post_history( $post_id, esc_html__( 'Akismet cleared this post as not spam', 'buddyboss' ), 'check-ham' );
 
 						// If post_status is the spam status, which isn't expected, leave a note
-						if ( bbp_get_spam_status_id() === $_post->post_status ) {
+						if ( bboss_bbp_get_spam_status_id() === $_post->post_status ) {
 
 							// @todo Use wp_blacklist_check()
 
@@ -587,8 +587,8 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		 * @param int    $topic_id
 		 * @param int    $reply_id
 		 *
-		 * @uses bbp_get_reply_id() To get the reply_id
-		 * @uses bbp_get_topic_id() To get the topic_id
+		 * @uses bboss_bbp_get_reply_id() To get the reply_id
+		 * @uses bboss_bbp_get_topic_id() To get the topic_id
 		 * @uses wp_get_object_terms() To a post's current terms
 		 * @uses update_post_meta() To add spam terms to post meta
 		 *
@@ -597,11 +597,11 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		public function filter_post_terms( $terms = '', $topic_id = 0, $reply_id = 0 ) {
 
 			// Validate the reply_id and topic_id
-			$reply_id = bbp_get_reply_id( $reply_id );
-			$topic_id = bbp_get_topic_id( $topic_id );
+			$reply_id = bboss_bbp_get_reply_id( $reply_id );
+			$topic_id = bboss_bbp_get_topic_id( $topic_id );
 
 			// Get any pre-existing terms
-			$existing_terms = wp_get_object_terms( $topic_id, bbp_get_topic_tag_tax_id(), array( 'fields' => 'names' ) );
+			$existing_terms = wp_get_object_terms( $topic_id, bboss_bbp_get_topic_tag_tax_id(), array( 'fields' => 'names' ) );
 
 			// Save the terms for later in case the reply gets hammed
 			if ( ! empty( $terms ) ) {
@@ -625,13 +625,13 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		 * @param string $path The path from the host
 		 * @param string $port The port to use
 		 * @param string $ip Optional Override $host with an IP address
-		 * @uses bbp_get_version() To get the current bbPress version
+		 * @uses bboss_bbp_get_version() To get the current bbPress version
 		 * @return mixed WP_Error on error, array on success, empty on failure
 		 */
 		private function http_post( $request, $host, $path, $port = 80, $ip = '' ) {
 
 			// Preload required variables
-			$bbp_version    = bbp_get_version();
+			$bbp_version    = bboss_bbp_get_version();
 			$content_length = strlen( $request );
 			$http_host      = $host;
 			$blog_charset   = get_option( 'blog_charset' );
@@ -762,7 +762,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				'bbp_akismet_topic_history',
 				__( 'Akismet History', 'buddyboss' ),
 				array( $this, 'history_metabox' ),
-				bbp_get_topic_post_type(),
+				bboss_bbp_get_topic_post_type(),
 				'normal',
 				'core'
 			);
@@ -772,7 +772,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				'bbp_akismet_reply_history',
 				__( 'Akismet History', 'buddyboss' ),
 				array( $this, 'history_metabox' ),
-				bbp_get_reply_post_type(),
+				bboss_bbp_get_reply_post_type(),
 				'normal',
 				'core'
 			);
@@ -785,7 +785,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 		 *
 		 * @uses get_post_history() To get the Akismet history for the post
 		 * @uses get_the_ID() To get the post ID
-		 * @uses bbp_time_since() To get the human readable time
+		 * @uses bboss_bbp_time_since() To get the human readable time
 		 */
 		public function history_metabox() {
 
@@ -804,7 +804,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 							<tr>
 								<td style="color: #999; text-align: right; white-space: nowrap;">
 									<span title="<?php echo esc_attr( gmdate( 'D d M Y @ h:i:m a', $row['time'] ) . ' GMT' ); ?>">
-										<?php bbp_time_since( $row['time'], false, true ); ?>
+										<?php bboss_bbp_time_since( $row['time'], false, true ); ?>
 									</span>
 								</td>
 								<td style="padding-left: 5px;">

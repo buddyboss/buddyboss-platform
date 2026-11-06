@@ -38,8 +38,8 @@ $components = array( 'activity', 'blogs', 'friends', 'groups', 'members', 'messa
 foreach ( $components as $component ) {
 	add_action( "bp_{$component}_includes", function() use ( $component ) {
 		$dirs = array(
-			buddypress()->plugin_dir . 'bp-' . $component . '/actions/',
-			buddypress()->plugin_dir . 'bp-' . $component . '/screens/',
+			bboss()->plugin_dir . 'bp-' . $component . '/actions/',
+			bboss()->plugin_dir . 'bp-' . $component . '/screens/',
 		);
 
 		foreach ( $dirs as $dir ) {

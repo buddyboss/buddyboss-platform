@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function bb_blog_is_blog_context() {
+function bboss_blog_is_blog_context() {
 	return is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date();
 }
 
@@ -26,12 +26,12 @@ function bb_blog_is_blog_context() {
  *
  * @return string[] Enabled platform keys.
  */
-function bb_blog_get_enabled_social_links() {
+function bboss_blog_get_enabled_social_links() {
 	// Single-source the platform keys + defaults from the shared helper. On the
 	// front end the helper (admin/callbacks.php) is not loaded, so fall back to
 	// the canonical list.
-	$defaults = function_exists( 'bb_blog_social_link_platforms' )
-		? bb_blog_social_link_platforms()
+	$defaults = function_exists( 'bboss_blog_social_link_platforms' )
+		? bboss_blog_social_link_platforms()
 		: array(
 			'facebook' => 1,
 			'linkedin' => 1,
@@ -42,7 +42,7 @@ function bb_blog_get_enabled_social_links() {
 
 	$enabled = array();
 	foreach ( $defaults as $platform => $default ) {
-		if ( (bool) bp_get_option( 'bb_blog_social_link_' . $platform, $default ) ) {
+		if ( (bool) bboss_get_option( 'bb_blog_social_link_' . $platform, $default ) ) {
 			$enabled[] = $platform;
 		}
 	}
@@ -64,8 +64,8 @@ function bb_blog_get_enabled_social_links() {
  *
  * @return bool
  */
-function bb_blog_is_related_posts_enabled() {
-	return (bool) bp_get_option( 'bb_blog_related_posts', 1 );
+function bboss_blog_is_related_posts_enabled() {
+	return (bool) bboss_get_option( 'bb_blog_related_posts', 1 );
 }
 
 /**
@@ -75,8 +75,8 @@ function bb_blog_is_related_posts_enabled() {
  *
  * @return bool
  */
-function bb_blog_is_author_bio_enabled() {
-	return (bool) bp_get_option( 'bb_blog_author_bio', 1 );
+function bboss_blog_is_author_bio_enabled() {
+	return (bool) bboss_get_option( 'bb_blog_author_bio', 1 );
 }
 
 /**
@@ -88,7 +88,7 @@ function bb_blog_is_author_bio_enabled() {
  *
  * @return array[] Array of { label, url, icon } keyed by platform.
  */
-function bb_blog_get_share_links( $post_id ) {
+function bboss_blog_get_share_links( $post_id ) {
 	$permalink = rawurlencode( get_permalink( $post_id ) );
 	$title     = rawurlencode( get_the_title( $post_id ) );
 
@@ -120,7 +120,7 @@ function bb_blog_get_share_links( $post_id ) {
 		),
 	);
 
-	$links = array_intersect_key( $all, array_flip( bb_blog_get_enabled_social_links() ) );
+	$links = array_intersect_key( $all, array_flip( bboss_blog_get_enabled_social_links() ) );
 
 	/**
 	 * Filter the blog share links for a post.
@@ -143,7 +143,7 @@ function bb_blog_get_share_links( $post_id ) {
  *
  * @return WP_Query
  */
-function bb_blog_get_related_posts( $post_id, $limit = 3 ) {
+function bboss_blog_get_related_posts( $post_id, $limit = 3 ) {
 	$category_ids = wp_get_post_categories( $post_id, array( 'fields' => 'ids' ) );
 
 	$args = array(
@@ -180,7 +180,7 @@ function bb_blog_get_related_posts( $post_id, $limit = 3 ) {
  *
  * @return string Rendered HTML (may be empty).
  */
-function bb_blog_render_post_footer_sections() {
+function bboss_blog_render_post_footer_sections() {
 	$post_id = get_the_ID();
 
 	if ( empty( $post_id ) ) {
@@ -189,7 +189,7 @@ function bb_blog_render_post_footer_sections() {
 
 	// The blog page sections render only through the BuddyBoss Theme or
 	// ReadyLaunch blog templates — never into a third-party theme.
-	if ( ! function_exists( 'buddyboss_theme_get_option' ) && ! bb_is_readylaunch_enabled() ) {
+	if ( ! function_exists( 'buddyboss_theme_get_option' ) && ! bboss_is_readylaunch_enabled() ) {
 		return '';
 	}
 
@@ -202,7 +202,7 @@ function bb_blog_render_post_footer_sections() {
 	// When ReadyLaunch renders the current blog surface the theme's template
 	// (and its share/author/related sections) never outputs, so the theme's
 	// Redux options must not suppress ours.
-	if ( $bb_blog_theme_active && bb_is_readylaunch_enabled() && bb_blog_rl_is_enabled() && bb_blog_is_blog_context() ) {
+	if ( $bb_blog_theme_active && bboss_is_readylaunch_enabled() && bboss_blog_rl_is_enabled() && bboss_blog_is_blog_context() ) {
 		$bb_blog_theme_active = false;
 	}
 
@@ -218,7 +218,7 @@ function bb_blog_render_post_footer_sections() {
 	$bb_blog_suppress_share = apply_filters( 'bb_blog_suppress_share_for_theme', $bb_blog_theme_active && buddyboss_theme_get_option( 'blog_share_box' ), $post_id );
 
 	// Social share.
-	$share_links = bb_blog_get_share_links( $post_id );
+	$share_links = bboss_blog_get_share_links( $post_id );
 	if ( ! $bb_blog_suppress_share && ! empty( $share_links ) ) {
 		?>
 		<div class="bb-blog-share">
@@ -266,17 +266,17 @@ function bb_blog_render_post_footer_sections() {
 	$bb_blog_suppress_author_bio = apply_filters( 'bb_blog_suppress_author_bio_for_theme', $bb_blog_theme_active && buddyboss_theme_get_option( 'blog_author_box' ), $post_id );
 
 	// Author bio.
-	if ( ! $bb_blog_suppress_author_bio && bb_blog_is_author_bio_enabled() ) {
+	if ( ! $bb_blog_suppress_author_bio && bboss_blog_is_author_bio_enabled() ) {
 		$author_id  = (int) get_post_field( 'post_author', $post_id );
 		$author_bio = get_the_author_meta( 'description', $author_id );
-		$author_url = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $author_id ) : get_author_posts_url( $author_id );
+		$author_url = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $author_id ) : get_author_posts_url( $author_id );
 		?>
 		<div class="bb-blog-author-bio">
 			<div class="bb-blog-author-bio__left">
 				<a class="bb-blog-author-bio__avatar" href="<?php echo esc_url( $author_url ); ?>" data-bb-hp-profile="<?php echo esc_attr( $author_id ); ?>">
 					<?php
-					if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
+					if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+						echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
 							array(
 								'item_id' => $author_id,
 								'html'    => true,
@@ -289,7 +289,7 @@ function bb_blog_render_post_footer_sections() {
 				</a>
 				<h4 class="bb-blog-author-bio__name">
 					<a href="<?php echo esc_url( $author_url ); ?>" data-bb-hp-profile="<?php echo esc_attr( $author_id ); ?>">
-						<?php echo esc_html( function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $author_id ) : get_the_author_meta( 'display_name', $author_id ) ); ?>
+						<?php echo esc_html( function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $author_id ) : get_the_author_meta( 'display_name', $author_id ) ); ?>
 					</a>
 				</h4>
 			</div>
@@ -334,8 +334,8 @@ function bb_blog_render_post_footer_sections() {
 	$bb_blog_suppress_related = apply_filters( 'bb_blog_suppress_related_for_theme', $bb_blog_theme_active && buddyboss_theme_get_option( 'blog_related_switch' ), $post_id );
 
 	// Related posts.
-	if ( ! $bb_blog_suppress_related && bb_blog_is_related_posts_enabled() ) {
-		$related = bb_blog_get_related_posts( $post_id );
+	if ( ! $bb_blog_suppress_related && bboss_blog_is_related_posts_enabled() ) {
+		$related = bboss_blog_get_related_posts( $post_id );
 		if ( $related->have_posts() ) {
 			?>
 			<div class="bb-blog-related">
@@ -384,7 +384,7 @@ function bb_blog_render_post_footer_sections() {
  *
  * @return string
  */
-function bb_blog_append_post_footer_sections( $content ) {
+function bboss_blog_append_post_footer_sections( $content ) {
 	static $rendered = array();
 
 	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() ) {
@@ -397,14 +397,14 @@ function bb_blog_append_post_footer_sections( $content ) {
 	}
 	$rendered[ $post_id ] = true;
 
-	return $content . bb_blog_render_post_footer_sections();
+	return $content . bboss_blog_render_post_footer_sections();
 }
 
 /**
  * Gather the shared data for the member profile Blogs toolbar.
  *
- * Both bb_blog_rl_member_blog_toolbar() (ReadyLaunch) and
- * bb_blog_member_blog_toolbar() (standard pack) render the same underlying
+ * Both bboss_blog_rl_member_blog_toolbar() (ReadyLaunch) and
+ * bboss_blog_member_blog_toolbar() (standard pack) render the same underlying
  * data — the sub-tab pills with optional counts, the resolved sort, and the
  * re-homed add-on Create button — differing only in the surrounding markup.
  * This collects that data once so both renderers stay in sync and the count
@@ -423,7 +423,7 @@ function bb_blog_append_post_footer_sections( $content ) {
  *     @type string $sort_base     Base URL the sort options link from.
  * }
  */
-function bb_blog_get_member_toolbar_data() {
+function bboss_blog_get_member_toolbar_data() {
 	// Re-home the add-on's Create button inside the toolbar (the add-on hooks
 	// the same actions at priority 10; this runs at 5, so removal wins).
 	$bb_blog_render_create = false;
@@ -440,8 +440,8 @@ function bb_blog_get_member_toolbar_data() {
 	}
 
 	$bb_blog_nav_items = array();
-	if ( isset( buddypress()->members->nav ) ) {
-		$bb_blog_nav_items = buddypress()->members->nav->get_secondary(
+	if ( isset( bboss()->members->nav ) ) {
+		$bb_blog_nav_items = bboss()->members->nav->get_secondary(
 			array(
 				'parent_slug'     => 'blog',
 				'user_has_access' => true,
@@ -450,17 +450,17 @@ function bb_blog_get_member_toolbar_data() {
 	}
 	$bb_blog_nav_items = ! empty( $bb_blog_nav_items ) ? array_values( (array) $bb_blog_nav_items ) : array();
 
-	$bb_blog_is_bookmarks = function_exists( 'bp_is_current_action' ) && bp_is_current_action( 'bookmarks' );
+	$bb_blog_is_bookmarks = function_exists( 'bboss_is_current_action' ) && bboss_is_current_action( 'bookmarks' );
 
 	$bb_blog_sort = isset( $_GET['bb-sort'] ) ? sanitize_key( wp_unslash( $_GET['bb-sort'] ) ) : 'newest'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort.
 	if ( ! in_array( $bb_blog_sort, array( 'newest', 'oldest' ), true ) ) {
 		$bb_blog_sort = 'newest';
 	}
 
-	$bb_blog_displayed_id = bp_displayed_user_id();
-	$bb_blog_is_owner     = bp_is_my_profile() || current_user_can( 'edit_others_posts' );
-	$bb_blog_counts_on    = function_exists( 'bb_enable_content_counts' ) && bb_enable_content_counts();
-	$bb_blog_tab_base     = trailingslashit( bp_displayed_user_domain() . 'blog' );
+	$bb_blog_displayed_id = bboss_displayed_user_id();
+	$bb_blog_is_owner     = bboss_is_my_profile() || current_user_can( 'edit_others_posts' );
+	$bb_blog_counts_on    = function_exists( 'bboss_enable_content_counts' ) && bboss_enable_content_counts();
+	$bb_blog_tab_base     = trailingslashit( bboss_displayed_user_domain() . 'blog' );
 	$bb_blog_sort_base    = $bb_blog_is_bookmarks ? $bb_blog_tab_base . 'bookmarks/' : $bb_blog_tab_base;
 
 	$bb_blog_tabs = array();
@@ -495,7 +495,7 @@ function bb_blog_get_member_toolbar_data() {
 		$bb_blog_tabs[] = array(
 			'label'      => $bb_blog_label,
 			'link'       => $bb_blog_nav_item->link,
-			'is_current' => bp_current_action() === $bb_blog_nav_item->slug,
+			'is_current' => bboss_current_action() === $bb_blog_nav_item->slug,
 		);
 	}
 
@@ -523,16 +523,16 @@ function bb_blog_get_member_toolbar_data() {
  *
  * @return void
  */
-function bb_blog_rl_member_blog_toolbar() {
-	if ( ! function_exists( 'bb_is_readylaunch_enabled' ) || ! bb_is_readylaunch_enabled() ) {
+function bboss_blog_rl_member_blog_toolbar() {
+	if ( ! function_exists( 'bboss_is_readylaunch_enabled' ) || ! bboss_is_readylaunch_enabled() ) {
 		return;
 	}
 
-	if ( ! function_exists( 'buddypress' ) || ! function_exists( 'bp_is_user' ) || ! bp_is_user() ) {
+	if ( ! function_exists( 'bboss' ) || ! function_exists( 'bboss_is_user' ) || ! bboss_is_user() ) {
 		return;
 	}
 
-	$bb_blog_toolbar = bb_blog_get_member_toolbar_data();
+	$bb_blog_toolbar = bboss_blog_get_member_toolbar_data();
 	?>
 	<div class="bb-rl-member-blog__toolbar">
 		<?php if ( $bb_blog_toolbar['show_tabs'] ) : ?>
@@ -573,7 +573,7 @@ add_action( 'bb_blog_bookmarks_before', 'bb_blog_rl_member_blog_toolbar', 5 );
  * Render the member profile Blogs toolbar for the standard (non-ReadyLaunch)
  * template pack.
  *
- * Standard-mode sibling of bb_blog_rl_member_blog_toolbar(): outputs the
+ * Standard-mode sibling of bboss_blog_rl_member_blog_toolbar(): outputs the
  * sub-tab pills (My Blogs / Bookmarked, with counts), the Newest/Oldest sort
  * dropdown and the add-on's Create Post button on a single row. Hooked to both
  * the My Blogs and Bookmarked screens; bails in ReadyLaunch mode so the RL
@@ -583,17 +583,17 @@ add_action( 'bb_blog_bookmarks_before', 'bb_blog_rl_member_blog_toolbar', 5 );
  *
  * @return void
  */
-function bb_blog_member_blog_toolbar() {
+function bboss_blog_member_blog_toolbar() {
 	// ReadyLaunch renders its own toolbar (bb_blog_rl_member_blog_toolbar).
-	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+	if ( function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled() ) {
 		return;
 	}
 
-	if ( ! function_exists( 'buddypress' ) || ! function_exists( 'bp_is_user' ) || ! bp_is_user() ) {
+	if ( ! function_exists( 'bboss' ) || ! function_exists( 'bboss_is_user' ) || ! bboss_is_user() ) {
 		return;
 	}
 
-	$bb_blog_toolbar = bb_blog_get_member_toolbar_data();
+	$bb_blog_toolbar = bboss_blog_get_member_toolbar_data();
 
 	$bb_blog_sort_options = array(
 		'newest' => __( 'Newest', 'buddyboss' ),
@@ -661,7 +661,7 @@ add_action( 'bb_blog_bookmarks_before', 'bb_blog_member_blog_toolbar', 5 );
  *
  * @return bool
  */
-function bb_blog_force_card_view_post_menu_item( $show, $post_id ) {
+function bboss_blog_force_card_view_post_menu_item( $show, $post_id ) {
 	$bb_blog_context = get_query_var( 'bb_blog_card_context' );
 
 	if ( ! in_array( $bb_blog_context, array( 'member-posts', 'bookmarks' ), true ) ) {

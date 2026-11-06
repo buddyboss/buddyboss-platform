@@ -1,7 +1,7 @@
 <?php
 /**
  * @group core
- * @group BP_Email
+ * @group BBoss_Email
  */
 class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	protected $u1;
@@ -23,7 +23,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_valid_subject() {
 		$message = 'test';
-		$email   = new BP_Email( 'activity-at-message' );
+		$email   = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_subject( $message )->set_tokens( array( 'poster.name' => 'example' ) );
 		$this->assertSame( $message, $email->get_subject() );
@@ -31,7 +31,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_valid_html_content() {
 		$message = '<b>test</b>';
-		$email   = new BP_Email( 'activity-at-message' );
+		$email   = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_content_html( $message );
 		$email->set_content_type( 'html' );
@@ -41,7 +41,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_valid_plaintext_content() {
 		$message = 'test';
-		$email   = new BP_Email( 'activity-at-message' );
+		$email   = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_content_plaintext( $message );
 		$email->set_content_type( 'plaintext' );
@@ -51,14 +51,14 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_valid_template() {
 		$message = 'test';
-		$email   = new BP_Email( 'activity-at-message' );
+		$email   = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_template( $message );
 		$this->assertSame( $message, $email->get_template() );
 	}
 
 	public function test_tokens() {
-		$email          = new BP_Email( 'activity-at-message' );
+		$email          = new BBoss_Email( 'activity-at-message' );
 		$default_tokens = $email->get_tokens();
 		$tokens         = array( 'test1' => 'hello', 'test2' => 'world' );
 
@@ -76,7 +76,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_headers() {
-		$email           = new BP_Email( 'activity-at-message' );
+		$email           = new BBoss_Email( 'activity-at-message' );
 		$default_headers = $email->get_headers();
 		$headers         = array( 'custom_header' => 'custom_value' );
 
@@ -86,7 +86,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_validation() {
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 		$email->set_from( 'test1@example.com' )->set_to( 'test2@example.com' )->set_subject( 'testing' );
 		$email->set_content_html( 'testing' )->set_tokens( array( 'poster.name' => 'example' ) );
 
@@ -94,7 +94,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_invalid_characters_are_stripped_from_tokens() {
-		$email          = new BP_Email( 'activity-at-message' );
+		$email          = new BBoss_Email( 'activity-at-message' );
 		$default_tokens = $email->get_tokens();
 
 		$email->set_tokens( array( 'te{st}1' => 'hello world' ) );
@@ -107,7 +107,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_token_are_escaped() {
 		$token = '<blink>';
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 		$email->set_content_html( '{{test}}' )->set_tokens( array( 'test' => $token ) );
 
 		$this->assertSame(
@@ -118,7 +118,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_token_are_not_escaped() {
 		$token = '<blink>';
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 		$email->set_content_html( '{{{test}}}' )->set_tokens( array( 'test' => $token ) );
 
 		$this->assertSame(
@@ -128,7 +128,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_invalid_headers() {
-		$email           = new BP_Email( 'activity-at-message' );
+		$email           = new BBoss_Email( 'activity-at-message' );
 		$default_headers = $email->get_headers();
 		$headers         = array( 'custom:header' => 'custom:value' );
 
@@ -139,7 +139,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_validation_with_missing_required_data() {
-		$email  = new BP_Email( 'activity-at-message' );
+		$email  = new BBoss_Email( 'activity-at-message' );
 		$email->set_from( 'test1@example.com' )->set_to( 'test2@example.com' )->set_subject( 'testing' );  // Content
 		$email->set_tokens( array( 'poster.name' => 'example' ) );
 		$result = $email->validate();
@@ -149,7 +149,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_validation_with_missing_template() {
-		$email  = new BP_Email( 'activity-at-message' );
+		$email  = new BBoss_Email( 'activity-at-message' );
 		$email->set_from( 'test1@example.com' )->set_to( 'test2@example.com' )->set_subject( 'testing' );
 		$email->set_content_html( 'testing' )->set_tokens( array( 'poster.name' => 'example' ) )->set_template( '' );
 		$result = $email->validate();
@@ -161,7 +161,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 
 	public function test_invalid_tags_should_be_removed_from_html_content() {
 		$message = '<b>hello world</b><iframe src="https://example.com"></iframe><b>hello world</b>';
-		$email   = new BP_Email( 'activity-at-message' );
+		$email   = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_content_html( $message );
 		$email->set_content_type( 'html' );
@@ -172,7 +172,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	public function test_multiple_recipients_are_supported_by_address() {
 		$email1 = 'test1@example.com';
 		$email2 = 'test2@example.com';
-		$email  = new BP_Email( 'activity-at-message' );
+		$email  = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_to( array( $email1, $email2 ) );
 		$addresses = $email->get_to();
@@ -185,7 +185,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	public function test_multiple_recipients_are_supported_by_wp_user_object() {
 		$user1 = get_user_by( 'id', $this->u1 );
 		$user2 = get_user_by( 'id', $this->u2 );
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_to( array( $user1, $user2 ) );
 		$addresses = $email->get_to();
@@ -198,7 +198,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	public function test_multiple_recipients_are_supported_by_wp_user_id() {
 		$user1 = get_user_by( 'id', $this->u1 );
 		$user2 = get_user_by( 'id', $this->u2 );
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 		$email->set_to( array( $this->u1, $this->u2 ) );
 		$addresses = $email->get_to();
 
@@ -211,7 +211,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 		$user1 = get_user_by( 'id', $this->u1 );
 		$user2 = get_user_by( 'id', $this->u2 );
 		$user3 = 'test3@example.com';
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 
 		$email->set_to( array( $user1, $this->u2, $user3 ) );
 		$addresses = $email->get_to();
@@ -223,7 +223,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_replacing_existing_recipients_with_new_recipients() {
-		$email              = new BP_Email( 'activity-at-message' );
+		$email              = new BBoss_Email( 'activity-at-message' );
 		$original_recipient = 'test1@example.com';
 		$new_recipient      = 'test2@example.com';
 
@@ -237,7 +237,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_appending_new_recipients_to_existing_recipients() {
-		$email              = new BP_Email( 'activity-at-message' );
+		$email              = new BBoss_Email( 'activity-at-message' );
 		$original_recipient = 'test1@example.com';
 		$new_recipient      = 'test2@example.com';
 
@@ -252,11 +252,11 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_sending_email() {
-		require_once( BP_PLUGIN_DIR . '/bp-core/admin/bp-core-admin-schema.php' );
-		bp_core_install_emails();
+		require_once( BBOSS_PLUGIN_DIR . '/bp-core/admin/bp-core-admin-schema.php' );
+		bboss_core_install_emails();
 
 		$user1  = get_user_by( 'id', $this->u1 );
-		$result = bp_send_email( 'activity-comment', $this->u1, array(
+		$result = bboss_send_email( 'activity-comment', $this->u1, array(
 			'tokens' => array(
 				'comment.id'                => 123,
 				'commenter.id'              => $this->u2,
@@ -275,7 +275,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 		// Emulate custom post title for an email post type.
 		$subject = "It's pretty <new & magical.";
 
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 		$email->set_subject( $subject )->set_tokens( array( 'poster.name' => 'blah' ) );
 
 		// Subject always has to have tokens replaced before sending.
@@ -289,7 +289,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 		// Emulate rendered {poster.name} token.
 		$token = apply_filters( 'bp_core_get_user_displayname', $name );
 
-		$email = new BP_Email( 'activity-at-message' );
+		$email = new BBoss_Email( 'activity-at-message' );
 		$email->set_subject( '{{poster.name}}' )->set_tokens( array( 'poster.name' => $token ) );
 
 		// Subject always has to have tokens replaced before sending.

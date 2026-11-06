@@ -25,12 +25,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_access_control_fields() {
+function bboss_groups_register_access_control_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Member Access Controls.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'access_controls',
 		'member_access_controls',
@@ -38,7 +38,7 @@ function bb_groups_register_access_control_fields() {
 			'title'      => __( 'Member Access Controls', 'buddyboss' ),
 			'order'      => 10,
 			'help_url'   => '638206',
-			'pro_notice' => bb_admin_settings_get_pro_notice(
+			'pro_notice' => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'access_controls',
 					'context' => 'section',
@@ -48,7 +48,7 @@ function bb_groups_register_access_control_fields() {
 	);
 
 	// FIELD: Create Groups access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'access_controls',
 		'member_access_controls',
@@ -60,12 +60,12 @@ function bb_groups_register_access_control_fields() {
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
-			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
+			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 		)
 	);
 
 	// FIELD: Join Groups access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'access_controls',
 		'member_access_controls',
@@ -77,12 +77,12 @@ function bb_groups_register_access_control_fields() {
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 20,
-			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
+			'sanitize_callback' => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 		)
 	);
 
 	// FIELD: Admin notice (displayed once at the end of the section).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'access_controls',
 		'member_access_controls',

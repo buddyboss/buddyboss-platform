@@ -20,50 +20,58 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-define('PLATFORM_EDITION', 'developer');
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-loader — backward compatibility for third-party code that uses the
+// pre-rename (BuddyPress-style) function, class and constant names. buddyboss.com build only.
+if ( file_exists( __DIR__ . '/bb-compat/bb-compat-loader.php' ) ) {
+	require_once __DIR__ . '/bb-compat/bb-compat-loader.php';
+}
+// @bbwt-com-end compat-layer
 
-if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+define('BBOSS_PLATFORM_EDITION', 'developer');
+
+if ( ! defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
-if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '3.7.1' );
+if ( ! defined( 'BBOSS_PLATFORM_VERSION' ) ) {
+	define( 'BBOSS_PLATFORM_VERSION', '3.7.1' );
 }
 
-if ( ! defined( 'BP_PLATFORM_API' ) ) {
-	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'BBOSS_PLATFORM_API' ) ) {
+	define( 'BBOSS_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
 // Load translation files.
-add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
+add_action( 'plugins_loaded', 'bboss_core_load_buddypress_textdomain', 0 );
 
 // The plugins_loaded-priority-0 load above runs before multilingual plugins
 // (WPML, Polylang) have resolved the request language, so it can cache the
 // catalog for the wrong locale. Re-run once the locale is final, and whenever
 // it changes mid-request (switch_to_locale() — e.g. per-recipient emails);
 // the loader itself is a no-op when the loaded locale is already correct.
-add_action( 'init', 'bp_core_load_buddypress_textdomain', 0 );
+add_action( 'init', 'bboss_core_load_buddypress_textdomain', 0 );
 // Core unloads every textdomain inside change_locale() itself — before this
 // action fires — and its registry cannot re-load from this plugin's custom
 // locations. Run early so other change_locale callbacks that render buddyboss
 // strings already see the correct catalog. Also cover WPML's and Polylang's
 // own switch events, which change the locale without firing change_locale;
 // the loader self-no-ops when the locale is unchanged.
-add_action( 'change_locale', 'bp_core_load_buddypress_textdomain', 0 );
+add_action( 'change_locale', 'bboss_core_load_buddypress_textdomain', 0 );
 // Priority 20: after WPML String Translation swaps its $l10n entries (10),
 // so the reload is not immediately overwritten and re-done.
-add_action( 'wpml_language_has_switched', 'bp_core_load_buddypress_textdomain', 20 );
+add_action( 'wpml_language_has_switched', 'bboss_core_load_buddypress_textdomain', 20 );
 // Priority 10: after Polylang's own-language-tools manager removes its
 // load_textdomain_mofile blocker on this same action (priority 2). That blocker
 // is front-end only — PLL_OLT_Manager returns early in wp-admin and for REST.
 // Polylang's own change_locale dispatch is conditional on the core locale
 // switcher already existing, so it does not fire at plugins_loaded; these two
 // actions are the only reliable Polylang entry points.
-add_action( 'pll_language_defined', 'bp_core_load_buddypress_textdomain', 10 );
+add_action( 'pll_language_defined', 'bboss_core_load_buddypress_textdomain', 10 );
 // Same blocker is lifted on this sibling action when no languages are configured
 // yet (fresh install, or the last language was deleted); without it those
 // requests would keep the neutered plugins_loaded catalog until init:0.
-add_action( 'pll_no_language_defined', 'bp_core_load_buddypress_textdomain', 10 );
+add_action( 'pll_no_language_defined', 'bboss_core_load_buddypress_textdomain', 10 );
 
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
@@ -123,8 +131,8 @@ foreach ( $bp_incompatible_plugins_list as $incompatible_plugin ) {
 
 if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible_plugins ) ) {
 
-	if ( ! defined( 'BP_VERSION' ) ) {
-		define( 'BP_VERSION', '4.3.0' );
+	if ( ! defined( 'BBOSS_VERSION' ) ) {
+		define( 'BBOSS_VERSION', '4.3.0' );
 	}
 
 	/**
@@ -132,12 +140,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function bp_core_unset_bbpress_buddypress_active() {
+	function bboss_core_unset_bbpress_buddypress_active() {
 		global $bp_is_multisite;
-		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+		remove_filter( 'option_active_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 
 		if ( $bp_is_multisite ) {
-			remove_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+			remove_filter( 'site_option_active_sitewide_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
 
@@ -146,12 +154,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function bp_core_set_bbpress_buddypress_on_admin_notices() {
+	function bboss_core_set_bbpress_buddypress_on_admin_notices() {
 		global $bp_is_multisite;
 
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+		add_filter( 'option_active_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 		if ( $bp_is_multisite ) {
-			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+			add_filter( 'site_option_active_sitewide_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
 
@@ -164,7 +172,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return mixed
 	 */
-	function bp_core_set_bbpress_buddypress_active( $value = array() ) {
+	function bboss_core_set_bbpress_buddypress_active( $value = array() ) {
 
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
@@ -238,39 +246,39 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			/**
 			 * Add this so the spoofing plugin does not get loaded by WordPress
 			 */
-			add_action( 'pre_current_active_plugins', 'bp_core_unset_bbpress_buddypress_active', 10000 );
-			add_action( 'all_admin_notices', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+			add_action( 'pre_current_active_plugins', 'bboss_core_unset_bbpress_buddypress_active', 10000 );
+			add_action( 'all_admin_notices', 'bboss_core_unset_bbpress_buddypress_active', 100000 );
 			if ( empty( $bp_is_multisite ) ) {
-				add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active', 10000 );
+				add_action( 'muplugins_loaded', 'bboss_core_unset_bbpress_buddypress_active', 10000 );
 			}
 
 			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
 
-				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+				add_action( 'admin_init', 'bboss_core_unset_bbpress_buddypress_active', 100000 );
 
-				add_filter( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
+				add_filter( 'all_plugins', 'bboss_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
 
 				if ( isset( $_REQUEST['checked'] ) ) {
-					add_action( 'load-plugins.php', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
+					add_action( 'load-plugins.php', 'bboss_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 				}
 			}
 
 			/**
 			 * Add this so the spoofing plugin does get loaded by WordPress
 			 */
-			add_action( 'plugin_loaded', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
-			add_action( 'admin_notices', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
+			add_action( 'plugin_loaded', 'bboss_core_set_bbpress_buddypress_on_admin_notices', - 1 );
+			add_action( 'admin_notices', 'bboss_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 		}
 
 		if ( $bp_is_multisite ) {
 			// Check if Forum Component is enabled if so then add.
-			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
+			if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'forums' ) ) {
 				$value[ $bb_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 			}
 			$value[ $bp_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 		} else {
 			// Check if Forum Component is enabled if so then add.
-			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
+			if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'forums' ) ) {
 				array_push( $value, $bb_plugin_file );
 			}
 			array_push( $value, $bp_plugin_file );
@@ -288,8 +296,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @return mixed
 	 */
-	function bp_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
-		bp_core_unset_bbpress_buddypress_active();
+	function bboss_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
+		bboss_core_unset_bbpress_buddypress_active();
 
 		return $plugins;
 	}
@@ -299,7 +307,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function bp_pre_update_option_active_plugins( $value ) {
+	function bboss_pre_update_option_active_plugins( $value ) {
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite;
 		if ( $bp_is_multisite ) {
 			if ( isset( $value[ $bb_plugin_file ] ) ) {
@@ -321,27 +329,27 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	if ( ! is_network_admin() ) {
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+		add_filter( 'option_active_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
 	}
 	// Filter for setting the spoofing of BuddyPress.
-	add_filter( 'pre_update_option_active_plugins', 'bp_pre_update_option_active_plugins' );
+	add_filter( 'pre_update_option_active_plugins', 'bboss_pre_update_option_active_plugins' );
 
 	if ( $bp_is_multisite ) {
-		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
-		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
-		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
+		add_filter( 'site_option_active_sitewide_plugins', 'bboss_core_set_bbpress_buddypress_active', 0 );
+		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bboss_pre_update_option_active_plugins' );
+		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bboss_pre_update_option_active_plugins' );
 	}
 
 
 	// Required PHP version.
-	define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
+	define( 'BBOSS_REQUIRED_PHP_VERSION', '5.3.0' );
 
 	/**
 	 * Adds an admin notice to installations that don't meet minimum PHP requirement.
 	 *
 	 * @since BuddyPress 2.8.0
 	 */
-	function bp_php_requirements_notice() {
+	function bboss_php_requirements_notice() {
 		if ( ! current_user_can( 'update_core' ) ) {
 			return;
 		}
@@ -352,19 +360,26 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss' ); ?></strong>
 			</p>
 			<?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
+			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BBOSS_REQUIRED_PHP_VERSION ) ); ?></p>
 			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss' ); ?></p>
 		</div>
 
 		<?php
 	}
 
-	if ( version_compare( phpversion(), BP_REQUIRED_PHP_VERSION, '<' ) ) {
-		add_action( 'admin_notices', 'bp_php_requirements_notice' );
-		add_action( 'network_admin_notices', 'bp_php_requirements_notice' );
+	if ( version_compare( phpversion(), BBOSS_REQUIRED_PHP_VERSION, '<' ) ) {
+		add_action( 'admin_notices', 'bboss_php_requirements_notice' );
+		add_action( 'network_admin_notices', 'bboss_php_requirements_notice' );
 
 		return;
 	} else {
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:compat-functions — the old function names, declared only now that Platform runs
+		// (not when it stands down for BuddyPress/bbPress). buddyboss.com build only.
+		if ( function_exists( 'bb_compat_load_functions' ) ) {
+			bb_compat_load_functions();
+		}
+		// @bbwt-com-end compat-layer
 		require dirname( __FILE__ ) . '/class-buddypress.php';
 
 		/**
@@ -373,12 +388,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		 * Use this function like you would a global variable, except without needing
 		 * to declare the global.
 		 *
-		 * Example: <?php $bp = buddypress(); ?>
+		 * Example: <?php $bp = bboss(); ?>
 		 *
-		 * @return BuddyPress|null The one true BuddyPress Instance.
+		 * @return BBoss_Platform|null The one true BuddyPress Instance.
 		 */
-		function buddypress() {
-			return BuddyPress::instance();
+		function bboss() {
+			return BBoss_Platform::instance();
 		}
 
 		// load the member switch class so all the hook prior to bp_init can be hook in.
@@ -392,26 +407,26 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		 * BuddyBoss Platform being in the way.
 		 */
 		if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
-			add_action( 'plugins_loaded', 'buddypress', (int) BUDDYPRESS_LATE_LOAD );
+			add_action( 'plugins_loaded', 'bboss', (int) BUDDYPRESS_LATE_LOAD );
 
-			$bp_forum_active = array_key_exists( 'forums', bp_get_option( 'bp-active-components', array() ) );
+			$bp_forum_active = array_key_exists( 'forums', bboss_get_option( 'bp-active-components', array() ) );
 
 			// A lot of actions in bbpress require before component init,
 			// hence we grab the pure db value and load the class
 			// so all the hook prior to bp_init can be hook in.
 			if ( $bp_forum_active ) {
 				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
-				add_action( 'plugins_loaded', 'bbpress', (int) BUDDYPRESS_LATE_LOAD );
+				add_action( 'plugins_loaded', 'bboss_forums', (int) BUDDYPRESS_LATE_LOAD );
 			}
 
 			// "And now here's something we hope you'll really like!"
 		} else {
-			$GLOBALS['bp'] = buddypress();
+			$GLOBALS['bp'] = bboss();
 
-			$bp_forum_active = array_key_exists( 'forums', bp_get_option( 'bp-active-components', array() ) );
+			$bp_forum_active = array_key_exists( 'forums', bboss_get_option( 'bp-active-components', array() ) );
 			if ( $bp_forum_active ) {
 				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
-				$GLOBALS['bbp'] = bbpress();
+				$GLOBALS['bbp'] = bboss_forums();
 			}
 		}
 	}
@@ -422,7 +437,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return void
 	 */
-	function bp_duplicate_notice() {
+	function bboss_duplicate_notice() {
 
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			return;
@@ -481,11 +496,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * You can't have bbPress and BuddyBoss Platform both active at the same time!
 	 */
-	add_action( 'admin_notices', 'bp_duplicate_notice' );
-	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
+	add_action( 'admin_notices', 'bboss_duplicate_notice' );
+	add_action( 'network_admin_notices', 'bboss_duplicate_notice' );
 }
 
-if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
+if ( ! function_exists( 'bboss_core_load_buddypress_textdomain' ) ) {
 	/**
 	 * Load the buddyboss translation file for current language.
 	 *
@@ -514,7 +529,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *              loaded" — do not treat it as proof of a loaded catalog. On WP 6.1-6.6 that
 	 *              branch still loads the file and its return value is a genuine load result.
 	 */
-	function bp_core_load_buddypress_textdomain() {
+	function bboss_core_load_buddypress_textdomain() {
 		static $loaded_locale   = null;
 		static $path_registered = false;
 
@@ -587,9 +602,9 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		if ( $locale_key !== $loaded_locale || ! is_textdomain_loaded( $domain ) ) {
 			$loaded_locale   = $locale_key;
 			$mofile_custom   = sprintf( '%s-%s.mo', $domain, $locale );
-			$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
+			$plugin_dir_path = defined( 'BBOSS_PLUGIN_DIR' ) ? BBOSS_PLUGIN_DIR : plugin_dir_path( __FILE__ );
 			$plugin_dir      = $plugin_dir_path;
-			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			if ( defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BBOSS_SOURCE_SUBDIRECTORY' ) ) ) {
 				$plugin_dir = $plugin_dir . 'src';
 			}
 
@@ -848,7 +863,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 
 			$plugin_folder       = plugin_basename( $plugin_dir_path );
 			$buddyboss_lang_path = $plugin_folder . '/languages';
-			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			if ( defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BBOSS_SOURCE_SUBDIRECTORY' ) ) ) {
 				$buddyboss_lang_path = $plugin_folder . '/src/languages';
 			}
 
@@ -858,3 +873,11 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		return false;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-export — expose old constant/class names as soon as Platform has loaded,
+// for plugins that check them at file-include time.
+if ( function_exists( 'bb_compat_sweep' ) ) {
+	bb_compat_sweep();
+}
+// @bbwt-com-end compat-layer

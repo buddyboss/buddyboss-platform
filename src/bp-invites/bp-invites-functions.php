@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string The name of the invite post type.
  */
-function bp_get_invite_post_type() {
+function bboss_get_invite_post_type() {
 
 	/**
 	 * Filters the name of the invite post type.
@@ -30,7 +30,7 @@ function bp_get_invite_post_type() {
 	 *
 	 * @param string $value invite post type name.
 	 */
-	return apply_filters( 'bp_get_invite_post_type', buddypress()->invite_post_type );
+	return apply_filters( 'bp_get_invite_post_type', bboss()->invite_post_type );
 }
 
 /**
@@ -46,16 +46,16 @@ function bp_get_invite_post_type() {
  *
  * @return bool
  */
-function bb_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
+function bboss_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
 	$invite_id = absint( $invite_id );
-	$user_id   = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+	$user_id   = $user_id ? absint( $user_id ) : bboss_loggedin_user_id();
 	$invite    = $invite_id ? get_post( $invite_id ) : null;
 
-	if ( empty( $invite ) || empty( $user_id ) || bp_get_invite_post_type() !== $invite->post_type ) {
+	if ( empty( $invite ) || empty( $user_id ) || bboss_get_invite_post_type() !== $invite->post_type ) {
 		return false;
 	}
 
-	$can_revoke = ( (int) $invite->post_author === $user_id ) || bp_user_can( $user_id, 'bp_moderate' );
+	$can_revoke = ( (int) $invite->post_author === $user_id ) || bboss_user_can( $user_id, 'bp_moderate' );
 
 	/**
 	 * Filters whether a user can revoke an email invite.
@@ -76,7 +76,7 @@ function bb_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
  *
  * @return array
  */
-function bp_get_invite_post_type_labels() {
+function bboss_get_invite_post_type_labels() {
 
 	/**
 	 * Filters invite post type labels.
@@ -110,7 +110,7 @@ function bp_get_invite_post_type_labels() {
  *
  * @return array
  */
-function bp_get_invite_post_type_supports() {
+function bboss_get_invite_post_type_supports() {
 
 	/**
 	 * Filters the features that the invite post type supports.
@@ -136,10 +136,10 @@ function bp_get_invite_post_type_supports() {
  *
  * @return bool
  */
-function bp_invites_member_invite_invitation_page() {
+function bboss_invites_member_invite_invitation_page() {
 	$retval = false;
 
-	if ( bp_is_register_page() && ! empty( $_GET['bp-invites'] ) && 'accept-member-invitation' === urldecode( $_GET['bp-invites'] ) ) {
+	if ( bboss_is_register_page() && ! empty( $_GET['bp-invites'] ) && 'accept-member-invitation' === urldecode( $_GET['bp-invites'] ) ) {
 		$retval = true;
 	}
 
@@ -151,14 +151,14 @@ function bp_invites_member_invite_invitation_page() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_member_invite_remove_registration_lock() {
+function bboss_invites_member_invite_remove_registration_lock() {
 	global $bp;
 
-	if ( ! bp_invites_member_invite_invitation_page() ) {
+	if ( ! bboss_invites_member_invite_invitation_page() ) {
 		return;
 	}
 
-	if ( false === bp_is_active( 'invites' ) ) {
+	if ( false === bboss_is_active( 'invites' ) ) {
 		return;
 	}
 
@@ -172,7 +172,7 @@ function bp_invites_member_invite_remove_registration_lock() {
 	$email = str_replace( ' ', '+', $email );
 
 	$args = array(
-		'post_type'      => bp_get_invite_post_type(),
+		'post_type'      => bboss_get_invite_post_type(),
 		'posts_per_page' => -1,
 		'meta_query'     => array(
 			array(
@@ -191,7 +191,7 @@ function bp_invites_member_invite_remove_registration_lock() {
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
 		return;
 	}
 
@@ -219,10 +219,10 @@ add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_member_invite_register_screen_message() {
+function bboss_invites_member_invite_register_screen_message() {
 	global $bp;
 
-	if ( ! bp_invites_member_invite_invitation_page() ) {
+	if ( ! bboss_invites_member_invite_invitation_page() ) {
 		return;
 	}
 
@@ -250,7 +250,7 @@ function bp_invites_member_invite_register_screen_message() {
 			echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the email is wp_json_encode()'d above. WordPress < 5.7 only.
 		}
 
-		$bp_get_invitee_email = bp_invites_member_invite_get_invitations_by_invited_email( $email );
+		$bp_get_invitee_email = bboss_invites_member_invite_get_invitations_by_invited_email( $email );
 
 		$inviters = array();
 		if ( $bp_get_invitee_email->have_posts() ) {
@@ -269,7 +269,7 @@ function bp_invites_member_invite_register_screen_message() {
 		// invitation email.
 		$inviters_names = array();
 		foreach ( $inviters as $inviter ) {
-			$inviters_names[] = bp_core_get_user_displayname( $inviter, bb_core_guest_viewer_id() );
+			$inviters_names[] = bboss_core_get_user_displayname( $inviter, bboss_core_guest_viewer_id() );
 		}
 
 		if ( ! empty( $inviters_names ) ) {
@@ -281,7 +281,7 @@ function bp_invites_member_invite_register_screen_message() {
 
 		if ( isset( $_GET['inviter'] ) ) {
 			$args = array(
-				'post_type'      => bp_get_invite_post_type(),
+				'post_type'      => bboss_get_invite_post_type(),
 				'posts_per_page' => -1,
 				'posts_author'   => base64_decode( $_GET['inviter'] ),
 				'meta_query'     => array(
@@ -298,7 +298,7 @@ function bp_invites_member_invite_register_screen_message() {
 			$post_id                  = $posts[0]->ID;
 			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
-				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
+				$member_type_post_id = bboss_member_type_post_by_type( $get_invite_profile_type );
 
 				// Lock the profile type select to the invited type (was a raw <script>).
 				$inline_js = <<<'JS'
@@ -326,7 +326,7 @@ JS;
 					'bp_after_has_profile_parse_args',
 					function ( $args ) use ( $get_invite_profile_type ) {
 						if (
-							bp_invites_member_invite_invitation_page() &&
+							bboss_invites_member_invite_invitation_page() &&
 							! empty( $get_invite_profile_type ) &&
 							( empty( $args['member_type'] ) || 'any' === $args['member_type'] )
 						) {
@@ -353,7 +353,7 @@ add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen
  *
  * @return WP_Query
  */
-function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
+function bboss_invites_member_invite_get_invitations_by_invited_email( $email ) {
 
 	// If the url takes the form register/?bp-invites=accept-member-invitation&email=username+extra%40gmail.com,
 	// urldecode returns a space in place of the +. (This is not typical,
@@ -361,7 +361,7 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 	$email = str_replace( ' ', '+', $email );
 
 	$args = array(
-		'post_type'      => bp_get_invite_post_type(),
+		'post_type'      => bboss_get_invite_post_type(),
 		'posts_per_page' => -1,
 		'meta_query'     => array(
 			array(
@@ -384,12 +384,12 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
  *
  * @return string
  */
-function bp_get_member_invitation_subject() {
+function bboss_get_member_invitation_subject() {
 	global $bp;
 
-	$query = bb_get_member_invitation_query();
+	$query = bboss_get_member_invitation_query();
 
-	$title = bp_get_member_invites_wildcard_replace( ( $query->posts ? $query->posts[0]->post_title : '' ) );
+	$title = bboss_get_member_invites_wildcard_replace( ( $query->posts ? $query->posts[0]->post_title : '' ) );
 
 	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $title ) );
 }
@@ -401,10 +401,10 @@ function bp_get_member_invitation_subject() {
  *
  * @return string
  */
-function bp_get_member_invitation_message() {
+function bboss_get_member_invitation_message() {
 	global $bp;
 
-	$query = bb_get_member_invitation_query();
+	$query = bboss_get_member_invitation_query();
 
 	$wp_html_emails    = null;
 	$is_default_wpmail = null;
@@ -445,7 +445,7 @@ function bp_get_member_invitation_message() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_get_invites_member_invite_url() {
+function bboss_get_invites_member_invite_url() {
 
 	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss' ) );
 
@@ -462,16 +462,16 @@ function bp_get_invites_member_invite_url() {
  *
  * @return string
  */
-function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
+function bboss_get_member_invites_wildcard_replace( $text, $email = false ) {
 	global $bp;
 
 	// The invitation is composed in the inviter's own session but is delivered to a plain email
 	// address - there is no member behind it. Resolved against the request viewer the inviter sees
 	// their own profile in full, so the email would carry name parts the site hides from everyone
 	// else. Pin the resolution to the public, logged-out view.
-	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
+	$inviter_name = bboss_core_get_user_displayname( bboss_loggedin_user_id(), bboss_core_guest_viewer_id() );
 	$site_name    = get_bloginfo( 'name' );
-	$inviter_url  = bp_loggedin_user_domain();
+	$inviter_url  = bboss_loggedin_user_domain();
 
 	$email = urlencode( $email );
 
@@ -479,9 +479,9 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 		array(
 			'bp-invites' => 'accept-member-invitation',
 			'email'      => $email,
-			'inviter'    => base64_encode( bp_loggedin_user_id() ),
+			'inviter'    => base64_encode( bboss_loggedin_user_id() ),
 		),
-		bp_get_root_domain() . '/' . bp_get_signup_slug() . '/'
+		bboss_get_root_domain() . '/' . bboss_get_signup_slug() . '/'
 	);
 	$accept_link = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 
@@ -517,15 +517,15 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
  * @param $key
  * @param $user
  */
-function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
+function bboss_invites_member_invite_activate_user( $user_id, $key, $user ) {
 	global $bp;
 
-	$email = bp_core_get_user_email( $user_id );
+	$email = bboss_core_get_user_email( $user_id );
 
 	$inviters = array();
 
 	$args = array(
-		'post_type'      => bp_get_invite_post_type(),
+		'post_type'      => bboss_get_invite_post_type(),
 		'posts_per_page' => -1,
 		'meta_query'     => array(
 			array(
@@ -553,10 +553,10 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $member_type );
+				bboss_set_member_type( $user_id, '' );
+				bboss_set_member_type( $user_id, $member_type );
 
-				$member_type_id                = bp_member_type_post_by_type( $member_type );
+				$member_type_id                = bboss_member_type_post_by_type( $member_type );
 				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -596,20 +596,20 @@ add_action( 'bp_core_activated_user', 'bp_invites_member_invite_activate_user', 
  * @param $user_id
  *
  */
-function bp_invites_member_invite_mark_register_user( $user_id ) {
+function bboss_invites_member_invite_mark_register_user( $user_id ) {
 	global $bp;
 
-	$allow_custom_registration = bp_allow_custom_registration();
+	$allow_custom_registration = bboss_allow_custom_registration();
 	if ( ! $allow_custom_registration ) {
 	    return;
 	}
 
-	$email = bp_core_get_user_email( $user_id );
+	$email = bboss_core_get_user_email( $user_id );
 
 	$inviters = array();
 
 	$args = array(
-		'post_type'      => bp_get_invite_post_type(),
+		'post_type'      => bboss_get_invite_post_type(),
 		'posts_per_page' => -1,
 		'meta_query'     => array(
 			array(
@@ -637,10 +637,10 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $member_type );
+				bboss_set_member_type( $user_id, '' );
+				bboss_set_member_type( $user_id, $member_type );
 
-				$member_type_id                = bp_member_type_post_by_type( $member_type );
+				$member_type_id                = bboss_member_type_post_by_type( $member_type );
 				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -680,7 +680,7 @@ add_action( 'user_register', 'bp_invites_member_invite_mark_register_user', 10, 
  * @param $user_id
  *
  */
-function bp_nouveau_send_invite_content_css( $mceInit ) {
+function bboss_nouveau_send_invite_content_css( $mceInit ) {
 	$styles = 'body.mce-content-body { font-family: Arial, sans-serif;}';
 	if ( isset( $mceInit['content_style'] ) ) {
 		$mceInit['content_style'] .= ' ' . $styles . ' ';
@@ -697,16 +697,16 @@ function bp_nouveau_send_invite_content_css( $mceInit ) {
  *
  * @return object $query
  */
-function bb_get_member_invitation_query() {
+function bboss_get_member_invitation_query() {
 	static $cache = null;
 	if ( null === $cache ) {
-		$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
+		$term = get_term_by( 'name', 'invites-member-invite', bboss_get_email_tax_type() );
 
 		$args = array(
-			'post_type' => bp_get_email_post_type(),
+			'post_type' => bboss_get_email_post_type(),
 			'tax_query' => array(
 				array(
-					'taxonomy' => bp_get_email_tax_type(),
+					'taxonomy' => bboss_get_email_tax_type(),
 					'field'    => 'term_id',
 					// The email type term is missing when the emails were never installed or were deleted.
 					'terms'    => ! empty( $term->term_id ) ? $term->term_id : 0,
@@ -730,7 +730,7 @@ function bb_get_member_invitation_query() {
  *
  * @return bool $is_already_invited True|False.
  */
-function bb_is_email_address_already_invited( $email, $inviter_id = 0 ) {
+function bboss_is_email_address_already_invited( $email, $inviter_id = 0 ) {
 
 	$args = array(
 		'post_type'   => 'bp-invite',

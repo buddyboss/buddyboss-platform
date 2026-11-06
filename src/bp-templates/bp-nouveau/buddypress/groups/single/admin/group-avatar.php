@@ -11,9 +11,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_is_group_create   = bp_is_group_create();
-$group_has_avatar     = bp_get_group_has_avatar();
-$bp_avatar_admin_step = bp_get_avatar_admin_step();
+$bp_is_group_create   = bboss_is_group_create();
+$group_has_avatar     = bboss_get_group_has_avatar();
+$bp_avatar_admin_step = bboss_get_avatar_admin_step();
 
 if ( $bp_is_group_create ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
@@ -44,7 +44,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 	if ( $bp_is_group_create ) :
 		?>
 		<div class="left-menu">
-			<?php bp_new_group_avatar(); ?>
+			<?php bboss_new_group_avatar(); ?>
 		</div><!-- .left-menu -->
 		<div class="main-column">
 	<?php endif; ?>
@@ -65,13 +65,13 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 
 		<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
 		<?php
-		bp_button(
+		bboss_button(
 			array(
 				'id'         => 'delete_group_avatar',
 				'component'  => 'groups',
 				'wrapper_id' => 'delete-group-avatar-button',
 				'link_class' => 'edit',
-				'link_href'  => bp_get_group_avatar_delete_link(),
+				'link_href'  => bboss_get_group_avatar_delete_link(),
 				'link_title' => __( 'Delete Group Photo', 'buddyboss' ),
 				'link_text'  => __( 'Delete Group Photo', 'buddyboss' ),
 			)
@@ -84,7 +84,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 	 *
 	 * @since BuddyPress 2.3.0
 	 */
-	bp_avatar_get_templates();
+	bboss_avatar_get_templates();
 
 	if ( ! $bp_is_group_create ) {
 		wp_nonce_field( 'bp_avatar_upload' );
@@ -95,12 +95,12 @@ endif;
 if ( 'crop-image' === $bp_avatar_admin_step ) {
 	?>
 	<h2><?php esc_html_e( 'Crop Group Photo', 'buddyboss' ); ?></h2>
-	<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Photo to crop', 'buddyboss' ); ?>" />
+	<img src="<?php bboss_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Photo to crop', 'buddyboss' ); ?>" />
 	<div id="avatar-crop-pane">
-		<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Crop preview', 'buddyboss' ); ?>" />
+		<img src="<?php bboss_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Crop preview', 'buddyboss' ); ?>" />
 	</div>
 	<input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Photo', 'buddyboss' ); ?>" />
-	<input type="hidden" name="image_src" id="image_src" value="<?php bp_avatar_to_crop_src(); ?>" />
+	<input type="hidden" name="image_src" id="image_src" value="<?php bboss_avatar_to_crop_src(); ?>" />
 	<input type="hidden" id="x" name="x" />
 	<input type="hidden" id="y" name="y" />
 	<input type="hidden" id="w" name="w" />

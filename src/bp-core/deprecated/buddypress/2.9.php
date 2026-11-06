@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array             $args    Arguments passed to get_avatar_data(), after processing.
  * @return string BP avatar path, if found; else the original avatar path.
  */
-function bp_core_fetch_avatar_filter( $avatar, $user, $size, $default, $alt = '', $args = array() ) {
+function bboss_core_fetch_avatar_filter( $avatar, $user, $size, $default, $alt = '', $args = array() ) {
 	_deprecated_function( __FUNCTION__, '2.9' );
 	return $avatar;
 }

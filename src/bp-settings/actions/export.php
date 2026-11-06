@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_settings_action_export() {
+function bboss_settings_action_export() {
 
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		return;
 	}
 
@@ -26,16 +26,16 @@ function bp_settings_action_export() {
 			wp_die( esc_html__( 'Sorry something went wrong, please try again.', 'buddyboss' ) );
 		}
 
-		if ( bp_core_can_edit_settings() ) {
+		if ( bboss_core_can_edit_settings() ) {
 
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 
 			$user       = get_userdata( $user_id );
 			$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
 
 			if ( is_wp_error( $request_id ) ) {
 
-				bp_core_add_message( $request_id->get_error_message(), 'error' );
+				bboss_core_add_message( $request_id->get_error_message(), 'error' );
 
 				// Redirect to the root domain.
 				// bp_core_redirect( bp_get_root_domain() );
@@ -43,7 +43,7 @@ function bp_settings_action_export() {
 				return false;
 			} elseif ( ! $request_id ) {
 
-				bp_core_add_message( __( 'Unable to initiate the data export request.', 'buddyboss' ), 'error' );
+				bboss_core_add_message( __( 'Unable to initiate the data export request.', 'buddyboss' ), 'error' );
 
 				// Redirect to the root domain.
 				// bp_core_redirect( bp_get_root_domain() );
@@ -53,7 +53,7 @@ function bp_settings_action_export() {
 
 			wp_send_user_request( $request_id );
 
-			bp_core_add_message( __( 'Please check your email to confirm the data export request.', 'buddyboss' ), 'success' );
+			bboss_core_add_message( __( 'Please check your email to confirm the data export request.', 'buddyboss' ), 'success' );
 
 		}
 	}

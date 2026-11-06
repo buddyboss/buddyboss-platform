@@ -4,7 +4,7 @@
 	<div class="bp-admin-card section-bp_buddyboss_app-integration">
 		<h2>
 			<?php
-			$meta_icon = bb_admin_icons( 'bp_buddyboss_app-integration' );
+			$meta_icon = bboss_admin_icons( 'bp_buddyboss_app-integration' );
 			if ( ! empty( $meta_icon ) ) {
 				echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 			}
@@ -28,7 +28,7 @@
 		<?php
 			printf(
 				'<a href="%s" class="button-primary">%s</a>',
-				esc_url( bp_get_admin_url( '?hello=buddyboss-app' ) ),
+				esc_url( bboss_get_admin_url( '?hello=buddyboss-app' ) ),
 				esc_html__( 'Video Demo', 'buddyboss' )
 			);
 		?>

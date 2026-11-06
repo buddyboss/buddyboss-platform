@@ -64,17 +64,17 @@ class Components extends BuddypressCommand {
 			WP_CLI::error( sprintf( '%s is not a valid component.', ucfirst( $component ) ) );
 		}
 
-		if ( bp_is_active( $component ) ) {
+		if ( bboss_is_active( $component ) ) {
 			WP_CLI::error( sprintf( 'The %s component is already active.', ucfirst( $component ) ) );
 		}
 
-		$active_components =& buddypress()->active_components;
+		$active_components =& bboss()->active_components;
 
 		// Set for the rest of the page load.
 		$active_components[ $component ] = 1;
 
 		// Save in the db.
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		// Ensure that dbDelta() is defined.
 		if ( ! function_exists( 'dbDelta' ) ) {
@@ -82,9 +82,9 @@ class Components extends BuddypressCommand {
 		}
 
 		// Run the setup, in case tables have to be created.
-		require_once \BP_PLUGIN_DIR . 'bp-core/admin/bp-core-admin-schema.php';
-		bp_core_install( $active_components );
-		bp_core_add_page_mappings( $active_components );
+		require_once \BBOSS_PLUGIN_DIR . 'bp-core/admin/bp-core-admin-schema.php';
+		bboss_core_install( $active_components );
+		bboss_core_add_page_mappings( $active_components );
 
 		WP_CLI::success( sprintf( 'The %s component has been activated.', ucfirst( $component ) ) );
 	}
@@ -109,21 +109,21 @@ class Components extends BuddypressCommand {
 			WP_CLI::error( sprintf( '%s is not a valid component.', ucfirst( $component ) ) );
 		}
 
-		if ( ! bp_is_active( $component ) ) {
+		if ( ! bboss_is_active( $component ) ) {
 			WP_CLI::error( sprintf( 'The %s component is not active.', ucfirst( $component ) ) );
 		}
 
-		if ( array_key_exists( $component, bp_core_get_components( 'required' ) ) ) {
+		if ( array_key_exists( $component, bboss_core_get_components( 'required' ) ) ) {
 			WP_CLI::error( 'You cannot deactivate a required component.' );
 		}
 
-		$active_components =& buddypress()->active_components;
+		$active_components =& bboss()->active_components;
 
 		// Set for the rest of the page load.
 		unset( $active_components[ $component ] );
 
 		// Save in the db.
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		WP_CLI::success( sprintf( 'The %s component has been deactivated.', ucfirst( $component ) ) );
 	}
@@ -184,10 +184,10 @@ class Components extends BuddypressCommand {
 			$status = 'all';
 		}
 
-		$components = bp_core_get_components( $type );
+		$components = bboss_core_get_components( $type );
 
 		// Active components.
-		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
+		$active_components = apply_filters( 'bp_active_components', bboss_get_option( 'bp-active-components' ) );
 
 		// Core component is always active.
 		if ( 'optional' !== $type ) {
@@ -268,7 +268,7 @@ class Components extends BuddypressCommand {
 	 * @return bool
 	 */
 	protected function component_exists( $component ) {
-		$keys = array_keys( bp_core_get_components() );
+		$keys = array_keys( bboss_core_get_components() );
 
 		return in_array( $component, $keys, true );
 	}
@@ -289,7 +289,7 @@ class Components extends BuddypressCommand {
 			return $active;
 		}
 
-		return ( bp_is_active( $id ) ) ? $active : 'Inactive';
+		return ( bboss_is_active( $id ) ) ? $active : 'Inactive';
 	}
 
 	/**

@@ -5,7 +5,7 @@
  * This template handles the subscription settings for members.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,15 +13,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_member_hook( 'before', 'settings_template' );
+bboss_nouveau_member_hook( 'before', 'settings_template' );
 
 ?>
-	<?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
+	<?php bboss_get_template_part( 'members/single/parts/notification-subnav' ); ?>
 
 	<div class="subscription-views">
 		<?php
-		$types               = bb_get_subscriptions_types();
-		$types_with_singular = bb_get_subscriptions_types( true );
+		$types               = bboss_get_subscriptions_types();
+		$types_with_singular = bboss_get_subscriptions_types( true );
 
 		/**
 		 * Filters the subscription types displayed in the member Subscriptions
@@ -76,4 +76,4 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 	</div>
 <?php
 
-bp_nouveau_member_hook( 'after', 'settings_template' );
+bboss_nouveau_member_hook( 'after', 'settings_template' );

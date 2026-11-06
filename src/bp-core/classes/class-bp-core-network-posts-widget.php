@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.3
  */
-class BP_Core_Network_Posts_Widget extends WP_Widget {
+class BBoss_Core_Network_Posts_Widget extends WP_Widget {
 
 
 	/**
@@ -135,7 +135,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 
 							<div class="item">
 								<div class="item-title">
-									<a class="post-author" href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ) ); ?>"><?php echo esc_html( apply_filters( 'the_author', bp_core_get_user_displayname( get_the_author_meta( 'ID' ) ) ) ); ?></a>
+									<a class="post-author" href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ) ); ?>"><?php echo esc_html( apply_filters( 'the_author', bboss_core_get_user_displayname( get_the_author_meta( 'ID' ) ) ) ); ?></a>
 									<span class="netowrk-post-type">created a post:</span>
 
 								</div>
@@ -235,7 +235,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
-		return bp_parse_args(
+		return bboss_parse_args(
 			$instance,
 			array(
 				'title'      => __( 'Recent Networkside Posts', 'buddyboss' ),

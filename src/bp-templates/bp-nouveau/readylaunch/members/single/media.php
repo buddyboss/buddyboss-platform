@@ -5,7 +5,7 @@
  * This template handles displaying member media with albums and loading placeholders.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,23 +13,23 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 ?>
 <div class="bb-rl-sub-ctrls flex items-center justify-between">
 	<?php
-	bp_get_template_part( 'members/single/parts/item-subnav' );
+	bboss_get_template_part( 'members/single/parts/item-subnav' );
 	?>
 </div>
 <div class="bb-media-container member-media bb-rl-media-container">
 	<?php
-	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
-		bp_get_template_part( 'video/theatre' );
-		bp_get_template_part( 'video/add-video-thumbnail' );
+	bboss_get_template_part( 'media/theatre' );
+	if ( bboss_is_active( 'video' ) && bboss_is_profile_video_support_enabled() ) {
+		bboss_get_template_part( 'video/theatre' );
+		bboss_get_template_part( 'video/add-video-thumbnail' );
 	}
-	bp_get_template_part( 'document/theatre' );
+	bboss_get_template_part( 'document/theatre' );
 
-	switch ( bp_current_action() ) :
+	switch ( bboss_current_action() ) :
 
 		// Home/Media.
 		case 'my-media':
@@ -38,33 +38,33 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			 *
 			 * @since BuddyBoss 2.15.2
 			 */
-			bp_nouveau_member_hook( 'before', 'rl_stream_media_content' );
+			bboss_nouveau_member_hook( 'before', 'rl_stream_media_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php
-				bp_get_template_part( 'media/media-header' );
+				bboss_get_template_part( 'media/media-header' );
 				?>
 				<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
-						bp_nouveau_user_feedback( 'member-media-loading' );
+						bboss_nouveau_user_feedback( 'member-media-loading' );
 						echo '</div>';
 					} else {
-						bp_get_template_part( 'media/media-loop' );
+						bboss_get_template_part( 'media/media-loop' );
 					}
 					?>
 				</div><!-- .media -->
 			</div>
 			<?php
-			bp_nouveau_member_hook( 'after', 'media_content' );
+			bboss_nouveau_member_hook( 'after', 'media_content' );
 
 			/**
 			 * Fires after the display of the media list.
 			 *
 			 * @since BuddyBoss 2.15.2
 			 */
-			bp_nouveau_member_hook( 'after', 'rl_stream_media_content' );
+			bboss_nouveau_member_hook( 'after', 'rl_stream_media_content' );
 			break;
 
 		// Home/Media/Albums.
@@ -72,10 +72,10 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			?>
 			<div class="bb-rl-albums bb-rl-media-stream">
 				<?php
-				if ( ! bp_is_single_album() ) {
-					bp_get_template_part( 'media/albums' );
+				if ( ! bboss_is_single_album() ) {
+					bboss_get_template_part( 'media/albums' );
 				} else {
-					bp_get_template_part( 'media/single-album' );
+					bboss_get_template_part( 'media/single-album' );
 				}
 				?>
 			</div>
@@ -84,7 +84,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Any other.
 		default:
-			bp_get_template_part( 'members/single/plugins' );
+			bboss_get_template_part( 'members/single/plugins' );
 			break;
 	endswitch;
 	?>

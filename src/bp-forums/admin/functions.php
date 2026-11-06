@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since bbPress (r2957)
  */
-function bbp_admin_separator() {
+function bboss_bbp_admin_separator() {
 
 	// Caps necessary where a separator is necessary
 	$caps = array(
@@ -28,13 +28,13 @@ function bbp_admin_separator() {
 	// Loop through caps, and look for a reason to show the separator
 	foreach ( $caps as $cap ) {
 		if ( current_user_can( $cap ) ) {
-			bbpress()->admin->show_separator = true;
+			bboss_forums()->admin->show_separator = true;
 			break;
 		}
 	}
 
 	// Bail if no separator
-	if ( false === bbpress()->admin->show_separator ) {
+	if ( false === bboss_forums()->admin->show_separator ) {
 		return;
 	}
 
@@ -51,8 +51,8 @@ function bbp_admin_separator() {
  * @param bool $menu_order Menu order
  * @return mixed True if separator, false if not
  */
-function bbp_admin_custom_menu_order( $menu_order = false ) {
-	if ( false === bbpress()->admin->show_separator ) {
+function bboss_bbp_admin_custom_menu_order( $menu_order = false ) {
+	if ( false === bboss_forums()->admin->show_separator ) {
 		return $menu_order;
 	}
 
@@ -65,13 +65,13 @@ function bbp_admin_custom_menu_order( $menu_order = false ) {
  * @since bbPress (r2957)
  *
  * @param array $menu_order Menu Order
- * @uses bbp_get_forum_post_type() To get the forum post type
+ * @uses bboss_bbp_get_forum_post_type() To get the forum post type
  * @return array Modified menu order
  */
-function bbp_admin_menu_order( $menu_order ) {
+function bboss_bbp_admin_menu_order( $menu_order ) {
 
 	// Bail if user cannot see any top level Forums menus
-	if ( empty( $menu_order ) || ( false === bbpress()->admin->show_separator ) ) {
+	if ( empty( $menu_order ) || ( false === bboss_forums()->admin->show_separator ) ) {
 		return $menu_order;
 	}
 
@@ -82,9 +82,9 @@ function bbp_admin_menu_order( $menu_order ) {
 	$second_sep   = 'separator2';
 	$custom_menus = array(
 		'separator-bbpress',                               // Separator
-		'edit.php?post_type=' . bbp_get_forum_post_type(), // Forums
-		'edit.php?post_type=' . bbp_get_topic_post_type(), // Topics
-		'edit.php?post_type=' . bbp_get_reply_post_type(),  // Replies
+		'edit.php?post_type=' . bboss_bbp_get_forum_post_type(), // Forums
+		'edit.php?post_type=' . bboss_bbp_get_topic_post_type(), // Topics
+		'edit.php?post_type=' . bboss_bbp_get_reply_post_type(),  // Replies
 	);
 
 	// Loop through menu order and do some rearranging
@@ -121,7 +121,7 @@ function bbp_admin_menu_order( $menu_order ) {
  * @param string $slug
  * @return string
  */
-function bbp_sanitize_slug( $slug = '' ) {
+function bboss_bbp_sanitize_slug( $slug = '' ) {
 
 	// Don't allow multiple slashes in a row.
 	$value = preg_replace( '#/+#', '/', str_replace( '#', '', $slug ) );
@@ -151,15 +151,15 @@ function bbp_sanitize_slug( $slug = '' ) {
  * @since bbPress (r3765)
  * @param type $site_id
  */
-function bbp_do_uninstall( $site_id = 0 ) {
+function bboss_bbp_do_uninstall( $site_id = 0 ) {
 	if ( empty( $site_id ) ) {
 		$site_id = get_current_blog_id();
 	}
 
 	switch_to_blog( $site_id );
-	bbp_delete_options();
-	bbp_remove_roles();
-	bbp_remove_caps();
+	bboss_bbp_delete_options();
+	bboss_bbp_remove_roles();
+	bboss_bbp_remove_caps();
 	flush_rewrite_rules();
 	restore_current_blog();
 }
@@ -175,7 +175,7 @@ function bbp_do_uninstall( $site_id = 0 ) {
  * @global string $plugin_page
  * @global array $submenu_file
  */
-function bbp_tools_modify_menu_highlight() {
+function bboss_bbp_tools_modify_menu_highlight() {
 	global $plugin_page, $submenu_file;
 
 	// This tweaks the Tools subnav menu to only show one Forums menu item.
@@ -188,8 +188,8 @@ function bbp_tools_modify_menu_highlight() {
  * @since bbPress (r3872)
  * @param string $active_tab Name of the tab that is active
  */
-function bbp_tools_admin_tabs( $active_tab = '' ) {
-	echo wp_kses_post( bbp_get_tools_admin_tabs( $active_tab ) );
+function bboss_bbp_tools_admin_tabs( $active_tab = '' ) {
+	echo wp_kses_post( bboss_bbp_get_tools_admin_tabs( $active_tab ) );
 }
 
 	/**
@@ -198,7 +198,7 @@ function bbp_tools_admin_tabs( $active_tab = '' ) {
 	 * @since bbPress (r3872)
 	 * @param string $active_tab Name of the tab that is active
 	 */
-function bbp_get_tools_admin_tabs( $active_tab = '' ) {
+function bboss_bbp_get_tools_admin_tabs( $active_tab = '' ) {
 
 	// Declare local variables
 	$tabs_html    = '';
@@ -246,7 +246,7 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
  *
  * @return bool
  */
-function bb_check_table_exists( $opdb, $table_name ) {
+function bboss_check_table_exists( $opdb, $table_name ) {
 	if ( empty( $opdb ) || empty( $table_name ) ) {
 		return false;
 	}
@@ -272,14 +272,14 @@ function bb_check_table_exists( $opdb, $table_name ) {
  *
  * @return bool
  */
-function bb_check_column_exists( $opdb, $table_name, $column_name ) {
+function bboss_check_column_exists( $opdb, $table_name, $column_name ) {
 	if ( empty( $opdb ) || empty( $table_name ) || empty( $column_name ) ) {
 		return false;
 	}
 
 	$table_name = $opdb->prefix . $table_name;
 
-	if ( bb_check_table_exists( $opdb, $table_name ) ) {
+	if ( bboss_check_table_exists( $opdb, $table_name ) ) {
 		$field_array = $opdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
 		if ( false !== $field_array ) {
 			$field_names = array_column( $field_array, 'Field' );

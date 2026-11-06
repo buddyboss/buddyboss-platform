@@ -11,15 +11,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_blogs_create_hook( 'before', 'content_template' );
-bp_nouveau_template_notices();
-bp_nouveau_blogs_create_hook( 'before', 'content' );
+bboss_nouveau_blogs_create_hook( 'before', 'content_template' );
+bboss_nouveau_template_notices();
+bboss_nouveau_blogs_create_hook( 'before', 'content' );
 
-if ( bp_blog_signup_enabled() ) :
-	bp_show_blog_signup_form();
+if ( bboss_blog_signup_enabled() ) :
+	bboss_show_blog_signup_form();
 else :
-	bp_nouveau_user_feedback( 'blogs-no-signup' );
+	bboss_nouveau_user_feedback( 'blogs-no-signup' );
 endif;
 
-bp_nouveau_blogs_create_hook( 'after', 'content' );
-bp_nouveau_blogs_create_hook( 'after', 'content_template' );
+bboss_nouveau_blogs_create_hook( 'after', 'content' );
+bboss_nouveau_blogs_create_hook( 'after', 'content_template' );

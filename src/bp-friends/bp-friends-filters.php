@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Filter BP_User_Query::populate_extras to add confirmed friendship status.
+ * Filter BBoss_User_Query::populate_extras to add confirmed friendship status.
  *
  * Each member in the user query is checked for confirmed friendship status
  * against the logged-in user.
@@ -19,25 +19,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @param BP_User_Query $user_query   The BP_User_Query object.
+ * @param BBoss_User_Query $user_query   The BBoss_User_Query object.
  * @param string        $user_ids_sql Comma-separated list of user IDs to fetch extra
- *                                    data for, as determined by BP_User_Query.
+ *                                    data for, as determined by BBoss_User_Query.
  */
-function bp_friends_filter_user_query_populate_extras( BP_User_Query $user_query, $user_ids_sql ) {
+function bboss_friends_filter_user_query_populate_extras( BBoss_User_Query $user_query, $user_ids_sql ) {
 	global $wpdb;
 
 	// Stop if user isn't logged in.
-	if ( ! $user_id = bp_loggedin_user_id() ) {
+	if ( ! $user_id = bboss_loggedin_user_id() ) {
 		return;
 	}
 
 	$maybe_friend_ids = wp_parse_id_list( $user_ids_sql );
 
 	// Bulk prepare the friendship cache.
-	BP_Friends_Friendship::update_bp_friends_cache( $user_id, $maybe_friend_ids );
+	BBoss_Friends_Friendship::update_bp_friends_cache( $user_id, $maybe_friend_ids );
 
 	foreach ( $maybe_friend_ids as $friend_id ) {
-		$status = BP_Friends_Friendship::check_is_friend( $user_id, $friend_id );
+		$status = BBoss_Friends_Friendship::check_is_friend( $user_id, $friend_id );
 		$user_query->results[ $friend_id ]->friendship_status = $status;
 		if ( 'is_friend' == $status ) {
 			$user_query->results[ $friend_id ]->is_friend = 1;
@@ -50,7 +50,7 @@ add_filter( 'bp_user_query_populate_extras', 'bp_friends_filter_user_query_popul
 /**
  * Set up media arguments for use with the 'friends' scope.
  *
- * For details on the syntax, see {@link BP_Media_Query}.
+ * For details on the syntax, see {@link BBoss_Media_Query}.
  *
  * @since BuddyBoss 1.1.9
  *
@@ -58,28 +58,28 @@ add_filter( 'bp_user_query_populate_extras', 'bp_friends_filter_user_query_popul
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
+function bboss_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	// Determine friends of user.
-	$friends = friends_get_friend_user_ids( $user_id );
+	$friends = bboss_friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
 
-	if ( $user_id !== bp_loggedin_user_id() ) {
-		array_push( $friends, bp_loggedin_user_id() );
+	if ( $user_id !== bboss_loggedin_user_id() ) {
+		array_push( $friends, bboss_loggedin_user_id() );
 	}
 
-	if ( ! bp_is_profile_media_support_enabled() ) {
+	if ( ! bboss_is_profile_media_support_enabled() ) {
 		$friends = array( 0 );
 	}
 
@@ -96,7 +96,7 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bboss_is_profile_albums_support_enabled() ) {
 		$retval[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -135,28 +135,28 @@ add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
+function bboss_friends_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	// Determine friends of user.
-	$friends = friends_get_friend_user_ids( $user_id );
+	$friends = bboss_friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
 
-	if ( bp_loggedin_user_id() !== (int) $user_id ) {
-		array_push( $friends, bp_loggedin_user_id() );
+	if ( bboss_loggedin_user_id() !== (int) $user_id ) {
+		array_push( $friends, bboss_loggedin_user_id() );
 	}
 
-	if ( ! bp_is_profile_video_support_enabled() ) {
+	if ( ! bboss_is_profile_video_support_enabled() ) {
 		$friends = array( 0 );
 	}
 
@@ -173,7 +173,7 @@ function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
 		),
 	);
 
-	if ( ! bp_is_profile_albums_support_enabled() ) {
+	if ( ! bboss_is_profile_albums_support_enabled() ) {
 		$retval[] = array(
 			'column'  => 'album_id',
 			'compare' => '=',
@@ -204,7 +204,7 @@ add_filter( 'bp_video_set_friends_scope_args', 'bp_friends_filter_video_scope', 
 /**
  * Set up media arguments for use with the 'friends' scope.
  *
- * For details on the syntax, see {@link BP_Media_Query}.
+ * For details on the syntax, see {@link BBoss_Media_Query}.
  *
  * @since BuddyBoss 1.1.9
  *
@@ -212,15 +212,15 @@ add_filter( 'bp_video_set_friends_scope_args', 'bp_friends_filter_video_scope', 
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_friends_filter_document_scope( $retval = array(), $filter = array() ) {
+function bboss_friends_filter_document_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$folder_id = 0;
@@ -230,13 +230,13 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 	}
 
 	// Determine friends of user.
-	$friends = friends_get_friend_user_ids( $user_id );
+	$friends = bboss_friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
 
-	if ( $user_id !== bp_loggedin_user_id() ) {
-		array_push( $friends, bp_loggedin_user_id() );
+	if ( $user_id !== bboss_loggedin_user_id() ) {
+		array_push( $friends, bboss_loggedin_user_id() );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -266,7 +266,7 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 		);
 	}
 
-	if ( ! bp_is_profile_document_support_enabled() ) {
+	if ( ! bboss_is_profile_document_support_enabled() ) {
 		$friends = array( 0 );
 	}
 
@@ -291,7 +291,7 @@ add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_do
 /**
  * Set up media arguments for use with the 'friends' scope.
  *
- * For details on the syntax, see {@link BP_Media_Query}.
+ * For details on the syntax, see {@link BBoss_Media_Query}.
  *
  * @since BuddyBoss 1.1.9
  *
@@ -299,15 +299,15 @@ add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_do
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
+function bboss_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = (int) $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	$folder_id = 0;
@@ -317,13 +317,13 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 	}
 
 	// Determine friends of user.
-	$friends = friends_get_friend_user_ids( $user_id );
+	$friends = bboss_friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
 
-	if ( $user_id !== bp_loggedin_user_id() ) {
-		array_push( $friends, bp_loggedin_user_id() );
+	if ( $user_id !== bboss_loggedin_user_id() ) {
+		array_push( $friends, bboss_loggedin_user_id() );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -353,7 +353,7 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 		);
 	}
 
-	if ( ! bp_is_profile_document_support_enabled() ) {
+	if ( ! bboss_is_profile_document_support_enabled() ) {
 		$friends = array( 0 );
 	}
 
@@ -381,18 +381,18 @@ add_filter( 'bp_document_set_folder_friends_scope_args', 'bp_friends_filter_fold
  *
  * @since BuddyPress 1.0.0
  */
-function friends_screen_notification_settings() {
+function bboss_friends_screen_notification_settings() {
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bboss_enabled_legacy_email_preference() ) {
 		return;
 	}
 
-	if ( ! $send_requests = bp_get_user_meta( bp_displayed_user_id(), 'notification_friends_friendship_request', true ) ) {
+	if ( ! $send_requests = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_friends_friendship_request', true ) ) {
 		$send_requests = 'yes';
 	}
 
-	if ( ! $accept_requests = bp_get_user_meta( bp_displayed_user_id(), 'notification_friends_friendship_accepted', true ) ) {
+	if ( ! $accept_requests = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_friends_friendship_accepted', true ) ) {
 		$accept_requests = 'yes';
 	}
 	?>
@@ -465,9 +465,9 @@ add_action( 'bp_notification_settings', 'friends_screen_notification_settings', 
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_load_friends_notifications() {
-	if ( class_exists( 'BP_Friends_Notification' ) ) {
-		BP_Friends_Notification::instance();
+function bboss_load_friends_notifications() {
+	if ( class_exists( 'BBoss_Friends_Notification' ) ) {
+		BBoss_Friends_Notification::instance();
 	}
 }
 // Load Group Notifications.
@@ -478,13 +478,13 @@ add_action( 'bp_friends_includes', 'bb_load_friends_notifications' );
  *
  * @since BuddyBoss 2.3.50
  *
- * @param BP_Friends_Friendship $value Current friendship request object.
+ * @param BBoss_Friends_Friendship $value Current friendship request object.
  */
-function bb_friends_friendship_before_save( $value ) {
-	if ( bp_is_active( 'moderation' ) ) {
+function bboss_friends_friendship_before_save( $value ) {
+	if ( bboss_is_active( 'moderation' ) ) {
 		if (
-			bb_moderation_is_user_blocked_by( $value->friend_user_id ) ||
-			bp_moderation_is_user_blocked( $value->friend_user_id )
+			bboss_moderation_is_user_blocked_by( $value->friend_user_id ) ||
+			bboss_moderation_is_user_blocked( $value->friend_user_id )
 		) {
 			$value->friend_user_id = '';
 		}

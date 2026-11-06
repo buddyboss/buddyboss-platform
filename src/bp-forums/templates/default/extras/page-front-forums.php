@@ -26,7 +26,7 @@ get_header(); ?>
 
 				<?php the_content(); ?>
 
-				<?php bbp_get_template_part( 'content', 'archive-forum' ); ?>
+				<?php bboss_bbp_get_template_part( 'content', 'archive-forum' ); ?>
 
 			</div>
 		</div><!-- #forum-front -->

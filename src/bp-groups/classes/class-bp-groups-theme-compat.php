@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  */
-class BP_Groups_Theme_Compat {
+class BBoss_Groups_Theme_Compat {
 
 	/**
 	 * Set up theme compatibility for the Groups component.
@@ -36,13 +36,13 @@ class BP_Groups_Theme_Compat {
 	public function is_group() {
 
 		// Bail if not looking at a group.
-		if ( ! bp_is_groups_component() ) {
+		if ( ! bboss_is_groups_component() ) {
 			return;
 		}
 
 		// Group Directory.
-		if ( bp_is_groups_directory() ) {
-			bp_update_is_directory( true, 'groups' );
+		if ( bboss_is_groups_directory() ) {
+			bboss_update_is_directory( true, 'groups' );
 
 			/**
 			 * Fires at the start of the group theme compatibility setup.
@@ -56,13 +56,13 @@ class BP_Groups_Theme_Compat {
 			add_filter( 'bp_replace_the_content', array( $this, 'directory_content' ) );
 
 			// Creating a group.
-		} elseif ( bp_is_groups_component() && bp_is_current_action( 'create' ) ) {
+		} elseif ( bboss_is_groups_component() && bboss_is_current_action( 'create' ) ) {
 			add_filter( 'bp_get_buddypress_template', array( $this, 'create_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'create_dummy_post' ) );
 			add_filter( 'bp_replace_the_content', array( $this, 'create_content' ) );
 
 			// Group page.
-		} elseif ( bp_is_single_item() ) {
+		} elseif ( bboss_is_single_item() ) {
 			add_filter( 'bp_get_buddypress_template', array( $this, 'single_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'single_dummy_post' ) );
 			add_filter( 'bp_replace_the_content', array( $this, 'single_content' ) );
@@ -80,14 +80,14 @@ class BP_Groups_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function directory_template_hierarchy( $templates ) {
 		// Set up the template hierarchy.
 		$new_templates = array();
-		if ( '' !== bp_get_current_group_directory_type() ) {
-			$new_templates[] = 'groups/index-directory-type-' . sanitize_file_name( bp_get_current_group_directory_type() ) . '.php';
+		if ( '' !== bboss_get_current_group_directory_type() ) {
+			$new_templates[] = 'groups/index-directory-type-' . sanitize_file_name( bboss_get_current_group_directory_type() ) . '.php';
 		}
 		$new_templates[] = 'groups/index-directory.php';
 
@@ -113,11 +113,11 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
-		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
-		bp_theme_compat_reset_post(
+		$groups_page_id = bboss_core_get_directory_page_id( 'groups' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
-				'post_title'     => bp_get_directory_title( 'groups' ),
+				'post_title'     => bboss_get_directory_title( 'groups' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -135,7 +135,7 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
-		return bp_buffer_template_part( 'groups/index', null, false );
+		return bboss_buffer_template_part( 'groups/index', null, false );
 	}
 
 	/** Create ************************************************************/
@@ -148,7 +148,7 @@ class BP_Groups_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function create_template_hierarchy( $templates ) {
@@ -183,8 +183,8 @@ class BP_Groups_Theme_Compat {
 
 		$title = __( 'Social Groups', 'buddyboss' );
 
-		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
-		bp_theme_compat_reset_post(
+		$groups_page_id = bboss_core_get_directory_page_id( 'groups' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => $title,
@@ -205,7 +205,7 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function create_content() {
-		return bp_buffer_template_part( 'groups/create', null, false );
+		return bboss_buffer_template_part( 'groups/create', null, false );
 	}
 
 	/** Single ************************************************************/
@@ -218,12 +218,12 @@ class BP_Groups_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function single_template_hierarchy( $templates ) {
 		// Setup some variables we're going to reference in our custom templates.
-		$group = groups_get_current_group();
+		$group = bboss_groups_get_current_group();
 
 		/**
 		 * Filters the Groups single pages template hierarchy based on priority.
@@ -235,9 +235,9 @@ class BP_Groups_Theme_Compat {
 		$new_templates = apply_filters(
 			'bp_template_hierarchy_groups_single_item',
 			array(
-				'groups/single/index-id-' . (int) bp_get_current_group_id() . '.php',
-				'groups/single/index-slug-' . sanitize_file_name( bp_get_current_group_slug() ) . '.php',
-				'groups/single/index-action-' . sanitize_file_name( bp_current_action() ) . '.php',
+				'groups/single/index-id-' . (int) bboss_get_current_group_id() . '.php',
+				'groups/single/index-slug-' . sanitize_file_name( bboss_get_current_group_slug() ) . '.php',
+				'groups/single/index-action-' . sanitize_file_name( bboss_current_action() ) . '.php',
 				'groups/single/index-status-' . sanitize_file_name( $group->status ) . '.php',
 				'groups/single/index.php',
 			)
@@ -256,17 +256,17 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
-		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
+		$groups_page_id = bboss_core_get_directory_page_id( 'groups' );
 		$groups_page_id = ! empty( $groups_page_id ) ? $groups_page_id : 0;
 
 		// If page is single group then pass page ID as zero.
-		if ( bp_is_group() ) {
+		if ( bboss_is_group() ) {
 			$groups_page_id = 0;
 		}
-		bp_theme_compat_reset_post(
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => $groups_page_id,
-				'post_title'     => bp_get_current_group_name(),
+				'post_title'     => bboss_get_current_group_name(),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -284,6 +284,6 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_content() {
-		return bp_buffer_template_part( 'groups/single/home', null, false );
+		return bboss_buffer_template_part( 'groups/single/home', null, false );
 	}
 }

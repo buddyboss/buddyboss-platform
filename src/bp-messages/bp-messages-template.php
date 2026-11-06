@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  *
- * @global BP_Messages_Box_Template $messages_template
+ * @global BBoss_Messages_Box_Template $messages_template
  *
  * @param array|string $args {
  *     Array of arguments. All are optional.
@@ -41,11 +41,11 @@ defined( 'ABSPATH' ) || exit;
  * }
  * @return bool True if there are threads to display, otherwise false.
  */
-function bp_has_message_threads( $args = array() ) {
+function bboss_has_message_threads( $args = array() ) {
 	global $messages_template;
 
 	// The default box the user is looking at.
-	$current_action = bp_current_action();
+	$current_action = bboss_current_action();
 	switch ( $current_action ) {
 		case 'notices':
 		case 'inbox':
@@ -58,13 +58,13 @@ function bp_has_message_threads( $args = array() ) {
 
 	// User ID
 	// @todo displayed user for moderators that get this far?
-	$user_id = bp_displayed_user_id() ?: bp_loggedin_user_id();
+	$user_id = bboss_displayed_user_id() ?: bboss_loggedin_user_id();
 
 	// Search Terms.
 	$search_terms = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
 
 	// Parse the arguments.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'user_id'      => $user_id,
@@ -80,7 +80,7 @@ function bp_has_message_threads( $args = array() ) {
 		'has_message_threads'
 	);
 	// Load the messages loop global up with messages.
-	$messages_template = new BP_Messages_Box_Template( $r );
+	$messages_template = new BBoss_Messages_Box_Template( $r );
 
 	/**
 	 * Filters if there are any message threads to display in inbox/sentbox/notices.
@@ -88,7 +88,7 @@ function bp_has_message_threads( $args = array() ) {
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @param bool                     $value             Whether or not the message has threads.
-	 * @param BP_Messages_Box_Template $messages_template Current message box template object.
+	 * @param BBoss_Messages_Box_Template $messages_template Current message box template object.
 	 * @param array                    $r                 Array of parsed arguments passed into function.
 	 */
 	return apply_filters( 'bp_has_message_threads', $messages_template->has_threads(), $messages_template, $r );
@@ -99,7 +99,7 @@ function bp_has_message_threads( $args = array() ) {
  *
  * @return bool
  */
-function bp_message_threads() {
+function bboss_message_threads() {
 	global $messages_template;
 	return $messages_template->message_threads();
 }
@@ -109,7 +109,7 @@ function bp_message_threads() {
  *
  * @return object
  */
-function bp_message_thread() {
+function bboss_message_thread() {
 	global $messages_template;
 	return $messages_template->the_message_thread();
 }
@@ -117,15 +117,15 @@ function bp_message_thread() {
 /**
  * Output the ID of the current thread in the loop.
  */
-function bp_message_thread_id() {
-	echo esc_attr( bp_get_message_thread_id() );
+function bboss_message_thread_id() {
+	echo esc_attr( bboss_get_message_thread_id() );
 }
 	/**
 	 * Get the ID of the current thread in the loop.
 	 *
 	 * @return int
 	 */
-function bp_get_message_thread_id() {
+function bboss_get_message_thread_id() {
 	global $messages_template;
 
 	/**
@@ -141,15 +141,15 @@ function bp_get_message_thread_id() {
 /**
  * Output the subject of the current thread in the loop.
  */
-function bp_message_thread_subject() {
-	echo bp_get_message_thread_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
+function bboss_message_thread_subject() {
+	echo bboss_get_message_thread_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the subject of the current thread in the loop.
 	 *
 	 * @return string
 	 */
-function bp_get_message_thread_subject() {
+function bboss_get_message_thread_subject() {
 	global $messages_template;
 
 	/**
@@ -165,15 +165,15 @@ function bp_get_message_thread_subject() {
 /**
  * Output an excerpt from the current message in the loop.
  */
-function bp_message_thread_excerpt() {
-	echo wp_kses_post( bp_get_message_thread_excerpt() );
+function bboss_message_thread_excerpt() {
+	echo wp_kses_post( bboss_get_message_thread_excerpt() );
 }
 	/**
 	 * Generate an excerpt from the current message in the loop.
 	 *
 	 * @return string
 	 */
-function bp_get_message_thread_excerpt() {
+function bboss_get_message_thread_excerpt() {
 	global $messages_template;
 
 	/**
@@ -183,7 +183,7 @@ function bp_get_message_thread_excerpt() {
 	 *
 	 * @param string $value Excerpt of the current thread in the loop.
 	 */
-	return apply_filters( 'bp_get_message_thread_excerpt', bp_create_excerpt( wp_strip_all_tags( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $messages_template->thread->last_message_content ) ), 75 ) );
+	return apply_filters( 'bp_get_message_thread_excerpt', bboss_create_excerpt( wp_strip_all_tags( preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $messages_template->thread->last_message_content ) ), 75 ) );
 }
 
 /**
@@ -197,8 +197,8 @@ function bp_get_message_thread_excerpt() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_message_thread_content() {
-	echo wp_kses_post( bp_get_message_thread_content() );
+function bboss_message_thread_content() {
+	echo wp_kses_post( bboss_get_message_thread_content() );
 }
 	/**
 	 * Return the thread's last message content.
@@ -213,7 +213,7 @@ function bp_message_thread_content() {
 	 *
 	 * @return string The raw content of the last message in the thread.
 	 */
-function bp_get_message_thread_content() {
+function bboss_get_message_thread_content() {
 	global $messages_template;
 
 	/**
@@ -229,15 +229,15 @@ function bp_get_message_thread_content() {
 /**
  * Output a link to the page of the current thread's last author.
  */
-function bp_message_thread_from() {
-	echo wp_kses_post( bp_get_message_thread_from() );
+function bboss_message_thread_from() {
+	echo wp_kses_post( bboss_get_message_thread_from() );
 }
 	/**
 	 * Get a link to the page of the current thread's last author.
 	 *
 	 * @return string
 	 */
-function bp_get_message_thread_from() {
+function bboss_get_message_thread_from() {
 	global $messages_template;
 
 	/**
@@ -247,21 +247,21 @@ function bp_get_message_thread_from() {
 	 *
 	 * @param string $value Link to the page of the current thread's last author.
 	 */
-	return apply_filters( 'bp_get_message_thread_from', bp_core_get_userlink( $messages_template->thread->last_sender_id ) );
+	return apply_filters( 'bp_get_message_thread_from', bboss_core_get_userlink( $messages_template->thread->last_sender_id ) );
 }
 
 /**
  * Output links to the pages of the current thread's recipients.
  */
-function bp_message_thread_to() {
-	echo wp_kses_post( bp_get_message_thread_to() );
+function bboss_message_thread_to() {
+	echo wp_kses_post( bboss_get_message_thread_to() );
 }
 	/**
 	 * Generate HTML links to the pages of the current thread's recipients.
 	 *
 	 * @return string
 	 */
-function bp_get_message_thread_to() {
+function bboss_get_message_thread_to() {
 	global $messages_template;
 
 	/**
@@ -271,7 +271,7 @@ function bp_get_message_thread_to() {
 	 *
 	 * @param string $value HTML links to the pages of the current thread's recipients.
 	 */
-	return apply_filters( 'bp_message_thread_to', BP_Messages_Thread::get_recipient_links( $messages_template->thread->recipients ) );
+	return apply_filters( 'bp_message_thread_to', BBoss_Messages_Thread::get_recipient_links( $messages_template->thread->recipients ) );
 }
 
 /**
@@ -284,8 +284,8 @@ function bp_get_message_thread_to() {
  * @param int $user_id   Optional. ID of the user relative to whom the link
  *                       should be generated. Default: ID of logged-in user.
  */
-function bp_message_thread_view_link( $thread_id = 0, $user_id = null ) {
-	echo wp_kses_post( bp_get_message_thread_view_link( $thread_id, $user_id ) );
+function bboss_message_thread_view_link( $thread_id = 0, $user_id = null ) {
+	echo wp_kses_post( bboss_get_message_thread_view_link( $thread_id, $user_id ) );
 }
 	/**
 	 * Get the permalink of a particular thread.
@@ -298,7 +298,7 @@ function bp_message_thread_view_link( $thread_id = 0, $user_id = null ) {
 	 *                       should be generated. Default: ID of logged-in user.
 	 * @return string
 	 */
-function bp_get_message_thread_view_link( $thread_id = 0, $user_id = null ) {
+function bboss_get_message_thread_view_link( $thread_id = 0, $user_id = null ) {
 	global $messages_template;
 
 	if ( empty( $messages_template ) && (int) $thread_id > 0 ) {
@@ -308,10 +308,10 @@ function bp_get_message_thread_view_link( $thread_id = 0, $user_id = null ) {
 	}
 
 	if ( null === $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
-	$domain = bp_core_get_user_domain( $user_id );
+	$domain = bboss_core_get_user_domain( $user_id );
 
 	/**
 	 * Filters the permalink of a particular thread.
@@ -324,7 +324,7 @@ function bp_get_message_thread_view_link( $thread_id = 0, $user_id = null ) {
 	 * @param int    $thread_id ID of the thread.
 	 * @param int    $user_id   ID of the user.
 	 */
-	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bp_get_messages_slug() . '/view/' . $thread_id ), $thread_id, $user_id );
+	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bboss_get_messages_slug() . '/view/' . $thread_id ), $thread_id, $user_id );
 }
 
 /**
@@ -335,8 +335,8 @@ function bp_get_message_thread_view_link( $thread_id = 0, $user_id = null ) {
  * @param int $user_id Optional. ID of the user relative to whom the link
  *                     should be generated. Default: ID of logged-in user.
  */
-function bp_message_thread_delete_link( $user_id = null ) {
-	echo esc_url( bp_get_message_thread_delete_link( $user_id ) );
+function bboss_message_thread_delete_link( $user_id = null ) {
+	echo esc_url( bboss_get_message_thread_delete_link( $user_id ) );
 }
 	/**
 	 * Generate the URL for deleting the current thread.
@@ -347,14 +347,14 @@ function bp_message_thread_delete_link( $user_id = null ) {
 	 *                     should be generated. Default: ID of logged-in user.
 	 * @return string
 	 */
-function bp_get_message_thread_delete_link( $user_id = null ) {
+function bboss_get_message_thread_delete_link( $user_id = null ) {
 	global $messages_template;
 
 	if ( null === $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
-	$domain = bp_core_get_user_domain( $user_id );
+	$domain = bboss_core_get_user_domain( $user_id );
 
 	/**
 	 * Filters the URL for deleting the current thread.
@@ -364,7 +364,7 @@ function bp_get_message_thread_delete_link( $user_id = null ) {
 	 * @param string $value   URL for deleting the current thread.
 	 * @param int    $user_id ID of the user relative to whom the link should be generated.
 	 */
-	return apply_filters( 'bp_get_message_thread_delete_link', wp_nonce_url( trailingslashit( $domain . bp_get_messages_slug() . '/' . bp_current_action() . '/delete/' . $messages_template->thread->thread_id ), 'messages_delete_thread' ), $user_id );
+	return apply_filters( 'bp_get_message_thread_delete_link', wp_nonce_url( trailingslashit( $domain . bboss_get_messages_slug() . '/' . bboss_current_action() . '/delete/' . $messages_template->thread->thread_id ), 'messages_delete_thread' ), $user_id );
 }
 
 /**
@@ -378,8 +378,8 @@ function bp_get_message_thread_delete_link( $user_id = null ) {
  * @param int $user_id Optional. ID of the user relative to whom the link
  *                     should be generated. Default: ID of logged-in user.
  */
-function bp_the_message_thread_mark_unread_url( $user_id = null ) {
-	echo esc_url( bp_get_the_message_thread_mark_unread_url( $user_id ) );
+function bboss_the_message_thread_mark_unread_url( $user_id = null ) {
+	echo esc_url( bboss_get_the_message_thread_mark_unread_url( $user_id ) );
 }
 	/**
 	 * Return the URL used for marking a single message thread as unread.
@@ -391,10 +391,10 @@ function bp_the_message_thread_mark_unread_url( $user_id = null ) {
 	 *                     should be generated. Default: ID of logged-in user.
 	 * @return string
 	 */
-function bp_get_the_message_thread_mark_unread_url( $user_id = null ) {
+function bboss_get_the_message_thread_mark_unread_url( $user_id = null ) {
 
 	// Get the message ID.
-	$id = bp_get_message_thread_id();
+	$id = bboss_get_message_thread_id();
 
 	// Get the args to add to the URL.
 	$args = array(
@@ -403,13 +403,13 @@ function bp_get_the_message_thread_mark_unread_url( $user_id = null ) {
 	);
 
 	if ( null === $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
-	$domain = bp_core_get_user_domain( $user_id );
+	$domain = bboss_core_get_user_domain( $user_id );
 
 	// Base unread URL.
-	$url = trailingslashit( $domain . bp_get_messages_slug() . '/' . bp_current_action() . '/unread' );
+	$url = trailingslashit( $domain . bboss_get_messages_slug() . '/' . bboss_current_action() . '/unread' );
 
 	// Add the args to the URL.
 	$url = add_query_arg( $args, $url );
@@ -440,8 +440,8 @@ function bp_get_the_message_thread_mark_unread_url( $user_id = null ) {
  * @param int $user_id Optional. ID of the user relative to whom the link
  *                     should be generated. Default: ID of logged-in user.
  */
-function bp_the_message_thread_mark_read_url( $user_id = null ) {
-	echo esc_url( bp_get_the_message_thread_mark_read_url( $user_id ) );
+function bboss_the_message_thread_mark_read_url( $user_id = null ) {
+	echo esc_url( bboss_get_the_message_thread_mark_read_url( $user_id ) );
 }
 	/**
 	 * Return the URL used for marking a single message thread as read.
@@ -453,10 +453,10 @@ function bp_the_message_thread_mark_read_url( $user_id = null ) {
 	 *                     should be generated. Default: ID of logged-in user.
 	 * @return string
 	 */
-function bp_get_the_message_thread_mark_read_url( $user_id = null ) {
+function bboss_get_the_message_thread_mark_read_url( $user_id = null ) {
 
 	// Get the message ID.
-	$id = bp_get_message_thread_id();
+	$id = bboss_get_message_thread_id();
 
 	// Get the args to add to the URL.
 	$args = array(
@@ -465,13 +465,13 @@ function bp_get_the_message_thread_mark_read_url( $user_id = null ) {
 	);
 
 	if ( null === $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
-	$domain = bp_core_get_user_domain( $user_id );
+	$domain = bboss_core_get_user_domain( $user_id );
 
 	// Base read URL.
-	$url = trailingslashit( $domain . bp_get_messages_slug() . '/' . bp_current_action() . '/read' );
+	$url = trailingslashit( $domain . bboss_get_messages_slug() . '/' . bboss_current_action() . '/read' );
 
 	// Add the args to the URL.
 	$url = add_query_arg( $args, $url );
@@ -493,15 +493,15 @@ function bp_get_the_message_thread_mark_read_url( $user_id = null ) {
 /**
  * Output the CSS class for the current thread.
  */
-function bp_message_css_class() {
-	echo esc_attr( bp_get_message_css_class() );
+function bboss_message_css_class() {
+	echo esc_attr( bboss_get_message_css_class() );
 }
 	/**
 	 * Generate the CSS class for the current thread.
 	 *
 	 * @return string
 	 */
-function bp_get_message_css_class() {
+function bboss_get_message_css_class() {
 	global $messages_template;
 
 	$class = false;
@@ -525,7 +525,7 @@ function bp_get_message_css_class() {
  *
  * @return bool True if there are unread items, otherwise false.
  */
-function bp_message_thread_has_unread() {
+function bboss_message_thread_has_unread() {
 	global $messages_template;
 
 	$retval = ! empty( $messages_template->thread->unread_count )
@@ -545,15 +545,15 @@ function bp_message_thread_has_unread() {
 /**
  * Output the current thread's unread count.
  */
-function bp_message_thread_unread_count() {
-	echo esc_html( bp_get_message_thread_unread_count() );
+function bboss_message_thread_unread_count() {
+	echo esc_html( bboss_get_message_thread_unread_count() );
 }
 	/**
 	 * Get the current thread's unread count.
 	 *
 	 * @return int
 	 */
-function bp_get_message_thread_unread_count() {
+function bboss_get_message_thread_unread_count() {
 	global $messages_template;
 
 	$count = ! empty( $messages_template->thread->unread_count )
@@ -577,8 +577,8 @@ function bp_get_message_thread_unread_count() {
  *
  * @param int|bool $thread_id Optional. ID of the thread. Defaults to current thread ID.
  */
-function bp_message_thread_total_count( $thread_id = false ) {
-	echo esc_html( bp_get_message_thread_total_count( $thread_id ) );
+function bboss_message_thread_total_count( $thread_id = false ) {
+	echo esc_html( bboss_get_message_thread_total_count( $thread_id ) );
 }
 	/**
 	 * Get the current thread's total message count.
@@ -589,12 +589,12 @@ function bp_message_thread_total_count( $thread_id = false ) {
 	 *                            Defaults to current thread ID.
 	 * @return int
 	 */
-function bp_get_message_thread_total_count( $thread_id = false ) {
+function bboss_get_message_thread_total_count( $thread_id = false ) {
 	if ( false === $thread_id ) {
-		$thread_id = bp_get_message_thread_id();
+		$thread_id = bboss_get_message_thread_id();
 	}
 
-	$thread_template = new BP_Messages_Thread_Template(
+	$thread_template = new BBoss_Messages_Thread_Template(
 		$thread_id,
 		'ASC',
 		array(
@@ -626,8 +626,8 @@ function bp_get_message_thread_total_count( $thread_id = false ) {
  *
  * @param int|bool $thread_id Optional. ID of the thread. Default: current thread ID.
  */
-function bp_message_thread_total_and_unread_count( $thread_id = false ) {
-	echo wp_kses_post( bp_get_message_thread_total_and_unread_count( $thread_id ) );
+function bboss_message_thread_total_and_unread_count( $thread_id = false ) {
+	echo wp_kses_post( bboss_get_message_thread_total_and_unread_count( $thread_id ) );
 }
 	/**
 	 * Get markup for the current thread's total and unread count.
@@ -635,35 +635,35 @@ function bp_message_thread_total_and_unread_count( $thread_id = false ) {
 	 * @param int|bool $thread_id Optional. ID of the thread. Default: current thread ID.
 	 * @return string Markup displaying the total and unread count for the thread.
 	 */
-function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
+function bboss_get_message_thread_total_and_unread_count( $thread_id = false ) {
 	if ( false === $thread_id ) {
-		$thread_id = bp_get_message_thread_id();
+		$thread_id = bboss_get_message_thread_id();
 	}
 
-	$total  = bp_get_message_thread_total_count( $thread_id );
-	$unread = bp_get_message_thread_unread_count( $thread_id );
+	$total  = bboss_get_message_thread_total_count( $thread_id );
+	$unread = bboss_get_message_thread_unread_count( $thread_id );
 
 	return sprintf(
 		/* translators: 1: total number, 2: accessibility text: number of unread messages */
 		'<span class="thread-count">(%1$s)</span> <span class="bp-screen-reader-text">%2$s</span>',
-		bp_core_number_format( $total ),
+		bboss_core_number_format( $total ),
 		/* translators: %d: number of unread messages. */
-		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), bp_core_number_format( $unread ) )
+		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), bboss_core_number_format( $unread ) )
 	);
 }
 
 /**
  * Output the unformatted date of the last post in the current thread.
  */
-function bp_message_thread_last_post_date_raw() {
-	echo esc_html( bp_get_message_thread_last_post_date_raw() );
+function bboss_message_thread_last_post_date_raw() {
+	echo esc_html( bboss_get_message_thread_last_post_date_raw() );
 }
 	/**
 	 * Get the unformatted date of the last post in the current thread.
 	 *
 	 * @return string
 	 */
-function bp_get_message_thread_last_post_date_raw() {
+function bboss_get_message_thread_last_post_date_raw() {
 	global $messages_template;
 
 	/**
@@ -679,15 +679,15 @@ function bp_get_message_thread_last_post_date_raw() {
 /**
  * Output the nicely formatted date of the last post in the current thread.
  */
-function bp_message_thread_last_post_date() {
-	echo esc_html( bp_get_message_thread_last_post_date() );
+function bboss_message_thread_last_post_date() {
+	echo esc_html( bboss_get_message_thread_last_post_date() );
 }
 	/**
 	 * Get the nicely formatted date of the last post in the current thread.
 	 *
 	 * @return string
 	 */
-function bp_get_message_thread_last_post_date() {
+function bboss_get_message_thread_last_post_date() {
 
 	/**
 	 * Filters the nicely formatted date of the last post in the current thread.
@@ -696,29 +696,29 @@ function bp_get_message_thread_last_post_date() {
 	 *
 	 * @param string $value Formatted date of the last post in the current thread.
 	 */
-	return apply_filters( 'bp_get_message_thread_last_post_date', bp_format_time( strtotime( bp_get_message_thread_last_post_date_raw() ) ) );
+	return apply_filters( 'bp_get_message_thread_last_post_date', bboss_format_time( strtotime( bboss_get_message_thread_last_post_date_raw() ) ) );
 }
 
 /**
  * Output the avatar for the last sender in the current message thread.
  *
- * @see bp_get_message_thread_avatar() for a description of arguments.
+ * @see bboss_get_message_thread_avatar() for a description of arguments.
  *
- * @param array|string $args See {@link bp_get_message_thread_avatar()}.
+ * @param array|string $args See {@link bboss_get_message_thread_avatar()}.
  */
-function bp_message_thread_avatar( $args = '' ) {
-	echo wp_kses_post( bp_get_message_thread_avatar( $args ) );
+function bboss_message_thread_avatar( $args = '' ) {
+	echo wp_kses_post( bboss_get_message_thread_avatar( $args ) );
 }
 	/**
 	 * Return the avatar for the last sender in the current message thread.
 	 *
-	 * @see bp_core_fetch_avatar() For a description of arguments and
+	 * @see bboss_core_fetch_avatar() For a description of arguments and
 	 *      return values.
 	 *
 	 * @param array|string $args {
 	 *     Arguments are listed here with an explanation of their defaults.
 	 *     For more information about the arguments, see
-	 *     {@link bp_core_fetch_avatar()}.
+	 *     {@link bboss_core_fetch_avatar()}.
 	 *     @type string      $type   Default: 'thumb'.
 	 *     @type int|bool    $width  Default: false.
 	 *     @type int|bool    $height Default: false.
@@ -728,14 +728,14 @@ function bp_message_thread_avatar( $args = '' ) {
 	 * }
 	 * @return string User avatar string.
 	 */
-function bp_get_message_thread_avatar( $args = '' ) {
+function bboss_get_message_thread_avatar( $args = '' ) {
 	global $messages_template;
 
-	$fullname = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
+	$fullname = bboss_core_get_user_displayname( $messages_template->thread->last_sender_id );
 	/* translators: %s: member display name. */
 	$alt      = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname );
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'   => 'thumb',
@@ -758,7 +758,7 @@ function bp_get_message_thread_avatar( $args = '' ) {
 	 */
 	return apply_filters(
 		'bp_get_message_thread_avatar',
-		bp_core_fetch_avatar(
+		bboss_core_fetch_avatar(
 			array(
 				'item_id' => $messages_template->thread->last_sender_id,
 				'type'    => $r['type'],
@@ -782,8 +782,8 @@ function bp_get_message_thread_avatar( $args = '' ) {
  *
  * @return int $unread_count Total inbox unread count for user.
  */
-function bp_total_unread_messages_count( $user_id = 0 ) {
-	echo esc_html( bp_get_total_unread_messages_count( $user_id ) );
+function bboss_total_unread_messages_count( $user_id = 0 ) {
+	echo esc_html( bboss_get_total_unread_messages_count( $user_id ) );
 }
 	/**
 	 * Get the unread messages count for the current inbox.
@@ -794,7 +794,7 @@ function bp_total_unread_messages_count( $user_id = 0 ) {
 	 *
 	 * @return int $unread_count Total inbox unread count for user.
 	 */
-function bp_get_total_unread_messages_count( $user_id = 0 ) {
+function bboss_get_total_unread_messages_count( $user_id = 0 ) {
 
 	/**
 	 * Filters the unread messages count for the current inbox.
@@ -803,21 +803,21 @@ function bp_get_total_unread_messages_count( $user_id = 0 ) {
 	 *
 	 * @param int $value Unread messages count for the current inbox.
 	 */
-	return apply_filters( 'bp_get_total_unread_messages_count', BP_Messages_Thread::get_inbox_count( $user_id ) );
+	return apply_filters( 'bp_get_total_unread_messages_count', BBoss_Messages_Thread::get_inbox_count( $user_id ) );
 }
 
 /**
  * Output the pagination HTML for the current thread loop.
  */
-function bp_messages_pagination() {
-	echo wp_kses_post( bp_get_messages_pagination() );
+function bboss_messages_pagination() {
+	echo wp_kses_post( bboss_get_messages_pagination() );
 }
 	/**
 	 * Get the pagination HTML for the current thread loop.
 	 *
 	 * @return string
 	 */
-function bp_get_messages_pagination() {
+function bboss_get_messages_pagination() {
 	global $messages_template;
 
 	/**
@@ -833,13 +833,13 @@ function bp_get_messages_pagination() {
 /**
  * Generate the "Viewing message x to y (of z messages)" string for a loop.
  */
-function bp_messages_pagination_count() {
+function bboss_messages_pagination_count() {
 	global $messages_template;
 
 	$start_num = intval( ( $messages_template->pag_page - 1 ) * $messages_template->pag_num ) + 1;
-	$from_num  = bp_core_number_format( $start_num );
-	$to_num    = bp_core_number_format( ( $start_num + ( $messages_template->pag_num - 1 ) > $messages_template->total_thread_count ) ? $messages_template->total_thread_count : $start_num + ( $messages_template->pag_num - 1 ) );
-	$total     = bp_core_number_format( $messages_template->total_thread_count );
+	$from_num  = bboss_core_number_format( $start_num );
+	$to_num    = bboss_core_number_format( ( $start_num + ( $messages_template->pag_num - 1 ) > $messages_template->total_thread_count ) ? $messages_template->total_thread_count : $start_num + ( $messages_template->pag_num - 1 ) );
+	$total     = bboss_core_number_format( $messages_template->total_thread_count );
 
 	/* translators: 1: starting message number, 2: ending message number, 3: total number of messages. */
 	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
@@ -853,10 +853,10 @@ function bp_messages_pagination_count() {
  * @todo  Move markup to template part in: /members/single/messages/search.php
  * @since BuddyPress 1.6.0
  */
-function bp_message_search_form() {
+function bboss_message_search_form() {
 
 	// Get the default search text.
-	$default_search_value = bp_get_search_default_text( 'messages' );
+	$default_search_value = bboss_get_search_default_text( 'messages' );
 
 	// Setup a few values based on what's being searched for.
 	$search_submitted   = ! empty( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : $default_search_value;
@@ -895,15 +895,15 @@ function bp_message_search_form() {
 /**
  * Echo the form action for Messages HTML forms.
  */
-function bp_messages_form_action() {
-	echo esc_url( bp_get_messages_form_action() );
+function bboss_messages_form_action() {
+	echo esc_url( bboss_get_messages_form_action() );
 }
 	/**
 	 * Return the form action for Messages HTML forms.
 	 *
 	 * @return string The form action.
 	 */
-function bp_get_messages_form_action() {
+function bboss_get_messages_form_action() {
 
 	/**
 	 * Filters the form action for Messages HTML forms.
@@ -912,21 +912,21 @@ function bp_get_messages_form_action() {
 	 *
 	 * @param string $value The form action.
 	 */
-	return apply_filters( 'bp_get_messages_form_action', trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() . '/' . bp_action_variable( 0 ) ) );
+	return apply_filters( 'bp_get_messages_form_action', trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() . '/' . bboss_action_variable( 0 ) ) );
 }
 
 /**
  * Output the default username for the recipient box.
  */
-function bp_messages_username_value() {
-	echo esc_attr( bp_get_messages_username_value() );
+function bboss_messages_username_value() {
+	echo esc_attr( bboss_get_messages_username_value() );
 }
 	/**
 	 * Get the default username for the recipient box.
 	 *
 	 * @return string
 	 */
-function bp_get_messages_username_value() {
+function bboss_get_messages_username_value() {
 	if ( isset( $_COOKIE['bp_messages_send_to'] ) ) {
 
 		/**
@@ -949,8 +949,8 @@ function bp_get_messages_username_value() {
 /**
  * Output the default value for the Subject field.
  */
-function bp_messages_subject_value() {
-	echo esc_attr( bp_get_messages_subject_value() );
+function bboss_messages_subject_value() {
+	echo esc_attr( bboss_get_messages_subject_value() );
 }
 	/**
 	 * Get the default value for the Subject field.
@@ -960,7 +960,7 @@ function bp_messages_subject_value() {
 	 *
 	 * @return string
 	 */
-function bp_get_messages_subject_value() {
+function bboss_get_messages_subject_value() {
 
 	// Sanitized in bp-messages-filters.php.
 	$subject = ! empty( $_POST['subject'] )
@@ -980,8 +980,8 @@ function bp_get_messages_subject_value() {
 /**
  * Output the default value for the Compose content field.
  */
-function bp_messages_content_value() {
-	echo esc_textarea( bp_get_messages_content_value() );
+function bboss_messages_content_value() {
+	echo esc_textarea( bboss_get_messages_content_value() );
 }
 	/**
 	 * Get the default value fo the Compose content field.
@@ -991,7 +991,7 @@ function bp_messages_content_value() {
 	 *
 	 * @return string
 	 */
-function bp_get_messages_content_value() {
+function bboss_get_messages_content_value() {
 
 	// Sanitized in bp-messages-filters.php.
 	$content = ! empty( $_POST['content'] )
@@ -1011,7 +1011,7 @@ function bp_get_messages_content_value() {
 /**
  * Output the markup for the message type dropdown.
  */
-function bp_messages_options() {
+function bboss_messages_options() {
 	?>
 
 	<label for="message-type-select" class="bp-screen-reader-text">
@@ -1027,7 +1027,7 @@ function bp_messages_options() {
 		<option value="all"><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
 	</select> &nbsp;
 
-	<?php if ( ! bp_is_current_action( 'notices' ) ) : ?>
+	<?php if ( ! bboss_is_current_action( 'notices' ) ) : ?>
 
 		<a href="#" id="mark_as_read"><?php esc_html_e( 'Mark as Read', 'buddyboss' ); ?></a> &nbsp;
 		<a href="#" id="mark_as_unread"><?php esc_html_e( 'Mark as Unread', 'buddyboss' ); ?></a> &nbsp;
@@ -1037,7 +1037,7 @@ function bp_messages_options() {
 
 	<?php endif; ?>
 
-	<a href="#" id="delete_<?php echo esc_attr( bp_current_action() ); ?>_messages"><?php esc_html_e( 'Delete Selected', 'buddyboss' ); ?></a> &nbsp;
+	<a href="#" id="delete_<?php echo esc_attr( bboss_current_action() ); ?>_messages"><?php esc_html_e( 'Delete Selected', 'buddyboss' ); ?></a> &nbsp;
 	<?php wp_nonce_field( 'bp_messages_delete_selected', 'delete-selected-nonce', false ); ?>
 	<?php
 }
@@ -1047,7 +1047,7 @@ function bp_messages_options() {
  *
  * @since BuddyPress 2.2.0
  */
-function bp_messages_bulk_management_dropdown() {
+function bboss_messages_bulk_management_dropdown() {
 	?>
 	<label class="bp-screen-reader-text" for="messages-select">
 	<?php
@@ -1079,7 +1079,7 @@ function bp_messages_bulk_management_dropdown() {
  *
  * @return bool
  */
-function bp_messages_is_active_notice() {
+function bboss_messages_is_active_notice() {
 	global $messages_template;
 
 	$retval = ! empty( $messages_template->thread->is_active )
@@ -1105,8 +1105,8 @@ function bp_messages_is_active_notice() {
  * @deprecated 1.6.0
  * @return bool
  */
-function bp_message_is_active_notice() {
-	echo esc_html( bp_get_message_is_active_notice() );
+function bboss_message_is_active_notice() {
+	echo esc_html( bboss_get_message_is_active_notice() );
 }
 	/**
 	 * Returns a string for the active notice.
@@ -1118,9 +1118,9 @@ function bp_message_is_active_notice() {
 	 * @deprecated 1.6.0
 	 * @return string
 	 */
-function bp_get_message_is_active_notice() {
+function bboss_get_message_is_active_notice() {
 
-	$string = bp_messages_is_active_notice()
+	$string = bboss_messages_is_active_notice()
 		? __( 'Currently Active', 'buddyboss' )
 		: '';
 
@@ -1130,15 +1130,15 @@ function bp_get_message_is_active_notice() {
 /**
  * Output the ID of the current notice in the loop.
  */
-function bp_message_notice_id() {
-	echo (int) bp_get_message_notice_id();
+function bboss_message_notice_id() {
+	echo (int) bboss_get_message_notice_id();
 }
 	/**
 	 * Get the ID of the current notice in the loop.
 	 *
 	 * @return int
 	 */
-function bp_get_message_notice_id() {
+function bboss_get_message_notice_id() {
 	global $messages_template;
 
 	/**
@@ -1154,15 +1154,15 @@ function bp_get_message_notice_id() {
 /**
  * Output the post date of the current notice in the loop.
  */
-function bp_message_notice_post_date() {
-	echo esc_html( bp_get_message_notice_post_date() );
+function bboss_message_notice_post_date() {
+	echo esc_html( bboss_get_message_notice_post_date() );
 }
 	/**
 	 * Get the post date of the current notice in the loop.
 	 *
 	 * @return string
 	 */
-function bp_get_message_notice_post_date() {
+function bboss_get_message_notice_post_date() {
 	global $messages_template;
 
 	/**
@@ -1172,21 +1172,21 @@ function bp_get_message_notice_post_date() {
 	 *
 	 * @param string $value Formatted post date of the current notice in the loop.
 	 */
-	return apply_filters( 'bp_get_message_notice_post_date', bp_format_time( strtotime( $messages_template->thread->date_sent ) ) );
+	return apply_filters( 'bp_get_message_notice_post_date', bboss_format_time( strtotime( $messages_template->thread->date_sent ) ) );
 }
 
 /**
  * Output the subject of the current notice in the loop.
  */
-function bp_message_notice_subject() {
-	echo bp_get_message_notice_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
+function bboss_message_notice_subject() {
+	echo bboss_get_message_notice_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the subject of the current notice in the loop.
 	 *
 	 * @return string
 	 */
-function bp_get_message_notice_subject() {
+function bboss_get_message_notice_subject() {
 	global $messages_template;
 
 	/**
@@ -1202,15 +1202,15 @@ function bp_get_message_notice_subject() {
 /**
  * Output the text of the current notice in the loop.
  */
-function bp_message_notice_text() {
-	echo bp_get_message_notice_text(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
+function bboss_message_notice_text() {
+	echo bboss_get_message_notice_text(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the text of the current notice in the loop.
 	 *
 	 * @return string
 	 */
-function bp_get_message_notice_text() {
+function bboss_get_message_notice_text() {
 	global $messages_template;
 
 	/**
@@ -1226,15 +1226,15 @@ function bp_get_message_notice_text() {
 /**
  * Output the URL for deleting the current notice.
  */
-function bp_message_notice_delete_link() {
-	echo esc_url( bp_get_message_notice_delete_link() );
+function bboss_message_notice_delete_link() {
+	echo esc_url( bboss_get_message_notice_delete_link() );
 }
 	/**
 	 * Get the URL for deleting the current notice.
 	 *
 	 * @return string Delete URL.
 	 */
-function bp_get_message_notice_delete_link() {
+function bboss_get_message_notice_delete_link() {
 	global $messages_template;
 
 	/**
@@ -1245,27 +1245,27 @@ function bp_get_message_notice_delete_link() {
 	 * @param string $value URL for deleting the current notice.
 	 * @param string $value Text indicating action being executed.
 	 */
-	return apply_filters( 'bp_get_message_notice_delete_link', wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/notices/delete/' . $messages_template->thread->id ), 'messages_delete_notice' ) );
+	return apply_filters( 'bp_get_message_notice_delete_link', wp_nonce_url( trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/notices/delete/' . $messages_template->thread->id ), 'messages_delete_notice' ) );
 }
 
 /**
  * Output the URL for deactivating the current notice.
  */
-function bp_message_activate_deactivate_link() {
-	echo esc_url( bp_get_message_activate_deactivate_link() );
+function bboss_message_activate_deactivate_link() {
+	echo esc_url( bboss_get_message_activate_deactivate_link() );
 }
 	/**
 	 * Get the URL for deactivating the current notice.
 	 *
 	 * @return string
 	 */
-function bp_get_message_activate_deactivate_link() {
+function bboss_get_message_activate_deactivate_link() {
 	global $messages_template;
 
 	if ( 1 === (int) $messages_template->thread->is_active ) {
-		$link = wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/notices/deactivate/' . $messages_template->thread->id ), 'messages_deactivate_notice' );
+		$link = wp_nonce_url( trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/notices/deactivate/' . $messages_template->thread->id ), 'messages_deactivate_notice' );
 	} else {
-		$link = wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/notices/activate/' . $messages_template->thread->id ), 'messages_activate_notice' );
+		$link = wp_nonce_url( trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/notices/activate/' . $messages_template->thread->id ), 'messages_activate_notice' );
 	}
 
 	/**
@@ -1281,15 +1281,15 @@ function bp_get_message_activate_deactivate_link() {
 /**
  * Output the Deactivate/Activate text for the notice action link.
  */
-function bp_message_activate_deactivate_text() {
-	echo esc_html( bp_get_message_activate_deactivate_text() );
+function bboss_message_activate_deactivate_text() {
+	echo esc_html( bboss_get_message_activate_deactivate_text() );
 }
 	/**
 	 * Generate the text ('Deactivate' or 'Activate') for the notice action link.
 	 *
 	 * @return string
 	 */
-function bp_get_message_activate_deactivate_text() {
+function bboss_get_message_activate_deactivate_text() {
 	global $messages_template;
 
 	if ( 1 === (int) $messages_template->thread->is_active ) {
@@ -1313,8 +1313,8 @@ function bp_get_message_activate_deactivate_text() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_messages_slug() {
-	echo esc_attr( bp_get_messages_slug() );
+function bboss_messages_slug() {
+	echo esc_attr( bboss_get_messages_slug() );
 }
 	/**
 	 * Return the messages component slug.
@@ -1323,7 +1323,7 @@ function bp_messages_slug() {
 	 *
 	 * @return string
 	 */
-function bp_get_messages_slug() {
+function bboss_get_messages_slug() {
 
 	/**
 	 * Filters the messages component slug.
@@ -1332,20 +1332,20 @@ function bp_get_messages_slug() {
 	 *
 	 * @param string $slug Messages component slug.
 	 */
-	return apply_filters( 'bp_get_messages_slug', buddypress()->messages->slug );
+	return apply_filters( 'bp_get_messages_slug', bboss()->messages->slug );
 }
 
 /**
  * Generate markup for currently active notices.
  */
-function bp_message_get_notices() {
-	$notice = BP_Messages_Notice::get_active();
+function bboss_message_get_notices() {
+	$notice = BBoss_Messages_Notice::get_active();
 
 	if ( empty( $notice ) ) {
 		return false;
 	}
 
-	$closed_notices = bp_get_user_meta( bp_loggedin_user_id(), 'closed_notices', true );
+	$closed_notices = bboss_get_user_meta( bboss_loggedin_user_id(), 'closed_notices', true );
 
 	if ( empty( $closed_notices ) ) {
 		$closed_notices = array();
@@ -1370,22 +1370,22 @@ function bp_message_get_notices() {
 /**
  * Output the URL for the Private Message link in member profile headers.
  */
-function bp_send_private_message_link() {
-	echo esc_url( bp_get_send_private_message_link() );
+function bboss_send_private_message_link() {
+	echo esc_url( bboss_get_send_private_message_link() );
 }
 	/**
 	 * Generate the URL for the Private Message link in member profile headers.
 	 *
 	 * @return bool|string False on failure, otherwise the URL.
 	 */
-function bp_get_send_private_message_link() {
+function bboss_get_send_private_message_link() {
 
-	if ( bp_is_my_profile() || ! is_user_logged_in() ) {
+	if ( bboss_is_my_profile() || ! is_user_logged_in() ) {
 		return false;
 	}
 
-	if ( bp_displayed_user_id() > 0 ) {
-		$user_id = bp_displayed_user_id();
+	if ( bboss_displayed_user_id() > 0 ) {
+		$user_id = bboss_displayed_user_id();
 	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) {
 		$user_id = absint( $_GET['user'] );
 	} else {
@@ -1399,7 +1399,7 @@ function bp_get_send_private_message_link() {
 	 *
 	 * @param string $value URL for the Private Message link in member profile headers.
 	 */
-	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id ) ) );
+	return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/compose/?r=' . bboss_members_get_user_nicename( $user_id ) ) );
 }
 
 /**
@@ -1409,8 +1409,8 @@ function bp_get_send_private_message_link() {
  *
  * @since BuddyPress 1.2.6
  */
-function bp_send_private_message_button() {
-	echo wp_kses_post( bp_get_send_message_button() );
+function bboss_send_private_message_button() {
+	echo wp_kses_post( bboss_get_send_message_button() );
 }
 
 /**
@@ -1419,10 +1419,10 @@ function bp_send_private_message_button() {
  * @since BuddyPress 1.2.0
  * @since BuddyPress 3.0.0 Added `$args` parameter.
  *
- * @param array|string $args See {@link bp_get_send_message_button()}.
+ * @param array|string $args See {@link bboss_get_send_message_button()}.
  */
-function bp_send_message_button( $args = '' ) {
-	echo wp_kses_post( bp_get_send_message_button( $args ) );
+function bboss_send_message_button( $args = '' ) {
+	echo wp_kses_post( bboss_get_send_message_button( $args ) );
 }
 
 /**
@@ -1432,7 +1432,7 @@ function bp_send_message_button( $args = '' ) {
  * @since BuddyPress 3.0.0 Added `$args` parameter.
  *
  * @param array|string $args {
- *     All arguments are optional. See {@link BP_Button} for complete
+ *     All arguments are optional. See {@link BBoss_Button} for complete
  *     descriptions.
  *     @type string $id                Default: 'private_message'.
  *     @type string $component         Default: 'messages'.
@@ -1459,10 +1459,10 @@ function bp_send_message_button( $args = '' ) {
  * }
  * @return string
  */
-function bp_get_send_message_button( $args = '' ) {
+function bboss_get_send_message_button( $args = '' ) {
 
-	if ( bp_displayed_user_id() > 0 ) {
-		$receiver_user_id = bp_displayed_user_id();
+	if ( bboss_displayed_user_id() > 0 ) {
+		$receiver_user_id = bboss_displayed_user_id();
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) {
 		$receiver_user_id = absint( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -1470,7 +1470,7 @@ function bp_get_send_message_button( $args = '' ) {
 		$receiver_user_id = ( $GLOBALS['members_template']->member->ID ) ? $GLOBALS['members_template']->member->ID : 0;
 	}
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'id'                       => 'private_message',
@@ -1479,7 +1479,7 @@ function bp_get_send_message_button( $args = '' ) {
 			'block_self'               => true,
 			'message_receiver_user_id' => $receiver_user_id,
 			'wrapper_id'               => 'send-private-message',
-			'link_href'                => bp_get_send_private_message_link(),
+			'link_href'                => bboss_get_send_private_message_link(),
 			'link_text'                => esc_html__( 'Send Message', 'buddyboss' ),
 			'link_class'               => 'send-message',
 			'is_tooltips'              => false,
@@ -1504,24 +1504,24 @@ function bp_get_send_message_button( $args = '' ) {
 		 *
 		 * @since BuddyPress 1.8.0
 		 *
-		 * @param array $value See {@link BP_Button}.
+		 * @param array $value See {@link BBoss_Button}.
 		 */
-		bp_get_button( apply_filters( 'bp_get_send_message_button_args', $r ) )
+		bboss_get_button( apply_filters( 'bp_get_send_message_button_args', $r ) )
 	);
 }
 
 /**
  * Output the URL of the Messages AJAX loader gif.
  */
-function bp_message_loading_image_src() {
-	echo esc_url( bp_get_message_loading_image_src() );
+function bboss_message_loading_image_src() {
+	echo esc_url( bboss_get_message_loading_image_src() );
 }
 	/**
 	 * Get the URL of the Messages AJAX loader gif.
 	 *
 	 * @return string
 	 */
-function bp_get_message_loading_image_src() {
+function bboss_get_message_loading_image_src() {
 
 	/**
 	 * Filters the URL of the Messages AJAX loader gif.
@@ -1530,20 +1530,20 @@ function bp_get_message_loading_image_src() {
 	 *
 	 * @param string $value URL of the Messages AJAX loader gif.
 	 */
-	return apply_filters( 'bp_get_message_loading_image_src', buddypress()->messages->image_base . '/ajax-loader.gif' );
+	return apply_filters( 'bp_get_message_loading_image_src', bboss()->messages->image_base . '/ajax-loader.gif' );
 }
 
 /**
  * Output the markup for the message recipient tabs.
  */
-function bp_message_get_recipient_tabs() {
-	$recipients = explode( ' ', bp_get_message_get_recipient_usernames() );
+function bboss_message_get_recipient_tabs() {
+	$recipients = explode( ' ', bboss_get_message_get_recipient_usernames() );
 
 	foreach ( $recipients as $recipient ) {
 
-		$user_id = bp_is_username_compatibility_mode()
-			? bp_core_get_userid( $recipient )
-			: bp_core_get_userid_from_nicename( $recipient );
+		$user_id = bboss_is_username_compatibility_mode()
+			? bboss_core_get_userid( $recipient )
+			: bboss_core_get_userid_from_nicename( $recipient );
 
 		if ( ! empty( $user_id ) ) :
 			?>
@@ -1551,7 +1551,7 @@ function bp_message_get_recipient_tabs() {
 			<li id="un-<?php echo esc_attr( $recipient ); ?>" class="friend-tab">
 				<span>
 				<?php
-					echo wp_kses_post( bp_core_fetch_avatar(
+					echo wp_kses_post( bboss_core_fetch_avatar(
 						array(
 							'item_id' => $user_id,
 							'type'    => 'thumb',
@@ -1559,7 +1559,7 @@ function bp_message_get_recipient_tabs() {
 							'height'  => 15,
 						)
 					) );
-					echo wp_kses_post( bp_core_get_userlink( $user_id ) );
+					echo wp_kses_post( bboss_core_get_userlink( $user_id ) );
 				?>
 				</span>
 			</li>
@@ -1572,15 +1572,15 @@ function bp_message_get_recipient_tabs() {
 /**
  * Output recipient usernames for prefilling the 'To' field on the Compose screen.
  */
-function bp_message_get_recipient_usernames() {
-	echo esc_attr( bp_get_message_get_recipient_usernames() );
+function bboss_message_get_recipient_usernames() {
+	echo esc_attr( bboss_get_message_get_recipient_usernames() );
 }
 	/**
 	 * Get the recipient usernames for prefilling the 'To' field on the Compose screen.
 	 *
 	 * @return string
 	 */
-function bp_get_message_get_recipient_usernames() {
+function bboss_get_message_get_recipient_usernames() {
 
 	// Sanitized in bp-messages-filters.php.
 	$recipients = isset( $_GET['r'] )
@@ -1611,10 +1611,10 @@ function bp_get_message_get_recipient_usernames() {
  * }
  * @return bool True if there are messages to display, otherwise false.
  */
-function bp_thread_has_messages( $args = '' ) {
+function bboss_thread_has_messages( $args = '' ) {
 	global $thread_template;
 
-	$thread_template = bp_get_thread( $args );
+	$thread_template = bboss_get_thread( $args );
 
 	return $thread_template->has_messages();
 }
@@ -1633,10 +1633,10 @@ function bp_thread_has_messages( $args = '' ) {
  * }
  * @return object thread template.
  */
-function bp_get_thread( $args = '' ) {
+function bboss_get_thread( $args = '' ) {
 	global $thread_template;
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'thread_id'         => false,
@@ -1646,15 +1646,15 @@ function bp_get_thread( $args = '' ) {
 		'thread_has_messages'
 	);
 
-	if ( empty( $r['thread_id'] ) && bp_is_messages_component() && bp_is_current_action( 'view' ) ) {
-		$r['thread_id'] = (int) bp_action_variable( 0 );
+	if ( empty( $r['thread_id'] ) && bboss_is_messages_component() && bboss_is_current_action( 'view' ) ) {
+		$r['thread_id'] = (int) bboss_action_variable( 0 );
 	}
 
 	// Set up extra args.
 	$extra_args = $r;
 	unset( $extra_args['thread_id'], $extra_args['order'] );
 
-	$thread_template = new BP_Messages_Thread_Template( $r['thread_id'], $r['order'], $extra_args );
+	$thread_template = new BBoss_Messages_Thread_Template( $r['thread_id'], $r['order'], $extra_args );
 
 	return $thread_template;
 }
@@ -1662,15 +1662,15 @@ function bp_get_thread( $args = '' ) {
 /**
  * Output the 'ASC' or 'DESC' messages order string for this loop.
  */
-function bp_thread_messages_order() {
-	echo esc_attr( bp_get_thread_messages_order() );
+function bboss_thread_messages_order() {
+	echo esc_attr( bboss_get_thread_messages_order() );
 }
 	/**
 	 * Get the 'ASC' or 'DESC' messages order string for this loop.
 	 *
 	 * @return string
 	 */
-function bp_get_thread_messages_order() {
+function bboss_get_thread_messages_order() {
 	global $thread_template;
 	return $thread_template->thread->messages_order;
 }
@@ -1680,7 +1680,7 @@ function bp_get_thread_messages_order() {
  *
  * @return bool
  */
-function bp_thread_messages() {
+function bboss_thread_messages() {
 	global $thread_template;
 
 	return $thread_template->messages();
@@ -1691,7 +1691,7 @@ function bp_thread_messages() {
  *
  * @return object
  */
-function bp_thread_the_message() {
+function bboss_thread_the_message() {
 	global $thread_template;
 
 	return $thread_template->the_message();
@@ -1700,15 +1700,15 @@ function bp_thread_the_message() {
 /**
  * Output the ID of the thread that the current loop belongs to.
  */
-function bp_the_thread_id() {
-	echo (int) bp_get_the_thread_id();
+function bboss_the_thread_id() {
+	echo (int) bboss_get_the_thread_id();
 }
 	/**
 	 * Get the ID of the thread that the current loop belongs to.
 	 *
 	 * @return int
 	 */
-function bp_get_the_thread_id() {
+function bboss_get_the_thread_id() {
 	global $thread_template;
 
 	/**
@@ -1724,15 +1724,15 @@ function bp_get_the_thread_id() {
 /**
  * Output the subject of the thread currently being iterated over.
  */
-function bp_the_thread_subject() {
-	echo bp_get_the_thread_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
+function bboss_the_thread_subject() {
+	echo bboss_get_the_thread_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the subject of the thread currently being iterated over.
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_subject() {
+function bboss_get_the_thread_subject() {
 	global $thread_template;
 
 	/**
@@ -1754,12 +1754,12 @@ function bp_get_the_thread_subject() {
  *
  * @return string
  */
-function bp_get_the_thread_recipients() {
-	if ( 5 <= bp_get_thread_recipients_count() ) {
+function bboss_get_the_thread_recipients() {
+	if ( 5 <= bboss_get_thread_recipients_count() ) {
 		/* translators: %s: number of recipients. */
-		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), bp_core_number_format( bp_get_thread_recipients_count() ) );
+		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), bboss_core_number_format( bboss_get_thread_recipients_count() ) );
 	} else {
-		$recipients = bp_get_thread_recipients_list();
+		$recipients = bboss_get_thread_recipients_list();
 	}
 
 	return apply_filters( 'bp_get_the_thread_recipients', $recipients );
@@ -1772,7 +1772,7 @@ function bp_get_the_thread_recipients() {
  *
  * @return int
  */
-function bp_get_thread_recipients_count() {
+function bboss_get_thread_recipients_count() {
 	global $thread_template;
 	/**
 	 * Filters the total number of recipients in a thread.
@@ -1791,7 +1791,7 @@ function bp_get_thread_recipients_count() {
  *
  * @return int
  */
-function bp_get_max_thread_recipients_to_list() {
+function bboss_get_max_thread_recipients_to_list() {
 	/**
 	 * Filters the max number of recipients to list in the 'Conversation between...' gloss.
 	 *
@@ -1807,8 +1807,8 @@ function bp_get_max_thread_recipients_to_list() {
  *
  * @since BuddyPress 2.2.0
  */
-function bp_the_thread_recipients_list() {
-	echo wp_kses_post( bp_get_thread_recipients_list() );
+function bboss_the_thread_recipients_list() {
+	echo wp_kses_post( bboss_get_thread_recipients_list() );
 }
 	/**
 	 * Generate HTML links to the profiles of recipients in the current thread.
@@ -1817,14 +1817,14 @@ function bp_the_thread_recipients_list() {
 	 *
 	 * @return string
 	 */
-function bp_get_thread_recipients_list() {
+function bboss_get_thread_recipients_list() {
 	global $thread_template;
 
 	$recipient_links = array();
 
 	foreach ( (array) $thread_template->thread->recipients as $recipient ) {
-		if ( (int) $recipient->user_id !== bp_loggedin_user_id() ) {
-			$recipient_link = bp_core_get_userlink( $recipient->user_id );
+		if ( (int) $recipient->user_id !== bboss_loggedin_user_id() ) {
+			$recipient_link = bboss_core_get_userlink( $recipient->user_id );
 
 			if ( empty( $recipient_link ) ) {
 				$recipient_link = __( 'Deleted User', 'buddyboss' );
@@ -1854,8 +1854,8 @@ function bp_get_thread_recipients_list() {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_the_thread_message_id() {
-	echo (int) bp_get_the_thread_message_id();
+function bboss_the_thread_message_id() {
+	echo (int) bboss_get_the_thread_message_id();
 }
 	/**
 	 * Get the ID of the current message in the thread.
@@ -1864,7 +1864,7 @@ function bp_the_thread_message_id() {
 	 *
 	 * @return int
 	 */
-function bp_get_the_thread_message_id() {
+function bboss_get_the_thread_message_id() {
 	global $thread_template;
 
 	$thread_message_id = isset( $thread_template->message->id )
@@ -1886,8 +1886,8 @@ function bp_get_the_thread_message_id() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_the_thread_message_css_class() {
-	echo esc_attr( bp_get_the_thread_message_css_class() );
+function bboss_the_thread_message_css_class() {
+	echo esc_attr( bboss_get_the_thread_message_css_class() );
 }
 	/**
 	 * Generate the CSS classes for messages within a single thread.
@@ -1896,19 +1896,19 @@ function bp_the_thread_message_css_class() {
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_message_css_class() {
+function bboss_get_the_thread_message_css_class() {
 	global $thread_template;
 
 	$classes = array();
 
 	// Zebra-striping.
-	$classes[] = bp_get_the_thread_message_alt_class();
+	$classes[] = bboss_get_the_thread_message_alt_class();
 
 	// ID of the sender.
 	$classes[] = 'sent-by-' . intval( $thread_template->message->sender_id );
 
 	// Whether the sender is the same as the logged-in user.
-	if ( bp_loggedin_user_id() == $thread_template->message->sender_id ) {
+	if ( bboss_loggedin_user_id() == $thread_template->message->sender_id ) {
 		$classes[] = 'sent-by-me';
 	}
 
@@ -1927,15 +1927,15 @@ function bp_get_the_thread_message_css_class() {
 /**
  * Output the CSS class used for message zebra striping.
  */
-function bp_the_thread_message_alt_class() {
-	echo esc_attr( bp_get_the_thread_message_alt_class() );
+function bboss_the_thread_message_alt_class() {
+	echo esc_attr( bboss_get_the_thread_message_alt_class() );
 }
 	/**
 	 * Get the CSS class used for message zebra striping.
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_message_alt_class() {
+function bboss_get_the_thread_message_alt_class() {
 	global $thread_template;
 
 	if ( $thread_template->current_message % 2 == 1 ) {
@@ -1959,8 +1959,8 @@ function bp_get_the_thread_message_alt_class() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_the_thread_message_sender_id() {
-	echo (int) bp_get_the_thread_message_sender_id();
+function bboss_the_thread_message_sender_id() {
+	echo (int) bboss_get_the_thread_message_sender_id();
 }
 	/**
 	 * Return the ID for message sender within a single thread.
@@ -1969,7 +1969,7 @@ function bp_the_thread_message_sender_id() {
 	 *
 	 * @return int
 	 */
-function bp_get_the_thread_message_sender_id() {
+function bboss_get_the_thread_message_sender_id() {
 	global $thread_template;
 
 	$user_id = ! empty( $thread_template->message->sender_id )
@@ -1989,17 +1989,17 @@ function bp_get_the_thread_message_sender_id() {
 /**
  * Output the avatar for the current message sender.
  *
- * @param array|string $args See {@link bp_get_the_thread_message_sender_avatar_thumb()}
+ * @param array|string $args See {@link bboss_get_the_thread_message_sender_avatar_thumb()}
  *                           for a description.
  */
-function bp_the_thread_message_sender_avatar( $args = '' ) {
-	echo wp_kses_post( bp_get_the_thread_message_sender_avatar_thumb( $args ) );
+function bboss_the_thread_message_sender_avatar( $args = '' ) {
+	echo wp_kses_post( bboss_get_the_thread_message_sender_avatar_thumb( $args ) );
 }
 	/**
 	 * Get the avatar for the current message sender.
 	 *
 	 * @param array|string $args {
-	 *     Array of arguments. See {@link bp_core_fetch_avatar()} for more
+	 *     Array of arguments. See {@link bboss_core_fetch_avatar()} for more
 	 *     complete details. All arguments are optional.
 	 *     @type string $type   Avatar type. Default: 'thumb'.
 	 *     @type int    $width  Avatar width. Default: default for your $type.
@@ -2007,10 +2007,10 @@ function bp_the_thread_message_sender_avatar( $args = '' ) {
 	 * }
 	 * @return string <img> tag containing the avatar.
 	 */
-function bp_get_the_thread_message_sender_avatar_thumb( $args = '' ) {
+function bboss_get_the_thread_message_sender_avatar_thumb( $args = '' ) {
 	global $thread_template;
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'   => 'thumb',
@@ -2030,13 +2030,13 @@ function bp_get_the_thread_message_sender_avatar_thumb( $args = '' ) {
 	 */
 	return apply_filters(
 		'bp_get_the_thread_message_sender_avatar_thumb',
-		bp_core_fetch_avatar(
+		bboss_core_fetch_avatar(
 			array(
 				'item_id' => $thread_template->message->sender_id,
 				'type'    => $r['type'],
 				'width'   => $r['width'],
 				'height'  => $r['height'],
-				'alt'     => bp_core_get_user_displayname( $thread_template->message->sender_id ),
+				'alt'     => bboss_core_get_user_displayname( $thread_template->message->sender_id ),
 			)
 		),
 		$r
@@ -2048,8 +2048,8 @@ function bp_get_the_thread_message_sender_avatar_thumb( $args = '' ) {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_the_thread_message_sender_link() {
-	echo esc_url( bp_get_the_thread_message_sender_link() );
+function bboss_the_thread_message_sender_link() {
+	echo esc_url( bboss_get_the_thread_message_sender_link() );
 }
 	/**
 	 * Get a link to the sender of the current message.
@@ -2058,7 +2058,7 @@ function bp_the_thread_message_sender_link() {
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_message_sender_link() {
+function bboss_get_the_thread_message_sender_link() {
 	global $thread_template;
 
 	/**
@@ -2068,7 +2068,7 @@ function bp_get_the_thread_message_sender_link() {
 	 *
 	 * @param string $value Link to the sender of the current message.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_sender_link', bp_core_get_userlink( $thread_template->message->sender_id, false, true ) );
+	return apply_filters( 'bp_get_the_thread_message_sender_link', bboss_core_get_userlink( $thread_template->message->sender_id, false, true ) );
 }
 
 /**
@@ -2076,8 +2076,8 @@ function bp_get_the_thread_message_sender_link() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_the_thread_message_sender_name() {
-	echo esc_html( bp_get_the_thread_message_sender_name() );
+function bboss_the_thread_message_sender_name() {
+	echo esc_html( bboss_get_the_thread_message_sender_name() );
 }
 	/**
 	 * Get the display name of the sender of the current message.
@@ -2086,10 +2086,10 @@ function bp_the_thread_message_sender_name() {
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_message_sender_name() {
+function bboss_get_the_thread_message_sender_name() {
 	global $thread_template;
 
-	$display_name = bp_core_get_user_displayname( $thread_template->message->sender_id );
+	$display_name = bboss_core_get_user_displayname( $thread_template->message->sender_id );
 
 	if ( empty( $display_name ) ) {
 		$display_name = __( 'Deleted User', 'buddyboss' );
@@ -2110,8 +2110,8 @@ function bp_get_the_thread_message_sender_name() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_the_thread_delete_link() {
-	echo esc_url( bp_get_the_thread_delete_link() );
+function bboss_the_thread_delete_link() {
+	echo esc_url( bboss_get_the_thread_delete_link() );
 }
 	/**
 	 * Get the URL for deleting the current thread.
@@ -2120,7 +2120,7 @@ function bp_the_thread_delete_link() {
 	 *
 	 * @return string URL
 	 */
-function bp_get_the_thread_delete_link() {
+function bboss_get_the_thread_delete_link() {
 
 	/**
 	 * Filters the URL for deleting the current thread.
@@ -2130,7 +2130,7 @@ function bp_get_the_thread_delete_link() {
 	 * @param string $value URL for deleting the current thread.
 	 * @param string $value Text indicating action being executed.
 	 */
-	return apply_filters( 'bp_get_message_thread_delete_link', wp_nonce_url( bp_displayed_user_domain() . bp_get_messages_slug() . '/inbox/delete/' . bp_get_the_thread_id(), 'messages_delete_thread' ) );
+	return apply_filters( 'bp_get_message_thread_delete_link', wp_nonce_url( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/inbox/delete/' . bboss_get_the_thread_id(), 'messages_delete_thread' ) );
 }
 
 /**
@@ -2138,8 +2138,8 @@ function bp_get_the_thread_delete_link() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_the_thread_message_time_since() {
-	echo esc_html( bp_get_the_thread_message_time_since() );
+function bboss_the_thread_message_time_since() {
+	echo esc_html( bboss_get_the_thread_message_time_since() );
 }
 	/**
 	 * Generate the 'Sent x hours ago' string for the current message.
@@ -2148,7 +2148,7 @@ function bp_the_thread_message_time_since() {
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_message_time_since() {
+function bboss_get_the_thread_message_time_since() {
 
 	/**
 	 * Filters the 'Sent x hours ago' string for the current message.
@@ -2157,7 +2157,7 @@ function bp_get_the_thread_message_time_since() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_time_since', bp_core_time_since( bp_get_the_thread_message_date_sent() ) );
+	return apply_filters( 'bp_get_the_thread_message_time_since', bboss_core_time_since( bboss_get_the_thread_message_date_sent() ) );
 }
 
 /**
@@ -2165,8 +2165,8 @@ function bp_get_the_thread_message_time_since() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_the_thread_message_date_sent() {
-	echo esc_html( bp_get_the_thread_message_date_sent() );
+function bboss_the_thread_message_date_sent() {
+	echo esc_html( bboss_get_the_thread_message_date_sent() );
 }
 	/**
 	 * Generate the 'Sent x hours ago' string for the current message.
@@ -2175,7 +2175,7 @@ function bp_the_thread_message_date_sent() {
 	 *
 	 * @return int
 	 */
-function bp_get_the_thread_message_date_sent() {
+function bboss_get_the_thread_message_date_sent() {
 	global $thread_template;
 
 	/**
@@ -2193,8 +2193,8 @@ function bp_get_the_thread_message_date_sent() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_the_thread_message_content() {
-	echo wp_kses_post( bp_get_the_thread_message_content() );
+function bboss_the_thread_message_content() {
+	echo wp_kses_post( bboss_get_the_thread_message_content() );
 }
 	/**
 	 * Get the content of the current message in the loop.
@@ -2203,13 +2203,13 @@ function bp_the_thread_message_content() {
 	 *
 	 * @return string
 	 */
-function bp_get_the_thread_message_content() {
+function bboss_get_the_thread_message_content() {
 	global $thread_template;
 
 	$content = $thread_template->message->message;
 
 	// If user was deleted, mark content as deleted.
-	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
+	if ( false === bboss_core_get_core_userdata( bboss_get_the_thread_message_sender_id() ) ) {
 		$content = esc_html__( 'This message was deleted', 'buddyboss' );
 	}
 
@@ -2228,8 +2228,8 @@ function bp_get_the_thread_message_content() {
  *
  * @since BuddyBoss 2.1.4
  */
-function bb_the_thread_message_excerpt() {
-	echo wp_kses_post( bb_get_the_thread_message_excerpt() );
+function bboss_the_thread_message_excerpt() {
+	echo wp_kses_post( bboss_get_the_thread_message_excerpt() );
 }
 /**
  * Get the excerpt of the current message in the loop.
@@ -2238,13 +2238,13 @@ function bb_the_thread_message_excerpt() {
  *
  * @return string
  */
-function bb_get_the_thread_message_excerpt() {
+function bboss_get_the_thread_message_excerpt() {
 	global $thread_template;
 
 	$content = $thread_template->message->message;
 
 	// If user was deleted, mark content as deleted.
-	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
+	if ( false === bboss_core_get_core_userdata( bboss_get_the_thread_message_sender_id() ) ) {
 		$content = esc_html__( 'This message was deleted', 'buddyboss' );
 	}
 
@@ -2265,9 +2265,9 @@ function bb_get_the_thread_message_excerpt() {
  *
  * @since BuddyPress 1.5.0
  *
- * @see BP_Embed
+ * @see BBoss_Embed
  */
-function bp_messages_embed() {
+function bboss_messages_embed() {
 	add_filter( 'embed_post_id', 'bp_get_the_thread_message_id' );
 	add_filter( 'bp_embed_get_cache', 'bp_embed_message_cache', 10, 3 );
 	add_action( 'bp_embed_update_cache', 'bp_embed_message_save_cache', 10, 3 );
@@ -2277,18 +2277,18 @@ add_action( 'thread_loop_start', 'bp_messages_embed' );
 /**
  * Fetch a private message item's cached embeds.
  *
- * Used during {@link BP_Embed::parse_oembed()} via {@link bp_messages_embed()}.
+ * Used during {@link BBoss_Embed::parse_oembed()} via {@link bboss_messages_embed()}.
  *
  * @since BuddyPress 2.2.0
  *
- * @param string $cache    An empty string passed by BP_Embed::parse_oembed() for
+ * @param string $cache    An empty string passed by BBoss_Embed::parse_oembed() for
  *                         functions like this one to filter.
  * @param int    $id       The ID of the message item.
- * @param string $cachekey The cache key generated in BP_Embed::parse_oembed().
+ * @param string $cachekey The cache key generated in BBoss_Embed::parse_oembed().
  * @return mixed The cached embeds for this message item.
  */
-function bp_embed_message_cache( $cache, $id, $cachekey ) {
-	$data = bp_messages_get_meta( $id, $cachekey );
+function bboss_embed_message_cache( $cache, $id, $cachekey ) {
+	$data = bboss_messages_get_meta( $id, $cachekey );
 
 	if (
 		! empty( $data ) &&
@@ -2304,17 +2304,17 @@ function bp_embed_message_cache( $cache, $id, $cachekey ) {
 /**
  * Set a private message item's embed cache.
  *
- * Used during {@link BP_Embed::parse_oembed()} via {@link bp_messages_embed()}.
+ * Used during {@link BBoss_Embed::parse_oembed()} via {@link bboss_messages_embed()}.
  *
  * @since BuddyPress 2.2.0
  *
- * @param string $cache    An empty string passed by BP_Embed::parse_oembed() for
+ * @param string $cache    An empty string passed by BBoss_Embed::parse_oembed() for
  *                         functions like this one to filter.
- * @param string $cachekey The cache key generated in BP_Embed::parse_oembed().
+ * @param string $cachekey The cache key generated in BBoss_Embed::parse_oembed().
  * @param int    $id       The ID of the message item.
  */
-function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
-	bp_messages_update_meta( $id, $cachekey, $cache );
+function bboss_embed_message_save_cache( $cache, $cachekey, $id ) {
+	bboss_messages_update_meta( $id, $cachekey, $cache );
 }
 
 /**
@@ -2324,7 +2324,7 @@ function bp_embed_message_save_cache( $cache, $cachekey, $id ) {
  *
  * @return int Return total recipients count.
  */
-function bb_get_thread_total_recipients_count() {
+function bboss_get_thread_total_recipients_count() {
 	global $thread_template;
 	/**
 	 * Filters the total number of recipients in a thread.
@@ -2347,7 +2347,7 @@ function bb_get_thread_total_recipients_count() {
  *
  * @return string
  */
-function bb_get_thread_sent_date( $last_message_date = false ) {
+function bboss_get_thread_sent_date( $last_message_date = false ) {
 	global $messages_template;
 
 	if ( empty( $last_message_date ) && isset( $messages_template->thread->last_message_date ) ) {
@@ -2385,7 +2385,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	);
 
 	if ( is_numeric( $last_message_date ) ) {
-		$last_message_date_formatted = bp_core_get_format_date( $last_message_date, 'Y-m-d H:i:s' );
+		$last_message_date_formatted = bboss_core_get_format_date( $last_message_date, 'Y-m-d H:i:s' );
 	} else {
 		$last_message_date_formatted = $last_message_date;
 	}
@@ -2453,38 +2453,38 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 				// Set output var.
 				switch ( $seconds ) {
 					case YEAR_IN_SECONDS:
-						$date_year    = bp_core_get_format_date( $old_last_date, 'Y' );
-						$current_year = bp_core_get_format_date( bp_core_current_time( false ), 'Y' );
+						$date_year    = bboss_core_get_format_date( $old_last_date, 'Y' );
+						$current_year = bboss_core_get_format_date( bboss_core_current_time( false ), 'Y' );
 
 						if ( $current_year === $date_year ) {
-							$output = bp_core_get_format_date( $old_last_date, 'M j' );
+							$output = bboss_core_get_format_date( $old_last_date, 'M j' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M j, Y' );
+							$output = bboss_core_get_format_date( $old_last_date, 'M j, Y' );
 						}
 						break;
 					case WEEK_IN_SECONDS:
-						$start_week = bb_get_week_timestamp( '-7 days' );
-						$end_week   = bb_get_week_timestamp( 'now', 'end' );
+						$start_week = bboss_get_week_timestamp( '-7 days' );
+						$end_week   = bboss_get_week_timestamp( 'now', 'end' );
 
 						if ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
-							$output = bp_core_get_format_date( $old_last_date, 'l' );
+							$output = bboss_core_get_format_date( $old_last_date, 'l' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M j' );
+							$output = bboss_core_get_format_date( $old_last_date, 'M j' );
 						}
 						break;
 					case DAY_IN_SECONDS:
-						$start_week = bb_get_week_timestamp( '-7 days' );
-						$end_week   = bb_get_week_timestamp( 'now', 'end' );
+						$start_week = bboss_get_week_timestamp( '-7 days' );
+						$end_week   = bboss_get_week_timestamp( 'now', 'end' );
 						if ( 1 == $count ) {
 							$output = __( 'Yesterday', 'buddyboss' );
 						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
-							$output = bp_core_get_format_date( $old_last_date, 'l' );
+							$output = bboss_core_get_format_date( $old_last_date, 'l' );
 						} else {
-							$output = bp_core_get_format_date( $old_last_date, 'M j' );
+							$output = bboss_core_get_format_date( $old_last_date, 'M j' );
 						}
 						break;
 					case 1:
-						$output = bp_core_get_format_date( $old_last_date, 'g:i A' );
+						$output = bboss_core_get_format_date( $old_last_date, 'g:i A' );
 						break;
 					default:
 						$output = $right_now_text;
@@ -2523,7 +2523,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
  *
  * @return string
  */
-function bb_get_thread_start_date( $thread_start_date = false, $show_week_days = true ) {
+function bboss_get_thread_start_date( $thread_start_date = false, $show_week_days = true ) {
 	global $thread_template;
 
 	if ( empty( $thread_start_date ) && isset( $thread_template->thread->first_message_date ) ) {
@@ -2561,7 +2561,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	);
 
 	if ( is_numeric( $thread_start_date ) ) {
-		$last_message_date_formatted = bp_core_get_format_date( $thread_start_date, 'Y-m-d H:i:s' );
+		$last_message_date_formatted = bboss_core_get_format_date( $thread_start_date, 'Y-m-d H:i:s' );
 	} else {
 		$last_message_date_formatted = $thread_start_date;
 	}
@@ -2581,7 +2581,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	$newer_date = date_i18n( 'Y-m-d' ) . ' 23:59:59';
 	$newer_date = strtotime( $newer_date );
 
-	$end_week = bb_get_week_timestamp( '-7 days' );
+	$end_week = bboss_get_week_timestamp( '-7 days' );
 
 	// Difference in seconds.
 	$since = $newer_date - $thread_start_date;
@@ -2630,29 +2630,29 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$date_year    = bp_core_get_format_date( $old_start_date, 'Y' );
-					$current_year = bp_core_get_format_date( bp_core_current_time( false ), 'Y' );
+					$date_year    = bboss_core_get_format_date( $old_start_date, 'Y' );
+					$current_year = bboss_core_get_format_date( bboss_core_current_time( false ), 'Y' );
 
 					if ( $current_year === $date_year ) {
-						$output = bp_core_get_format_date( $old_start_date, $format );
+						$output = bboss_core_get_format_date( $old_start_date, $format );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, 'F j, Y' );
+						$output = bboss_core_get_format_date( $old_start_date, 'F j, Y' );
 					}
 					break;
 				case WEEK_IN_SECONDS:
 					if ( $end_week <= $thread_start_date ) {
-						$output = bp_core_get_format_date( $old_start_date, 'l' );
+						$output = bboss_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, $format );
+						$output = bboss_core_get_format_date( $old_start_date, $format );
 					}
 					break;
 				case DAY_IN_SECONDS:
 					if ( 1 == $count ) {
 						$output = __( 'yesterday', 'buddyboss' );
 					} elseif ( $end_week <= $thread_start_date ) {
-						$output = bp_core_get_format_date( $old_start_date, 'l' );
+						$output = bboss_core_get_format_date( $old_start_date, 'l' );
 					} else {
-						$output = bp_core_get_format_date( $old_start_date, $format );
+						$output = bboss_core_get_format_date( $old_start_date, $format );
 					}
 					break;
 				default:
@@ -2687,7 +2687,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
  *
  * @return string
  */
-function bb_get_the_thread_message_sent_time() {
+function bboss_get_the_thread_message_sent_time() {
 	global $thread_template;
 
 	$sent_date_formatted      = $thread_template->message->date_sent;
@@ -2709,8 +2709,8 @@ function bb_get_the_thread_message_sent_time() {
  *
  * @since BuddyBoss 2.1.4
  */
-function bb_messages_archived_slug() {
-	echo esc_attr( bb_get_messages_archived_slug() );
+function bboss_messages_archived_slug() {
+	echo esc_attr( bboss_get_messages_archived_slug() );
 }
 
 /**
@@ -2720,7 +2720,7 @@ function bb_messages_archived_slug() {
  *
  * @return string
  */
-function bb_get_messages_archived_slug() {
+function bboss_get_messages_archived_slug() {
 
 	/**
 	 * Filters the archived messages component slug.
@@ -2737,8 +2737,8 @@ function bb_get_messages_archived_slug() {
  *
  * @since BuddyBoss 2.1.4
  */
-function bb_messages_archived_url() {
-	echo esc_url( bb_get_messages_archived_url() );
+function bboss_messages_archived_url() {
+	echo esc_url( bboss_get_messages_archived_url() );
 }
 
 /**
@@ -2748,7 +2748,7 @@ function bb_messages_archived_url() {
  *
  * @return string
  */
-function bb_get_messages_archived_url() {
+function bboss_get_messages_archived_url() {
 
 	/**
 	 * Filters the archived messages component URL.
@@ -2757,7 +2757,7 @@ function bb_get_messages_archived_url() {
 	 *
 	 * @param string $slug Archived messages component URL.
 	 */
-	return apply_filters( 'bb_get_messages_archived_url', trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/' . bb_get_messages_archived_slug() ) );
+	return apply_filters( 'bb_get_messages_archived_url', trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/' . bboss_get_messages_archived_slug() ) );
 }
 
 /**
@@ -2770,8 +2770,8 @@ function bb_get_messages_archived_url() {
  * @param int $user_id   Optional. ID of the user relative to whom the link
  *                       should be generated. Default: ID of logged-in user.
  */
-function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
-	echo wp_kses_post( bb_get_message_archived_thread_view_link( $thread_id, $user_id ) );
+function bboss_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+	echo wp_kses_post( bboss_get_message_archived_thread_view_link( $thread_id, $user_id ) );
 }
 /**
  * Get the permalink of a particular archived thread.
@@ -2784,7 +2784,7 @@ function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null )
  *                       should be generated. Default: ID of logged-in user.
  * @return string
  */
-function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
+function bboss_get_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
 	global $messages_template;
 
 	if ( empty( $messages_template ) && (int) $thread_id > 0 ) {
@@ -2794,10 +2794,10 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
 	}
 
 	if ( null === $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
-	$domain = bp_core_get_user_domain( $user_id );
+	$domain = bboss_core_get_user_domain( $user_id );
 
 	/**
 	 * Filters the permalink of a particular archived thread.
@@ -2808,7 +2808,7 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
 	 * @param int    $thread_id ID of the archived thread.
 	 * @param int    $user_id   ID of the user.
 	 */
-	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bp_get_messages_slug() . '/archived/view/' . $thread_id ), $thread_id, $user_id );
+	return apply_filters( 'bp_get_message_thread_view_link', trailingslashit( $domain . bboss_get_messages_slug() . '/archived/view/' . $thread_id ), $thread_id, $user_id );
 }
 
 /**
@@ -2822,10 +2822,10 @@ function bb_get_message_archived_thread_view_link( $thread_id = 0, $user_id = nu
  *
  * @return bool
  */
-function bb_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id ) {
+function bboss_member_loop_show_message_button( $enabled_message_action, $member_id, $current_user_id ) {
 	return (bool) (
 		$enabled_message_action &&
-		bb_messages_user_can_send_message(
+		bboss_messages_user_can_send_message(
 			array(
 				'sender_id'     => $current_user_id,
 				'recipients_id' => $member_id,

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 #[\AllowDynamicProperties]
-class BP_Settings_Component extends BP_Component {
+class BBoss_Settings_Component extends BBoss_Component {
 
 	/**
 	 * Start the settings component creation process.
@@ -26,7 +26,7 @@ class BP_Settings_Component extends BP_Component {
 		parent::start(
 			'settings',
 			'Account',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 21,
 			)
@@ -63,7 +63,7 @@ class BP_Settings_Component extends BP_Component {
 		}
 
 		// Bail if not on Settings component.
-		if ( ! bp_is_settings_component() ) {
+		if ( ! bboss_is_settings_component() ) {
 			return;
 		}
 
@@ -71,22 +71,22 @@ class BP_Settings_Component extends BP_Component {
 
 		// Authenticated actions.
 		if ( is_user_logged_in() ) {
-			if ( ! bp_current_action() || bp_is_current_action( 'general' ) ) {
+			if ( ! bboss_current_action() || bboss_is_current_action( 'general' ) ) {
 				require $this->path . 'bp-settings/actions/general.php';
 
 				// Specific to post requests.
-			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) ) {
-				require $this->path . 'bp-settings/actions/' . bp_current_action() . '.php';
+			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) ) {
+				require $this->path . 'bp-settings/actions/' . bboss_current_action() . '.php';
 			}
 		}
 
 		// Screens - User profile integration.
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			require $this->path . 'bp-settings/screens/general.php';
 
 			// Sub-nav items.
-			if ( in_array( bp_current_action(), $actions, true ) ) {
-				require $this->path . 'bp-settings/screens/' . bp_current_action() . '.php';
+			if ( in_array( bboss_current_action(), $actions, true ) ) {
+				require $this->path . 'bp-settings/screens/' . bboss_current_action() . '.php';
 			}
 		}
 	}
@@ -104,14 +104,14 @@ class BP_Settings_Component extends BP_Component {
 	public function setup_globals( $args = array() ) {
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_SETTINGS_SLUG' ) ) {
-			define( 'BP_SETTINGS_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_SETTINGS_SLUG' ) ) {
+			define( 'BBOSS_SETTINGS_SLUG', $this->id );
 		}
 
 		// All globals for settings component.
 		parent::setup_globals(
 			array(
-				'slug'          => BP_SETTINGS_SLUG,
+				'slug'          => BBOSS_SETTINGS_SLUG,
 				'has_directory' => false,
 			)
 		);
@@ -128,16 +128,16 @@ class BP_Settings_Component extends BP_Component {
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
-		$access        = bp_core_can_edit_settings();
-		$slug          = bp_get_settings_slug();
+		$access        = bboss_core_can_edit_settings();
+		$slug          = bboss_get_settings_slug();
 		$settings_link = trailingslashit( $user_domain . $slug );
 
 		// Add the settings navigation item.
@@ -146,7 +146,7 @@ class BP_Settings_Component extends BP_Component {
 			'slug'                    => $slug,
 			'position'                => 21,
 			'show_for_displayed_user' => $access,
-			'screen_function'         => 'bp_settings_screen_general',
+			'screen_function'         => 'bboss_settings_screen_general',
 			'default_subnav_slug'     => 'general',
 		);
 
@@ -156,12 +156,12 @@ class BP_Settings_Component extends BP_Component {
 			'slug'            => 'general',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_settings_screen_general',
+			'screen_function' => 'bboss_settings_screen_general',
 			'position'        => 10,
 			'user_has_access' => $access,
 		);
 
-		$data = bb_core_notification_preferences_data();
+		$data = bboss_core_notification_preferences_data();
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
@@ -169,17 +169,17 @@ class BP_Settings_Component extends BP_Component {
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_settings_screen_notification',
+			'screen_function' => 'bboss_settings_screen_notification',
 			'position'        => 20,
 			'user_has_access' => $access,
 			'item_css_class'  => $data['item_css_class'],
 		);
 
-		if ( ! empty( bb_get_subscriptions_types() ) ) {
+		if ( ! empty( bboss_get_subscriptions_types() ) ) {
 			// Common params to all nav items.
 			$default_params_notifications = array(
 				'parent_slug'     => $slug . '_notifications',
-				'screen_function' => 'bp_settings_screen_notification',
+				'screen_function' => 'bboss_settings_screen_notification',
 				'user_has_access' => $access,
 			);
 
@@ -209,46 +209,46 @@ class BP_Settings_Component extends BP_Component {
 			'slug'            => 'export',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_settings_screen_export_data',
+			'screen_function' => 'bboss_settings_screen_export_data',
 			'position'        => 80,
 			'user_has_access' => $access,
 		);
 
-		if( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ){
+		if( bboss_is_active( 'moderation' ) && bboss_is_moderation_member_blocking_enable() ){
 			$sub_nav[] = array(
 				'name'            => __( 'Blocked Members', 'buddyboss' ),
 				'slug'            => 'blocked-members',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'bp_moderation_screen',
+				'screen_function' => 'bboss_moderation_screen',
 				'position'        => 65,
 				'user_has_access' => $access,
 			);
 		}
 
 		// Add Spam Account nav item.
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			$sub_nav[] = array(
 				'name'            => __( 'Capabilities', 'buddyboss' ),
 				'slug'            => 'capabilities',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'bp_settings_screen_capabilities',
+				'screen_function' => 'bboss_settings_screen_capabilities',
 				'position'        => 80,
-				'user_has_access' => ! bp_is_my_profile(),
+				'user_has_access' => ! bboss_is_my_profile(),
 			);
 		}
 
 		// Add Delete Account nav item.
-		if ( ( ! bp_disable_account_deletion() && bp_is_my_profile() ) || bp_current_user_can( 'delete_users' ) ) {
+		if ( ( ! bboss_disable_account_deletion() && bboss_is_my_profile() ) || bboss_current_user_can( 'delete_users' ) ) {
 			$sub_nav[] = array(
 				'name'            => __( 'Delete Account', 'buddyboss' ),
 				'slug'            => 'delete-account',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'bp_settings_screen_delete_account',
+				'screen_function' => 'bboss_settings_screen_delete_account',
 				'position'        => 90,
-				'user_has_access' => ! is_super_admin( bp_displayed_user_id() ),
+				'user_has_access' => ! is_super_admin( bboss_displayed_user_id() ),
 			);
 		}
 
@@ -268,11 +268,11 @@ class BP_Settings_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables.
-			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+			$settings_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_settings_slug() );
 
 			// Add main Settings menu.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Account', 'buddyboss' ),
 				'href'   => $settings_link,
@@ -289,7 +289,7 @@ class BP_Settings_Component extends BP_Component {
 
 			// Notifications - only add the tab when there is something to display there.
 			if ( has_action( 'bp_notification_settings' ) ) {
-				$data           = bb_core_notification_preferences_data();
+				$data           = bboss_core_notification_preferences_data();
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notifications',
@@ -308,7 +308,7 @@ class BP_Settings_Component extends BP_Component {
 			);
 
 			// Delete Account
-			if ( ! bp_current_user_can( 'bp_moderate' ) && ! bp_core_get_root_option( 'bp-disable-account-deletion' ) ) {
+			if ( ! bboss_current_user_can( 'bp_moderate' ) && ! bboss_core_get_root_option( 'bp-disable-account-deletion' ) ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-delete-account',
@@ -318,7 +318,7 @@ class BP_Settings_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+			if ( bboss_is_active( 'moderation' ) && bboss_is_moderation_member_blocking_enable() ) {
 				// Blocked Members.
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
@@ -336,14 +336,14 @@ class BP_Settings_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array(
-			'BP_REST_Account_Settings_Endpoint',
-			'BP_REST_Account_Settings_Options_Endpoint',
+			'BBoss_REST_Account_Settings_Endpoint',
+			'BBoss_REST_Account_Settings_Options_Endpoint',
 		) );
 	}
 
@@ -352,7 +352,7 @@ class BP_Settings_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

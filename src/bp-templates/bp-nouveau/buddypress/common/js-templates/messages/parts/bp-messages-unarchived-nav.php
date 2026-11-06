@@ -14,5 +14,5 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-unarchived-nav">
-	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+	<?php bboss_get_template_part( 'members/single/parts/item-subnav' ); ?>
 </script>

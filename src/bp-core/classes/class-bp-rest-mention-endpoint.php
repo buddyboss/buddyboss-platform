@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Mention_Endpoint class
+ * BP REST: BBoss_REST_Mention_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Mention_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Mention_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Variable to store the argument data.
@@ -28,7 +28,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'mention';
 	}
 
@@ -81,17 +81,17 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $request['only_friends'] ) ) {
 			$args['only_friends'] = absint( $request['only_friends'] );
 		} elseif (
-			bp_is_active( 'friends' )
+			bboss_is_active( 'friends' )
 			&& isset( $args['term'] )
 			&& empty( $args['term'] )
 			&& empty( trim( $args['term'] ) )
 		) {
 			$args['only_friends'] = isset( $request['only_friends'] ) ? absint( $request['only_friends'] ) : true;
 		} elseif (
-			bp_is_active( 'messages' )
-			&& bp_is_active( 'friends' )
-			&& function_exists( 'bp_force_friendship_to_message' )
-			&& bp_force_friendship_to_message()
+			bboss_is_active( 'messages' )
+			&& bboss_is_active( 'friends' )
+			&& function_exists( 'bboss_force_friendship_to_message' )
+			&& bboss_force_friendship_to_message()
 		) {
 			$args['only_friends'] = true;
 		}
@@ -105,7 +105,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 			add_filter( 'bp_members_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
 		}
 
-		$results = bp_core_get_suggestions( $args );
+		$results = bboss_core_get_suggestions( $args );
 
 		if ( ! empty( $request['group_id'] ) ) {
 			remove_filter( 'bp_groups_member_suggestions_validate_args', array( $this, 'validate_member_suggestions' ), 10, 1 );
@@ -182,7 +182,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares group data for return as an object.
 	 *
-	 * @param BP_Groups_Group $item    Group object.
+	 * @param BBoss_Groups_Group $item    Group object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -208,7 +208,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Groups_Group  $item     Group object.
+		 * @param BBoss_Groups_Group  $item     Group object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -337,7 +337,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		if (
 			is_wp_error( $valid ) &&
 			$valid->get_error_code() === 'missing_parameter' &&
-			bp_is_active( 'friends' ) &&
+			bboss_is_active( 'friends' ) &&
 			! empty( $args ) &&
 			isset( $args['term'] ) &&
 			empty( trim( $args['term'] ) ) &&
@@ -349,3 +349,11 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 		return $valid;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Mention_Endpoint', false ) || interface_exists( 'BBoss_REST_Mention_Endpoint', false ) || trait_exists( 'BBoss_REST_Mention_Endpoint', false ) ) && ! class_exists( 'BP_REST_Mention_Endpoint', false ) && ! interface_exists( 'BP_REST_Mention_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Mention_Endpoint', 'BP_REST_Mention_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

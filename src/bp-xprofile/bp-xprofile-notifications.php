@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *                                  for WP Toolbar. Default: 'string'.
  * @return string
  */
-function xprofile_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+function bboss_xprofile_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
 	switch ( $action ) {
 		default:
 			/**

@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Reaction' ) ) {
+if ( ! class_exists( 'BBoss_Reaction' ) ) {
 
 	/**
 	 * BuddyBoss Reaction object.
@@ -16,7 +16,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 	 * @since BuddyBoss 2.4.30
 	 */
 	#[\AllowDynamicProperties]
-	class BB_Reaction {
+	class BBoss_Reaction {
 
 		/**
 		 * The single instance of the class.
@@ -102,7 +102,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 *
 		 * @since BuddyBoss 2.4.30
 		 *
-		 * @return Controller|BB_Reaction|null
+		 * @return Controller|BBoss_Reaction|null
 		 */
 		public static function instance() {
 
@@ -120,7 +120,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @since BuddyBoss 2.4.30
 		 */
 		public function __construct() {
-			$bp_prefix = bp_core_get_table_prefix();
+			$bp_prefix = bboss_core_get_table_prefix();
 			// User reaction table.
 			$bb_user_reactions         = $bp_prefix . 'bb_user_reactions';
 			self::$user_reaction_table = $bb_user_reactions;
@@ -226,7 +226,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return void
 		 */
 		public function bb_register_post_type() {
-			if ( bp_is_root_blog() && ! is_network_admin() && function_exists( 'register_post_type' ) ) {
+			if ( bboss_is_root_blog() && ! is_network_admin() && function_exists( 'register_post_type' ) ) {
 				register_post_type(
 					self::$post_type,
 					array(
@@ -288,7 +288,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return int|void|WP_Error
 		 */
 		public function bb_add_reaction( $args ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'name'              => '',
@@ -354,7 +354,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'post_type'    => self::$post_type,
 				'post_status'  => 'publish',
 				'post_content' => maybe_serialize( $post_content ),
-				'post_author'  => bp_loggedin_user_id(),
+				'post_author'  => bboss_loggedin_user_id(),
 				'menu_order'   => $r['menu_order'],
 			);
 
@@ -394,7 +394,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return int|void|WP_Error
 		 */
 		public function bb_update_reaction( $reaction_id, $args ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'name'              => '',
@@ -441,7 +441,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'post_type'    => self::$post_type,
 				'post_status'  => 'publish',
 				'post_content' => maybe_serialize( $post_content ),
-				'post_author'  => bp_loggedin_user_id(),
+				'post_author'  => bboss_loggedin_user_id(),
 				'menu_order'   => $r['menu_order'],
 			);
 
@@ -607,7 +607,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return void
 		 */
 		public function bb_register_reaction_item_type( $type, $args ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'reaction_type'     => $type,
@@ -644,14 +644,14 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_add_user_item_reaction( $args ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'reaction_id'  => 0,
 					'item_type'    => '',
 					'item_id'      => 0,
-					'user_id'      => bp_loggedin_user_id(),
-					'date_created' => bp_core_current_time(),
+					'user_id'      => bboss_loggedin_user_id(),
+					'date_created' => bboss_core_current_time(),
 					'error_type'   => 'bool',
 				)
 			);
@@ -715,7 +715,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$privacy_check = bb_validate_activity_privacy(
+			$privacy_check = bboss_validate_activity_privacy(
 				array(
 					'activity_id'     => $r['item_id'],
 					'activity_type'   => $r['item_type'],
@@ -877,13 +877,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_remove_user_item_reactions( $args ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'reaction_id' => 0,
 					'item_id'     => 0,
 					'item_type'   => '',
-					'user_id'     => bp_loggedin_user_id(),
+					'user_id'     => bboss_loggedin_user_id(),
 					'error_type'  => 'bool',
 				)
 			);
@@ -998,7 +998,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_get_user_reactions( $args = array() ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'id'          => 0,      // User reaction id.
@@ -1056,7 +1056,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$where_conditions = array();
 
 			// Sorting.
-			$sort = bp_esc_sql_order( $r['order'] );
+			$sort = bboss_esc_sql_order( $r['order'] );
 			if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 				$sort = 'DESC';
 			}
@@ -1096,7 +1096,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					$where_conditions['reaction_id'] = '1=0';
 				}
 				// If no reaction_id is specified, get all reactions having active emotions.
-			} elseif ( bb_is_reaction_emotions_enabled() ) {
+			} elseif ( bboss_is_reaction_emotions_enabled() ) {
 				$reactions      = $this->bb_get_reactions( 'emotions' );
 				$reaction_id_in = implode( ',', wp_list_pluck( $reactions, 'id' ) );
 				if ( ! empty( $reaction_id_in ) ) {
@@ -1187,10 +1187,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			$paged_user_reactions_sql = apply_filters( 'bb_get_user_reactions_paged_sql', $paged_user_reactions_sql, $r );
 
-			$cached = bp_core_get_incremented_cache( $paged_user_reactions_sql, self::$cache_group );
+			$cached = bboss_core_get_incremented_cache( $paged_user_reactions_sql, self::$cache_group );
 			if ( false === $cached ) {
 				$paged_user_reactions_ids = $wpdb->get_col( $paged_user_reactions_sql ); // phpcs:ignore
-				bp_core_set_incremented_cache( $paged_user_reactions_sql, self::$cache_group, $paged_user_reactions_ids );
+				bboss_core_set_incremented_cache( $paged_user_reactions_sql, self::$cache_group, $paged_user_reactions_ids );
 			} else {
 				$paged_user_reactions_ids = $cached;
 			}
@@ -1199,7 +1199,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// We only want the IDs.
 				$paged_user_reactions = array_map( 'intval', $paged_user_reactions_ids );
 			} else {
-				$uncached_ids = bp_get_non_cached_ids( $paged_user_reactions_ids, self::$cache_group );
+				$uncached_ids = bboss_get_non_cached_ids( $paged_user_reactions_ids, self::$cache_group );
 				if ( ! empty( $uncached_ids ) ) {
 					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
@@ -1238,10 +1238,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 */
 				$sql                      = 'SELECT count(DISTINCT ur.id) FROM ' . self::$user_reaction_table . " ur {$join_sql} {$where_sql}";
 				$total_user_reactions_sql = apply_filters( 'bb_get_user_reactions_total_sql', $sql, $where_sql, $sort );
-				$cached                   = bp_core_get_incremented_cache( $total_user_reactions_sql, self::$cache_group );
+				$cached                   = bboss_core_get_incremented_cache( $total_user_reactions_sql, self::$cache_group );
 				if ( false === $cached ) {
 					$total_user_reactions = $wpdb->get_var( $total_user_reactions_sql ); // phpcs:ignore
-					bp_core_set_incremented_cache( $total_user_reactions_sql, self::$cache_group, $total_user_reactions );
+					bboss_core_set_incremented_cache( $total_user_reactions_sql, self::$cache_group, $total_user_reactions );
 				} else {
 					$total_user_reactions = $cached;
 				}
@@ -1292,7 +1292,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return int
 		 */
 		public function bb_get_user_reactions_count( $args = array() ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'reaction_id' => 0,      // Reaction id.
@@ -1322,10 +1322,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return int
 		 */
 		public function bb_get_current_user_reactions_count( $args = array() ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
-					'user_id' => bp_loggedin_user_id(), // User Id.
+					'user_id' => bboss_loggedin_user_id(), // User Id.
 				),
 				'bb_get_current_user_reactions_count'
 			);
@@ -1347,7 +1347,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_get_reactions_data( $args = array() ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'name'        => '',       // Item Summary.
@@ -1378,7 +1378,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$where_conditions = array();
 
 			// Sorting.
-			$sort = bp_esc_sql_order( $r['order'] );
+			$sort = bboss_esc_sql_order( $r['order'] );
 			if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 				$sort = 'DESC';
 			}
@@ -1499,10 +1499,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			 */
 			$paged_reaction_data_sql = apply_filters( 'bb_get_reactions_data_paged_sql', $paged_reaction_data_sql, $r );
 
-			$cached = bp_core_get_incremented_cache( $paged_reaction_data_sql, self::$rd_cache_group );
+			$cached = bboss_core_get_incremented_cache( $paged_reaction_data_sql, self::$rd_cache_group );
 			if ( false === $cached ) {
 				$paged_reaction_data_ids = $wpdb->get_col( $paged_reaction_data_sql ); // phpcs:ignore
-				bp_core_set_incremented_cache( $paged_reaction_data_sql, self::$rd_cache_group, $paged_reaction_data_ids );
+				bboss_core_set_incremented_cache( $paged_reaction_data_sql, self::$rd_cache_group, $paged_reaction_data_ids );
 			} else {
 				$paged_reaction_data_ids = $cached;
 			}
@@ -1511,7 +1511,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				// We only want the IDs.
 				$paged_reaction_data = array_map( 'intval', $paged_reaction_data_ids );
 			} else {
-				$uncached_ids = bp_get_non_cached_ids( $paged_reaction_data_ids, self::$rd_cache_group );
+				$uncached_ids = bboss_get_non_cached_ids( $paged_reaction_data_ids, self::$rd_cache_group );
 				if ( ! empty( $uncached_ids ) ) {
 					$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
@@ -1550,10 +1550,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				 */
 				$sql                     = 'SELECT count(DISTINCT rd.id) FROM ' . self::$reaction_data_table . " rd {$join_sql} {$where_sql}";
 				$total_reaction_data_sql = apply_filters( 'bb_get_reactions_data_total_sql', $sql, $where_sql, $sort );
-				$cached                  = bp_core_get_incremented_cache( $total_reaction_data_sql, self::$rd_cache_group );
+				$cached                  = bboss_core_get_incremented_cache( $total_reaction_data_sql, self::$rd_cache_group );
 				if ( false === $cached ) {
 					$total_reaction_data = $wpdb->get_var( $total_reaction_data_sql ); // phpcs:ignore
-					bp_core_set_incremented_cache( $total_reaction_data_sql, self::$rd_cache_group, $total_reaction_data );
+					bboss_core_set_incremented_cache( $total_reaction_data_sql, self::$rd_cache_group, $total_reaction_data );
 				} else {
 					$total_reaction_data = $cached;
 				}
@@ -1576,7 +1576,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_add_reactions_data( $args ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'name'         => '',
@@ -1584,7 +1584,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'rel1'         => '',
 					'rel2'         => '',
 					'rel3'         => '',
-					'date_created' => bp_core_current_time(),
+					'date_created' => bboss_core_current_time(),
 					'error_type'   => '',
 				)
 			);
@@ -1979,7 +1979,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return bool|WP_Error|array
 		 */
 		public function bb_validate_activity_reaction_request( $args ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'item_type' => '',
@@ -1990,15 +1990,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$valid_item_ids = array();
 
 			if (
-				! bp_is_active( 'activity' ) ||
-				false === bp_is_activity_like_active()
+				! bboss_is_active( 'activity' ) ||
+				false === bboss_is_activity_like_active()
 			) {
 				return $valid_item_ids;
 			}
 
 			$activities_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
-				$activities = BP_Activity_Activity::get(
+				$activities = BBoss_Activity_Activity::get(
 					array(
 						'per_page'    => 0,
 						'fields'      => 'ids',
@@ -2023,7 +2023,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return void
 		 */
 		public function bb_register_activity_like() {
-			$reaction_id   = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			$reaction_id   = (int) bboss_get_option( 'bb_reactions_default_like_reaction_added' );
 			$prepared_args = array(
 				'name'              => 'Likes',
 				'icon'              => 'likes',
@@ -2040,7 +2040,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				$reaction_id = $this->bb_add_reaction( $prepared_args );
 
 				if ( ! empty( $reaction_id ) ) {
-					bp_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
+					bboss_update_option( 'bb_reactions_default_like_reaction_added', (int) $reaction_id );
 				}
 			} else {
 				$this->bb_update_reaction( $reaction_id, $prepared_args );
@@ -2076,7 +2076,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return int|void
 		 */
 		public function bb_reactions_get_like_reaction_id() {
-			$reaction_id = (int) bp_get_option( 'bb_reactions_default_like_reaction_added' );
+			$reaction_id = (int) bboss_get_option( 'bb_reactions_default_like_reaction_added' );
 
 			if ( empty( $reaction_id ) ) {
 				return;
@@ -2095,13 +2095,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		public function bb_reactions_reaction_id() {
 			static $reaction_id = array();
 
-			$reaction_mode = bb_get_reaction_mode();
+			$reaction_mode = bboss_get_reaction_mode();
 
 			if ( ! empty( $reaction_id[ $reaction_mode ] ) ) {
 				return $reaction_id[ $reaction_mode ];
 			}
 
-			if ( bb_is_reaction_emotions_enabled() ) {
+			if ( bboss_is_reaction_emotions_enabled() ) {
 				$reactions                     = $this->bb_get_reactions( 'emotions' );
 				$reaction                      = current( $reactions );
 				$reaction_id[ $reaction_mode ] = $reaction['id'];
@@ -2131,9 +2131,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				array(
 					'item_id'     => $args['item_id'],
 					'item_type'   => $args['item_type'],
-					'user_id'     => ! empty( $args['user_id'] ) ? $args['user_id'] : bp_loggedin_user_id(),
+					'user_id'     => ! empty( $args['user_id'] ) ? $args['user_id'] : bboss_loggedin_user_id(),
 					'fields'      => 'reaction_id',
-					'reaction_id' => bb_is_reaction_emotions_enabled() ? 0 : $this->bb_reactions_get_like_reaction_id(),
+					'reaction_id' => bboss_is_reaction_emotions_enabled() ? 0 : $this->bb_reactions_get_like_reaction_id(),
 				)
 			);
 
@@ -2156,7 +2156,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 		 * @return array|WP_Error
 		 */
 		public function bb_validate_activity_comment_reaction_request( $args ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'item_type' => '',
@@ -2167,15 +2167,15 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$valid_item_ids = array();
 
 			if (
-				! bp_is_active( 'activity' ) ||
-				false === bb_is_reaction_activity_comments_enabled()
+				! bboss_is_active( 'activity' ) ||
+				false === bboss_is_reaction_activity_comments_enabled()
 			) {
 				return $valid_item_ids;
 			}
 
 			$activity_comment_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity_comment' === $r['item_type'] ) {
-				$activities = BP_Activity_Activity::get(
+				$activities = BBoss_Activity_Activity::get(
 					array(
 						'per_page'         => 0,
 						'fields'           => 'ids',

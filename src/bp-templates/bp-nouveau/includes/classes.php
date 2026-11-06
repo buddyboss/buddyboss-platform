@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Builds a group of BP_Button
+ * Builds a group of BBoss_Button
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Buttons_Group {
+class BBoss_Buttons_Group {
 
 	/**
 	 * The parameters of the Group of buttons
@@ -69,7 +69,7 @@ class BP_Buttons_Group {
 	 */
 	public function set( $args = array() ) {
 
-		$r = bp_parse_args( (array) $args, array(
+		$r = bboss_parse_args( (array) $args, array(
 			'id'                => '',
 			'position'          => 99,
 			'component'         => '',
@@ -172,7 +172,7 @@ class BP_Buttons_Group {
 				unset( $this->group[ $key_button ] );
 			}
 
-			$buttons[ $button['id'] ] = bp_get_button( $button );
+			$buttons[ $button['id'] ] = bboss_get_button( $button );
 		}
 
 		return $buttons;

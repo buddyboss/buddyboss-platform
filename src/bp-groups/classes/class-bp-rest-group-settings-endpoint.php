@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Group_Settings_Endpoint class
+ * BP REST: BBoss_REST_Group_Settings_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * BP_REST_Groups_Endpoint Instance.
+	 * BBoss_REST_Groups_Endpoint Instance.
 	 *
-	 * @var BP_REST_Groups_Endpoint
+	 * @var BBoss_REST_Groups_Endpoint
 	 */
 	protected $groups_endpoint;
 
@@ -35,9 +35,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base       = buddypress()->groups->id;
-		$this->groups_endpoint = new BP_REST_Groups_Endpoint();
+		$this->namespace       = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base       = bboss()->groups->id;
+		$this->groups_endpoint = new BBoss_REST_Groups_Endpoint();
 		$this->nav             = array( 'edit-details', 'group-settings' );
 	}
 
@@ -48,7 +48,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	public function register_routes() {
 
-		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) && bbp_is_group_forums_active() ) {
+		if ( bboss_is_active( 'forums' ) && function_exists( 'bboss_bbp_is_group_forums_active' ) && bboss_bbp_is_group_forums_active() ) {
 			$this->nav[] = 'forum';
 		}
 
@@ -203,7 +203,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( is_user_logged_in() && bp_is_active( 'groups' ) ) {
+		if ( is_user_logged_in() && bboss_is_active( 'groups' ) ) {
 			$group  = $this->groups_endpoint->get_group_object( $request );
 			$retval = true;
 			if ( empty( $group->id ) ) {
@@ -339,7 +339,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( is_user_logged_in() && bp_is_active( 'groups' ) ) {
+		if ( is_user_logged_in() && bboss_is_active( 'groups' ) ) {
 			$retval = true;
 			$group  = $this->groups_endpoint->get_group_object( $request );
 			if ( empty( $group->id ) ) {
@@ -529,15 +529,15 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	protected function get_detais_fields( $group_id ) {
 		$fields                             = array();
-		$group                              = groups_get_group( $group_id );
-		buddypress()->groups->current_group = $group;
+		$group                              = bboss_groups_get_group( $group_id );
+		bboss()->groups->current_group = $group;
 
 		$fields[] = array(
 			'label'       => esc_html__( 'Group Name (required)', 'buddyboss' ),
 			'name'        => 'group-name',
 			'description' => '',
 			'field'       => 'text',
-			'value'       => ( function_exists( 'bp_get_group_name_editable' ) ? bp_get_group_name_editable( $group ) : bp_get_group_name( $group ) ),
+			'value'       => ( function_exists( 'bboss_get_group_name_editable' ) ? bboss_get_group_name_editable( $group ) : bboss_get_group_name( $group ) ),
 			'options'     => array(),
 		);
 
@@ -546,30 +546,30 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'name'        => 'group-desc',
 			'description' => '',
 			'field'       => 'textarea',
-			'value'       => bp_get_group_description_editable( $group ),
+			'value'       => bboss_get_group_description_editable( $group ),
 			'options'     => array(),
 		);
 
 		if (
 			(
-				function_exists( 'bb_enabled_legacy_email_preference' ) &&
+				function_exists( 'bboss_enabled_legacy_email_preference' ) &&
 				(
 					(
-						! bb_enabled_legacy_email_preference() &&
-						bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
+						! bboss_enabled_legacy_email_preference() &&
+						bboss_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
 					) ||
-					bb_enabled_legacy_email_preference()
+					bboss_enabled_legacy_email_preference()
 				)
 			) ||
-			! function_exists( 'bb_enabled_legacy_email_preference' )
+			! function_exists( 'bboss_enabled_legacy_email_preference' )
 		) {
 			$checked = 0;
 			$label   = esc_html__( 'Notify group members of these changes via email', 'buddyboss' );
 
 			if (
-				function_exists( 'bb_enabled_legacy_email_preference' ) &&
-				! bb_enabled_legacy_email_preference() &&
-				bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
+				function_exists( 'bboss_enabled_legacy_email_preference' ) &&
+				! bboss_enabled_legacy_email_preference() &&
+				bboss_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
 			) {
 				$label   = esc_html__( 'Notify group members of these changes', 'buddyboss' );
 				$checked = 1;
@@ -604,14 +604,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	protected function get_settings_fields( $group_id ) {
 		$fields                             = array();
-		buddypress()->groups->current_group = groups_get_group( $group_id );
+		bboss()->groups->current_group = bboss_groups_get_group( $group_id );
 
 		$fields[] = array(
 			'label'       => esc_html__( 'Privacy Options', 'buddyboss' ),
 			'name'        => 'group-status',
 			'description' => '',
 			'field'       => 'radio',
-			'value'       => bp_get_new_group_status(),
+			'value'       => bboss_get_new_group_status(),
 			'options'     => array(
 				array(
 					'label'             => esc_html__( 'This is a public group', 'buddyboss' ),
@@ -621,7 +621,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 											'<li>' . esc_html__( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ) . '</li>' .
 											'<li>' . esc_html__( 'Group content and activity will be visible to any site member.', 'buddyboss' ) . '</li>' .
 										'</ul>',
-					'is_default_option' => 'public' === bp_get_new_group_status() || ! bp_get_new_group_status(),
+					'is_default_option' => 'public' === bboss_get_new_group_status() || ! bboss_get_new_group_status(),
 				),
 				array(
 					'label'             => esc_html__( 'This is a private group', 'buddyboss' ),
@@ -631,7 +631,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 											'<li>' . esc_html__( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ) . '</li>' .
 											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ) . '</li>' .
 										'</ul>',
-					'is_default_option' => 'private' === bp_get_new_group_status(),
+					'is_default_option' => 'private' === bboss_get_new_group_status(),
 				),
 				array(
 					'label'             => esc_html__( 'This is a hidden group', 'buddyboss' ),
@@ -641,7 +641,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 											'<li>' . esc_html__( 'This group will not be listed in the groups directory or search results', 'buddyboss' ) . '</li>' .
 											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ) . '</li>' .
 										'</ul>',
-					'is_default_option' => 'hidden' === bp_get_new_group_status(),
+					'is_default_option' => 'hidden' === bboss_get_new_group_status(),
 				),
 			),
 		);
@@ -651,225 +651,225 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'name'        => 'group-invite-status',
 			'description' => esc_html__( 'Which members of this group are allowed to invite others?', 'buddyboss' ),
 			'field'       => 'radio',
-			'value'       => bp_group_get_invite_status( $group_id ),
+			'value'       => bboss_group_get_invite_status( $group_id ),
 			'options'     => array(
 				array(
 					'label'             => esc_html__( 'All group members', 'buddyboss' ),
 					'value'             => 'members',
 					'description'       => '',
-					'is_default_option' => 'members' === bp_group_get_invite_status( $group_id ),
+					'is_default_option' => 'members' === bboss_group_get_invite_status( $group_id ),
 				),
 				array(
 					'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 					'value'             => 'mods',
 					'description'       => '',
-					'is_default_option' => 'mods' === bp_group_get_invite_status( $group_id ),
+					'is_default_option' => 'mods' === bboss_group_get_invite_status( $group_id ),
 				),
 				array(
 					'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 					'value'             => 'admins',
 					'description'       => '',
-					'is_default_option' => 'admins' === bp_group_get_invite_status( $group_id ),
+					'is_default_option' => 'admins' === bboss_group_get_invite_status( $group_id ),
 				),
 			),
 		);
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Activity Feeds', 'buddyboss' ),
 				'name'        => 'group-activity-feed-status',
 				'description' => esc_html__( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ),
 				'field'       => 'radio',
-				'value'       => bp_group_get_activity_feed_status( $group_id ),
+				'value'       => bboss_group_get_activity_feed_status( $group_id ),
 				'options'     => array(
 					array(
 						'label'             => esc_html__( 'All group members', 'buddyboss' ),
 						'value'             => 'members',
 						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_activity_feed_status( $group_id ),
+						'is_default_option' => 'members' === bboss_group_get_activity_feed_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 						'value'             => 'mods',
 						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_activity_feed_status( $group_id ),
+						'is_default_option' => 'mods' === bboss_group_get_activity_feed_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 						'value'             => 'admins',
 						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_activity_feed_status( $group_id ),
+						'is_default_option' => 'admins' === bboss_group_get_activity_feed_status( $group_id ),
 					),
 				),
 			);
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled() ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Photos', 'buddyboss' ),
 				'name'        => 'group-media-status',
 				'description' => esc_html__( 'Which members of this group are allowed to upload photos?', 'buddyboss' ),
 				'field'       => 'radio',
-				'value'       => bp_group_get_media_status( $group_id ),
+				'value'       => bboss_group_get_media_status( $group_id ),
 				'options'     => array(
 					array(
 						'label'             => esc_html__( 'All group members', 'buddyboss' ),
 						'value'             => 'members',
 						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_media_status( $group_id ),
+						'is_default_option' => 'members' === bboss_group_get_media_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 						'value'             => 'mods',
 						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_media_status( $group_id ),
+						'is_default_option' => 'mods' === bboss_group_get_media_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 						'value'             => 'admins',
 						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_media_status( $group_id ),
+						'is_default_option' => 'admins' === bboss_group_get_media_status( $group_id ),
 					),
 				),
 			);
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled() ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Albums', 'buddyboss' ),
 				'name'        => 'group-album-status',
 				'description' => esc_html__( 'Which members of this group are allowed to create albums?', 'buddyboss' ),
 				'field'       => 'radio',
-				'value'       => bp_group_get_album_status( $group_id ),
+				'value'       => bboss_group_get_album_status( $group_id ),
 				'options'     => array(
 					array(
 						'label'             => esc_html__( 'All group members', 'buddyboss' ),
 						'value'             => 'members',
 						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_album_status( $group_id ),
+						'is_default_option' => 'members' === bboss_group_get_album_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 						'value'             => 'mods',
 						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_album_status( $group_id ),
+						'is_default_option' => 'mods' === bboss_group_get_album_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 						'value'             => 'admins',
 						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_album_status( $group_id ),
+						'is_default_option' => 'admins' === bboss_group_get_album_status( $group_id ),
 					),
 				),
 			);
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_group_document_support_enabled() ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Documents', 'buddyboss' ),
 				'name'        => 'group-document-status',
 				'description' => esc_html__( 'Which members of this group are allowed to upload documents?', 'buddyboss' ),
 				'field'       => 'radio',
-				'value'       => bp_group_get_document_status( $group_id ),
+				'value'       => bboss_group_get_document_status( $group_id ),
 				'options'     => array(
 					array(
 						'label'             => esc_html__( 'All group members', 'buddyboss' ),
 						'value'             => 'members',
 						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_document_status( $group_id ),
+						'is_default_option' => 'members' === bboss_group_get_document_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 						'value'             => 'mods',
 						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_document_status( $group_id ),
+						'is_default_option' => 'mods' === bboss_group_get_document_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 						'value'             => 'admins',
 						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_document_status( $group_id ),
+						'is_default_option' => 'admins' === bboss_group_get_document_status( $group_id ),
 					),
 				),
 			);
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_group_video_support_enabled() ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Videos', 'buddyboss' ),
 				'name'        => 'group-video-status',
 				'description' => esc_html__( 'Which members of this group are allowed to upload videos?', 'buddyboss' ),
 				'field'       => 'radio',
-				'value'       => bp_group_get_video_status( $group_id ),
+				'value'       => bboss_group_get_video_status( $group_id ),
 				'options'     => array(
 					array(
 						'label'             => esc_html__( 'All group members', 'buddyboss' ),
 						'value'             => 'members',
 						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_video_status( $group_id ),
+						'is_default_option' => 'members' === bboss_group_get_video_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 						'value'             => 'mods',
 						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_video_status( $group_id ),
+						'is_default_option' => 'mods' === bboss_group_get_video_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 						'value'             => 'admins',
 						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_video_status( $group_id ),
+						'is_default_option' => 'admins' === bboss_group_get_video_status( $group_id ),
 					),
 				),
 			);
 		}
 
-		if ( bp_is_active( 'messages' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+		if ( bboss_is_active( 'messages' ) && function_exists( 'bboss_disable_group_messages' ) && true === bboss_disable_group_messages() ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Messages', 'buddyboss' ),
 				'name'        => 'group-message-status',
 				'description' => esc_html__( 'Which members of this group are allowed to send group messages?', 'buddyboss' ),
 				'field'       => 'radio',
-				'value'       => bp_group_get_message_status( $group_id ),
+				'value'       => bboss_group_get_message_status( $group_id ),
 				'options'     => array(
 					array(
 						'label'             => esc_html__( 'All group members', 'buddyboss' ),
 						'value'             => 'members',
 						'description'       => '',
-						'is_default_option' => 'members' === bp_group_get_message_status( $group_id ),
+						'is_default_option' => 'members' === bboss_group_get_message_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
 						'value'             => 'mods',
 						'description'       => '',
-						'is_default_option' => 'mods' === bp_group_get_message_status( $group_id ),
+						'is_default_option' => 'mods' === bboss_group_get_message_status( $group_id ),
 					),
 					array(
 						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
 						'value'             => 'admins',
 						'description'       => '',
-						'is_default_option' => 'admins' === bp_group_get_message_status( $group_id ),
+						'is_default_option' => 'admins' === bboss_group_get_message_status( $group_id ),
 					),
 				),
 			);
 		}
 
 		// Group Types.
-		$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
+		$group_types = bboss_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
 
 		// Hide Group Types if none is selected in Users > Profile Type > E.g. (Students) > Allowed Group Types meta box.
 		if (
-			function_exists( 'bp_restrict_group_creation' )
-			&& function_exists( 'bp_member_type_enable_disable' )
-			&& false === bp_restrict_group_creation()
-			&& true === bp_member_type_enable_disable()
+			function_exists( 'bboss_restrict_group_creation' )
+			&& function_exists( 'bboss_member_type_enable_disable' )
+			&& false === bboss_restrict_group_creation()
+			&& true === bboss_member_type_enable_disable()
 		) {
-			$get_all_registered_member_types = bp_get_active_member_types();
+			$get_all_registered_member_types = bboss_get_active_member_types();
 			if ( isset( $get_all_registered_member_types ) && ! empty( $get_all_registered_member_types ) ) {
 
-				$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+				$current_user_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
 				if ( '' !== $current_user_member_type ) {
-					$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+					$member_type_post_id = bboss_member_type_post_by_type( $current_user_member_type );
 					$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
 					if ( isset( $include_group_type ) && ! empty( $include_group_type ) && 'none' === $include_group_type[0] ) {
 						$group_types = '';
@@ -879,7 +879,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( $group_types ) {
-			$current_types    = bp_groups_get_group_type( $group_id, false );
+			$current_types    = bboss_groups_get_group_type( $group_id, false );
 			$group_type_field = array(
 				'label'       => esc_html__( 'Group Type', 'buddyboss' ),
 				'name'        => 'group-types',
@@ -899,21 +899,21 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			foreach ( $group_types as $type ) {
 
 				if (
-					function_exists( 'bp_restrict_group_creation' )
-					&& function_exists( 'bp_member_type_enable_disable' )
-					&& false === bp_restrict_group_creation()
-					&& true === bp_member_type_enable_disable()
+					function_exists( 'bboss_restrict_group_creation' )
+					&& function_exists( 'bboss_member_type_enable_disable' )
+					&& false === bboss_restrict_group_creation()
+					&& true === bboss_member_type_enable_disable()
 				) {
 
-					$get_all_registered_member_types = bp_get_active_member_types();
+					$get_all_registered_member_types = bboss_get_active_member_types();
 
 					if ( isset( $get_all_registered_member_types ) && ! empty( $get_all_registered_member_types ) ) {
 
-						$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+						$current_user_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
 
 						if ( '' !== $current_user_member_type ) {
 
-							$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+							$member_type_post_id = bboss_member_type_post_by_type( $current_user_member_type );
 							$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
 
 							if ( isset( $include_group_type ) && ! empty( $include_group_type ) ) {
@@ -922,7 +922,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 										'label'       => $type->labels['singular_name'],
 										'value'       => $type->name,
 										'description' => '',
-										'is_default_option' => ( ( ( true === bp_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
+										'is_default_option' => ( ( ( true === bboss_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
 									);
 								}
 							} else {
@@ -930,7 +930,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 									'label'             => $type->labels['singular_name'],
 									'value'             => $type->name,
 									'description'       => '',
-									'is_default_option' => ( ( ( true === bp_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
+									'is_default_option' => ( ( ( true === bboss_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
 								);
 							}
 						} else {
@@ -938,7 +938,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 								'label'             => $type->labels['singular_name'],
 								'value'             => $type->name,
 								'description'       => '',
-								'is_default_option' => ( ( ( true === bp_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
+								'is_default_option' => ( ( ( true === bboss_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
 							);
 						}
 					} else {
@@ -946,7 +946,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 							'label'             => $type->labels['singular_name'],
 							'value'             => $type->name,
 							'description'       => '',
-							'is_default_option' => ( ( ( true === bp_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
+							'is_default_option' => ( ( ( true === bboss_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
 						);
 					}
 				} else {
@@ -954,7 +954,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 						'label'             => $type->labels['singular_name'],
 						'value'             => $type->name,
 						'description'       => '',
-						'is_default_option' => ( ( ( true === bp_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
+						'is_default_option' => ( ( ( true === bboss_groups_has_group_type( $group_id, $type->name ) ) ? $type->name : '' ) === $type->name ),
 					);
 				}
 			}
@@ -963,9 +963,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 		// --Group Types.
 
-		if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) {
-			$current_parent_group_id = bp_get_parent_group_id();
-			$possible_parent_groups  = bp_get_possible_parent_groups();
+		if ( function_exists( 'bboss_enable_group_hierarchies' ) && bboss_enable_group_hierarchies() ) {
+			$current_parent_group_id = bboss_get_parent_group_id();
+			$possible_parent_groups  = bboss_get_possible_parent_groups();
 
 			$group_hierarchies = array(
 				'label'       => esc_html__( 'Group Parent', 'buddyboss' ),
@@ -1010,8 +1010,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	protected function update_details_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
 		$group_id                           = $request->get_param( 'id' );
-		$group                              = groups_get_group( $group_id );
-		buddypress()->groups->current_group = $group;
+		$group                              = bboss_groups_get_group( $group_id );
+		bboss()->groups->current_group = $group;
 
 		if ( empty( $post_fields ) ) {
 			return array(
@@ -1020,14 +1020,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$group_name           = ( array_key_exists( 'group-name', (array) $post_fields ) && ! empty( $post_fields['group-name'] ) ) ? $post_fields['group-name'] : bp_get_group_name( $group );
-		$group_desc           = ( array_key_exists( 'group-desc', (array) $post_fields ) && ! empty( $post_fields['group-desc'] ) ) ? $post_fields['group-desc'] : bp_get_group_description_editable( $group );
+		$group_name           = ( array_key_exists( 'group-name', (array) $post_fields ) && ! empty( $post_fields['group-name'] ) ) ? $post_fields['group-name'] : bboss_get_group_name( $group );
+		$group_desc           = ( array_key_exists( 'group-desc', (array) $post_fields ) && ! empty( $post_fields['group-desc'] ) ) ? $post_fields['group-desc'] : bboss_get_group_description_editable( $group );
 		$group_notify_members = (bool) ( array_key_exists( 'group-notify-members', (array) $post_fields ) && ! empty( $post_fields['group-notify-members'] ) ) ? $post_fields['group-notify-members'] : false;
 
 		$error  = '';
 		$notice = '';
 
-		if ( ! groups_edit_base_group_details(
+		if ( ! bboss_groups_edit_base_group_details(
 			array(
 				'group_id'       => $group_id,
 				'name'           => $group_name,
@@ -1066,8 +1066,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	protected function update_settings_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
 		$group_id                           = $request->get_param( 'id' );
-		$group                              = groups_get_group( $group_id );
-		buddypress()->groups->current_group = $group;
+		$group                              = bboss_groups_get_group( $group_id );
+		bboss()->groups->current_group = $group;
 
 		if ( empty( $post_fields ) ) {
 			return array(
@@ -1079,7 +1079,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_status = apply_filters( 'groups_allowed_status', array( 'public', 'private', 'hidden' ) );
-		$status         = ( array_key_exists( 'group-status', (array) $post_fields ) && ! empty( $post_fields['group-status'] ) ) ? $post_fields['group-status'] : ( ! bp_get_new_group_status() ? 'public' : bp_get_new_group_status() );
+		$status         = ( array_key_exists( 'group-status', (array) $post_fields ) && ! empty( $post_fields['group-status'] ) ) ? $post_fields['group-status'] : ( ! bboss_get_new_group_status() ? 'public' : bboss_get_new_group_status() );
 
 		$error          = '';
 		$notice         = '';
@@ -1091,8 +1091,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
-		$invite_status         = ( array_key_exists( 'group-invite-status', (array) $post_fields ) && ! empty( $post_fields['group-invite-status'] ) ) ? $post_fields['group-invite-status'] : bp_group_get_invite_status( $group->id );
+		$allowed_invite_status = bboss_groups_get_settings_status( 'invite' );
+		$invite_status         = ( array_key_exists( 'group-invite-status', (array) $post_fields ) && ! empty( $post_fields['group-invite-status'] ) ) ? $post_fields['group-invite-status'] : bboss_group_get_invite_status( $group->id );
 
 		if ( ! in_array( $invite_status, $allowed_invite_status, true ) ) {
 			$validate_error = true;
@@ -1100,8 +1100,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
-		$activity_feed_status         = ( array_key_exists( 'group-activity-feed-status', (array) $post_fields ) && ! empty( $post_fields['group-activity-feed-status'] ) ) ? $post_fields['group-activity-feed-status'] : bp_group_get_activity_feed_status( $group->id );
+		$allowed_activity_feed_status = bboss_groups_get_settings_status( 'activity_feed' );
+		$activity_feed_status         = ( array_key_exists( 'group-activity-feed-status', (array) $post_fields ) && ! empty( $post_fields['group-activity-feed-status'] ) ) ? $post_fields['group-activity-feed-status'] : bboss_group_get_activity_feed_status( $group->id );
 
 		if ( ! in_array( $activity_feed_status, $allowed_activity_feed_status, true ) ) {
 			$validate_error = true;
@@ -1109,8 +1109,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_media_status = bb_groups_get_settings_status( 'media' );
-		$media_status         = ( array_key_exists( 'group-media-status', (array) $post_fields ) && ! empty( $post_fields['group-media-status'] ) ) ? $post_fields['group-media-status'] : bp_group_get_media_status( $group->id );
+		$allowed_media_status = bboss_groups_get_settings_status( 'media' );
+		$media_status         = ( array_key_exists( 'group-media-status', (array) $post_fields ) && ! empty( $post_fields['group-media-status'] ) ) ? $post_fields['group-media-status'] : bboss_group_get_media_status( $group->id );
 
 		if ( ! in_array( $media_status, $allowed_media_status, true ) ) {
 			$validate_error = true;
@@ -1118,8 +1118,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_document_status = bb_groups_get_settings_status( 'document' );
-		$document_status         = ( array_key_exists( 'group-document-status', (array) $post_fields ) && ! empty( $post_fields['group-document-status'] ) ) ? $post_fields['group-document-status'] : bp_group_get_document_status( $group->id );
+		$allowed_document_status = bboss_groups_get_settings_status( 'document' );
+		$document_status         = ( array_key_exists( 'group-document-status', (array) $post_fields ) && ! empty( $post_fields['group-document-status'] ) ) ? $post_fields['group-document-status'] : bboss_group_get_document_status( $group->id );
 
 		if ( ! in_array( $document_status, $allowed_document_status, true ) ) {
 			$validate_error = true;
@@ -1127,8 +1127,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_album_status = bb_groups_get_settings_status( 'album' );
-		$album_status         = ( array_key_exists( 'group-album-status', (array) $post_fields ) && ! empty( $post_fields['group-album-status'] ) ) ? $post_fields['group-album-status'] : bp_group_get_album_status( $group->id );
+		$allowed_album_status = bboss_groups_get_settings_status( 'album' );
+		$album_status         = ( array_key_exists( 'group-album-status', (array) $post_fields ) && ! empty( $post_fields['group-album-status'] ) ) ? $post_fields['group-album-status'] : bboss_group_get_album_status( $group->id );
 
 		if ( ! in_array( $album_status, $allowed_album_status, true ) ) {
 			$validate_error = true;
@@ -1136,8 +1136,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_video_status = bb_groups_get_settings_status( 'video' );
-		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bp_group_get_video_status( $group->id );
+		$allowed_video_status = bboss_groups_get_settings_status( 'video' );
+		$video_status         = ( array_key_exists( 'group-video-status', (array) $post_fields ) && ! empty( $post_fields['group-video-status'] ) ) ? $post_fields['group-video-status'] : bboss_group_get_video_status( $group->id );
 
 		if ( ! in_array( $video_status, $allowed_video_status, true ) ) {
 			$validate_error = true;
@@ -1145,8 +1145,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
-		$allowed_message_status = bb_groups_get_settings_status( 'message' );
-		$message_status         = ( array_key_exists( 'group-message-status', (array) $post_fields ) && ! empty( $post_fields['group-message-status'] ) ) ? $post_fields['group-message-status'] : bp_group_get_message_status( $group->id );
+		$allowed_message_status = bboss_groups_get_settings_status( 'message' );
+		$message_status         = ( array_key_exists( 'group-message-status', (array) $post_fields ) && ! empty( $post_fields['group-message-status'] ) ) ? $post_fields['group-message-status'] : bboss_group_get_message_status( $group->id );
 
 		if ( ! in_array( $message_status, $allowed_message_status, true ) ) {
 			$validate_error = true;
@@ -1157,13 +1157,13 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		 *
 		 * Ensure we keep types that have 'show_in_create_screen' set to false.
 		 */
-		$current_types = bp_groups_get_group_type( $group_id, false );
-		$current_types = array_intersect( bp_groups_get_group_types( array( 'show_in_create_screen' => false ) ), (array) $current_types );
+		$current_types = bboss_groups_get_group_type( $group_id, false );
+		$current_types = array_intersect( bboss_groups_get_group_types( array( 'show_in_create_screen' => false ) ), (array) $current_types );
 		if ( isset( $post_fields['group-types'] ) ) {
 			$current_types = array_merge( $current_types, (array) $post_fields['group-types'] );
 
 			// Set group types.
-			bp_groups_set_group_type( $group_id, $current_types );
+			bboss_groups_set_group_type( $group_id, $current_types );
 
 			// No group types checked, so this means we want to wipe out all group types.
 		} else {
@@ -1175,13 +1175,13 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$current_types = empty( $current_types ) ? '' : $current_types;
 
 			// Set group types.
-			bp_groups_set_group_type( $group_id, $current_types );
+			bboss_groups_set_group_type( $group_id, $current_types );
 		}
 
-		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : bp_get_parent_group_id( $group->id );
+		$parent_id    = isset( $post_fields['bp-groups-parent'] ) && array_key_exists( 'bp-groups-parent', (array) $post_fields ) ? $post_fields['bp-groups-parent'] : bboss_get_parent_group_id( $group->id );
 		$enable_forum = ( isset( $group->enable_forum ) ? $group->enable_forum : false );
 
-		if ( true === $validate_error || ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
+		if ( true === $validate_error || ! bboss_groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
 			$error = __( 'There was an error updating group settings. Please try again.', 'buddyboss' );
 		} else {
 			$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
@@ -1203,9 +1203,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	protected function get_forum_fields( $group_id ) {
 		$fields                             = array();
-		buddypress()->groups->current_group = groups_get_group( $group_id );
+		bboss()->groups->current_group = bboss_groups_get_group( $group_id );
 
-		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() ) {
+		if ( ! bboss_is_active( 'forums' ) || ! function_exists( 'bboss_bbp_is_group_forums_active' ) || ! bboss_bbp_is_group_forums_active() ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
 				__( 'Sorry, you are not allowed to see the forum group settings options.', 'buddyboss' ),
@@ -1216,14 +1216,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		$forum_id  = 0;
-		$forum_ids = bbp_get_group_forum_ids( $group_id );
+		$forum_ids = bboss_bbp_get_group_forum_ids( $group_id );
 
 		// Get the first forum ID.
 		if ( ! empty( $forum_ids ) ) {
 			$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
 		}
 
-		$checked = bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( $group_id );
+		$checked = bboss_get_new_group_enable_forum() || bboss_group_is_forum_enabled( $group_id );
 
 		$fields[] = array(
 			'label'       => esc_html__( 'Group Forum Settings', 'buddyboss' ),
@@ -1257,10 +1257,10 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	protected function update_forum_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
 		$group_id                           = $request->get_param( 'id' );
-		$group                              = groups_get_group( $group_id );
-		buddypress()->groups->current_group = $group;
+		$group                              = bboss_groups_get_group( $group_id );
+		bboss()->groups->current_group = $group;
 
-		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() || ! class_exists( 'BBP_Forums_Group_Extension' ) ) {
+		if ( ! bboss_is_active( 'forums' ) || ! function_exists( 'bboss_bbp_is_group_forums_active' ) || ! bboss_bbp_is_group_forums_active() || ! class_exists( 'BBoss_BBP_Forums_Group_Extension' ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
 				__( 'Sorry, you are not allowed to update the forum group settings options.', 'buddyboss' ),
@@ -1280,14 +1280,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$edit_forum = ( array_key_exists( 'bbp-edit-group-forum', (array) $post_fields ) && ! empty( $post_fields['bbp-edit-group-forum'] ) ) ? true : false;
 		$forum_id   = 0;
 
-		$group_forum_extention = new BBP_Forums_Group_Extension();
+		$group_forum_extention = new BBoss_BBP_Forums_Group_Extension();
 
-		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
+		$forum_ids = array_values( bboss_bbp_get_group_forum_ids( $group_id ) );
 
 		// Check for the last associated values if no forum set from setting.
 		if ( $edit_forum && empty( $forum_ids ) ) {
 
-			$last_forum_id = (int) groups_get_groupmeta( $group_id, 'last_forum_id' );
+			$last_forum_id = (int) bboss_groups_get_groupmeta( $group_id, 'last_forum_id' );
 
 			if ( ! empty( $last_forum_id ) ) {
 
@@ -1307,7 +1307,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 					$valid_forum = $group_forum_extention->forum_can_associate_with_group( $forum_id, $group_id, false );
 
 					// Look for forum if exits.
-					$forum_exist = bbp_get_forum( $forum_id );
+					$forum_exist = bboss_bbp_get_forum( $forum_id );
 					if ( empty( $valid_forum ) || empty( $forum_exist ) ) {
 						$restored_associations = false;
 					}
@@ -1329,7 +1329,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			foreach ( $forum_ids as $forum_id ) {
 
 				// Look for forum.
-				$forum = bbp_get_forum( $forum_id );
+				$forum = bboss_bbp_get_forum( $forum_id );
 
 				// No forum exists, so break the relationship.
 				if ( empty( $forum ) ) {
@@ -1348,8 +1348,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		// Update the group ID and forum ID relationships.
-		bbp_update_forum_group_ids( $forum_id, (array) $group_id );
-		bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
+		bboss_bbp_update_forum_group_ids( $forum_id, (array) $group_id );
+		bboss_bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
 
 		// Update the group forum setting.
 		$group = $group_forum_extention->toggle_group_forum( $group_id, $edit_forum, $forum_id );
@@ -1364,7 +1364,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $forum_id ) ) {
 				delete_post_meta( $forum_id, '_last_bbp_group_ids' );
 			}
-			groups_delete_groupmeta( $group_id, 'last_forum_id' );
+			bboss_groups_delete_groupmeta( $group_id, 'last_forum_id' );
 		}
 
 		// Create a new forum.
@@ -1373,21 +1373,21 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			// Set the default forum status.
 			switch ( $group->status ) {
 				case 'hidden':
-					$status = bbp_get_hidden_status_id();
+					$status = bboss_bbp_get_hidden_status_id();
 					break;
 				case 'private':
-					$status = bbp_get_private_status_id();
+					$status = bboss_bbp_get_private_status_id();
 					break;
 				case 'public':
 				default:
-					$status = bbp_get_public_status_id();
+					$status = bboss_bbp_get_public_status_id();
 					break;
 			}
 
 			// Create the initial forum.
-			$forum_id = bbp_insert_forum(
+			$forum_id = bboss_bbp_insert_forum(
 				array(
-					'post_parent'  => bbp_get_group_forums_root_id(),
+					'post_parent'  => bboss_bbp_get_group_forums_root_id(),
 					'post_title'   => $group->name,
 					'post_content' => $group->description,
 					'post_status'  => $status,
@@ -1422,7 +1422,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @return mixed|void
 	 */
 	protected function get_courses_fields( $group_id ) {
-		buddypress()->groups->current_group = groups_get_group( $group_id );
+		bboss()->groups->current_group = bboss_groups_get_group( $group_id );
 
 		/**
 		 * @since BuddyBoss 3.0.0
@@ -1462,8 +1462,8 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	protected function update_courses_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
 		$group_id                           = $request->get_param( 'id' );
-		$group                              = groups_get_group( $group_id );
-		buddypress()->groups->current_group = $group;
+		$group                              = bboss_groups_get_group( $group_id );
+		bboss()->groups->current_group = $group;
 
 		if ( empty( $post_fields ) ) {
 			return array(
@@ -1504,12 +1504,12 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @param object $forum    Forum post data.
 	 * @param int    $forum_id Selected forum id.
 	 *
-	 * @uses bbp_get_forum_group_ids() Get forum group id.
+	 * @uses bboss_bbp_get_forum_group_ids() Get forum group id.
 	 *
 	 * @return bool
 	 */
 	protected function is_option_disabled( $forum, $forum_id ) {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			return false;
 		}
 
@@ -1521,13 +1521,13 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			return true;
 		}
 
-		$group_ids = bbp_get_forum_group_ids( $forum->ID );
+		$group_ids = bboss_bbp_get_forum_group_ids( $forum->ID );
 
 		if ( ! empty( $group_ids ) ) {
 			return true;
 		}
 
-		if ( bbp_is_forum_category( $forum->ID ) ) {
+		if ( bboss_bbp_is_forum_category( $forum->ID ) ) {
 			return true;
 		}
 
@@ -1536,3 +1536,10 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 }
 
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Group_Settings_Endpoint', false ) || interface_exists( 'BBoss_REST_Group_Settings_Endpoint', false ) || trait_exists( 'BBoss_REST_Group_Settings_Endpoint', false ) ) && ! class_exists( 'BP_REST_Group_Settings_Endpoint', false ) && ! interface_exists( 'BP_REST_Group_Settings_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Group_Settings_Endpoint', 'BP_REST_Group_Settings_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

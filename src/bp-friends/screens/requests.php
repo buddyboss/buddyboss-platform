@@ -14,42 +14,42 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function friends_screen_requests() {
-	if ( bp_is_action_variable( 'accept', 0 ) && is_numeric( bp_action_variable( 1 ) ) ) {
+function bboss_friends_screen_requests() {
+	if ( bboss_is_action_variable( 'accept', 0 ) && is_numeric( bboss_action_variable( 1 ) ) ) {
 		// Check the nonce.
 		check_admin_referer( 'friends_accept_friendship' );
 
-		if ( friends_accept_friendship( bp_action_variable( 1 ) ) ) {
-			bp_core_add_message( __( 'Connection accepted', 'buddyboss' ) );
+		if ( bboss_friends_accept_friendship( bboss_action_variable( 1 ) ) ) {
+			bboss_core_add_message( __( 'Connection accepted', 'buddyboss' ) );
 		} else {
-			bp_core_add_message( __( 'Connection could not be accepted', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'Connection could not be accepted', 'buddyboss' ), 'error' );
 		}
 
-		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
+		bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_current_component() . '/' . bboss_current_action() ) );
 
-	} elseif ( bp_is_action_variable( 'reject', 0 ) && is_numeric( bp_action_variable( 1 ) ) ) {
+	} elseif ( bboss_is_action_variable( 'reject', 0 ) && is_numeric( bboss_action_variable( 1 ) ) ) {
 		// Check the nonce.
 		check_admin_referer( 'friends_reject_friendship' );
 
-		if ( friends_reject_friendship( bp_action_variable( 1 ) ) ) {
-			bp_core_add_message( __( 'Connection rejected', 'buddyboss' ) );
+		if ( bboss_friends_reject_friendship( bboss_action_variable( 1 ) ) ) {
+			bboss_core_add_message( __( 'Connection rejected', 'buddyboss' ) );
 		} else {
-			bp_core_add_message( __( 'Connection could not be rejected', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'Connection could not be rejected', 'buddyboss' ), 'error' );
 		}
 
-		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
+		bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_current_component() . '/' . bboss_current_action() ) );
 
-	} elseif ( bp_is_action_variable( 'cancel', 0 ) && is_numeric( bp_action_variable( 1 ) ) ) {
+	} elseif ( bboss_is_action_variable( 'cancel', 0 ) && is_numeric( bboss_action_variable( 1 ) ) ) {
 		// Check the nonce.
 		check_admin_referer( 'friends_withdraw_friendship' );
 
-		if ( friends_withdraw_friendship( bp_loggedin_user_id(), bp_action_variable( 1 ) ) ) {
-			bp_core_add_message( __( 'Connection request withdrawn', 'buddyboss' ) );
+		if ( bboss_friends_withdraw_friendship( bboss_loggedin_user_id(), bboss_action_variable( 1 ) ) ) {
+			bboss_core_add_message( __( 'Connection request withdrawn', 'buddyboss' ) );
 		} else {
-			bp_core_add_message( __( 'Connection request could not be withdrawn', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'Connection request could not be withdrawn', 'buddyboss' ), 'error' );
 		}
 
-		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
+		bboss_core_redirect( trailingslashit( bboss_loggedin_user_domain() . bboss_current_component() . '/' . bboss_current_action() ) );
 	}
 
 	/**
@@ -66,5 +66,5 @@ function friends_screen_requests() {
 	 *
 	 * @param string $template Path to the friends request template to load.
 	 */
-	bp_core_load_template( apply_filters( 'friends_template_requests', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'friends_template_requests', 'members/single/home' ) );
 }

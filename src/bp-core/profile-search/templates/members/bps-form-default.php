@@ -32,7 +32,7 @@ if ( is_admin() ) {
 
 // 3rd section: display the search form
 
-$F = bp_ps_escaped_form_data( $version = '4.9' );
+$F = bboss_ps_escaped_form_data( $version = '4.9' );
 
 if ( ! empty( $options['theme'] ) ) {
 	$accordion = 'bp_ps_accordion_' . $F->unique_id;
@@ -43,8 +43,8 @@ if ( ! empty( $options['theme'] ) ) {
 	 * assets). The theme picker is gone from the template options, so any other
 	 * stored $options['theme'] value falls back to the bundled base theme.
 	 */
-	$min = bp_core_get_minified_asset_suffix();
-	wp_enqueue_style( 'jquery-ui-theme', buddypress()->plugin_url . "bp-core/css/vendor/jquery-ui/jquery-ui{$min}.css", array(), '1.12.1' );
+	$min = bboss_core_get_minified_asset_suffix();
+	wp_enqueue_style( 'jquery-ui-theme', bboss()->plugin_url . "bp-core/css/vendor/jquery-ui/jquery-ui{$min}.css", array(), '1.12.1' );
 
 	// Accordion init and form styles on their enqueued handles (were a raw <script>/<style> here).
 	$accordion_config = array(
@@ -135,7 +135,7 @@ foreach ( $F->fields as $f ) {
 			$km          = __( 'km', 'buddyboss' );
 			$miles       = __( 'miles', 'buddyboss' );
 			$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-			$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
+			$icon_url    = bboss()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
 			$icon_title  = __( 'get current location', 'buddyboss' );
 			?>
 			<input type="number" min="1" style="width: 5em;" name="<?php echo esc_attr( $name . '[distance]' ); ?>" value="<?php echo esc_attr( $value['distance'] ); ?>">

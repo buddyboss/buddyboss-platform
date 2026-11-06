@@ -22,8 +22,8 @@ defined( 'ABSPATH' ) || exit;
 						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss' ); ?></span></h4>
 					</header>
 					<div class="bb-field-wrap">
-						<?php bp_get_template_part( 'media/location-move' ); ?>
-						<?php bp_get_template_part( 'media/media-create-album' ); ?>
+						<?php bboss_get_template_part( 'media/location-move' ); ?>
+						<?php bboss_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-model-footer">
 						<a href="#" class="bp-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>

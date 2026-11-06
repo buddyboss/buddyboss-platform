@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_registration_register_login_redirects_panel_fields() {
+function bboss_registration_register_login_redirects_panel_fields() {
 
 	$feature_id = 'registration';
 	$panel_id   = 'login_redirects';
@@ -27,7 +27,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 	// SECTION 1: Global Redirects — global_redirects
 	// =========================================================================
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		$feature_id,
 		$panel_id,
 		'global_redirects',
@@ -40,7 +40,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 	);
 
 	// Field 10: After Login.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'global_redirects',
@@ -51,7 +51,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_search_published_pages',
 			'default'           => '',
-			'sanitize_callback' => 'bb_registration_sanitize_redirection',
+			'sanitize_callback' => 'bboss_registration_sanitize_redirection',
 			'placeholder'       => __( 'Default', 'buddyboss' ),
 			'group'             => 'login_redirect',
 			'order'             => 10,
@@ -59,7 +59,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 	);
 
 	// Field 10a: Custom Login URL (conditional: when Custom URL selected).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'global_redirects',
@@ -68,7 +68,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'label'             => '',
 			'type'              => 'text',
 			'default'           => '',
-			'sanitize_callback' => 'bb_registration_sanitize_redirect_url',
+			'sanitize_callback' => 'bboss_registration_sanitize_redirect_url',
 			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 			'conditional'       => array(
 				'field'  => 'bb-login-redirection',
@@ -81,7 +81,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 	);
 
 	// Field 11: After Logout.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'global_redirects',
@@ -92,7 +92,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_search_published_pages',
 			'default'           => '',
-			'sanitize_callback' => 'bb_registration_sanitize_redirection',
+			'sanitize_callback' => 'bboss_registration_sanitize_redirection',
 			'placeholder'       => __( 'Default', 'buddyboss' ),
 			'group'             => 'logout_redirect',
 			'order'             => 20,
@@ -100,7 +100,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 	);
 
 	// Field 11a: Custom Logout URL (conditional: when Custom URL selected).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'global_redirects',
@@ -109,7 +109,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'label'             => '',
 			'type'              => 'text',
 			'default'           => '',
-			'sanitize_callback' => 'bb_registration_sanitize_redirect_url',
+			'sanitize_callback' => 'bboss_registration_sanitize_redirect_url',
 			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 			'conditional'       => array(
 				'field'  => 'bb-logout-redirection',
@@ -128,8 +128,8 @@ function bb_registration_register_login_redirects_panel_fields() {
 	// and member types exist.
 	// =========================================================================
 
-	if ( bp_is_active( 'xprofile' ) && function_exists( 'bp_get_member_types' ) ) {
-		bb_register_feature_section(
+	if ( bboss_is_active( 'xprofile' ) && function_exists( 'bboss_get_member_types' ) ) {
+		bboss_register_feature_section(
 			$feature_id,
 			$panel_id,
 			'profile_type_redirects',
@@ -158,7 +158,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 		// This field saves per-type redirects via bb_admin_update_member_type AJAX,
 		// not the main settings save handler. sanitize_callback returns empty array
 		// to prevent accidental data persistence through the main save flow.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			$feature_id,
 			$panel_id,
 			'profile_type_redirects',

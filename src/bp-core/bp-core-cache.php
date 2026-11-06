@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return int
  */
-function bp_core_clear_cache() {
+function bboss_core_clear_cache() {
 	global $cache_path;
 
 	if ( function_exists( 'prune_super_cache' ) ) {
@@ -47,7 +47,7 @@ function bp_core_clear_cache() {
  *
  * @param string $user_id User ID to delete cache for.
  */
-function bp_core_clear_user_object_cache( $user_id ) {
+function bboss_core_clear_user_object_cache( $user_id ) {
 	wp_cache_delete( 'bp_user_' . $user_id, 'bp' );
 }
 
@@ -56,7 +56,7 @@ function bp_core_clear_user_object_cache( $user_id ) {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_core_clear_member_count_caches() {
+function bboss_core_clear_member_count_caches() {
 	wp_cache_delete( 'bp_total_member_count', 'bp' );
 	delete_transient( 'bp_active_member_count' );
 }
@@ -73,19 +73,19 @@ add_action( 'deleted_user', 'bp_core_clear_member_count_caches' );
  *
  * @param int $post_id ID of the page that was saved.
  */
-function bp_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
+function bboss_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
 
 	// Bail if BP is not defined here.
-	if ( ! buddypress() ) {
+	if ( ! bboss() ) {
 		return;
 	}
 
 	// Bail if not on the root blog
-	if ( ! bp_is_root_blog() ) {
+	if ( ! bboss_is_root_blog() ) {
 		return;
 	}
 
-	$page_ids = bp_core_get_directory_page_ids( 'all' );
+	$page_ids = bboss_core_get_directory_page_ids( 'all' );
 
 	// Bail if post ID is not a directory page
 	if ( ! in_array( $post_id, $page_ids ) ) {
@@ -109,7 +109,7 @@ add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
  *
  * @param string $option Option name.
  */
-function bp_core_clear_directory_pages_cache_settings_edit( $option ) {
+function bboss_core_clear_directory_pages_cache_settings_edit( $option ) {
 	if ( 'bp-pages' === $option ) {
 
 		$cache_key = 'directory_pages';
@@ -130,13 +130,13 @@ add_action( 'update_option', 'bp_core_clear_directory_pages_cache_settings_edit'
  *
  * @param string $option Option name.
  */
-function bp_core_clear_root_options_cache( $option ) {
+function bboss_core_clear_root_options_cache( $option ) {
 	foreach ( array( 'add_option', 'add_site_option', 'update_option', 'update_site_option' ) as $action ) {
 		remove_action( $action, 'bp_core_clear_root_options_cache' );
 	}
 
 	// Surrounding code prevents infinite loops on WP < 4.4.
-	$keys = array_keys( bp_get_default_options() );
+	$keys = array_keys( bboss_get_default_options() );
 
 	foreach ( array( 'add_option', 'add_site_option', 'update_option', 'update_site_option' ) as $action ) {
 		add_action( $action, 'bp_core_clear_root_options_cache' );
@@ -172,7 +172,7 @@ add_action( 'add_site_option', 'bp_core_clear_root_options_cache' );
  * @param string $cache_group The cache group to check against.
  * @return array
  */
-function bp_get_non_cached_ids( $item_ids, $cache_group ) {
+function bboss_get_non_cached_ids( $item_ids, $cache_group ) {
 	$uncached = array();
 
 	foreach ( $item_ids as $item_id ) {
@@ -212,7 +212,7 @@ function bp_get_non_cached_ids( $item_ids, $cache_group ) {
  * }
  * @return false|array Metadata cache for the specified objects, or false on failure.
  */
-function bp_update_meta_cache( $args = array() ) {
+function bboss_update_meta_cache( $args = array() ) {
 	global $wpdb;
 
 	$defaults = array(
@@ -223,7 +223,7 @@ function bp_update_meta_cache( $args = array() ) {
 		'object_column'    => '',      // DB column for the object ids (group_id, etc).
 		'cache_key_prefix' => '',       // Prefix to use when creating cache key names. Eg 'bp_groups_groupmeta'.
 	);
-	$r        = bp_parse_args( $args, $defaults );
+	$r        = bboss_parse_args( $args, $defaults );
 	extract( $r );
 
 	if ( empty( $object_ids ) || empty( $object_type ) || empty( $meta_table ) || empty( $cache_group ) ) {
@@ -243,7 +243,7 @@ function bp_update_meta_cache( $args = array() ) {
 	}
 
 	$object_ids   = wp_parse_id_list( $object_ids );
-	$uncached_ids = bp_get_non_cached_ids( $object_ids, $cache_group );
+	$uncached_ids = bboss_get_non_cached_ids( $object_ids, $cache_group );
 
 	$cache = array();
 
@@ -287,17 +287,17 @@ function bp_update_meta_cache( $args = array() ) {
 /**
  * Gets a value that has been cached using an incremented key.
  *
- * A utility function for use by query methods like BP_Activity_Activity::get().
+ * A utility function for use by query methods like BBoss_Activity_Activity::get().
  *
  * @since BuddyPress 2.7.0
- * @see bp_core_set_incremented_cache()
+ * @see bboss_core_set_incremented_cache()
  *
  * @param string $key   Unique key for the query. Usually a SQL string.
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return array|bool False if no cached values are found, otherwise an array of IDs.
  */
-function bp_core_get_incremented_cache( $key, $group ) {
-	$cache_key = bp_core_get_incremented_cache_key( $key, $group );
+function bboss_core_get_incremented_cache( $key, $group ) {
+	$cache_key = bboss_core_get_incremented_cache_key( $key, $group );
 	return wp_cache_get( $cache_key, $group );
 }
 
@@ -310,7 +310,7 @@ function bp_core_get_incremented_cache( $key, $group ) {
  * Use this method when caching data that should be invalidated whenever any
  * object of a given type is created, updated, or deleted. This usually means
  * data related to object queries, which can only reliably cached until the
- * underlying set of objects has been modified. See, eg, BP_Activity_Activity::get().
+ * underlying set of objects has been modified. See, eg, BBoss_Activity_Activity::get().
  *
  * @since BuddyPress 2.7.0
  *
@@ -319,25 +319,25 @@ function bp_core_get_incremented_cache( $key, $group ) {
  * @param array  $ids   Array of IDs.
  * @return bool
  */
-function bp_core_set_incremented_cache( $key, $group, $ids ) {
-	$cache_key = bp_core_get_incremented_cache_key( $key, $group );
+function bboss_core_set_incremented_cache( $key, $group, $ids ) {
+	$cache_key = bboss_core_get_incremented_cache_key( $key, $group );
 	return wp_cache_set( $cache_key, $ids, $group );
 }
 
 /**
  * Delete a value that has been cached using an incremented key.
  *
- * A utility function for use by query methods like BP_Activity_Activity::get().
+ * A utility function for use by query methods like BBoss_Activity_Activity::get().
  *
  * @since BuddyPress 3.0.0
- * @see bp_core_set_incremented_cache()
+ * @see bboss_core_set_incremented_cache()
  *
  * @param string $key   Unique key for the query. Usually a SQL string.
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return bool True on successful removal, false on failure.
  */
-function bp_core_delete_incremented_cache( $key, $group ) {
-	$cache_key = bp_core_get_incremented_cache_key( $key, $group );
+function bboss_core_delete_incremented_cache( $key, $group ) {
+	$cache_key = bboss_core_get_incremented_cache_key( $key, $group );
 	return wp_cache_delete( $cache_key, $group );
 }
 
@@ -353,9 +353,9 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return string
  */
-function bp_core_get_incremented_cache_key( $key, $group ) {
+function bboss_core_get_incremented_cache_key( $key, $group ) {
 	global $wpdb;
-	$incrementor = bp_core_get_incrementor( $group );
+	$incrementor = bboss_core_get_incrementor( $group );
 
 	// Removes the placeholder escape strings from a query.
 	$key       = $wpdb->remove_placeholder_escape( $key );
@@ -378,7 +378,7 @@ function bp_core_get_incremented_cache_key( $key, $group ) {
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return string
  */
-function bp_core_get_incrementor( $group ) {
+function bboss_core_get_incrementor( $group ) {
 	$incrementor = wp_cache_get( 'incrementor', $group );
 	if ( ! $incrementor ) {
 		$incrementor = microtime();
@@ -399,7 +399,7 @@ function bp_core_get_incrementor( $group ) {
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return bool True on success, false on failure.
  */
-function bp_core_reset_incrementor( $group ) {
+function bboss_core_reset_incrementor( $group ) {
 	return wp_cache_delete( 'incrementor', $group );
 }
 
@@ -409,8 +409,8 @@ function bp_core_reset_incrementor( $group ) {
  * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  */
-function bp_invitations_reset_cache_incrementor() {
-	bp_core_reset_incrementor( 'bp_invitations' );
+function bboss_invitations_reset_cache_incrementor() {
+	bboss_core_reset_incrementor( 'bp_invitations' );
 }
 add_action( 'bp_invitation_after_save', 'bp_invitations_reset_cache_incrementor' );
 add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incrementor' );
@@ -424,10 +424,10 @@ add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incremento
  *
  * @return void
  */
-function bb_subscriptions_clear_bbpress_cache( $subscription_id ) {
+function bboss_subscriptions_clear_bbpress_cache( $subscription_id ) {
 	if ( $subscription_id ) {
 		// Delete the bbpress subscription cache.
-		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 		if ( ! empty( $subscription->item_id ) ) {
 			if ( 'forum' === $subscription->type ) {
 				wp_cache_delete( 'bbp_get_forum_subscribers_' . $subscription->item_id, 'bbpress_users' );
@@ -445,8 +445,8 @@ function bb_subscriptions_clear_bbpress_cache( $subscription_id ) {
  *
  * @return void
  */
-function bb_subscriptions_reset_cache_incrementor() {
-	bp_core_reset_incrementor( 'bb_subscriptions' );
+function bboss_subscriptions_reset_cache_incrementor() {
+	bboss_core_reset_incrementor( 'bb_subscriptions' );
 }
 
 add_action( 'bb_create_subscription', 'bb_subscriptions_reset_cache_incrementor' );
@@ -457,14 +457,14 @@ add_action( 'bb_delete_subscription', 'bb_subscriptions_reset_cache_incrementor'
  *
  * @since BuddyBoss 2.2.6
  *
- * @param BB_Subscriptions $subscription Subscription object.
+ * @param BBoss_Subscriptions $subscription Subscription object.
  */
-function bb_subscriptions_clear_cache_for_subscription( $subscription ) {
+function bboss_subscriptions_clear_cache_for_subscription( $subscription ) {
 	if ( ! empty( $subscription->id ) ) {
 		wp_cache_delete( $subscription->id, 'bb_subscriptions' );
 
 		// Delete the existing subscription cache.
-		bb_subscriptions_clear_bbpress_cache( $subscription->id );
+		bboss_subscriptions_clear_bbpress_cache( $subscription->id );
 	}
 }
 
@@ -481,13 +481,13 @@ add_action( 'bb_subscriptions_after_delete_subscription', 'bb_subscriptions_clea
  *
  * @return void
  */
-function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
+function bboss_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
 
 	if ( empty( $type ) || empty( $item_id ) ) {
 		return;
 	}
 
-	$subscription_ids = bb_get_subscriptions(
+	$subscription_ids = bboss_get_subscriptions(
 		array(
 			'type'    => $type,
 			'item_id' => $item_id,
@@ -499,13 +499,13 @@ function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
 	);
 
 	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
-		bp_core_reset_incrementor( 'bb_subscriptions' );
+		bboss_core_reset_incrementor( 'bb_subscriptions' );
 
 		foreach ( $subscription_ids['subscriptions'] as $id ) {
 			wp_cache_delete( $id, 'bb_subscriptions' );
 
 			// Delete the existing subscription cache.
-			bb_subscriptions_clear_bbpress_cache( $id );
+			bboss_subscriptions_clear_bbpress_cache( $id );
 		}
 	}
 }
@@ -522,13 +522,13 @@ add_action( 'bb_subscriptions_after_update_subscription_status', 'bb_subscriptio
  *
  * @return void
  */
-function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
+function bboss_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 
 	if ( empty( $r ) ) {
 		return;
 	}
 
-	$subscription_ids = bb_get_subscriptions(
+	$subscription_ids = bboss_get_subscriptions(
 		array(
 			'type'    => $r['type'],
 			'item_id' => $r['item_id'],
@@ -538,13 +538,13 @@ function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 	);
 
 	if ( ! empty( $subscription_ids['subscriptions'] ) ) {
-		bp_core_reset_incrementor( 'bb_subscriptions' );
+		bboss_core_reset_incrementor( 'bb_subscriptions' );
 
 		foreach ( $subscription_ids['subscriptions'] as $id ) {
 			wp_cache_delete( $id, 'bb_subscriptions' );
 
 			// Delete the existing subscription cache.
-			bb_subscriptions_clear_bbpress_cache( $id );
+			bboss_subscriptions_clear_bbpress_cache( $id );
 		}
 	}
 }
@@ -560,8 +560,8 @@ add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions
  *
  * @return void
  */
-function bb_reaction_clear_user_item_cache( $user_reaction_id ) {
-	bp_core_reset_incrementor( 'bb_reactions' );
+function bboss_reaction_clear_user_item_cache( $user_reaction_id ) {
+	bboss_core_reset_incrementor( 'bb_reactions' );
 	if ( ! empty( $user_reaction_id ) ) {
 		wp_cache_delete( $user_reaction_id, 'bb_reactions' );
 	}
@@ -581,8 +581,8 @@ add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_us
  *
  * @return void
  */
-function bb_reaction_clear_remove_user_item_cache( $deleted, $r, $reactions ) {
-	bp_core_reset_incrementor( 'bb_reactions' );
+function bboss_reaction_clear_remove_user_item_cache( $deleted, $r, $reactions ) {
+	bboss_core_reset_incrementor( 'bb_reactions' );
 	if ( ! empty( $reactions ) ) {
 		foreach ( $reactions as $id ) {
 			wp_cache_delete( $id, 'bb_reactions' );
@@ -601,8 +601,8 @@ add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_r
  *
  * @return void
  */
-function bb_reaction_clear_reactions_data_cache( $reaction_data_id ) {
-	bp_core_reset_incrementor( 'bb_reaction_data' );
+function bboss_reaction_clear_reactions_data_cache( $reaction_data_id ) {
+	bboss_core_reset_incrementor( 'bb_reaction_data' );
 	if ( ! empty( $reaction_data_id ) ) {
 		wp_cache_delete( $reaction_data_id, 'bb_reaction_data' );
 	}
@@ -621,14 +621,14 @@ add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_reactions
  *
  * @return void
  */
-function bb_reaction_clear_reactions_cache_on_update_settings( $old_value = '', $value = '', $option = '' ) {
+function bboss_reaction_clear_reactions_cache_on_update_settings( $old_value = '', $value = '', $option = '' ) {
 	if (
 		function_exists( 'wp_cache_flush_group' ) &&
 		function_exists( 'wp_cache_supports' ) &&
 		wp_cache_supports( 'flush_group' )
 	) {
-		bp_core_reset_incrementor( 'bb_reactions' );
-		bp_core_reset_incrementor( 'bb_reaction_data' );
+		bboss_core_reset_incrementor( 'bb_reactions' );
+		bboss_core_reset_incrementor( 'bb_reaction_data' );
 
 		wp_cache_flush_group( 'bb_reactions' );
 		wp_cache_flush_group( 'bb_reaction_data' );
@@ -650,13 +650,13 @@ add_action( 'update_option_bb_reaction_mode', 'bb_reaction_clear_reactions_cache
  *
  * @return void
  */
-function bb_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
+function bboss_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
 	if (
 		! empty( $post ) &&
 		! empty( $post->post_type ) &&
 		'bb_reaction' === $post->post_type
 	) {
-		bb_reaction_clear_reactions_cache_on_update_settings();
+		bboss_reaction_clear_reactions_cache_on_update_settings();
 	}
 }
 
@@ -670,17 +670,17 @@ add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion
  * @param object|int $topic_data Topic relationship object or topic ID.
  * @param array      $args       Additional arguments.
  */
-function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
+function bboss_clear_topic_related_caches( $topic_data, $args = array() ) {
 	if ( empty( $topic_data ) ) {
 		return;
 	}
 
 	// Reset the incrementor to clear all cached queries.
-	bp_core_reset_incrementor( 'bb_topics' );
+	bboss_core_reset_incrementor( 'bb_topics' );
 
 	// If topic_data is an ID, get the full topic data.
 	if ( is_numeric( $topic_data ) ) {
-		$topic_data = bb_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $topic_data ) );
+		$topic_data = bboss_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $topic_data ) );
 	}
 
 	// Clear individual topic relationship cache.
@@ -730,8 +730,8 @@ function bb_clear_topic_related_caches( $topic_data, $args = array() ) {
  * @param object|int $topic_relationship Topic relationship object or topic ID.
  * @param array      $r                  Additional arguments.
  */
-function bb_topic_added_cache_reset( $topic_relationship, $r ) {
-	bb_clear_topic_related_caches( $topic_relationship, $r );
+function bboss_topic_added_cache_reset( $topic_relationship, $r ) {
+	bboss_clear_topic_related_caches( $topic_relationship, $r );
 }
 
 add_action( 'bb_topic_after_added', 'bb_topic_added_cache_reset', 10, 2 );
@@ -746,17 +746,17 @@ add_action( 'bb_topic_relationship_after_updated', 'bb_topic_added_cache_reset',
  * @param array $relationships_ids The IDs of the topic relationships that were deleted.
  * @param int   $topic_id          The ID of the topic that was deleted.
  */
-function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
+function bboss_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
 	if ( empty( $relationships_ids ) || empty( $topic_id ) ) {
 		return;
 	}
 
 	// Reset the incrementor to clear all cached queries.
-	bp_core_reset_incrementor( 'bb_topics' );
+	bboss_core_reset_incrementor( 'bb_topics' );
 
 	// Clear individual topic relationship caches.
 	foreach ( $relationships_ids as $relationship_id ) {
-		$relationship = bb_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $relationship_id ) );
+		$relationship = bboss_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $relationship_id ) );
 		if ( ! empty( $relationship ) ) {
 			$relationship_cache_key = 'bb_topic_relationship_' . $relationship_id . '_' . $relationship->item_id . '_' . $relationship->item_type;
 			wp_cache_delete( $relationship_cache_key, 'bb_topics' );
@@ -790,9 +790,9 @@ add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
  *
  * @since BuddyBoss 3.7.0
  */
-function bb_topics_order_updated_cache_reset() {
-	bp_core_reset_incrementor( 'bb_topics' );
-	bp_core_reset_incrementor( 'bb_activity_topic_lists' );
+function bboss_topics_order_updated_cache_reset() {
+	bboss_core_reset_incrementor( 'bb_topics' );
+	bboss_core_reset_incrementor( 'bb_activity_topic_lists' );
 
 	// Also clear lists cached without the incrementor, e.g. by an older Platform Pro.
 	if (
@@ -815,8 +815,8 @@ add_action( 'bp_rest_topics_update_order', 'bb_topics_order_updated_cache_reset'
  *
  * @param int $relationship_id The ID of the updated relationship.
  */
-function bb_activity_topic_relationship_after_update_cache_reset( $relationship_id ) {
-	bp_core_reset_incrementor( 'bb_activity_topics' );
+function bboss_activity_topic_relationship_after_update_cache_reset( $relationship_id ) {
+	bboss_core_reset_incrementor( 'bb_activity_topics' );
 	if ( ! empty( $relationship_id ) ) {
 		wp_cache_delete( $relationship_id, 'bb_activity_topics' );
 	}
@@ -833,7 +833,7 @@ add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_re
  * @param string       $item_type The item type (optional, defaults to 'activity').
  * @param int          $item_id The item ID (optional, defaults to 0 for activity).
  */
-function bb_clear_topic_redirect_cache( $old_slug_or_args, $item_type = 'activity', $item_id = 0 ) {
+function bboss_clear_topic_redirect_cache( $old_slug_or_args, $item_type = 'activity', $item_id = 0 ) {
 	// Handle array parameter (from action hooks).
 	if ( is_array( $old_slug_or_args ) ) {
 		$old_slug  = isset( $old_slug_or_args['old_topic_slug'] ) ? $old_slug_or_args['old_topic_slug'] : '';
@@ -858,8 +858,8 @@ function bb_clear_topic_redirect_cache( $old_slug_or_args, $item_type = 'activit
 	// Get all slugs that might redirect to this one.
 	global $wpdb;
 
-	if ( function_exists( 'bb_topics_manager_instance' ) && bb_topics_manager_instance() ) {
-		$topic_history_table = bb_topics_manager_instance()->topic_history_table;
+	if ( function_exists( 'bboss_topics_manager_instance' ) && bboss_topics_manager_instance() ) {
+		$topic_history_table = bboss_topics_manager_instance()->topic_history_table;
 		$sql                 = $wpdb->prepare(
 			"SELECT DISTINCT old_topic_slug FROM {$topic_history_table} WHERE new_topic_slug = %s",
 			$old_slug
@@ -900,7 +900,7 @@ add_action( 'bb_topic_history_after_added', 'bb_clear_topic_redirect_cache', 10,
  * @param string $item_type             The type of item.
  * @param array  $migrated_activity_ids The IDs of the activities.
  */
-function bb_clear_activity_results_cache( $topic, $old_topic_id, $new_topic_id, $item_id, $item_type, $migrated_activity_ids ) {
+function bboss_clear_activity_results_cache( $topic, $old_topic_id, $new_topic_id, $item_id, $item_type, $migrated_activity_ids ) {
 	if ( empty( $topic ) || empty( $item_type ) ) {
 		return;
 	}

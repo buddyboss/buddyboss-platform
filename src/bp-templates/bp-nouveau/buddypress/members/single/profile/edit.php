@@ -11,12 +11,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_xprofile_hook( 'before', 'edit_content' );
+bboss_nouveau_xprofile_hook( 'before', 'edit_content' );
 
-if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) ) {
+if ( bboss_has_profile( 'profile_group_id=' . bboss_get_current_profile_group_id() ) ) {
 
-	while ( bp_profile_groups() ) :
-		bp_the_profile_group();
+	while ( bboss_profile_groups() ) :
+		bboss_the_profile_group();
 		?>
 
 		<h2 class="screen-heading edit-profile-screen">
@@ -24,64 +24,64 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 			printf(
 			/* translators: %s = profile field group name */
 				esc_html__( 'Edit "%s" Information', 'buddyboss' ),
-				esc_html( bp_get_the_profile_group_name() )
+				esc_html( bboss_get_the_profile_group_name() )
 			)
 			?>
 		</h2>
 
-		<form action="<?php bp_the_profile_group_edit_form_action(); ?>" method="post" id="profile-edit-form" class="standard-form profile-edit <?php bp_the_profile_group_slug(); ?>">
+		<form action="<?php bboss_the_profile_group_edit_form_action(); ?>" method="post" id="profile-edit-form" class="standard-form profile-edit <?php bboss_the_profile_group_slug(); ?>">
 			<?php
-			bp_nouveau_xprofile_hook( 'before', 'field_content' );
+			bboss_nouveau_xprofile_hook( 'before', 'field_content' );
 
-			if ( bp_profile_has_multiple_groups() ) {
+			if ( bboss_profile_has_multiple_groups() ) {
 				?>
 				<ul class="button-tabs button-nav">
-					<?php bp_profile_group_tabs(); ?>
+					<?php bboss_profile_group_tabs(); ?>
 				</ul>
 				<?php
 			}
 
-			while ( bp_profile_fields() ) :
-				bp_the_profile_field();
+			while ( bboss_profile_fields() ) :
+				bboss_the_profile_field();
 
-				$get_profile_field_id = bp_get_the_profile_field_id();
-				$member_type_field_id = function_exists( 'bp_get_xprofile_member_type_field_id') ? bp_get_xprofile_member_type_field_id() : 0;
+				$get_profile_field_id = bboss_get_the_profile_field_id();
+				$member_type_field_id = function_exists( 'bboss_get_xprofile_member_type_field_id') ? bboss_get_xprofile_member_type_field_id() : 0;
 
-				if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+				if ( function_exists('bboss_member_type_enable_disable' ) && false === bboss_member_type_enable_disable() ) {
 					if ( $member_type_field_id && $get_profile_field_id === $member_type_field_id ) {
 						continue;
 					}
 				}
 
-				if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() && $get_profile_field_id === $member_type_field_id ) {
+				if ( function_exists( 'bboss_check_member_type_field_have_options' ) && false === bboss_check_member_type_field_have_options() && $get_profile_field_id === $member_type_field_id ) {
 					continue;
 				}
 
-				bp_nouveau_xprofile_hook( 'before', 'field_html' );
+				bboss_nouveau_xprofile_hook( 'before', 'field_html' );
 				?>
 
-				<div<?php bp_field_css_class( 'editfield' ); ?>>
+				<div<?php bboss_field_css_class( 'editfield' ); ?>>
 					<fieldset>
 						<?php
-						$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
+						$field_type = bboss_xprofile_create_field_type( bboss_get_the_profile_field_type() );
 						$field_type->edit_field_html();
-						bp_nouveau_xprofile_edit_visibilty();
+						bboss_nouveau_xprofile_edit_visibilty();
 						?>
 					</fieldset>
 				</div>
 
 				<?php
-				bp_nouveau_xprofile_hook( 'after', 'field_html' );
+				bboss_nouveau_xprofile_hook( 'after', 'field_html' );
 
 			endwhile;
 
-			bp_nouveau_xprofile_hook( 'after', 'field_content' );
+			bboss_nouveau_xprofile_hook( 'after', 'field_content' );
 			?>
-			<input type="hidden" name="field_ids" id="field_ids" value="<?php bp_the_profile_field_ids(); ?>" />
-			<?php bp_nouveau_submit_button( 'member-profile-edit' ); ?>
+			<input type="hidden" name="field_ids" id="field_ids" value="<?php bboss_the_profile_field_ids(); ?>" />
+			<?php bboss_nouveau_submit_button( 'member-profile-edit' ); ?>
 		</form>
 
 		<?php
 	endwhile;
 }
-bp_nouveau_xprofile_hook( 'after', 'edit_content' );
+bboss_nouveau_xprofile_hook( 'after', 'edit_content' );

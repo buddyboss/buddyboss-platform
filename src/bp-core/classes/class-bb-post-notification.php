@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BB_Post_Notification class.
+ * Set up the BBoss_Post_Notification class.
  *
  * @since BuddyBoss 2.3.50
  */
-class BB_Post_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Post_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 2.3.50
 	 *
-	 * @return null|BB_Post_Notification|Controller|object
+	 * @return null|BBoss_Post_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -58,7 +58,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$this->register_notification_group(
 				'posts',
 				esc_html__( 'Posts', 'buddyboss' ),
@@ -126,7 +126,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if ( ! empty( $notification ) && 'bb_posts_new_comment_reply' === $notification->component_action &&
 			in_array( $notification->component_name, array( 'core' ), true ) ) {
@@ -134,12 +134,12 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 			$excerpt           = wp_strip_all_tags( $comment->comment_content );
 			$notification_link = add_query_arg( 'cid', (int) $notification_id, get_comment_link( $comment ) );
 			$comment_author    = get_user_by( 'email', $comment->comment_author_email );
-			$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
+			$commenter_name    = ! empty( $comment_author ) ? bboss_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
 			} else {
-				$excerpt = '"' . bp_create_excerpt(
+				$excerpt = '"' . bboss_create_excerpt(
 					$excerpt,
 					50,
 					array(
@@ -195,7 +195,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $commenter_name,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,

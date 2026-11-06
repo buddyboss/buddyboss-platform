@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Activity_Export class
+ * Export API: BBoss_Activity_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,17 +10,17 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Activity_Export
+ * Class BBoss_Activity_Export
  *
  * @since BuddyBoss 1.0.0
  */
-final class BP_Activity_Export extends BP_Export {
+final class BBoss_Activity_Export extends BBoss_Export {
 
 
 	/**
-	 * BP_Activity_Export instance.
+	 * BBoss_Activity_Export instance.
 	 *
-	 * @return BP_Activity_Export|null
+	 * @return BBoss_Activity_Export|null
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -28,7 +28,7 @@ final class BP_Activity_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Activity_Export();
+			$instance = new BBoss_Activity_Export();
 			$instance->setup( 'bp_activity', __( 'Activities', 'buddyboss' ) );
 		}
 
@@ -73,7 +73,7 @@ final class BP_Activity_Export extends BP_Export {
 
 			$activity_type = apply_filters( 'buddyboss_bp_gdpr_bp_activity_item_activity_type', $activity_type, $item, $data_items );
 
-			$permalink = bp_activity_get_permalink( $item->id );
+			$permalink = bboss_activity_get_permalink( $item->id );
 
 			$data = array(
 				array(
@@ -141,7 +141,7 @@ final class BP_Activity_Export extends BP_Export {
 		/**
 		 * Make use of buddypress default data remover.
 		 */
-		bp_activity_remove_all_user_data( $user->ID );
+		bboss_activity_remove_all_user_data( $user->ID );
 
 		$done = true;
 
@@ -165,7 +165,7 @@ final class BP_Activity_Export extends BP_Export {
 
 		$wpdb->show_errors( false );
 
-		$table  = bp_core_get_table_prefix() . 'bp_activity item';
+		$table  = bboss_core_get_table_prefix() . 'bp_activity item';
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 
 		// Table name from bp_core_get_table_prefix(); user ID, LIMIT and OFFSET bound as %d.

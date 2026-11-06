@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since bbPress (r3910)
  * @return array Filtered user option names and values
  */
-function bbp_get_default_user_options() {
+function bboss_bbp_get_default_user_options() {
 
 	// Default options
 	return apply_filters(
@@ -36,20 +36,20 @@ function bbp_get_default_user_options() {
  * This is destructive, so existing Forums user options will be overridden.
  *
  * @since bbPress (r3910)
- * @uses bbp_get_default_user_options() To get default options
+ * @uses bboss_bbp_get_default_user_options() To get default options
  * @uses update_user_option() Adds default options
  * @uses do_action() Calls 'bbp_add_user_options'
  */
-function bbp_add_user_options( $user_id = 0 ) {
+function bboss_bbp_add_user_options( $user_id = 0 ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return;
 	}
 
 	// Add default options
-	foreach ( bbp_get_default_user_options() as $key => $value ) {
+	foreach ( bboss_bbp_get_default_user_options() as $key => $value ) {
 		update_user_option( $user_id, $key, $value );
 	}
 
@@ -64,20 +64,20 @@ function bbp_add_user_options( $user_id = 0 ) {
  * This is destructive, so existing Forums user options will be destroyed.
  *
  * @since bbPress (r3910)
- * @uses bbp_get_default_user_options() To get default options
+ * @uses bboss_bbp_get_default_user_options() To get default options
  * @uses delete_user_option() Removes default options
  * @uses do_action() Calls 'bbp_delete_options'
  */
-function bbp_delete_user_options( $user_id = 0 ) {
+function bboss_bbp_delete_user_options( $user_id = 0 ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return;
 	}
 
 	// Add default options
-	foreach ( array_keys( bbp_get_default_user_options() ) as $key ) {
+	foreach ( array_keys( bboss_bbp_get_default_user_options() ) as $key ) {
 		delete_user_option( $user_id, $key );
 	}
 
@@ -90,14 +90,14 @@ function bbp_delete_user_options( $user_id = 0 ) {
  * inside the $bbp->options array.
  *
  * @since bbPress (r3910)
- * @uses bbp_get_default_user_options() To get default options
+ * @uses bboss_bbp_get_default_user_options() To get default options
  * @uses add_filter() To add filters to 'pre_option_{$key}'
  * @uses do_action() Calls 'bbp_add_option_filters'
  */
-function bbp_setup_user_option_filters() {
+function bboss_bbp_setup_user_option_filters() {
 
 	// Add filters to each Forums option
-	foreach ( array_keys( bbp_get_default_user_options() ) as $key ) {
+	foreach ( array_keys( bboss_bbp_get_default_user_options() ) as $key ) {
 		add_filter( 'get_user_option_' . $key, 'bbp_filter_get_user_option', 10, 3 );
 	}
 
@@ -113,8 +113,8 @@ function bbp_setup_user_option_filters() {
  * @param bool $value Optional. Default value false
  * @return mixed false if not overloaded, mixed if set
  */
-function bbp_filter_get_user_option( $value = false, $option = '', $user = 0 ) {
-	$bbp = bbpress();
+function bboss_bbp_filter_get_user_option( $value = false, $option = '', $user = 0 ) {
+	$bbp = bboss_forums();
 
 	// Check the options global for preset value
 	if ( isset( $user->ID ) && isset( $bbp->user_options[ $user->ID ] ) && ! empty( $bbp->user_options[ $user->ID ][ $option ] ) ) {
@@ -134,11 +134,11 @@ function bbp_filter_get_user_option( $value = false, $option = '', $user = 0 ) {
  *
  * @param int     $user_id
  * @param boolean $integer Optional. Whether or not to format the result
- * @uses bbp_get_user_topic_count()
+ * @uses bboss_bbp_get_user_topic_count()
  * @return string
  */
-function bbp_user_topic_count( $user_id = 0, $integer = false ) {
-	echo esc_html( bbp_get_user_topic_count( $user_id, $integer ) );
+function bboss_bbp_user_topic_count( $user_id = 0, $integer = false ) {
+	echo esc_html( bboss_bbp_get_user_topic_count( $user_id, $integer ) );
 }
 	/**
 	 * Return a users reply count
@@ -147,15 +147,15 @@ function bbp_user_topic_count( $user_id = 0, $integer = false ) {
 	 *
 	 * @param int     $user_id
 	 * @param boolean $integer Optional. Whether or not to format the result
-	 * @uses bbp_get_user_id()
+	 * @uses bboss_bbp_get_user_id()
 	 * @uses get_user_option()
 	 * @uses apply_filters()
 	 * @return string
 	 */
-function bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
+function bboss_bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -173,11 +173,11 @@ function bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
  *
  * @param int     $user_id
  * @param boolean $integer Optional. Whether or not to format the result
- * @uses bbp_get_user_reply_count()
+ * @uses bboss_bbp_get_user_reply_count()
  * @return string
  */
-function bbp_user_reply_count( $user_id = 0, $integer = false ) {
-	echo esc_html( bbp_get_user_reply_count( $user_id, $integer ) );
+function bboss_bbp_user_reply_count( $user_id = 0, $integer = false ) {
+	echo esc_html( bboss_bbp_get_user_reply_count( $user_id, $integer ) );
 }
 	/**
 	 * Return a users reply count
@@ -186,15 +186,15 @@ function bbp_user_reply_count( $user_id = 0, $integer = false ) {
 	 *
 	 * @param int     $user_id
 	 * @param boolean $integer Optional. Whether or not to format the result
-	 * @uses bbp_get_user_id()
+	 * @uses bboss_bbp_get_user_id()
 	 * @uses get_user_option()
 	 * @uses apply_filters()
 	 * @return string
 	 */
-function bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
+function bboss_bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -212,11 +212,11 @@ function bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
  *
  * @param int     $user_id
  * @param boolean $integer Optional. Whether or not to format the result
- * @uses bbp_get_user_post_count()
+ * @uses bboss_bbp_get_user_post_count()
  * @return string
  */
-function bbp_user_post_count( $user_id = 0, $integer = false ) {
-	echo esc_html( bbp_get_user_post_count( $user_id, $integer ) );
+function bboss_bbp_user_post_count( $user_id = 0, $integer = false ) {
+	echo esc_html( bboss_bbp_get_user_post_count( $user_id, $integer ) );
 }
 	/**
 	 * Return a users total post count
@@ -225,21 +225,21 @@ function bbp_user_post_count( $user_id = 0, $integer = false ) {
 	 *
 	 * @param int     $user_id
 	 * @param boolean $integer Optional. Whether or not to format the result
-	 * @uses bbp_get_user_id()
+	 * @uses bboss_bbp_get_user_id()
 	 * @uses get_user_option()
 	 * @uses apply_filters()
 	 * @return string
 	 */
-function bbp_get_user_post_count( $user_id = 0, $integer = false ) {
+function bboss_bbp_get_user_post_count( $user_id = 0, $integer = false ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}
 
-	$topics  = bbp_get_user_topic_count( $user_id, true );
-	$replies = bbp_get_user_reply_count( $user_id, true );
+	$topics  = bboss_bbp_get_user_topic_count( $user_id, true );
+	$replies = bboss_bbp_get_user_reply_count( $user_id, true );
 	$count   = (int) $topics + $replies;
 	$filter  = ( true === $integer ) ? 'bbp_get_user_post_count_int' : 'bbp_get_user_post_count';
 
@@ -256,10 +256,10 @@ function bbp_get_user_post_count( $user_id = 0, $integer = false ) {
  * @param int $time Time in time() format
  * @return bool False if no user or failure, true if successful
  */
-function bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
+function bboss_bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -277,10 +277,10 @@ function bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
  *
  * @since bbPress (r3910)
  * @param int $user_id User ID to retrieve value for
- * @uses bbp_get_user_last_posted() To output the last posted time
+ * @uses bboss_bbp_get_user_last_posted() To output the last posted time
  */
-function bbp_user_last_posted( $user_id = 0 ) {
-	echo esc_html( bbp_get_user_last_posted( $user_id ) );
+function bboss_bbp_user_last_posted( $user_id = 0 ) {
+	echo esc_html( bboss_bbp_get_user_last_posted( $user_id ) );
 }
 
 	/**
@@ -290,10 +290,10 @@ function bbp_user_last_posted( $user_id = 0 ) {
 	 * @param int $user_id User ID to retrieve value for
 	 * @return mixed False if no user, time() format if exists
 	 */
-function bbp_get_user_last_posted( $user_id = 0 ) {
+function bboss_bbp_get_user_last_posted( $user_id = 0 ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
 	}

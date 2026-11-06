@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
+class BBoss_Members_MS_List_Table extends WP_MS_Users_List_Table {
 
 	/**
 	 * Signup counts.
@@ -74,7 +74,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 		}
 
 		$mode    = empty( $_REQUEST['mode'] ) ? 'list' : $_REQUEST['mode'];
-		$signups = BP_Signup::get( $args );
+		$signups = BBoss_Signup::get( $args );
 
 		$this->items         = $signups['signups'];
 		$this->signup_counts = $signups['total'];
@@ -175,7 +175,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 * @since BuddyPress 2.0.0
 	 */
 	public function no_items() {
-		if ( bp_get_signup_allowed() ) {
+		if ( bboss_get_signup_allowed() ) {
 			esc_html_e( 'No pending accounts found.', 'buddyboss' );
 		} else {
 			$link = false;

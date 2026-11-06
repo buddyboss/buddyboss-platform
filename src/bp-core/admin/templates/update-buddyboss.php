@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 $show_overview = false;
 
 // Get release data from a local readme.txt file.
-$cache_key         = 'bb_changelog_' . BP_PLATFORM_VERSION;
+$cache_key         = 'bb_changelog_' . BBOSS_PLATFORM_VERSION;
 $bb_changelog_data = wp_cache_get( $cache_key, 'bp' );
 if ( false === $bb_changelog_data ) {
 	$readme_file = trailingslashit( dirname( dirname( dirname( __DIR__ ) ) ) ) . 'readme.txt';
@@ -56,8 +56,8 @@ if ( false === $bb_changelog_data ) {
 			}
 
 			// Get changelog for current version.
-			if ( isset( $versions[ BP_PLATFORM_VERSION ] ) ) {
-				$bb_changelog_data = $versions[ BP_PLATFORM_VERSION ];
+			if ( isset( $versions[ BBOSS_PLATFORM_VERSION ] ) ) {
+				$bb_changelog_data = $versions[ BBOSS_PLATFORM_VERSION ];
 			} elseif ( ! empty( $versions ) ) {
 				// Fallback to the first (latest) version in changelog.
 				$bb_changelog_data = reset( $versions );
@@ -85,7 +85,7 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 
 		<div class="bp-hello-title">
 			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Release Notes', 'buddyboss' ); ?></h1>
-			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Platform v', 'buddyboss' ) . esc_html( BP_PLATFORM_VERSION ); ?></span>
+			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Platform v', 'buddyboss' ) . esc_html( BBOSS_PLATFORM_VERSION ); ?></span>
 		</div>
 		<ul class="bb-hello-tabs">
 			<?php

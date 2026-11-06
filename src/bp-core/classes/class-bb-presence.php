@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Presence' ) ) {
+if ( ! class_exists( 'BBoss_Presence' ) ) {
 
 	/**
 	 * BuddyBoss Presence object.
 	 *
 	 * @since BuddyBoss 2.3.1
 	 */
-	class BB_Presence {
+	class BBoss_Presence {
 
 
 		/**
@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @since BuddyBoss 2.3.1
 		 *
-		 * @return Controller|BB_Presence|null
+		 * @return Controller|BBoss_Presence|null
 		 */
 		public static function instance() {
 
@@ -269,7 +269,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_load_presence_api_mu_plugin( $bypass = true ) {
-			if ( ! function_exists( 'buddypress' ) ) {
+			if ( ! function_exists( 'bboss' ) ) {
 				return;
 			}
 
@@ -279,7 +279,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			$wp_files_system        = new \WP_Filesystem_Direct( array() );
-			$bp_mu_plugin_file_path = buddypress()->plugin_dir . 'bp-core/mu-plugins/buddyboss-performance-api.php';
+			$bp_mu_plugin_file_path = bboss()->plugin_dir . 'bp-core/mu-plugins/buddyboss-performance-api.php';
 
 			$purge_nonce = ( ! empty( $_GET['download_mu_bpa_file'] ) ) ? wp_unslash( $_GET['download_mu_bpa_file'] ) : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
@@ -428,8 +428,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				return false;
 			}
 
-			$bb_presence_interval  = function_exists( 'bb_presence_interval' ) ? bb_presence_interval() : self::bb_presence_interval();
-			$bb_presence_time_span = function_exists( 'bb_presence_time_span' ) ? bb_presence_time_span() : self::bb_presence_time_span();
+			$bb_presence_interval  = function_exists( 'bboss_presence_interval' ) ? bboss_presence_interval() : self::bb_presence_interval();
+			$bb_presence_time_span = function_exists( 'bboss_presence_time_span' ) ? bboss_presence_time_span() : self::bb_presence_time_span();
 			if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 				$timeframe = $expiry;
 			} else {
@@ -1078,5 +1078,5 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		}
 	}
 
-	BB_Presence::instance();
+	BBoss_Presence::instance();
 }

@@ -13,24 +13,24 @@
 defined( 'ABSPATH' ) || exit;
 
 $topic_id = get_the_ID();
-$total    = bbp_get_topic_reply_count( $topic_id );
+$total    = bboss_bbp_get_topic_reply_count( $topic_id );
 ?>
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php bbp_topic_permalink( $topic_id ); ?>" data-bb-hp-profile="<?php echo esc_attr( bbp_get_topic_author_id( $topic_id ) ); ?>">
+			<a href="<?php bboss_bbp_topic_permalink( $topic_id ); ?>" data-bb-hp-profile="<?php echo esc_attr( bboss_bbp_get_topic_author_id( $topic_id ) ); ?>">
 				<?php
 				$args   = array(
 					'type'    => 'avatar',
 					'post_id' => $topic_id,
 				);
-				$avatar = bbp_get_topic_author_link( $args );
+				$avatar = bboss_bbp_get_topic_author_link( $args );
 
 				if ( $avatar ) {
 					echo wp_kses_post( $avatar );
 				} else {
 					?>
-					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+					<i class="bb-icon-f <?php echo esc_attr( bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 					<?php
 				}
 				?>
@@ -39,13 +39,13 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 
 		<div class="item">
 			<h3 class="entry-title item-title">
-				<a href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
+				<a href="<?php bboss_bbp_topic_permalink( $topic_id ); ?>"><?php bboss_bbp_topic_title( $topic_id ); ?></a>
 			</h3>
 			<div class="entry-content entry-summary">
-				<?php echo wp_kses_post( wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?>
+				<?php echo wp_kses_post( wp_trim_words( bboss_bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?>
 			</div>
 			<div class="entry-meta">
-				<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
+				<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bboss_core_get_user_displayname( bboss_bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<span class="reply-count">
 					<?php /* translators: %s: number. */ printf( esc_html( _n( '%d reply', '%d replies', $total, 'buddyboss' ) ), (int) $total ); ?>
@@ -54,7 +54,7 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 				<span>
 					<?php
 					esc_html_e( 'Started ', 'buddyboss' );
-					echo wp_kses_post( bbp_get_topic_created_time( $topic_id ) );
+					echo wp_kses_post( bboss_bbp_get_topic_created_time( $topic_id ) );
 					?>
 				</span>
 			</div>

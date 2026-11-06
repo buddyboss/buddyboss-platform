@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Friends_Notification class.
+ * Set up the BBoss_Friends_Notification class.
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Friends_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Friends_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Friends_Notification|Controller|object
+	 * @return null|BBoss_Friends_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -188,17 +188,17 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function bb_format_friends_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		// Friends request accepted.
 		if ( ! empty( $notification ) && 'friends' === $notification->component_name && 'bb_connections_request_accepted' === $notification->component_action ) {
 			$amount = 'single';
 
 			if ( 'web_push' === $screen ) {
-				$notification_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/my-friends' );
+				$notification_link = trailingslashit( bboss_core_get_user_domain( $notification->user_id ) . bboss_get_friends_slug() . '/my-friends' );
 				$text              = __( 'Has accepted your connection request', 'buddyboss' );
 			} else {
-				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+				$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/my-friends' );
 
 				// Set up the string and the filter.
 				if ( (int) $total_items > 1 ) {
@@ -212,7 +212,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 					$text = sprintf(
 					/* translators: member name */
 						esc_html__( '%s has accepted your connection request', 'buddyboss' ),
-						bp_core_get_user_displayname( $item_id )
+						bboss_core_get_user_displayname( $item_id )
 					);
 
 				}
@@ -223,8 +223,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				array(
 					'link'  => $notification_link,
 					'text'  => $text,
-					'title' => bp_core_get_user_displayname( $notification->item_id ),
-					'image' => bb_notification_avatar_url( $notification ),
+					'title' => bboss_core_get_user_displayname( $notification->item_id ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,
@@ -238,10 +238,10 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 
 			$amount = 'single';
 			if ( 'web_push' === $screen ) {
-				$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_friends_slug() . '/requests/?new';
+				$notification_link = bboss_core_get_user_domain( $notification->user_id ) . bboss_get_friends_slug() . '/requests/?new';
 				$text              = __( 'Sent you a connection request', 'buddyboss' );
 			} else {
-				$notification_link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
+				$notification_link = bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/requests/?new';
 
 				// Set up the string and the filter.
 				if ( (int) $total_items > 1 ) {
@@ -256,7 +256,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 					$text = sprintf(
 					/* translators: users display name. */
 						esc_html__( '%s has sent you a connection request', 'buddyboss' ),
-						bp_core_get_user_displayname( $item_id )
+						bboss_core_get_user_displayname( $item_id )
 					);
 
 				}
@@ -267,8 +267,8 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				array(
 					'link'  => $notification_link,
 					'text'  => $text,
-					'title' => bp_core_get_user_displayname( $notification->item_id ),
-					'image' => bb_notification_avatar_url( $notification ),
+					'title' => bboss_core_get_user_displayname( $notification->item_id ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,

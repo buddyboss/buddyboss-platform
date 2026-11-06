@@ -10,13 +10,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BP_Core_Notification is deprecated.
+ * BBoss_Core_Notification is deprecated.
  *
- * Use BP_Notifications_Notification instead.
+ * Use BBoss_Notifications_Notification instead.
  *
  * @deprecated since 1.9.0
  */
-class BP_Core_Notification {
+class BBoss_Core_Notification {
 
 	/**
 	 * The notification id.
@@ -98,7 +98,7 @@ class BP_Core_Notification {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Update.
 		if ( ! empty( $this->id ) ) {
@@ -128,7 +128,7 @@ class BP_Core_Notification {
 	public function populate() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( $notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE id = %d", $this->id ) ) ) {
 			$this->item_id           = $notification->item_id;
@@ -153,7 +153,7 @@ class BP_Core_Notification {
 	public static function check_access( $user_id, $notification_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->core->table_name_notifications} WHERE id = %d AND user_id = %d", $notification_id, $user_id ) );
 	}
@@ -172,7 +172,7 @@ class BP_Core_Notification {
 	public static function get_all_for_user( $user_id, $status = 'is_new' ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$is_new = ( 'is_new' === $status )
 			? ' AND is_new = 1 '
@@ -196,11 +196,11 @@ class BP_Core_Notification {
 	public static function delete_for_user_by_type( $user_id, $component_name, $component_action ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Capture the IDs first so the orphaned metadata can be cleaned up after the delete.
 		$notification_ids = array();
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND component_name = %s AND component_action = %s", $user_id, $component_name, $component_action ) );
 		}
 
@@ -211,7 +211,7 @@ class BP_Core_Notification {
 
 		// Remove the now-orphaned metadata after the notifications are gone.
 		if ( ! empty( $notification_ids ) ) {
-			bb_notifications_delete_meta_for_ids( $notification_ids );
+			bboss_notifications_delete_meta_for_ids( $notification_ids );
 		}
 
 		return $deleted;
@@ -235,14 +235,14 @@ class BP_Core_Notification {
 	public static function delete_for_user_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$secondary_item_sql = ! empty( $secondary_item_id )
 			? $wpdb->prepare( ' AND secondary_item_id = %d', $secondary_item_id )
 			: '';
 
 		$notification_ids = array();
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND item_id = %d AND component_name = %s AND component_action = %s{$secondary_item_sql}", $user_id, $item_id, $component_name, $component_action ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $secondary_item_sql is $wpdb->prepare()'d above (%d) or empty; table name from buddypress().
 		}
 
@@ -253,7 +253,7 @@ class BP_Core_Notification {
 
 		// Remove the now-orphaned metadata after the notifications are gone.
 		if ( ! empty( $notification_ids ) ) {
-			bb_notifications_delete_meta_for_ids( $notification_ids );
+			bboss_notifications_delete_meta_for_ids( $notification_ids );
 		}
 
 		return $deleted;
@@ -274,10 +274,10 @@ class BP_Core_Notification {
 	public static function delete_from_user_by_type( $user_id, $component_name, $component_action ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$notification_ids = array();
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s AND component_action = %s", $user_id, $component_name, $component_action ) );
 		}
 
@@ -288,7 +288,7 @@ class BP_Core_Notification {
 
 		// Remove the now-orphaned metadata after the notifications are gone.
 		if ( ! empty( $notification_ids ) ) {
-			bb_notifications_delete_meta_for_ids( $notification_ids );
+			bboss_notifications_delete_meta_for_ids( $notification_ids );
 		}
 
 		return $deleted;
@@ -323,10 +323,10 @@ class BP_Core_Notification {
 			$secondary_item_sql = '';
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$notification_ids = array();
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s {$component_action_sql} {$secondary_item_sql}", $item_id, $component_name ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $component_action_sql (%s) and $secondary_item_sql (%d) are $wpdb->prepare()'d above or empty; table name from buddypress().
 		}
 
@@ -337,7 +337,7 @@ class BP_Core_Notification {
 
 		// Remove the now-orphaned metadata after the notifications are gone.
 		if ( ! empty( $notification_ids ) ) {
-			bb_notifications_delete_meta_for_ids( $notification_ids );
+			bboss_notifications_delete_meta_for_ids( $notification_ids );
 		}
 
 		return $deleted;

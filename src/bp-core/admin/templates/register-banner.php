@@ -2,7 +2,7 @@
 /**
  * "Register your email and get Memberships & Courses" banner markup.
  *
- * Included by bb_admin_render_register_banner() with $mode in scope. The full
+ * Included by bboss_admin_render_register_banner() with $mode in scope. The full
  * banner (illustration, headline, CTA, modal) renders in both modes — matching
  * the legacy Membership banner — and only the activate-license notice differs:
  * - 'pitch'  — notice present but hidden; JS reveals it after a successful
@@ -24,7 +24,7 @@ $bb_reg_license_url = admin_url( 'admin.php?page=' . \BuddyBoss\Core\Admin\Mothe
 	<div class="bb-reg-banner" role="region" aria-label="<?php esc_attr_e( 'Register your email and get Memberships and Courses', 'buddyboss' ); ?>">
 
 		<div class="bb-reg-banner-image">
-			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/register-banner.jpg' ); ?>" alt="<?php esc_attr_e( 'BuddyBoss Register Banner', 'buddyboss' ); ?>" />
+			<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-core/images/admin/register-banner.jpg' ); ?>" alt="<?php esc_attr_e( 'BuddyBoss Register Banner', 'buddyboss' ); ?>" />
 		</div>
 
 		<div class="bb-reg-content">

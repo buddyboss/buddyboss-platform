@@ -11,8 +11,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_loggedin_user_id = bp_loggedin_user_id();
-$is_media_active     = bp_is_active( 'media' );
+$bp_loggedin_user_id = bboss_loggedin_user_id();
+$is_media_active     = bboss_is_active( 'media' );
 $args                = array(
 	'exclude'             => array( $bp_loggedin_user_id ),
 	'exclude_admins_mods' => false,
@@ -20,7 +20,7 @@ $args                = array(
 	'populate_extras'     => false,
 );
 
-$group_members = groups_get_group_members( $args );
+$group_members = bboss_groups_get_group_members( $args );
 $total_count   = 0;
 $all_text      = esc_html__( 'All Group Members', 'buddyboss' );
 
@@ -28,11 +28,11 @@ if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 	foreach ( $group_members['members'] as $member ) {
 
 		if (
-			bb_messages_user_can_send_message(
+			bboss_messages_user_can_send_message(
 				array(
 					'sender_id'     => $bp_loggedin_user_id,
 					'recipients_id' => $member->ID,
-					'group_id'      => bp_get_current_group_id(),
+					'group_id'      => bboss_get_current_group_id(),
 
 				)
 			)
@@ -61,8 +61,8 @@ if ( 0 === $total_count ) {
 } else {
 
 	$group_id = 0;
-	if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
-		$group_id = bp_get_current_group_id();
+	if ( bboss_is_active( 'groups' ) && bboss_is_group_single() ) {
+		$group_id = bboss_get_current_group_id();
 	}
 
 	if ( $group_members['count'] != 0 ) {
@@ -89,7 +89,7 @@ if ( 0 === $total_count ) {
 				<div class="group-messages-search subnav-search clearfix" role="search">
 					<div class="bp-search">
 						<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form search-form-has-reset" data-bp-search="group-messages">
-							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
+							<label for="group_messages_search" class="bp-screen-reader-text"><?php bboss_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
 							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 							<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit search-form_submit">
 								<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
@@ -288,7 +288,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bboss_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 										<span class="bb-icon-l bb-icon-camera"></span>
@@ -298,7 +298,7 @@ if ( 0 === $total_count ) {
 							endif;
 
 							$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
-							if ( $is_media_active && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
+							if ( $is_media_active && ! empty( $video_extensions ) && bboss_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
 								?>
 								<div class="post-elements-buttons-item post-video video-support">
 									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
@@ -308,7 +308,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bboss_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 										<span class="bb-icon-l bb-icon-attach"></span>
@@ -317,7 +317,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_media_gif_picker_available() && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bboss_media_gif_picker_available() && bboss_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
@@ -351,7 +351,7 @@ if ( 0 === $total_count ) {
 								<?php
 							endif;
 
-							if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
+							if ( $is_media_active && bboss_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 							<?php endif; ?>
 

@@ -26,8 +26,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return mixed The existing stored value.
  */
-function bb_sanitize_topic_list_noop( $value ) {
-	return bp_get_option( 'bb_activity_topics', array() );
+function bboss_sanitize_topic_list_noop( $value ) {
+	return bboss_get_option( 'bb_activity_topics', array() );
 }
 
 /**
@@ -36,21 +36,21 @@ function bb_sanitize_topic_list_noop( $value ) {
  * Handles the toggle + select combo for activity edit and comment edit fields.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss 3.5.1 Delegates to bb_activity_normalize_edit_time().
+ * @since BuddyBoss 3.5.1 Delegates to bboss_activity_normalize_edit_time().
  *
  * @param mixed $value The value to sanitize.
  *
  * @return int Sanitized integer value.
  */
-function bb_activity_sanitize_edit_time( $value ) {
+function bboss_activity_sanitize_edit_time( $value ) {
 	// Shared with the read path so both sides resolve an out-of-range duration identically.
-	return bb_activity_normalize_edit_time( $value );
+	return bboss_activity_normalize_edit_time( $value );
 }
 
 /**
  * Sanitize activity comment edit time setting.
  *
- * Delegates to bb_activity_sanitize_edit_time() since the validation
+ * Delegates to bboss_activity_sanitize_edit_time() since the validation
  * rules are identical for activity posts and comments.
  *
  * @since BuddyBoss 3.0.0
@@ -59,8 +59,8 @@ function bb_activity_sanitize_edit_time( $value ) {
  *
  * @return int Sanitized integer value.
  */
-function bb_activity_sanitize_comment_edit_time( $value ) {
-	return bb_activity_sanitize_edit_time( $value );
+function bboss_activity_sanitize_comment_edit_time( $value ) {
+	return bboss_activity_sanitize_edit_time( $value );
 }
 
 /**
@@ -74,7 +74,7 @@ function bb_activity_sanitize_comment_edit_time( $value ) {
  *
  * @return array Sanitized array of platform_slug => 0|1.
  */
-function bb_sanitize_sharing_platforms( $value ) {
+function bboss_sanitize_sharing_platforms( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -102,7 +102,7 @@ function bb_sanitize_sharing_platforms( $value ) {
  *
  * @return int Sanitized integer value (0-5).
  */
-function bb_activity_sanitize_comment_visibility( $value ) {
+function bboss_activity_sanitize_comment_visibility( $value ) {
 	$value = absint( $value );
 
 	if ( $value > 5 ) {
@@ -118,15 +118,15 @@ function bb_activity_sanitize_comment_visibility( $value ) {
  * Accepts values 1-4 for thread depth levels.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss 3.5.1 Delegates to bb_activity_normalize_comment_threading_depth().
+ * @since BuddyBoss 3.5.1 Delegates to bboss_activity_normalize_comment_threading_depth().
  *
  * @param mixed $value The value to sanitize.
  *
  * @return int Sanitized integer value (1-4).
  */
-function bb_activity_sanitize_comment_threading_depth( $value ) {
+function bboss_activity_sanitize_comment_threading_depth( $value ) {
 	// Shared with the read path so both sides resolve an out-of-range depth identically.
-	return bb_activity_normalize_comment_threading_depth( $value );
+	return bboss_activity_normalize_comment_threading_depth( $value );
 }
 
 /**
@@ -140,7 +140,7 @@ function bb_activity_sanitize_comment_threading_depth( $value ) {
  *
  * @return int Sanitized integer value.
  */
-function bb_activity_sanitize_comment_loading( $value ) {
+function bboss_activity_sanitize_comment_loading( $value ) {
 	$value = absint( $value );
 
 	/**
@@ -171,7 +171,7 @@ function bb_activity_sanitize_comment_loading( $value ) {
  *
  * @return array Sanitized array of activity_name => 0|1.
  */
-function bb_activity_sanitize_platform_activity_types( $value ) {
+function bboss_activity_sanitize_platform_activity_types( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -187,7 +187,7 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
 /**
  * Sync blogs component activation after activity CPT feed settings are saved.
  *
- * Uses the shared bb_sync_blogs_component_state() helper, reading saved option
+ * Uses the shared bboss_sync_blogs_component_state() helper, reading saved option
  * values instead of $_POST (Settings 2.0 saves options before this hook fires).
  *
  * @since BuddyBoss 3.0.0
@@ -196,26 +196,26 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
  */
-function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) {
+function bboss_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) {
 	if ( 'activity' !== $feature_id ) {
 		return;
 	}
 
-	bb_sync_blogs_component_state(
+	bboss_sync_blogs_component_state(
 		function ( $cpt ) {
-			$option_name = bb_post_type_feed_option_name( $cpt );
-			return (bool) bp_get_option( $option_name, false );
+			$option_name = bboss_post_type_feed_option_name( $cpt );
+			return (bool) bboss_get_option( $option_name, false );
 		}
 	);
 
 	// If a post type feed is disabled, also disable its comments option.
 	// Mirrors legacy behavior from bb_after_update_activity_settings().
-	foreach ( bb_feed_post_types() as $post_type ) {
-		$pt_opt_name  = bb_post_type_feed_option_name( $post_type );
-		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+	foreach ( bboss_feed_post_types() as $post_type ) {
+		$pt_opt_name  = bboss_post_type_feed_option_name( $post_type );
+		$ptc_opt_name = bboss_post_type_feed_comment_option_name( $post_type );
 
-		if ( empty( bp_get_option( $pt_opt_name, '' ) ) ) {
-			bp_update_option( $ptc_opt_name, 0 );
+		if ( empty( bboss_get_option( $pt_opt_name, '' ) ) ) {
+			bboss_update_option( $ptc_opt_name, 0 );
 		}
 	}
 }
@@ -234,7 +234,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_comp
  *
  * @return array Sanitized associative array.
  */
-function bb_sanitize_checkbox_list( $value ) {
+function bboss_sanitize_checkbox_list( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}

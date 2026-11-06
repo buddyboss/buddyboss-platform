@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-trait BP_REST_Attachments {
+trait BBoss_REST_Attachments {
 
 	/**
 	 * Cover upload from file.
@@ -26,7 +26,7 @@ trait BP_REST_Attachments {
 	protected function upload_cover_from_file( $file ) {
 
 		// Set global variables.
-		$bp = buddypress();
+		$bp = bboss();
 		switch ( $this->object ) {
 			case 'group':
 				$bp->groups->current_group = $this->group;
@@ -60,7 +60,7 @@ trait BP_REST_Attachments {
 
 		$component                  = $this->get_cover_object_component();
 		$item_id                    = $this->get_item_id();
-		$bp_attachments_uploads_dir = bp_attachments_cover_image_upload_dir(
+		$bp_attachments_uploads_dir = bboss_attachments_cover_image_upload_dir(
 			array(
 				'object_directory' => $component,
 				'object_id'        => $item_id,
@@ -100,12 +100,12 @@ trait BP_REST_Attachments {
 		}
 
 		// Added buddypress support.
-		if ( isset( buddypress()->buddyboss ) && 'members' === $component ) {
+		if ( isset( bboss()->buddyboss ) && 'members' === $component ) {
 			$component = 'xprofile';
 		}
 
 		// Upload cover.
-		$cover = bp_attachments_cover_image_generate_file(
+		$cover = bboss_attachments_cover_image_generate_file(
 			array(
 				'file'            => $uploaded_image['file'],
 				'component'       => $component,
@@ -119,7 +119,7 @@ trait BP_REST_Attachments {
 			$error_message = esc_html__( 'There was a problem uploading the cover image.', 'buddyboss' );
 			$error_reason  = 'unknown';
 
-			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+			if ( ! bboss_is_gd_or_imagick_library_enabled() ) {
 				/* translators: %s: error message. */
 				$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
 				$error_reason  = 'image_no_editor';
@@ -187,7 +187,7 @@ trait BP_REST_Attachments {
 	protected function upload_avatar_from_file( $files ) {
 
 		// Set global variables.
-		$bp = buddypress();
+		$bp = bboss();
 		switch ( $this->object ) {
 			case 'group':
 				$bp->groups->current_group = $this->group;
@@ -234,8 +234,8 @@ trait BP_REST_Attachments {
 
 		// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 		if ( $avatar_attachment->is_too_small( $image_file ) ) {
-			$full_width  = bp_core_avatar_full_width();
-			$full_height = bp_core_avatar_full_height();
+			$full_width  = bboss_core_avatar_full_width();
+			$full_height = bboss_core_avatar_full_height();
 
 			return new WP_Error(
 				"bp_rest_attachments_{$this->object}_avatar_error",
@@ -268,10 +268,10 @@ trait BP_REST_Attachments {
 		foreach ( array( 'full', 'thumb' ) as $key_type ) {
 
 			// Update path with an url.
-			$url = str_replace( bp_core_avatar_upload_path(), '', $cropped[ $key_type ] );
+			$url = str_replace( bboss_core_avatar_upload_path(), '', $cropped[ $key_type ] );
 
 			// Set image url to its size/type.
-			$args[ $key_type ] = bp_core_avatar_url() . $url;
+			$args[ $key_type ] = bboss_core_avatar_url() . $url;
 		}
 
 		// Build response object.
@@ -293,8 +293,8 @@ trait BP_REST_Attachments {
 	 * @return string|WP_Error
 	 */
 	protected function resize( $file ) {
-		$bp          = buddypress();
-		$upload_path = bp_core_avatar_upload_path();
+		$bp          = bboss();
+		$upload_path = bboss_core_avatar_upload_path();
 
 		if ( ! isset( $bp->avatar_admin ) ) {
 			$bp->avatar_admin = new stdClass();
@@ -364,11 +364,11 @@ trait BP_REST_Attachments {
 	 */
 	protected function crop_image( $image_file ) {
 		$image          = getimagesize( $image_file );
-		$avatar_to_crop = str_replace( bp_core_avatar_upload_path(), '', $image_file );
+		$avatar_to_crop = str_replace( bboss_core_avatar_upload_path(), '', $image_file );
 
 		// Get avatar full width and height.
-		$full_height = bp_core_avatar_full_height();
-		$full_width  = bp_core_avatar_full_width();
+		$full_height = bboss_core_avatar_full_height();
+		$full_width  = bboss_core_avatar_full_width();
 
 		// Use as much as possible of the image.
 		$avatar_ratio = $full_width / $full_height;
@@ -437,7 +437,7 @@ trait BP_REST_Attachments {
 	 */
 	protected function delete_existing_image() {
 		// Get existing avatar.
-		$existing_avatar = bp_core_fetch_avatar(
+		$existing_avatar = bboss_core_fetch_avatar(
 			array(
 				'object'  => $this->object,
 				'item_id' => $this->get_item_id(),
@@ -447,7 +447,7 @@ trait BP_REST_Attachments {
 
 		// Check if the avatar exists before deleting.
 		if ( ! empty( $existing_avatar ) ) {
-			bp_core_delete_existing_avatar(
+			bboss_core_delete_existing_avatar(
 				array(
 					'object'  => $this->object,
 					'item_id' => $this->get_item_id(),
@@ -519,3 +519,11 @@ trait BP_REST_Attachments {
 		return $args;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Attachments', false ) || interface_exists( 'BBoss_REST_Attachments', false ) || trait_exists( 'BBoss_REST_Attachments', false ) ) && ! class_exists( 'BP_REST_Attachments', false ) && ! interface_exists( 'BP_REST_Attachments', false ) ) {
+	class_alias( 'BBoss_REST_Attachments', 'BP_REST_Attachments' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

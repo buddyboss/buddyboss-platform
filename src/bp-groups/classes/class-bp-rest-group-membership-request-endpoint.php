@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Group_Membership_Request_Endpoint class
+ * BP REST: BBoss_REST_Group_Membership_Request_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -17,23 +17,23 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * Reuse some parts of the BP_REST_Groups_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Groups_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Groups_Endpoint
+	 * @var BBoss_REST_Groups_Endpoint
 	 */
 	protected $groups_endpoint;
 
 	/**
-	 * Reuse some parts of the BP_REST_Group_Invites_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Group_Invites_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Group_Invites_Endpoint
+	 * @var BBoss_REST_Group_Invites_Endpoint
 	 */
 	protected $invites_endpoint;
 
@@ -50,11 +50,11 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace              = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base              = buddypress()->groups->id . '/membership-requests';
-		$this->groups_endpoint        = new BP_REST_Groups_Endpoint();
-		$this->group_members_endpoint = new BP_REST_Group_Membership_Endpoint();
-		$this->invites_endpoint       = new BP_REST_Group_Invites_Endpoint();
+		$this->namespace              = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base              = bboss()->groups->id . '/membership-requests';
+		$this->groups_endpoint        = new BBoss_REST_Groups_Endpoint();
+		$this->group_members_endpoint = new BBoss_REST_Group_Membership_Endpoint();
+		$this->invites_endpoint       = new BBoss_REST_Group_Invites_Endpoint();
 	}
 
 	/**
@@ -150,8 +150,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		);
 
 		// If the query is not restricted by group or user, limit it to the current user, if not an admin.
-		if ( ! $args['item_id'] && ! $args['user_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$args['user_id'] = bp_loggedin_user_id();
+		if ( ! $args['item_id'] && ! $args['user_id'] && ! bboss_current_user_can( 'bp_moderate' ) ) {
+			$args['user_id'] = bboss_loggedin_user_id();
 		}
 
 		/**
@@ -164,7 +164,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_group_membership_requests_get_items_query_args', $args, $request );
 
-		$group_requests = groups_get_requests( $args );
+		$group_requests = bboss_groups_get_requests( $args );
 
 		$retval = array();
 		foreach ( $group_requests as $group_request ) {
@@ -174,7 +174,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, count( $group_requests ), $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, count( $group_requests ), $args['per_page'] );
 
 		/**
 		 * Fires after a list of group membership request is fetched via the REST API.
@@ -207,22 +207,22 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user_id     = bp_loggedin_user_id();
+		$user_id     = bboss_loggedin_user_id();
 		$user_id_arg = $request['user_id'];
 		$group       = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
 		// If the query is not restricted by group or user, limit it to the current user, if not an admin.
-		if ( ! $request['group_id'] && ! $request['user_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! $request['group_id'] && ! $request['user_id'] && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$user_id_arg = $user_id;
 		}
 
-		$user = bp_rest_get_user( $user_id_arg );
+		$user = bboss_rest_get_user( $user_id_arg );
 
 		if ( $user_id ) {
 			$retval = true;
 
 			// If a group ID has been passed, check that it is valid.
-			if ( $request['group_id'] && ! $group instanceof BP_Groups_Group ) {
+			if ( $request['group_id'] && ! $group instanceof BBoss_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
 					__( 'Invalid group ID.', 'buddyboss' ),
@@ -243,8 +243,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 
 				// Site administrators can do anything. Otherwise, the user must manage the subject group or be the requester.
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
-				! ( $request['group_id'] && groups_is_user_admin( $user_id, $request['group_id'] ) ) &&
+				! bboss_current_user_can( 'bp_moderate' ) &&
+				! ( $request['group_id'] && bboss_groups_is_user_admin( $user_id, $request['group_id'] ) ) &&
 				$user_id_arg !== $user_id
 			) {
 				$retval = new WP_Error(
@@ -295,7 +295,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a membership request is fetched via the REST API.
 		 *
-		 * @param BP_Invitation $group_request Membership request object.
+		 * @param BBoss_Invitation $group_request Membership request object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -323,7 +323,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user_id       = bp_loggedin_user_id();
+		$user_id       = bboss_loggedin_user_id();
 		$group_request = $this->fetch_single_membership_request( $request['request_id'] );
 
 		if ( $user_id ) {
@@ -338,9 +338,9 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
+				! bboss_current_user_can( 'bp_moderate' ) &&
 				$user_id !== $group_request->user_id &&
-				! groups_is_user_admin( $user_id, $group_request->item_id )
+				! bboss_groups_is_user_admin( $user_id, $group_request->item_id )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_cannot_get_item',
@@ -382,12 +382,12 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [message] The optional message to send to the invited user.
 	 */
 	public function create_item( $request ) {
-		$user_id_arg = $request['user_id'] ? $request['user_id'] : bp_loggedin_user_id();
-		$user        = bp_rest_get_user( $user_id_arg );
+		$user_id_arg = $request['user_id'] ? $request['user_id'] : bboss_loggedin_user_id();
+		$user        = bboss_rest_get_user( $user_id_arg );
 		$group       = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
 		// Avoid duplicate requests.
-		if ( groups_check_for_membership_request( $user->ID, $group->id ) ) {
+		if ( bboss_groups_check_for_membership_request( $user->ID, $group->id ) ) {
 			return new WP_Error(
 				'bp_rest_group_membership_requests_duplicate_request',
 				__( 'There is already a request to this member.', 'buddyboss' ),
@@ -397,7 +397,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$request_id = groups_send_membership_request(
+		$request_id = bboss_groups_send_membership_request(
 			array(
 				'group_id' => $group->id,
 				'user_id'  => $user->ID,
@@ -425,7 +425,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		}
 		$request->set_param( 'user_id', $user->ID );
 
-		$invite = new BP_Invitation( $request_id );
+		$invite = new BBoss_Invitation( $request_id );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $invite, $request )
@@ -437,8 +437,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * Fires after a group membership request is made via the REST API.
 		 *
 		 * @param WP_User $user The user.
-		 * @param BP_Invitation $invite The invitation object.
-		 * @param BP_Groups_Group $group The group object.
+		 * @param BBoss_Invitation $invite The invitation object.
+		 * @param BBoss_Groups_Group $group The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -466,9 +466,9 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user_id     = bp_loggedin_user_id();
-		$user_id_arg = $request['user_id'] ? $request['user_id'] : bp_loggedin_user_id();
-		$user        = bp_rest_get_user( $user_id_arg );
+		$user_id     = bboss_loggedin_user_id();
+		$user_id_arg = $request['user_id'] ? $request['user_id'] : bboss_loggedin_user_id();
+		$user        = bboss_rest_get_user( $user_id_arg );
 		$group       = $this->groups_endpoint->get_group_object( $request['group_id'] );
 
 		// User must be logged in.
@@ -486,7 +486,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 				);
 
 				// Check for valid group.
-			} elseif ( ! $group instanceof BP_Groups_Group ) {
+			} elseif ( ! $group instanceof BBoss_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
 					__( 'Invalid group ID.', 'buddyboss' ),
@@ -497,7 +497,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 
 				// Normal users can only extend invitations on their own behalf.
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
+				! bboss_current_user_can( 'bp_moderate' ) &&
 				$user_id !== $user_id_arg
 			) {
 				$retval = new WP_Error(
@@ -539,7 +539,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		$group_request = $this->fetch_single_membership_request( $request['request_id'] );
-		$success       = groups_accept_membership_request( false, $group_request->user_id, $group_request->item_id );
+		$success       = bboss_groups_accept_membership_request( false, $group_request->user_id, $group_request->item_id );
 		if ( ! $success ) {
 			return new WP_Error(
 				'bp_rest_group_member_request_cannot_update_item',
@@ -553,7 +553,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		$g_member = new BP_Groups_Member( $group_request->user_id, $group_request->item_id );
+		$g_member = new BBoss_Groups_Member( $group_request->user_id, $group_request->item_id );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->group_members_endpoint->prepare_item_for_response( $g_member, $request )
@@ -565,8 +565,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a group membership request is accepted/rejected via the REST API.
 		 *
-		 * @param BP_Groups_Member $g_member The groups member object.
-		 * @param BP_Groups_Group $group The group object.
+		 * @param BBoss_Groups_Member $g_member The groups member object.
+		 * @param BBoss_Groups_Group $group The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -594,7 +594,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user_id       = bp_loggedin_user_id();
+		$user_id       = bboss_loggedin_user_id();
 		$group_request = $this->fetch_single_membership_request( $request['request_id'] );
 
 		if ( $user_id ) {
@@ -609,8 +609,8 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
-				! groups_is_user_admin( $user_id, $group_request->item_id )
+				! bboss_current_user_can( 'bp_moderate' ) &&
+				! bboss_groups_is_user_admin( $user_id, $group_request->item_id )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_member_request_cannot_update_item',
@@ -664,14 +664,14 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * If this change is being initiated by the requesting user,
 		 * use the `delete` function.
 		 */
-		if ( bp_loggedin_user_id() === $group_request->user_id ) {
-			$success = groups_delete_membership_request( false, $group_request->user_id, $group_request->item_id );
+		if ( bboss_loggedin_user_id() === $group_request->user_id ) {
+			$success = bboss_groups_delete_membership_request( false, $group_request->user_id, $group_request->item_id );
 			/**
 			 * Otherwise, this change is being initiated by a group admin or site admin,
 			 * and we should use the `reject` function.
 			 */
 		} else {
-			$success = groups_reject_membership_request( false, $group_request->user_id, $group_request->item_id );
+			$success = bboss_groups_reject_membership_request( false, $group_request->user_id, $group_request->item_id );
 		}
 
 		if ( ! $success ) {
@@ -693,7 +693,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user  = bp_rest_get_user( $group_request->user_id );
+		$user  = bboss_rest_get_user( $group_request->user_id );
 		$group = $this->groups_endpoint->get_group_object( $group_request->item_id );
 
 		$response->add_links( $this->prepare_links( $group_request ) );
@@ -702,7 +702,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * Fires after a group membership request is rejected via the REST API.
 		 *
 		 * @param WP_User $user The user.
-		 * @param BP_Groups_Group $group The group object.
+		 * @param BBoss_Groups_Group $group The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -730,7 +730,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user_id       = bp_loggedin_user_id();
+		$user_id       = bboss_loggedin_user_id();
 		$group_request = $this->fetch_single_membership_request( $request['request_id'] );
 
 		if ( $user_id ) {
@@ -745,9 +745,9 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
+				! bboss_current_user_can( 'bp_moderate' ) &&
 				$user_id !== $group_request->user_id &&
-				! groups_is_user_admin( $user_id, $group_request->item_id )
+				! bboss_groups_is_user_admin( $user_id, $group_request->item_id )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_membership_requests_cannot_delete_item',
@@ -773,7 +773,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares group invitation data to return as an object.
 	 *
-	 * @param BP_Invitation   $invite Invite object.
+	 * @param BBoss_Invitation   $invite Invite object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -786,7 +786,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 
 		// If joined is true then set user and group IDs.
 		if ( true === $joined && empty( $invite->id ) ) {
-			$invite->user_id = ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id();
+			$invite->user_id = ! empty( $request['user_id'] ) ? $request['user_id'] : bboss_loggedin_user_id();
 			$invite->item_id = ! empty( $request['group_id'] ) ? $request['group_id'] : false;
 		}
 
@@ -796,7 +796,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			'invite_sent'   => $invite->invite_sent,
 			'inviter_id'    => $invite->inviter_id,
 			'group_id'      => $invite->item_id,
-			'date_modified' => bp_rest_prepare_date_response( $invite->date_modified ),
+			'date_modified' => bboss_rest_prepare_date_response( $invite->date_modified ),
 			'type'          => $invite->type,
 			'message'       => array(
 				'raw'      => $invite->content,
@@ -817,7 +817,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request Request used to generate the response.
-		 * @param BP_Invitation $invite The invite object.
+		 * @param BBoss_Invitation $invite The invite object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -827,7 +827,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Invitation $invite Invite object.
+	 * @param BBoss_Invitation $invite Invite object.
 	 *
 	 * @return array Links for the given plugin.
 	 * @since 0.1.0
@@ -847,7 +847,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $invite->user_id ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $invite->user_id ) ),
 				'embeddable' => true,
 			),
 		);
@@ -855,7 +855,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $group_id ) ) {
 			$links['group'] = array(
 				'embeddable' => true,
-				'href'       => rest_url( $this->namespace . '/' . buddypress()->groups->id . '/' . $group_id ),
+				'href'       => rest_url( $this->namespace . '/' . bboss()->groups->id . '/' . $group_id ),
 			);
 		}
 
@@ -863,7 +863,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array $links The prepared links of the REST response.
-		 * @param BP_Invitation $invite Invite object.
+		 * @param BBoss_Invitation $invite Invite object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -875,11 +875,11 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param int $request_id The ID of the request you wish to fetch.
 	 *
-	 * @return BP_Invitation|bool $group_request Membership request if found, false otherwise.
+	 * @return BBoss_Invitation|bool $group_request Membership request if found, false otherwise.
 	 * @since 0.1.0
 	 */
 	public function fetch_single_membership_request( $request_id = 0 ) {
-		$group_requests = groups_get_requests( array( 'id' => $request_id ) );
+		$group_requests = bboss_groups_get_requests( array( 'id' => $request_id ) );
 		if ( $group_requests ) {
 			return current( $group_requests );
 		} else {
@@ -905,7 +905,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 			$args['message']['type']        = 'string';
 			$args['message']['description'] = __( 'The optional message to send to the invited user.', 'buddyboss' );
 			$args['group_id']['required']   = true;
-			$args['user_id']['default']     = bp_loggedin_user_id();
+			$args['user_id']['default']     = bboss_loggedin_user_id();
 
 			// Remove arguments not needed for the CREATABLE transport method.
 			unset( $args['message']['properties'], $args['date_modified'], $args['type'] );
@@ -989,3 +989,11 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_group_membership_requests_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Group_Membership_Request_Endpoint', false ) || interface_exists( 'BBoss_REST_Group_Membership_Request_Endpoint', false ) || trait_exists( 'BBoss_REST_Group_Membership_Request_Endpoint', false ) ) && ! class_exists( 'BP_REST_Group_Membership_Request_Endpoint', false ) && ! interface_exists( 'BP_REST_Group_Membership_Request_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Group_Membership_Request_Endpoint', 'BP_REST_Group_Membership_Request_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

@@ -14,11 +14,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-function bp_messages_register_widgets() {
+function bboss_messages_register_widgets() {
 	add_action(
 		'widgets_init',
 		function() {
-			register_widget( 'BP_Messages_Sitewide_Notices_Widget' );
+			register_widget( 'BBoss_Messages_Sitewide_Notices_Widget' );
 		}
 	);
 }

@@ -27,22 +27,22 @@ defined( 'ABSPATH' ) || exit;
  *                                   theme's empty-string replacement.
  * @return array|string
  */
-function bb_two_factor_settings_admin_nav( $wp_admin_nav ) {
+function bboss_two_factor_settings_admin_nav( $wp_admin_nav ) {
 	if ( ! is_array( $wp_admin_nav ) ) {
 		return $wp_admin_nav;
 	}
 
-	if ( ! bb_two_factor_is_active() || ! is_user_logged_in() ) {
+	if ( ! bboss_two_factor_is_active() || ! is_user_logged_in() ) {
 		return $wp_admin_nav;
 	}
 
-	$settings_id = buddypress()->settings->id;
+	$settings_id = bboss()->settings->id;
 
 	$wp_admin_nav[] = array(
 		'parent'   => 'my-account-' . $settings_id,
 		'id'       => 'my-account-' . $settings_id . '-security',
 		'title'    => __( 'Security', 'buddyboss' ),
-		'href'     => bb_two_factor_get_settings_url( bp_loggedin_user_id() ),
+		'href'     => bboss_two_factor_get_settings_url( bboss_loggedin_user_id() ),
 		'position' => 15,
 	);
 
@@ -58,7 +58,7 @@ add_filter( 'bp_settings_admin_nav', 'bb_two_factor_settings_admin_nav', 15 );
  * @param array $buttons Registered submit buttons.
  * @return array
  */
-function bb_two_factor_submit_button( $buttons ) {
+function bboss_two_factor_submit_button( $buttons ) {
 	$buttons['bb-two-factor-settings'] = array(
 		'before'     => 'bb_two_factor_settings_before_submit',
 		'after'      => 'bb_two_factor_settings_after_submit',
@@ -88,7 +88,7 @@ add_filter( 'bp_nouveau_get_submit_button', 'bb_two_factor_submit_button' );
  * @param array $providers Provider instances keyed by provider class name.
  * @return array
  */
-function bb_two_factor_hide_dummy_provider( $providers ) {
+function bboss_two_factor_hide_dummy_provider( $providers ) {
 	if ( ! is_array( $providers ) ) {
 		return $providers;
 	}

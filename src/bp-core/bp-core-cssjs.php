@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.1.0
  */
-function bp_core_register_common_scripts() {
-	$min = bp_core_get_minified_asset_suffix();
-	$url = buddypress()->plugin_url . 'bp-core/js/';
+function bboss_core_register_common_scripts() {
+	$min = bboss_core_get_minified_asset_suffix();
+	$url = bboss()->plugin_url . 'bp-core/js/';
 
 	// Set up default scripts to register.
 	$scripts = array(
@@ -151,7 +151,7 @@ function bp_core_register_common_scripts() {
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field.
-	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+	if ( bboss_is_register_page() && bboss_get_xprofile_member_type_field_id() > 0 ) {
 		$scripts['bp-register-page'] = array(
 			'file'         => "{$url}register{$min}.js",
 			'dependencies' => array( 'jquery' ),
@@ -175,7 +175,7 @@ function bp_core_register_common_scripts() {
 	 */
 	$scripts = apply_filters( 'bp_core_register_common_scripts', $scripts );
 
-	$version = bp_get_version();
+	$version = bboss_get_version();
 	foreach ( $scripts as $id => $script ) {
 		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
@@ -251,9 +251,9 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
  *
  * @since BuddyPress 2.1.0
  */
-function bp_core_register_common_styles() {
-	$min = bp_core_get_minified_asset_suffix();
-	$url = buddypress()->plugin_url . 'bp-core/css/';
+function bboss_core_register_common_styles() {
+	$min = bboss_core_get_minified_asset_suffix();
+	$url = bboss()->plugin_url . 'bp-core/css/';
 
 	/**
 	 * Filters the URL for the Admin Bar stylesheet.
@@ -311,7 +311,7 @@ function bp_core_register_common_styles() {
 
 	foreach ( $styles as $id => $style ) {
 		// Styles added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
-		wp_register_style( $id, $style['file'], $style['dependencies'], isset( $style['version'] ) ? $style['version'] : bp_get_version() );
+		wp_register_style( $id, $style['file'], $style['dependencies'], isset( $style['version'] ) ? $style['version'] : bboss_get_version() );
 
 		wp_style_add_data( $id, 'rtl', true );
 		if ( $min ) {
@@ -327,8 +327,8 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_styles', 1 );
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_confirmation_js() {
-	if ( is_multisite() && ! bp_is_root_blog() ) {
+function bboss_core_confirmation_js() {
+	if ( is_multisite() && ! bboss_is_root_blog() ) {
 		return false;
 	}
 
@@ -351,13 +351,13 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_core_confirmation_js' );
  *
  * @since BuddyPress 2.3.0
  */
-function bp_core_avatar_scripts() {
-	if ( ! bp_avatar_is_front_edit() ) {
+function bboss_core_avatar_scripts() {
+	if ( ! bboss_avatar_is_front_edit() ) {
 		return false;
 	}
 
 	// Enqueue the Attachments scripts for the Avatar UI.
-	bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
+	bboss_attachments_enqueue_scripts( 'BBoss_Attachment_Avatar' );
 
 	// Add Some actions for Theme backcompat.
 	add_action( 'bp_after_profile_avatar_upload_content', 'bp_avatar_template_check' );
@@ -371,13 +371,13 @@ add_action( 'bp_enqueue_scripts', 'bp_core_avatar_scripts' );
  *
  * @since BuddyPress 2.4.0
  */
-function bp_core_cover_image_scripts() {
-	if ( ! bp_attachments_cover_image_is_edit() ) {
+function bboss_core_cover_image_scripts() {
+	if ( ! bboss_attachments_cover_image_is_edit() ) {
 		return false;
 	}
 
 	// Enqueue the Attachments scripts for the Cover Photo UI.
-	bp_attachments_enqueue_scripts( 'BP_Attachment_Cover_Image' );
+	bboss_attachments_enqueue_scripts( 'BBoss_Attachment_Cover_Image' );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
 
@@ -386,12 +386,12 @@ add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_add_jquery_cropper() {
+function bboss_core_add_jquery_cropper() {
 	wp_enqueue_style( 'jcrop' );
 	wp_enqueue_script( 'jcrop', array( 'jquery' ) );
 
 	// This runs on wp_print_scripts, before the head scripts print, so the inline JS still attaches to the jcrop handle.
-	bp_core_add_cropper_inline_js();
+	bboss_core_add_cropper_inline_js();
 	add_action( 'wp_head', 'bp_core_add_cropper_inline_css' );
 }
 
@@ -400,7 +400,7 @@ function bp_core_add_jquery_cropper() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_add_cropper_inline_js() {
+function bboss_core_add_cropper_inline_js() {
 
 	/**
 	 * Filters the return value of getimagesize to determine if an image was uploaded.
@@ -409,14 +409,14 @@ function bp_core_add_cropper_inline_js() {
 	 *
 	 * @param array $value Array of data found by getimagesize.
 	 */
-	$image = apply_filters( 'bp_inline_cropper_image', getimagesize( bp_core_avatar_upload_path() . buddypress()->avatar_admin->image->dir ) );
+	$image = apply_filters( 'bp_inline_cropper_image', getimagesize( bboss_core_avatar_upload_path() . bboss()->avatar_admin->image->dir ) );
 	if ( empty( $image ) ) {
 		return;
 	}
 
 	// Get avatar full width and height.
-	$full_height = bp_core_avatar_full_height();
-	$full_width  = bp_core_avatar_full_width();
+	$full_height = bboss_core_avatar_full_height();
+	$full_width  = bboss_core_avatar_full_width();
 
 	// Calculate Aspect Ratio.
 	if ( ! empty( $full_height ) && ( $full_width != $full_height ) ) {
@@ -511,12 +511,12 @@ function bp_core_add_cropper_inline_js() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_add_cropper_inline_css() {
+function bboss_core_add_cropper_inline_css() {
 	?>
 
 	<style>
 		.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
-		#avatar-crop-pane { width: <?php echo (int) bp_core_avatar_full_width(); ?>px; height: <?php echo (int) bp_core_avatar_full_height(); ?>px; overflow: hidden; }
+		#avatar-crop-pane { width: <?php echo (int) bboss_core_avatar_full_width(); ?>px; height: <?php echo (int) bboss_core_avatar_full_height(); ?>px; overflow: hidden; }
 		#avatar-crop-submit { margin: 20px 0; }
 		.jcrop-holder img,
 		#avatar-crop-pane img,
@@ -533,8 +533,8 @@ function bp_core_add_cropper_inline_css() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_add_ajax_url_js() {
-	$inline_js = "var ajaxurl = '" . esc_url( bp_core_ajax_url() ) . "';";
+function bboss_core_add_ajax_url_js() {
+	$inline_js = "var ajaxurl = '" . esc_url( bboss_core_ajax_url() ) . "';";
 
 	// Printed in place on wp_head: theme scripts read the global before any handle prints.
 	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
@@ -555,7 +555,7 @@ add_action( 'wp_head', 'bp_core_add_ajax_url_js' );
  *
  * @return string AJAX endpoint URL.
  */
-function bp_core_ajax_url() {
+function bboss_core_ajax_url() {
 
 	/**
 	 * Filters the proper value for BuddyPress' ajaxurl.
@@ -574,7 +574,7 @@ function bp_core_ajax_url() {
  *
  * @return array The JavaScript dependencies.
  */
-function bp_core_get_js_dependencies() {
+function bboss_core_get_js_dependencies() {
 
 	/**
 	 * Filters the javascript dependencies for buddypress.js.
@@ -607,15 +607,15 @@ function bp_core_get_js_dependencies() {
  * @return null|array|false The inline css or an associative array containing
  *                          the css rules and the style handle.
  */
-function bp_add_cover_image_inline_css( $return = false ) {
-	$bp = buddypress();
+function bboss_add_cover_image_inline_css( $return = false ) {
+	$bp = bboss();
 
 	// Find the component of the current item.
-	if ( bp_is_user() ) {
+	if ( bboss_is_user() ) {
 
 		// User is not allowed to upload cover photos
 		// no need to carry on.
-		if ( bp_disable_cover_image_uploads() ) {
+		if ( bboss_disable_cover_image_uploads() ) {
 			return;
 		}
 
@@ -623,11 +623,11 @@ function bp_add_cover_image_inline_css( $return = false ) {
 			'component' => 'xprofile',
 			'object'    => $bp->displayed_user,
 		);
-	} elseif ( bp_is_group() ) {
+	} elseif ( bboss_is_group() ) {
 
 		// Users are not allowed to upload cover photos for their groups
 		// no need to carry on.
-		if ( bp_disable_group_cover_image_uploads() ) {
+		if ( bboss_disable_group_cover_image_uploads() ) {
 			return;
 		}
 
@@ -640,12 +640,12 @@ function bp_add_cover_image_inline_css( $return = false ) {
 	}
 
 	// Bail if no component were found.
-	if ( empty( $cover_image_object['component'] ) || empty( $cover_image_object['object'] ) || ! bp_is_active( $cover_image_object['component'], 'cover_image' ) ) {
+	if ( empty( $cover_image_object['component'] ) || empty( $cover_image_object['object'] ) || ! bboss_is_active( $cover_image_object['component'], 'cover_image' ) ) {
 		return;
 	}
 
 	// Get the settings of the cover photo feature for the current component.
-	$params = bp_attachments_get_cover_image_settings( $cover_image_object['component'] );
+	$params = bboss_attachments_get_cover_image_settings( $cover_image_object['component'] );
 
 	// Bail if no params.
 	if ( empty( $params ) ) {
@@ -661,7 +661,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 			$object_dir = 'members';
 		}
 
-		$cover_image = bp_attachments_get_attachment(
+		$cover_image = bboss_attachments_get_attachment(
 			'url',
 			array(
 				'object_dir' => $object_dir,
@@ -712,16 +712,16 @@ add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
  *
  * @since BuddyPress 2.7.0
  */
-function bp_core_add_livestamp() {
+function bboss_core_add_livestamp() {
 	if (
-		! is_buddypress() &&
-		( ! function_exists( 'bp_search_is_search' ) || ! bp_search_is_search() ) &&
+		! bboss_is_buddypress() &&
+		( ! function_exists( 'bboss_search_is_search' ) || ! bboss_search_is_search() ) &&
 		did_action( 'elementor/theme/before_do_single' )
 	) {
 		return;
 	}
 
-	bp_core_enqueue_livestamp();
+	bboss_core_enqueue_livestamp();
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
 
@@ -730,7 +730,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
  *
  * @since BuddyPress 2.7.0
  */
-function bp_core_enqueue_livestamp() {
+function bboss_core_enqueue_livestamp() {
 	// If bp-livestamp isn't enqueued, do it now.
 	if ( wp_script_is( 'bp-livestamp' ) || ! wp_script_is( 'moment', 'registered' ) ) {
 		return;
@@ -823,12 +823,12 @@ function bp_core_enqueue_livestamp() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_add_jquery_mask() {
-	if ( ! is_buddypress() ) {
+function bboss_core_add_jquery_mask() {
+	if ( ! bboss_is_buddypress() ) {
 		return;
 	}
 
-	if ( 'profile' != bp_current_component() || 'edit' != bp_current_action() ) {
+	if ( 'profile' != bboss_current_component() || 'edit' != bboss_current_action() ) {
 		return;// we need this script only on profile edit screens
 	}
 
@@ -839,7 +839,7 @@ function bp_core_add_jquery_mask() {
 	wp_enqueue_script( 'jquery-mask' );
 
 	// Attach the telephone-mask init to the jquery-mask handle it depends on.
-	bp_core_add_jquery_mask_inline_js();
+	bboss_core_add_jquery_mask_inline_js();
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 
@@ -848,7 +848,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_add_jquery_mask_inline_js() {
+function bboss_core_add_jquery_mask_inline_js() {
 	$inline_js = <<<'JS'
 	jQuery(document).ready(function(){
 		jQuery(".field_type_telephone").each(function(){
@@ -871,15 +871,15 @@ JS;
  *
  * @since BuddyBoss 1.1.6
  */
-function bp_core_register_page_js() {
+function bboss_core_register_page_js() {
 
-	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+	if ( bboss_is_register_page() && bboss_get_xprofile_member_type_field_id() > 0 ) {
 		wp_enqueue_script( 'bp-register-page' );
 		wp_enqueue_editor();
 
 		$data = array(
-			'ajaxurl'        => bp_core_ajax_url(),
-			'field_id'       => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'ajaxurl'        => bboss_core_ajax_url(),
+			'field_id'       => 'field_' . bboss_get_xprofile_member_type_field_id(),
 			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
 			'mismatch_email' => __( 'Mismatch', 'buddyboss' ),
 			'valid_email'    => __( 'Enter valid email', 'buddyboss' ),
@@ -893,20 +893,20 @@ function bp_core_register_page_js() {
 
 add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
 
-function bp_core_enqueue_isInViewPort() {
+function bboss_core_enqueue_isInViewPort() {
 	if (
-		bp_is_user_media() ||
-		bp_is_single_album() ||
-		bp_is_media_directory() ||
-		bp_is_activity_component() ||
-		bp_is_group_activity() ||
-		bp_is_group_media() ||
-		bp_is_group_albums() ||
-		bp_is_messages_component() ||
-		( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
-		( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
-		( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
-		( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
+		bboss_is_user_media() ||
+		bboss_is_single_album() ||
+		bboss_is_media_directory() ||
+		bboss_is_activity_component() ||
+		bboss_is_group_activity() ||
+		bboss_is_group_media() ||
+		bboss_is_group_albums() ||
+		bboss_is_messages_component() ||
+		( function_exists( 'bboss_is_profile_media_support_enabled' ) && bboss_is_profile_media_support_enabled() ) ||
+		( function_exists( 'bboss_is_group_media_support_enabled' ) && bboss_is_group_media_support_enabled() ) ||
+		( function_exists( 'bboss_is_group_albums_support_enabled' ) && bboss_is_group_albums_support_enabled() ) ||
+		( function_exists( 'bboss_is_messages_media_support_enabled' ) && bboss_is_messages_media_support_enabled() )
 	) {
 		wp_enqueue_script( 'isInViewport' );
 	}
@@ -919,8 +919,8 @@ add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );
  *
  * @since BuddyBoss 2.3.60
  */
-function bb_load_link_preview_js_template() {
-	bp_get_template_part( 'common/js-templates/members/bb-link-preview' );
+function bboss_load_link_preview_js_template() {
+	bboss_get_template_part( 'common/js-templates/members/bb-link-preview' );
 }
 
 add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
@@ -930,7 +930,7 @@ add_action( 'bp_enqueue_scripts', 'bb_load_link_preview_js_template' );
  *
  * @since BuddyBoss 2.4.40
  */
-function bb_load_emoji_detection_script() {
+function bboss_load_emoji_detection_script() {
 	// Get the current WordPress version.
 	$wp_version = get_bloginfo( 'version' );
 

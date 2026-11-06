@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_nouveau = bp_nouveau();
+$bp_nouveau = bboss_nouveau();
 
 // If no Profile Completion Progress found then stop.
 if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {

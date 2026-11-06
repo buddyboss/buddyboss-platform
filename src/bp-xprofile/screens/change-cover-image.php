@@ -14,10 +14,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.4.0
  */
-function xprofile_screen_change_cover_image() {
+function bboss_xprofile_screen_change_cover_image() {
 
 	// Bail if not the correct screen.
-	if ( ! bp_is_my_profile() && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_is_my_profile() && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
@@ -35,5 +35,5 @@ function xprofile_screen_change_cover_image() {
 	 *
 	 * @param string $template Path to the XProfile cover photo template to load.
 	 */
-	bp_core_load_template( apply_filters( 'xprofile_template_cover_image', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'xprofile_template_cover_image', 'members/single/home' ) );
 }

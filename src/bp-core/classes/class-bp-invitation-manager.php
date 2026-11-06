@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.3.5
  */
-abstract class BP_Invitation_Manager {
+abstract class BBoss_Invitation_Manager {
 
 	/**
 	 * The name of the related class.
@@ -50,7 +50,7 @@ abstract class BP_Invitation_Manager {
 	 * @return string
 	 */
 	public static function get_table_name() {
-		return buddypress()->table_prefix . 'bp_invitations';
+		return bboss()->table_prefix . 'bp_invitations';
 	}
 
 	/** Create ********************************************************************/
@@ -81,7 +81,7 @@ abstract class BP_Invitation_Manager {
 	 */
 	public function add_invitation( $args = array() ) {
 
-		$r = bp_parse_args( $args, array(
+		$r = bboss_parse_args( $args, array(
 			'user_id'           => 0,
 			'invitee_email'     => '',
 			'inviter_id'        => 0,
@@ -89,7 +89,7 @@ abstract class BP_Invitation_Manager {
 			'secondary_item_id' => 0,
 			'type'              => 'invite',
 			'content'           => '',
-			'date_modified'     => bp_core_current_time(),
+			'date_modified'     => bboss_core_current_time(),
 			'send_invite'       => 0,
 			'accepted'          => 0
 		), 'add_invitation' );
@@ -121,7 +121,7 @@ abstract class BP_Invitation_Manager {
 
 		if ( ! $invite_id ) {
 			// Set up the new invitation as a draft.
-			$invitation                    = new BP_Invitation;
+			$invitation                    = new BBoss_Invitation;
 			$invitation->user_id           = $r['user_id'];
 			$invitation->inviter_id        = $r['inviter_id'];
 			$invitation->invitee_email     = $r['invitee_email'];
@@ -161,7 +161,7 @@ abstract class BP_Invitation_Manager {
 	public function send_invitation_by_id( $invitation_id = 0 ) {
 		$updated = false;
 
-		$invitation = new BP_Invitation( $invitation_id );
+		$invitation = new BBoss_Invitation( $invitation_id );
 
 		if ( ! $invitation->id ) {
 			return false;
@@ -172,7 +172,7 @@ abstract class BP_Invitation_Manager {
 		 *
 		 * @since BuddyBoss 1.3.5
 		 *
-		 * @param BP_Invitation object $invitation Invitation about to be sent.
+		 * @param BBoss_Invitation object $invitation Invitation about to be sent.
 		 */
 		do_action( 'bp_invitations_send_invitation_by_id_before_send', $invitation );
 
@@ -196,7 +196,7 @@ abstract class BP_Invitation_Manager {
 		// Perform the send action.
 		$this->run_send_action( $invitation );
 
-		$updated = BP_Invitation::mark_sent( $invitation->id );
+		$updated = BBoss_Invitation::mark_sent( $invitation->id );
 
 		return $updated;
 	}
@@ -227,7 +227,7 @@ abstract class BP_Invitation_Manager {
 	 */
 	public function add_request( $args = array() ) {
 
-		$r = bp_parse_args( $args, array(
+		$r = bboss_parse_args( $args, array(
 			'user_id'           => 0,
 			'inviter_id'        => 0,
 			'invitee_email'     => '',
@@ -235,7 +235,7 @@ abstract class BP_Invitation_Manager {
 			'secondary_item_id' => 0,
 			'type'              => 'request',
 			'content'           => '',
-			'date_modified'     => bp_core_current_time(),
+			'date_modified'     => bboss_core_current_time(),
 			'invite_sent'       => 0,
 			'accepted'          => 0
 		), 'add_request' );
@@ -281,7 +281,7 @@ abstract class BP_Invitation_Manager {
 			return $this->accept_invitation( $base_args );
 		} else {
 			// Set up the new request.
-			$request                    = new BP_Invitation;
+			$request                    = new BBoss_Invitation;
 			$request->user_id           = $r['user_id'];
 			$request->inviter_id        = $r['inviter_id'];
 			$request->invitee_email     = $r['invitee_email'];
@@ -312,7 +312,7 @@ abstract class BP_Invitation_Manager {
 	public function send_request_notification_by_id( $request_id = 0 ) {
 		$updated = false;
 
-		$request = new BP_Invitation( $request_id );
+		$request = new BBoss_Invitation( $request_id );
 
 		if ( ! $request->id ) {
 			return false;
@@ -342,7 +342,7 @@ abstract class BP_Invitation_Manager {
 		// Perform the send action.
 		$this->run_send_action( $request );
 
-		$updated = BP_Invitation::mark_sent( $request->id );
+		$updated = BBoss_Invitation::mark_sent( $request->id );
 
 		return $updated;
 	}
@@ -355,10 +355,10 @@ abstract class BP_Invitation_Manager {
 	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param int $id ID of the invitation.
-	 * @return BP_Invitation object
+	 * @return BBoss_Invitation object
 	 */
 	public function get_by_id( $id = 0 ) {
-		return new BP_Invitation( $id );
+		return new BBoss_Invitation( $id );
 	}
 
 	/**
@@ -366,7 +366,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of accepted parameters.
+	 * @see BBoss_Invitation::get() for a description of accepted parameters.
 	 *
 	 * @return array Located invitations.
 	 */
@@ -378,7 +378,7 @@ abstract class BP_Invitation_Manager {
 		// Use the class_name property value.
 		$args['class'] = $this->class_name;
 
-		return BP_Invitation::get( $args );
+		return BBoss_Invitation::get( $args );
 	}
 
 	/**
@@ -386,7 +386,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of accepted parameters.
+	 * @see BBoss_Invitation::get() for a description of accepted parameters.
 	 *
 	 * @return array Located invitations.
 	 */
@@ -399,7 +399,7 @@ abstract class BP_Invitation_Manager {
 		// Use the class_name property value.
 		$args['class'] = $this->class_name;
 
-		return BP_Invitation::get( $args );
+		return BBoss_Invitation::get( $args );
 	}
 
 	/**
@@ -407,7 +407,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of accepted parameters.
+	 * @see BBoss_Invitation::get() for a description of accepted parameters.
 	 *
 	 * @return int|bool ID of first found invitation or false if none found.
 	 */
@@ -427,7 +427,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of accepted parameters.
+	 * @see BBoss_Invitation::get() for a description of accepted parameters.
 	 *
 	 * @return int|bool ID of existing request or false if none found.
 	 */
@@ -449,7 +449,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of
+	 * @see BBoss_Invitation::get() for a description of
 	 *      accepted update/where arguments.
 	 *
 	 * @param array $update_args Associative array of fields to update,
@@ -465,7 +465,7 @@ abstract class BP_Invitation_Manager {
 		 * because we'll need to mark all similar invitations and requests.
 		 * The following, except the optional 'secondary_item_id', are required.
 		 */
-		$r = bp_parse_args( $args, array(
+		$r = bboss_parse_args( $args, array(
 			'user_id'           => 0,
 			'invitee_email'     => '',
 			'item_id'           => null,
@@ -498,7 +498,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of
+	 * @see BBoss_Invitation::get() for a description of
 	 *      accepted update/where arguments.
 	 *
 	 * @param array $update_args Associative array of fields to update,
@@ -513,7 +513,7 @@ abstract class BP_Invitation_Manager {
 		 * because we'll need to accept all similar invitations and requests.
 		 * The following, except the optional 'secondary_item_id', are required.
 		 */
-		$r = bp_parse_args( $args, array(
+		$r = bboss_parse_args( $args, array(
 			'user_id'           => 0,
 			'item_id'           => null,
 			'secondary_item_id' => null,
@@ -544,7 +544,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::get() for a description of
+	 * @see BBoss_Invitation::get() for a description of
 	 *      accepted update/where arguments.
 	 *
 	 * @param array $update_args Associative array of fields to update,
@@ -557,7 +557,7 @@ abstract class BP_Invitation_Manager {
 	 */
 	public function update_invitation( $update_args = array(), $where_args = array() ) {
 		$update_args['class'] = $this->class_name;
-		return BP_Invitation::update( $update_args, $where_args );
+		return BBoss_Invitation::update( $update_args, $where_args );
 	}
 
 	/**
@@ -566,10 +566,10 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @param BP_Invitation $invitation The invitation to send.
+	 * @param BBoss_Invitation $invitation The invitation to send.
 	 * @return bool True on success, false on failure.
 	 */
-	abstract public function run_send_action( BP_Invitation $invitation );
+	abstract public function run_send_action( BBoss_Invitation $invitation );
 
 	/**
 	 * Mark invitations as sent that are found by user_id, inviter_id,
@@ -599,7 +599,7 @@ abstract class BP_Invitation_Manager {
 	 */
 	public function mark_sent( $args ) {
 		$args['class'] = $this->class_name;
-		return BP_Invitation::mark_sent_by_data( $args );
+		return BBoss_Invitation::mark_sent_by_data( $args );
 	}
 
 	/**
@@ -622,7 +622,7 @@ abstract class BP_Invitation_Manager {
 	 * @return bool True on success, false on failure.
 	 */
 	public function mark_accepted_by_id( $id ) {
-		return BP_Invitation::mark_accepted( $id );
+		return BBoss_Invitation::mark_accepted( $id );
 	}
 
 	/**
@@ -632,12 +632,12 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::mark_accepted_by_data()
+	 * @see BBoss_Invitation::mark_accepted_by_data()
 	 *      for a description of arguments.
 	 */
 	public function mark_accepted( $args ) {
 		$args['class'] = $this->class_name;
-		return BP_Invitation::mark_accepted_by_data( $args );
+		return BBoss_Invitation::mark_accepted_by_data( $args );
 	}
 
 	/** Delete ********************************************************************/
@@ -647,7 +647,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::delete for a description of arguments.
+	 * @see BBoss_Invitation::delete for a description of arguments.
 	 * @return int|bool Number of rows deleted on success, false on failure.
 	 */
 	public function delete( $args ) {
@@ -655,7 +655,7 @@ abstract class BP_Invitation_Manager {
 			$args['type'] = 'invite';
 		}
 		$args['class'] = $this->class_name;
-		return BP_Invitation::delete( $args );
+		return BBoss_Invitation::delete( $args );
 	}
 
 	/**
@@ -663,7 +663,7 @@ abstract class BP_Invitation_Manager {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 *
-	 * @see BP_Invitation::delete for a description of arguments.
+	 * @see BBoss_Invitation::delete for a description of arguments.
 	 *
 	 * @return int|bool Number of rows deleted on success, false on failure.
 	 */
@@ -683,7 +683,7 @@ abstract class BP_Invitation_Manager {
 	 * @return int|bool Number of rows deleted on success, false on failure.
 	 */
 	public function delete_all() {
-		return BP_Invitation::delete( array(
+		return BBoss_Invitation::delete( array(
 			'class' => $this->class_name,
 		) );
 	}

@@ -55,27 +55,27 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->format_backup                   = bp_get_option( 'bp-display-name-format' );
-		$this->fn_default_backup               = bp_xprofile_get_meta( bp_xprofile_firstname_field_id(), 'field', 'default_visibility' );
-		$this->fn_allow_backup                 = bp_xprofile_get_meta( bp_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility' );
+		$this->format_backup                   = bboss_get_option( 'bp-display-name-format' );
+		$this->fn_default_backup               = bboss_xprofile_get_meta( bboss_xprofile_firstname_field_id(), 'field', 'default_visibility' );
+		$this->fn_allow_backup                 = bboss_xprofile_get_meta( bboss_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility' );
 		// Read with a null default so an option that was never stored is restored by deleting it:
 		// both toggles fall back to "shown" only while the row is absent, and writing back the ''
 		// that bp_get_option() otherwise returns would flip that default for every later test.
-		$this->hide_last_name_backup           = bp_get_option( 'bp-hide-last-name', null );
-		$this->hide_nickname_first_name_backup = bp_get_option( 'bp-hide-nickname-first-name', null );
+		$this->hide_last_name_backup           = bboss_get_option( 'bp-hide-last-name', null );
+		$this->hide_nickname_first_name_backup = bboss_get_option( 'bp-hide-nickname-first-name', null );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 	}
 
 	/**
 	 * Restore the options the harness started with.
 	 */
 	public function tearDown(): void {
-		bp_update_option( 'bp-display-name-format', $this->format_backup );
+		bboss_update_option( 'bp-display-name-format', $this->format_backup );
 		$this->restore_option( 'bp-hide-last-name', $this->hide_last_name_backup );
 		$this->restore_option( 'bp-hide-nickname-first-name', $this->hide_nickname_first_name_backup );
-		bp_xprofile_update_meta( bp_xprofile_firstname_field_id(), 'field', 'default_visibility', $this->fn_default_backup );
-		bp_xprofile_update_meta( bp_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility', $this->fn_allow_backup );
+		bboss_xprofile_update_meta( bboss_xprofile_firstname_field_id(), 'field', 'default_visibility', $this->fn_default_backup );
+		bboss_xprofile_update_meta( bboss_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility', $this->fn_allow_backup );
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 
 		parent::tearDown();
@@ -89,11 +89,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	protected function restore_option( $option_name, $value ) {
 		if ( is_null( $value ) ) {
-			bp_delete_option( $option_name );
+			bboss_delete_option( $option_name );
 			return;
 		}
 
-		bp_update_option( $option_name, $value );
+		bboss_update_option( $option_name, $value );
 	}
 
 	/**
@@ -106,7 +106,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	protected function search_as( $viewer_id, $term ) {
 		$this->set_current_user( $viewer_id );
 
-		$query = new BP_User_Query(
+		$query = new BBoss_User_Query(
 			array(
 				'search_terms' => $term,
 				'per_page'     => 20,
@@ -119,7 +119,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * Create a member whose surname is stored in both the WP column and the xprofile field.
 	 *
-	 * Each test uses its own surname on purpose. bp_xprofile_bp_user_query_search() memoizes its
+	 * Each test uses its own surname on purpose. bboss_xprofile_bp_user_query_search() memoizes its
 	 * built SQL - including the resolved ID list - in a function-local static keyed by the search
 	 * term. That is correct within a single request, where the data cannot change underneath it,
 	 * but a PHPUnit process spans many notional requests, so reusing one term across tests would
@@ -143,9 +143,9 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $first_name );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $surname );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, $visibility );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, $first_name );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, $surname );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, $visibility );
 
 		return $user_id;
 	}
@@ -235,7 +235,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * can only differ because of the friendship.
 	 */
 	public function test_friends_level_surname_is_visible_to_a_friend_and_hidden_from_a_stranger() {
-		if ( ! bp_is_active( 'friends' ) || ! function_exists( 'friends_add_friend' ) ) {
+		if ( ! bboss_is_active( 'friends' ) || ! function_exists( 'bboss_friends_add_friend' ) ) {
 			$this->markTestSkipped( 'The Friends component is not active in this configuration.' );
 		}
 
@@ -243,12 +243,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$friend   = self::factory()->user->create();
 		$stranger = self::factory()->user->create();
 
-		friends_add_friend( $friend, $user_id, true );
+		bboss_friends_add_friend( $friend, $user_id, true );
 
 		// Fixture guard: without a real confirmed friendship the positive assertion below would
 		// pass for the wrong reason.
 		$this->assertTrue(
-			(bool) friends_check_friendship( $friend, $user_id ),
+			(bool) bboss_friends_check_friendship( $friend, $user_id ),
 			'Fixture: the friendship was not established, so the positive case proves nothing.'
 		);
 
@@ -270,7 +270,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * The site-wide Display Name Format hide, which is the configuration this ticket is about.
 	 *
 	 * Under "First Name" the surname is not part of anybody's visible name, whatever the Last Name
-	 * field's visibility says, and bp_core_get_user_displayname() redacts it accordingly. Before
+	 * field's visibility says, and bboss_core_get_user_displayname() redacts it accordingly. Before
 	 * this, none of the search filter's candidate sources looked at the format at all, so a member
 	 * whose only match was that surname stayed in the results and confirmed it.
 	 *
@@ -285,25 +285,25 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ashdownly', 'Rosalind' );
 		$pattern = '%Ashdownly%';
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( $pattern ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( $pattern ), 0 ),
 			'Nothing is hidden under the First Name & Last Name format, so the match must survive.'
 		);
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( $pattern ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( $pattern ), 0 ),
 			'A guest confirmed a surname the First Name format hides from everyone.'
 		);
 
 		// The name part the format DOES show still matches, so the member stays findable.
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Rosalind%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Rosalind%' ), 0 ),
 			'The visible first name stopped matching under the format hide.'
 		);
 	}
@@ -321,25 +321,25 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		global $wpdb;
 
 		$user_id = self::factory()->user->create( array( 'nickname' => 'driftnick' ) );
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Dorothea' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, 'Dorothea' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, '' );
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Dorothea Quillmere' ), array( 'ID' => $user_id ) );
 		clean_user_cache( $user_id );
 
 		$this->assertSame(
 			'',
-			(string) xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id ),
+			(string) bboss_xprofile_get_field_data( bboss_xprofile_lastname_field_id(), $user_id ),
 			'Fixture: the surname must exist only in the stored column.'
 		);
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( 0 );
 
-		$this->assertSame( 'Dorothea', bp_core_get_user_displayname( $user_id, 0 ), 'Fixture: the rendered name is redacted.' );
+		$this->assertSame( 'Dorothea', bboss_core_get_user_displayname( $user_id, 0 ), 'Fixture: the rendered name is redacted.' );
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Quillmere%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Quillmere%' ), 0 ),
 			'A guest confirmed a surname that is redacted everywhere it is rendered.'
 		);
 	}
@@ -365,9 +365,9 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Wilhelmina' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, 'Wilhelmina' );
 		if ( '' !== $surname ) {
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $surname );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, $surname );
 		}
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Wilhelmina ' . $token ), array( 'ID' => $user_id ) );
@@ -418,12 +418,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			$user_ids[] = $this->create_member_with_drifted_column( 'Zarquonade', 'zarqnick' . $i );
 		}
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( 0 );
 
 		list( $result, $resolutions ) = $this->count_name_resolutions(
 			function () use ( $user_ids ) {
-				return bb_xprofile_filter_user_search_matches( $user_ids, array( '%Zarquonade%' ), 0 );
+				return bboss_xprofile_filter_user_search_matches( $user_ids, array( '%Zarquonade%' ), 0 );
 			}
 		);
 
@@ -455,7 +455,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// any re-testing and the budget must not touch it.
 		$visible_id = $this->create_member_with_hidden_surname( 'public', 'Ellsworthy', 'Vandergloom' );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( 0 );
 
 		$cap = function () {
@@ -465,7 +465,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		list( $result, $resolutions ) = $this->count_name_resolutions(
 			function () use ( $over_budget, $visible_id ) {
-				return bb_xprofile_filter_user_search_matches(
+				return bboss_xprofile_filter_user_search_matches(
 					array_merge( $over_budget, array( $visible_id ) ),
 					array( '%Vandergloom%' ),
 					0
@@ -506,24 +506,24 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Reginald' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Quenlingham' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, 'Reginald' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, 'Quenlingham' );
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Reggiebert Quenlingham' ), array( 'ID' => $user_id ) );
 		clean_user_cache( $user_id );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( 0 );
 
 		$this->assertSame(
 			'Reginald',
-			bp_core_get_user_displayname( $user_id, 0 ),
+			bboss_core_get_user_displayname( $user_id, 0 ),
 			'Fixture: the visible name must come from the First Name field, not the drifted column.'
 		);
 
 		list( $result, $resolutions ) = $this->count_name_resolutions(
 			function () use ( $user_id ) {
-				return bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), 0 );
+				return bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), 0 );
 			}
 		);
 
@@ -536,13 +536,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reginald%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reginald%' ), 0 ),
 			'A member whose VISIBLE name matches was filtered out of the results.'
 		);
 
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Quenlingham%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Quenlingham%' ), 0 ),
 			'The surname the format hides still answered a search.'
 		);
 	}
@@ -580,10 +580,10 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$non_candidate_id = $this->create_member_with_hidden_surname( 'public', 'Underbough9', 'Underbough' );
 		$user_ids         = array_merge( $candidate_ids, array( $non_candidate_id ) );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
 
-		$unbounded = bb_xprofile_filter_user_search_matches( $user_ids, array( '%Underbough%' ), 0 );
+		$unbounded = bboss_xprofile_filter_user_search_matches( $user_ids, array( '%Underbough%' ), 0 );
 		sort( $unbounded );
 		$expected = $user_ids;
 		sort( $expected );
@@ -596,7 +596,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		// Fixture: exactly the four restricted members are candidates, so the assertion past the
 		// budget can tell "withhold the candidates" apart from "withhold the leg".
-		$candidates = bb_xprofile_get_hidden_name_search_user_ids( array( '%Underbough%' ), 0 );
+		$candidates = bboss_xprofile_get_hidden_name_search_user_ids( array( '%Underbough%' ), 0 );
 		$this->assertIsArray( $candidates, 'Fixture: the candidate set could not be resolved.' );
 		$this->assertNotContains(
 			(int) $non_candidate_id,
@@ -611,7 +611,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		list( $result, $resolutions ) = $this->count_name_resolutions(
 			function () use ( $user_ids ) {
-				return bb_xprofile_filter_user_search_matches( $user_ids, array( '%Underbough%' ), 0 );
+				return bboss_xprofile_filter_user_search_matches( $user_ids, array( '%Underbough%' ), 0 );
 			}
 		);
 
@@ -647,10 +647,10 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				'user_nicename' => 'gladhollow',
 			)
 		);
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $hidden_id, 'Perrin' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $hidden_id, 'Perrin' );
 		// Both nickname sources, set explicitly: the field is what a member sees under this format,
 		// the user meta is what the fallback chain reads, and the factory does not set either.
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $hidden_id, 'gladhollow' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $hidden_id, 'gladhollow' );
 		update_user_meta( $hidden_id, 'nickname', 'gladhollow' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Perrin Ashgrovely' ), array( 'ID' => $hidden_id ) );
 		clean_user_cache( $hidden_id );
@@ -659,8 +659,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// the term either. The first name is NOT a source under this format, so this member is not
 		// findable by it - the leg that used to be re-tested in PHP and is now decided outright.
 		$fallback_id = self::factory()->user->create( array( 'user_nicename' => 'nonicknamer' ) );
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $fallback_id, 'Ashgrovely' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $fallback_id, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $fallback_id, 'Ashgrovely' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $fallback_id, '' );
 		delete_user_meta( $fallback_id, 'nickname' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Ashgrovely Winterbourne' ), array( 'ID' => $fallback_id ) );
 		clean_user_cache( $fallback_id );
@@ -672,24 +672,24 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				'user_nicename' => 'ashg-visible',
 			)
 		);
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $visible_id, 'Corwin' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $visible_id, 'Ashgrovely' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $visible_id, 'Corwin' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $visible_id, 'Ashgrovely' );
 		update_user_meta( $visible_id, 'nickname', 'Ashgrovely' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Corwin Dunhollow' ), array( 'ID' => $visible_id ) );
 		clean_user_cache( $visible_id );
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
 		$this->set_current_user( 0 );
 
 		$this->assertSame(
 			'nonicknamer',
-			bp_core_get_user_displayname( $fallback_id, 0 ),
+			bboss_core_get_user_displayname( $fallback_id, 0 ),
 			'Fixture: with no nickname the visible name must end at user_nicename, not the first name.'
 		);
 
 		list( $result, $resolutions ) = $this->count_name_resolutions(
 			function () use ( $hidden_id, $fallback_id, $visible_id ) {
-				return bb_xprofile_filter_user_search_matches(
+				return bboss_xprofile_filter_user_search_matches(
 					array( $hidden_id, $fallback_id, $visible_id ),
 					array( '%Ashgrovely%' ),
 					0
@@ -712,7 +712,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * A search is a read: re-testing a candidate must not write to their profile fields.
 	 *
-	 * bp_xprofile_get_member_display_name() back-fills a missing name field from the WP user meta
+	 * bboss_xprofile_get_member_display_name() back-fills a missing name field from the WP user meta
 	 * and DELETEs the row when that value is empty. Reached from the search re-test that is one
 	 * destructive write per candidate, against members who are not even in the results.
 	 *
@@ -721,7 +721,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_search_re_test_does_not_write_to_profile_fields() {
 		global $wpdb;
 
-		$bp      = buddypress();
+		$bp      = bboss();
 		$viewer  = self::factory()->user->create();
 		$user_id = self::factory()->user->create(
 			array(
@@ -731,8 +731,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		// No First Name row at all - that absence is what the self-heal repairs.
-		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bp_xprofile_firstname_field_id(), 'user_id' => $user_id ) );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Quenlingham' );
+		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bboss_xprofile_firstname_field_id(), 'user_id' => $user_id ) );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, 'Quenlingham' );
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Reggiebert Quenlingham' ), array( 'ID' => $user_id ) );
 		clean_user_cache( $user_id );
@@ -740,28 +740,28 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$before = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d",
-				bp_xprofile_firstname_field_id(),
+				bboss_xprofile_firstname_field_id(),
 				$user_id
 			)
 		);
 		$this->assertSame( 0, $before, 'Fixture: the First Name row must be missing before the search.' );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( $viewer );
 
-		bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), $viewer );
+		bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), $viewer );
 
 		$after = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d",
-				bp_xprofile_firstname_field_id(),
+				bboss_xprofile_firstname_field_id(),
 				$user_id
 			)
 		);
 
 		$this->assertSame( 0, $after, 'A read-only member search wrote to another member\'s profile fields.' );
 		$this->assertFalse(
-			bb_xprofile_is_display_name_self_heal_suspended(),
+			bboss_xprofile_is_display_name_self_heal_suspended(),
 			'The self-heal suspension outlived the search and will silence the repair for the rest of the request.'
 		);
 	}
@@ -787,7 +787,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		add_filter( 'bp_core_get_user_displayname', $boom, 999 );
 
 		try {
-			bb_core_get_redacted_core_author_name( $user_id );
+			bboss_core_get_redacted_core_author_name( $user_id );
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -795,7 +795,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		remove_filter( 'bp_core_get_user_displayname', $boom, 999 );
 
 		$this->assertFalse(
-			bb_core_is_resolving_user_displayname(),
+			bboss_core_is_resolving_user_displayname(),
 			'The marker stayed raised after a throw - WordPress core author output now leaks the raw display_name.'
 		);
 
@@ -816,17 +816,17 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$user_id = $this->create_member_with_hidden_surname( 'public', 'Fenwicker', 'Marguerite' );
 		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Fenwicker%' ), $admin )
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Fenwicker%' ), $admin )
 		);
 	}
 
 	/**
-	 * The site-wide search engine (Bp_Search_Members) builds its own SQL against wp_users and never
-	 * runs BP_User_Query, so it used to answer a surname question the member directory refuses. The
+	 * The site-wide search engine (BBoss_Search_Members) builds its own SQL against wp_users and never
+	 * runs BBoss_User_Query, so it used to answer a surname question the member directory refuses. The
 	 * wp_users leg must now exclude the same members.
 	 *
 	 * @group bb_search_visibility_display_format
@@ -836,7 +836,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// bp-* class file it is asked for whether the component was booted or not - so probing for
 		// Bp_Search_Members with autoloading on is a fatal, because its base class is defined by an
 		// include the component never ran. Load the base class first, then the subclass.
-		$search_dir = buddypress()->plugin_dir . 'bp-search/';
+		$search_dir = bboss()->plugin_dir . 'bp-search/';
 
 		foreach ( array( 'bp-search-functions.php', 'bp-search-settings.php' ) as $search_file ) {
 			if ( file_exists( $search_dir . $search_file ) ) {
@@ -844,24 +844,24 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			}
 		}
 
-		if ( ! class_exists( 'Bp_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
+		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
 			require_once $search_dir . 'classes/class-bp-search-types.php';
 		}
 
-		if ( ! class_exists( 'Bp_Search_Type', false ) ) {
+		if ( ! class_exists( 'BBoss_Search_Type', false ) ) {
 			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
 		}
 
-		if ( ! class_exists( 'Bp_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
+		if ( ! class_exists( 'BBoss_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
 			require_once $search_dir . 'classes/class-bp-search-members.php';
 		}
 
-		if ( ! class_exists( 'Bp_Search_Members', false ) || ! function_exists( 'bp_get_search_user_fields' ) || ! function_exists( 'bp_is_search_user_field_enable' ) ) {
+		if ( ! class_exists( 'BBoss_Search_Members', false ) || ! function_exists( 'bboss_get_search_user_fields' ) || ! function_exists( 'bboss_is_search_user_field_enable' ) ) {
 			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
 		}
 
 		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Thistlewood', 'Genevieve' );
-		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+		bboss_update_user_last_activity( $user_id, bboss_core_current_time() );
 
 		// The Display Name search field is what the site owner switches on in Search settings; the
 		// harness has no settings saved, so turn it on for this assertion and put it back after.
@@ -872,7 +872,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$this->set_current_user( 0 );
 
 		try {
-			$sql = Bp_Search_Members::instance()->sql( 'Thistlewood' );
+			$sql = BBoss_Search_Members::instance()->sql( 'Thistlewood' );
 		} finally {
 			if ( false === $field_backup ) {
 				delete_option( $field_option );
@@ -914,22 +914,22 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		// Custom visibility has to be permitted for a stored level to be honoured by the getter.
-		bp_xprofile_update_meta( $hidden_id, 'field', 'allow_custom_visibility', 'allowed' );
-		bp_xprofile_update_meta( $public_id, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $hidden_id, 'field', 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_meta( $public_id, 'field', 'allow_custom_visibility', 'allowed' );
 
 		$hidden_only = self::factory()->user->create();
 		$both        = self::factory()->user->create();
 		$member      = self::factory()->user->create();
 
 		foreach ( array( $hidden_only, $both ) as $user_id ) {
-			xprofile_set_field_data( $hidden_id, $user_id, 'Umbraclesecret' );
-			xprofile_set_field_visibility_level( $hidden_id, $user_id, 'loggedin' );
+			bboss_xprofile_set_field_data( $hidden_id, $user_id, 'Umbraclesecret' );
+			bboss_xprofile_set_field_visibility_level( $hidden_id, $user_id, 'loggedin' );
 		}
-		xprofile_set_field_data( $public_id, $both, 'Umbraclesecret' );
-		xprofile_set_field_visibility_level( $public_id, $both, 'public' );
+		bboss_xprofile_set_field_data( $public_id, $both, 'Umbraclesecret' );
+		bboss_xprofile_set_field_visibility_level( $public_id, $both, 'public' );
 
 		// Fixture precondition: without this the assertions below would pass vacuously.
-		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $hidden_id, $hidden_only ) );
+		$this->assertSame( 'loggedin', bboss_xprofile_get_field_visibility_level( $hidden_id, $hidden_only ) );
 
 		$matched_ids  = array( $hidden_only, $both );
 		$matched_rows = array(
@@ -948,12 +948,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		// A logged-out visitor is denied 'loggedin'.
-		$guest_result = bb_xprofile_filter_field_search_matches( $matched_ids, $matched_rows, 0 );
+		$guest_result = bboss_xprofile_filter_field_search_matches( $matched_ids, $matched_rows, 0 );
 		$this->assertNotContains( $hidden_only, $guest_result, 'a guest confirmed a members-only field value' );
 		$this->assertContains( $both, $guest_result, 'a member who also matched a public field was dropped' );
 
 		// A logged-in member may read 'loggedin', so nothing is removed.
-		$member_result = bb_xprofile_filter_field_search_matches( $matched_ids, $matched_rows, $member );
+		$member_result = bboss_xprofile_filter_field_search_matches( $matched_ids, $matched_rows, $member );
 		$this->assertContains( $hidden_only, $member_result, 'a logged-in member lost a field value they may see' );
 		$this->assertContains( $both, $member_result );
 	}
@@ -964,32 +964,32 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * permitted member gets the field-resolved name, i.e. the guest sees MORE.
 	 *
 	 * The first name is hidden here through the field's own default visibility, which
-	 * bp_xprofile_get_fields_by_visibility_levels() applies to every member even where custom
+	 * bboss_xprofile_get_fields_by_visibility_levels() applies to every member even where custom
 	 * visibility is disabled - the way a site actually hides it.
 	 */
 	public function test_hidden_first_name_is_not_served_to_a_denied_viewer() {
-		$fn_id = bp_xprofile_firstname_field_id();
+		$fn_id = bboss_xprofile_firstname_field_id();
 
 		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ashgrove', 'Cornelius' );
 		$member  = self::factory()->user->create();
 
 		// BuddyBoss locks the First Name field's custom visibility under this format, so the site-wide
 		// default is what applies to every member - which is how a site actually hides it.
-		bp_xprofile_update_meta( $fn_id, 'field', 'allow_custom_visibility', 'disabled' );
-		bp_xprofile_update_meta( $fn_id, 'field', 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_meta( $fn_id, 'field', 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_update_meta( $fn_id, 'field', 'default_visibility', 'loggedin' );
 
 		// BP_XProfile_Group::fetch_default_visibility_levels() caches the whole default map under a
 		// single key that bp_xprofile_update_meta() does not invalidate, so the change is invisible
 		// until it is cleared.
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
-		BB_XProfile_Visibility::flush_field_ids_cache();
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
 
 		// Fixture precondition: the first name really is hidden from a guest and visible to a member.
-		$this->assertContains( (int) $fn_id, array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ) );
-		$this->assertNotContains( (int) $fn_id, array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $member ) ) );
+		$this->assertContains( (int) $fn_id, array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ) );
+		$this->assertNotContains( (int) $fn_id, array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, $member ) ) );
 
-		$guest_name  = bp_core_get_user_displayname( $user_id, 0 );
-		$member_name = bp_core_get_user_displayname( $user_id, $member );
+		$guest_name  = bboss_core_get_user_displayname( $user_id, 0 );
+		$member_name = bboss_core_get_user_displayname( $user_id, $member );
 
 		$this->assertStringNotContainsStringIgnoringCase( 'cornelius', $guest_name, 'the hidden first name was served to a guest' );
 		$this->assertSame( 'Ashgrove', $guest_name );
@@ -1006,7 +1006,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * an over-broad redaction can pass.
 	 */
 	public function test_hidden_first_name_is_redacted_when_display_name_has_drifted() {
-		$fn_id = bp_xprofile_firstname_field_id();
+		$fn_id = bboss_xprofile_firstname_field_id();
 
 		$member = self::factory()->user->create();
 
@@ -1020,35 +1020,35 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		foreach ( $shapes as $label => $display_name ) {
 			$user_id = self::factory()->user->create( array( 'nickname' => 'marinick' ) );
 
-			xprofile_set_field_data( $fn_id, $user_id, 'Marigold' );
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Thistlewood' );
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'public' );
+			bboss_xprofile_set_field_data( $fn_id, $user_id, 'Marigold' );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, 'Thistlewood' );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'public' );
 
 			global $wpdb;
 			$wpdb->update( $wpdb->users, array( 'display_name' => $display_name ), array( 'ID' => $user_id ) );
 			clean_user_cache( $user_id );
 
-			bp_xprofile_update_meta( $fn_id, 'field', 'allow_custom_visibility', 'disabled' );
-			bp_xprofile_update_meta( $fn_id, 'field', 'default_visibility', 'loggedin' );
+			bboss_xprofile_update_meta( $fn_id, 'field', 'allow_custom_visibility', 'disabled' );
+			bboss_xprofile_update_meta( $fn_id, 'field', 'default_visibility', 'loggedin' );
 			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 			wp_cache_delete( $fn_id, 'bp_xprofile_fields' );
-			BB_XProfile_Visibility::flush_field_ids_cache();
+			BBoss_XProfile_Visibility::flush_field_ids_cache();
 
 			// Fixture precondition: the first name really is hidden from a guest.
-			$this->assertContains( (int) $fn_id, array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ), "precondition ({$label})" );
+			$this->assertContains( (int) $fn_id, array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ), "precondition ({$label})" );
 
-			$guest = bp_core_get_user_displayname( $user_id, 0 );
+			$guest = bboss_core_get_user_displayname( $user_id, 0 );
 			$this->assertStringNotContainsStringIgnoringCase( 'marigold', $guest, "hidden first name leaked to a guest ({$label})" );
 			$this->assertSame( 'Thistlewood', $guest, "the visible last name should survive ({$label})" );
 
 			// A viewer who may see the first name keeps the full name.
-			$permitted = bp_core_get_user_displayname( $user_id, $member );
+			$permitted = bboss_core_get_user_displayname( $user_id, $member );
 			$this->assertStringContainsStringIgnoringCase( 'marigold', $permitted, "a permitted viewer lost the first name ({$label})" );
 		}
 	}
 
 	/**
-	 * When the first name is empty in every source bp_xprofile_get_member_display_name() consults
+	 * When the first name is empty in every source bboss_xprofile_get_member_display_name() consults
 	 * (xprofile field, first_name usermeta and nickname usermeta), the name it rebuilds is the bare
 	 * surname with no leading space. The priority-15 filter's strip needed a leading space, so it
 	 * did nothing and returned the hidden surname verbatim to a logged-in viewer denied it.
@@ -1061,35 +1061,35 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$stranger = self::factory()->user->create();
 
 		// Empty every first-name source, so the rebuilt name is the bare surname.
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, '' );
 		update_user_meta( $user_id, 'first_name', '' );
 		update_user_meta( $user_id, 'nickname', '' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Ravensworth' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, 'Ravensworth' );
 		update_user_meta( $user_id, 'last_name', 'Ravensworth' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
 
 		global $wpdb;
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Ravensworth' ), array( 'ID' => $user_id ) );
 		clean_user_cache( $user_id );
-		BB_XProfile_Visibility::flush_field_ids_cache();
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
 
 		// Fixture precondition: the rebuild really is the bare surname, and it really is hidden.
-		$this->assertSame( 'Ravensworth', bp_xprofile_get_member_display_name( $user_id ) );
-		$this->assertContains( (int) bp_xprofile_lastname_field_id(), array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $stranger ) ) );
+		$this->assertSame( 'Ravensworth', bboss_xprofile_get_member_display_name( $user_id ) );
+		$this->assertContains( (int) bboss_xprofile_lastname_field_id(), array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, $stranger ) ) );
 
 		$this->set_current_user( $stranger );
-		$name = bp_core_get_user_displayname( $user_id, $stranger );
+		$name = bboss_core_get_user_displayname( $user_id, $stranger );
 
 		$this->assertStringNotContainsStringIgnoringCase( 'ravensworth', $name, 'the hidden surname was returned verbatim' );
 		$this->assertNotSame( '', trim( (string) $name ), 'a redacted name must never be blank' );
 
 		// The member themselves still sees it.
 		$this->set_current_user( $user_id );
-		$this->assertStringContainsStringIgnoringCase( 'ravensworth', bp_core_get_user_displayname( $user_id, $user_id ) );
+		$this->assertStringContainsStringIgnoringCase( 'ravensworth', bboss_core_get_user_displayname( $user_id, $user_id ) );
 	}
 
 	/**
-	 * The members directory renders names through bp_member_name()/bp_get_member_name(), which had
+	 * The members directory renders names through bboss_member_name()/bboss_get_member_name(), which had
 	 * no test at all and was still on the pre-fix logic: it preferred the loop's own `fullname`,
 	 * fell back to the raw display_name column when that was unset, and redacted with a naive
 	 * str_replace( ' ' . $last_name, ... ).
@@ -1108,12 +1108,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		foreach ( array( 'Octavia Bramblewick', 'OctaviaBramblewick', 'Octavia-Bramblewick', 'Bramblewick' ) as $display_name ) {
 			$wpdb->update( $wpdb->users, array( 'display_name' => $display_name ), array( 'ID' => $user_id ) );
 			clean_user_cache( $user_id );
-			BB_XProfile_Visibility::flush_field_ids_cache();
+			BBoss_XProfile_Visibility::flush_field_ids_cache();
 
 			foreach ( array( true, false ) as $populate_extras ) {
 				$this->set_current_user( 0 );
 
-				$has = bp_has_members(
+				$has = bboss_has_members(
 					array(
 						'include'         => array( $user_id ),
 						'per_page'        => 1,
@@ -1123,10 +1123,10 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				$this->assertTrue( $has, 'the members loop should return the fixture member' );
 
 				global $members_template;
-				while ( bp_members() ) {
-					bp_the_member();
+				while ( bboss_members() ) {
+					bboss_the_member();
 
-					$name = bp_get_member_name();
+					$name = bboss_get_member_name();
 					$this->assertStringNotContainsStringIgnoringCase(
 						'bramblewick',
 						$name,
@@ -1140,13 +1140,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// The member themselves still sees their own full name in the loop.
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Octavia Bramblewick' ), array( 'ID' => $user_id ) );
 		clean_user_cache( $user_id );
-		BB_XProfile_Visibility::flush_field_ids_cache();
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
 		$this->set_current_user( $user_id );
 
-		if ( bp_has_members( array( 'include' => array( $user_id ), 'per_page' => 1, 'populate_extras' => true ) ) ) {
-			while ( bp_members() ) {
-				bp_the_member();
-				$this->assertStringContainsStringIgnoringCase( 'bramblewick', bp_get_member_name(), 'the member lost their own surname' );
+		if ( bboss_has_members( array( 'include' => array( $user_id ), 'per_page' => 1, 'populate_extras' => true ) ) ) {
+			while ( bboss_members() ) {
+				bboss_the_member();
+				$this->assertStringContainsStringIgnoringCase( 'bramblewick', bboss_get_member_name(), 'the member lost their own surname' );
 			}
 		}
 	}
@@ -1188,7 +1188,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			array( 'column is nothing but the hidden surname', 'Wendy', 'Zebrastripe', 'Zebrastripe' ),
 		);
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$viewer = self::factory()->user->create();
 
 		foreach ( $cases as $case ) {
@@ -1196,9 +1196,9 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 			$user_id = self::factory()->user->create();
 
-			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $first_name );
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $last_name );
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+			bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, $first_name );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, $last_name );
+			bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
 
 			$wpdb->update( $wpdb->users, array( 'display_name' => $stored ), array( 'ID' => $user_id ) );
 			clean_user_cache( $user_id );
@@ -1206,13 +1206,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 			$this->assertSame(
 				$first_name,
-				(string) bp_core_get_user_displayname( $user_id, 0 ),
+				(string) bboss_core_get_user_displayname( $user_id, 0 ),
 				sprintf( 'Guest view was not the visible field for the "%s" shape.', $label )
 			);
 
 			$this->assertSame(
 				$first_name,
-				(string) bp_core_get_user_displayname( $user_id, $viewer ),
+				(string) bboss_core_get_user_displayname( $user_id, $viewer ),
 				sprintf( 'Member view was not the visible field for the "%s" shape.', $label )
 			);
 		}
@@ -1230,15 +1230,15 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_a_fully_redacted_name_falls_back_without_reaching_the_column() {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 		// Nickname present: it is the first fallback.
 		$with_nickname = self::factory()->user->create( array( 'nickname' => 'quietquill' ) );
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $with_nickname, '' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $with_nickname, 'Zebrastripe' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $with_nickname, 'adminsonly' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $with_nickname, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $with_nickname, 'Zebrastripe' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $with_nickname, 'adminsonly' );
 		delete_user_meta( $with_nickname, 'first_name' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $with_nickname, 'quietquill' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $with_nickname, 'quietquill' );
 		update_user_meta( $with_nickname, 'nickname', 'quietquill' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Peter Zebrastripe' ), array( 'ID' => $with_nickname ) );
 		clean_user_cache( $with_nickname );
@@ -1246,17 +1246,17 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'quietquill',
-			(string) bp_core_get_user_displayname( $with_nickname, 0 ),
+			(string) bboss_core_get_user_displayname( $with_nickname, 0 ),
 			'A member with nothing visible must fall back to the nickname.'
 		);
 
 		// No nickname at all: the chain ends at the public user_nicename.
 		$no_nickname = self::factory()->user->create( array( 'user_nicename' => 'silent-quill' ) );
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $no_nickname, '' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $no_nickname, 'Zebrastripe' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $no_nickname, 'adminsonly' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $no_nickname, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $no_nickname, 'Zebrastripe' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $no_nickname, 'adminsonly' );
 		delete_user_meta( $no_nickname, 'first_name' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $no_nickname, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $no_nickname, '' );
 		delete_user_meta( $no_nickname, 'nickname' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Peter Zebrastripe' ), array( 'ID' => $no_nickname ) );
 		clean_user_cache( $no_nickname );
@@ -1264,29 +1264,29 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'silent-quill',
-			(string) bp_core_get_user_displayname( $no_nickname, 0 ),
+			(string) bboss_core_get_user_displayname( $no_nickname, 0 ),
 			'With no nickname the chain must end at user_nicename, never at the stored column.'
 		);
 	}
 
 	/**
 	 * The LIKE matcher has to agree with the SQL comparison that produced the candidate rows,
-	 * including the backslash escaping bp_esc_like() applies.
+	 * including the backslash escaping bboss_esc_like() applies.
 	 */
 	public function test_sql_like_match_mirrors_mysql_semantics() {
-		$this->assertTrue( bb_core_sql_like_match( '%quill%', 'Alex Quillfeather' ), 'case-insensitive contains' );
-		$this->assertTrue( bb_core_sql_like_match( '%Quillfeather', 'Alex Quillfeather' ), 'suffix' );
-		$this->assertTrue( bb_core_sql_like_match( 'Alex%', 'Alex Quillfeather' ), 'prefix' );
-		$this->assertFalse( bb_core_sql_like_match( '%Quillfeather%', 'Alex' ), 'redacted name must not match' );
-		$this->assertTrue( bb_core_sql_like_match( 'Al_x%', 'Alex Quillfeather' ), 'single-character wildcard' );
+		$this->assertTrue( bboss_core_sql_like_match( '%quill%', 'Alex Quillfeather' ), 'case-insensitive contains' );
+		$this->assertTrue( bboss_core_sql_like_match( '%Quillfeather', 'Alex Quillfeather' ), 'suffix' );
+		$this->assertTrue( bboss_core_sql_like_match( 'Alex%', 'Alex Quillfeather' ), 'prefix' );
+		$this->assertFalse( bboss_core_sql_like_match( '%Quillfeather%', 'Alex' ), 'redacted name must not match' );
+		$this->assertTrue( bboss_core_sql_like_match( 'Al_x%', 'Alex Quillfeather' ), 'single-character wildcard' );
 
 		// A literal % typed by a member is escaped by bp_esc_like() and must stay literal.
-		$this->assertTrue( bb_core_sql_like_match( '%' . bp_esc_like( '100%' ) . '%', 'Scored 100% today' ) );
-		$this->assertFalse( bb_core_sql_like_match( '%' . bp_esc_like( '100%' ) . '%', 'Scored 100 today' ) );
+		$this->assertTrue( bboss_core_sql_like_match( '%' . bboss_esc_like( '100%' ) . '%', 'Scored 100% today' ) );
+		$this->assertFalse( bboss_core_sql_like_match( '%' . bboss_esc_like( '100%' ) . '%', 'Scored 100 today' ) );
 
 		// Regex metacharacters in the pattern are literal in LIKE.
-		$this->assertTrue( bb_core_sql_like_match( '%a.b%', 'x a.b y' ) );
-		$this->assertFalse( bb_core_sql_like_match( '%a.b%', 'x axb y' ) );
+		$this->assertTrue( bboss_core_sql_like_match( '%a.b%', 'x a.b y' ) );
+		$this->assertFalse( bboss_core_sql_like_match( '%a.b%', 'x axb y' ) );
 	}
 
 	/**
@@ -1297,14 +1297,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$this->assertSame( $user_id, bb_core_get_viewer_user_id(), 'should track the logged-in user' );
+		$this->assertSame( $user_id, bboss_core_get_viewer_user_id(), 'should track the logged-in user' );
 
 		// Simulate REST: WordPress knows the user, BuddyPress' global has not been populated.
-		$bp                    = buddypress();
+		$bp                    = bboss();
 		$original              = $bp->loggedin_user->id;
 		$bp->loggedin_user->id = 0;
 
-		$this->assertSame( $user_id, bb_core_get_viewer_user_id(), 'should fall back to the WP current user' );
+		$this->assertSame( $user_id, bboss_core_get_viewer_user_id(), 'should fall back to the WP current user' );
 
 		$bp->loggedin_user->id = $original;
 	}
@@ -1326,31 +1326,31 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The profile-FIELD search producer must drop a match that lives only in a hidden field.
 	 *
-	 * bb_xprofile_filter_field_search_matches() is the second of the two producers - a search over
+	 * bboss_xprofile_filter_field_search_matches() is the second of the two producers - a search over
 	 * xprofile_data.value rather than the display_name column. It had no test at all, and a mutation
 	 * in its format-hide arm survived. Without it a guest can confirm the contents of
 	 * an admins-only field by watching whether the member comes back.
 	 */
 	public function test_field_search_drops_a_member_matched_only_on_a_hidden_field() {
 		$user_id      = $this->create_member_with_hidden_surname( 'adminsonly', 'Blackwood' );
-		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+		$matched_data = array( $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ) );
 
 		$this->set_current_user( 0 );
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'A guest confirmed the contents of an admins-only field through profile-field search.'
 		);
 	}
 	/**
 	 * The profile-field producer must read the guest sentinel the same way its sibling does.
 	 *
-	 * bb_core_guest_viewer_id() (-1) marks "resolve this for an audience that is provably not a
+	 * bboss_core_guest_viewer_id() (-1) marks "resolve this for an audience that is provably not a
 	 * member". It is a NON-EMPTY id, so a bare truthy test reads it as a logged-in member.
-	 * bb_xprofile_filter_user_search_matches() excludes it before bp_user_can(); this producer did
+	 * bboss_xprofile_filter_user_search_matches() excludes it before bboss_user_can(); this producer did
 	 * not, so the sentinel was handed to a capability check for a user row that does not exist.
 	 *
-	 * Harmless in itself - bp_user_can() answers false for a non-existent user - but the two
+	 * Harmless in itself - bboss_user_can() answers false for a non-existent user - but the two
 	 * filters are OR'd into one search and must not disagree about who a guest is. Asserted in both
 	 * directions so an over-broad guard cannot pass either: the sentinel is denied a members-only
 	 * field, and a real logged-in member still gets it.
@@ -1359,7 +1359,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	public function test_field_search_guest_sentinel_is_treated_as_logged_out() {
 		$user_id      = $this->create_member_with_hidden_surname( 'loggedin', 'Fenwicke', 'Ottoline' );
-		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+		$matched_data = array( $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ) );
 
 		// Record every capability check the filter performs. The guard's whole effect is that the
 		// sentinel never reaches one - the RESULT is identical either way, because bp_user_can()
@@ -1374,7 +1374,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		add_filter( 'bp_user_can', $spy, 10, 2 );
 
 		try {
-			$result = bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, bb_core_guest_viewer_id() );
+			$result = bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, bboss_core_guest_viewer_id() );
 		} finally {
 			remove_filter( 'bp_user_can', $spy, 10 );
 		}
@@ -1386,7 +1386,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		$this->assertNotContains(
-			(int) bb_core_guest_viewer_id(),
+			(int) bboss_core_guest_viewer_id(),
 			$checked,
 			'The guest sentinel was passed to a capability check for a user row that does not exist.'
 		);
@@ -1394,7 +1394,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$member = self::factory()->user->create();
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, $member ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, $member ),
 			'A logged-in viewer was wrongly denied a members-only field they may read.'
 		);
 	}
@@ -1407,14 +1407,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_field_search_keeps_a_member_when_any_matched_field_is_visible() {
 		$user_id      = $this->create_member_with_hidden_surname( 'adminsonly', 'Thistlewood', 'Cordelia' );
 		$matched_data = array(
-			$this->field_match_row( $user_id, bp_xprofile_firstname_field_id() ),
-			$this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ),
+			$this->field_match_row( $user_id, bboss_xprofile_firstname_field_id() ),
+			$this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ),
 		);
 
 		$this->set_current_user( 0 );
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'A member matched on a visible field as well as a hidden one was wrongly dropped.'
 		);
 	}
@@ -1435,29 +1435,29 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	public function test_field_search_format_hide_drops_a_last_name_only_match() {
 		$user_id      = $this->create_member_with_hidden_surname( 'public', 'Grimsford', 'Evangeline' );
-		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+		$matched_data = array( $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ) );
 
 		$this->set_current_user( 0 );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'The public surname is part of the visible name under this format and must not be filtered.'
 		);
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
-		bp_update_option( 'bp-hide-last-name', 1 );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-hide-last-name', 1 );
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'The Last Name field is still rendered on the profile under this format, so the match must be kept.'
 		);
 
-		bp_update_option( 'bp-hide-last-name', 0 );
+		bboss_update_option( 'bp-hide-last-name', 0 );
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'The withheld Last Name field was not applied by the profile-field search producer.'
 		);
 	}
@@ -1473,22 +1473,22 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	public function test_field_search_nickname_format_drops_a_first_name_only_match() {
 		$user_id      = $this->create_member_with_hidden_surname( 'public', 'Nettleby', 'Percival' );
-		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_firstname_field_id() ) );
+		$matched_data = array( $this->field_match_row( $user_id, bboss_xprofile_firstname_field_id() ) );
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
 		$this->set_current_user( 0 );
 
-		bp_update_option( 'bp-hide-nickname-first-name', 1 );
+		bboss_update_option( 'bp-hide-nickname-first-name', 1 );
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'The First Name field is still rendered on the profile under this format, so the match must be kept.'
 		);
 
-		bp_update_option( 'bp-hide-nickname-first-name', 0 );
+		bboss_update_option( 'bp-hide-nickname-first-name', 0 );
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
 			'The Nickname format withholds the first name, but a first-name-only field match survived.'
 		);
 	}
@@ -1499,11 +1499,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_field_search_moderator_sees_every_field() {
 		$user_id      = $this->create_member_with_hidden_surname( 'adminsonly', 'Ironwood' );
 		$admin        = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+		$matched_data = array( $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ) );
 
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, $admin ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, $admin ),
 			'A moderator was denied a match on a field they may read.'
 		);
 	}
@@ -1514,11 +1514,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * The imported/unhealed member shape here: the name lives in user_meta + wp_users.display_name,
 	 * the xprofile First Name field is empty, and there is no stored surname. The visible name is
 	 * assembled from the first-name source the format shows, and that source falls back to the user
-	 * meta exactly as bp_xprofile_get_member_display_name() does - so guest and member resolve the
+	 * meta exactly as bboss_xprofile_get_member_display_name() does - so guest and member resolve the
 	 * same name, and a search for it must keep the member rather than silently losing every
 	 * unhealed member from the directory.
 	 *
-	 * That column is compared by bb_xprofile_get_format_visible_name_matches(), so the answer costs
+	 * That column is compared by bboss_xprofile_get_format_visible_name_matches(), so the answer costs
 	 * no name resolution at all.
 	 *
 	 * @group bb_search_visibility_display_format
@@ -1530,8 +1530,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		// Force the xprofile name fields empty, THEN set the authoritative user-meta value, so the
 		// only place the first name lives is user_meta and the drifted display_name column.
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, '' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, '' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, '' );
 		update_user_meta( $user_id, 'first_name', 'Grimwald' );
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Grimwald Ashforth' ), array( 'ID' => $user_id ) );
@@ -1539,7 +1539,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'',
-			(string) xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id ),
+			(string) bboss_xprofile_get_field_data( bboss_xprofile_firstname_field_id(), $user_id ),
 			'Fixture: the First Name field must be empty so the resolver falls back to user_meta.'
 		);
 		$this->assertSame(
@@ -1548,37 +1548,37 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'Fixture: the first name must live in user_meta.'
 		);
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 
 		$member = self::factory()->user->create();
 
 		// Prove the fixture without persisting the self-heal, which would populate the field and
 		// make the member trivially findable regardless of the behaviour under test.
-		bb_xprofile_is_display_name_self_heal_suspended( true );
+		bboss_xprofile_is_display_name_self_heal_suspended( true );
 		try {
 			$this->assertSame(
 				'Grimwald',
-				bp_core_get_user_displayname( $user_id, $member ),
+				bboss_core_get_user_displayname( $user_id, $member ),
 				'Fixture: a logged-in viewer resolves the member to the user-meta first name.'
 			);
 			$this->assertSame(
 				'Grimwald',
-				bp_core_get_user_displayname( $user_id, 0 ),
+				bboss_core_get_user_displayname( $user_id, 0 ),
 				'A guest must resolve the same name as a member - the surname is what the format hides, not the first name.'
 			);
 		} finally {
-			bb_xprofile_is_display_name_self_heal_suspended( false );
+			bboss_xprofile_is_display_name_self_heal_suspended( false );
 		}
 		$this->assertSame(
 			'',
-			(string) xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id ),
+			(string) bboss_xprofile_get_field_data( bboss_xprofile_firstname_field_id(), $user_id ),
 			'Fixture: resolving a name for a search must not have persisted the back-filled first name.'
 		);
 
 		foreach ( array( $member, 0 ) as $viewer_id ) {
 			list( $result, $resolutions ) = $this->count_name_resolutions(
 				function () use ( $user_id, $viewer_id ) {
-					return bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), $viewer_id );
+					return bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), $viewer_id );
 				}
 			);
 
@@ -1592,7 +1592,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Ashforth%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Ashforth%' ), 0 ),
 			'The surname the format hides still answered a search.'
 		);
 	}
@@ -1602,7 +1602,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 *
 	 * wp_get_document_title() returns the first non-empty `pre_get_document_title` value untouched,
 	 * so a plugin answering there short-circuits the whole title build and
-	 * bb_core_filter_author_document_title_parts() never fires. Every major SEO plugin does this -
+	 * bboss_core_filter_author_document_title_parts() never fires. Every major SEO plugin does this -
 	 * All in One SEO at priority 99999, Yoast, Rank Math - and they read the name off the WP_User
 	 * object's display_name PROPERTY, which no WordPress filter intercepts. Replicated live against
 	 * All in One SEO before this test was written.
@@ -1616,7 +1616,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ravensmere', 'Tobias' );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( 0 );
 
 		$this->go_to( get_author_posts_url( $user_id ) );
@@ -1650,7 +1650,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * An SEO plugin's JSON-LD graph must not carry a name part hidden from the viewer.
 	 *
 	 * SEO plugins build their schema from the WP_User object's display_name PROPERTY, a read no
-	 * WordPress filter reaches, so BB_SEO_Helpers intercepts the graph on its way out instead.
+	 * WordPress filter reaches, so BBoss_SEO_Helpers intercepts the graph on its way out instead.
 	 * Replicated live against All in One SEO before this test was written: its breadcrumb crumbs
 	 * (Breadcrumbs.php:317) and ProfilePage mainEntity name (ProfilePage.php:86) both carried the
 	 * raw surname on an anonymous author-archive request.
@@ -1663,13 +1663,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ashcombe', 'Marguerite' );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$this->set_current_user( 0 );
 
 		$this->go_to( get_author_posts_url( $user_id ) );
 
-		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-		$helper = BB_SEO_Helpers::instance();
+		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BBoss_SEO_Helpers::instance();
 
 		$permalink = get_author_posts_url( $user_id );
 		$graph     = array(
@@ -1744,8 +1744,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$this->set_current_user( 0 );
 		$this->go_to( get_author_posts_url( $user_id ) );
 
-		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-		BB_SEO_Helpers::instance();
+		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		BBoss_SEO_Helpers::instance();
 
 		// Exactly the shape Slack::get_author_data() builds: a flat label => value map whose
 		// second entry is an integer, so the redactor must leave both labels and the count alone.
@@ -1808,8 +1808,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( 0 );
 
-		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-		$helper = BB_SEO_Helpers::instance();
+		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BBoss_SEO_Helpers::instance();
 
 		// No go_to(): this is the REST shape, where nothing has been queried.
 		$this->assertFalse( is_author(), 'The test must run with no author query for this to mean anything.' );
@@ -1865,8 +1865,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( $viewer );
 
-		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-		$helper = BB_SEO_Helpers::instance();
+		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BBoss_SEO_Helpers::instance();
 
 		$context                         = new stdClass();
 		$context->indexable              = new stdClass();
@@ -1898,7 +1898,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * WordPress filter reaches - and prints it as <meta name="author">. The schema graph and the
 	 * document title were redacted while this tag was not, so a guest page source still carried the
 	 * full name. The plugin offers `wpseo_meta_author`, which is what
-	 * BB_SEO_Helpers hooks.
+	 * BBoss_SEO_Helpers hooks.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -1908,8 +1908,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( 0 );
 
-		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-		$helper = BB_SEO_Helpers::instance();
+		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BBoss_SEO_Helpers::instance();
 
 		// Stand in for Yoast's Indexable_Presentation: `model` is the indexable, not `indexable`.
 		$presentation                     = new stdClass();
@@ -1939,8 +1939,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->set_current_user( $viewer );
 
-		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
-		$helper = BB_SEO_Helpers::instance();
+		require_once bboss()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BBoss_SEO_Helpers::instance();
 
 		$presentation                     = new stdClass();
 		$presentation->model              = new stdClass();
@@ -2014,7 +2014,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * on the data shape it actually passes.
 	 *
 	 * The registration half is asserted against the singleton production already built, read
-	 * through reflection. Asking BB_SEO_Helpers::instance() for it instead would construct the
+	 * through reflection. Asking BBoss_SEO_Helpers::instance() for it instead would construct the
 	 * class - and the constructor is what registers the filters - so the assertion would be
 	 * satisfied by the act of making it.
 	 *
@@ -2032,8 +2032,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 *
 	 * @param string $slug        Plugin directory name.
 	 * @param string $plugin_name Human name, for the failure messages.
-	 * @param string $hook        Hook BB_SEO_Helpers registers on.
-	 * @param string $callback    BB_SEO_Helpers method registered on it.
+	 * @param string $hook        Hook BBoss_SEO_Helpers registers on.
+	 * @param string $callback    BBoss_SEO_Helpers method registered on it.
 	 * @param array  $contract    Map of `what the plugin must still do` => regex over its source.
 	 */
 	public function test_seo_plugin_contract_holds_against_the_installed_plugin( $slug, $plugin_name, $hook, $callback, $contract ) {
@@ -2043,7 +2043,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			$this->markTestSkipped( sprintf( '%s is not installed in this configuration.', $plugin_name ) );
 		}
 
-		if ( ! class_exists( 'BB_SEO_Helpers', false ) ) {
+		if ( ! class_exists( 'BBoss_SEO_Helpers', false ) ) {
 			$this->markTestSkipped( 'The SEO compatibility layer is not available in this configuration.' );
 		}
 
@@ -2087,7 +2087,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @return string Absolute path, or '' when the plugin is not installed.
 	 */
 	protected function seo_plugin_dir( $slug ) {
-		$roots = array( WP_PLUGIN_DIR, dirname( untrailingslashit( buddypress()->plugin_dir ), 2 ) );
+		$roots = array( WP_PLUGIN_DIR, dirname( untrailingslashit( bboss()->plugin_dir ), 2 ) );
 
 		foreach ( array_unique( $roots ) as $root ) {
 			if ( is_dir( $root . '/' . $slug ) ) {
@@ -2138,7 +2138,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * BuddyBoss must actually contribute its personal-data exporters and erasers.
 	 *
-	 * BP_Core_Gdpr is constructed on `bp_loaded` priority 0 and used to schedule its registration on
+	 * BBoss_Core_Gdpr is constructed on `bp_loaded` priority 0 and used to schedule its registration on
 	 * `bp_loaded` priority 0 as well - the priority already executing. WordPress iterates one
 	 * priority bucket with a foreach over a snapshot of that bucket, and WP_Hook::add_filter() can
 	 * only resort the list of priorities, never rewind the inner loop, so the callback was never
@@ -2147,7 +2147,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * connections, group memberships, messages, activity, profile fields or forum content
 	 *. Registering on a LATER priority of the same action is what makes it run - and
 	 * it has to be later than priority 2 in any case, because every check in the callback is a
-	 * bp_is_active() call and the components are not set up until then.
+	 * bboss_is_active() call and the components are not set up until then.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -2191,7 +2191,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * subject: the notification exporter through the component callback that writes the notification
 	 * text (QA finding F-3, "Alex Quillfeather replied to your post" in a report produced for a
 	 * member the surname is hidden from), the other two through their own direct
-	 * bp_core_get_user_displayname() call. One predicate, several independent sites, and a leak here
+	 * bboss_core_get_user_displayname() call. One predicate, several independent sites, and a leak here
 	 * lands in a file the member keeps.
 	 *
 	 * @dataProvider export_name_scope_provider
@@ -2250,7 +2250,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @param int $subject Member the export belongs to.
 	 */
 	protected function fixture_notification_naming_the_actor( $actor, $subject ) {
-		bp_notifications_add_notification(
+		bboss_notifications_add_notification(
 			array(
 				'user_id'           => $subject,
 				'item_id'           => 1,
@@ -2269,7 +2269,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @param int $subject Member the export belongs to.
 	 */
 	protected function fixture_friendship_naming_the_actor( $actor, $subject ) {
-		friends_add_friend( $subject, $actor, true );
+		bboss_friends_add_friend( $subject, $actor, true );
 	}
 
 	/**
@@ -2282,7 +2282,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @param int $subject Member the export belongs to.
 	 */
 	protected function fixture_message_naming_the_actor( $actor, $subject ) {
-		messages_new_message(
+		bboss_messages_new_message(
 			array(
 				'sender_id'  => $subject,
 				'recipients' => array( $actor ),
@@ -2295,7 +2295,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * An unhealed member's restricted surname must not survive in the resolved name.
 	 *
-	 * bp_xprofile_get_member_display_name() back-fills a name field that has no stored row from the
+	 * bboss_xprofile_get_member_display_name() back-fills a name field that has no stored row from the
 	 * WordPress user meta, and returns that value whether or not the repair was persisted - a member
 	 * search suspends the write while still resolving. xprofile_filter_get_user_display_name() then
 	 * decided whether to strip the surname by re-reading the FIELD, a second and independent
@@ -2307,7 +2307,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	public function test_unhealed_member_restricted_last_name_is_stripped() {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$viewer  = self::factory()->user->create();
 		$user_id = self::factory()->user->create( array( 'nickname' => 'ravennick' ) );
@@ -2321,28 +2321,28 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Anneliese' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, 'Anneliese' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
 
 		// The unhealed shape: the surname lives only in user meta and the stored column.
-		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bp_xprofile_lastname_field_id(), 'user_id' => $user_id ) );
+		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bboss_xprofile_lastname_field_id(), 'user_id' => $user_id ) );
 		wp_cache_flush();
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( $viewer );
 
 		$this->assertSame(
 			'',
-			(string) xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id ),
+			(string) bboss_xprofile_get_field_data( bboss_xprofile_lastname_field_id(), $user_id ),
 			'Fixture: the Last Name field must have no stored row.'
 		);
 
 		// The resolution exactly as the search re-test performs it, with the repair suspended.
-		bb_xprofile_is_display_name_self_heal_suspended( true );
+		bboss_xprofile_is_display_name_self_heal_suspended( true );
 		try {
-			$suspended_name = bp_core_get_user_displayname( $user_id, $viewer );
+			$suspended_name = bboss_core_get_user_displayname( $user_id, $viewer );
 		} finally {
-			bb_xprofile_is_display_name_self_heal_suspended( false );
+			bboss_xprofile_is_display_name_self_heal_suspended( false );
 		}
 
 		$this->assertSame(
@@ -2353,7 +2353,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Ravenscroft%' ), $viewer ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Ravenscroft%' ), $viewer ),
 			'The restricted surname still answered a member search.'
 		);
 
@@ -2361,7 +2361,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// failed closed and must keep doing so.
 		$this->assertStringNotContainsString(
 			'Ravenscroft',
-			(string) bp_core_get_user_displayname( $user_id, 0 ),
+			(string) bboss_core_get_user_displayname( $user_id, 0 ),
 			'A guest was served the restricted surname.'
 		);
 	}
@@ -2377,7 +2377,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	public function test_unhealed_member_without_restriction_keeps_full_name() {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$viewer  = self::factory()->user->create();
 		$user_id = self::factory()->user->create( array( 'nickname' => 'holtnick' ) );
@@ -2391,24 +2391,24 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Bartholomew' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'public' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, 'Bartholomew' );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'public' );
 
-		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bp_xprofile_lastname_field_id(), 'user_id' => $user_id ) );
+		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bboss_xprofile_lastname_field_id(), 'user_id' => $user_id ) );
 		wp_cache_flush();
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( $viewer );
 
 		$this->assertSame(
 			'Bartholomew Holtsworthy',
-			(string) bp_core_get_user_displayname( $user_id, $viewer ),
+			(string) bboss_core_get_user_displayname( $user_id, $viewer ),
 			'An unhealed member with nothing hidden lost a name part they are allowed to show.'
 		);
 
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Holtsworthy%' ), $viewer ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Holtsworthy%' ), $viewer ),
 			'A visible surname was wrongly dropped from the search results.'
 		);
 	}
@@ -2416,11 +2416,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The explicit guest viewer must be treated as logged OUT, not as member -1.
 	 *
-	 * bb_core_guest_viewer_id() is the marker for "resolve this for an audience that is provably not
+	 * bboss_core_guest_viewer_id() is the marker for "resolve this for an audience that is provably not
 	 * a member" (an invitation email to a plain address, say). It is a non-empty id, so a bare
 	 * truthy test reads it as a logged-in member and drops 'loggedin' from the hidden set - which
 	 * under-protects a "Logged-in Users only" name field for exactly the audience that must not see
-	 * it. bp_xprofile_get_hidden_field_types_for_user() has always checked the sentinel; this
+	 * it. bboss_xprofile_get_hidden_field_types_for_user() has always checked the sentinel; this
 	 * producer did not.
 	 *
 	 * @group bb_search_visibility_display_format
@@ -2428,12 +2428,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_guest_sentinel_viewer_is_treated_as_logged_out() {
 		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Marchbanks', 'Evelina' );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
 
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Marchbanks%' ), bb_core_guest_viewer_id() ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Marchbanks%' ), bboss_core_guest_viewer_id() ),
 			'A members-only surname answered a search resolved for an explicitly anonymous audience.'
 		);
 
@@ -2441,7 +2441,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$member = self::factory()->user->create();
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Marchbanks%' ), $member ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Marchbanks%' ), $member ),
 			'A logged-in viewer was wrongly denied a members-only name they may read.'
 		);
 	}
@@ -2452,7 +2452,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * Email bodies are built once, in the request of whoever triggered the send, and delivered to
 	 * someone else. A name resolved against the actor is never redacted - nobody is denied their own
 	 * name - so the full name landed in every recipient's inbox even when the site withholds it from
-	 * them on screen. groups_notification_group_invites() now passes the invitee as the viewer.
+	 * them on screen. bboss_groups_notification_group_invites() now passes the invitee as the viewer.
 	 *
 	 * This covers the email/notification fan-out paths, which had no test.
 	 *
@@ -2462,14 +2462,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$inviter = $this->create_member_with_hidden_surname( 'adminsonly', 'Wolstenholme', 'Prudence' );
 		$invitee = self::factory()->user->create();
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 		// bp_send_email() returns a WP_Error before it ever sets tokens when the bp-email posts are
 		// absent, and WP's test suite wipes them. Re-establish them the way BP_UnitTestCase_Emails
 		// does - bp_core_install_emails() lives in the admin schema file, which is not loaded here.
-		if ( is_wp_error( bp_get_email( 'groups-invitation' ) ) ) {
-			require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-			bp_core_install_emails();
+		if ( is_wp_error( bboss_get_email( 'groups-invitation' ) ) ) {
+			require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+			bboss_core_install_emails();
 		}
 
 		$captured = array();
@@ -2487,13 +2487,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		add_filter( 'bp_email_validate', $halt, 99 );
 
 		$group_id = $this->factory->group->create( array( 'creator_id' => $inviter ) );
-		$group    = groups_get_group( $group_id );
+		$group    = bboss_groups_get_group( $group_id );
 		// groups_notification_group_invites() accepts a BP_Groups_Member or a plain user id.
 		$member = (int) $invitee;
 
 		// The actor is the inviter - the context that made the name unredacted before the fix.
 		$this->set_current_user( $inviter );
-		groups_notification_group_invites( $group, $member, $inviter );
+		bboss_groups_notification_group_invites( $group, $member, $inviter );
 
 		remove_filter( 'bp_email_set_tokens', $capture );
 		remove_filter( 'bp_email_validate', $halt, 99 );
@@ -2527,13 +2527,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * The group-message email fan-out must resolve {{sender.name}} for the recipient on BOTH of its
 	 * branches.
 	 *
-	 * group_messages_notification_new_message() either queues the batch or sends it inline, and
-	 * which one runs is decided by nothing but bb_is_email_queue() and the recipient count - so the
+	 * bboss_group_messages_notification_new_message() either queues the batch or sends it inline, and
+	 * which one runs is decided by nothing but bboss_is_email_queue() and the recipient count - so the
 	 * two have to agree about the name they deliver. The inline branch resolves the name per
 	 * recipient. The queued branch cannot: it builds its tokens once, in the sender's own request,
 	 * where nobody is ever denied their own name, so what it stores is the unredacted name and the
 	 * only thing keeping the withheld surname out of the inbox is
-	 * bb_render_messages_recipients() overwriting the token for each recipient as it sends. On a
+	 * bboss_render_messages_recipients() overwriting the token for each recipient as it sends. On a
 	 * populated community the queued branch is the one that runs, because the queue exists for
 	 * exactly the recipient counts a real community produces.
 	 *
@@ -2551,13 +2551,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// Both branches skip a recipient whose group-message email preference is off, so give the
 		// recipients the preference a member who wants these emails has.
 		$type_key = 'notification_group_messages_new_message';
-		if ( ! bb_enabled_legacy_email_preference() ) {
-			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		if ( ! bboss_enabled_legacy_email_preference() ) {
+			$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 		}
 
 		$recipients = array();
 		foreach ( self::factory()->user->create_many( 3 ) as $recipient_id ) {
-			bp_update_user_meta( $recipient_id, $type_key, 'yes' );
+			bboss_update_user_meta( $recipient_id, $type_key, 'yes' );
 
 			$recipient            = new stdClass();
 			$recipient->user_id   = (int) $recipient_id;
@@ -2565,21 +2565,21 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			$recipients[]         = $recipient;
 		}
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 		// bp_send_email() returns a WP_Error before it ever sets tokens when the email post for the
 		// type is absent, and the harness has no bp-email posts at all.
-		if ( is_wp_error( bp_get_email( 'group-message-email' ) ) ) {
+		if ( is_wp_error( bboss_get_email( 'group-message-email' ) ) ) {
 			$email_post_id = wp_insert_post(
 				array(
 					'post_status'  => 'publish',
-					'post_type'    => bp_get_email_post_type(),
+					'post_type'    => bboss_get_email_post_type(),
 					'post_title'   => '[{{{site.name}}}] New message from group: "{{{group.name}}}"',
 					'post_content' => '{{{sender.name}}} sent you a message.',
 					'post_excerpt' => '{{{sender.name}}} sent you a message.',
 				)
 			);
-			wp_set_object_terms( $email_post_id, 'group-message-email', bp_get_email_tax_type() );
+			wp_set_object_terms( $email_post_id, 'group-message-email', bboss_get_email_tax_type() );
 		}
 
 		$args = array(
@@ -2615,7 +2615,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		// Branch one: the queue is off, so the recipients are served inline.
 		add_filter( 'bb_is_email_queue', '__return_false' );
-		group_messages_notification_new_message( $args );
+		bboss_group_messages_notification_new_message( $args );
 		remove_filter( 'bb_is_email_queue', '__return_false' );
 
 		$unqueued = $captured;
@@ -2623,7 +2623,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		// Branch two: the queue is on and the recipient count clears the batch threshold, so the
 		// tokens are built now and the send happens later, out of the sender's request.
-		$table = BB_Background_Process::$table_name;
+		$table = BBoss_BB_Background_Process::$table_name;
 		$this->assertNotEmpty( $table, 'Fixture: the background queue table name is not resolved.' );
 		$last_job_id = (int) $wpdb->get_var( "SELECT MAX(id) FROM {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
@@ -2643,7 +2643,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		add_filter( 'bb_email_queue_min_count', $one_per_batch );
 		add_filter( 'pre_http_request', $block_dispatch );
-		group_messages_notification_new_message( $args );
+		bboss_group_messages_notification_new_message( $args );
 		remove_filter( 'pre_http_request', $block_dispatch );
 		remove_filter( 'bb_email_queue_min_count', $one_per_batch );
 
@@ -2714,8 +2714,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * WordPress user meta when it has no stored row - the normal state of an imported member, the
 	 * shape this install has ~70,000 of. The search re-test resolves a name for up to
 	 * `bb_xprofile_user_search_visibility_candidate_limit` candidates on a request an anonymous
-	 * visitor can issue, and unlike bp_core_get_user_displaynames() it does not warm the WP user
-	 * caches itself - so bb_core_prime_user_displayname_caches() has to, or every candidate costs
+	 * visitor can issue, and unlike bboss_core_get_user_displaynames() it does not warm the WP user
+	 * caches itself - so bboss_core_prime_user_displayname_caches() has to, or every candidate costs
 	 * its own query before a single result is rendered.
 	 *
 	 * Two disjoint batches of different sizes are measured so the fixed cost cancels out and only
@@ -2729,7 +2729,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_search_re_test_primes_the_name_sources_for_the_whole_batch() {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
 
 		$make_batch = function ( $size, $tag ) use ( $wpdb ) {
@@ -2738,11 +2738,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				$id = self::factory()->user->create();
 				// The unhealed shape: no xprofile name rows, the name only in user meta and the
 				// stored column. The restricted surname is what makes them search candidates.
-				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $id, '' );
-				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $id, '' );
+				bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $id, '' );
+				bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $id, '' );
 				update_user_meta( $id, 'first_name', $tag . $i );
 				update_user_meta( $id, 'last_name', 'Hollowmere' );
-				xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $id, 'adminsonly' );
+				bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $id, 'adminsonly' );
 				$wpdb->update( $wpdb->users, array( 'display_name' => $tag . $i . ' Hollowmere' ), array( 'ID' => $id ) );
 				clean_user_cache( $id );
 				$ids[] = $id;
@@ -2767,7 +2767,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			};
 
 			add_filter( 'query', $counter );
-			bb_xprofile_filter_user_search_matches( $ids, array( '%Hollowmere%' ), 0 );
+			bboss_xprofile_filter_user_search_matches( $ids, array( '%Hollowmere%' ), 0 );
 			remove_filter( 'query', $counter );
 
 			return $counted;
@@ -2778,7 +2778,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		wp_cache_flush();
 		$this->assertSame(
 			'Smallmember0',
-			(string) bp_core_get_user_displayname( $small[0], 0 ),
+			(string) bboss_core_get_user_displayname( $small[0], 0 ),
 			'Fixture: the name must resolve from the user meta.'
 		);
 
@@ -2801,12 +2801,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The BB_SEO_Helpers singleton production built, observed without building one.
+	 * The BBoss_SEO_Helpers singleton production built, observed without building one.
 	 *
-	 * @return BB_SEO_Helpers|null
+	 * @return BBoss_SEO_Helpers|null
 	 */
 	protected function existing_seo_helper_instance() {
-		if ( ! class_exists( 'BB_SEO_Helpers', false ) ) {
+		if ( ! class_exists( 'BBoss_SEO_Helpers', false ) ) {
 			return null;
 		}
 
@@ -2819,12 +2819,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The production wiring - not the test - is what instantiates the SEO redaction.
 	 *
-	 * BB_SEO_Helpers registers its filters from its own constructor, so any assertion phrased as
-	 * `has_filter( $hook, array( BB_SEO_Helpers::instance(), ... ) )` creates the object it is about
+	 * BBoss_SEO_Helpers registers its filters from its own constructor, so any assertion phrased as
+	 * `has_filter( $hook, array( BBoss_SEO_Helpers::instance(), ... ) )` creates the object it is about
 	 * to look for and passes on an install where nothing in the plugin ever loads the class. The
 	 * contract test above therefore reads the singleton through reflection, and this test proves the
 	 * singleton is filled by production: the instance is dropped, every redaction filter it had
-	 * registered is removed, and `bp_helper_plugins_loaded_callback()` - the `init` priority 0
+	 * registered is removed, and `bboss_helper_plugins_loaded_callback()` - the `init` priority 0
 	 * callback that requires the file and calls instance() - is run on its own. The assertion that
 	 * the singleton is no longer null is made BEFORE anything asks for it, so it can only be
 	 * satisfied by that callback.
@@ -2832,11 +2832,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @group bb_search_visibility_display_format
 	 */
 	public function test_the_production_path_registers_the_seo_redaction() {
-		if ( ! function_exists( 'bp_helper_plugins_loaded_callback' ) ) {
+		if ( ! function_exists( 'bboss_helper_plugins_loaded_callback' ) ) {
 			$this->markTestSkipped( 'The compatibility loader is not available in this configuration.' );
 		}
 
-		if ( ! class_exists( 'BB_SEO_Helpers', false ) ) {
+		if ( ! class_exists( 'BBoss_SEO_Helpers', false ) ) {
 			$this->markTestSkipped( 'The SEO compatibility layer is not available in this configuration.' );
 		}
 
@@ -2883,7 +2883,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		try {
-			bp_helper_plugins_loaded_callback();
+			bboss_helper_plugins_loaded_callback();
 
 			$rebuilt = $instance->getValue();
 
@@ -2920,13 +2920,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * Load the site-wide search engine into a harness that never boots the Search component.
 	 *
 	 * The class autoloader require()s any bp-* class file it is asked for whether the component was
-	 * booted or not, so probing for Bp_Search_Members with autoloading on is a fatal: its base class
+	 * booted or not, so probing for BBoss_Search_Members with autoloading on is a fatal: its base class
 	 * is defined by an include the component never ran. Load the base class first, then the subclass.
 	 *
 	 * @return bool Whether the engine is usable in this configuration.
 	 */
 	protected function load_search_members_engine() {
-		$search_dir = buddypress()->plugin_dir . 'bp-search/';
+		$search_dir = bboss()->plugin_dir . 'bp-search/';
 
 		foreach ( array( 'bp-search-functions.php', 'bp-search-settings.php' ) as $search_file ) {
 			if ( file_exists( $search_dir . $search_file ) ) {
@@ -2934,21 +2934,21 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			}
 		}
 
-		if ( ! class_exists( 'Bp_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
+		if ( ! class_exists( 'BBoss_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
 			require_once $search_dir . 'classes/class-bp-search-types.php';
 		}
 
-		if ( ! class_exists( 'Bp_Search_Type', false ) ) {
+		if ( ! class_exists( 'BBoss_Search_Type', false ) ) {
 			return false;
 		}
 
-		if ( ! class_exists( 'Bp_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
+		if ( ! class_exists( 'BBoss_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
 			require_once $search_dir . 'classes/class-bp-search-members.php';
 		}
 
-		return class_exists( 'Bp_Search_Members', false )
-			&& function_exists( 'bp_get_search_user_fields' )
-			&& function_exists( 'bp_is_search_user_field_enable' );
+		return class_exists( 'BBoss_Search_Members', false )
+			&& function_exists( 'bboss_get_search_user_fields' )
+			&& function_exists( 'bboss_is_search_user_field_enable' );
 	}
 
 	/**
@@ -2968,7 +2968,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		update_option( $field_option, 1 );
 
 		try {
-			return Bp_Search_Members::instance()->sql( $term, $count_only );
+			return BBoss_Search_Members::instance()->sql( $term, $count_only );
 		} finally {
 			if ( false === $field_backup ) {
 				delete_option( $field_option );
@@ -2989,10 +2989,10 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @return array
 	 */
 	protected function display_name_visibility_exclusions( $term ) {
-		$method = new ReflectionMethod( 'Bp_Search_Members', 'bb_get_display_name_visibility_exclusions' );
+		$method = new ReflectionMethod( 'BBoss_Search_Members', 'bb_get_display_name_visibility_exclusions' );
 		$method->setAccessible( true );
 
-		return $method->invoke( Bp_Search_Members::instance(), $term );
+		return $method->invoke( BBoss_Search_Members::instance(), $term );
 	}
 
 	/**
@@ -3009,7 +3009,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$wpdb->update( $wpdb->users, array( 'display_name' => $display_name ), array( 'ID' => $user_id ) );
 		clean_user_cache( $user_id );
-		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+		bboss_update_user_last_activity( $user_id, bboss_core_current_time() );
 
 		return $user_id;
 	}
@@ -3017,7 +3017,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * There is no ceiling on the display_name leg any more, and no shape that could carry one.
 	 *
-	 * The engine used to bound its own work with Bp_Search_Members::bb_get_display_name_visibility_bounds(),
+	 * The engine used to bound its own work with BBoss_Search_Members::bb_get_display_name_visibility_bounds(),
 	 * which returned a `max_id` fence: matches above it were excluded outright. That bounded RESULTS
 	 * where only WORK ever needed bounding, because it was computed from the MATCH SET rather than
 	 * from the restricted population - a term matching 70,000 members admitted 500 and fenced off
@@ -3035,12 +3035,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		}
 
 		$this->assertFalse(
-			method_exists( 'Bp_Search_Members', 'bb_get_display_name_visibility_bounds' ),
+			method_exists( 'BBoss_Search_Members', 'bb_get_display_name_visibility_bounds' ),
 			'The match-set ceiling is back on the search engine.'
 		);
 
 		$this->assertTrue(
-			method_exists( 'Bp_Search_Members', 'bb_get_display_name_visibility_exclusions' ),
+			method_exists( 'BBoss_Search_Members', 'bb_get_display_name_visibility_exclusions' ),
 			'The engine no longer resolves display_name visibility exclusions at all.'
 		);
 
@@ -3089,7 +3089,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_an_empty_exclusion_set_leaves_the_whole_match_set_intact() {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
 
 		$match_size = 40;
@@ -3107,7 +3107,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			array(),
-			bb_xprofile_get_hidden_name_search_user_ids( array( $pattern ), 0 ),
+			bboss_xprofile_get_hidden_name_search_user_ids( array( $pattern ), 0 ),
 			'Nobody restricted a name field, so the exclusion set must be an authoritative empty - never false, never a subset.'
 		);
 
@@ -3121,16 +3121,16 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		try {
 			list( $kept, $resolutions ) = $this->count_name_resolutions(
 				function () use ( $user_ids, $pattern ) {
-					return bb_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
+					return bboss_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
 				}
 			);
 
 			$rows = array();
 			foreach ( $user_ids as $user_id ) {
-				$rows[] = $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() );
+				$rows[] = $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() );
 			}
 
-			$field_kept = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+			$field_kept = bboss_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
 
 			sort( $kept );
 			sort( $field_kept );
@@ -3192,7 +3192,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_a_failed_visibility_read_withholds_the_leg_on_every_producer() {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
 
 		$user_ids = array();
@@ -3203,7 +3203,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$pattern = '%Marrowgate%';
 		$rows    = array();
 		foreach ( $user_ids as $user_id ) {
-			$rows[] = $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() );
+			$rows[] = $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() );
 		}
 
 		$expected = $user_ids;
@@ -3211,8 +3211,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		// Control: with the read healthy every one of these is kept, so the empty answers below are
 		// attributable to the failure and not to the fixture.
-		$healthy_user  = bb_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
-		$healthy_field = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+		$healthy_user  = bboss_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
+		$healthy_field = bboss_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
 		sort( $healthy_user );
 		sort( $healthy_field );
 
@@ -3226,7 +3226,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// broken. `FROM` keeps BB_XProfile_Visibility::visibility_table_exists() out of scope: it
 		// probes with `SHOW TABLES LIKE`, and breaking that would withhold the leg through the
 		// missing-table path instead of the failed-read path this test is about.
-		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+		$visibility_table = BBoss_XProfile_Visibility::get_visibility_table_name();
 
 		$break_query = function ( $query ) use ( $visibility_table ) {
 			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
@@ -3240,8 +3240,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		add_filter( 'query', $break_query );
 
 		try {
-			$broken_user  = bb_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
-			$broken_field = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+			$broken_user  = bboss_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
+			$broken_field = bboss_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
 
 			$engine_sql = null;
 			if ( $this->load_search_members_engine() ) {
@@ -3298,18 +3298,18 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Grimthwaite', 'Peregrine' );
 		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 
 		// Fixture: both halves really would drop this match for anybody else.
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimthwaite%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimthwaite%' ), 0 ),
 			'Fixture: a guest must be denied this match, or the moderator assertion proves nothing.'
 		);
 
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimthwaite%' ), $admin ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimthwaite%' ), $admin ),
 			'A moderator lost a surname match they are allowed to read - one of the two halves is not checking the bypass.'
 		);
 	}
@@ -3317,8 +3317,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The same exemption, in the profile-field producer.
 	 *
-	 * This producer answers the format half through bp_core_hide_display_name_field() and the
-	 * per-member half through bp_xprofile_get_hidden_fields_for_user(), and the moderator bypass
+	 * This producer answers the format half through bboss_core_hide_display_name_field() and the
+	 * per-member half through bboss_xprofile_get_hidden_fields_for_user(), and the moderator bypass
 	 * has to stand in front of both - it is one rule and two filters, and they must not disagree
 	 * about who a moderator is.
 	 *
@@ -3327,21 +3327,21 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_moderator_is_exempt_from_both_halves_of_the_field_producer() {
 		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Thornbury', 'Peregrine' );
 		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$rows    = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+		$rows    = array( $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ) );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
-		bp_update_option( 'bp-hide-last-name', 0 );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-hide-last-name', 0 );
 
 		// Fixture: both halves really would drop this match for anybody else.
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $rows, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $rows, 0 ),
 			'Fixture: a guest must be denied this match, or the moderator assertion proves nothing.'
 		);
 
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $rows, $admin ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $rows, $admin ),
 			'A moderator lost a profile-field match they are allowed to read.'
 		);
 	}
@@ -3362,9 +3362,9 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Wrackmoor', 'Peregrine' );
 		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+		bboss_update_user_last_activity( $user_id, bboss_core_current_time() );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 
 		// Fixture: for a guest both halves are in play - the member is excluded by id AND the
 		// format predicate is added to the leg.
@@ -3412,8 +3412,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * Both answers to "which matches does the format still show" have to be the same answer.
 	 *
-	 * The ID-returning resolver and the subquery one - bb_xprofile_get_format_visible_name_matches()
-	 * and bb_xprofile_get_format_visible_name_sql() - exist as two shapes because their callers
+	 * The ID-returning resolver and the subquery one - bboss_xprofile_get_format_visible_name_matches()
+	 * and bboss_xprofile_get_format_visible_name_sql() - exist as two shapes because their callers
 	 * differ: the member directory can afford an ID list, the site-wide engine cannot materialise
 	 * one. The RULE must not differ, or the member directory and the site-wide search answer the
 	 * same question differently, which is the defect this whole area exists to close.
@@ -3467,20 +3467,20 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		foreach ( $members as $member_id ) {
-			foreach ( array( bp_xprofile_firstname_field_id(), bp_xprofile_lastname_field_id(), bp_xprofile_nickname_field_id() ) as $field_id ) {
-				xprofile_set_field_data( $field_id, $member_id, '' );
+			foreach ( array( bboss_xprofile_firstname_field_id(), bboss_xprofile_lastname_field_id(), bboss_xprofile_nickname_field_id() ) as $field_id ) {
+				bboss_xprofile_set_field_data( $field_id, $member_id, '' );
 			}
 			delete_user_meta( $member_id, 'first_name' );
 			delete_user_meta( $member_id, 'nickname' );
 		}
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $members['first_field'], 'Alberic' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $members['first_field'], 'Alberic' );
 		update_user_meta( $members['first_meta'], 'first_name', 'Bramwell' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $members['nick_field'], 'Cindervale' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $members['nick_field'], 'Cindervale' );
 		update_user_meta( $members['nick_meta'], 'nickname', 'Dellowbrook' );
 		$wpdb->update( $wpdb->users, array( 'user_nicename' => 'everwick' ), array( 'ID' => $members['nicename'] ) );
 		clean_user_cache( $members['nicename'] );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $members['last_field'], 'Fennimore' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $members['last_field'], 'Fennimore' );
 
 		$terms = array(
 			'first_field' => 'Alberic',
@@ -3506,10 +3506,10 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		foreach ( $terms as $term_key => $term ) {
 			$patterns = array( '%' . $term . '%' );
 
-			$by_ids = bb_xprofile_get_format_visible_name_matches( $format, $patterns );
+			$by_ids = bboss_xprofile_get_format_visible_name_matches( $format, $patterns );
 			sort( $by_ids );
 
-			$built = bb_xprofile_get_format_visible_name_sql( $format, $patterns );
+			$built = bboss_xprofile_get_format_visible_name_sql( $format, $patterns );
 
 			$this->assertNotSame( '', $built['sql'], 'Fixture: the format must build a subquery, or the comparison is vacuous.' );
 
@@ -3609,7 +3609,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_hidden_name_candidates_exclude_the_viewer_and_anyone_the_term_missed() {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 
 		$viewer = $this->create_member_with_hidden_surname( 'adminsonly', 'Sablewick', 'Ottoline' );
 		// Restricted in exactly the same way, but their display_name does not contain the term.
@@ -3617,7 +3617,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// The orphan: a visibility row whose member no longer exists.
 		$orphan_id = 99000000;
 
-		$orphan_row        = new BB_XProfile_Visibility( bp_xprofile_lastname_field_id(), $orphan_id );
+		$orphan_row        = new BBoss_XProfile_Visibility( bboss_xprofile_lastname_field_id(), $orphan_id );
 		$orphan_row->value = 'adminsonly';
 		$orphan_row->save();
 
@@ -3625,7 +3625,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// the only thing that can keep them out of the candidate set.
 		$this->assertSame(
 			'adminsonly',
-			xprofile_get_field_visibility_level( bp_xprofile_lastname_field_id(), $unmatched ),
+			bboss_xprofile_get_field_visibility_level( bboss_xprofile_lastname_field_id(), $unmatched ),
 			'Fixture: the unmatched member must be restricted in exactly the same way.'
 		);
 
@@ -3639,7 +3639,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		add_filter( 'bb_xprofile_user_search_visibility_candidates', $observer );
 
 		try {
-			$hidden = bb_xprofile_get_hidden_name_search_user_ids( array( '%Sablewick%' ), $viewer );
+			$hidden = bboss_xprofile_get_hidden_name_search_user_ids( array( '%Sablewick%' ), $viewer );
 		} finally {
 			remove_filter( 'bb_xprofile_user_search_visibility_candidates', $observer );
 		}
@@ -3677,7 +3677,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		add_filter( 'bb_xprofile_user_search_visibility_candidates', $re_add );
 
 		try {
-			$hidden_after_filter = bb_xprofile_get_hidden_name_search_user_ids( array( '%Sablewickagain%' ), $viewer );
+			$hidden_after_filter = bboss_xprofile_get_hidden_name_search_user_ids( array( '%Sablewickagain%' ), $viewer );
 		} finally {
 			remove_filter( 'bb_xprofile_user_search_visibility_candidates', $re_add );
 		}
@@ -3715,7 +3715,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_the_name_leak_stays_closed_on_both_producers( $format, $first_name, $surname, $nickname ) {
 		global $wpdb;
 
-		bp_update_option( 'bp-display-name-format', $format );
+		bboss_update_option( 'bp-display-name-format', $format );
 		$this->set_current_user( 0 );
 
 		$user_id = self::factory()->user->create( array( 'nickname' => $nickname ) );
@@ -3736,42 +3736,42 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// intends rather than their login.
 		update_user_meta( $user_id, 'nickname', $nickname );
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $first_name );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $surname );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
-		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, $first_name );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, $surname );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $user_id, $nickname );
+		bboss_xprofile_set_field_visibility_level( bboss_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+		bboss_update_user_last_activity( $user_id, bboss_core_current_time() );
 
 		$this->assertStringNotContainsString(
 			$surname,
-			(string) bp_core_get_user_displayname( $user_id, 0 ),
+			(string) bboss_core_get_user_displayname( $user_id, 0 ),
 			'Fixture: the surname must be redacted from the rendered name, or there is nothing to leak.'
 		);
 
 		// The display_name producer.
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%' . $surname . '%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%' . $surname . '%' ), 0 ),
 			sprintf( 'A guest confirmed a restricted surname under the %s format.', $format )
 		);
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%' . $first_name . '%' ), 0 ),
+			bboss_xprofile_filter_user_search_matches( array( $user_id ), array( '%' . $first_name . '%' ), 0 ),
 			sprintf( 'A member became unfindable by a name part the %s format shows.', $format )
 		);
 
 		// The profile-field producer, on the same two terms.
-		$surname_rows = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
-		$visible_rows = array( $this->field_match_row( $user_id, bp_xprofile_nickname_field_id() ) );
+		$surname_rows = array( $this->field_match_row( $user_id, bboss_xprofile_lastname_field_id() ) );
+		$visible_rows = array( $this->field_match_row( $user_id, bboss_xprofile_nickname_field_id() ) );
 
 		$this->assertSame(
 			array(),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $surname_rows, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $surname_rows, 0 ),
 			sprintf( 'A guest confirmed a restricted surname through the profile-field producer under the %s format.', $format )
 		);
 		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_field_search_matches( array( $user_id ), $visible_rows, 0 ),
+			bboss_xprofile_filter_field_search_matches( array( $user_id ), $visible_rows, 0 ),
 			sprintf( 'The profile-field producer dropped a match on a field the %s format shows.', $format )
 		);
 
@@ -3831,7 +3831,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$memo->setAccessible( true );
 		$memo_backup = $memo->getValue();
 
-		$bp             = buddypress();
+		$bp             = bboss();
 		$table_backup   = isset( $bp->profile->table_name_visibility ) ? $bp->profile->table_name_visibility : null;
 		$user_id        = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather' );
 		$like_patterns  = array( '%Quillfeather%' );
@@ -3850,7 +3850,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			// (a) Healthy install: the table is there.
 			$memo->setValue( null, null );
 			$this->assertTrue(
-				BB_XProfile_Visibility::visibility_table_exists(),
+				BBoss_XProfile_Visibility::visibility_table_exists(),
 				'Fixture: the visibility table is missing, so nothing below is what it claims to be.'
 			);
 
@@ -3861,7 +3861,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			add_filter( 'query', $break_probe );
 
 			try {
-				$failed = BB_XProfile_Visibility::visibility_table_exists();
+				$failed = BBoss_XProfile_Visibility::visibility_table_exists();
 
 				$this->assertNull( $failed, 'A failed probe was reported as an answer.' );
 				$this->assertNull( $memo->getValue(), 'A failed probe was memoised, so the rest of the request cannot recover from it.' );
@@ -3869,11 +3869,11 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				// While the question is unanswered, the producers that need the candidate set fail
 				// closed rather than serving matches they could not verify.
 				$this->assertFalse(
-					bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, 0 ),
+					bboss_xprofile_get_hidden_name_search_user_ids( $like_patterns, 0 ),
 					'An unanswered probe was treated as "no restricting rows" and the display_name leg was served.'
 				);
 				$this->assertFalse(
-					bb_xprofile_filter_possible_hidden_users( array( $user_id ) ),
+					bboss_xprofile_filter_possible_hidden_users( array( $user_id ) ),
 					'An unanswered probe was treated as "no restricting rows" and the narrowing answered anyway.'
 				);
 			} finally {
@@ -3883,7 +3883,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 			// The failure was not memoised, so a healthy call straight afterwards resolves again.
 			$this->assertTrue(
-				BB_XProfile_Visibility::visibility_table_exists(),
+				BBoss_XProfile_Visibility::visibility_table_exists(),
 				'The probe did not retry after a failure, so one transient error stands for the whole request.'
 			);
 
@@ -3893,17 +3893,17 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			$bp->profile->table_name_visibility = $wpdb->prefix . 'bb_no_such_visibility_table';
 
 			$this->assertFalse(
-				BB_XProfile_Visibility::visibility_table_exists(),
+				BBoss_XProfile_Visibility::visibility_table_exists(),
 				'An absent table must be reported as an answer, not as an unresolved probe.'
 			);
 			$this->assertFalse( $memo->getValue(), 'An absent table is a stable answer and must be memoised.' );
 
 			$this->assertIsArray(
-				bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, 0 ),
+				bboss_xprofile_get_hidden_name_search_user_ids( $like_patterns, 0 ),
 				'A pre-migration install was treated as a read failure and lost its whole display_name leg.'
 			);
 			$this->assertNotFalse(
-				bb_xprofile_filter_possible_hidden_users( array( $user_id ) ),
+				bboss_xprofile_filter_possible_hidden_users( array( $user_id ) ),
 				'A pre-migration install was treated as a read failure by the narrowing.'
 			);
 		} finally {
@@ -3933,19 +3933,19 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$author = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
 
 		// Under the Nickname format the visible name is the xprofile Nickname FIELD, so store one.
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, 'quillnick' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $author, 'quillnick' );
 
 		$this->set_current_user( 0 );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$GLOBALS['bb_default_display_avatar'] = true;
-		$first = bb_core_get_redacted_core_author_name( $author );
+		$first = bboss_core_get_redacted_core_author_name( $author );
 
 		$this->assertSame( 'Alex', $first, 'Fixture: the surname is not being withheld under the first format.' );
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
 		$GLOBALS['bb_default_display_avatar'] = true;
-		$second = bb_core_get_redacted_core_author_name( $author );
+		$second = bboss_core_get_redacted_core_author_name( $author );
 
 		$this->assertSame(
 			'quillnick',
@@ -3961,10 +3961,10 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			$this->markTestIncomplete( 'Nothing in this process instantiated BB_SEO_Helpers, so its memo cannot be observed here.' );
 		}
 
-		$name_map = new ReflectionMethod( 'BB_SEO_Helpers', 'get_name_map' );
+		$name_map = new ReflectionMethod( 'BBoss_SEO_Helpers', 'get_name_map' );
 		$name_map->setAccessible( true );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$map_first = $name_map->invoke( $helper, array( $author ) );
 
@@ -3974,7 +3974,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'Fixture: the SEO name map is not redacting under the first format.'
 		);
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$map_second = $name_map->invoke( $helper, array( $author ) );
 
@@ -3988,7 +3988,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The matcher must replace a name in a script written without word separators.
 	 *
-	 * Platform owns bb_core_replace_names() and had no test for it. The first version of the
+	 * Platform owns bboss_core_replace_names() and had no test for it. The first version of the
 	 * whole-word boundary asserted `(?![\p{L}\p{N}_])` for every script; in Japanese, Chinese,
 	 * Korean and Thai the next character is always a letter, so the assertion never held, the
 	 * replacement never fired, and the surname was published in full. Compared against strtr(),
@@ -4006,7 +4006,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			strtr( $text, $map ),
-			bb_core_replace_names( $text, $map ),
+			bboss_core_replace_names( $text, $map ),
 			'The name was left standing where strtr() would have replaced it.'
 		);
 	}
@@ -4037,13 +4037,13 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function test_replace_names_does_not_rewrite_the_middle_of_a_longer_word() {
 		$this->assertSame(
 			'A. joined the Annapolis Anniversary group',
-			bb_core_replace_names( 'Ann joined the Annapolis Anniversary group', array( 'Ann' => 'A.' ) ),
+			bboss_core_replace_names( 'Ann joined the Annapolis Anniversary group', array( 'Ann' => 'A.' ) ),
 			'A longer word starting with the name was rewritten.'
 		);
 
 		$this->assertSame(
 			'Zoey and Z. are friends',
-			bb_core_replace_names( 'Zoey and Zoe are friends', array( 'Zoe' => 'Z.' ) ),
+			bboss_core_replace_names( 'Zoey and Zoe are friends', array( 'Zoe' => 'Z.' ) ),
 			'The standalone name was missed, or the longer word was corrupted.'
 		);
 	}
@@ -4073,7 +4073,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$text = "\u{5C71}\u{7530}\u{592A}\u{90CE}\u{3055}\u{3093}\u{304C}\u{6295}\u{7A3F}";
 		$map  = array( "\u{5C71}\u{7530}\u{592A}\u{90CE}" => "\u{5C71}\u{7530}" );
-		$out  = bb_core_replace_names( $text, $map );
+		$out  = bboss_core_replace_names( $text, $map );
 
 		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
 
@@ -4119,14 +4119,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @param mixed $returned What the listener returns.
 	 */
 	public function test_a_non_string_script_class_return_is_refused( $returned ) {
-		$default = bb_core_get_continuous_script_class();
+		$default = bboss_core_get_continuous_script_class();
 
 		$callback = function () use ( $returned ) {
 			return $returned;
 		};
 
 		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
-		$resolved = bb_core_get_continuous_script_class();
+		$resolved = bboss_core_get_continuous_script_class();
 		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
 
 		$this->assertSame( $default, $resolved, 'A non-string listener return reached the class body.' );
@@ -4163,14 +4163,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertSame(
 			$subject,
-			bb_core_replace_names( $subject, array( 'Ann' => 'A.' ) ),
+			bboss_core_replace_names( $subject, array( 'Ann' => 'A.' ) ),
 			'A name matched straight after a combining mark and corrupted a decomposed word.'
 		);
 
 		// The mirror direction, which already passed, kept here so the pair cannot drift apart.
 		$this->assertSame(
 			"Z. and Zoe\xCC\x88 Muller",
-			bb_core_replace_names( "Zoe and Zoe\xCC\x88 Muller", array( 'Zoe' => 'Z.' ) ),
+			bboss_core_replace_names( "Zoe and Zoe\xCC\x88 Muller", array( 'Zoe' => 'Z.' ) ),
 			'A decomposed word was split on the trailing edge.'
 		);
 
@@ -4178,7 +4178,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		// the matcher simply having stopped working.
 		$this->assertSame(
 			'A. posted',
-			bb_core_replace_names( 'Ann posted', array( 'Ann' => 'A.' ) ),
+			bboss_core_replace_names( 'Ann posted', array( 'Ann' => 'A.' ) ),
 			'The standalone name stopped matching.'
 		);
 	}
@@ -4202,7 +4202,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * @param string $leak    Fragment that must not survive.
 	 */
 	public function test_the_entity_spelling_is_expanded_from_a_raw_map( $subject, $stored, $safe, $leak ) {
-		$out = bb_core_replace_names( $subject, array( $stored => $safe ) );
+		$out = bboss_core_replace_names( $subject, array( $stored => $safe ) );
 
 		$this->assertStringNotContainsString( $leak, $out, 'The entity-encoded spelling was not matched.' );
 		$this->assertStringContainsString( $safe, $out, 'The permitted name is missing from the result.' );
@@ -4240,7 +4240,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		};
 
 		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
-		bb_core_replace_names( 'Ann posted', array( 'Ann' => 'A.' ) );
+		bboss_core_replace_names( 'Ann posted', array( 'Ann' => 'A.' ) );
 		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
 
 		$this->assertGreaterThan( 0, $seen, 'bb_core_continuous_script_class was never dispatched.' );
@@ -4260,7 +4260,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		};
 
 		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
-		$class = bb_core_get_continuous_script_class();
+		$class = bboss_core_get_continuous_script_class();
 		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
 
 		$this->assertStringContainsString( '\p{Cyrillic}', $class, 'A valid addition was discarded.' );

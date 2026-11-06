@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  * @deprecated BuddyPress 2.6.0
  */
-function bp_core_print_generation_time() {
+function bboss_core_print_generation_time() {
 	?>
 
 <!-- Generated in <?php timer_stop( 1 ); ?> seconds. (<?php echo esc_html( get_num_queries() ); ?> q) -->
@@ -33,7 +33,7 @@ function bp_core_print_generation_time() {
  *
  * @return bool|null Returns false on failure.
  */
-function bp_core_sort_nav_items() {
+function bboss_core_sort_nav_items() {
 	_deprecated_function( __FUNCTION__, '2.6' );
 }
 
@@ -45,6 +45,6 @@ function bp_core_sort_nav_items() {
  *
  * @return bool|null Returns false on failure.
  */
-function bp_core_sort_subnav_items() {
+function bboss_core_sort_subnav_items() {
 	_deprecated_function( __FUNCTION__, '2.6' );
 }

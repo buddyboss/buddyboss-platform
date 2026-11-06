@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * @return bool True if this is a fresh BP install, otherwise false.
  * @since BuddyPress 1.7.0
  */
-function bp_is_install() {
-	return ! bp_get_db_version_raw();
+function bboss_is_install() {
+	return ! bboss_get_db_version_raw();
 }
 
 /**
@@ -31,27 +31,27 @@ function bp_is_install() {
  * @return bool True if update, otherwise false.
  * @since BuddyPress 1.6.0
  */
-function bp_is_update() {
+function bboss_is_update() {
 
 	// Get current DB version.
-	$current_db = (int) bp_get_option( '_bp_db_version' );
+	$current_db = (int) bboss_get_option( '_bp_db_version' );
 	// Get the raw database version.
-	$current_live = (int) bp_get_db_version();
+	$current_live = (int) bboss_get_db_version();
 
 	// Pro plugin version history.
-	bp_version_bump();
-	$bb_plugin_version_history = (array) bp_get_option( 'bb_plugin_version_history', array() );
+	bboss_version_bump();
+	$bb_plugin_version_history = (array) bboss_get_option( 'bb_plugin_version_history', array() );
 	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? end( $bb_plugin_version_history ) : array();
-	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BP_PLATFORM_VERSION === (string) $initial_version_data['version'];
+	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BBOSS_PLATFORM_VERSION === (string) $initial_version_data['version'];
 	if ( ! $bb_version_exists || $current_live !== $current_db ) {
 		$current_date                = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 		$bb_latest_plugin_version    = array(
 			'db_version' => $current_live,
 			'date'       => $current_date->format( 'Y-m-d H:i:s' ),
-			'version'    => BP_PLATFORM_VERSION,
+			'version'    => BBOSS_PLATFORM_VERSION,
 		);
 		$bb_plugin_version_history[] = $bb_latest_plugin_version;
-		bp_update_option( 'bb_plugin_version_history', array_filter( $bb_plugin_version_history ) );
+		bboss_update_option( 'bb_plugin_version_history', array_filter( $bb_plugin_version_history ) );
 	}
 
 	$is_update = false;
@@ -71,8 +71,8 @@ function bp_is_update() {
  * @return bool True if activating BuddyPress, false if not.
  * @since BuddyPress 1.6.0
  */
-function bp_is_activation( $basename = '' ) {
-	$bp     = buddypress();
+function bboss_is_activation( $basename = '' ) {
+	$bp     = bboss();
 	$action = false;
 
 	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
@@ -115,8 +115,8 @@ function bp_is_activation( $basename = '' ) {
  * @return bool True if deactivating BuddyPress, false if not.
  * @since BuddyPress 1.6.0
  */
-function bp_is_deactivation( $basename = '' ) {
-	$bp     = buddypress();
+function bboss_is_deactivation( $basename = '' ) {
+	$bp     = bboss();
 	$action = false;
 
 	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
@@ -156,8 +156,8 @@ function bp_is_deactivation( $basename = '' ) {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_version_bump() {
-	bp_update_option( '_bp_db_version', bp_get_db_version() );
+function bboss_version_bump() {
+	bboss_update_option( '_bp_db_version', bboss_get_db_version() );
 }
 
 /**
@@ -165,14 +165,14 @@ function bp_version_bump() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_updater() {
+function bboss_setup_updater() {
 
 	// Are we running an outdated version of BuddyPress?
-	if ( ! bp_is_update() ) {
+	if ( ! bboss_is_update() ) {
 		return;
 	}
 
-	bp_version_updater();
+	bboss_version_updater();
 }
 
 /**
@@ -187,12 +187,12 @@ function bp_setup_updater() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_version_updater() {
+function bboss_version_updater() {
 
 	// Get current DB version.
-	$current_db = (int) bp_get_option( '_bp_db_version' );
+	$current_db = (int) bboss_get_option( '_bp_db_version' );
 	// Get the raw database version.
-	$raw_db_version = (int) bp_get_db_version_raw();
+	$raw_db_version = (int) bboss_get_db_version_raw();
 
 	/**
 	 * Filters the default components to activate for a new install.
@@ -212,38 +212,38 @@ function bp_version_updater() {
 		)
 	);
 
-	$get_default_forum = bp_get_option( 'bbp_set_forum_to_default', '' );
+	$get_default_forum = bboss_get_option( 'bbp_set_forum_to_default', '' );
 	if ( 'yes' === $get_default_forum ) {
 		$default_components['forums'] = 1;
 	}
 
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+	require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 	$switched_to_root_blog = false;
 
 	// Make sure the current blog is set to the root blog.
-	if ( ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
-		bp_register_taxonomies();
+	if ( ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
+		bboss_register_taxonomies();
 
 		$switched_to_root_blog = true;
 	}
 
 	// Install BP schema and activate only Activity and XProfile.
-	if ( bp_is_install() ) {
+	if ( bboss_is_install() ) {
 
 		do_action( 'bb_core_before_install', $default_components );
 
 		// Apply schema and set Activity and XProfile components as active.
-		bp_core_install( $default_components );
-		bp_update_option( 'bp-active-components', $default_components );
-		bp_core_add_page_mappings( $default_components, 'delete' );
-		bp_core_install_emails();
-		bp_core_install_invitations();
+		bboss_core_install( $default_components );
+		bboss_update_option( 'bp-active-components', $default_components );
+		bboss_core_add_page_mappings( $default_components, 'delete' );
+		bboss_core_install_emails();
+		bboss_core_install_invitations();
 
 		// Seed media section toggle defaults when media component is active.
 		if ( isset( $default_components['media'] ) ) {
-			bb_seed_media_section_toggle_defaults();
+			bboss_seed_media_section_toggle_defaults();
 		}
 
 		do_action( 'bb_core_after_install', $default_components );
@@ -252,284 +252,284 @@ function bp_version_updater() {
 	} else {
 
 		// Run the schema install to update tables.
-		bp_core_install();
+		bboss_core_install();
 
 		// Version 1.5.0.
 		if ( $raw_db_version < 1801 ) {
-			bp_update_to_1_5();
-			bp_core_add_page_mappings( $default_components, 'delete' );
+			bboss_update_to_1_5();
+			bboss_core_add_page_mappings( $default_components, 'delete' );
 		}
 
 		// Version 1.6.0.
 		if ( $raw_db_version < 6067 ) {
-			bp_update_to_1_6();
+			bboss_update_to_1_6();
 		}
 
 		// Version 1.9.0.
 		if ( $raw_db_version < 7553 ) {
-			bp_update_to_1_9();
+			bboss_update_to_1_9();
 		}
 
 		// Version 1.9.2.
 		if ( $raw_db_version < 7731 ) {
-			bp_update_to_1_9_2();
+			bboss_update_to_1_9_2();
 		}
 
 		// Version 2.0.0.
 		if ( $raw_db_version < 7892 ) {
-			bp_update_to_2_0();
+			bboss_update_to_2_0();
 		}
 
 		// Version 2.0.1.
 		if ( $raw_db_version < 8311 ) {
-			bp_update_to_2_0_1();
+			bboss_update_to_2_0_1();
 		}
 
 		// Version 2.2.0.
 		if ( $raw_db_version < 9181 ) {
-			bp_update_to_2_2();
+			bboss_update_to_2_2();
 		}
 
 		// Version 2.3.0.
 		if ( $raw_db_version < 9615 ) {
-			bp_update_to_2_3();
+			bboss_update_to_2_3();
 		}
 
 		// Version 2.5.0.
 		if ( $raw_db_version < 10440 ) {
-			bp_update_to_2_5();
+			bboss_update_to_2_5();
 		}
 
 		// Version 2.7.0.
 		if ( $raw_db_version < 11105 ) {
-			bp_update_to_2_7();
+			bboss_update_to_2_7();
 		}
 
 		// Version 3.1.1.
 		if ( $raw_db_version < 13731 ) {
-			bp_update_to_3_1_1();
+			bboss_update_to_3_1_1();
 		}
 
 		// Version 3.1.1.
 		if ( $raw_db_version < 14001 ) {
-			bb_update_to_1_2_3();
+			bboss_update_to_1_2_3();
 		}
 
 		// Version 3.1.1.
 		if ( $raw_db_version < 14801 ) {
-			bp_update_to_1_2_4();
+			bboss_update_to_1_2_4();
 		}
 
 		if ( $raw_db_version < 14901 ) {
-			bp_update_to_1_2_9();
+			bboss_update_to_1_2_9();
 		}
 
 		if ( $raw_db_version < 15200 ) {
-			bp_update_to_1_3_0();
+			bboss_update_to_1_3_0();
 		}
 
 		// Version 1.3.5.
 		if ( $raw_db_version < 15601 ) {
-			bb_update_to_1_3_5();
+			bboss_update_to_1_3_5();
 		}
 
 		// Version 1.4.0.
 		if ( $raw_db_version < 15800 ) {
-			bp_update_to_1_4_0();
+			bboss_update_to_1_4_0();
 		}
 
 		if ( $raw_db_version < 16000 ) {
-			bp_update_to_1_4_3();
+			bboss_update_to_1_4_3();
 		}
 
 		if ( $raw_db_version < 16201 ) {
-			bp_update_to_1_5_1();
+			bboss_update_to_1_5_1();
 		}
 
 		if ( $raw_db_version < 16301 ) {
-			bp_update_to_1_5_5();
+			bboss_update_to_1_5_5();
 		}
 
 		if ( $raw_db_version < 16401 ) {
-			bb_update_to_1_5_6();
+			bboss_update_to_1_5_6();
 		}
 
 		// Version 1.7.0.
 		if ( $raw_db_version < 16601 ) {
-			bp_update_to_1_7_0();
+			bboss_update_to_1_7_0();
 		}
 
 		// Version 1.7.2.
 		if ( $raw_db_version < 16901 ) {
-			bb_update_to_1_7_2();
+			bboss_update_to_1_7_2();
 		}
 
 		if ( $raw_db_version < 17401 ) {
-			bb_update_to_1_7_5();
+			bboss_update_to_1_7_5();
 		}
 
 		if ( $raw_db_version < 17701 ) {
-			bb_update_to_1_7_7();
+			bboss_update_to_1_7_7();
 		}
 
 		if ( $raw_db_version < 17901 ) {
-			bb_update_to_1_7_8();
+			bboss_update_to_1_7_8();
 		}
 
 		if ( $raw_db_version < 17951 ) {
-			bb_update_to_1_8_1();
+			bboss_update_to_1_8_1();
 		}
 
 		if ( $raw_db_version < 18401 ) {
-			bb_update_to_1_8_6();
+			bboss_update_to_1_8_6();
 		}
 
 		if ( $raw_db_version < 18501 ) {
-			bb_update_to_1_9_0_1();
+			bboss_update_to_1_9_0_1();
 		}
 
 		if ( $raw_db_version < 18651 ) {
-			bb_update_to_1_9_1();
+			bboss_update_to_1_9_1();
 		}
 
 		if ( $raw_db_version < 18701 ) {
-			bb_update_to_1_9_3();
+			bboss_update_to_1_9_3();
 		}
 
 		if ( $raw_db_version < 18855 ) {
-			bb_update_to_2_1_1();
+			bboss_update_to_2_1_1();
 		}
 
 		if ( $raw_db_version < 18951 ) {
-			bb_update_to_2_1_4();
+			bboss_update_to_2_1_4();
 		}
 
 		if ( $raw_db_version < 18981 ) {
-			bb_update_to_2_1_5();
+			bboss_update_to_2_1_5();
 		}
 
 		if ( $raw_db_version < 19081 ) {
-			bb_update_to_2_2_3();
+			bboss_update_to_2_2_3();
 		}
 
 		if ( $raw_db_version < 19181 ) {
-			bb_update_to_2_2_4();
+			bboss_update_to_2_2_4();
 		}
 
 		if ( $raw_db_version < 19281 ) {
-			bb_update_to_2_2_5();
+			bboss_update_to_2_2_5();
 		}
 
 		if ( $raw_db_version < 19381 ) {
-			bb_update_to_2_2_6();
+			bboss_update_to_2_2_6();
 		}
 
 		if ( $raw_db_version < 19481 ) {
-			bb_update_to_2_2_7();
+			bboss_update_to_2_2_7();
 		}
 
 		if ( $raw_db_version < 19551 ) {
-			bb_update_to_2_2_8();
+			bboss_update_to_2_2_8();
 		}
 
 		if ( $raw_db_version < 19571 ) {
-			bb_update_to_2_2_9();
+			bboss_update_to_2_2_9();
 		}
 
 		if ( $raw_db_version < 19971 ) {
-			bb_update_to_2_3_0();
+			bboss_update_to_2_3_0();
 		}
 
 		if ( $raw_db_version < 19991 ) {
-			bb_update_to_2_3_1();
+			bboss_update_to_2_3_1();
 		}
 
 		if ( $raw_db_version < 20101 ) {
-			bb_update_to_2_3_4();
+			bboss_update_to_2_3_4();
 		}
 
 		if ( $raw_db_version < 20211 ) {
-			bb_update_to_2_3_50();
+			bboss_update_to_2_3_50();
 		}
 
 		if ( $raw_db_version < 20261 ) {
-			bb_update_to_2_3_60();
+			bboss_update_to_2_3_60();
 		}
 
 		if ( $raw_db_version < 20371 ) {
-			bb_update_to_2_3_80();
+			bboss_update_to_2_3_80();
 		}
 
 		if ( $raw_db_version < 20561 ) {
-			bb_update_to_2_4_10();
+			bboss_update_to_2_4_10();
 		}
 
 		if ( $raw_db_version < 20654 ) {
-			bb_update_to_2_4_41();
+			bboss_update_to_2_4_41();
 		}
 
 		if ( $raw_db_version < 20674 ) {
-			bb_update_to_2_4_50();
+			bboss_update_to_2_4_50();
 		}
 
 		if ( $raw_db_version < 20761 ) {
-			bb_update_to_2_4_60();
+			bboss_update_to_2_4_60();
 		}
 
 		if ( $raw_db_version < 20861 ) {
-			bb_update_to_2_4_71();
+			bboss_update_to_2_4_71();
 		}
 
 		if ( $raw_db_version < 20991 ) {
-			bb_update_to_2_4_74();
+			bboss_update_to_2_4_74();
 		}
 
 		if ( $raw_db_version < 21011 ) {
-			bb_update_to_2_4_75();
+			bboss_update_to_2_4_75();
 		}
 
 		if ( $raw_db_version < 21081 ) {
-			bb_update_to_2_5_80();
+			bboss_update_to_2_5_80();
 		}
 
 		if ( $raw_db_version < 21111 ) {
-			bb_update_to_2_6_10();
+			bboss_update_to_2_6_10();
 		}
 
 		if ( $raw_db_version < 21121 ) {
-			bb_update_to_2_6_20();
+			bboss_update_to_2_6_20();
 		}
 
 		if ( $raw_db_version < 21151 ) {
-			bb_update_to_2_6_51();
+			bboss_update_to_2_6_51();
 		}
 
 		if ( $raw_db_version < 21161 ) {
-			bb_update_to_2_6_70();
+			bboss_update_to_2_6_70();
 		}
 
 		if ( $raw_db_version < 23221 ) {
-			bb_update_to_2_6_80();
+			bboss_update_to_2_6_80();
 		}
 
 		if ( $raw_db_version < 23321 ) {
-			bb_update_to_2_8_20();
+			bboss_update_to_2_8_20();
 		}
 
 		if ( $raw_db_version < 23421 ) {
-			bb_update_to_2_9_2();
+			bboss_update_to_2_9_2();
 		}
 
 		if ( $raw_db_version < 23431 ) {
-			bb_update_to_2_9_4();
+			bboss_update_to_2_9_4();
 		}
 
 		if ( $raw_db_version < 23521 ) {
-			bb_update_to_2_9_50();
+			bboss_update_to_2_9_50();
 		}
 
 		if ( $raw_db_version < 23531 ) {
-			bb_update_to_2_10_1();
+			bboss_update_to_2_10_1();
 		}
 
 		// @bbwt-com-start mothership-hub
@@ -543,14 +543,14 @@ function bp_version_updater() {
 		// @bbwt-com-end mothership-hub
 
 		if ( $raw_db_version < 23551 ) {
-			bb_update_to_2_16_1();
+			bboss_update_to_2_16_1();
 		}
 
 		// DB version 23584 — 3.0.0 release migration block (Settings 2.0
 		// feature activation + ReadyLaunch option-shape canonicalization).
 		if ( $raw_db_version < 23584 ) {
-			bb_update_to_3_0_0();
-			bb_rl_migrate_settings();
+			bboss_update_to_3_0_0();
+			bboss_rl_migrate_settings();
 		}
 
 		// DB version 23601 — 3.0.2 release migration. Cleans up `_none`
@@ -561,7 +561,7 @@ function bp_version_updater() {
 		// `_none` is an explicit admin selection ("Users with no profile
 		// type") and must be preserved.
 		if ( $raw_db_version >= 23584 && $raw_db_version < 23601 ) {
-			bb_update_to_3_0_3();
+			bboss_update_to_3_0_3();
 		}
 
 		// @bbwt-com-start installers
@@ -570,7 +570,7 @@ function bp_version_updater() {
 		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
 		// — because this keys on the stored _bp_db_version vs the code db_version.
 		if ( $raw_db_version < 23604 ) {
-			bb_install_addons_bundle_on_upgrade();
+			bboss_install_addons_bundle_on_upgrade();
 		}
 		// @bbwt-com-end installers
 
@@ -578,7 +578,7 @@ function bp_version_updater() {
 		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
 		// their App API cache so cached empty previews are not served for 30 days.
 		if ( $raw_db_version < 23605 ) {
-			bb_purge_forums_api_cache_for_legacy_embed();
+			bboss_purge_forums_api_cache_for_legacy_embed();
 		}
 
 		// @bbwt-com-start installers
@@ -588,8 +588,8 @@ function bp_version_updater() {
 		// (PROD-9995). Queuing is cheap: the download runs later, on a regular admin page
 		// load by a user who can update plugins.
 		if ( $raw_db_version < 23631 ) {
-			bb_install_addons_bundle_on_upgrade();
-			bb_queue_addons_bundle_update();
+			bboss_install_addons_bundle_on_upgrade();
+			bboss_queue_addons_bundle_update();
 		}
 		// @bbwt-com-end installers
 
@@ -601,20 +601,20 @@ function bp_version_updater() {
 		// Gated above 23631, the db_version 3.7.0 shipped with, so sites
 		// already on 3.7.0 still run it.
 		if ( $raw_db_version < 23641 ) {
-			bb_drafts_cleanup_on_upgrade();
-			bb_purge_activity_api_cache_for_comment_access();
+			bboss_drafts_cleanup_on_upgrade();
+			bboss_purge_activity_api_cache_for_comment_access();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
 			// Run migration about the moderation.
-			if ( function_exists( 'bb_moderation_migration_on_update' ) ) {
-				bb_moderation_migration_on_update();
+			if ( function_exists( 'bboss_moderation_migration_on_update' ) ) {
+				bboss_moderation_migration_on_update();
 			}
 
-			if ( function_exists( 'bb_xprofile_update_social_network_fields' ) ) {
-				bb_xprofile_update_social_network_fields();
+			if ( function_exists( 'bboss_xprofile_update_social_network_fields' ) ) {
+				bboss_xprofile_update_social_network_fields();
 			}
 
 			// Create the table when class loaded.
@@ -622,23 +622,23 @@ function bp_version_updater() {
 				\BuddyBoss\Performance\Performance::instance()->on_activation();
 			}
 
-			if ( function_exists( 'bb_messages_migration' ) ) {
-				bb_messages_migration();
+			if ( function_exists( 'bboss_messages_migration' ) ) {
+				bboss_messages_migration();
 			}
 
 			// Run migration about activity.
-			if ( function_exists( 'bb_activity_migration' ) ) {
-				bb_activity_migration( $raw_db_version, $current_db );
+			if ( function_exists( 'bboss_activity_migration' ) ) {
+				bboss_activity_migration( $raw_db_version, $current_db );
 			}
 
 			// Run migration about forums.
-			if ( function_exists( 'bb_forums_migration' ) ) {
-				bb_forums_migration( $raw_db_version );
+			if ( function_exists( 'bboss_forums_migration' ) ) {
+				bboss_forums_migration( $raw_db_version );
 			}
 
 			// Run migration about media/video description.
-			if ( function_exists( 'bb_media_migration' ) ) {
-				bb_media_migration();
+			if ( function_exists( 'bboss_media_migration' ) ) {
+				bboss_media_migration();
 			}
 
 			// Run migration about document description.
@@ -647,17 +647,17 @@ function bp_version_updater() {
 			}
 
 			// Run migration about group.
-			if ( function_exists( 'bb_group_migration' ) ) {
-				bb_group_migration();
+			if ( function_exists( 'bboss_group_migration' ) ) {
+				bboss_group_migration();
 			}
 
 			// Run migration about profile fields visibility.
-			if ( function_exists( 'bb_migrate_xprofile_visibility' ) ) {
-				bb_migrate_xprofile_visibility( true );
+			if ( function_exists( 'bboss_migrate_xprofile_visibility' ) ) {
+				bboss_migrate_xprofile_visibility( true );
 			}
 
-			if ( function_exists( 'bb_remove_deleted_user_last_activities' ) ) {
-				bb_remove_deleted_user_last_activities();
+			if ( function_exists( 'bboss_remove_deleted_user_last_activities' ) ) {
+				bboss_remove_deleted_user_last_activities();
 			}
 		}
 	}
@@ -676,11 +676,11 @@ function bp_version_updater() {
  *
  * @since BuddyPress 2.3.0
  */
-function bp_pre_schema_upgrade() {
+function bboss_pre_schema_upgrade() {
 	global $wpdb;
 
-	$raw_db_version = (int) bp_get_db_version_raw();
-	$bp_prefix      = bp_core_get_table_prefix();
+	$raw_db_version = (int) bboss_get_db_version_raw();
+	$bp_prefix      = bboss_core_get_table_prefix();
 
 	// 2.3.0: Change index lengths to account for utf8mb4.
 	if ( $raw_db_version < 9695 ) {
@@ -696,7 +696,7 @@ function bp_pre_schema_upgrade() {
 
 		foreach ( $tables as $table_name => $indexes ) {
 			foreach ( $indexes as $index ) {
-				if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
+				if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bboss_esc_like( $table_name ) ) ) ) {
 					$wpdb->query( "ALTER TABLE {$table_name} DROP INDEX {$index}" );
 				}
 			}
@@ -711,7 +711,7 @@ function bp_pre_schema_upgrade() {
 	// specification without a key length". Dropping the bad index here lets dbDelta
 	// recreate it correctly via the canonical schema in bp_core_install_activity_streams().
 	$activity_table = $bp_prefix . 'bp_activity';
-	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $activity_table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', bboss_esc_like( $activity_table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	if ( $table_exists ) {
 		// SUB_PART is NULL when an index has no prefix length. For indexes on a
 		// TEXT column, SUB_PART must be a positive integer (e.g. 191). The query
@@ -752,7 +752,7 @@ function bp_pre_schema_upgrade() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_update_to_1_5() {
+function bboss_update_to_1_5() {
 
 	// Delete old database version options.
 	delete_site_option( 'bp-activity-db-version' );
@@ -770,7 +770,7 @@ function bp_update_to_1_5() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_update_to_1_6() {
+function bboss_update_to_1_6() {
 
 	// Delete possible site options.
 	delete_site_option( 'bp-db-version' );
@@ -779,10 +779,10 @@ function bp_update_to_1_6() {
 	delete_site_option( '_bp-core-db-version' );
 
 	// Delete possible blog options.
-	delete_blog_option( bp_get_root_blog_id(), 'bp-db-version' );
-	delete_blog_option( bp_get_root_blog_id(), 'bp-core-db-version' );
-	delete_site_option( bp_get_root_blog_id(), '_bp-core-db-version' );
-	delete_site_option( bp_get_root_blog_id(), '_bp_db_version' );
+	delete_blog_option( bboss_get_root_blog_id(), 'bp-db-version' );
+	delete_blog_option( bboss_get_root_blog_id(), 'bp-core-db-version' );
+	delete_site_option( bboss_get_root_blog_id(), '_bp-core-db-version' );
+	delete_site_option( bboss_get_root_blog_id(), '_bp_db_version' );
 }
 
 /**
@@ -794,14 +794,14 @@ function bp_update_to_1_6() {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_update_to_1_9() {
+function bboss_update_to_1_9() {
 
 	// Setup hardcoded keys.
 	$active_components_key      = 'bp-active-components';
 	$notifications_component_id = 'notifications';
 
 	// Get the active components.
-	$active_components = bp_get_option( $active_components_key );
+	$active_components = bboss_get_option( $active_components_key );
 
 	// Add notifications.
 	if ( ! in_array( $notifications_component_id, $active_components ) ) {
@@ -809,7 +809,7 @@ function bp_update_to_1_9() {
 	}
 
 	// Update the active components option.
-	bp_update_option( $active_components_key, $active_components );
+	bboss_update_option( $active_components_key, $active_components );
 }
 
 /**
@@ -829,7 +829,7 @@ function bp_update_to_1_9() {
  *
  * @since BuddyPress 1.9.2
  */
-function bp_update_to_1_9_2() {
+function bboss_update_to_1_9_2() {
 	if ( 'bp-default' === get_stylesheet() || 'bp-default' === get_template() ) {
 		update_site_option( '_bp_retain_bp_default', 1 );
 	}
@@ -844,30 +844,30 @@ function bp_update_to_1_9_2() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_update_to_2_0() {
+function bboss_update_to_2_0() {
 
 	/* Install activity tables for 'last_activity' ***************************/
 
-	bp_core_install_activity_streams();
+	bboss_core_install_activity_streams();
 
 	/* Migrate 'last_activity' data ******************************************/
 
-	bp_last_activity_migrate();
+	bboss_last_activity_migrate();
 
 	/* Migrate signups data **************************************************/
 
 	if ( ! is_multisite() ) {
 
 		// Maybe install the signups table.
-		bp_core_maybe_install_signups();
+		bboss_core_maybe_install_signups();
 
 		// Run the migration script.
-		bp_members_migrate_signups();
+		bboss_members_migrate_signups();
 	}
 
 	/* Add BP options to the options table ***********************************/
 
-	bp_add_options();
+	bboss_add_options();
 }
 
 /**
@@ -875,11 +875,11 @@ function bp_update_to_2_0() {
  *
  * @since BuddyPress 2.0.1
  */
-function bp_update_to_2_0_1() {
+function bboss_update_to_2_0_1() {
 
 	// We purposely call this during both the 2.0 upgrade and the 2.0.1 upgrade.
 	// Don't worry; it won't break anything, and safely handles all cases.
-	bp_core_maybe_install_signups();
+	bboss_core_maybe_install_signups();
 }
 
 /**
@@ -891,18 +891,18 @@ function bp_update_to_2_0_1() {
  *
  * @since BuddyPress 2.2.0
  */
-function bp_update_to_2_2() {
+function bboss_update_to_2_2() {
 
 	// Also handled by `bp_core_install()`.
-	if ( bp_is_active( 'messages' ) ) {
-		bp_core_install_private_messaging();
+	if ( bboss_is_active( 'messages' ) ) {
+		bboss_core_install_private_messaging();
 	}
 
-	if ( bp_is_active( 'activity' ) ) {
-		bp_migrate_new_member_activity_component();
+	if ( bboss_is_active( 'activity' ) ) {
+		bboss_migrate_new_member_activity_component();
 
-		if ( bp_is_active( 'friends' ) ) {
-			bp_cleanup_friendship_activities();
+		if ( bboss_is_active( 'friends' ) ) {
+			bboss_cleanup_friendship_activities();
 		}
 	}
 }
@@ -914,11 +914,11 @@ function bp_update_to_2_2() {
  *
  * @since BuddyPress 2.3.0
  */
-function bp_update_to_2_3() {
+function bboss_update_to_2_3() {
 
 	// Also handled by `bp_core_install()`.
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_core_install_notifications();
+	if ( bboss_is_active( 'notifications' ) ) {
+		bboss_core_install_notifications();
 	}
 }
 
@@ -929,8 +929,8 @@ function bp_update_to_2_3() {
  *
  * @since BuddyPress 2.5.0
  */
-function bp_update_to_2_5() {
-	bp_core_install_emails();
+function bboss_update_to_2_5() {
+	bboss_core_install_emails();
 }
 
 /**
@@ -942,22 +942,22 @@ function bp_update_to_2_5() {
  *
  * @since BuddyPress 2.7.0
  */
-function bp_update_to_2_7() {
-	bp_add_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
+function bboss_update_to_2_7() {
+	bboss_add_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
 	// Update post_titles.
-	bp_migrate_directory_page_titles();
+	bboss_migrate_directory_page_titles();
 
 	/*
 	 * Add `parent_id` column to groups table.
 	 * Also handled by `bp_core_install()`.
 	 */
-	if ( bp_is_active( 'groups' ) ) {
-		bp_core_install_groups();
+	if ( bboss_is_active( 'groups' ) ) {
+		bboss_core_install_groups();
 
 		// Invalidate all cached group objects.
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$group_ids = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
 
@@ -967,7 +967,7 @@ function bp_update_to_2_7() {
 	}
 
 	// Do not ignore deprecated code for existing installs.
-	bp_add_option( '_bp_ignore_deprecated_code', false );
+	bboss_add_option( '_bp_ignore_deprecated_code', false );
 }
 
 /**
@@ -977,16 +977,16 @@ function bp_update_to_2_7() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_update_to_3_1_1() {
+function bboss_update_to_3_1_1() {
 
-	bp_core_install_activity_streams();
-	bp_core_install_follow();
-	bp_core_install_default_profiles_fields();
-	bp_core_install_bbp_emails();
-	bp_core_install_invites_email();
-	bp_core_update_activity_favorites();
-	bp_core_fix_media_activities();
-	bp_core_install_media();
+	bboss_core_install_activity_streams();
+	bboss_core_install_follow();
+	bboss_core_install_default_profiles_fields();
+	bboss_core_install_bbp_emails();
+	bboss_core_install_invites_email();
+	bboss_core_update_activity_favorites();
+	bboss_core_fix_media_activities();
+	bboss_core_install_media();
 }
 
 /**
@@ -996,12 +996,12 @@ function bp_update_to_3_1_1() {
  *
  * @since BuddyBoss 1.2.3
  */
-function bp_update_to_1_2_4() {
-	bp_core_install_media();
+function bboss_update_to_1_2_4() {
+	bboss_core_install_media();
 }
 
-function bp_update_to_1_4_0() {
-	bp_core_install_document();
+function bboss_update_to_1_4_0() {
+	bboss_core_install_document();
 }
 
 /**
@@ -1009,12 +1009,12 @@ function bp_update_to_1_4_0() {
  *
  * @since BuddyBoss 1.4.3
  */
-function bp_update_to_1_4_3() {
+function bboss_update_to_1_4_3() {
 	global $wpdb;
-	$bp      = buddypress();
+	$bp      = bboss();
 	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
 	$records = $wpdb->get_col( $squery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- constant query, table names from $wpdb.
-	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
+	if ( ! empty( $records ) && bboss_is_active( 'media' ) ) {
 		$records = wp_parse_id_list( explode( ',', (string) reset( $records ) ) );
 		if ( ! empty( $records ) ) {
 			$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', array_fill( 0, count( $records ), '%d' ) ) . ')', $records ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %d per media id (the stored meta is parsed to ints first).
@@ -1028,11 +1028,11 @@ function bp_update_to_1_4_3() {
  *
  * @since BuddyBoss 1.5.1
  */
-function bp_update_to_1_5_1() {
-	if ( bp_is_active( 'xprofile' ) ) {
-		$nickname_field_id = bp_xprofile_nickname_field_id();
-		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
-		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
+function bboss_update_to_1_5_1() {
+	if ( bboss_is_active( 'xprofile' ) ) {
+		$nickname_field_id = bboss_xprofile_nickname_field_id();
+		bboss_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+		bboss_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
 }
 
@@ -1041,9 +1041,9 @@ function bp_update_to_1_5_1() {
  *
  * @since BuddyBoss 1.7.0
  */
-function bp_update_to_1_7_0() {
-	bp_core_install_media();
-	bp_update_option( 'bp_media_symlink_support', 1 );
+function bboss_update_to_1_7_0() {
+	bboss_core_install_media();
+	bboss_update_option( 'bp_media_symlink_support', 1 );
 }
 
 /**
@@ -1051,9 +1051,9 @@ function bp_update_to_1_7_0() {
  *
  * @since BuddyBoss 1.7.2
  */
-function bb_update_to_1_7_2() {
+function bboss_update_to_1_7_2() {
 	flush_rewrite_rules();
-	bb_update_to_1_7_2_activity_setting_feed_comments_migration();
+	bboss_update_to_1_7_2_activity_setting_feed_comments_migration();
 }
 
 /**
@@ -1061,12 +1061,12 @@ function bb_update_to_1_7_2() {
  *
  * @since BuddyBoss 1.7.5
  */
-function bb_update_to_1_7_5() {
+function bboss_update_to_1_7_5() {
 	global $bp_background_updater;
 
 	$bp_background_updater->push_to_queue(
 		array(
-			'callback' => 'bb_moderation_bg_update_moderation_data',
+			'callback' => 'bboss_moderation_bg_update_moderation_data',
 			'args'     => array(),
 		)
 	);
@@ -1080,7 +1080,7 @@ function bb_update_to_1_7_5() {
  *
  * @since BuddyBoss 1.7.7
  */
-function bb_update_to_1_7_7() {
+function bboss_update_to_1_7_7() {
 	$upload_dir        = wp_get_upload_dir();
 	$media_htaccess    = $upload_dir['basedir'] . '/bb_medias/.htaccess';
 	$document_htaccess = $upload_dir['basedir'] . '/bb_documents/.htaccess';
@@ -1106,9 +1106,9 @@ function bb_update_to_1_7_7() {
 	}
 }
 
-function bp_update_default_doc_extensions() {
+function bboss_update_default_doc_extensions() {
 
-	$get_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+	$get_extensions = bboss_get_option( 'bp_document_extensions_support', array() );
 
 	// $changed_array = array(
 	// 'bb_doc_52'   => array(
@@ -1149,11 +1149,11 @@ function bp_update_default_doc_extensions() {
  *
  * @since BuddyBoss 1.2.3
  */
-function bb_update_to_1_2_3() {
-	bp_add_option( '_bp_ignore_deprecated_code', false );
+function bboss_update_to_1_2_3() {
+	bboss_add_option( '_bp_ignore_deprecated_code', false );
 
 	// Fix current forums media privacy to 'forums'.
-	bp_core_fix_forums_media();
+	bboss_core_fix_forums_media();
 }
 
 /**
@@ -1163,9 +1163,9 @@ function bb_update_to_1_2_3() {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_migrate_new_member_activity_component() {
+function bboss_migrate_new_member_activity_component() {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Update the component for the new_member type.
 	$wpdb->update(
@@ -1195,10 +1195,10 @@ function bp_migrate_new_member_activity_component() {
  *
  * @since BuddyPress 2.2.0
  */
-function bp_cleanup_friendship_activities() {
-	bp_activity_delete(
+function bboss_cleanup_friendship_activities() {
+	bboss_activity_delete(
 		array(
-			'component'     => buddypress()->friends->id,
+			'component'     => bboss()->friends->id,
 			'type'          => 'friendship_created',
 			'hide_sitewide' => true,
 		)
@@ -1214,10 +1214,10 @@ function bp_cleanup_friendship_activities() {
  *
  * @since BuddyPress 2.7.0
  */
-function bp_migrate_directory_page_titles() {
-	$bp_pages = bp_core_get_directory_page_ids( 'all' );
+function bboss_migrate_directory_page_titles() {
+	$bp_pages = bboss_core_get_directory_page_ids( 'all' );
 
-	$default_titles = bp_core_get_directory_page_default_titles();
+	$default_titles = bboss_core_get_directory_page_default_titles();
 
 	$legacy_titles = array(
 		'activity' => __( 'Site-Wide Activity', 'buddyboss' ),
@@ -1263,7 +1263,7 @@ function bp_migrate_directory_page_titles() {
  *
  * @internal Used internally to redirect BuddyPress to the about page on activation.
  */
-function bp_add_activation_redirect() {
+function bboss_add_activation_redirect() {
 
 	// Bail if activating from network, or bulk.
 	if ( isset( $_GET['activate-multi'] ) ) {
@@ -1277,7 +1277,7 @@ function bp_add_activation_redirect() {
 
 	// Record that this is a new installation, so we show the right
 	// welcome message.
-	if ( bp_is_install() ) {
+	if ( bboss_is_install() ) {
 		set_transient( '_bp_is_new_install', true, 30 );
 	}
 
@@ -1317,21 +1317,21 @@ function bp_add_activation_redirect() {
 				$bp_active_components['forums'] = 1;
 
 				// Set the forums to in DB.
-				bp_update_option( 'bp-active-components', $bp_active_components );
+				bboss_update_option( 'bp-active-components', $bp_active_components );
 
 			}
 
 			// If Forums page is not set.
-			$option = bp_get_option( '_bbp_root_slug_custom_slug', '' );
+			$option = bboss_get_option( '_bbp_root_slug_custom_slug', '' );
 			if ( '' === $option ) {
 
-				$default_title = bp_core_get_directory_page_default_titles();
+				$default_title = bboss_core_get_directory_page_default_titles();
 				$title         = ( isset( $default_title['new_forums_page'] ) ) ? $default_title['new_forums_page'] : '';
 
 				$new_page = array(
 					'post_title'     => $title,
 					'post_status'    => 'publish',
-					'post_author'    => bp_loggedin_user_id(),
+					'post_author'    => bboss_loggedin_user_id(),
 					'post_type'      => 'page',
 					'comment_status' => 'closed',
 					'ping_status'    => 'closed',
@@ -1340,16 +1340,16 @@ function bp_add_activation_redirect() {
 				// Create Forums Page.
 				$page_id = wp_insert_post( $new_page );
 
-				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
+				bboss_update_option( '_bbp_root_slug_custom_slug', $page_id );
 				$slug = get_page_uri( $page_id );
 
 				// Set BBPress root Slug.
-				bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
+				bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
 
 			}
 
 			// Reset the permalink.
-			bp_update_option( 'rewrite_rules', '' );
+			bboss_update_option( 'rewrite_rules', '' );
 
 		}
 
@@ -1364,7 +1364,7 @@ function bp_add_activation_redirect() {
 		}
 	}
 
-	bb_remove_deleted_user_last_activities();
+	bboss_remove_deleted_user_last_activities();
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
@@ -1379,7 +1379,7 @@ function bp_add_activation_redirect() {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_core_maybe_install_signups() {
+function bboss_core_maybe_install_signups() {
 	global $wpdb;
 
 	// The table to run queries against.
@@ -1399,13 +1399,13 @@ function bp_core_maybe_install_signups() {
 
 		// 'signup_id' column doesn't exist, so run the upgrade
 		if ( empty( $column_exists ) ) {
-			bp_core_upgrade_signups();
+			bboss_core_upgrade_signups();
 		}
 
 		// Table does not exist, and we are a single site, so install the multisite
 		// signups table using WordPress core's database schema.
 	} elseif ( ! is_multisite() ) {
-		bp_core_install_signups();
+		bboss_core_install_signups();
 	}
 
 	// Restore previous error suppression setting.
@@ -1421,13 +1421,13 @@ function bp_core_maybe_install_signups() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_activation() {
+function bboss_activation() {
 
 	// Force refresh theme roots.
 	delete_site_transient( 'theme_roots' );
 
 	// Add options.
-	bp_add_options();
+	bboss_add_options();
 
 	/**
 	 * Fires during the activation of BuddyPress.
@@ -1449,7 +1449,7 @@ function bp_activation() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_deactivation() {
+function bboss_deactivation() {
 
 	// Force refresh theme roots.
 	delete_site_transient( 'theme_roots' );
@@ -1482,7 +1482,7 @@ function bp_deactivation() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_uninstall() {
+function bboss_uninstall() {
 
 	/**
 	 * Fires during the uninstallation of BuddyPress.
@@ -1497,9 +1497,9 @@ function bp_uninstall() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_update_activity_favorites() {
-	if ( bp_is_active( 'activity' ) ) {
-		bp_activity_favorites_upgrade_data();
+function bboss_core_update_activity_favorites() {
+	if ( bboss_is_active( 'activity' ) ) {
+		bboss_activity_favorites_upgrade_data();
 	}
 }
 
@@ -1508,9 +1508,9 @@ function bp_core_update_activity_favorites() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_fix_media_activities() {
-	if ( bp_is_active( 'activity' ) ) {
-		bp_activity_media_fix_data();
+function bboss_core_fix_media_activities() {
+	if ( bboss_is_active( 'activity' ) ) {
+		bboss_activity_media_fix_data();
 	}
 }
 
@@ -1519,8 +1519,8 @@ function bp_core_fix_media_activities() {
  *
  * @since BuddyBoss 1.2.9
  */
-function bp_update_to_1_2_9() {
-	bp_core_install_group_message_email();
+function bboss_update_to_1_2_9() {
+	bboss_core_install_group_message_email();
 }
 
 /**
@@ -1528,14 +1528,14 @@ function bp_update_to_1_2_9() {
  *
  * @since BuddyBoss 1.2.3
  */
-function bp_core_fix_forums_media() {
-	if ( bp_is_active( 'forums' ) && bp_is_active( 'media' ) ) {
-		bbp_fix_forums_media();
+function bboss_core_fix_forums_media() {
+	if ( bboss_is_active( 'forums' ) && bboss_is_active( 'media' ) ) {
+		bboss_bbp_fix_forums_media();
 	}
 }
 
-function bp_update_to_1_3_0() {
-	bp_core_install_private_messaging();
+function bboss_update_to_1_3_0() {
+	bboss_core_install_private_messaging();
 }
 
 /**
@@ -1544,11 +1544,11 @@ function bp_update_to_1_3_0() {
  * - Create the invitations table.
  * - Migrate requests and invitations to the new table.
  */
-function bb_update_to_1_3_5() {
-	bp_core_install_invitations();
+function bboss_update_to_1_3_5() {
+	bboss_core_install_invitations();
 
-	if ( bp_is_active( 'groups' ) ) {
-		bp_groups_migrate_invitations();
+	if ( bboss_is_active( 'groups' ) ) {
+		bboss_groups_migrate_invitations();
 	}
 }
 
@@ -1557,10 +1557,10 @@ function bb_update_to_1_3_5() {
  *
  * @since BuddyBoss 1.5.5
  */
-function bp_update_to_1_5_5() {
+function bboss_update_to_1_5_5() {
 
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
 	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
@@ -1571,8 +1571,8 @@ function bp_update_to_1_5_5() {
  *
  * @since BuddyBoss 1.5.6
  */
-function bb_update_to_1_5_6() {
-	bp_core_install_moderation_emails();
+function bboss_update_to_1_5_6() {
+	bboss_core_install_moderation_emails();
 }
 
 /**
@@ -1630,26 +1630,26 @@ add_filter(
  *
  * @since BuddyBoss 1.7.2
  *
- * @uses bb_feed_post_types()                    Get all post types.
- * @uses bb_post_type_feed_option_name()         Option key for individual post type.
- * @uses bb_post_type_feed_comment_option_name() Option key for individual post type comment.
- * @uses bp_is_post_type_feed_enable()           Checks if post type feed is enabled.
+ * @uses bboss_feed_post_types()                    Get all post types.
+ * @uses bboss_post_type_feed_option_name()         Option key for individual post type.
+ * @uses bboss_post_type_feed_comment_option_name() Option key for individual post type comment.
+ * @uses bboss_is_post_type_feed_enable()           Checks if post type feed is enabled.
  *
  * @return void
  */
-function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
-	$custom_post_types = bb_feed_post_types();
+function bboss_update_to_1_7_2_activity_setting_feed_comments_migration() {
+	$custom_post_types = bboss_feed_post_types();
 
 	// Run over all custom post type.
 	foreach ( $custom_post_types as $post_type ) {
 		// Post type option name.
-		$pt_opt_name = bb_post_type_feed_option_name( $post_type );
+		$pt_opt_name = bboss_post_type_feed_option_name( $post_type );
 
 		// Post type comment option name.
-		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+		$ptc_opt_name = bboss_post_type_feed_comment_option_name( $post_type );
 
-		if ( bp_is_post_type_feed_enable( $post_type ) ) {
-			bp_update_option( $ptc_opt_name, 1 );
+		if ( bboss_is_post_type_feed_enable( $post_type ) ) {
+			bboss_update_option( $ptc_opt_name, 1 );
 		}
 	}
 }
@@ -1662,14 +1662,14 @@ function bb_update_to_1_7_2_activity_setting_feed_comments_migration() {
  *
  * @return void
  */
-function bb_update_to_1_7_8() {
+function bboss_update_to_1_7_8() {
 	// Return, when group or forum component deactive.
-	if ( ! bp_is_active( 'groups' ) || ! bp_is_active( 'forums' ) ) {
+	if ( ! bboss_is_active( 'groups' ) || ! bboss_is_active( 'forums' ) ) {
 		return;
 	}
 
 	// Get all forum associated groups.
-	$group_data = groups_get_groups(
+	$group_data = bboss_groups_get_groups(
 		array(
 			'per_page'   => -1,
 			'fields'     => 'ids',
@@ -1694,7 +1694,7 @@ function bb_update_to_1_7_8() {
 
 	if ( ! empty( $groups ) ) {
 		foreach ( $groups as $group_id ) {
-			$forum_ids = groups_get_groupmeta( $group_id, 'forum_id' );
+			$forum_ids = bboss_groups_get_groupmeta( $group_id, 'forum_id' );
 
 			if ( empty( $forum_ids ) ) {
 				continue;
@@ -1702,7 +1702,7 @@ function bb_update_to_1_7_8() {
 
 			// Group never contains multiple forums.
 			$forum_id  = current( $forum_ids );
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 			$group_ids = empty( $group_ids ) ? array() : $group_ids;
 
 			if ( ! empty( $group_ids ) && in_array( $group_id, $group_ids, true ) ) {
@@ -1711,7 +1711,7 @@ function bb_update_to_1_7_8() {
 
 			$group_ids[] = $group_id;
 
-			bbp_update_forum_group_ids( $forum_id, $group_ids );
+			bboss_bbp_update_forum_group_ids( $forum_id, $group_ids );
 		}
 	}
 }
@@ -1722,10 +1722,10 @@ function bb_update_to_1_7_8() {
  *
  * @since BuddyBoss 1.8.1
  */
-function bb_update_to_1_8_1() {
-	if ( function_exists( 'bb_email_queue' ) ) {
+function bboss_update_to_1_8_1() {
+	if ( function_exists( 'bboss_email_queue' ) ) {
 		// Install email queue table.
-		bb_email_queue()::create_db_table();
+		bboss_email_queue()::create_db_table();
 	}
 }
 
@@ -1735,11 +1735,11 @@ function bb_update_to_1_8_1() {
  *
  * @since BuddyBoss 1.8.6
  */
-function bb_update_to_1_8_6() {
+function bboss_update_to_1_8_6() {
 	global $buddyboss_theme_options;
 
 	// Do not ignore deprecated code for existing installs.
-	bp_add_option( '_bp_ignore_deprecated_code', false );
+	bboss_add_option( '_bp_ignore_deprecated_code', false );
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -1758,25 +1758,25 @@ function bb_update_to_1_8_6() {
 	$reset_post  = $_POST;
 
 	// Set Profile Avatar.
-	$show_profile_avatar = bp_get_option( 'show_avatars' );
-	$default_avatar      = bp_get_option( 'avatar_default', 'mystery' );
+	$show_profile_avatar = bboss_get_option( 'show_avatars' );
+	$default_avatar      = bboss_get_option( 'avatar_default', 'mystery' );
 
 	if ( $show_profile_avatar && 'mystery' === $default_avatar ) {
-		bp_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
-		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+		bboss_update_option( 'bp-profile-avatar-type', 'BuddyBoss' );
+		bboss_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	} else {
-		bp_update_option( 'bp-profile-avatar-type', 'WordPress' );
+		bboss_update_option( 'bp-profile-avatar-type', 'WordPress' );
 	}
 
 	// Set Group Avatar.
-	bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	bboss_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 
 	// Profile Cover.
-	bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
+	bboss_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 
-	if ( ! bp_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
+	if ( ! bboss_disable_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BBoss_Attachment_Cover_Image' ) ) {
 
-		$temp_profile_cover = bb_to_1_8_6_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
+		$temp_profile_cover = bboss_to_1_8_6_upload_temp_cover_file( 'buddyboss_profile_cover_default' );
 
 		if ( isset( $temp_profile_cover['filename'], $temp_profile_cover['path'], $temp_profile_cover['url'] ) && ! empty( $temp_profile_cover['filename'] ) && ! empty( $temp_profile_cover['path'] ) && ! empty( $temp_profile_cover['url'] ) ) {
 
@@ -1785,7 +1785,7 @@ function bb_update_to_1_8_6() {
 			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir', 99 );
 
 			// Upload the file.
-			$cover_image_attachment                        = new BP_Attachment_Cover_Image();
+			$cover_image_attachment                        = new BBoss_Attachment_Cover_Image();
 			$_POST['action']                               = $cover_image_attachment->action;
 			$_POST['profile_cover_upload']                 = true;
 			$_FILES[ $cover_image_attachment->file_input ] = array(
@@ -1804,8 +1804,8 @@ function bb_update_to_1_8_6() {
 			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir' );
 
 			if ( ! empty( $profile_cover_image ) && isset( $profile_cover_image['url'] ) ) {
-				bp_update_option( 'bp-default-profile-cover-type', 'custom' );
-				bp_update_option( 'bp-default-custom-profile-cover', $profile_cover_image['url'] );
+				bboss_update_option( 'bp-default-profile-cover-type', 'custom' );
+				bboss_update_option( 'bp-default-custom-profile-cover', $profile_cover_image['url'] );
 
 				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
@@ -1815,7 +1815,7 @@ function bb_update_to_1_8_6() {
 				$file_system_direct->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
 				// Delete option after migration.
-				bp_delete_option( 'buddyboss_profile_cover_default_migration' );
+				bboss_delete_option( 'buddyboss_profile_cover_default_migration' );
 
 				if ( isset( $buddyboss_theme_options['buddyboss_profile_cover_default'] ) ) {
 					add_option( 'bb_platform_profile_cover_default_migration', $buddyboss_theme_options['buddyboss_profile_cover_default'] );
@@ -1827,16 +1827,16 @@ function bb_update_to_1_8_6() {
 			$_FILES = $reset_files;
 			$_POST  = $reset_post;
 		} else {
-			bp_update_option( 'bp-default-profile-cover-type', 'none' );
+			bboss_update_option( 'bp-default-profile-cover-type', 'none' );
 		}
 	}
 
 	// Group Cover.
-	bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+	bboss_update_option( 'bp-default-group-cover-type', 'buddyboss' );
 
-	if ( ! bp_disable_group_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BP_Attachment_Cover_Image' ) ) {
+	if ( ! bboss_disable_group_cover_image_uploads() && function_exists( 'buddyboss_theme_get_option' ) && class_exists( 'BBoss_Attachment_Cover_Image' ) ) {
 
-		$temp_group_cover = bb_to_1_8_6_upload_temp_cover_file( 'buddyboss_group_cover_default' );
+		$temp_group_cover = bboss_to_1_8_6_upload_temp_cover_file( 'buddyboss_group_cover_default' );
 
 		if ( isset( $temp_group_cover['filename'], $temp_group_cover['path'], $temp_group_cover['url'] ) && ! empty( $temp_group_cover['filename'] ) && ! empty( $temp_group_cover['path'] ) && ! empty( $temp_group_cover['url'] ) ) {
 
@@ -1845,7 +1845,7 @@ function bb_update_to_1_8_6() {
 			add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir', 99 );
 
 			// Upload the file.
-			$group_cover_image_attachment                        = new BP_Attachment_Cover_Image();
+			$group_cover_image_attachment                        = new BBoss_Attachment_Cover_Image();
 			$_POST['action']                                     = $group_cover_image_attachment->action;
 			$_POST['group_cover_upload']                         = true;
 			$_FILES[ $group_cover_image_attachment->file_input ] = array(
@@ -1864,8 +1864,8 @@ function bb_update_to_1_8_6() {
 			remove_filter( 'bp_attachments_cover_image_upload_dir', 'bb_to_1_8_6_image_upload_dir' );
 
 			if ( ! empty( $group_cover_image ) && isset( $group_cover_image['url'] ) ) {
-				bp_update_option( 'bp-default-group-cover-type', 'custom' );
-				bp_update_option( 'bp-default-custom-group-cover', $group_cover_image['url'] );
+				bboss_update_option( 'bp-default-group-cover-type', 'custom' );
+				bboss_update_option( 'bp-default-custom-group-cover', $group_cover_image['url'] );
 
 				if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
 					require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
@@ -1875,7 +1875,7 @@ function bb_update_to_1_8_6() {
 				$file_system_direct->rmdir( wp_upload_dir()['basedir'] . '/bb-cover', true );
 
 				// Delete option after migration.
-				bp_delete_option( 'buddyboss_group_cover_default_migration' );
+				bboss_delete_option( 'buddyboss_group_cover_default_migration' );
 
 				if ( isset( $buddyboss_theme_options['buddyboss_group_cover_default'] ) ) {
 					add_option( 'bb_platform_cover_default_migration', $buddyboss_theme_options['buddyboss_group_cover_default'] );
@@ -1887,7 +1887,7 @@ function bb_update_to_1_8_6() {
 			$_FILES = $reset_files;
 			$_POST  = $reset_post;
 		} else {
-			bp_update_option( 'bp-default-group-cover-type', 'none' );
+			bboss_update_option( 'bp-default-group-cover-type', 'none' );
 		}
 	}
 
@@ -1904,7 +1904,7 @@ function bb_update_to_1_8_6() {
  * @param string $cover_type The option name of cover. 'buddyboss_profile_cover_default' or 'buddyboss_group_cover_default'.
  * @return array Array containing the path, URL, and file name.
  */
-function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
+function bboss_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 	$data = array(
 		'filename' => '',
 		'path'     => '',
@@ -1914,7 +1914,7 @@ function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 	$default_cover_url = buddyboss_theme_get_option( $cover_type, 'url' );
 
 	if ( empty( $default_cover_url ) ) {
-		$bb_default_cover_url = bp_get_option( $cover_type . '_migration', array() );
+		$bb_default_cover_url = bboss_get_option( $cover_type . '_migration', array() );
 
 		if ( ! empty( $bb_default_cover_url ) && isset( $bb_default_cover_url['url'] ) ) {
 			$default_cover_url = $bb_default_cover_url['url'];
@@ -1964,7 +1964,7 @@ function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
  * @param string $type The requested file type.
  * @return array List of allowed extensions.
  */
-function bb_to_1_8_6_allow_extension( $exts, $type ) {
+function bboss_to_1_8_6_allow_extension( $exts, $type ) {
 	$exts[] = 'webp';
 	return $exts;
 }
@@ -1977,7 +1977,7 @@ function bb_to_1_8_6_allow_extension( $exts, $type ) {
  * @param array $overrides The wp_handle_upload overrides.
  * @return array The wp_handle_upload overrides.
  */
-function bb_to_1_8_6_change_overrides( $overrides ) {
+function bboss_to_1_8_6_change_overrides( $overrides ) {
 	$overrides['test_form'] = false;
 	return $overrides;
 }
@@ -1989,14 +1989,14 @@ function bb_to_1_8_6_change_overrides( $overrides ) {
  *
  * @return array See wp_upload_dir().
  */
-function bb_to_1_8_6_image_upload_dir( $args ) {
+function bboss_to_1_8_6_image_upload_dir( $args ) {
 	// Set the subdir.
 	$subdir = '/members/0/cover-image';
 	if ( isset( $_POST['group_cover_upload'] ) ) {
 		$subdir = '/groups/0/cover-image';
 	}
 
-	$upload_dir = bp_attachments_uploads_dir_get();
+	$upload_dir = bboss_attachments_uploads_dir_get();
 
 	return array(
 		'path'    => $upload_dir['basedir'] . $subdir,
@@ -2015,7 +2015,7 @@ function bb_to_1_8_6_image_upload_dir( $args ) {
  *
  * @return void
  */
-function bb_update_to_1_9_0_1() {
+function bboss_update_to_1_9_0_1() {
 	wp_clear_scheduled_hook( 'bb_bb_video_deleter_older_symlink_hook' );
 	wp_clear_scheduled_hook( 'bb_bb_document_deleter_older_symlink_hook' );
 	wp_clear_scheduled_hook( 'bb_bb_media_deleter_older_symlink_hook' );
@@ -2027,16 +2027,16 @@ function bb_update_to_1_9_0_1() {
  *
  * @since BuddyBoss 1.9.1
  */
-function bb_update_to_1_9_1() {
+function bboss_update_to_1_9_1() {
 	// Display plugin update notice.
 	update_option( '_bb_is_update', true );
 
 	// If enabled follow component then return follow as primary action.
 	$primary_action = '';
-	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+	if ( ! function_exists( 'bb_platform_pro' ) && function_exists( 'bboss_is_active' ) && bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active() ) {
 		$primary_action = 'follow';
 	}
-	bp_update_option( 'bb-member-profile-primary-action', $primary_action );
+	bboss_update_option( 'bb-member-profile-primary-action', $primary_action );
 
 	if ( ! function_exists( 'buddyboss_theme' ) ) {
 		return;
@@ -2055,36 +2055,36 @@ function bb_update_to_1_9_1() {
 
 	// Check if options are empty.
 	if ( empty( $buddyboss_theme_options ) ) {
-		$buddyboss_theme_options = bp_get_option( 'buddyboss_theme_options', array() );
+		$buddyboss_theme_options = bboss_get_option( 'buddyboss_theme_options', array() );
 	}
 
 	if ( ! empty( $buddyboss_theme_options ) ) {
-		bp_update_option( 'old_buddyboss_theme_options_1_8_7', $buddyboss_theme_options );
+		bboss_update_option( 'old_buddyboss_theme_options_1_8_7', $buddyboss_theme_options );
 	}
 
-	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bp_get_option( 'buddyboss_profile_cover_width' );
-	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? bp_get_option( 'buddyboss_profile_cover_height' );
-	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? bp_get_option( 'buddyboss_group_cover_width' );
-	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? bp_get_option( 'buddyboss_group_cover_height' );
+	$profile_cover_width  = $buddyboss_theme_options['buddyboss_profile_cover_width'] ?? bboss_get_option( 'buddyboss_profile_cover_width' );
+	$profile_cover_height = $buddyboss_theme_options['buddyboss_profile_cover_height'] ?? bboss_get_option( 'buddyboss_profile_cover_height' );
+	$group_cover_width    = $buddyboss_theme_options['buddyboss_group_cover_width'] ?? bboss_get_option( 'buddyboss_group_cover_width' );
+	$group_cover_height   = $buddyboss_theme_options['buddyboss_group_cover_height'] ?? bboss_get_option( 'buddyboss_group_cover_height' );
 
 	if ( ! empty( $profile_cover_width ) ) {
-		bp_delete_option( 'bb-pro-cover-profile-width' );
-		bp_add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
+		bboss_delete_option( 'bb-pro-cover-profile-width' );
+		bboss_add_option( 'bb-pro-cover-profile-width', $profile_cover_width );
 	}
 
 	if ( ! empty( $profile_cover_height ) ) {
-		bp_delete_option( 'bb-pro-cover-profile-height' );
-		bp_add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
+		bboss_delete_option( 'bb-pro-cover-profile-height' );
+		bboss_add_option( 'bb-pro-cover-profile-height', $profile_cover_height );
 	}
 
 	if ( ! empty( $group_cover_width ) ) {
-		bp_delete_option( 'bb-pro-cover-group-width' );
-		bp_add_option( 'bb-pro-cover-group-width', $group_cover_width );
+		bboss_delete_option( 'bb-pro-cover-group-width' );
+		bboss_add_option( 'bb-pro-cover-group-width', $group_cover_width );
 	}
 
 	if ( ! empty( $group_cover_height ) ) {
-		bp_delete_option( 'bb-pro-cover-group-height' );
-		bp_add_option( 'bb-pro-cover-group-height', $group_cover_height );
+		bboss_delete_option( 'bb-pro-cover-group-height' );
+		bboss_add_option( 'bb-pro-cover-group-height', $group_cover_height );
 	}
 }
 
@@ -2093,16 +2093,16 @@ function bb_update_to_1_9_1() {
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_update_to_1_9_3() {
+function bboss_update_to_1_9_3() {
 
 	// Update the email situation labels.
-	bb_core_update_email_situation_labels();
+	bboss_core_update_email_situation_labels();
 
 	// Update the users settings.
-	bb_core_update_user_settings();
+	bboss_core_update_user_settings();
 
 	// Installed missing emails.
-	bp_admin_install_emails();
+	bboss_admin_install_emails();
 }
 
 /**
@@ -2110,7 +2110,7 @@ function bb_update_to_1_9_3() {
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_core_update_email_situation_labels() {
+function bboss_core_update_email_situation_labels() {
 
 	$email_situation_labels = array(
 		'activity-at-message'          => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
@@ -2120,12 +2120,12 @@ function bb_core_update_email_situation_labels() {
 	);
 
 	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
-		$situation_term = get_term_by( 'slug', $situation_slug, bp_get_email_tax_type() );
+		$situation_term = get_term_by( 'slug', $situation_slug, bboss_get_email_tax_type() );
 
 		if ( ! empty( $situation_term ) && $situation_term->term_id ) {
 			wp_update_term(
 				(int) $situation_term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $situation_label,
 				)
@@ -2140,7 +2140,7 @@ function bb_core_update_email_situation_labels() {
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_core_update_user_settings() {
+function bboss_core_update_user_settings() {
 	global $bp_background_updater;
 
 	$user_ids = get_users(
@@ -2163,7 +2163,7 @@ function bb_core_update_user_settings() {
 		$bp_background_updater->data(
 			array(
 				array(
-					'callback' => 'migrate_notification_preferences',
+					'callback' => 'bboss_migrate_notification_preferences',
 					'args'     => array( $chunk ),
 				),
 			)
@@ -2182,8 +2182,8 @@ function bb_core_update_user_settings() {
  *
  * @return void
  */
-function migrate_notification_preferences( $user_ids ) {
-	$all_keys = bb_preferences_key_maps();
+function bboss_migrate_notification_preferences( $user_ids ) {
+	$all_keys = bboss_preferences_key_maps();
 
 	if ( empty( $user_ids ) || empty( $all_keys ) ) {
 		return;
@@ -2205,8 +2205,8 @@ function migrate_notification_preferences( $user_ids ) {
  *
  * @since BuddyBoss 2.1.1
  */
-function bb_update_to_2_1_1() {
-	bb_moderation_add_user_report_column();
+function bboss_update_to_2_1_1() {
+	bboss_moderation_add_user_report_column();
 }
 
 /**
@@ -2214,7 +2214,7 @@ function bb_update_to_2_1_1() {
  *
  * @since BuddyBoss 2.1.1
  */
-function bb_moderation_add_user_report_column() {
+function bboss_moderation_add_user_report_column() {
 
 	global $wpdb;
 
@@ -2236,30 +2236,30 @@ function bb_moderation_add_user_report_column() {
  *
  * @since BuddyBoss 2.1.4
  */
-function bb_update_to_2_1_4() {
+function bboss_update_to_2_1_4() {
 
 	// Do not ignore deprecated code for existing installs.
-	bp_update_option( '_bp_ignore_deprecated_code', false );
+	bboss_update_option( '_bp_ignore_deprecated_code', false );
 
 	// Create 'bp_groups_membermeta' table.
-	if ( bp_is_active( 'groups' ) ) {
-		bp_core_install_groups();
+	if ( bboss_is_active( 'groups' ) ) {
+		bboss_core_install_groups();
 	}
 
 	// Create 'bp_invitations_invitemeta' table.
-	bp_core_install_invitations();
+	bboss_core_install_invitations();
 
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
-	bb_messages_add_is_deleted_column();
+	bboss_messages_add_is_deleted_column();
 
 	// Migrate the 'bp_messages_deleted' value from 'wp_bp_messages_meta' table to 'is_deleted' column in 'bp_messages_messages' table.
-	bb_messages_migrate_is_deleted_column();
+	bboss_messages_migrate_is_deleted_column();
 
 	// For existing customer set default values for Messaging Notifications metabox.
-	bb_set_default_value_for_messaging_notifications_metabox();
+	bboss_set_default_value_for_messaging_notifications_metabox();
 
 	// Update the messages email templates.
-	bb_migrate_messages_email_templates();
+	bboss_migrate_messages_email_templates();
 
 }
 
@@ -2270,7 +2270,7 @@ function bb_update_to_2_1_4() {
  *
  * @return void
  */
-function bb_messages_add_is_deleted_column() {
+function bboss_messages_add_is_deleted_column() {
 	global $wpdb;
 
 	// Add 'is_deleted' column in 'bp_messages_messages' table.
@@ -2288,7 +2288,7 @@ function bb_messages_add_is_deleted_column() {
  *
  * @return void
  */
-function bb_messages_migrate_is_deleted_column() {
+function bboss_messages_migrate_is_deleted_column() {
 	global $wpdb;
 
 	$table_name = $wpdb->base_prefix . 'bp_messages_messages';
@@ -2315,9 +2315,9 @@ function bb_messages_migrate_is_deleted_column() {
  *
  * @return void
  */
-function bb_set_default_value_for_messaging_notifications_metabox() {
-	bp_update_option( 'delay_email_notification', 0 );
-	bp_update_option( 'time_delay_email_notification', 15 );
+function bboss_set_default_value_for_messaging_notifications_metabox() {
+	bboss_update_option( 'delay_email_notification', 0 );
+	bboss_update_option( 'time_delay_email_notification', 15 );
 }
 
 /**
@@ -2327,17 +2327,17 @@ function bb_set_default_value_for_messaging_notifications_metabox() {
  *
  * @return void
  */
-function bb_migrate_messages_email_templates() {
+function bboss_migrate_messages_email_templates() {
 	$emails = get_posts(
 		array(
 			'post_status'            => 'publish',
-			'post_type'              => bp_get_email_post_type(),
+			'post_type'              => bboss_get_email_post_type(),
 			'suppress_filters'       => false,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 			'tax_query'              => array(
 				array(
-					'taxonomy' => bp_get_email_tax_type(),
+					'taxonomy' => bboss_get_email_tax_type(),
 					'field'    => 'slug',
 					'terms'    => array( 'group-message-email', 'messages-unread' ), // phpcs:ignore
 				),
@@ -2388,7 +2388,7 @@ function bb_migrate_messages_email_templates() {
  *
  * @return void
  */
-function bb_update_to_2_1_5() {
+function bboss_update_to_2_1_5() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
@@ -2402,10 +2402,10 @@ function bb_update_to_2_1_5() {
  *
  * @return void
  */
-function bb_update_to_2_2_3() {
+function bboss_update_to_2_2_3() {
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
 	$email = array(
@@ -2420,10 +2420,10 @@ function bb_update_to_2_2_3() {
 	$id = 'new-activity-following';
 
 	if (
-		term_exists( $id, bp_get_email_tax_type() ) &&
+		term_exists( $id, bboss_get_email_tax_type() ) &&
 		get_terms(
 			array(
-				'taxonomy' => bp_get_email_tax_type(),
+				'taxonomy' => bboss_get_email_tax_type(),
 				'slug'     => $id,
 				'fields'   => 'count',
 			)
@@ -2432,18 +2432,18 @@ function bb_update_to_2_2_3() {
 		return;
 	}
 
-	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 	if ( ! $post_id ) {
 		return;
 	}
 
-	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+	$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 
 	foreach ( $tt_ids as $tt_id ) {
-		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 		wp_update_term(
 			(int) $term->term_id,
-			bp_get_email_tax_type(),
+			bboss_get_email_tax_type(),
 			array(
 				'description' => esc_html__( 'New activity post by someone a member is following', 'buddyboss' ),
 			)
@@ -2458,7 +2458,7 @@ function bb_update_to_2_2_3() {
  *
  * @return void
  */
-function bb_update_to_2_2_4() {
+function bboss_update_to_2_2_4() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -2474,7 +2474,7 @@ function bb_update_to_2_2_4() {
  *
  * @return void
  */
-function bb_update_to_2_2_5() {
+function bboss_update_to_2_2_5() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -2483,7 +2483,7 @@ function bb_update_to_2_2_5() {
 
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
 	$email = array(
@@ -2498,10 +2498,10 @@ function bb_update_to_2_2_5() {
 	$id = 'new-follower';
 
 	if (
-		term_exists( $id, bp_get_email_tax_type() ) &&
+		term_exists( $id, bboss_get_email_tax_type() ) &&
 		get_terms(
 			array(
-				'taxonomy' => bp_get_email_tax_type(),
+				'taxonomy' => bboss_get_email_tax_type(),
 				'slug'     => $id,
 				'fields'   => 'count',
 			)
@@ -2510,18 +2510,18 @@ function bb_update_to_2_2_5() {
 		return;
 	}
 
-	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 	if ( ! $post_id ) {
 		return;
 	}
 
-	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+	$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 
 	foreach ( $tt_ids as $tt_id ) {
-		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 		wp_update_term(
 			(int) $term->term_id,
-			bp_get_email_tax_type(),
+			bboss_get_email_tax_type(),
 			array(
 				'description' => esc_html__( 'A member receives a new follower', 'buddyboss' ),
 			)
@@ -2536,7 +2536,7 @@ function bb_update_to_2_2_5() {
  *
  * @return void
  */
-function bb_update_to_2_2_6() {
+function bboss_update_to_2_2_6() {
 	wp_cache_flush();
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -2546,7 +2546,7 @@ function bb_update_to_2_2_6() {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-document' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-video' );
 	}
-	bb_migrate_subscriptions();
+	bboss_migrate_subscriptions();
 }
 
 /**
@@ -2556,7 +2556,7 @@ function bb_update_to_2_2_6() {
  *
  * @return void
  */
-function bb_migrate_subscriptions() {
+function bboss_migrate_subscriptions() {
 	$is_already_run = get_transient( 'bb_migrate_subscriptions' );
 	if ( $is_already_run ) {
 		return;
@@ -2564,10 +2564,10 @@ function bb_migrate_subscriptions() {
 
 	set_transient( 'bb_migrate_subscriptions', 'yes', HOUR_IN_SECONDS );
 	// Create subscription table.
-	bb_core_install_subscription();
+	bboss_core_install_subscription();
 
 	// Migrate the subscription data to new table.
-	bb_subscriptions_migrate_users_forum_topic( true, true );
+	bboss_subscriptions_migrate_users_forum_topic( true, true );
 
 	// Flush the cache to delete all old cached subscriptions.
 	wp_cache_flush();
@@ -2580,7 +2580,7 @@ function bb_migrate_subscriptions() {
  *
  * @return void
  */
-function bb_update_to_2_2_7() {
+function bboss_update_to_2_2_7() {
 	// Clear cache.
 	if (
 		function_exists( 'wp_cache_flush_group' ) &&
@@ -2623,7 +2623,7 @@ function bb_update_to_2_2_7() {
  *
  * @return void
  */
-function bb_update_to_2_2_8() {
+function bboss_update_to_2_2_8() {
 	$is_already_run = get_transient( 'bb_migrate_group_subscriptions' );
 	if ( $is_already_run ) {
 		return;
@@ -2632,10 +2632,10 @@ function bb_update_to_2_2_8() {
 	set_transient( 'bb_migrate_group_subscriptions', 'yes', HOUR_IN_SECONDS );
 
 	// Default enabled the group subscriptions.
-	bp_update_option( 'bb_enable_group_subscriptions', 1 );
+	bboss_update_option( 'bb_enable_group_subscriptions', 1 );
 
 	// Install new group subscription email templates.
-	bb_migrate_group_subscription_email_templates();
+	bboss_migrate_group_subscription_email_templates();
 
 	// Migrate group subscriptions. The migration ships with BuddyBoss Add-ons, which also offers it as a repair tool.
 	if ( function_exists( 'bb_migrate_group_subscription' ) ) {
@@ -2650,7 +2650,7 @@ function bb_update_to_2_2_8() {
  *
  * @return void
  */
-function bb_migrate_group_subscription_email_templates() {
+function bboss_migrate_group_subscription_email_templates() {
 	$email_templates = array(
 		array(
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -2660,7 +2660,7 @@ function bb_migrate_group_subscription_email_templates() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 			'post_status'      => 'publish',
-			'post_type'        => bp_get_email_post_type(),
+			'post_type'        => bboss_get_email_post_type(),
 			'id'               => 'groups-new-activity',
 			'term_description' => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
 		),
@@ -2672,7 +2672,7 @@ function bb_migrate_group_subscription_email_templates() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 			'post_status'      => 'publish',
-			'post_type'        => bp_get_email_post_type(),
+			'post_type'        => bboss_get_email_post_type(),
 			'id'               => 'groups-new-discussion',
 			'term_description' => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
 		),
@@ -2685,10 +2685,10 @@ function bb_migrate_group_subscription_email_templates() {
 		unset( $email_template['term_description'] );
 
 		if (
-			term_exists( $email_template_id, bp_get_email_tax_type() ) &&
+			term_exists( $email_template_id, bboss_get_email_tax_type() ) &&
 			get_terms(
 				array(
-					'taxonomy' => bp_get_email_tax_type(),
+					'taxonomy' => bboss_get_email_tax_type(),
 					'slug'     => $email_template_id,
 					'fields'   => 'count',
 				)
@@ -2702,13 +2702,13 @@ function bb_migrate_group_subscription_email_templates() {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $email_template_id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $email_template_id, bboss_get_email_tax_type() );
 
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $term_description,
 				)
@@ -2724,7 +2724,7 @@ function bb_migrate_group_subscription_email_templates() {
  *
  * @return void
  */
-function bb_update_to_2_2_9() {
+function bboss_update_to_2_2_9() {
 	$is_already_run = get_transient( 'bb_update_to_2_2_9' );
 	if ( $is_already_run ) {
 		return;
@@ -2732,7 +2732,7 @@ function bb_update_to_2_2_9() {
 
 	set_transient( 'bb_update_to_2_2_9', 'yes', HOUR_IN_SECONDS );
 
-	bb_create_background_member_friends_count();
+	bboss_create_background_member_friends_count();
 }
 
 /**
@@ -2744,10 +2744,10 @@ function bb_update_to_2_2_9() {
  *
  * @return void
  */
-function bb_create_background_member_friends_count( $paged = 1 ) {
+function bboss_create_background_member_friends_count( $paged = 1 ) {
 	global $bb_background_updater;
 
-	if ( ! bp_is_active( 'friends' ) ) {
+	if ( ! bboss_is_active( 'friends' ) ) {
 		return;
 	}
 
@@ -2780,7 +2780,7 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
 			'type'     => 'update_member_friends_count',
 			'group'    => 'bb_migrate_member_friends_count',
 			'priority' => 5,
-			'callback' => 'bb_migrate_member_friends_count_callback',
+			'callback' => 'bboss_migrate_member_friends_count_callback',
 			'args'     => array( $user_ids, $paged ),
 		),
 	);
@@ -2797,13 +2797,13 @@ function bb_create_background_member_friends_count( $paged = 1 ) {
  *
  * @return void
  */
-function bb_migrate_member_friends_count_callback( $user_ids, $paged ) {
+function bboss_migrate_member_friends_count_callback( $user_ids, $paged ) {
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
 	foreach ( $user_ids as $user_id ) {
-		$friends = bp_core_get_users(
+		$friends = bboss_core_get_users(
 			array(
 				'type'            => 'alphabetical',
 				'user_id'         => $user_id,
@@ -2813,13 +2813,13 @@ function bb_migrate_member_friends_count_callback( $user_ids, $paged ) {
 		);
 
 		if ( ! empty( $friends ) ) {
-			bp_update_user_meta( $user_id, 'total_friend_count', (int) $friends['total'] );
+			bboss_update_user_meta( $user_id, 'total_friend_count', (int) $friends['total'] );
 		}
 	}
 
 	// Call recursive to finish update for all users.
 	$paged++;
-	bb_create_background_member_friends_count( $paged );
+	bboss_create_background_member_friends_count( $paged );
 }
 
 /**
@@ -2829,9 +2829,9 @@ function bb_migrate_member_friends_count_callback( $user_ids, $paged ) {
  *
  * @return void
  */
-function bb_update_to_2_3_0() {
+function bboss_update_to_2_3_0() {
 
-	if ( bp_is_relevant_feed_enabled() ) {
+	if ( bboss_is_relevant_feed_enabled() ) {
 		$settings = get_option( 'widget_bp_latest_activities' );
 		if ( ! empty( $settings ) ) {
 			foreach ( $settings as $k => $widget_data ) {
@@ -2841,7 +2841,7 @@ function bb_update_to_2_3_0() {
 
 				if ( ! empty( $widget_data ) ) {
 					if ( ! isset( $widget_data['relevant'] ) ) {
-						$widget_data['relevant'] = (bool) bp_is_relevant_feed_enabled();
+						$widget_data['relevant'] = (bool) bboss_is_relevant_feed_enabled();
 					}
 
 					$settings[ $k ] = $widget_data;
@@ -2861,7 +2861,7 @@ function bb_update_to_2_3_0() {
  *
  * @return void
  */
-function bb_update_to_2_3_1() {
+function bboss_update_to_2_3_1() {
 
 	$is_already_run = get_transient( 'bb_update_to_2_3_1' );
 	if ( $is_already_run ) {
@@ -2870,9 +2870,9 @@ function bb_update_to_2_3_1() {
 
 	set_transient( 'bb_update_to_2_3_1', 'yes', DAY_IN_SECONDS );
 
-	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin();
-		BB_Presence::bb_check_native_presence_load_directly();
+	if ( class_exists( 'BBoss_Presence' ) ) {
+		BBoss_Presence::bb_load_presence_api_mu_plugin();
+		BBoss_Presence::bb_check_native_presence_load_directly();
 	}
 }
 
@@ -2884,7 +2884,7 @@ function bb_update_to_2_3_1() {
  *
  * @return void
  */
-function bb_update_to_2_3_4() {
+function bboss_update_to_2_3_4() {
 	if ( file_exists( WPMU_PLUGIN_DIR . '/buddyboss-presence-api.php' ) ) {
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
@@ -2903,8 +2903,8 @@ function bb_update_to_2_3_4() {
 
 	set_transient( 'bb_migrate_favorites', 'yes', DAY_IN_SECONDS );
 	// Migrate the topic favorites.
-	if ( function_exists( 'bb_admin_upgrade_user_favorites' ) ) {
-		bb_admin_upgrade_user_favorites( true, get_current_blog_id() );
+	if ( function_exists( 'bboss_admin_upgrade_user_favorites' ) ) {
+		bboss_admin_upgrade_user_favorites( true, get_current_blog_id() );
 	}
 
 	wp_cache_flush();
@@ -2915,7 +2915,7 @@ function bb_update_to_2_3_4() {
  *
  * @since BuddyBoss 2.3.41
  */
-function bb_core_update_repair_member_slug() {
+function bboss_core_update_repair_member_slug() {
 	global $wpdb, $bb_background_updater, $is_member_slug_background;
 
 	$user_limit = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
@@ -2948,7 +2948,7 @@ function bb_core_update_repair_member_slug() {
 	}
 
 	$is_member_slug_background = true;
-	bb_set_bulk_user_profile_slug( $user_ids );
+	bboss_set_bulk_user_profile_slug( $user_ids );
 
 	$total_bg = $wpdb->get_row(
 		$wpdb->prepare(
@@ -2969,7 +2969,7 @@ function bb_core_update_repair_member_slug() {
 			'type'     => 'repair_member_slug',
 			'group'    => 'bb_core_update_repair_member_slug',
 			'priority' => 5,
-			'callback' => 'bb_core_update_repair_member_slug',
+			'callback' => 'bboss_core_update_repair_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -2984,7 +2984,7 @@ function bb_core_update_repair_member_slug() {
  *
  * @return void
  */
-function bb_update_to_2_3_50() {
+function bboss_update_to_2_3_50() {
 	// Clear cache.
 	wp_cache_flush();
 	// Purge all the cache for API.
@@ -2995,7 +2995,7 @@ function bb_update_to_2_3_50() {
 
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
 	$email = array(
@@ -3010,10 +3010,10 @@ function bb_update_to_2_3_50() {
 	$id = 'new-comment-reply';
 
 	if (
-		term_exists( $id, bp_get_email_tax_type() ) &&
+		term_exists( $id, bboss_get_email_tax_type() ) &&
 		get_terms(
 			array(
-				'taxonomy' => bp_get_email_tax_type(),
+				'taxonomy' => bboss_get_email_tax_type(),
 				'slug'     => $id,
 				'fields'   => 'count',
 			)
@@ -3022,18 +3022,18 @@ function bb_update_to_2_3_50() {
 		return;
 	}
 
-	$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+	$post_id = wp_insert_post( bboss_parse_args( $email, $defaults, 'install_email_' . $id ) );
 	if ( ! $post_id ) {
 		return;
 	}
 
-	$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+	$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 
 	foreach ( $tt_ids as $tt_id ) {
-		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+		$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 		wp_update_term(
 			(int) $term->term_id,
-			bp_get_email_tax_type(),
+			bboss_get_email_tax_type(),
 			array(
 				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 			)
@@ -3050,16 +3050,16 @@ function bb_update_to_2_3_50() {
  *
  * @return void
  */
-function bb_update_to_2_3_60() {
+function bboss_update_to_2_3_60() {
 	global $wpdb;
 
 	// Disabled notification for post type comment reply notification.
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+	$enabled_notification = bboss_get_option( 'bb_enabled_notification', array() );
 	if ( ! isset( $enabled_notification['bb_posts_new_comment_reply'] ) ) {
-		bb_disable_notification_type( 'bb_posts_new_comment_reply' );
+		bboss_disable_notification_type( 'bb_posts_new_comment_reply' );
 	}
 
-	bb_background_update_group_member_count();
+	bboss_background_update_group_member_count();
 
 	$tables = array(
 		$wpdb->base_prefix . 'bp_media'    => array(
@@ -3084,7 +3084,7 @@ function bb_update_to_2_3_60() {
 
 	$table_exists = array();
 	foreach ( $tables as $table_name => $indexes ) {
-		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
+		if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bboss_esc_like( $table_name ) ) ) ) {
 			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$table_name}' AND column_name = 'message_id'" );
 			if ( empty( $row ) ) {
 				$wpdb->query( "ALTER TABLE {$table_name} ADD message_id BIGINT(20) DEFAULT 0 AFTER activity_id" );
@@ -3097,7 +3097,7 @@ function bb_update_to_2_3_60() {
 	}
 
 	// Update older data.
-	bb_create_background_message_media_document_update( $table_exists );
+	bboss_create_background_message_media_document_update( $table_exists );
 }
 
 /**
@@ -3105,10 +3105,10 @@ function bb_update_to_2_3_60() {
  *
  * @since BuddyBoss 2.3.60
  */
-function bb_background_update_group_member_count() {
+function bboss_background_update_group_member_count() {
 	global $wpdb, $bp_background_updater;
 
-	if ( ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
@@ -3127,7 +3127,7 @@ function bb_background_update_group_member_count() {
 			$bp_background_updater->data(
 				array(
 					array(
-						'callback' => 'bb_update_group_member_count',
+						'callback' => 'bboss_update_group_member_count',
 						'args'     => array( $chunk ),
 					),
 				)
@@ -3135,7 +3135,7 @@ function bb_background_update_group_member_count() {
 			$bp_background_updater->save()->schedule_event();
 		}
 	} else {
-		bb_update_group_member_count( $group_ids );
+		bboss_update_group_member_count( $group_ids );
 	}
 }
 
@@ -3147,7 +3147,7 @@ function bb_background_update_group_member_count() {
  * @param array $table_exists List of tables.
  * @param int   $paged        Page number.
  */
-function bb_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
+function bboss_create_background_message_media_document_update( $table_exists, $paged = 1 ) {
 	global $wpdb, $bp_background_updater;
 
 	if ( empty( $paged ) ) {
@@ -3159,7 +3159,7 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	$results  = array();
 
 	$message_meta_table_name = $wpdb->base_prefix . 'bp_messages_meta';
-	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $message_meta_table_name ) ) ) ) {
+	if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bboss_esc_like( $message_meta_table_name ) ) ) ) {
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT message_id, meta_key, meta_value FROM {$message_meta_table_name} WHERE meta_key IN
@@ -3178,7 +3178,7 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
 	$bp_background_updater->data(
 		array(
 			array(
-				'callback' => 'bb_migrate_message_media_document',
+				'callback' => 'bboss_migrate_message_media_document',
 				'args'     => array( $table_exists, $results, $paged ),
 			),
 		)
@@ -3195,7 +3195,7 @@ function bb_create_background_message_media_document_update( $table_exists, $pag
  * @param array $results      Results from message meta table.
  * @param int   $paged        Page number.
  */
-function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
+function bboss_migrate_message_media_document( $table_exists, $results, $paged ) {
 	global $wpdb;
 
 	if ( empty( $results ) ) {
@@ -3225,7 +3225,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 
 	// Call recursive to finish update for all records.
 	$paged++;
-	bb_create_background_message_media_document_update( $table_exists, $paged );
+	bboss_create_background_message_media_document_update( $table_exists, $paged );
 }
 
 /**
@@ -3233,8 +3233,8 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
  *
  * @since BuddyBoss 2.3.80
  */
-function bb_update_to_2_3_80() {
-	bb_core_update_repair_duplicate_following_notification();
+function bboss_update_to_2_3_80() {
+	bboss_core_update_repair_duplicate_following_notification();
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -3247,9 +3247,9 @@ function bb_update_to_2_3_80() {
  *
  * @since BuddyBoss 2.3.80
  */
-function bb_core_update_repair_duplicate_following_notification() {
+function bboss_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Identify the duplicate "following" notifications once (keep the newest per
 	// user + secondary item, mark the older ones for deletion), then remove them in
@@ -3271,8 +3271,8 @@ function bb_core_update_repair_duplicate_following_notification() {
 	}
 
 	// Clean up the now-orphaned metadata after the notifications are gone.
-	if ( ! empty( $notification_ids ) && function_exists( 'bb_notifications_delete_meta_for_ids' ) ) {
-		bb_notifications_delete_meta_for_ids( $notification_ids );
+	if ( ! empty( $notification_ids ) && function_exists( 'bboss_notifications_delete_meta_for_ids' ) ) {
+		bboss_notifications_delete_meta_for_ids( $notification_ids );
 	}
 
 	// Purge all the cache for API.
@@ -3290,11 +3290,11 @@ function bb_core_update_repair_duplicate_following_notification() {
  *
  * @return void
  */
-function bb_update_to_2_4_10() {
+function bboss_update_to_2_4_10() {
 	global $wpdb;
 
-	if ( bp_is_active( 'document' ) ) {
-		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+	if ( bboss_is_active( 'document' ) ) {
+		$saved_extensions = bboss_get_option( 'bp_document_extensions_support', array() );
 		$default          = bp_media_allowed_document_type();
 
 		foreach ( $default as $key => $value ) {
@@ -3305,10 +3305,10 @@ function bb_update_to_2_4_10() {
 			}
 		}
 
-		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+		bboss_update_option( 'bp_document_extensions_support', $saved_extensions );
 	}
 
-	if ( ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
@@ -3325,7 +3325,7 @@ function bb_update_to_2_4_10() {
 	if ( ! empty( $groups ) ) {
 		$admin = get_users(
 			array(
-				'blog_id' => bp_get_root_blog_id(),
+				'blog_id' => bboss_get_root_blog_id(),
 				'fields'  => 'ID',
 				'number'  => 1,
 				'orderby' => 'ID',
@@ -3338,8 +3338,8 @@ function bb_update_to_2_4_10() {
 
 			// Assign the group organizer to all the group that has 0 members.
 			foreach ( $groups as $group ) {
-				groups_join_group( $group->id, $admin_id );
-				$member = new BP_Groups_Member( $admin_id, $group->id );
+				bboss_groups_join_group( $group->id, $admin_id );
+				$member = new BBoss_Groups_Member( $admin_id, $group->id );
 				$member->promote( 'admin' );
 			}
 		}
@@ -3353,7 +3353,7 @@ function bb_update_to_2_4_10() {
  *
  * @return void
  */
-function bb_update_to_2_4_41() {
+function bboss_update_to_2_4_41() {
 	global $wpdb, $bb_background_updater;
 
 	// Delete existing `bb_set_bulk_user_profile_slug` background jobs from options table.
@@ -3366,7 +3366,7 @@ function bb_update_to_2_4_41() {
 			'type'     => 'repair_member_slug',
 			'group'    => 'bb_core_update_repair_member_slug',
 			'priority' => 5,
-			'callback' => 'bb_core_update_repair_member_slug',
+			'callback' => 'bboss_core_update_repair_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -3377,7 +3377,7 @@ function bb_update_to_2_4_41() {
 			'type'     => 'repair_member_slug',
 			'group'    => 'bb_core_update_repair_member_slug',
 			'priority' => 5,
-			'callback' => 'bb_core_update_repair_member_slug',
+			'callback' => 'bboss_core_update_repair_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -3388,7 +3388,7 @@ function bb_update_to_2_4_41() {
 			'type'     => 'repair_member_slug',
 			'group'    => 'bb_core_update_repair_member_slug',
 			'priority' => 5,
-			'callback' => 'bb_core_update_repair_member_slug',
+			'callback' => 'bboss_core_update_repair_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -3399,7 +3399,7 @@ function bb_update_to_2_4_41() {
 			'type'     => 'repair_member_slug',
 			'group'    => 'bb_core_update_repair_member_slug',
 			'priority' => 5,
-			'callback' => 'bb_core_update_repair_member_slug',
+			'callback' => 'bboss_core_update_repair_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -3410,7 +3410,7 @@ function bb_update_to_2_4_41() {
 			'type'     => 'repair_member_slug',
 			'group'    => 'bb_core_update_repair_member_slug',
 			'priority' => 5,
-			'callback' => 'bb_core_update_repair_member_slug',
+			'callback' => 'bboss_core_update_repair_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -3418,16 +3418,16 @@ function bb_update_to_2_4_41() {
 }
 
 /**
- * Add 'description' column to bp_media and bp_document table.
+ * Add 'description' column to BBoss_Media and bp_document table.
  *
  * @since BuddyBoss 2.4.50
  *
  * @return void
  */
-function bb_update_to_2_4_50() {
+function bboss_update_to_2_4_50() {
 	global $wpdb, $bp;
 
-	if ( ! bp_is_active( 'media' ) ) {
+	if ( ! bboss_is_active( 'media' ) ) {
 		return;
 	}
 
@@ -3466,7 +3466,7 @@ function bb_update_to_2_4_50() {
  *
  * @return void
  */
-function bb_update_to_2_4_60() {
+function bboss_update_to_2_4_60() {
 	global $wpdb;
 
 	$is_already_run = get_transient( 'bb_update_to_2_4_60' );
@@ -3476,12 +3476,12 @@ function bb_update_to_2_4_60() {
 
 	set_transient( 'bb_update_to_2_4_60', true, HOUR_IN_SECONDS );
 
-	bp_update_option( '_bb_enable_activity_pinned_posts', 0 );
+	bboss_update_option( '_bb_enable_activity_pinned_posts', 0 );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'wp_1_bp_updater_batch_%' AND `option_value` LIKE '%bb_migrate_member_friends_count%'" );
 
-	bb_create_background_member_friends_count();
+	bboss_create_background_member_friends_count();
 }
 
 /**
@@ -3491,7 +3491,7 @@ function bb_update_to_2_4_60() {
  *
  * @return void
  */
-function bb_update_to_2_4_71() {
+function bboss_update_to_2_4_71() {
 	global $wpdb;
 
 	$is_already_run = get_transient( 'bb_update_to_2_4_71' );
@@ -3499,7 +3499,7 @@ function bb_update_to_2_4_71() {
 		return;
 	}
 
-	bb_background_removed_orphaned_metadata();
+	bboss_background_removed_orphaned_metadata();
 
 	set_transient( 'bb_update_to_2_4_71', true, HOUR_IN_SECONDS );
 }
@@ -3511,7 +3511,7 @@ function bb_update_to_2_4_71() {
  *
  * @return void
  */
-function bb_background_removed_orphaned_metadata() {
+function bboss_background_removed_orphaned_metadata() {
 	global $bb_background_updater, $wpdb;
 
 	$table_name = $bb_background_updater::$table_name;
@@ -3534,7 +3534,7 @@ function bb_background_removed_orphaned_metadata() {
 			'type'     => 'removed_orphaned_metadata',
 			'group'    => 'bb_core_removed_orphaned_member_slug',
 			'priority' => 3,
-			'callback' => 'bb_core_removed_orphaned_member_slug',
+			'callback' => 'bboss_core_removed_orphaned_member_slug',
 			'args'     => array(),
 		),
 	);
@@ -3549,7 +3549,7 @@ function bb_background_removed_orphaned_metadata() {
  *
  * @return void
  */
-function bb_core_removed_orphaned_member_slug() {
+function bboss_core_removed_orphaned_member_slug() {
 	global $wpdb;
 
 	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
@@ -3577,10 +3577,10 @@ function bb_core_removed_orphaned_member_slug() {
 		return;
 	}
 
-	bb_set_bulk_user_profile_slug( $users );
+	bboss_set_bulk_user_profile_slug( $users );
 
 	// Re-register the background jobs until the result is empty.
-	bb_background_removed_orphaned_metadata();
+	bboss_background_removed_orphaned_metadata();
 }
 
 /**
@@ -3590,9 +3590,9 @@ function bb_core_removed_orphaned_member_slug() {
  *
  * @return void
  */
-function bb_update_to_2_4_74() {
-	if ( class_exists( 'BB_BG_Process_Log' ) ) {
-		BB_BG_Process_Log::instance()->create_table();
+function bboss_update_to_2_4_74() {
+	if ( class_exists( 'BBoss_BG_Process_Log' ) ) {
+		BBoss_BG_Process_Log::instance()->create_table();
 	}
 }
 
@@ -3603,13 +3603,13 @@ function bb_update_to_2_4_74() {
  *
  * @return void
  */
-function bb_update_to_2_4_75() {
+function bboss_update_to_2_4_75() {
 	global $wpdb;
 
-	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+	if ( class_exists( 'BBoss_BG_Process_Log' ) ) {
 
 		// Delete the existing table.
-		$log_table_name = bp_core_get_table_prefix() . 'bb_background_process_logs';
+		$log_table_name = bboss_core_get_table_prefix() . 'bb_background_process_logs';
 
 		// Check the index keys.
 		$indices_columns = $wpdb->get_col( $wpdb->prepare( "SELECT COLUMN_NAME FROM information_schema.statistics WHERE table_schema = %s AND table_name = %s", $wpdb->__get( 'dbname' ), $log_table_name ) );
@@ -3629,7 +3629,7 @@ function bb_update_to_2_4_75() {
 		$wpdb->query( "DROP TABLE IF EXISTS {$log_table_name}" );
 
 		// Create a new table again.
-		BB_BG_Process_Log::instance()->create_table();
+		BBoss_BG_Process_Log::instance()->create_table();
 	}
 }
 
@@ -3642,7 +3642,7 @@ function bb_update_to_2_4_75() {
  *
  * @return void
  */
-function bb_update_to_2_5_80() {
+function bboss_update_to_2_5_80() {
 
 	$is_already_run = get_transient( 'bb_update_to_2_5_80' );
 	if ( $is_already_run ) {
@@ -3651,22 +3651,22 @@ function bb_update_to_2_5_80() {
 
 	set_transient( 'bb_update_to_2_5_80', true, HOUR_IN_SECONDS );
 
-	bp_update_option( '_bb_enable_close_activity_comments', 0 );
+	bboss_update_option( '_bb_enable_close_activity_comments', 0 );
 
-	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+	bboss_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
 
 	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
 	if ( $thread_comments_depth > 4 ) {
 		$thread_comments_depth = 4;
 	}
-	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
+	bboss_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 
-	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$is_autoload = (bool) bboss_get_option( '_bp_enable_activity_autoload', true );
 	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
 
-	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
-	bp_update_option( 'bb_ajax_request_page_load', 2 );
-	bp_update_option( 'bb_load_activity_per_request', 10 );
+	bboss_update_option( 'bb_activity_load_type', $autoload_new_setting );
+	bboss_update_option( 'bb_ajax_request_page_load', 2 );
+	bboss_update_option( 'bb_load_activity_per_request', 10 );
 }
 
 /**
@@ -3677,7 +3677,7 @@ function bb_update_to_2_5_80() {
  *
  * @return void
  */
-function bb_update_to_2_6_10() {
+function bboss_update_to_2_6_10() {
 	global $wpdb;
 
 	// Purge all the cache for API.
@@ -3685,22 +3685,22 @@ function bb_update_to_2_6_10() {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
-	if ( function_exists( 'bp_media_symlink_path' ) ) {
-		$media_symlinks_path = bp_media_symlink_path();
-		bb_remove_symlinks( $media_symlinks_path );
+	if ( function_exists( 'bboss_media_symlink_path' ) ) {
+		$media_symlinks_path = bboss_media_symlink_path();
+		bboss_remove_symlinks( $media_symlinks_path );
 	}
 
 	if ( function_exists( 'bp_document_symlink_path' ) ) {
 		$document_symlinks_path = bp_document_symlink_path();
-		bb_remove_symlinks( $document_symlinks_path );
+		bboss_remove_symlinks( $document_symlinks_path );
 	}
 
 	if ( function_exists( 'bb_video_symlink_path' ) ) {
 		$video_symlinks_path = bb_video_symlink_path();
-		bb_remove_symlinks( $video_symlinks_path );
+		bboss_remove_symlinks( $video_symlinks_path );
 	}
 
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// Check if the 'bp_activity' table exists.
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -3750,7 +3750,7 @@ function bb_update_to_2_6_10() {
  *
  * @return void
  */
-function bb_remove_symlinks( $folder_path ) {
+function bboss_remove_symlinks( $folder_path ) {
 
 	if ( ! file_exists( $folder_path ) ) {
 		return;
@@ -3787,10 +3787,10 @@ function bb_remove_symlinks( $folder_path ) {
  *
  * @return void
  */
-function bb_update_to_2_6_20() {
+function bboss_update_to_2_6_20() {
 	global $wpdb;
 
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// Check if the 'bp_suspend' table exists.
 	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
@@ -3829,11 +3829,11 @@ function bb_update_to_2_6_20() {
 	if ( ! $is_already_run ) {
 
 		// Remove deleted user last_activity on update.
-		bb_remove_deleted_user_last_activities();
+		bboss_remove_deleted_user_last_activities();
 
 		// Migrate xprofile visibility data.
-		bb_core_install_xprofile_visibility();
-		bb_migrate_xprofile_visibility( true );
+		bboss_core_install_xprofile_visibility();
+		bboss_migrate_xprofile_visibility( true );
 		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
 	}
 
@@ -3847,12 +3847,12 @@ function bb_update_to_2_6_20() {
  *
  * @return void
  */
-function bb_update_to_2_6_51() {
+function bboss_update_to_2_6_51() {
 	// Remove deleted user last_activity on update.
-	bb_remove_deleted_user_last_activities();
+	bboss_remove_deleted_user_last_activities();
 
 	global $wpdb;
-	$bp_prefix = bp_core_get_table_prefix();
+	$bp_prefix = bboss_core_get_table_prefix();
 
 	$insert_query = "INSERT INTO {$bp_prefix}bp_activity (user_id, component, type, action, content, primary_link, item_id, secondary_item_id, date_recorded, hide_sitewide, mptt_left, mptt_right, is_spam)
 		SELECT
@@ -3895,9 +3895,9 @@ function bb_update_to_2_6_51() {
  *
  * @return void
  */
-function bb_update_to_2_6_70() {
+function bboss_update_to_2_6_70() {
 	global $wpdb;
-	$bp_prefix             = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix             = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 	$suspend_table         = $bp_prefix . 'bp_suspend';
 	$suspend_details_table = $bp_prefix . 'bp_suspend_details';
 	$moderation_table      = $bp_prefix . 'bp_moderation';
@@ -3974,8 +3974,8 @@ function bb_update_to_2_6_70() {
  *
  * @return void
  */
-function bb_update_to_2_6_80() {
-	bp_update_option( 'bb-enable-content-counts', 1 );
+function bboss_update_to_2_6_80() {
+	bboss_update_option( 'bb-enable-content-counts', 1 );
 }
 
 /**
@@ -3984,7 +3984,7 @@ function bb_update_to_2_6_80() {
  *
  * @since BuddyBoss 2.8.20
  */
-function bb_update_to_2_8_20() {
+function bboss_update_to_2_8_20() {
 	$is_already_run = get_transient( 'bb_update_to_2_8_20' );
 	if ( $is_already_run ) {
 		return;
@@ -3993,13 +3993,13 @@ function bb_update_to_2_8_20() {
 	// Set a transient to avoid running the update multiple times within an hour.
 	set_transient( 'bb_update_to_2_8_20', 'yes', HOUR_IN_SECONDS );
 
-	if ( bp_is_active( 'moderation' ) ) {
-		bb_create_background_member_friends_count();
+	if ( bboss_is_active( 'moderation' ) ) {
+		bboss_create_background_member_friends_count();
 	}
 
 	global $wpdb;
 
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// Check if the 'bp_activity' table exists.
 	$activity_table = $bp_prefix . 'bp_activity';
@@ -4044,20 +4044,20 @@ function bb_update_to_2_8_20() {
 	}
 
 	// Migrate activity tabs settings to filters.
-	$enable_activity_tabs = (bool) bp_get_option( '_bp_enable_activity_tabs', false );
+	$enable_activity_tabs = (bool) bboss_get_option( '_bp_enable_activity_tabs', false );
 	if ( ! $enable_activity_tabs ) {
-		bp_update_option( 'bb_activity_filter_options', array( 'all' => 1 ) );
-		bp_update_option( 'bb_activity_timeline_filter_options', array( 'just-me' => 1 ) );
+		bboss_update_option( 'bb_activity_filter_options', array( 'all' => 1 ) );
+		bboss_update_option( 'bb_activity_timeline_filter_options', array( 'just-me' => 1 ) );
 	}
 
-	bp_update_option(
+	bboss_update_option(
 		'bb_activity_sorting_options',
 		array(
 			'date_recorded' => 1,
 			'date_updated'  => 1,
 		)
 	);
-	bp_update_option( 'bb_enable_activity_search', true );
+	bboss_update_option( 'bb_enable_activity_search', true );
 }
 
 /**
@@ -4067,7 +4067,7 @@ function bb_update_to_2_8_20() {
  *
  * @return void
  */
-function bb_update_to_2_9_2() {
+function bboss_update_to_2_9_2() {
 	global $wpdb;
 
 	$postmeta_table = $wpdb->prefix . 'postmeta';
@@ -4120,7 +4120,7 @@ function bb_update_to_2_9_2() {
  *
  * @since BuddyBoss 2.10.0
  */
-function bb_update_to_2_9_4() {
+function bboss_update_to_2_9_4() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear groups API cache.
@@ -4135,7 +4135,7 @@ function bb_update_to_2_9_4() {
  *
  * @return void
  */
-function bb_update_to_2_9_50() {
+function bboss_update_to_2_9_50() {
 	global $wpdb;
 
 	$is_already_run = get_transient( 'bb_update_to_2_9_50' );
@@ -4145,7 +4145,7 @@ function bb_update_to_2_9_50() {
 
 	set_transient( 'bb_update_to_2_9_50', 'yes', HOUR_IN_SECONDS );
 
-	$bp_prefix      = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix      = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 	$activity_table = $bp_prefix . 'bp_activity';
 	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) ); // phpcs:ignore
 
@@ -4169,10 +4169,10 @@ function bb_update_to_2_9_50() {
  *
  * @return void
  */
-function bb_update_to_2_10_1() {
+function bboss_update_to_2_10_1() {
 	global $wpdb;
 
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $bp_prefix . 'bp_activity' ) ); // phpcs:ignore
@@ -4206,7 +4206,7 @@ function bb_update_to_2_10_1() {
  *
  * @return void
  */
-function bb_update_to_2_16_1() {
+function bboss_update_to_2_16_1() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		// Clear activity API cache.
@@ -4222,22 +4222,22 @@ function bb_update_to_2_16_1() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_update_to_3_0_0() {
+function bboss_update_to_3_0_0() {
 
 	// Seed media section toggle defaults when media component is active.
 	// This runs regardless of reactions migration state.
-	$active_components = bp_get_option( 'bp-active-components', array() );
+	$active_components = bboss_get_option( 'bp-active-components', array() );
 	if ( isset( $active_components['media'] ) ) {
-		bb_seed_media_section_toggle_defaults();
+		bboss_seed_media_section_toggle_defaults();
 	}
 
-	$active_features = bp_get_option( 'bb-active-features', array() );
+	$active_features = bboss_get_option( 'bb-active-features', array() );
 
 	// Reactions migration: only run if not yet migrated.
 	if ( ! isset( $active_features['reactions'] ) ) {
 		// Check the legacy bb_all_reactions option.
 		// Default: array( 'activity' => true, 'activity_comment' => true ).
-		$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+		$all_reactions = (array) bboss_get_option( 'bb_all_reactions', array() );
 
 		// If ANY reaction type was enabled, enable the reactions feature.
 		$any_enabled = false;
@@ -4253,32 +4253,32 @@ function bb_update_to_3_0_0() {
 
 	// reCAPTCHA migration: auto-enable if already connected.
 	if ( ! isset( $active_features['recaptcha'] ) ) {
-		$recaptcha_settings = bp_get_option( 'bb_recaptcha', array() );
+		$recaptcha_settings = bboss_get_option( 'bb_recaptcha', array() );
 		$is_connected       = ! empty( $recaptcha_settings['connection_status'] ) && 'connected' === $recaptcha_settings['connection_status'];
 
 		$active_features['recaptcha'] = $is_connected ? 1 : 0;
 	}
 
-	bp_update_option( 'bb-active-features', $active_features );
+	bboss_update_option( 'bb-active-features', $active_features );
 
 	// Migrate legacy group avatar type: 'legacy' option removed from Settings 2.0.
-	$avatar_type = bp_get_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	$avatar_type = bboss_get_option( 'bp-default-group-avatar-type', 'buddyboss' );
 	if ( 'legacy' === $avatar_type ) {
-		bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+		bboss_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 	}
 
 	// Migrate legacy profile avatar type: 'legacy' option removed from Settings 2.0.
-	$profile_avatar_type = bp_get_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	$profile_avatar_type = bboss_get_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	if ( 'legacy' === $profile_avatar_type ) {
-		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+		bboss_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	}
 
-	bb_migrate_email_type_groups();
+	bboss_migrate_email_type_groups();
 }
 
 /**
  * Companion migration for DB version 23584 — canonicalize ReadyLaunch
- * sidebar/menu/pages option shapes. Runs alongside bb_update_to_3_0_0() as
+ * sidebar/menu/pages option shapes. Runs alongside bboss_update_to_3_0_0() as
  * part of the same 3.0.0 release migration block.
  *
  * The legacy ReadyLaunch onboarding wizard persisted these options as sequential
@@ -4304,18 +4304,18 @@ function bb_update_to_3_0_0() {
  *
  * @return void
  */
-function bb_rl_migrate_settings() {
+function bboss_rl_migrate_settings() {
 	// Independent idempotency flag — the outer DB-version gate is shared with
 	// `bb_update_to_3_0_0()`. If that partially fails, the gate stays open and
 	// the version updater re-enters on every request until it succeeds. This
 	// migration is self-idempotent (list-to-map conversions no-op on already
 	// canonical data), but an explicit flag still saves five option reads +
 	// two helper calls per request during an incident window.
-	if ( bp_get_option( 'bb_rl_shapes_migrated' ) ) {
+	if ( bboss_get_option( 'bb_rl_shapes_migrated' ) ) {
 		return;
 	}
 
-	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
+	if ( ! function_exists( 'bboss_appearance_normalize_list_to_map' ) || ! function_exists( 'bboss_appearance_normalize_side_menu_shape' ) ) {
 		return;
 	}
 
@@ -4327,22 +4327,22 @@ function bb_rl_migrate_settings() {
 		'bb_rl_enabled_pages',
 	);
 	foreach ( $list_options as $option_name ) {
-		$stored = bp_get_option( $option_name, null );
+		$stored = bboss_get_option( $option_name, null );
 		if ( null === $stored || ! is_array( $stored ) ) {
 			continue;
 		}
-		$normalized = bb_appearance_normalize_list_to_map( $stored );
+		$normalized = bboss_appearance_normalize_list_to_map( $stored );
 		if ( $normalized !== $stored ) {
-			bp_update_option( $option_name, $normalized );
+			bboss_update_option( $option_name, $normalized );
 		}
 	}
 
 	// Sequential list of item objects → associative map keyed by id.
-	$side_menu = bp_get_option( 'bb_rl_side_menu', null );
+	$side_menu = bboss_get_option( 'bb_rl_side_menu', null );
 	if ( null !== $side_menu && is_array( $side_menu ) ) {
-		$normalized_menu = bb_appearance_normalize_side_menu_shape( $side_menu );
+		$normalized_menu = bboss_appearance_normalize_side_menu_shape( $side_menu );
 		if ( $normalized_menu !== $side_menu ) {
-			bp_update_option( 'bb_rl_side_menu', $normalized_menu );
+			bboss_update_option( 'bb_rl_side_menu', $normalized_menu );
 		}
 	}
 
@@ -4352,7 +4352,7 @@ function bb_rl_migrate_settings() {
 	// @todo: Remove after 3 release. Once every active site has run this
 	// migration the flag and the entire `bb_rl_migrate_settings()` function
 	// can be deleted along with its idempotency short-circuit at the top.
-	bp_update_option( 'bb_rl_shapes_migrated', 1 );
+	bboss_update_option( 'bb_rl_shapes_migrated', 1 );
 }
 
 /**
@@ -4360,11 +4360,11 @@ function bb_rl_migrate_settings() {
  *
  * Ensures that bb_media_*_support options exist in the DB with a default
  * value of 1 (enabled) so that frontend/backend code reading them via
- * get_option() or bp_get_option() gets `1` instead of `false`.
+ * get_option() or bboss_get_option() gets `1` instead of `false`.
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_seed_media_section_toggle_defaults() {
+function bboss_seed_media_section_toggle_defaults() {
 	$media_section_toggles = array(
 		'bb_media_photos_support',
 		'bb_media_videos_support',
@@ -4374,8 +4374,8 @@ function bb_seed_media_section_toggle_defaults() {
 	);
 
 	foreach ( $media_section_toggles as $toggle ) {
-		if ( false === bp_get_option( $toggle, false ) ) {
-			bp_update_option( $toggle, 1 );
+		if ( false === bboss_get_option( $toggle, false ) ) {
+			bboss_update_option( $toggle, 1 );
 		}
 	}
 }
@@ -4387,9 +4387,9 @@ function bb_seed_media_section_toggle_defaults() {
  *
  * @param string $feature_id The feature ID that was activated.
  */
-function bb_on_media_feature_activated( $feature_id ) {
+function bboss_on_media_feature_activated( $feature_id ) {
 	if ( 'media' === $feature_id ) {
-		bb_seed_media_section_toggle_defaults();
+		bboss_seed_media_section_toggle_defaults();
 	}
 }
 add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
@@ -4408,14 +4408,14 @@ add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_migrate_email_type_groups() {
+function bboss_migrate_email_type_groups() {
 
 	// One-time migration guard — skip if already completed.
-	if ( bp_get_option( 'bb_email_type_groups_migrated' ) ) {
+	if ( bboss_get_option( 'bb_email_type_groups_migrated' ) ) {
 		return;
 	}
 
-	$taxonomy = function_exists( 'bp_get_email_tax_type' ) ? bp_get_email_tax_type() : 'bp_email_type';
+	$taxonomy = function_exists( 'bboss_get_email_tax_type' ) ? bboss_get_email_tax_type() : 'bp_email_type';
 	$terms    = get_terms(
 		array(
 			'taxonomy'   => $taxonomy,
@@ -4504,7 +4504,7 @@ function bb_migrate_email_type_groups() {
 	}
 
 	// Mark migration as completed so it doesn't run again.
-	bp_update_option( 'bb_email_type_groups_migrated', true );
+	bboss_update_option( 'bb_email_type_groups_migrated', true );
 }
 
 /**
@@ -4532,9 +4532,9 @@ function bb_migrate_email_type_groups() {
  *
  * @return void
  */
-function bb_update_to_3_0_3() {
+function bboss_update_to_3_0_3() {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( empty( $bp->profile->table_name_meta ) ) {
 		return;
@@ -4560,7 +4560,7 @@ function bb_update_to_3_0_3() {
 	}
 
 	foreach ( $field_ids as $field_id ) {
-		bp_xprofile_delete_meta( (int) $field_id, 'field', 'member_type' );
+		bboss_xprofile_delete_meta( (int) $field_id, 'field', 'member_type' );
 	}
 
 	// Mirror the cache invalidation that
@@ -4584,7 +4584,7 @@ function bb_update_to_3_0_3() {
  *
  * @return bool True when entitled.
  */
-function bb_is_entitled_to_addons() {
+function bboss_is_entitled_to_addons() {
 
 	/**
 	 * Short-circuit the BuddyBoss Addons entitlement decision.
@@ -4648,7 +4648,7 @@ function bb_is_entitled_to_addons() {
  *
  * @return bool True when active.
  */
-function bb_is_addons_plugin_active() {
+function bboss_is_addons_plugin_active() {
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
@@ -4661,7 +4661,7 @@ function bb_is_addons_plugin_active() {
  * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
  * for entitled customers.
  *
- * Invoked once from bp_version_updater() (PROD-10242). System-migration style,
+ * Invoked once from bboss_version_updater() (PROD-10242). System-migration style,
  * like the sibling bb_update_to_* functions: no capability gate (bp_version_updater
  * is not capability-gated and bumps the stored version on the first admin request,
  * so a cap gate would let a low-privilege user burn the one-shot). Non-interactive
@@ -4672,16 +4672,16 @@ function bb_is_addons_plugin_active() {
  *
  * @return void
  */
-function bb_install_addons_bundle_on_upgrade() {
+function bboss_install_addons_bundle_on_upgrade() {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 	// Already active → nothing to do (checked first: no disk/network work, and
 	// keeps the unit test's no-write path hermetic).
-	if ( bb_is_addons_plugin_active() ) {
+	if ( bboss_is_addons_plugin_active() ) {
 		return;
 	}
 
-	if ( ! bb_is_entitled_to_addons() ) {
+	if ( ! bboss_is_entitled_to_addons() ) {
 		return;
 	}
 
@@ -4708,9 +4708,9 @@ function bb_install_addons_bundle_on_upgrade() {
 		if ( true !== $installed ) {
 			// Filesystem not writable / download failed. Fail silently for the
 			// user — the admin can install manually from the Add-ons page.
-			if ( function_exists( 'bb_error_log' ) ) {
+			if ( function_exists( 'bboss_error_log' ) ) {
 				// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces auto-install failures for support.
-				bb_error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
+				bboss_error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
 			}
 			return;
 		}
@@ -4720,16 +4720,16 @@ function bb_install_addons_bundle_on_upgrade() {
 	// network-activate the add-on so every subsite community gets it; otherwise
 	// this runs inside switch_to_blog( root ), so a plain activate lands on the
 	// root blog only.
-	$network_wide = function_exists( 'bp_is_network_activated' ) && bp_is_network_activated();
+	$network_wide = function_exists( 'bboss_is_network_activated' ) && bboss_is_network_activated();
 
 	$activated = activate_plugin( $plugin_file, '', $network_wide );
 
 	// Activation can fail even after a clean install (e.g. the add-on fatals on
 	// include, or its dependency check rejects the running Platform version).
 	// Leave it inactive rather than fatal the request, but log for support.
-	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+	if ( is_wp_error( $activated ) && function_exists( 'bboss_error_log' ) ) {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
-		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+		bboss_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
 	}
 }
 // @bbwt-com-end installers
@@ -4746,7 +4746,7 @@ function bb_install_addons_bundle_on_upgrade() {
  *
  * @return void
  */
-function bb_purge_forums_api_cache_for_legacy_embed() {
+function bboss_purge_forums_api_cache_for_legacy_embed() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
@@ -4775,7 +4775,7 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
  *
  * @return void
  */
-function bb_drafts_cleanup_on_upgrade() {
+function bboss_drafts_cleanup_on_upgrade() {
 	if ( ! get_site_option( 'bb_draft_cleanup_epoch' ) ) {
 		update_site_option( 'bb_draft_cleanup_epoch', time() );
 	}
@@ -4804,14 +4804,14 @@ function bb_drafts_cleanup_on_upgrade() {
 	// runs on whichever subsite's admin loads first after the version bump, and
 	// cron events are per-blog - so a naive schedule here could strand the
 	// continuation on a low-traffic subsite's cron (L10).
-	bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
+	bboss_draft_oneshot_schedule( MINUTE_IN_SECONDS );
 
-	$result = bb_drafts_oneshot_batch( 10 );
+	$result = bboss_drafts_oneshot_batch( 10 );
 
 	// Finished inside this request after all, so the queued continuation has
 	// nothing left to do.
 	if ( ! empty( $result['complete'] ) ) {
-		bb_draft_oneshot_unschedule();
+		bboss_draft_oneshot_unschedule();
 	}
 }
 
@@ -4829,7 +4829,7 @@ function bb_drafts_cleanup_on_upgrade() {
  *
  * @return void
  */
-function bb_purge_activity_api_cache_for_comment_access() {
+function bboss_purge_activity_api_cache_for_comment_access() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-activity' );
 	}
@@ -4845,12 +4845,12 @@ function bb_purge_activity_api_cache_for_comment_access() {
  *
  * @return string Minimum Add-ons version.
  */
-function bb_get_addons_required_version() {
-	if ( ! function_exists( 'bb_platform_3_addons_required_version' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
+function bboss_get_addons_required_version() {
+	if ( ! function_exists( 'bboss_platform_3_addons_required_version' ) ) {
+		require_once bboss()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
 	}
 
-	return bb_platform_3_addons_required_version();
+	return bboss_platform_3_addons_required_version();
 }
 
 /**
@@ -4860,7 +4860,7 @@ function bb_get_addons_required_version() {
  *
  * @return string Version, or an empty string when it is not installed or unreadable.
  */
-function bb_get_installed_addons_version() {
+function bboss_get_installed_addons_version() {
 	static $version = null;
 
 	if ( null === $version ) {
@@ -4884,10 +4884,10 @@ function bb_get_installed_addons_version() {
  *
  * @return bool False when the version is unknown (not installed or unreadable).
  */
-function bb_is_addons_below_required_version( $version = null ) {
-	$version = null === $version ? bb_get_installed_addons_version() : (string) $version;
+function bboss_is_addons_below_required_version( $version = null ) {
+	$version = null === $version ? bboss_get_installed_addons_version() : (string) $version;
 
-	return '' !== $version && version_compare( $version, bb_get_addons_required_version(), '<' );
+	return '' !== $version && version_compare( $version, bboss_get_addons_required_version(), '<' );
 }
 
 // @bbwt-com-start installers
@@ -4905,7 +4905,7 @@ function bb_is_addons_below_required_version( $version = null ) {
  * @return string Result: 'inactive', 'up_to_date', 'vcs_checkout', 'not_entitled', 'no_package',
  *                'updated' or 'failed'.
  */
-function bb_update_addons_bundle_to_required_version() {
+function bboss_update_addons_bundle_to_required_version() {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
@@ -4915,9 +4915,9 @@ function bb_update_addons_bundle_to_required_version() {
 		return 'inactive';
 	}
 
-	$installed = bb_get_installed_addons_version();
+	$installed = bboss_get_installed_addons_version();
 
-	if ( '' !== $installed && ! bb_is_addons_below_required_version( $installed ) ) {
+	if ( '' !== $installed && ! bboss_is_addons_below_required_version( $installed ) ) {
 		return 'up_to_date';
 	}
 
@@ -4931,7 +4931,7 @@ function bb_update_addons_bundle_to_required_version() {
 	}
 
 	// Plan check: only a license whose plan carries the add-on product can download it.
-	if ( ! bb_is_entitled_to_addons() ) {
+	if ( ! bboss_is_entitled_to_addons() ) {
 		// For an activated license a catalog outage also reads as "not entitled"; report
 		// it as a failure so it is retried.
 		if (
@@ -4979,7 +4979,7 @@ function bb_update_addons_bundle_to_required_version() {
 		'' === $download_url ||
 		'' === $latest ||
 		version_compare( $latest, $installed, '<=' ) ||
-		bb_is_addons_below_required_version( $latest )
+		bboss_is_addons_below_required_version( $latest )
 	) {
 		return 'no_package';
 	}
@@ -5018,14 +5018,14 @@ function bb_update_addons_bundle_to_required_version() {
 	if ( ! is_plugin_active( $plugin_file ) ) {
 		$activated = activate_plugin( $plugin_file, '', $network_wide, true );
 
-		if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
-			bb_error_log( 'BuddyBoss Addons auto-update: re-activation failed: ' . $activated->get_error_message() );
+		if ( is_wp_error( $activated ) && function_exists( 'bboss_error_log' ) ) {
+			bboss_error_log( 'BuddyBoss Addons auto-update: re-activation failed: ' . $activated->get_error_message() );
 		}
 	}
 
 	if ( true !== $result ) {
-		if ( function_exists( 'bb_error_log' ) ) {
-			bb_error_log( 'BuddyBoss Addons auto-update: update failed' . ( is_wp_error( $result ) ? ': ' . $result->get_error_message() : '.' ) );
+		if ( function_exists( 'bboss_error_log' ) ) {
+			bboss_error_log( 'BuddyBoss Addons auto-update: update failed' . ( is_wp_error( $result ) ? ': ' . $result->get_error_message() : '.' ) );
 		}
 
 		return 'failed';
@@ -5037,8 +5037,8 @@ function bb_update_addons_bundle_to_required_version() {
 /**
  * Queue the update of an active BuddyBoss Add-ons below the required version.
  *
- * Called once from bp_version_updater() for db version 23631. It only records
- * that the update is due; {@see bb_maybe_run_queued_addons_bundle_update()}
+ * Called once from bboss_version_updater() for db version 23631. It only records
+ * that the update is due; {@see bboss_maybe_run_queued_addons_bundle_update()}
  * performs it, so the upgrade request itself (which can be any front-end
  * admin-ajax call) never downloads or replaces a plugin.
  *
@@ -5046,9 +5046,9 @@ function bb_update_addons_bundle_to_required_version() {
  *
  * @return void
  */
-function bb_queue_addons_bundle_update() {
-	bp_update_option( 'bb_addons_bundle_update_queued', 1 );
-	bp_delete_option( 'bb_addons_bundle_update_attempts' );
+function bboss_queue_addons_bundle_update() {
+	bboss_update_option( 'bb_addons_bundle_update_queued', 1 );
+	bboss_delete_option( 'bb_addons_bundle_update_attempts' );
 }
 
 /**
@@ -5064,16 +5064,16 @@ function bb_queue_addons_bundle_update() {
  * it), is retried at most every 12 hours, up to 10 attempts. An inactive or
  * not-entitled Add-ons keeps the update queued without spending an attempt; it
  * is checked again after the same wait, or sooner once Add-ons or a license is
- * activated ({@see bb_retry_queued_addons_bundle_update_soon()}).
+ * activated ({@see bboss_retry_queued_addons_bundle_update_soon()}).
  *
  * @since BuddyBoss 3.7.0
  *
  * @return void
  */
-function bb_maybe_run_queued_addons_bundle_update() {
+function bboss_maybe_run_queued_addons_bundle_update() {
 	if (
-		! bp_get_option( 'bb_addons_bundle_update_queued', false ) ||
-		( is_multisite() && ! bp_is_root_blog() ) ||
+		! bboss_get_option( 'bb_addons_bundle_update_queued', false ) ||
+		( is_multisite() && ! bboss_is_root_blog() ) ||
 		wp_doing_ajax() ||
 		wp_doing_cron() ||
 		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
@@ -5093,18 +5093,18 @@ function bb_maybe_run_queued_addons_bundle_update() {
 
 	// Count the attempt and start the wait before running, so a fatal inside the
 	// upgrader is retried later instead of on every admin page load.
-	$attempts = (int) bp_get_option( 'bb_addons_bundle_update_attempts', 0 ) + 1;
-	bp_update_option( 'bb_addons_bundle_update_attempts', $attempts );
+	$attempts = (int) bboss_get_option( 'bb_addons_bundle_update_attempts', 0 ) + 1;
+	bboss_update_option( 'bb_addons_bundle_update_attempts', $attempts );
 	set_transient( 'bb_addons_bundle_update_retry_wait', 1, 12 * HOUR_IN_SECONDS );
 
-	$result = bb_update_addons_bundle_to_required_version();
+	$result = bboss_update_addons_bundle_to_required_version();
 
 	// Nothing was tried: keep the update queued for when Add-ons is active and entitled.
 	if ( in_array( $result, array( 'inactive', 'not_entitled' ), true ) ) {
-		bp_update_option( 'bb_addons_bundle_update_attempts', $attempts - 1 );
+		bboss_update_option( 'bb_addons_bundle_update_attempts', $attempts - 1 );
 	} elseif ( ! in_array( $result, array( 'failed', 'no_package' ), true ) || $attempts >= 10 ) {
-		bp_delete_option( 'bb_addons_bundle_update_queued' );
-		bp_delete_option( 'bb_addons_bundle_update_attempts' );
+		bboss_delete_option( 'bb_addons_bundle_update_queued' );
+		bboss_delete_option( 'bb_addons_bundle_update_attempts' );
 		delete_transient( 'bb_addons_bundle_update_retry_wait' );
 	}
 
@@ -5132,12 +5132,12 @@ add_action( 'admin_init', 'bb_maybe_run_queued_addons_bundle_update', 100 );
  *
  * @return void
  */
-function bb_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
+function bboss_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
 	if ( '' !== $plugin && 'buddyboss-addons/buddyboss-addons.php' !== $plugin ) {
 		return;
 	}
 
-	if ( bp_get_option( 'bb_addons_bundle_update_queued', false ) ) {
+	if ( bboss_get_option( 'bb_addons_bundle_update_queued', false ) ) {
 		delete_transient( 'bb_addons_bundle_update_retry_wait' );
 	}
 }

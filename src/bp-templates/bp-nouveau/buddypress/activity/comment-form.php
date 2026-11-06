@@ -13,25 +13,25 @@ defined( 'ABSPATH' ) || exit;
 
 global $activities_template;
 
-if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_comment() ) {
+if ( ! bboss_nouveau_current_user_can( 'comment_activity' ) || ! bboss_activity_can_comment() ) {
 	return;
 }
 
-$activity_id = bp_get_activity_id();
+$activity_id = bboss_get_activity_id();
 ?>
 
-<form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php echo esc_attr( $activity_id ); ?>" class="ac-form not-initialized"<?php bp_activity_comment_form_nojs_display(); ?>>
+<form action="<?php bboss_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php echo esc_attr( $activity_id ); ?>" class="ac-form not-initialized"<?php bboss_activity_comment_form_nojs_display(); ?>>
 
 	<div class="bp-ac-form-container">
 
-		<div class="ac-reply-avatar"><?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?></div>
+		<div class="ac-reply-avatar"><?php bboss_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?></div>
 
 		<div class="ac-reply-content">
 			<div class="ac-textarea">
 				<label for="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="bp-screen-reader-text">
 					<?php esc_html_e( 'Comment', 'buddyboss' ); ?>
 				</label>
-				<div contenteditable="true" id="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="ac-input bp-suggestions" name="ac_input_<?php echo esc_attr( $activity_id ); ?>" data-placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . esc_attr( bp_get_current_group_id() ) . '"' : ''; ?>></div>
+				<div contenteditable="true" id="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="ac-input bp-suggestions" name="ac_input_<?php echo esc_attr( $activity_id ); ?>" data-placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>" <?php echo bboss_is_group() ? 'data-suggestions-group-id="' . esc_attr( bboss_get_current_group_id() ) . '"' : ''; ?>></div>
 
 				<?php
 				if ( 'blogs' !== $activities_template->activity->component ) {
@@ -40,7 +40,7 @@ $activity_id = bp_get_activity_id();
 					<div id="ac-reply-toolbar-<?php echo esc_attr( $activity_id ); ?>" class="ac-reply-toolbar">
 
 						<?php
-						if ( bp_is_active( 'media' ) ) :
+						if ( bboss_is_active( 'media' ) ) :
 							?>
 
 							<div class="post-elements-buttons-item post-media media-support">
@@ -49,14 +49,14 @@ $activity_id = bp_get_activity_id();
 								</a>
 							</div>
 
-							<?php if ( bp_is_active( 'video' ) ) : ?>
+							<?php if ( bboss_is_active( 'video' ) ) : ?>
 							<div class="post-elements-buttons-item post-video video-support">
 								<a href="#" id="ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 									<i class="bb-icon-l bb-icon-video"></i>
 								</a>
 							</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'document' ) ) : ?>
+							<?php if ( bboss_is_active( 'document' ) ) : ?>
 							<div class="post-elements-buttons-item post-media document-support">
 								<a href="#" id="ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 									<i class="bb-icon-l bb-icon-attach"></i>
@@ -86,7 +86,7 @@ $activity_id = bp_get_activity_id();
 
 			<div class="ac-submit-wrap">
 				<?php
-				bp_nouveau_submit_button( 'activity-new-comment' );
+				bboss_nouveau_submit_button( 'activity-new-comment' );
 				?>
 			</div>
 			<?php
@@ -102,7 +102,7 @@ $activity_id = bp_get_activity_id();
 			?>
 			<div id="ac-reply-attachments-<?php echo esc_attr( $activity_id ); ?>" class="ac-reply-attachments attachments--small">
 
-				<?php if ( bp_is_active( 'media' ) ) : ?>
+				<?php if ( bboss_is_active( 'media' ) ) : ?>
 
 					<div class="dropzone closed media media-dropzone" id="ac-reply-post-media-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="ac-reply-post-default-template" style="display:none;">
@@ -139,7 +139,7 @@ $activity_id = bp_get_activity_id();
 						</div>
 					</div>
 
-					<?php if ( bp_is_active( 'document' ) ) : ?>
+					<?php if ( bboss_is_active( 'document' ) ) : ?>
 					<div class="dropzone closed document document-dropzone" id="ac-reply-post-document-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="ac-reply-post-document-template" style="display:none;">
 						<div class="dz-preview dz-file-preview">
@@ -176,7 +176,7 @@ $activity_id = bp_get_activity_id();
 					</div>
 					<?php endif; ?>
 
-					<?php if ( bp_is_active( 'video' ) ) : ?>
+					<?php if ( bboss_is_active( 'video' ) ) : ?>
 					<div class="dropzone closed video video-dropzone" id="ac-reply-post-video-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="ac-reply-post-video-template" style="display:none;">
 						<div class="dz-preview dz-file-preview well" id="dz-preview-template">

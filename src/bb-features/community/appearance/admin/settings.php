@@ -35,7 +35,7 @@ require_once __DIR__ . '/pages-panel.php';
  *
  * @return string Translated section title.
  */
-function bb_appearance_site_seo_section_title() {
+function bboss_appearance_site_seo_section_title() {
 	return __( 'Site SEO', 'buddyboss' );
 }
 
@@ -43,13 +43,13 @@ function bb_appearance_site_seo_section_title() {
  * Site SEO help article ID.
  *
  * Single source of truth for the SEO section's `help_url`. Mirrors the
- * Activity Sharing pattern (`bb_activity_sharing_section_help_article()`).
+ * Activity Sharing pattern (`bboss_activity_sharing_section_help_article()`).
  *
  * @since BuddyBoss 3.0.0
  *
  * @return string Help article ID.
  */
-function bb_appearance_site_seo_section_help_article() {
+function bboss_appearance_site_seo_section_help_article() {
 	return '638202';
 }
 
@@ -58,18 +58,18 @@ function bb_appearance_site_seo_section_help_article() {
  *
  * State-specific extensions (e.g. UPGRADE LAUNCH badge when Sharing is not
  * installed) are layered on top via the `bb_appearance_site_seo_section_args`
- * filter — see `bb_appearance_site_seo_get_section_args()` and
- * `bb_appearance_site_seo_add_pro_badge_when_no_sharing()` below.
+ * filter — see `bboss_appearance_site_seo_get_section_args()` and
+ * `bboss_appearance_site_seo_add_pro_badge_when_no_sharing()` below.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Section args (title, order, help_url).
  */
-function bb_appearance_site_seo_section_base_args() {
+function bboss_appearance_site_seo_section_base_args() {
 	return array(
-		'title'    => bb_appearance_site_seo_section_title(),
+		'title'    => bboss_appearance_site_seo_section_title(),
 		'order'    => 10,
-		'help_url' => bb_appearance_site_seo_section_help_article(),
+		'help_url' => bboss_appearance_site_seo_section_help_article(),
 	);
 }
 
@@ -79,21 +79,21 @@ function bb_appearance_site_seo_section_base_args() {
  * Plugins that need to mutate the Site SEO section attributes (add a
  * `pro_notice` badge, change `status`, override `description`, etc.) should
  * hook the `bb_appearance_site_seo_section_args` filter rather than calling
- * `bb_register_feature_section()` a second time. Re-registering the same
+ * `bboss_register_feature_section()` a second time. Re-registering the same
  * section ID without `merge => true` would trigger the registry's
  * duplicate-detection auto-suffix path (`seo_1`) and render two sections.
  *
  * The filter is the canonical extension point for boot-time state. For
  * runtime state changes that only resolve at AJAX time (Sharing's license
  * lock — see the same constraint documented in the Activity Sharing panel),
- * use `merge => true` on a follow-up `bb_register_feature_section()` call —
- * see `bb_appearance_register_site_seo_pro_placeholder_fields()`.
+ * use `merge => true` on a follow-up `bboss_register_feature_section()` call —
+ * see `bboss_appearance_register_site_seo_pro_placeholder_fields()`.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Section args after filter.
  */
-function bb_appearance_site_seo_get_section_args() {
+function bboss_appearance_site_seo_get_section_args() {
 	/**
 	 * Filter the Site SEO section args.
 	 *
@@ -101,7 +101,7 @@ function bb_appearance_site_seo_get_section_args() {
 	 *
 	 * @param array $args Default section args (title, order, help_url).
 	 */
-	return apply_filters( 'bb_appearance_site_seo_section_args', bb_appearance_site_seo_section_base_args() );
+	return apply_filters( 'bb_appearance_site_seo_section_args', bboss_appearance_site_seo_section_base_args() );
 }
 
 /**
@@ -113,7 +113,7 @@ function bb_appearance_site_seo_get_section_args() {
  * @param array $args Default section args.
  * @return array Possibly-modified section args.
  */
-function bb_appearance_site_seo_add_pro_badge_when_no_sharing( $args ) {
+function bboss_appearance_site_seo_add_pro_badge_when_no_sharing( $args ) {
 	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' )
 		&& method_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings', 'register_site_seo' );
 	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
@@ -141,7 +141,7 @@ add_filter( 'bb_appearance_site_seo_section_args', 'bb_appearance_site_seo_add_p
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_appearance_settings() {
+function bboss_admin_settings_register_appearance_settings() {
 
 	// Batch-prime the WP object cache for every bb_rl_* option this function
 	// reads below — one IN-list query beats 13 individual SELECT cache-miss
@@ -171,7 +171,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// SIDE PANEL: GENERAL (always visible)
 	// =========================================================================
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'appearance',
 		'general',
 		array(
@@ -188,7 +188,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// SIDE PANEL: BRANDING (visible only when Site Layout = ReadyLaunch)
 	// =========================================================================
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'appearance',
 		'branding',
 		array(
@@ -208,7 +208,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// SIDE PANEL: MENUS (visible only when Site Layout = ReadyLaunch)
 	// =========================================================================
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'appearance',
 		'menus',
 		array(
@@ -231,7 +231,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// Divider lives on this panel (not on Site SEO) to visually separate the
 	// page-mapping / SEO group from the ReadyLaunch-scoped panels above
 	// (General / Branding / Menus) per Figma.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'appearance',
 		'pages',
 		array(
@@ -248,7 +248,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// SIDE PANEL: SITE SEO (always visible — Platform owns the shell, Sharing fills fields)
 	// =========================================================================
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'appearance',
 		'site_seo',
 		array(
@@ -266,11 +266,11 @@ function bb_admin_settings_register_appearance_settings() {
 	// extension point for mutating section attributes from this or any
 	// other plugin. State-appropriate badges (e.g. UPGRADE LAUNCH when Sharing
 	// is absent) are added via filter callbacks, not by re-registering.
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'site_seo',
 		'seo',
-		bb_appearance_site_seo_get_section_args()
+		bboss_appearance_site_seo_get_section_args()
 	);
 
 	// Four possible states for the Site SEO panel (mirrors Activity Sharing):
@@ -299,7 +299,7 @@ function bb_admin_settings_register_appearance_settings() {
 		// (State 2 also runs the merge to add the badge at AJAX time.)
 	} elseif ( $has_old_sharing ) {
 		// State 3 — OLD Sharing: show Update Required notice.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'appearance',
 			'site_seo',
 			'seo',
@@ -320,7 +320,7 @@ function bb_admin_settings_register_appearance_settings() {
 		// State 4 — Sharing NOT installed: section already carries the
 		// UPGRADE LAUNCH badge from the filter callback above. Register
 		// placeholder fields.
-		bb_appearance_register_site_seo_pro_placeholder_fields();
+		bboss_appearance_register_site_seo_pro_placeholder_fields();
 	}
 
 	// =========================================================================
@@ -331,7 +331,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// `ReadyLaunchSettings.js`'s `handleHelpClick('459xxx')` call sites).
 	// Preserved verbatim so the `?` help icon links to the same KB article the
 	// customer is used to.
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'general',
 		'site_name',
@@ -342,7 +342,7 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'general',
 		'site_name',
@@ -362,7 +362,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// GENERAL → SECTION: Site Layout
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'general',
 		'site_layout',
@@ -378,7 +378,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// `bb_appearance_sanitize_layout` callback coerces back to boolean so the
 	// `bb_rl_enabled` option stays a bool end-to-end and `bb_is_readylaunch_enabled()`
 	// keeps working unchanged.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'general',
 		'site_layout',
@@ -408,8 +408,8 @@ function bb_admin_settings_register_appearance_settings() {
 				'1' => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss' ),
 				'0' => __( 'BuddyBoss pages will use your active theme\'s templates. Any templates not overridden will fall back to the platform default layouts.', 'buddyboss' ),
 			),
-			'default'             => bp_get_option( 'bb_rl_enabled', false ) ? '1' : '0',
-			'sanitize_callback'   => 'bb_appearance_sanitize_layout',
+			'default'             => bboss_get_option( 'bb_rl_enabled', false ) ? '1' : '0',
+			'sanitize_callback'   => 'bboss_appearance_sanitize_layout',
 			'field_class'         => 'bb-admin-settings-form__field--custom-full-width',
 			'order'               => 10,
 		)
@@ -418,7 +418,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// GENERAL → SECTION: Template Pages (ReadyLaunch-only content)
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'general',
 		'template_pages',
@@ -433,7 +433,7 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	$enabled_pages_default = bp_get_option(
+	$enabled_pages_default = bboss_get_option(
 		'bb_rl_enabled_pages',
 		array(
 			'registration' => true,
@@ -446,7 +446,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// integration is active (matches legacy `class-bp-admin-tab.php` localize logic).
 	$template_page_options = array();
 
-	if ( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() && function_exists( 'bp_allow_custom_registration' ) && ! bp_allow_custom_registration() ) {
+	if ( function_exists( 'bboss_enable_site_registration' ) && bboss_enable_site_registration() && function_exists( 'bboss_allow_custom_registration' ) && ! bboss_allow_custom_registration() ) {
 		$template_page_options[] = array(
 			'label' => __( 'Login & Registration', 'buddyboss' ),
 			'value' => 'registration',
@@ -457,8 +457,8 @@ function bb_admin_settings_register_appearance_settings() {
 	// guard and runs the constructor a second time, which re-registers
 	// `login_header` / `login_footer` / `login_form` hooks and duplicates
 	// the wp-login.php UI (PROD-9859).
-	if ( class_exists( 'BB_Readylaunch' ) ) {
-		$readylaunch_helper = BB_Readylaunch::instance();
+	if ( class_exists( 'BBoss_Readylaunch' ) ) {
+		$readylaunch_helper = BBoss_Readylaunch::instance();
 		if ( $readylaunch_helper && method_exists( $readylaunch_helper, 'bb_is_sidebar_enabled_for_courses' ) && $readylaunch_helper->bb_is_sidebar_enabled_for_courses() ) {
 			$template_page_options[] = array(
 				'label' => __( 'Courses', 'buddyboss' ),
@@ -470,7 +470,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// Gated like the sibling options above: only offer the Blog template page
 	// when the Blogs feature is active (registration/courses are each gated on
 	// their own backing feature, so Blog must be too).
-	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'blogging' ) ) {
+	if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'blogging' ) ) {
 		$template_page_options[] = array(
 			'label' => __( 'Blog', 'buddyboss' ),
 			'value' => 'blog',
@@ -478,7 +478,7 @@ function bb_admin_settings_register_appearance_settings() {
 	}
 
 	if ( ! empty( $template_page_options ) ) {
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'appearance',
 			'general',
 			'template_pages',
@@ -489,14 +489,14 @@ function bb_admin_settings_register_appearance_settings() {
 				'label_description' => __( 'Enable pages that should have styles from the template.', 'buddyboss' ),
 				'options'           => $template_page_options,
 				'default'           => $enabled_pages_default,
-				'sanitize_callback' => 'bb_appearance_sanitize_enabled_pages',
+				'sanitize_callback' => 'bboss_appearance_sanitize_enabled_pages',
 				'order'             => 10,
 			)
 		);
 	} else {
 		// No active integration offers a template page — render an empty-state
 		// card so the section never appears as a blank header/body.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'appearance',
 			'general',
 			'template_pages',
@@ -516,7 +516,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// GENERAL → SECTION: Template Sidebar Widgets
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'general',
 		'template_sidebars',
@@ -538,8 +538,8 @@ function bb_admin_settings_register_appearance_settings() {
 	// injected at AJAX format time in `bb_appearance_build_sidebar_description()`
 	// because BP component globals (members slug, groups table_name, loggedin
 	// user) aren't populated yet at `bb_register_features` (`bp_loaded@5`).
-	if ( bp_is_active( 'activity' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'activity' ) ) {
+		bboss_register_feature_field(
 			'appearance',
 			'general',
 			'template_sidebars',
@@ -547,7 +547,7 @@ function bb_admin_settings_register_appearance_settings() {
 				'name'              => 'bb_rl_activity_sidebars',
 				'label'             => __( 'Activity Feed', 'buddyboss' ),
 				'type'              => 'toggle_list',
-				'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_activity_sidebars' ),
+				'label_description' => bboss_appearance_render_sidebar_description( 'bb_rl_activity_sidebars' ),
 				'options'           => array(
 					array(
 						'label' => __( 'Complete Profile', 'buddyboss' ),
@@ -566,7 +566,7 @@ function bb_admin_settings_register_appearance_settings() {
 						'value' => 'active_members',
 					),
 				),
-				'default'           => bp_get_option(
+				'default'           => bboss_get_option(
 					'bb_rl_activity_sidebars',
 					array(
 						'complete_profile'  => true,
@@ -575,7 +575,7 @@ function bb_admin_settings_register_appearance_settings() {
 						'active_members'    => true,
 					)
 				),
-				'sanitize_callback' => 'bb_appearance_sanitize_sidebar_map',
+				'sanitize_callback' => 'bboss_appearance_sanitize_sidebar_map',
 				'order'             => 10,
 			)
 		);
@@ -593,21 +593,21 @@ function bb_admin_settings_register_appearance_settings() {
 		),
 	);
 
-	if ( bp_is_active( 'friends' ) ) {
+	if ( bboss_is_active( 'friends' ) ) {
 		$member_profile_options[] = array(
 			'label' => __( 'Connections', 'buddyboss' ),
 			'value' => 'connections',
 		);
 	}
 
-	if ( bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+	if ( bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active() ) {
 		$member_profile_options[] = array(
 			'label' => __( 'My Network (Follow, Followers)', 'buddyboss' ),
 			'value' => 'my_network',
 		);
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'general',
 		'template_sidebars',
@@ -615,9 +615,9 @@ function bb_admin_settings_register_appearance_settings() {
 			'name'              => 'bb_rl_member_profile_sidebars',
 			'label'             => __( 'Member Profile', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_member_profile_sidebars' ),
+			'label_description' => bboss_appearance_render_sidebar_description( 'bb_rl_member_profile_sidebars' ),
 			'options'           => $member_profile_options,
-			'default'           => bp_get_option(
+			'default'           => bboss_get_option(
 				'bb_rl_member_profile_sidebars',
 				array(
 					'complete_profile' => true,
@@ -625,7 +625,7 @@ function bb_admin_settings_register_appearance_settings() {
 					'my_network'       => true,
 				)
 			),
-			'sanitize_callback' => 'bb_appearance_sanitize_sidebar_map',
+			'sanitize_callback' => 'bboss_appearance_sanitize_sidebar_map',
 			'order'             => 20,
 		)
 	);
@@ -641,8 +641,8 @@ function bb_admin_settings_register_appearance_settings() {
 	// call `groups_get_groups()` here — the Groups component's `table_name`
 	// global is undefined at `bb_register_features` (`bp_loaded@5`), so any
 	// DB query against it emits a WP DB error.
-	if ( bp_is_active( 'groups' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'groups' ) ) {
+		bboss_register_feature_field(
 			'appearance',
 			'general',
 			'template_sidebars',
@@ -650,7 +650,7 @@ function bb_admin_settings_register_appearance_settings() {
 				'name'              => 'bb_rl_groups_sidebars',
 				'label'             => __( 'Group', 'buddyboss' ),
 				'type'              => 'toggle_list',
-				'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_groups_sidebars' ),
+				'label_description' => bboss_appearance_render_sidebar_description( 'bb_rl_groups_sidebars' ),
 				'options'           => array(
 					array(
 						'label' => __( 'About Group', 'buddyboss' ),
@@ -661,14 +661,14 @@ function bb_admin_settings_register_appearance_settings() {
 						'value' => 'group_members',
 					),
 				),
-				'default'           => bp_get_option(
+				'default'           => bboss_get_option(
 					'bb_rl_groups_sidebars',
 					array(
 						'about_group'   => true,
 						'group_members' => true,
 					)
 				),
-				'sanitize_callback' => 'bb_appearance_sanitize_sidebar_map',
+				'sanitize_callback' => 'bboss_appearance_sanitize_sidebar_map',
 				'order'             => 30,
 			)
 		);
@@ -677,7 +677,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// BRANDING → SECTION: Branding
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'branding',
 		'branding',
@@ -688,9 +688,9 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	$theme_mode_default = bp_get_option( 'bb_rl_theme_mode', 'light' );
+	$theme_mode_default = bboss_get_option( 'bb_rl_theme_mode', 'light' );
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'branding',
 		'branding',
@@ -720,7 +720,7 @@ function bb_admin_settings_register_appearance_settings() {
 				'choice' => __( 'Users will be able switch between the modes.', 'buddyboss' ),
 			),
 			'default'             => $theme_mode_default,
-			'sanitize_callback'   => 'bb_appearance_sanitize_theme_mode',
+			'sanitize_callback'   => 'bboss_appearance_sanitize_theme_mode',
 			'order'               => 10,
 		)
 	);
@@ -729,7 +729,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// First field carries the group label "Logo"; second field has an empty label so the
 	// label column is hidden on the second row. Each field uses `group.label` to render
 	// its own inline sub-header ("Logo (Light mode)" / "Logo (Dark mode)") above the control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'branding',
 		'branding',
@@ -738,8 +738,8 @@ function bb_admin_settings_register_appearance_settings() {
 			'label'               => __( 'Logo', 'buddyboss' ),
 			'type'                => 'media_picker',
 			'description'         => __( 'Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
-			'default'             => bp_get_option( 'bb_rl_light_logo', array() ),
-			'sanitize_callback'   => 'bb_appearance_sanitize_media',
+			'default'             => bboss_get_option( 'bb_rl_light_logo', array() ),
+			'sanitize_callback'   => 'bboss_appearance_sanitize_media',
 			'media_picker_config' => array(
 				'library_type' => 'image',
 				'multiple'     => false,
@@ -757,7 +757,7 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'branding',
 		'branding',
@@ -766,8 +766,8 @@ function bb_admin_settings_register_appearance_settings() {
 			'label'               => __( 'Logo', 'buddyboss' ),
 			'type'                => 'media_picker',
 			'description'         => __( 'Recommended to use a white-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
-			'default'             => bp_get_option( 'bb_rl_dark_logo', array() ),
-			'sanitize_callback'   => 'bb_appearance_sanitize_media',
+			'default'             => bboss_get_option( 'bb_rl_dark_logo', array() ),
+			'sanitize_callback'   => 'bboss_appearance_sanitize_media',
 			'media_picker_config' => array(
 				'library_type' => 'image',
 				'multiple'     => false,
@@ -786,7 +786,7 @@ function bb_admin_settings_register_appearance_settings() {
 	);
 
 	// Primary Color group — shares a single left-column label (Figma "Heading").
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'branding',
 		'branding',
@@ -795,8 +795,8 @@ function bb_admin_settings_register_appearance_settings() {
 			'label'             => __( 'Theme Color', 'buddyboss' ),
 			'type'              => 'color',
 			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bb_rl_color_light', '#3E34FF' ),
-			'sanitize_callback' => 'bb_appearance_sanitize_color',
+			'default'           => bboss_get_option( 'bb_rl_color_light', '#3E34FF' ),
+			'sanitize_callback' => 'bboss_appearance_sanitize_color',
 			'group'             => array(
 				'key'   => 'primary_color',
 				'label' => __( 'Primary Color (Light mode)', 'buddyboss' ),
@@ -810,7 +810,7 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'branding',
 		'branding',
@@ -819,8 +819,8 @@ function bb_admin_settings_register_appearance_settings() {
 			'label'             => __( 'Theme Color', 'buddyboss' ),
 			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss' ),
 			'type'              => 'color',
-			'default'           => bp_get_option( 'bb_rl_color_dark', '#A347FF' ),
-			'sanitize_callback' => 'bb_appearance_sanitize_color',
+			'default'           => bboss_get_option( 'bb_rl_color_dark', '#A347FF' ),
+			'sanitize_callback' => 'bboss_appearance_sanitize_color',
 			'group'             => array(
 				'key'   => 'primary_color',
 				'label' => __( 'Primary Color (Dark mode)', 'buddyboss' ),
@@ -837,7 +837,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// MENUS → SECTION: Menus
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'menus',
 		'menus',
@@ -865,7 +865,7 @@ function bb_admin_settings_register_appearance_settings() {
 		);
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'menus',
 		'menus',
@@ -875,7 +875,7 @@ function bb_admin_settings_register_appearance_settings() {
 			'type'              => 'select',
 			'description'       => __( 'Update your header menu from the Menus tab, where you\'ll find a dedicated ReadyLaunch header menu location.', 'buddyboss' ),
 			'options'           => $header_menu_options,
-			'default'           => bp_get_option( 'bb_rl_header_menu', 'readylaunch' ),
+			'default'           => bboss_get_option( 'bb_rl_header_menu', 'readylaunch' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 10,
 		)
@@ -884,7 +884,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// Side Menu — drag-sortable list of predefined navigation items.
 	// Items are component-conditional (matches legacy ReadyLaunchSettings.js getComponentMenuItems).
 	$side_menu_items = array();
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'activity' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'activity_feed',
 			'label' => __( 'Activity Feed', 'buddyboss' ),
@@ -896,14 +896,14 @@ function bb_admin_settings_register_appearance_settings() {
 		'label' => __( 'Members', 'buddyboss' ),
 		'icon'  => 'users',
 	);
-	if ( bp_is_active( 'groups' ) ) {
+	if ( bboss_is_active( 'groups' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'groups',
 			'label' => __( 'Groups', 'buddyboss' ),
 			'icon'  => 'users-three',
 		);
 	}
-	if ( bp_is_active( 'forums' ) ) {
+	if ( bboss_is_active( 'forums' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'forums',
 			'label' => __( 'Forums', 'buddyboss' ),
@@ -918,14 +918,14 @@ function bb_admin_settings_register_appearance_settings() {
 			'icon'  => 'graduation-cap',
 		);
 	}
-	if ( bp_is_active( 'messages' ) ) {
+	if ( bboss_is_active( 'messages' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'messages',
 			'label' => __( 'Messages', 'buddyboss' ),
 			'icon'  => 'chat-teardrop-text',
 		);
 	}
-	if ( bp_is_active( 'notifications' ) ) {
+	if ( bboss_is_active( 'notifications' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'notifications',
 			'label' => __( 'Notifications', 'buddyboss' ),
@@ -933,7 +933,7 @@ function bb_admin_settings_register_appearance_settings() {
 		);
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'menus',
 		'menus',
@@ -943,14 +943,14 @@ function bb_admin_settings_register_appearance_settings() {
 			'type'              => 'sortable_toggle_list',
 			'label_description' => __( 'Enable and re-order menu items shown on the left sidebar.', 'buddyboss' ),
 			'available_items'   => $side_menu_items,
-			'default'           => bp_get_option( 'bb_rl_side_menu', array() ),
-			'sanitize_callback' => 'bb_appearance_sanitize_side_menu',
+			'default'           => bboss_get_option( 'bb_rl_side_menu', array() ),
+			'sanitize_callback' => 'bboss_appearance_sanitize_side_menu',
 			'order'             => 20,
 		)
 	);
 
 	// Custom Links — user-defined link list (add/edit/delete via modal, drag to reorder).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'appearance',
 		'menus',
 		'menus',
@@ -959,8 +959,8 @@ function bb_admin_settings_register_appearance_settings() {
 			'label'                     => __( 'Link', 'buddyboss' ),
 			'type'                      => 'editable_link_list',
 			'label_description'         => __( 'Add and re-order custom links which are shown on the left sidebar.', 'buddyboss' ),
-			'default'                   => bp_get_option( 'bb_rl_custom_links', array() ),
-			'sanitize_callback'         => 'bb_appearance_sanitize_custom_links',
+			'default'                   => bboss_get_option( 'bb_rl_custom_links', array() ),
+			'sanitize_callback'         => 'bboss_appearance_sanitize_custom_links',
 			'editable_link_list_config' => array(
 				'add_label'        => __( 'Add New Link', 'buddyboss' ),
 				'modal_title_add'  => __( 'Add Link', 'buddyboss' ),
@@ -976,7 +976,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_appearance_setti
  * Register PRO-gated placeholder fields for the Site SEO panel.
  *
  * Called when the BuddyBoss Sharing plugin is NOT installed (or deactivated).
- * Mirrors `bb_notifications_register_web_push_pro_placeholder_fields()` in
+ * Mirrors `bboss_notifications_register_web_push_pro_placeholder_fields()` in
  * `settings-web-push.php` — registers the full Figma field surface as
  * `pro_only` disabled placeholders so admins see what they'd unlock by
  * upgrading to Pro + installing Sharing.
@@ -990,7 +990,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_appearance_setti
  *
  * @return void
  */
-function bb_appearance_register_site_seo_pro_placeholder_fields() {
+function bboss_appearance_register_site_seo_pro_placeholder_fields() {
 
 	$feature_id = 'appearance';
 	$panel_id   = 'site_seo';
@@ -1034,7 +1034,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	// @bbwt-com-start pricing-links
 	$pro_notice_section_url = 'https://www.buddyboss.com/pricing/';
 	// @bbwt-com-end pricing-links
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1050,7 +1050,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	);
 
 	// SEO group: title + description + Google SERP preview card.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1072,7 +1072,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1095,7 +1095,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	);
 
 	// Google SERP preview card — reads title/description live from above.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1126,7 +1126,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	// `help_text`   = secondary helper copy rendered below the field.
 	// Matches Figma layout where the toggle's inline label is the short text
 	// and the long "Open Graph support improves…" paragraph sits underneath.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1146,7 +1146,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	);
 
 	// Activity Title Template + Available Tags reference list.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1164,7 +1164,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -1221,7 +1221,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	foreach ( $indexing_toggles as $toggle_name => $toggle_label ) {
 		++$indexing_cur;
 		$is_last_toggle = ( $indexing_cur === $indexing_total );
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			$feature_id,
 			$panel_id,
 			$section_id,

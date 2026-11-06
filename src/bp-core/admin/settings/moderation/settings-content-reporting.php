@@ -7,10 +7,10 @@
  *
  * Content type fields are registered lazily via
  * bb_admin_settings_before_get_feature because the moderation content type
- * classes (BP_Moderation_Activity, BP_Moderation_Groups, etc.) are
+ * classes (BBoss_Moderation_Activity, BBoss_Moderation_Groups, etc.) are
  * instantiated at `bp_init` priority 1, which fires after
  * `bb_register_features` (at `bp_loaded` priority 5). Calling
- * bp_moderation_content_types() during feature registration returns
+ * bboss_moderation_content_types() during feature registration returns
  * an empty array since the filter callbacks aren't registered yet.
  *
  * @package BuddyBoss\Core\Administration
@@ -25,16 +25,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * Registers the sections and the Email Notification field eagerly.
  * Per-content-type fields are registered lazily via
- * bb_moderation_lazy_register_content_type_fields().
+ * bboss_moderation_lazy_register_content_type_fields().
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_moderation_register_content_reporting_fields() {
+function bboss_moderation_register_content_reporting_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Content Reporting
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'moderation',
 		'content_reporting',
 		'content_reporting',
@@ -46,7 +46,7 @@ function bb_moderation_register_content_reporting_fields() {
 	);
 
 	// FIELD: Email Notification (Toggle).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'moderation',
 		'content_reporting',
 		'content_reporting',
@@ -55,7 +55,7 @@ function bb_moderation_register_content_reporting_fields() {
 			'label'             => __( 'Email Notification', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Notify administrators when content has been automatically hidden', 'buddyboss' ),
-			'default'           => bp_is_moderation_reporting_email_notification_enable( false ),
+			'default'           => bboss_is_moderation_reporting_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
 			'order'             => 999,
 		)
@@ -67,13 +67,13 @@ function bb_moderation_register_content_reporting_fields() {
  *
  * Hooked to `bb_admin_settings_before_get_feature` which fires during the
  * AJAX request to fetch feature settings. By this point `bp_init` has fired
- * and bp_moderation_content_types() returns the full list of content types.
+ * and bboss_moderation_content_types() returns the full list of content types.
  *
  * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being fetched.
  */
-function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
+function bboss_moderation_lazy_register_content_type_fields( $feature_id ) {
 	if ( 'moderation' !== $feature_id ) {
 		return;
 	}
@@ -86,9 +86,9 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 	$registered = true;
 
 	// Get all moderation content types and exclude member-related types.
-	$content_types = bp_moderation_content_types();
-	unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
-	unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
+	$content_types = bboss_moderation_content_types();
+	unset( $content_types[ BBoss_Moderation_Members::$moderation_type ] );
+	unset( $content_types[ BBoss_Moderation_Members::$moderation_type_report ] );
 
 	$field_order = 10;
 
@@ -96,7 +96,7 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 
 		// FIELD: Allow {type} to be reported (Toggle).
 		$reporting_field_name = 'bpm_reporting_content_reporting_' . $slug;
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'moderation',
 			'content_reporting',
 			'content_reporting',
@@ -106,14 +106,14 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 				'type'              => 'toggle',
 				/* translators: %s: content type label (lowercase). */
 				'description'       => sprintf( __( 'Allow %s to be reported', 'buddyboss' ), strtolower( $type_label ) ),
-				'default'           => bp_is_moderation_content_reporting_enable( false, $slug ),
+				'default'           => bboss_is_moderation_content_reporting_enable( false, $slug ),
 				'sanitize_callback' => 'absint',
 				'order'             => $field_order,
 			)
 		);
 
 		// FIELD: Auto hide {type} after X reports (Toggle with inline number).
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'moderation',
 			'content_reporting',
 			'content_reporting',
@@ -128,15 +128,15 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 					strtolower( $type_label ),
 					'%s'
 				),
-				'default'              => bp_is_moderation_auto_hide_enable( false, $slug ),
+				'default'              => bboss_is_moderation_auto_hide_enable( false, $slug ),
 				'sanitize_callback'    => 'absint',
 				'parent_field'         => $reporting_field_name,
 				'description_controls' => array(
 					array(
 						'type'              => 'number',
 						'name'              => 'bpm_reporting_auto_hide_threshold_' . $slug,
-						'default'           => bp_moderation_reporting_auto_hide_threshold( 5, $slug ),
-						'sanitize_callback' => 'bb_moderation_sanitize_auto_hide_threshold',
+						'default'           => bboss_moderation_reporting_auto_hide_threshold( 5, $slug ),
+						'sanitize_callback' => 'bboss_moderation_sanitize_auto_hide_threshold',
 						'min'               => 1,
 						'max'               => 99,
 						'step'              => 1,

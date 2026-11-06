@@ -21,29 +21,29 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array Actual capabilities for meta capability.
  */
-function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
+function bboss_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 	switch ( $cap ) {
 		case 'bp_xprofile_change_field_visibility':
 			$caps = array( 'exist' );
 
 			// You may pass args manually: $field_id, $profile_user_id.
 			$field_id        = 0;
-			$profile_user_id = isset( $args[1] ) ? (int) $args[1] : bp_displayed_user_id();
+			$profile_user_id = isset( $args[1] ) ? (int) $args[1] : bboss_displayed_user_id();
 
 			if ( ! empty( $args[0] ) ) {
 				$field_id = (int) $args[0];
 			} elseif ( isset( $GLOBALS['profile_template'] ) && $GLOBALS['profile_template']->in_the_loop ) {
-				$field_id = bp_get_the_profile_field_id();
+				$field_id = bboss_get_the_profile_field_id();
 			}
 
 			// Has the admin disabled visibility modification for this field?
-			if ( 'disabled' == bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' ) ) {
+			if ( 'disabled' == bboss_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' ) ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}
 
 			// Connections don't edit each other's visibility.
-			if ( $profile_user_id != bp_displayed_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $profile_user_id != bboss_displayed_user_id() && ! bboss_current_user_can( 'bp_moderate' ) ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}
@@ -75,10 +75,10 @@ add_filter( 'bp_map_meta_caps', 'bp_xprofile_map_meta_caps', 10, 4 );
  * @param string $capability
  * @return bool
  */
-function bp_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users( $user_can, $user_id, $capability ) {
+function bboss_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users( $user_can, $user_id, $capability ) {
 	if ( 'bp_xprofile_change_field_visibility' === $capability && 0 === $user_id ) {
-		$field_id = bp_get_the_profile_field_id();
-		if ( $field_id && $field = xprofile_get_field( $field_id ) ) {
+		$field_id = bboss_get_the_profile_field_id();
+		if ( $field_id && $field = bboss_xprofile_get_field( $field_id ) ) {
 			$user_can = 'allowed' === $field->allow_custom_visibility;
 		}
 	}
@@ -97,19 +97,19 @@ add_filter( 'bp_user_can', 'bp_xprofile_grant_bp_xprofile_change_field_visibilit
  * @param string $capability
  * @return bool
  */
-function bp_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability ) {
+function bboss_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability ) {
 
 	if ( empty( $GLOBALS['profile_template'] ) || 'bp_xprofile_change_field_visibility' !== $capability ) {
 		return $user_can;
 	}
 
-	$field_id = bp_get_the_profile_field_id();
+	$field_id = bboss_get_the_profile_field_id();
 
 	if ( $field_id ) {
-		$first_name_id        = bp_xprofile_firstname_field_id();
-		$last_name_id        = bp_xprofile_lastname_field_id();
-		$nick_name_id        = bp_xprofile_nickname_field_id();
-		$display_name_format = bp_core_display_name_format();
+		$first_name_id        = bboss_xprofile_firstname_field_id();
+		$last_name_id        = bboss_xprofile_lastname_field_id();
+		$nick_name_id        = bboss_xprofile_nickname_field_id();
+		$display_name_format = bboss_core_display_name_format();
 
 		if ( $field_id === $nick_name_id ) {
 			$user_can = false;

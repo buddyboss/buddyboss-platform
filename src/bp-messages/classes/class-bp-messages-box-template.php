@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Message Box Template Class
  */
 #[\AllowDynamicProperties]
-class BP_Messages_Box_Template {
+class BBoss_Messages_Box_Template {
 
 	/**
 	 * The loop iterator.
@@ -103,7 +103,7 @@ class BP_Messages_Box_Template {
 	 * Constructor method.
 	 *
 	 * @param array $args {
-	 *     Array of arguments. See bp_has_message_threads() for full description.
+	 *     Array of arguments. See bboss_has_message_threads() for full description.
 	 * }
 	 */
 	public function __construct( $args = array() ) {
@@ -125,10 +125,10 @@ class BP_Messages_Box_Template {
 				6 => 'page_arg',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'page'         => 1,
@@ -136,7 +136,7 @@ class BP_Messages_Box_Template {
 				'page_arg'     => 'mpage',
 				'box'          => 'inbox',
 				'type'         => 'all',
-				'user_id'      => bp_loggedin_user_id(),
+				'user_id'      => bboss_loggedin_user_id(),
 				'max'          => false,
 				'search_terms' => '',
 				'include'      => false,
@@ -147,8 +147,8 @@ class BP_Messages_Box_Template {
 		);
 
 		$this->pag_arg      = sanitize_key( $r['page_arg'] );
-		$this->pag_page     = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num      = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page     = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num      = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 		$this->user_id      = $r['user_id'];
 		$this->box          = $r['box'];
 		$this->type         = $r['type'];
@@ -157,14 +157,14 @@ class BP_Messages_Box_Template {
 		$this->is_hidden    = $r['is_hidden'];
 
 		if ( 'notices' === $this->box ) {
-			$this->threads = BP_Messages_Notice::get_notices(
+			$this->threads = BBoss_Messages_Notice::get_notices(
 				array(
 					'pag_num'  => $this->pag_num,
 					'pag_page' => $this->pag_page,
 				)
 			);
 		} else {
-			$threads = BP_Messages_Thread::get_current_threads_for_user(
+			$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 				array(
 					'user_id'                        => $this->user_id,
 					'box'                            => $this->box,
@@ -188,7 +188,7 @@ class BP_Messages_Box_Template {
 			$this->thread_count       = 0;
 			$this->total_thread_count = 0;
 		} else {
-			$total_notice_count = BP_Messages_Notice::get_total_notice_count();
+			$total_notice_count = BBoss_Messages_Notice::get_total_notice_count();
 
 			if ( empty( $r['max'] ) || ( (int) $r['max'] >= (int) $total_notice_count ) ) {
 				if ( 'notices' === $this->box ) {
@@ -214,7 +214,7 @@ class BP_Messages_Box_Template {
 				$r['page_arg'] => '%#%',
 			);
 
-			if ( defined( 'DOING_AJAX' ) && true === (bool) DOING_AJAX ) {
+			if ( defined( 'BBOSS_DOING_AJAX' ) && true === (bool) BBOSS_DOING_AJAX ) {
 				$base = remove_query_arg( 's', wp_get_referer() );
 			} else {
 				$base = '';
@@ -244,7 +244,7 @@ class BP_Messages_Box_Template {
 	/**
 	 * Whether there are threads available in the loop.
 	 *
-	 * @see bp_has_message_threads()
+	 * @see bboss_has_message_threads()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -281,11 +281,11 @@ class BP_Messages_Box_Template {
 	/**
 	 * Whether there are threads left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_message_threads()} as part of the
+	 * This method is used by {@link bboss_message_threads()} as part of the
 	 * while loop that controls iteration inside the threads loop, eg:
-	 *     while ( bp_message_threads() ) { ...
+	 *     while ( bboss_message_threads() ) { ...
 	 *
-	 * @see bp_message_threads()
+	 * @see bboss_message_threads()
 	 *
 	 * @return bool True if there are more threads to show, otherwise false.
 	 */
@@ -311,18 +311,18 @@ class BP_Messages_Box_Template {
 	/**
 	 * Set up the current thread inside the loop.
 	 *
-	 * Used by {@link bp_message_thread()} to set up the current thread data
+	 * Used by {@link bboss_message_thread()} to set up the current thread data
 	 * while looping, so that template tags used during that iteration make
 	 * reference to the current thread.
 	 *
-	 * @see bp_message_thread()
+	 * @see bboss_message_thread()
 	 */
 	public function the_message_thread() {
 
 		$this->in_the_loop = true;
 		$this->thread      = $this->next_thread();
 
-		if ( ! bp_is_current_action( 'notices' ) && ! empty( $this->thread->messages ) ) {
+		if ( ! bboss_is_current_action( 'notices' ) && ! empty( $this->thread->messages ) ) {
 			$last_message_index = 0;
 
 			if ( isset( $this->thread->last_message->id ) && (int) $this->thread->last_message->id > 0 ) {

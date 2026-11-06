@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.5.0
  */
-class BP_Customizer_Control_Range extends WP_Customize_Control {
+class BBoss_Customizer_Control_Range extends WP_Customize_Control {
 	/**
 	 * @var string
 	 */

@@ -3,7 +3,7 @@
  * Pagination for pages of topics (when viewing a forum)
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
 	<div class="pag-count top">
 		<p class="pag-data">
 
-			<?php bbp_forum_pagination_count(); ?>
+			<?php bboss_bbp_forum_pagination_count(); ?>
 
 		</p>
 	</div>
 
 	<div class="bp-pagination-links">
 
-		<?php bbp_forum_pagination_links(); ?>
+		<?php bboss_bbp_forum_pagination_links(); ?>
 
 	</div>
 </div>

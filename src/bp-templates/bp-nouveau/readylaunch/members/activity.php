@@ -5,7 +5,7 @@
  * This template handles displaying member activity with loading placeholders.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,12 +13,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
-bp_nouveau_activity_member_post_form();
-bp_get_template_part( 'common/search-and-filters-bar' );
-bp_nouveau_member_hook( 'before', 'activity_content' );
+bboss_get_template_part( 'members/single/parts/item-subnav' );
+bboss_nouveau_activity_member_post_form();
+bboss_get_template_part( 'common/search-and-filters-bar' );
+bboss_nouveau_member_hook( 'before', 'activity_content' );
 ?>
 <div class="bb-rl-screen-content">
 	<div id="bb-rl-activity-stream" class="activity single-user" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
@@ -49,12 +49,12 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 		}
 		echo '</div>';
 	} else {
-		bp_get_template_part( 'activity/activity-loop' );
+		bboss_get_template_part( 'activity/activity-loop' );
 	}
 	?>
 	</div><!-- .activity -->
 </div><!-- .bb-rl-screen-content -->
 
 <?php
-bp_nouveau_member_hook( 'after', 'activity_content' );
-bp_get_template_part( 'common/js-templates/activity/comments' );
+bboss_nouveau_member_hook( 'after', 'activity_content' );
+bboss_get_template_part( 'common/js-templates/activity/comments' );

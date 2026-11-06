@@ -9,10 +9,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Admin_Setting_tab' ) ) :
+if ( ! class_exists( 'BBoss_Admin_Setting_tab' ) ) :
 
 	#[\AllowDynamicProperties]
-	class BP_Admin_Setting_tab extends BP_Admin_Tab {
+	class BBoss_Admin_Setting_tab extends BBoss_Admin_Tab {
 		public $global_tabs_var = 'bp_admin_setting_tabs';
 		public $menu_page       = 'bp-settings';
 
@@ -22,11 +22,11 @@ if ( ! class_exists( 'BP_Admin_Setting_tab' ) ) :
 		}
 
 		public function settings_saved() {
-			bp_core_redirect( bp_core_admin_setting_url( $this->tab_name, array( 'updated' => 'true' ) ) );
+			bboss_core_redirect( bboss_core_admin_setting_url( $this->tab_name, array( 'updated' => 'true' ) ) );
 		}
 
 		public function get_active_tab() {
-			return bp_core_get_admin_active_tab();
+			return bboss_core_get_admin_active_tab();
 		}
 
 		public function is_tab_visible() {
@@ -66,7 +66,7 @@ if ( ! class_exists( 'BP_Admin_Setting_tab' ) ) :
 				// Ie, the Profile Syncing option reads "Enable Sync", so when it's checked,
 				// the corresponding option should be unset.
 				$value = isset( $_POST[ $legacy_option ] ) ? '' : 1;
-				bp_update_option( $legacy_option, $value );
+				bboss_update_option( $legacy_option, $value );
 			}
 		}
 	}

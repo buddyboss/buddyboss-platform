@@ -4,7 +4,7 @@ include_once BP_TESTS_DIR . 'assets/attachment-extensions.php';
 
 /**
  * @group bp_attachments
- * @group BP_Attachment
+ * @group BBoss_Attachment
  */
 class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	private $upload_results;
@@ -16,7 +16,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		add_filter( 'upload_dir',                            array( $this, 'filter_upload_dir' ),      20, 1 );
 		add_filter( 'bp_attachments_cover_image_upload_dir', array( $this, 'filter_cover_image_dir' ), 10, 2 );
 		$this->upload_results = array();
-		$this->image_file = trailingslashit( buddypress()->plugin_dir ) . 'bp-core/images/profile-avatar-buddyboss.png';
+		$this->image_file = trailingslashit( bboss()->plugin_dir ) . 'bp-core/images/profile-avatar-buddyboss.png';
 		$this->original_upload_dir = array();
 	}
 
@@ -72,7 +72,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	}
 
 	private function clean_files( $basedir = 'attachment_base_dir' ) {
-		$upload_dir = bp_upload_dir();
+		$upload_dir = bboss_upload_dir();
 
 		$this->rrmdir( $upload_dir['basedir'] . '/' . $basedir );
 	}
@@ -84,7 +84,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 			$avatar_dir = 'group-avatars';
 		}
 
-		$this->rrmdir( bp_core_avatar_upload_path() . '/' . $avatar_dir );
+		$this->rrmdir( bboss_core_avatar_upload_path() . '/' . $avatar_dir );
 	}
 
 	public function max_filesize() {
@@ -112,14 +112,14 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	}
 
 	public function test_bp_attachment_set_upload_dir() {
-		$upload_dir = bp_upload_dir();
+		$upload_dir = bboss_upload_dir();
 
 		$attachment_class = new BPTest_Attachment_Extension( array(
 			'action'     => 'attachment_action',
 			'file_input' => 'attachment_file_input'
 		) );
 
-		$this->assertSame( $attachment_class->upload_dir, bp_upload_dir() );
+		$this->assertSame( $attachment_class->upload_dir, bboss_upload_dir() );
 
 		$attachment_class = new BPTest_Attachment_Extension( array(
 			'action'     => 'attachment_action',
@@ -219,7 +219,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	public function test_bp_attachment_avatar_user_upload() {
 		$reset_files = $_FILES;
 		$reset_post = $_POST;
-		$bp = buddypress();
+		$bp = bboss();
 		$displayed_user = $bp->displayed_user;
 		$bp->displayed_user = new stdClass;
 
@@ -227,7 +227,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$bp->displayed_user->id = $u1;
 
 		// Upload the file
-		$avatar_attachment = new BP_Attachment_Avatar();
+		$avatar_attachment = new BBoss_Attachment_Avatar();
 		$_POST['action'] = $avatar_attachment->action;
 		$_FILES[ $avatar_attachment->file_input ] = array(
 			'tmp_name' => $this->image_file,
@@ -268,17 +268,17 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	 * @group avatar
 	 */
 	public function test_bp_attachment_avatar_group_upload() {
-		$bp = buddypress();
+		$bp = bboss();
 		$reset_files = $_FILES;
 		$reset_post = $_POST;
 		$reset_current_group = $bp->groups->current_group;
 
 		$g = self::factory()->group->create();
 
-		$bp->groups->current_group = groups_get_group( $g );
+		$bp->groups->current_group = bboss_groups_get_group( $g );
 
 		// Upload the file
-		$avatar_attachment = new BP_Attachment_Avatar();
+		$avatar_attachment = new BBoss_Attachment_Avatar();
 		$_POST['action'] = $avatar_attachment->action;
 		$_FILES[ $avatar_attachment->file_input ] = array(
 			'tmp_name' => $this->image_file,
@@ -343,7 +343,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	public function test_bp_attachment_cover_image_user_upload() {
 		$reset_files = $_FILES;
 		$reset_post = $_POST;
-		$bp = buddypress();
+		$bp = bboss();
 		$displayed_user = $bp->displayed_user;
 		$bp->displayed_user = new stdClass;
 
@@ -351,7 +351,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 		$bp->displayed_user->id = $u1;
 
 		// Upload the file
-		$cover_image_attachment = new BP_Attachment_Cover_Image();
+		$cover_image_attachment = new BBoss_Attachment_Cover_Image();
 		$_POST['action'] = $cover_image_attachment->action;
 		$_FILES[ $cover_image_attachment->file_input ] = array(
 			'tmp_name' => $this->image_file,
@@ -383,7 +383,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 
 		$image = BP_TESTS_DIR . 'assets/upside-down.jpg';
 
-		$dir_copy = bp_upload_dir();
+		$dir_copy = bboss_upload_dir();
 
 		// in case cleaning files fails
 		if ( ! is_dir( $dir_copy['basedir'] . '/shrink' ) ) {
@@ -396,7 +396,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 
 		add_filter( 'bp_core_avatar_original_max_width', array( $this, 'limit_to_50px' ) );
 
-		$shrink = BP_Attachment_Avatar::shrink( $abs_path_copy );
+		$shrink = BBoss_Attachment_Avatar::shrink( $abs_path_copy );
 
 		remove_filter( 'bp_core_avatar_original_max_width', array( $this, 'limit_to_50px' ) );
 
@@ -415,7 +415,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	 * @group avatars
 	 */
 	public function test_bp_attachment_avatar_shrink_not_needed() {
-		$shrink = BP_Attachment_Avatar::shrink( $this->image_file );
+		$shrink = BBoss_Attachment_Avatar::shrink( $this->image_file );
 
 		$this->assertTrue( empty( $shrink ) );
 	}
@@ -431,7 +431,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 
 		$image = BP_TESTS_DIR . 'assets/upside-down.jpg';
 
-		$cover_image_class = new BP_Attachment_Cover_Image();
+		$cover_image_class = new BBoss_Attachment_Cover_Image();
 
 		$abs_path_copy = $cover_image_class->upload_path . '/upside-down.jpg';
 
@@ -450,7 +450,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 	 * @group cover_images
 	 */
 	public function test_bp_attachment_cover_image_fit_not_needed() {
-		$cover_image_class = new BP_Attachment_Cover_Image();
+		$cover_image_class = new BBoss_Attachment_Cover_Image();
 		$fit = $cover_image_class->fit( $this->image_file, array( 'width' => 1300, 'height' => 225 ) );
 
 		$this->assertTrue( empty( $fit ) );
@@ -468,7 +468,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 			$this->markTestSkipped( 'This test requires PHP to be compiled with EXIF support.' );
 		}
 
-		$image_data = BP_Attachment::get_image_data( BP_TESTS_DIR . 'assets/upside-down.jpg' );
+		$image_data = BBoss_Attachment::get_image_data( BP_TESTS_DIR . 'assets/upside-down.jpg' );
 
 		$this->assertTrue( 3 == $image_data['meta']['orientation'] );
 	}
@@ -510,7 +510,7 @@ class BP_Tests_BP_Attachment_TestCases extends BP_UnitTestCase {
 
 		$this->assertTrue( 1 === $attachment_class->upload_dir_filter_args );
 
-		$cover_image_class = new BP_Attachment_Cover_Image();
+		$cover_image_class = new BBoss_Attachment_Cover_Image();
 
 		// Simulate an upload
 		$cover_image_class->upload( $_FILES );

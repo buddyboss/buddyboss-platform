@@ -216,9 +216,9 @@ class BB_DRM_Addon extends BB_Base_DRM {
 
 		// Determine icon based on severity.
 		if ( BB_DRM_Helper::DRM_LOCKED === $drm_status || BB_DRM_Helper::DRM_HIGH === $drm_status ) {
-			$icon_url = buddypress()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
+			$icon_url = bboss()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
 		} else {
-			$icon_url = buddypress()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
+			$icon_url = bboss()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
 		}
 
 		$notifications = new BB_Notifications();

@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  * Class for generating SQL clauses that filter a primary query according to
  * XProfile metadata keys and values.
  *
- * `BP_XProfile_Meta_Query` is a helper that allows primary query classes, such
+ * `BBoss_XProfile_Meta_Query` is a helper that allows primary query classes, such
  * as {@see WP_Query} and {@see WP_User_Query}, to filter their results by object
  * metadata, by generating `JOIN` and `WHERE` subclauses to be attached
  * to the primary SQL query string.
  *
  * @since BuddyPress 2.3.0
  */
-class BP_XProfile_Meta_Query extends WP_Meta_Query {
+class BBoss_XProfile_Meta_Query extends WP_Meta_Query {
 
 	/**
 	 * Determine whether a query clause is first-order.

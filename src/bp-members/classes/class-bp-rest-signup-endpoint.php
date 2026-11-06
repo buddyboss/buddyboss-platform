@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Signup_Endpoint class
+ * BP REST: BBoss_REST_Signup_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Signup_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Signup_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Variable to store the password fields data.
@@ -32,7 +32,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'signup';
 
 		$this->default_password_fields = array(
@@ -172,7 +172,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$fields = array();
 
 		/* Account detail fields */
-		$account_fields = bp_nouveau_get_signup_fields( 'account_details' );
+		$account_fields = bboss_nouveau_get_signup_fields( 'account_details' );
 
 		if ( ! empty( $account_fields ) ) {
 			foreach ( $account_fields as $k => $field ) {
@@ -193,9 +193,9 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		/* xProfile fields */
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 			$signup_group_id = $this->bp_rest_xprofile_base_group_id();
-			$field_group     = bp_xprofile_get_groups(
+			$field_group     = bboss_xprofile_get_groups(
 				array(
 					'profile_group_id' => $signup_group_id,
 					'fetch_fields'     => true,
@@ -204,7 +204,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 			if ( ! empty( $field_group ) ) {
 				$field_group     = current( $field_group );
-				$fields_endpoint = new BP_REST_XProfile_Fields_Endpoint();
+				$fields_endpoint = new BBoss_REST_XProfile_Fields_Endpoint();
 				if ( ! empty( $field_group->fields ) ) {
 					foreach ( $field_group->fields as $field ) {
 
@@ -212,12 +212,12 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						 * Added support for display name format support from platform.
 						 */
 						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+						if ( function_exists( 'bboss_core_hide_display_name_field' ) && true === bboss_core_hide_display_name_field( $field->id ) ) {
 							continue;
 						}
 
-						if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-							if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() === $field->id ) {
+						if ( function_exists( 'bboss_member_type_enable_disable' ) && false === bboss_member_type_enable_disable() ) {
+							if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() === $field->id ) {
 								continue;
 							}
 						}
@@ -233,7 +233,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
-							'member_type' => bp_xprofile_get_meta( $field['id'], 'field', 'member_type', false ),
+							'member_type' => bboss_xprofile_get_meta( $field['id'], 'field', 'member_type', false ),
 						);
 					}
 				}
@@ -241,8 +241,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		/* xProfile fields */
-		$blog_fields = bp_nouveau_get_signup_fields( 'blog_details' );
-		if ( ! empty( $blog_fields ) && bp_get_blog_signup_allowed() ) {
+		$blog_fields = bboss_nouveau_get_signup_fields( 'blog_details' );
+		if ( ! empty( $blog_fields ) && bboss_get_blog_signup_allowed() ) {
 			if ( array_key_exists( 'signup_blog_privacy_public', $blog_fields ) ) {
 				unset( $blog_fields['signup_blog_privacy_public'] );
 			}
@@ -297,10 +297,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		/* Legal agreement field */
-		$legal_agreement_field = function_exists( 'bb_register_legal_agreement' ) ? bb_register_legal_agreement() : false;
+		$legal_agreement_field = function_exists( 'bboss_register_legal_agreement' ) ? bboss_register_legal_agreement() : false;
 
 		if ( $legal_agreement_field ) {
-			$page_ids = bp_core_get_directory_page_ids();
+			$page_ids = bboss_core_get_directory_page_ids();
 			$terms    = ! empty( $page_ids['terms'] ) ? $page_ids['terms'] : false;
 			$privacy  = ! empty( $page_ids['privacy'] ) ? $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
 
@@ -431,7 +431,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_signup_get_items_query_args', $args, $request );
 
 		// Actually, query it.
-		$signups = BP_Signup::get( $args );
+		$signups = BBoss_Signup::get( $args );
 
 		$retval = array();
 		foreach ( $signups['signups'] as $signup ) {
@@ -441,7 +441,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $signups['total'], $args['number'] );
+		$response = bboss_rest_response_add_total_headers( $response, $signups['total'], $args['number'] );
 
 		/**
 		 * Fires after a list of signups is fetched via the REST API.
@@ -474,7 +474,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( is_user_logged_in() && bp_current_user_can( 'bp_moderate' ) ) {
+		if ( is_user_logged_in() && bboss_current_user_can( 'bp_moderate' ) ) {
 			$retval = true;
 		}
 
@@ -518,7 +518,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires before a signup is retrieved via the REST API.
 		 *
-		 * @param BP_Signup        $signup   The signup object.
+		 * @param BBoss_Signup        $signup   The signup object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -558,7 +558,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
-			} elseif ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			} elseif ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
@@ -600,7 +600,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [signup_password_confirm] New user confirm account password.
 	 */
 	public function create_item( $request ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$request->set_param( 'context', 'edit' );
 
@@ -616,19 +616,19 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * the activation-time backstop.
 		 */
 		if (
-			function_exists( 'bp_get_xprofile_member_type_field_id' )
-			&& function_exists( 'bb_is_member_type_allowed_on_registration' )
+			function_exists( 'bboss_get_xprofile_member_type_field_id' )
+			&& function_exists( 'bboss_is_member_type_allowed_on_registration' )
 		) {
-			$bb_member_type_key = 'field_' . bp_get_xprofile_member_type_field_id();
+			$bb_member_type_key = 'field_' . bboss_get_xprofile_member_type_field_id();
 			if (
 				! empty( $param[ $bb_member_type_key ] )
-				&& ! bp_current_user_can( 'bp_moderate' )
+				&& ! bboss_current_user_can( 'bp_moderate' )
 				&& (
 					// An array is never a valid single-select submission; reject it
 					// (rather than skip validation) and short-circuit absint() so it
 					// is not called on an array.
 					is_array( $param[ $bb_member_type_key ] )
-					|| ! bb_is_member_type_allowed_on_registration( absint( $param[ $bb_member_type_key ] ) )
+					|| ! bboss_is_member_type_allowed_on_registration( absint( $param[ $bb_member_type_key ] ) )
 				)
 			) {
 				return new WP_Error(
@@ -674,8 +674,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$_POST = $posted_data;
 
 		$user_name  = (
-			function_exists( 'bp_get_signup_username_value' )
-			? bp_get_signup_username_value()
+			function_exists( 'bboss_get_signup_username_value' )
+			? bboss_get_signup_username_value()
 			: (
 				isset( $_POST['signup_username'] )
 				? sanitize_text_field( wp_unslash( $_POST['signup_username'] ) )
@@ -683,8 +683,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			)
 		);
 		$user_email = (
-			function_exists( 'bp_get_signup_email_value' )
-			? bp_get_signup_email_value()
+			function_exists( 'bboss_get_signup_email_value' )
+			? bboss_get_signup_email_value()
 			: (
 				isset( $_POST['signup_email'] )
 				? sanitize_text_field( wp_unslash( $_POST['signup_email'] ) )
@@ -693,10 +693,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		);
 
 		// Check the base account details for problems.
-		$account_details = bp_core_validate_user_signup( $user_name, $user_email );
+		$account_details = bboss_core_validate_user_signup( $user_name, $user_email );
 
-		$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
-		$password_opt = function_exists( 'bp_register_confirm_password' ) ? bp_register_confirm_password() : true;
+		$email_opt    = function_exists( 'bboss_register_confirm_email' ) && true === bboss_register_confirm_email() ? true : false;
+		$password_opt = function_exists( 'bboss_register_confirm_password' ) ? bboss_register_confirm_password() : true;
 
 		// If there are errors with account details, set them for display.
 		if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
@@ -747,7 +747,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		// Adding error message for the legal agreement checkbox.
-		if ( function_exists( 'bb_register_legal_agreement' ) && true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
+		if ( function_exists( 'bboss_register_legal_agreement' ) && true === bboss_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
 			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
 		}
 
@@ -755,7 +755,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$bp->signup->email    = $user_email;
 
 		// Now we've checked account details, we can check profile information.
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 
 			$xprofile_fields = array_filter(
 				$posted_data,
@@ -801,7 +801,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						unset( $_POST[ $field ] );
 					}
 
-					bp_xprofile_maybe_format_datebox_post_data( $field_id );
+					bboss_xprofile_maybe_format_datebox_post_data( $field_id );
 
 					// Trim post fields.
 					if ( isset( $_POST[ 'field_' . $field_id ] ) ) {
@@ -817,7 +817,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					}
 
 					// Create errors for required fields without values.
-					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+					if ( bboss_xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 						$bp->signup->errors[ 'field_' . $field_id ] = __( 'This is a required field.', 'buddyboss' );
 					} else {
 						// Validate xprofile.
@@ -832,10 +832,10 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		// Finally, let's check the blog details, if the user wants a blog and blog creation is enabled.
 		if ( isset( $_POST['signup_with_blog'] ) && ! empty( $_POST['signup_with_blog'] ) ) {
-			$active_signup = bp_core_get_root_option( 'registration' );
+			$active_signup = bboss_core_get_root_option( 'registration' );
 
 			if ( 'blog' === $active_signup || 'all' === $active_signup ) {
-				$blog_details = bp_core_validate_blog_signup( ( isset( $_POST['signup_blog_url'] ) ? $_POST['signup_blog_url'] : '' ), ( isset( $_POST['signup_blog_title'] ) ? $_POST['signup_blog_title'] : '' ) ); // phpcs:ignore
+				$blog_details = bboss_core_validate_blog_signup( ( isset( $_POST['signup_blog_url'] ) ? $_POST['signup_blog_url'] : '' ), ( isset( $_POST['signup_blog_title'] ) ? $_POST['signup_blog_title'] : '' ) ); // phpcs:ignore
 
 				// If there are errors with blog details, set them for display.
 				if ( ! empty( $blog_details['errors']->errors['blogname'] ) ) {
@@ -849,9 +849,9 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $bp->signup->errors ) ) {
-			if ( function_exists( 'bp_xprofile_nickname_field_id' ) && isset( $bp->signup->errors['signup_username'] ) ) {
-				if ( ! isset( $bp->signup->errors[ 'field_' . bp_xprofile_nickname_field_id() ] ) ) {
-					$bp->signup->errors[ 'field_' . bp_xprofile_nickname_field_id() ] = $bp->signup->errors['signup_username'];
+			if ( function_exists( 'bboss_xprofile_nickname_field_id' ) && isset( $bp->signup->errors['signup_username'] ) ) {
+				if ( ! isset( $bp->signup->errors[ 'field_' . bboss_xprofile_nickname_field_id() ] ) ) {
+					$bp->signup->errors[ 'field_' . bboss_xprofile_nickname_field_id() ] = $bp->signup->errors['signup_username'];
 				}
 				unset( $bp->signup->errors['signup_username'] );
 			}
@@ -866,7 +866,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		// No errors! Let's register those deets.
-		$active_signup = bp_core_get_root_option( 'registration' );
+		$active_signup = bboss_core_get_root_option( 'registration' );
 
 		if ( 'none' === $active_signup ) {
 			return new WP_Error(
@@ -879,14 +879,14 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		// Make sure the profiles fields module is enabled.
-		if ( bp_is_active( 'xprofile' ) && isset( $profile_field_ids ) && ! empty( $profile_field_ids ) ) {
+		if ( bboss_is_active( 'xprofile' ) && isset( $profile_field_ids ) && ! empty( $profile_field_ids ) ) {
 
 			/**
 			 * Loop through the posted fields, formatting any
 			 * datebox values, then add to usermeta.
 			 */
 			foreach ( (array) $profile_field_ids as $field_id ) {
-				bp_xprofile_maybe_format_datebox_post_data( $field_id );
+				bboss_xprofile_maybe_format_datebox_post_data( $field_id );
 
 				if ( ! empty( $_POST[ 'field_' . $field_id ] ) ) {
 					$usermeta[ 'field_' . $field_id ] = $_POST[ 'field_' . $field_id ]; // phpcs:ignore
@@ -927,7 +927,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		// Finally, sign up the user and/or blog.
 		if ( isset( $_POST['signup_with_blog'] ) && is_multisite() ) {
-			$wp_user_id = bp_core_signup_blog(
+			$wp_user_id = bboss_core_signup_blog(
 				$blog_details['domain'],
 				$blog_details['path'],
 				$blog_details['blog_title'],
@@ -936,7 +936,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				$usermeta
 			);
 		} else {
-			$wp_user_id = bp_core_signup_user(
+			$wp_user_id = bboss_core_signup_user(
 				$user_name,
 				sanitize_text_field( wp_unslash( $_POST['signup_password'] ) ),
 				$user_email,
@@ -985,7 +985,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a signup item is created via the REST API.
 		 *
-		 * @param BP_Signup        $signup   The created signup.
+		 * @param BBoss_Signup        $signup   The created signup.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -1013,7 +1013,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( ! is_user_logged_in() || bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! is_user_logged_in() || bboss_current_user_can( 'bp_moderate' ) ) {
 			$retval = true;
 		}
 
@@ -1050,7 +1050,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		// Get the signup before it's deleted.
 		$signup   = $this->get_signup_object( $request['id'] );
 		$previous = $this->prepare_item_for_response( $signup, $request );
-		$deleted  = BP_Signup::delete( array( $signup->id ) );
+		$deleted  = BBoss_Signup::delete( array( $signup->id ) );
 
 		if ( ! $deleted ) {
 			return new WP_Error(
@@ -1074,7 +1074,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a signup is deleted via the REST API.
 		 *
-		 * @param BP_Signup        $signup   The deleted signup.
+		 * @param BBoss_Signup        $signup   The deleted signup.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -1130,7 +1130,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		// Get the signup to activate thanks to the activation key.
 		$signup    = $this->get_signup_object( $activation_key );
-		$activated = bp_core_activate_signup( $activation_key );
+		$activated = bboss_core_activate_signup( $activation_key );
 
 		if ( is_wp_error( $activated ) ) {
 			return new WP_Error(
@@ -1151,7 +1151,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a signup is activated via the REST API.
 		 *
-		 * @param BP_Signup        $signup   The activated signup.
+		 * @param BBoss_Signup        $signup   The activated signup.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -1201,7 +1201,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares signup to return as an object.
 	 *
-	 * @param BP_Signup       $signup  Signup object.
+	 * @param BBoss_Signup       $signup  Signup object.
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
@@ -1212,7 +1212,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			'id'         => $signup->id,
 			'user_login' => $signup->user_login,
 			'user_name'  => $signup->user_name,
-			'registered' => bp_rest_prepare_date_response( $signup->registered ),
+			'registered' => bboss_rest_prepare_date_response( $signup->registered ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -1234,7 +1234,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Signup        $signup   Signup object.
+		 * @param BBoss_Signup        $signup   Signup object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -1246,7 +1246,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param int $identifier Signup identifier.
 	 *
-	 * @return BP_Signup|bool
+	 * @return BBoss_Signup|bool
 	 * @since 0.1.0
 	 */
 	public function get_signup_object( $identifier ) {
@@ -1260,7 +1260,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		// Get signups.
-		$signups = \BP_Signup::get( $signup_args );
+		$signups = \BBoss_Signup::get( $signup_args );
 
 		if ( ! empty( $signups['signups'] ) ) {
 			return reset( $signups['signups'] );
@@ -1284,7 +1284,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$key = 'create_item';
 
-			if ( ! function_exists( 'bp_xprofile_nickname_field_id' ) ) {
+			if ( ! function_exists( 'bboss_xprofile_nickname_field_id' ) ) {
 				$args['signup_username'] = array(
 					'context'           => array( 'edit' ),
 					'description'       => __( 'New user Username .', 'buddyboss' ),
@@ -1304,7 +1304,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
-			if ( function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ) {
+			if ( function_exists( 'bboss_register_confirm_email' ) && true === bboss_register_confirm_email() ) {
 				$args['signup_email_confirm'] = array(
 					'context'           => array( 'edit' ),
 					'description'       => __( 'New user confirm email address.', 'buddyboss' ),
@@ -1325,8 +1325,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 
 			if (
-				( function_exists( 'bp_register_confirm_password' ) && false !== bp_register_confirm_password() )
-				|| ! function_exists( 'bp_register_confirm_password' )
+				( function_exists( 'bboss_register_confirm_password' ) && false !== bboss_register_confirm_password() )
+				|| ! function_exists( 'bboss_register_confirm_password' )
 			) {
 				$args['signup_password_confirm'] = array(
 					'context'           => array( 'edit' ),
@@ -1338,7 +1338,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			if ( bp_get_blog_signup_allowed() ) {
+			if ( bboss_get_blog_signup_allowed() ) {
 				$args['signup_with_blog'] = array(
 					'context'           => array( 'edit' ),
 					'description'       => __( 'If user likes to create a new site.', 'buddyboss' ),
@@ -1392,7 +1392,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Signup $signup Signup object.
+	 * @param BBoss_Signup $signup Signup object.
 	 *
 	 * @return array Links for the given plugin.
 	 * @since 0.1.0
@@ -1420,7 +1420,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array     $links  The prepared links of the REST response.
-		 * @param BP_Signup $signup Signup object.
+		 * @param BBoss_Signup $signup Signup object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -1563,7 +1563,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Get the group id of the base name field
-	 * - from bp_xprofile_base_group_id()
+	 * - from bboss_xprofile_base_group_id()
 	 *
 	 * @param int  $defalut    xProfile field group id.
 	 * @param bool $get_option Get from options.
@@ -1576,9 +1576,17 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( empty( $field_id ) && $get_option ) {
-			$field_id = bp_get_option( 'bp-xprofile-base-group-id', $defalut );
+			$field_id = bboss_get_option( 'bp-xprofile-base-group-id', $defalut );
 		}
 
 		return (int) apply_filters( 'bp_xprofile_base_group_id', $field_id );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Signup_Endpoint', false ) || interface_exists( 'BBoss_REST_Signup_Endpoint', false ) || trait_exists( 'BBoss_REST_Signup_Endpoint', false ) ) && ! class_exists( 'BP_REST_Signup_Endpoint', false ) && ! interface_exists( 'BP_REST_Signup_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Signup_Endpoint', 'BP_REST_Signup_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

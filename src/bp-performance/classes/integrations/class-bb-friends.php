@@ -203,7 +203,7 @@ class BB_Friends extends Integration_Abstract {
 	 * When friendship request rejected
 	 *
 	 * @param int                   $friendship_id ID of the pending friendship.
-	 * @param BP_Friends_Friendship $friendship    Friendship object. Passed by reference.
+	 * @param BBoss_Friends_Friendship $friendship    Friendship object. Passed by reference.
 	 */
 	public function event_friends_friendship_rejected( $friendship_id, $friendship ) {
 		Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
@@ -224,7 +224,7 @@ class BB_Friends extends Integration_Abstract {
 	 * When friendship withdrawn
 	 *
 	 * @param int                   $friendship_id ID of the friendship.
-	 * @param BP_Friends_Friendship $friendship    Friendship object. Passed by reference.
+	 * @param BBoss_Friends_Friendship $friendship    Friendship object. Passed by reference.
 	 */
 	public function event_friends_friendship_withdrawn( $friendship_id, $friendship ) {
 		Cache::instance()->purge_by_group( 'bp-friends_' . $friendship_id );
@@ -267,7 +267,7 @@ class BB_Friends extends Integration_Abstract {
 	 */
 	private function get_friendship_ids_by_userid( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->friends->table_name} WHERE initiator_user_id = %d OR friend_user_id = %d ", $user_id, $user_id );

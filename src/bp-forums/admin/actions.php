@@ -14,7 +14,7 @@
  * There are a few common places that additional actions can currently be found
  *
  *  - Forums: In {@link bbPress::setup_actions()} in bbpress.php
- *  - Admin: More in {@link BBP_Admin::setup_actions()} in admin.php
+ *  - Admin: More in {@link BBoss_BBP_Admin::setup_actions()} in admin.php
  *
  * @see bbp-core-actions.php
  * @see bbp-core-filters.php
@@ -97,10 +97,10 @@ add_filter( 'dashboard_glance_items', 'bbp_filter_dashboard_glance_items', -99 )
  * @param int     $site_id
  * @param array() $meta
  */
-function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+function bboss_bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 
 	// Bail if plugin is not network activated
-	if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
+	if ( ! is_plugin_active_for_network( bboss_forums()->basename ) ) {
 		return;
 	}
 
@@ -125,14 +125,14 @@ function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
  * @param bool   $sample Optional, defaults to false. Is it a sample permalink.
  *
  * @uses is_admin() To make sure we're on an admin page
- * @uses bbp_is_custom_post_type() To get the forum post type
+ * @uses bboss_bbp_is_custom_post_type() To get the forum post type
  *
  * @return string The custom post type permalink
  */
-function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
+function bboss_bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
 
 	// Bail if not on an admin page and not getting a sample permalink
-	if ( ! empty( $sample ) && is_admin() && bbp_is_custom_post_type() ) {
+	if ( ! empty( $sample ) && is_admin() && bboss_bbp_is_custom_post_type() ) {
 		return urldecode( $post_link );
 	}
 
@@ -148,7 +148,7 @@ function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $s
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_init'
  */
-function bbp_admin_init() {
+function bboss_bbp_admin_init() {
 	do_action( 'bbp_admin_init' );
 }
 
@@ -158,7 +158,7 @@ function bbp_admin_init() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_menu'
  */
-function bbp_admin_menu() {
+function bboss_bbp_admin_menu() {
 	do_action( 'bbp_admin_menu' );
 }
 
@@ -168,7 +168,7 @@ function bbp_admin_menu() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_head'
  */
-function bbp_admin_head() {
+function bboss_bbp_admin_head() {
 	do_action( 'bbp_admin_head' );
 }
 
@@ -178,7 +178,7 @@ function bbp_admin_head() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_notices'
  */
-function bbp_admin_notices() {
+function bboss_bbp_admin_notices() {
 	do_action( 'bbp_admin_notices' );
 }
 
@@ -188,7 +188,7 @@ function bbp_admin_notices() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_notices'
  */
-function bbp_register_importers() {
+function bboss_bbp_register_importers() {
 	do_action( 'bbp_register_importers' );
 }
 
@@ -198,7 +198,7 @@ function bbp_register_importers() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_admin_notices'
  */
-function bbp_register_admin_style() {
+function bboss_bbp_register_admin_style() {
 	do_action( 'bbp_register_admin_style' );
 }
 
@@ -207,7 +207,7 @@ function bbp_register_admin_style() {
  *
  * @since 2.6.0 bbPress (r6912)
  */
-function bbp_register_admin_scripts() {
+function bboss_bbp_register_admin_scripts() {
 	do_action( 'bbp_register_admin_scripts' );
 }
 
@@ -217,6 +217,6 @@ function bbp_register_admin_scripts() {
  * @since bbPress (r3766)
  * @uses do_action() Calls 'bbp_register_admin_settings'
  */
-function bbp_register_admin_settings() {
+function bboss_bbp_register_admin_settings() {
 	do_action( 'bbp_register_admin_settings' );
 }

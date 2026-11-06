@@ -110,7 +110,7 @@ class BB_Subscriptions extends Integration_Abstract {
 	/**
 	 * When Subscription created/updated.
 	 *
-	 * @param BB_Subscriptions $subscription Subscription object.
+	 * @param BBoss_Subscriptions $subscription Subscription object.
 	 */
 	public function event_bb_subscriptions_after_save( $subscription ) {
 		if ( ! empty( $subscription->id ) ) {
@@ -121,7 +121,7 @@ class BB_Subscriptions extends Integration_Abstract {
 	/**
 	 * When Subscription deleted.
 	 *
-	 * @param BB_Subscriptions $subscription    Subscription object.
+	 * @param BBoss_Subscriptions $subscription    Subscription object.
 	 * @param int              $subscription_id Subscription ID.
 	 */
 	public function event_bb_subscriptions_after_delete_subscription( $subscription, $subscription_id ) {
@@ -138,7 +138,7 @@ class BB_Subscriptions extends Integration_Abstract {
 			return;
 		}
 
-		$subscription_ids = bb_get_subscriptions(
+		$subscription_ids = bboss_get_subscriptions(
 			array(
 				'type'    => $args['type'],
 				'item_id' => $args['item_id'],
@@ -203,7 +203,7 @@ class BB_Subscriptions extends Integration_Abstract {
 	 * @return array
 	 */
 	private function get_subscription_ids_by_userid( $user_id ) {
-		$all_subscription = bb_get_subscriptions(
+		$all_subscription = bboss_get_subscriptions(
 			array(
 				'user_id' => $user_id,
 				'fields'  => 'id',

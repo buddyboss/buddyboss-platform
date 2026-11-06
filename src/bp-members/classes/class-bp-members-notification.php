@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Members_Notification class.
+ * Set up the BBoss_Members_Notification class.
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Members_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Members_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Activity_Notification|Controller|object
+	 * @return null|BBoss_Activity_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -58,7 +58,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		if ( bp_is_active( 'settings' ) ) {
+		if ( bboss_is_active( 'settings' ) ) {
 			$this->register_notification_group(
 				'members',
 				esc_html__( 'Account Settings', 'buddyboss' ),
@@ -133,21 +133,21 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		if ( ! bp_is_active( 'settings' ) ) {
+		if ( ! bboss_is_active( 'settings' ) ) {
 			return $content;
 		}
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if ( 'members' === $component_name && 'bb_account_password' === $component_action_name ) {
 			$amount = 'single';
 
 			if ( 'web_push' === $screen ) {
-				$settings_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_settings_slug() );
+				$settings_link = trailingslashit( bboss_core_get_user_domain( $notification->user_id ) . bboss_get_settings_slug() );
 				$settings_link = add_query_arg( 'rid', (int) $notification->id, $settings_link );
 				$text          = __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' );
 			} else {
-				$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+				$settings_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_settings_slug() );
 				$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
 
 				// Set up the string and the filter.
@@ -165,8 +165,8 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 				array(
 					'link'  => $settings_link,
 					'text'  => $text,
-					'title' => bp_get_site_name(),
-					'image' => bb_notification_avatar_url( $notification ),
+					'title' => bboss_get_site_name(),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,

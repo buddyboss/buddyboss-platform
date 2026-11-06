@@ -14,10 +14,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_settings_screen_general() {
+function bboss_settings_screen_general() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -28,7 +28,7 @@ function bp_settings_screen_general() {
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */
-	bp_core_load_template( apply_filters( 'bp_settings_screen_general_settings', 'members/single/settings/general' ) );
+	bboss_core_load_template( apply_filters( 'bp_settings_screen_general_settings', 'members/single/settings/general' ) );
 }
 
 /**
@@ -36,9 +36,9 @@ function bp_settings_screen_general() {
  *
  * @since BuddyPress 2.2.0
  */
-function bp_settings_remove_email_subnav() {
+function bboss_settings_remove_email_subnav() {
 	if ( ! has_action( 'bp_notification_settings' ) ) {
-		bp_core_remove_subnav_item( BP_SETTINGS_SLUG, 'notifications' );
+		bboss_core_remove_subnav_item( BBOSS_SETTINGS_SLUG, 'notifications' );
 	}
 }
 add_action( 'bp_actions', 'bp_settings_remove_email_subnav' );

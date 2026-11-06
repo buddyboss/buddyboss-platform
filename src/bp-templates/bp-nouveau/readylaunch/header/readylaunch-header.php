@@ -7,7 +7,7 @@
  * message/notification counts, and responsive mobile navigation.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <?php
-$readylaunch_instance = bb_load_readylaunch();
+$readylaunch_instance = bboss_load_readylaunch();
 $bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
 $theme_mode_class     = '';
 if ( 'choice' === $bb_rl_theme_mode ) {
@@ -43,14 +43,14 @@ if ( 'choice' === $bb_rl_theme_mode ) {
 <body <?php body_class( 'bb-readylaunch-template ' . $theme_mode_class ); ?>>
 <?php
 wp_body_open();
-bp_get_template_part( 'sidebar/left-sidebar' );
+bboss_get_template_part( 'sidebar/left-sidebar' );
 ?>
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
 			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
-			bp_get_template_part( 'header/site-logo' );
+			bboss_get_template_part( 'header/site-logo' );
 
 			// Get menu location and generate CSS class based on parent items count.
 			$menu_id    = $readylaunch_instance->bb_rl_get_header_menu_location();
@@ -89,25 +89,25 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			<div id="header-aside" class="header-aside">
 				<div class="header-aside-inner flex items-center">
 					<?php
-					if ( bp_is_active( 'search' ) ) {
-						bp_get_template_part( 'common/search/search-model' );
+					if ( bboss_is_active( 'search' ) ) {
+						bboss_get_template_part( 'common/search/search-model' );
 					} else {
-						bp_nouveau_search_form();
+						bboss_nouveau_search_form();
 					}
 
 					if ( is_user_logged_in() ) {
-						if ( bp_is_active( 'messages' ) ) {
-							bp_get_template_part( 'header/messages-dropdown' );
+						if ( bboss_is_active( 'messages' ) ) {
+							bboss_get_template_part( 'header/messages-dropdown' );
 						}
-						if ( bp_is_active( 'notifications' ) ) {
-							bp_get_template_part( 'header/notification-dropdown' );
+						if ( bboss_is_active( 'notifications' ) ) {
+							bboss_get_template_part( 'header/notification-dropdown' );
 						}
 						?>
 						<div class="user-wrap user-wrap-container">
 							<?php
 							$logged_in_user = wp_get_current_user();
-							$user_link      = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $logged_in_user->ID ) : get_author_posts_url( $logged_in_user->ID );
-							$display_name   = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $logged_in_user->ID ) : $logged_in_user->display_name;
+							$user_link      = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $logged_in_user->ID ) : get_author_posts_url( $logged_in_user->ID );
+							$display_name   = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $logged_in_user->ID ) : $logged_in_user->display_name;
 							?>
 
 							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>" aria-label="<?php echo esc_attr( $display_name ); ?>">
@@ -115,7 +115,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							</a>
 							<?php if ( is_user_logged_in() ) { ?>
 								<div class="bb-rl-profile-dropdown">
-									<?php bp_get_template_part( 'header/profile-dropdown' ); ?>
+									<?php bboss_get_template_part( 'header/profile-dropdown' ); ?>
 								</div>
 							<?php } ?>
 						</div>
@@ -133,7 +133,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 
 			<div class="bb-readylaunch-mobile-menu__wrap">
 				<?php
-				if ( bp_is_active( 'search' ) ) {
+				if ( bboss_is_active( 'search' ) ) {
 					?>
 						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="mobile-search-form">
 							<label for="mobile-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
@@ -157,17 +157,17 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							'menu_class'  => 'bb-readylaunch-mobile-menu',
 						)
 					);
-					if ( is_user_logged_in() && ( bp_is_active( 'messages' ) || bp_is_active( 'notifications' ) ) ) {
+					if ( is_user_logged_in() && ( bboss_is_active( 'messages' ) || bboss_is_active( 'notifications' ) ) ) {
 						?>
 				<div class="bb-readylaunch-mobile-menu_items">
 					<ul>
-						<?php if ( bp_is_active( 'messages' ) ) { ?>
+						<?php if ( bboss_is_active( 'messages' ) ) { ?>
 							<li>
 								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 									<i class="bb-icons-rl-chat-teardrop-text"></i>
 									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
 									<?php
-										$unread_message_count = messages_get_unread_count();
+										$unread_message_count = bboss_messages_get_unread_count();
 									if ( $unread_message_count > 0 ) :
 										?>
 										<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
@@ -175,13 +175,13 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 								</a>
 							</li>
 						<?php } ?>
-						<?php if ( bp_is_active( 'notifications' ) ) { ?>
+						<?php if ( bboss_is_active( 'notifications' ) ) { ?>
 							<li>
 								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 									<i class="bb-icons-rl-bell-simple"></i>
 									<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
 									<?php
-										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+										$notifications             = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 									if ( $unread_notification_count > 0 ) :
 										?>
@@ -194,7 +194,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 				</div>
 						<?php
 					}
-					bp_get_template_part( 'sidebar/left-sidebar' );
+					bboss_get_template_part( 'sidebar/left-sidebar' );
 					?>
 			</div>
 		</div>

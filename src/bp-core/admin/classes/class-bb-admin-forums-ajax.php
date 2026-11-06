@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Forums_Ajax
+ * Class BBoss_Admin_Forums_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Forums_Ajax {
+class BBoss_Admin_Forums_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -59,7 +59,7 @@ class BB_Admin_Forums_Ajax {
 		add_action( 'bbp_delete_forum', $clear_counts );
 		add_action( 'bbp_deleted_forum', $clear_counts );
 		add_action( 'bbp_trash_forum', $clear_counts );
-		add_action( 'save_post_' . bbp_get_forum_post_type(), $clear_counts );
+		add_action( 'save_post_' . bboss_bbp_get_forum_post_type(), $clear_counts );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class BB_Admin_Forums_Ajax {
 		// transparently (the read path keys on this version). Avoids the prior
 		// behavior where only the saving user's mine-count was busted, leaving
 		// other users' counts stale until their own next save.
-		bp_update_option( 'bb_admin_forums_mine_count_version', (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
+		bboss_update_option( 'bb_admin_forums_mine_count_version', (int) bboss_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
 	}
 
 	/**
@@ -109,9 +109,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function get_forums() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -142,7 +142,7 @@ class BB_Admin_Forums_Ajax {
 
 		// Build WP_Query args.
 		$query_args = array(
-			'post_type'      => bbp_get_forum_post_type(),
+			'post_type'      => bboss_bbp_get_forum_post_type(),
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
 			'post_status'    => array( 'publish', 'private', 'hidden' ),
@@ -269,7 +269,7 @@ class BB_Admin_Forums_Ajax {
 			$author_id  = (int) $forum->post_author;
 			$user       = get_userdata( $author_id );
 
-			$last_active  = bbp_get_forum_last_active_time( $forum_id, false );
+			$last_active  = bboss_bbp_get_forum_last_active_time( $forum_id, false );
 			$thumbnail_id = get_post_thumbnail_id( $forum_id );
 
 			$item = array(
@@ -279,8 +279,8 @@ class BB_Admin_Forums_Ajax {
 				'description'          => wp_trim_words( wp_strip_all_tags( $forum->post_content ), 20 ),
 				'visibility'           => $visibility,
 				'visibility_label'     => isset( $visibility_labels[ $visibility ] ) ? $visibility_labels[ $visibility ] : $visibility,
-				'forum_status'         => bbp_get_forum_status( $forum_id ),
-				'forum_type'           => bbp_get_forum_type( $forum_id ),
+				'forum_status'         => bboss_bbp_get_forum_status( $forum_id ),
+				'forum_type'           => bboss_bbp_get_forum_type( $forum_id ),
 				'discussions_count'    => (int) get_post_meta( $forum_id, '_bbp_total_topic_count', true ),
 				'replies_count'        => (int) get_post_meta( $forum_id, '_bbp_total_reply_count', true ),
 				'author_id'            => $author_id,
@@ -288,11 +288,11 @@ class BB_Admin_Forums_Ajax {
 				'author_avatar'        => get_avatar_url( $author_id, array( 'size' => 32 ) ),
 				'last_active'          => ! empty( $last_active ) ? $last_active : '',
 				'date_created'         => $forum->post_date,
-				'permalink'            => bbp_get_forum_permalink( $forum_id ),
+				'permalink'            => bboss_bbp_get_forum_permalink( $forum_id ),
 				'parent_id'            => (int) $forum->post_parent,
 				'order'                => (int) $forum->menu_order,
-				'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
-				'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
+				'is_group_forum'       => ! empty( bboss_bbp_get_forum_group_ids( $forum_id ) ),
+				'is_group_forum_child' => function_exists( 'bboss_get_child_forum_group_ids' ) && ! empty( bboss_get_child_forum_group_ids( $forum_id ) ),
 				'featured_image'       => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
 			);
 
@@ -378,7 +378,7 @@ class BB_Admin_Forums_Ajax {
 			// Uses a stdClass with default values instead of WP_Post to avoid
 			// unnecessary class constructor overhead. All get_value callbacks
 			// guard against ID=0 to prevent DB queries on this dummy object.
-			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+			$response['create_fields'] = bboss_admin_meta_field_registry()->get_fields_data(
 				'forums',
 				(object) array(
 					'ID'           => 0,
@@ -389,7 +389,7 @@ class BB_Admin_Forums_Ajax {
 					'post_parent'  => 0,
 					'post_author'  => get_current_user_id(),
 					'menu_order'   => 0,
-					'post_type'    => bbp_get_forum_post_type(),
+					'post_type'    => bboss_bbp_get_forum_post_type(),
 				)
 			);
 		}
@@ -414,9 +414,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function get_forum() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -428,7 +428,7 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		$forum = get_post( $forum_id );
-		if ( ! $forum || bbp_get_forum_post_type() !== $forum->post_type ) {
+		if ( ! $forum || bboss_bbp_get_forum_post_type() !== $forum->post_type ) {
 			wp_send_json_error( array( 'message' => __( 'Forum not found.', 'buddyboss' ) ) );
 		}
 
@@ -440,16 +440,16 @@ class BB_Admin_Forums_Ajax {
 			'slug'                 => $forum->post_name,
 			'description'          => $forum->post_content,
 			'visibility'           => get_post_status( $forum_id ),
-			'forum_status'         => bbp_get_forum_status( $forum_id ),
-			'forum_type'           => bbp_get_forum_type( $forum_id ),
+			'forum_status'         => bboss_bbp_get_forum_status( $forum_id ),
+			'forum_type'           => bboss_bbp_get_forum_type( $forum_id ),
 			'parent_id'            => (int) $forum->post_parent,
 			'order'                => (int) $forum->menu_order,
-			'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
-			'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
-			'permalink'            => bbp_get_forum_permalink( $forum_id ),
+			'is_group_forum'       => ! empty( bboss_bbp_get_forum_group_ids( $forum_id ) ),
+			'is_group_forum_child' => function_exists( 'bboss_get_child_forum_group_ids' ) && ! empty( bboss_get_child_forum_group_ids( $forum_id ) ),
+			'permalink'            => bboss_bbp_get_forum_permalink( $forum_id ),
 			'featured_image'       => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
 			'featured_image_id'    => $thumbnail_id ? (int) $thumbnail_id : 0,
-			'registered_fields'    => bb_admin_meta_field_registry()->get_fields_data( 'forums', $forum ),
+			'registered_fields'    => bboss_admin_meta_field_registry()->get_fields_data( 'forums', $forum ),
 		);
 
 		/**
@@ -471,9 +471,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function create_forum() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -496,7 +496,7 @@ class BB_Admin_Forums_Ajax {
 		// Validate parent_id references an actual forum if provided.
 		if ( ! empty( $parent_id ) ) {
 			$parent_post = get_post( $parent_id );
-			if ( ! $parent_post || bbp_get_forum_post_type() !== $parent_post->post_type ) {
+			if ( ! $parent_post || bboss_bbp_get_forum_post_type() !== $parent_post->post_type ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid parent forum.', 'buddyboss' ) ) );
 			}
 		}
@@ -540,9 +540,9 @@ class BB_Admin_Forums_Ajax {
 		// callbacks ($forum->post_title = $value, etc.) would fatal on null in
 		// PHP 8+; mutations on the stub are harmless because $forum_data is
 		// built directly from $_POST below.
-		bb_admin_meta_field_registry()->save_fields_data( 'forums', new \stdClass(), 'before' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'forums', new \stdClass(), 'before' );
 
-		$forum_id = bbp_insert_forum( $forum_data );
+		$forum_id = bboss_bbp_insert_forum( $forum_data );
 
 		if ( ! $forum_id ) {
 			wp_send_json_error( array( 'message' => __( 'Failed to create forum.', 'buddyboss' ) ) );
@@ -550,9 +550,9 @@ class BB_Admin_Forums_Ajax {
 
 		// Set forum status (open/closed) using bbPress lifecycle functions.
 		if ( 'closed' === $forum_status ) {
-			bbp_close_forum( $forum_id );
+			bboss_bbp_close_forum( $forum_id );
 		} else {
-			bbp_open_forum( $forum_id );
+			bboss_bbp_open_forum( $forum_id );
 		}
 
 		// Handle featured image. The wp.media picker lets admins select any
@@ -573,13 +573,13 @@ class BB_Admin_Forums_Ajax {
 		 * Fires after a new forum is created in Settings 2.0 admin.
 		 *
 		 * This is the primary lifecycle hook that triggers count initialization
-		 * via bbp_update_forum() registered in bp-forums/core/actions.php.
+		 * via bboss_bbp_update_forum() registered in bp-forums/core/actions.php.
 		 * Must fire before bbp_new_forum_post_extras for correct ordering.
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $forum_args {
-		 *     Array of forum arguments matching legacy bbp_new_forum_handler() signature.
+		 *     Array of forum arguments matching legacy bboss_bbp_new_forum_handler() signature.
 		 *
 		 *     @type int    $forum_id           Forum ID.
 		 *     @type int    $post_parent        Parent forum ID.
@@ -596,12 +596,12 @@ class BB_Admin_Forums_Ajax {
 			array(
 				'forum_id'           => $forum_id,
 				'post_parent'        => $parent_id,
-				'forum_author'       => bbp_get_current_user_id(),
+				'forum_author'       => bboss_bbp_get_current_user_id(),
 				'last_topic_id'      => 0,
 				'last_reply_id'      => 0,
 				'last_active_id'     => 0,
 				'last_active_time'   => 0,
-				'last_active_status' => bbp_get_public_status_id(),
+				'last_active_status' => bboss_bbp_get_public_status_id(),
 			)
 		);
 
@@ -625,7 +625,7 @@ class BB_Admin_Forums_Ajax {
 		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
 		$created_forum = get_post( $forum_id );
 		if ( $created_forum ) {
-			bb_admin_meta_field_registry()->save_fields_data( 'forums', $created_forum, 'after' );
+			bboss_admin_meta_field_registry()->save_fields_data( 'forums', $created_forum, 'after' );
 		}
 
 		// Clear status counts cache.
@@ -647,9 +647,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function save_forum() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -672,7 +672,7 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		$forum = get_post( $forum_id );
-		if ( ! $forum || bbp_get_forum_post_type() !== $forum->post_type ) {
+		if ( ! $forum || bboss_bbp_get_forum_post_type() !== $forum->post_type ) {
 			wp_send_json_error( array( 'message' => __( 'Forum not found.', 'buddyboss' ) ) );
 		}
 
@@ -710,7 +710,7 @@ class BB_Admin_Forums_Ajax {
 		// Validate parent_id references an actual forum if provided.
 		if ( ! empty( $parent_id ) ) {
 			$parent_post = get_post( $parent_id );
-			if ( ! $parent_post || bbp_get_forum_post_type() !== $parent_post->post_type ) {
+			if ( ! $parent_post || bboss_bbp_get_forum_post_type() !== $parent_post->post_type ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid parent forum.', 'buddyboss' ) ) );
 			}
 		}
@@ -729,7 +729,7 @@ class BB_Admin_Forums_Ajax {
 		// populate $_POST with third-party metabox values before wp_update_post
 		// fires save_post_forum (where third-party plugins read $_POST and persist
 		// their post meta).
-		bb_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'before' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'before' );
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
@@ -740,9 +740,9 @@ class BB_Admin_Forums_Ajax {
 		$allowed_statuses = array( 'open', 'closed' );
 		if ( ! empty( $forum_status ) && in_array( $forum_status, $allowed_statuses, true ) ) {
 			if ( 'closed' === $forum_status ) {
-				bbp_close_forum( $forum_id );
+				bboss_bbp_close_forum( $forum_id );
 			} else {
-				bbp_open_forum( $forum_id );
+				bboss_bbp_open_forum( $forum_id );
 			}
 		}
 
@@ -762,12 +762,12 @@ class BB_Admin_Forums_Ajax {
 
 		// Recalculate counts when parent changes.
 		if ( $parent_id !== $old_parent_id ) {
-			bbp_update_forum( array( 'forum_id' => $forum_id ) );
+			bboss_bbp_update_forum( array( 'forum_id' => $forum_id ) );
 			if ( ! empty( $old_parent_id ) ) {
-				bbp_update_forum( array( 'forum_id' => $old_parent_id ) );
+				bboss_bbp_update_forum( array( 'forum_id' => $old_parent_id ) );
 			}
 			if ( ! empty( $parent_id ) ) {
-				bbp_update_forum( array( 'forum_id' => $parent_id ) );
+				bboss_bbp_update_forum( array( 'forum_id' => $parent_id ) );
 			}
 		}
 
@@ -782,7 +782,7 @@ class BB_Admin_Forums_Ajax {
 		if ( ! empty( $forum_status ) ) {
 			$_POST['bbp_forum_status'] = $forum_status;
 		}
-		$_POST['bbp_forum_type'] = ! empty( $forum_type ) ? $forum_type : bbp_get_forum_type( $forum_id );
+		$_POST['bbp_forum_type'] = ! empty( $forum_type ) ? $forum_type : bboss_bbp_get_forum_type( $forum_id );
 		if ( ! empty( $visibility ) ) {
 			$_POST['bbp_forum_visibility'] = $visibility;
 		}
@@ -792,13 +792,13 @@ class BB_Admin_Forums_Ajax {
 		 * Fires after forum edit is complete in Settings 2.0 admin.
 		 *
 		 * This is the primary lifecycle hook that triggers count recalculation
-		 * via bbp_update_forum() registered in bp-forums/core/actions.php.
+		 * via bboss_bbp_update_forum() registered in bp-forums/core/actions.php.
 		 * Must fire before bbp_edit_forum_post_extras for correct ordering.
 		 *
 		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $forum_args {
-		 *     Array of forum arguments matching legacy bbp_edit_forum_handler() signature.
+		 *     Array of forum arguments matching legacy bboss_bbp_edit_forum_handler() signature.
 		 *
 		 *     @type int    $forum_id           Forum ID.
 		 *     @type int    $post_parent        Parent forum ID.
@@ -820,7 +820,7 @@ class BB_Admin_Forums_Ajax {
 				'last_reply_id'      => 0,
 				'last_active_id'     => 0,
 				'last_active_time'   => 0,
-				'last_active_status' => bbp_get_public_status_id(),
+				'last_active_status' => bboss_bbp_get_public_status_id(),
 			)
 		);
 
@@ -846,7 +846,7 @@ class BB_Admin_Forums_Ajax {
 		$forum = get_post( $forum_id );
 
 		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
-		bb_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'after' );
+		bboss_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'after' );
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
@@ -867,9 +867,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function delete_forum() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -881,7 +881,7 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		$forum = get_post( $forum_id );
-		if ( ! $forum || bbp_get_forum_post_type() !== $forum->post_type ) {
+		if ( ! $forum || bboss_bbp_get_forum_post_type() !== $forum->post_type ) {
 			wp_send_json_error( array( 'message' => __( 'Forum not found.', 'buddyboss' ) ) );
 		}
 
@@ -909,9 +909,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function forum_bulk_action() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -967,7 +967,7 @@ class BB_Admin_Forums_Ajax {
 		foreach ( $forum_ids as $forum_id ) {
 			$forum = get_post( $forum_id );
 
-			if ( ! $forum || bbp_get_forum_post_type() !== $forum->post_type ) {
+			if ( ! $forum || bboss_bbp_get_forum_post_type() !== $forum->post_type ) {
 				++$failed;
 				continue;
 			}
@@ -984,15 +984,15 @@ class BB_Admin_Forums_Ajax {
 				$updated = false;
 
 				// Preserve existing forum type per-forum so bbp_save_forum_extras() doesn't overwrite it.
-				$_POST['bbp_forum_type'] = bbp_get_forum_type( $forum_id ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$_POST['bbp_forum_type'] = bboss_bbp_get_forum_type( $forum_id ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 				// Update status (open/closed) if provided and not "no change".
 				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
 					if ( 'closed' === $edit_status ) {
-						bbp_close_forum( $forum_id );
+						bboss_bbp_close_forum( $forum_id );
 						$updated = true;
 					} elseif ( 'open' === $edit_status ) {
-						bbp_open_forum( $forum_id );
+						bboss_bbp_open_forum( $forum_id );
 						$updated = true;
 					}
 				}
@@ -1025,7 +1025,7 @@ class BB_Admin_Forums_Ajax {
 					/**
 					 * Fires after a forum is bulk-edited in Settings 2.0 admin.
 					 *
-					 * Fires the primary lifecycle hook so that bbp_update_forum()
+					 * Fires the primary lifecycle hook so that bboss_bbp_update_forum()
 					 * runs count recalculation (registered at core/actions.php:169).
 					 *
 					 * @since BuddyBoss 3.0.0
@@ -1042,7 +1042,7 @@ class BB_Admin_Forums_Ajax {
 							'last_reply_id'      => 0,
 							'last_active_id'     => 0,
 							'last_active_time'   => 0,
-							'last_active_status' => bbp_get_public_status_id(),
+							'last_active_status' => bboss_bbp_get_public_status_id(),
 						)
 					);
 					do_action( 'bbp_edit_forum_post_extras', $forum_id );
@@ -1109,7 +1109,7 @@ class BB_Admin_Forums_Ajax {
 
 		if ( false === $counts_map ) {
 			global $wpdb;
-			$forum_post_type = bbp_get_forum_post_type();
+			$forum_post_type = bboss_bbp_get_forum_post_type();
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom status counts for forums, not available via core API.
 			$status_counts = $wpdb->get_results(
@@ -1138,7 +1138,7 @@ class BB_Admin_Forums_Ajax {
 	 */
 	private function bb_get_mine_count() {
 		$user_id   = get_current_user_id();
-		$version   = (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 );
+		$version   = (int) bboss_get_option( 'bb_admin_forums_mine_count_version', 0 );
 		$cache_key = 'bb_admin_forums_mine_count_' . $user_id . '_v' . $version;
 		$cached    = wp_cache_get( $cache_key, 'bbpress' );
 
@@ -1147,7 +1147,7 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		global $wpdb;
-		$forum_post_type = bbp_get_forum_post_type();
+		$forum_post_type = bboss_bbp_get_forum_post_type();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom count query for current user's forums.
 		$count = (int) $wpdb->get_var(
@@ -1175,9 +1175,9 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function bb_forum_autocomplete() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_forum_post_type' ) ) {
+		if ( ! bboss_is_active( 'forums' ) || ! function_exists( 'bboss_bbp_get_forum_post_type' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -1193,7 +1193,7 @@ class BB_Admin_Forums_Ajax {
 		// When only selected_id is passed (initial load to resolve label), return just that forum.
 		if ( $selected_id && empty( $term ) && 1 === $page ) {
 			$forum = get_post( $selected_id );
-			if ( $forum && bbp_get_forum_post_type() === $forum->post_type ) {
+			if ( $forum && bboss_bbp_get_forum_post_type() === $forum->post_type ) {
 				wp_send_json_success(
 					array(
 						'results'  => array(
@@ -1215,7 +1215,7 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		$query_args = array(
-			'post_type'              => bbp_get_forum_post_type(),
+			'post_type'              => bboss_bbp_get_forum_post_type(),
 			'posts_per_page'         => $per_page + 1,
 			'paged'                  => $page,
 			'orderby'                => 'title',
@@ -1263,11 +1263,11 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	private function bb_propagate_group_forum_visibility( $forum_id ) {
-		if ( ! function_exists( 'bb_get_all_nested_subforums' ) ) {
+		if ( ! function_exists( 'bboss_get_all_nested_subforums' ) ) {
 			return;
 		}
 
-		$forum_obj = bbp_get_forum( $forum_id );
+		$forum_obj = bboss_bbp_get_forum( $forum_id );
 
 		if ( ! empty( $forum_obj->post_parent ) ) {
 			$ancestors = get_post_ancestors( $forum_id );
@@ -1281,11 +1281,11 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		// Only propagate for group-attached forums.
-		if ( empty( $parent_forum ) || empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
+		if ( empty( $parent_forum ) || empty( bboss_bbp_get_forum_group_ids( $parent_forum ) ) ) {
 			return;
 		}
 
-		$child_forums = bb_get_all_nested_subforums( $parent_forum );
+		$child_forums = bboss_get_all_nested_subforums( $parent_forum );
 		if ( ! $child_forums ) {
 			return;
 		}
@@ -1294,15 +1294,15 @@ class BB_Admin_Forums_Ajax {
 		foreach ( $child_forums as $child_forum_id ) {
 			if ( get_post_status( $child_forum_id ) !== $parent_status ) {
 				switch ( $parent_status ) {
-					case bbp_get_hidden_status_id():
-						bbp_hide_forum( $child_forum_id );
+					case bboss_bbp_get_hidden_status_id():
+						bboss_bbp_hide_forum( $child_forum_id );
 						break;
-					case bbp_get_private_status_id():
-						bbp_privatize_forum( $child_forum_id );
+					case bboss_bbp_get_private_status_id():
+						bboss_bbp_privatize_forum( $child_forum_id );
 						break;
-					case bbp_get_public_status_id():
+					case bboss_bbp_get_public_status_id():
 					default:
-						bbp_publicize_forum( $child_forum_id );
+						bboss_bbp_publicize_forum( $child_forum_id );
 						break;
 				}
 			}
@@ -1311,4 +1311,4 @@ class BB_Admin_Forums_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Forums_Ajax();
+new BBoss_Admin_Forums_Ajax();

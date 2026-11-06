@@ -14,18 +14,18 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_settings_screen_notification() {
+function bboss_settings_screen_notification() {
 
 	$template = 'members/single/settings/notifications';
 
-	if ( bp_action_variables() ) {
-		$action_variable = bp_action_variable( 0 );
+	if ( bboss_action_variables() ) {
+		$action_variable = bboss_action_variable( 0 );
 
 		if ( 'subscriptions' === $action_variable ) {
-			if ( ! empty( bb_get_subscriptions_types() ) ) {
+			if ( ! empty( bboss_get_subscriptions_types() ) ) {
 				$template = 'members/single/settings/subscriptions';
 			} else {
-				bp_do_404();
+				bboss_do_404();
 				return;
 			}
 		} else {
@@ -46,7 +46,7 @@ function bp_settings_screen_notification() {
 			$custom_template = apply_filters( 'bb_settings_notification_subnav_template', false, $action_variable );
 
 			if ( empty( $custom_template ) ) {
-				bp_do_404();
+				bboss_do_404();
 				return;
 			}
 
@@ -61,5 +61,5 @@ function bp_settings_screen_notification() {
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */
-	bp_core_load_template( apply_filters( 'bp_settings_screen_notification_settings', $template ) );
+	bboss_core_load_template( apply_filters( 'bp_settings_screen_notification_settings', $template ) );
 }

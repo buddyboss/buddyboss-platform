@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings - Forums Meta Fields Registration.
  *
  * Registers core forum fields for the Forum Create/Edit modals
- * in the Settings 2.0 admin interface via BB_Admin_Meta_Field_Registry.
+ * in the Settings 2.0 admin interface via BBoss_Admin_Meta_Field_Registry.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  */
-function bb_forums_register_core_meta_fields( $registry, $component ) {
+function bboss_forums_register_core_meta_fields( $registry, $component ) {
 
 	// =========================================================================
 	// TAB: Details (order 10–90).
@@ -65,12 +65,12 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 			'get_extra_data'    => function ( $forum ) {
 				$site_url       = trailingslashit( get_site_url() );
 				$forum_slug     = get_option( '_bbp_forum_slug', 'forum' );
-				$is_child_forum = ! empty( $forum->ID ) && function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum->ID ) );
+				$is_child_forum = ! empty( $forum->ID ) && function_exists( 'bboss_get_child_forum_group_ids' ) && ! empty( bboss_get_child_forum_group_ids( $forum->ID ) );
 
 				// For child group forums, show the full permalink instead of base URL.
 				if ( $is_child_forum ) {
 					return array(
-						'base_url'       => bbp_get_forum_permalink( $forum->ID ),
+						'base_url'       => bboss_bbp_get_forum_permalink( $forum->ID ),
 						'is_child_forum' => true,
 					);
 				}
@@ -121,7 +121,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $forum->ID ) ) {
 					return 'forum';
 				}
-				return bbp_get_forum_type( $forum->ID );
+				return bboss_bbp_get_forum_type( $forum->ID );
 			},
 			'get_options'       => function ( $forum ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(
@@ -156,7 +156,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $forum->ID ) ) {
 					return 'open';
 				}
-				return bbp_get_forum_status( $forum->ID );
+				return bboss_bbp_get_forum_status( $forum->ID );
 			},
 			'get_options'       => function ( $forum ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(

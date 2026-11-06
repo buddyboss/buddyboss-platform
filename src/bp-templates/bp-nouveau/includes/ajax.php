@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Template loop for the specified object.
  */
-function bp_nouveau_ajax_object_template_loader() {
-	if ( ! bp_is_post_request() ) {
+function bboss_nouveau_ajax_object_template_loader() {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error();
 	}
 
@@ -29,7 +29,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	$object = sanitize_title( $_POST['object'] );
 
 	// Bail if object is not an active component to prevent arbitrary file inclusion.
-	if ( ! bp_is_active( $object ) ) {
+	if ( ! bboss_is_active( $object ) ) {
 		wp_send_json_error();
 	}
 
@@ -43,7 +43,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	if ( 'activity' === $object ) {
 		// AJAX takes the single-activity context from the Referer, and the query string then
 		// asks for that ID with hidden items shown. Check it the way the activity page does (PROD-10649).
-		if ( bp_is_single_activity() && ! bb_activity_user_can_view( (int) bp_current_action() ) ) {
+		if ( bboss_is_single_activity() && ! bboss_activity_user_can_view( (int) bboss_current_action() ) ) {
 			wp_send_json_error();
 		}
 
@@ -55,31 +55,31 @@ function bp_nouveau_ajax_object_template_loader() {
 		// We need to calculate and return the feed URL for each scope.
 		switch ( $scope ) {
 			case 'friends':
-				$feed_url = bp_loggedin_user_domain() . bp_get_activity_slug() . '/friends/feed/';
+				$feed_url = bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/friends/feed/';
 				break;
 			case 'groups':
-				$feed_url = bp_loggedin_user_domain() . bp_get_activity_slug() . '/groups/feed/';
+				$feed_url = bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/groups/feed/';
 				break;
 			case 'favorites':
-				$feed_url = bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/feed/';
+				$feed_url = bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/favorites/feed/';
 				break;
 			case 'mentions':
-				$feed_url = bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/feed/';
+				$feed_url = bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/mentions/feed/';
 
 				// Get user new mentions.
-				$new_mentions = bp_get_user_meta( bp_loggedin_user_id(), 'bp_new_mentions', true );
+				$new_mentions = bboss_get_user_meta( bboss_loggedin_user_id(), 'bp_new_mentions', true );
 
 				// If we have some, include them into the returned json before deleting them.
 				if ( is_array( $new_mentions ) ) {
 					$result['new_mentions'] = $new_mentions;
 
 					// Clear new mentions.
-					bp_activity_clear_new_mentions( bp_loggedin_user_id() );
+					bboss_activity_clear_new_mentions( bboss_loggedin_user_id() );
 				}
 
 				break;
 			default:
-				$feed_url = bp_get_sitewide_activity_feed_link();
+				$feed_url = bboss_get_sitewide_activity_feed_link();
 				break;
 		}
 
@@ -100,8 +100,8 @@ function bp_nouveau_ajax_object_template_loader() {
 	 * context. Without this check, templates will load the 'single' version
 	 * of themselves rather than the directory version.
 	 */
-	if ( ! bp_current_action() ) {
-		bp_update_is_directory( true, bp_current_component() );
+	if ( ! bboss_current_action() ) {
+		bboss_update_is_directory( true, bboss_current_component() );
 	}
 
 	// Get the template path based on the 'template' variable via the AJAX request.
@@ -132,7 +132,7 @@ function bp_nouveau_ajax_object_template_loader() {
 
 	ob_start();
 
-	$template_path = bp_locate_template( array( $template_part ), false );
+	$template_path = bboss_locate_template( array( $template_part ), false );
 
 	/**
 	 * Filters the server path for the template loader.
@@ -152,15 +152,15 @@ function bp_nouveau_ajax_object_template_loader() {
 	unset( $template_path, $template_part );
 
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
-		if ( bb_enable_content_counts() ) {
-			$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		if ( bboss_enable_content_counts() ) {
+			$result['count'] = bboss_core_number_format( $GLOBALS['members_template']->total_member_count );
 		}
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
-		if ( bb_enable_content_counts() ) {
-			$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
+		if ( bboss_enable_content_counts() ) {
+			$result['count'] = bboss_core_number_format( $GLOBALS['groups_template']->group_count );
 		}
-	} elseif ( 'members' === $object && bp_is_notifications_component() && bp_is_current_action( 'unread' ) ) {
-		$result['count'] = buddypress()->notifications->query_loop->total_notification_count;
+	} elseif ( 'members' === $object && bboss_is_notifications_component() && bboss_is_current_action( 'unread' ) ) {
+		$result['count'] = bboss()->notifications->query_loop->total_notification_count;
 	}
 
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
@@ -178,41 +178,41 @@ add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_res
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
+function bboss_nouveau_object_template_results_members_tabs( $results, $object ) {
 	if ( $object != 'members' ) {
 		return $results;
 	}
 
 	$results['scopes'] = array();
 
-	if ( bb_enable_content_counts() ) {
+	if ( bboss_enable_content_counts() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
-		bp_has_members( bp_ajax_querystring( 'members' ) );
-		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		bboss_has_members( bboss_ajax_querystring( 'members' ) );
+		$results['scopes']['all'] = bboss_core_number_format( $GLOBALS['members_template']->total_member_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 
 		add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
-		bp_has_members( bp_ajax_querystring( 'members' ) );
-		$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		bboss_has_members( bboss_ajax_querystring( 'members' ) );
+		$results['scopes']['personal'] = bboss_core_number_format( $GLOBALS['members_template']->total_member_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 
-		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-			$counts = bp_total_follow_counts();
+		if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
+			$counts = bboss_total_follow_counts();
 			if ( ! empty( $counts['following'] ) ) {
-				$results['scopes']['following'] = bp_core_number_format( $counts['following'] );
+				$results['scopes']['following'] = bboss_core_number_format( $counts['following'] );
 			}
 
 			// Followers.
 			if ( ! empty( $counts['followers'] ) ) {
 				add_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );
-				bp_has_members( bp_ajax_querystring( 'members' ) );
-				$results['scopes']['followers'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+				bboss_has_members( bboss_ajax_querystring( 'members' ) );
+				$results['scopes']['followers'] = bboss_core_number_format( $GLOBALS['members_template']->total_member_count );
 				remove_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );	
 			}
 		}
 	}
 
-	$results['layout'] = bb_get_directory_layout_preference( 'members' );
+	$results['layout'] = bboss_get_directory_layout_preference( 'members' );
 
 	return $results;
 }
@@ -223,26 +223,26 @@ add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_res
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
+function bboss_nouveau_object_template_results_groups_tabs( $results, $object ) {
 	if ( 'groups' !== $object ) {
 		return $results;
 	}
 
 	$results['scopes'] = array();
 
-	if ( bb_enable_content_counts() ) {
+	if ( bboss_enable_content_counts() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
-		bp_has_groups( bp_ajax_querystring( 'groups' ) );
-		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
+		bboss_has_groups( bboss_ajax_querystring( 'groups' ) );
+		$results['scopes']['all'] = bboss_core_number_format( $GLOBALS['groups_template']->total_group_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
 		add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
-		bp_has_groups( bp_ajax_querystring( 'groups' ) );
-		$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
+		bboss_has_groups( bboss_ajax_querystring( 'groups' ) );
+		$results['scopes']['personal'] = bboss_core_number_format( $GLOBALS['groups_template']->total_group_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
 	}
 
-	$results['layout'] = bb_get_directory_layout_preference( 'groups' );
+	$results['layout'] = bboss_get_directory_layout_preference( 'groups' );
 
 	return $results;
 }
@@ -252,15 +252,15 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_object_template_results_members_personal_scope( $querystring, $object ) {
+function bboss_nouveau_object_template_results_members_personal_scope( $querystring, $object ) {
 	if ( 'members' !== $object ) {
 		return $querystring;
 	}
 
-	$querystring = bp_parse_args( $querystring );
+	$querystring = bboss_parse_args( $querystring );
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-		$counts = bp_total_follow_counts();
+	if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
+		$counts = bboss_total_follow_counts();
 		if ( ! empty( $counts['following'] ) ) {
 			if ( isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
 				unset( $querystring['include'] );
@@ -277,7 +277,7 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
 	$querystring['scope']    = 'personal';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
-	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['user_id']  = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	return http_build_query( $querystring );
 }
 
@@ -286,17 +286,17 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_object_template_results_members_following_scope( $querystring, $object ) {
+function bboss_nouveau_object_template_results_members_following_scope( $querystring, $object ) {
 	if ( 'members' !== $object ) {
 		return $querystring;
 	}
 
-	$querystring = bp_parse_args( $querystring );
+	$querystring = bboss_parse_args( $querystring );
 
 	$args                             = array(
-		'user_id' => ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id(),
+		'user_id' => ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id(),
 	);
-	$following_comma_separated_string = bp_get_following_ids( $args );
+	$following_comma_separated_string = bboss_get_following_ids( $args );
 	$querystring['include']           = $following_comma_separated_string;
 	$querystring['scope']             = 'following';
 	$querystring['page']              = 1;
@@ -313,16 +313,16 @@ function bp_nouveau_object_template_results_members_following_scope( $querystrin
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_object_template_results_groups_personal_scope( $querystring, $object ) {
+function bboss_nouveau_object_template_results_groups_personal_scope( $querystring, $object ) {
 	if ( 'groups' !== $object ) {
 		return $querystring;
 	}
 
-	$querystring             = bp_parse_args( $querystring );
+	$querystring             = bboss_parse_args( $querystring );
 	$querystring['scope']    = 'personal';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
-	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['user_id']  = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 	return http_build_query( $querystring );
 }
 
@@ -335,15 +335,15 @@ add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position'
  *
  * Registered for the `bb_save_cover_position` action and the legacy
  * `save_cover_position` action. Both require the `bb_save_cover_position`
- * nonce (localized as BP_Nouveau.coverPositionNonce, posted as `nonce`) and a
+ * nonce (localized as BBoss_Nouveau.coverPositionNonce, posted as `nonce`) and a
  * logged-in user who can edit the group's or member's cover image.
  *
  * @since BuddyBoss 1.5.1
  * @since BuddyBoss [BBVERSION] Added the `bb_save_cover_position` action; both actions require a nonce.
  */
-function bp_nouveau_ajax_save_cover_position() {
+function bboss_nouveau_ajax_save_cover_position() {
 
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error();
 	}
 
@@ -364,36 +364,36 @@ function bp_nouveau_ajax_save_cover_position() {
 	$position = floatval( $_POST['position'] );
 	$updated  = false;
 
-	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) ) {
+	if ( bboss_is_active( 'groups' ) && bboss_is_group() && bboss_attachments_get_group_has_cover_image( bboss_get_current_group_id() ) ) {
 		// Only members allowed to manage the group's cover may reposition it.
 		if (
-			! bp_attachments_current_user_can(
+			! bboss_attachments_current_user_can(
 				'edit_cover_image',
 				array(
 					'object'  => 'group',
-					'item_id' => bp_get_current_group_id(),
+					'item_id' => bboss_get_current_group_id(),
 				)
 			)
 		) {
 			wp_send_json_error();
 		}
 
-		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
-	} else if ( bp_is_user() && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
+		$updated = bboss_groups_update_groupmeta( bboss_get_current_group_id(), 'bp_cover_position', $position );
+	} else if ( bboss_is_user() && bboss_attachments_get_user_has_cover_image( bboss_displayed_user_id() ) ) {
 		// Only the profile owner (or a user allowed to edit their cover) may reposition it.
 		if (
-			! bp_attachments_current_user_can(
+			! bboss_attachments_current_user_can(
 				'edit_cover_image',
 				array(
 					'object'  => 'user',
-					'item_id' => bp_displayed_user_id(),
+					'item_id' => bboss_displayed_user_id(),
 				)
 			)
 		) {
 			wp_send_json_error();
 		}
 
-		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
+		$updated = bboss_update_user_meta( bboss_displayed_user_id(), 'bp_cover_position', $position );
 	}
 
 	if ( empty( $updated ) ) {
@@ -415,17 +415,17 @@ function bp_nouveau_ajax_save_cover_position() {
  *
  * @return string Modified querystring
  */
-function bb_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
+function bboss_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
 	if ( 'members' !== $object ) {
 		return $querystring;
 	}
 
-	$querystring = bp_parse_args( $querystring );
+	$querystring = bboss_parse_args( $querystring );
 
 	$args = array(
-		'user_id' => bp_loggedin_user_id(),
+		'user_id' => bboss_loggedin_user_id(),
 	);
-	$followers_comma_separated_string = bp_get_follower_ids( $args );
+	$followers_comma_separated_string = bboss_get_follower_ids( $args );
 	$querystring['include']           = $followers_comma_separated_string;
 	$querystring['scope']             = 'followers';
 	$querystring['page']              = 1;

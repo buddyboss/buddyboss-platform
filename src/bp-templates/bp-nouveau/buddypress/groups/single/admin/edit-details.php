@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_is_group_create = bp_is_group_create();
+$bp_is_group_create = bboss_is_group_create();
 if ( $bp_is_group_create ) : ?>
 
 	<h3 class="bp-screen-title creation-step-name">
@@ -27,7 +27,7 @@ if ( $bp_is_group_create ) : ?>
 <?php endif; ?>
 
 <label for="group-name"><?php esc_html_e( 'Group Name (required)', 'buddyboss' ); ?></label>
-<input type="text" name="group-name" id="group-name" value="<?php echo $bp_is_group_create ? bp_get_new_group_name() : esc_attr( bp_get_group_name_editable() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value escaped above (create: esc_attr filter on bp_get_new_group_name(); edit: esc_attr()). ?>" aria-required="true" />
+<input type="text" name="group-name" id="group-name" value="<?php echo $bp_is_group_create ? bboss_get_new_group_name() : esc_attr( bboss_get_group_name_editable() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value escaped above (create: esc_attr filter on bp_get_new_group_name(); edit: esc_attr()). ?>" aria-required="true" />
 
 <label for="group-desc"><?php esc_html_e( 'Group Description', 'buddyboss' ); ?></label>
-<textarea name="group-desc" id="group-desc" aria-required="true"><?php $bp_is_group_create ? bp_new_group_description() : bp_group_description_editable(); ?></textarea>
+<textarea name="group-desc" id="group-desc" aria-required="true"><?php $bp_is_group_create ? bboss_new_group_description() : bboss_group_description_editable(); ?></textarea>

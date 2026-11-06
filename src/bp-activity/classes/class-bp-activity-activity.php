@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Activity_Activity {
+class BBoss_Activity_Activity {
 
 	/** Properties ************************************************************/
 
@@ -212,7 +212,7 @@ class BP_Activity_Activity {
 		$row = wp_cache_get( $this->id, 'bp_activity' );
 
 		if ( false === $row ) {
-			$bp  = buddypress();
+			$bp  = bboss();
 			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name} WHERE id = %d", $this->id ) );
 
 			wp_cache_set( $this->id, $row, 'bp_activity' );
@@ -277,7 +277,7 @@ class BP_Activity_Activity {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->id                = apply_filters_ref_array( 'bp_activity_id_before_save', array( $this->id, &$this ) );
 		$this->item_id           = apply_filters_ref_array( 'bp_activity_item_id_before_save', array( $this->item_id, &$this ) );
@@ -297,7 +297,7 @@ class BP_Activity_Activity {
 		$this->is_spam           = apply_filters_ref_array( 'bp_activity_is_spam_before_save', array( $this->is_spam, &$this ) );
 		$this->privacy           = apply_filters_ref_array( 'bp_activity_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->status            = apply_filters_ref_array( 'bb_activity_status_before_save', array( $this->status, &$this ) );
-		$this->title_required    = isset( $this->title_required ) ? apply_filters_ref_array( 'bb_activity_title_required_before_save', array( $this->title_required, &$this ) ) : bb_is_activity_post_title_enabled();
+		$this->title_required    = isset( $this->title_required ) ? apply_filters_ref_array( 'bb_activity_title_required_before_save', array( $this->title_required, &$this ) ) : bboss_is_activity_post_title_enabled();
 
 		/**
 		 * Fires before the current activity item gets saved.
@@ -306,7 +306,7 @@ class BP_Activity_Activity {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Activity_Activity $this Current instance of the activity item being saved. Passed by reference.
+		 * @param BBoss_Activity_Activity $this Current instance of the activity item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_activity_before_save', array( &$this ) );
 
@@ -329,12 +329,12 @@ class BP_Activity_Activity {
 		}
 
 		if ( $this->title_required ) {
-			$validate_post_title = bb_validate_activity_post_title( $this->post_title, $this );
+			$validate_post_title = bboss_validate_activity_post_title( $this->post_title, $this );
 			if ( ! $validate_post_title['valid'] ) {
 				$this->errors->add( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
 				return $this->errors;
 			}
-			$this->post_title = bb_activity_strip_post_title( $this->post_title );
+			$this->post_title = bboss_activity_strip_post_title( $this->post_title );
 		}
 
 		$prev_activity_status = '';
@@ -357,22 +357,22 @@ class BP_Activity_Activity {
 
 			// If an existing activity item, prevent any changes to the content generating new @mention notifications.
 		} elseif (
-			bb_get_activity_scheduled_status() === $prev_activity_status &&
-			bb_get_activity_published_status() === $this->status
+			bboss_get_activity_scheduled_status() === $prev_activity_status &&
+			bboss_get_activity_published_status() === $this->status
 		) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 		} elseif ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
-		bb_activity_update_date_updated_and_clear_cache( $this, $this->date_updated );
+		bboss_activity_update_date_updated_and_clear_cache( $this, $this->date_updated );
 
 		/**
 		 * Fires after an activity item has been saved to the database.
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Activity_Activity $this Current instance of activity item being saved. Passed by reference.
+		 * @param BBoss_Activity_Activity $this Current instance of activity item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_activity_after_save', array( &$this ) );
 
@@ -389,7 +389,7 @@ class BP_Activity_Activity {
 	 * @since BuddyPress 2.9.0 Introduced the `$order_by` parameter.
 	 * @since BuddyBoss 3.7.1 Site-wide visibility of a listed comment also requires the item it belongs to be visible.
 	 *
-	 * @see BP_Activity_Activity::get_filter_sql() for a description of the
+	 * @see BBoss_Activity_Activity::get_filter_sql() for a description of the
 	 *      'filter' parameter.
 	 * @see WP_Meta_Query::queries for a description of the 'meta_query'
 	 *      parameter format.
@@ -409,9 +409,9 @@ class BP_Activity_Activity {
 	 *     @type array        $meta_query        Array of meta_query conditions. See WP_Meta_Query::queries.
 	 *     @type array        $date_query        Array of date_query conditions. See first parameter of
 	 *                                           WP_Date_Query::__construct().
-	 *     @type array        $filter_query      Array of advanced query conditions. See BP_Activity_Query::__construct().
+	 *     @type array        $filter_query      Array of advanced query conditions. See BBoss_Activity_Query::__construct().
 	 *     @type string|array $scope             Pre-determined set of activity arguments.
-	 *     @type array        $filter            See BP_Activity_Activity::get_filter_sql().
+	 *     @type array        $filter            See BBoss_Activity_Activity::get_filter_sql().
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
 	 *     @type string       $privacy           Limit results by a privacy. Default: public.
 	 *     @type bool         $display_comments  Whether to include activity comments. Default: false.
@@ -449,11 +449,11 @@ class BP_Activity_Activity {
 				10 => 'spam',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$bp = buddypress();
-		$r  = bp_parse_args(
+		$bp = bboss();
+		$r  = bboss_parse_args(
 			$args,
 			array(
 				'page'              => 1,               // The current page.
@@ -498,9 +498,9 @@ class BP_Activity_Activity {
 			! empty( $r['scope'] ) &&
 			'unanswered' === $r['scope']
 		) {
-			if ( bb_is_rest() ) {
+			if ( bboss_is_rest() ) {
 				global $bb_rest_request;
-				$r['scope'] = BP_REST_Activity_Endpoint::bp_rest_activity_default_scope(
+				$r['scope'] = BBoss_REST_Activity_Endpoint::bp_rest_activity_default_scope(
 					'all',
 					( $bb_rest_request['user_id'] ? $bb_rest_request['user_id'] : 0 ),
 					( $bb_rest_request['group_id'] ? $bb_rest_request['group_id'] : 0 ),
@@ -508,7 +508,7 @@ class BP_Activity_Activity {
 					( $bb_rest_request['primary_id'] ? $bb_rest_request['primary_id'] : 0 )
 				);
 			} else {
-				$r['scope'] = bp_activity_default_scope();
+				$r['scope'] = bboss_activity_default_scope();
 			}
 
 			// Ensure filter array is initialized.
@@ -536,7 +536,7 @@ class BP_Activity_Activity {
 
 			// Advanced filtering.
 		} elseif ( ! empty( $r['filter_query'] ) ) {
-			$filter_query = new BP_Activity_Query( $r['filter_query'] );
+			$filter_query = new BBoss_Activity_Query( $r['filter_query'] );
 			$sql          = $filter_query->get_sql();
 			if ( ! empty( $sql ) ) {
 				$where_conditions['filter_query_sql'] = $sql;
@@ -561,7 +561,7 @@ class BP_Activity_Activity {
 
 		// Searching.
 		if ( $r['search_terms'] ) {
-			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$search_terms_like              = '%' . bboss_esc_like( $r['search_terms'] ) . '%';
 			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s OR a.post_title LIKE %s', $search_terms_like, $search_terms_like );
 
 			// Allow search CPT's post title in the activity feed.
@@ -729,13 +729,13 @@ class BP_Activity_Activity {
 		}
 
 		// Remove forums activity while component is disabled.
-		if ( ! function_exists( 'bbpress' ) || ! bp_is_active( 'forums' ) ) {
+		if ( ! function_exists( 'bboss_forums' ) || ! bboss_is_active( 'forums' ) ) {
 			$not_in_type                                = "'" . implode( "', '", esc_sql( array( 'bbp_topic_create', 'bbp_reply_create' ) ) ) . "'";
 			$where_conditions['exclude_forum_activity'] = "a.type NOT IN ({$not_in_type})";
 		}
 
 		// Remove groups activity while component is disabled.
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bboss_is_active( 'groups' ) ) {
 			$not_in_type                                 = "'" . implode( "', '", esc_sql( array( 'groups' ) ) ) . "'";
 			$where_conditions['exclude_groups_activity'] = "a.component NOT IN ({$not_in_type})";
 		}
@@ -787,7 +787,7 @@ class BP_Activity_Activity {
 		 * @since BuddyPress 2.0.0
 		 *
 		 * @param bool                 $value Whether to use legacy structure or not.
-		 * @param BP_Activity_Activity $value Current method being called.
+		 * @param BBoss_Activity_Activity $value Current method being called.
 		 * @param array                $r     Parsed arguments passed into method.
 		 */
 		if ( apply_filters( 'bp_use_legacy_activity_query', false, __METHOD__, $r ) ) {
@@ -870,10 +870,10 @@ class BP_Activity_Activity {
 				$cache_group = 'bp_activity_with_last_activity';
 			}
 
-			$cached = bp_core_get_incremented_cache( $activity_ids_sql, $cache_group );
+			$cached = bboss_core_get_incremented_cache( $activity_ids_sql, $cache_group );
 			if ( false === $cached ) {
 				$activity_ids = $wpdb->get_col( $activity_ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_activity_paged_activities_sql / bp_activity_get_where_conditions / bp_activity_get_join_sql; as built in get(): table names from buddypress()->activity / $wpdb->users, scope/filter clauses from get_scope_query_sql()/get_filter_sql() (ids via wp_parse_id_list(), strings via prepare %s in get_in_operator_sql()), search LIKE %s-prepared via bp_esc_like(), exclude/in ids via wp_parse_id_list(), privacy/status %s lists prepared, excluded types esc_sql()'d, meta/date query from WP_Meta_Query/BP_Date_Query, ORDER BY column whitelisted (FIELD() ids via wp_parse_id_list(), pinned id %d-prepared), sort ASC/DESC only, LIMIT %d-prepared.
-				bp_core_set_incremented_cache( $activity_ids_sql, $cache_group, $activity_ids );
+				bboss_core_set_incremented_cache( $activity_ids_sql, $cache_group, $activity_ids );
 			} else {
 				$activity_ids = $cached;
 			}
@@ -904,7 +904,7 @@ class BP_Activity_Activity {
 			}
 
 			if ( ! empty( $activity_ids ) && $r['update_meta_cache'] ) {
-				bp_activity_update_meta_cache( $activity_ids );
+				bboss_activity_update_meta_cache( $activity_ids );
 			}
 
 			if ( $activities && $r['display_comments'] ) {
@@ -933,10 +933,10 @@ class BP_Activity_Activity {
 			 * @param string $sort      Sort direction for query.
 			 */
 			$total_activities_sql = apply_filters( 'bp_activity_total_activities_sql', "SELECT count(DISTINCT a.id) FROM {$bp->activity->table_name} a {$join_sql} {$where_sql}", $where_sql, $sort );
-			$cached               = bp_core_get_incremented_cache( $total_activities_sql, $cache_group );
+			$cached               = bboss_core_get_incremented_cache( $total_activities_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_activities = $wpdb->get_var( $total_activities_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filter bp_activity_total_activities_sql (plus the where/join filters above); as built here: literal COUNT select, activity table name from buddypress()->activity and the same $join_sql/$where_sql as the ids query above (see the reason there).
-				bp_core_set_incremented_cache( $total_activities_sql, $cache_group, $total_activities );
+				bboss_core_set_incremented_cache( $total_activities_sql, $cache_group, $total_activities );
 			} else {
 				$total_activities = $cached;
 			}
@@ -971,10 +971,10 @@ class BP_Activity_Activity {
 		}
 
 		// Get BuddyPress.
-		$bp = buddypress();
+		$bp = bboss();
 
 		$activities   = array();
-		$uncached_ids = bp_get_non_cached_ids( $activity_ids, 'bp_activity' );
+		$uncached_ids = bboss_get_non_cached_ids( $activity_ids, 'bp_activity' );
 
 		// Prime caches as necessary.
 		if ( ! empty( $uncached_ids ) ) {
@@ -1006,7 +1006,7 @@ class BP_Activity_Activity {
 				$activity->is_spam           = (int) $activity->is_spam;
 
 				if ( empty( $activity->action ) ) {
-					$activity->action = bp_activity_generate_action_string( $activity );
+					$activity->action = bboss_activity_generate_action_string( $activity );
 				}
 			}
 
@@ -1022,7 +1022,7 @@ class BP_Activity_Activity {
 		if ( isset( $user_query_cache[ $cache_key ] ) ) {
 			$user_query = $user_query_cache[ $cache_key ];
 		} else {
-			$user_query = new BP_User_Query(
+			$user_query = new BBoss_User_Query(
 				array(
 					'user_ids'        => $user_ids,
 					'populate_extras' => false,
@@ -1058,11 +1058,11 @@ class BP_Activity_Activity {
 	 */
 	protected static function append_user_fullnames( $activities ) {
 
-		if ( bp_is_active( 'xprofile' ) && ! empty( $activities ) ) {
+		if ( bboss_is_active( 'xprofile' ) && ! empty( $activities ) ) {
 			$activity_user_ids = wp_list_pluck( $activities, 'user_id' );
 
 			if ( ! empty( $activity_user_ids ) ) {
-				$fullnames = bp_core_get_user_displaynames( $activity_user_ids );
+				$fullnames = bboss_core_get_user_displaynames( $activity_user_ids );
 				if ( ! empty( $fullnames ) ) {
 					foreach ( (array) $activities as $i => $activity ) {
 						if ( ! empty( $fullnames[ $activity->user_id ] ) ) {
@@ -1086,7 +1086,7 @@ class BP_Activity_Activity {
 	 *
 	 * The only object data required for activity component activity types
 	 * (activity_update and activity_comment) is related to users, and that
-	 * info is fetched separately in BP_Activity_Activity::get_activity_data().
+	 * info is fetched separately in BBoss_Activity_Activity::get_activity_data().
 	 * So this method contains nothing but a filter that allows other
 	 * components, such as bp-friends and bp-groups, to hook in and prime
 	 * their own caches at the beginning of an activity loop.
@@ -1109,7 +1109,7 @@ class BP_Activity_Activity {
 	}
 
 	/**
-	 * Generate action strings for the activities located in BP_Activity_Activity::get().
+	 * Generate action strings for the activities located in BBoss_Activity_Activity::get().
 	 *
 	 * If no string can be dynamically generated for a given item
 	 * (typically because the activity type has not been properly
@@ -1123,7 +1123,7 @@ class BP_Activity_Activity {
 	 */
 	protected static function generate_action_strings( $activities ) {
 		foreach ( $activities as $key => $activity ) {
-			$generated_action = bp_activity_generate_action_string( $activity );
+			$generated_action = bboss_activity_generate_action_string( $activity );
 			if ( false !== $generated_action ) {
 				$activity->action = $generated_action;
 			}
@@ -1135,11 +1135,11 @@ class BP_Activity_Activity {
 	}
 
 	/**
-	 * Get the SQL for the 'meta_query' param in BP_Activity_Activity::get().
+	 * Get the SQL for the 'meta_query' param in BBoss_Activity_Activity::get().
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses. However,
-	 * since BP_Activity_Activity::get() builds its SQL differently than
+	 * since BBoss_Activity_Activity::get() builds its SQL differently than
 	 * WP_Query, we have to alter the return value (stripping the leading
 	 * AND keyword from the 'where' clause).
 	 *
@@ -1162,7 +1162,7 @@ class BP_Activity_Activity {
 
 			// WP_Meta_Query expects the table name at
 			// $wpdb->activitymeta.
-			$wpdb->activitymeta = buddypress()->activity->table_name_meta;
+			$wpdb->activitymeta = bboss()->activity->table_name_meta;
 
 			$meta_sql = $activity_meta_query->get_sql( 'activity', 'a', 'id' );
 
@@ -1175,9 +1175,9 @@ class BP_Activity_Activity {
 	}
 
 	/**
-	 * Get the SQL for the 'date_query' param in BP_Activity_Activity::get().
+	 * Get the SQL for the 'date_query' param in BBoss_Activity_Activity::get().
 	 *
-	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
+	 * We use BBoss_Date_Query, which extends WP_Date_Query, to do the heavy lifting
 	 * of parsing the date_query array and creating the necessary SQL clauses.
 	 *
 	 * @since BuddyPress 2.1.0
@@ -1187,11 +1187,11 @@ class BP_Activity_Activity {
 	 * @return string
 	 */
 	public static function get_date_query_sql( $date_query = array() ) {
-		return BP_Date_Query::get_where_sql( $date_query, 'a.date_recorded' );
+		return BBoss_Date_Query::get_where_sql( $date_query, 'a.date_recorded' );
 	}
 
 	/**
-	 * Get the SQL for the 'scope' param in BP_Activity_Activity::get().
+	 * Get the SQL for the 'scope' param in BBoss_Activity_Activity::get().
 	 *
 	 * A scope is a predetermined set of activity arguments.  This method is used
 	 * to grab these activity arguments and override any existing args if needed.
@@ -1201,7 +1201,7 @@ class BP_Activity_Activity {
 	 * @since BuddyPress 2.2.0
 	 *
 	 * @param  mixed $scope  The activity scope. Accepts string or array of scopes.
-	 * @param  array $r      Current activity arguments. Same as those of BP_Activity_Activity::get(),
+	 * @param  array $r      Current activity arguments. Same as those of BBoss_Activity_Activity::get(),
 	 *                       but merged with defaults.
 	 * @return false|array 'sql' WHERE SQL string and 'override' activity args.
 	 */
@@ -1243,8 +1243,8 @@ class BP_Activity_Activity {
 			 *   - 'bp_activity_set_friends_scope_args'
 			 *
 			 * To see how this filter is used, plugin devs should check out:
-			 *   - bp_groups_filter_activity_scope() - used for 'groups' scope
-			 *   - bp_friends_filter_activity_scope() - used for 'friends' scope
+			 *   - bboss_groups_filter_activity_scope() - used for 'groups' scope
+			 *   - bboss_friends_filter_activity_scope() - used for 'friends' scope
 			 *
 			 * @since BuddyPress 2.2.0
 			 *
@@ -1252,12 +1252,12 @@ class BP_Activity_Activity {
 			 *     Activity query clauses.
 			 *     @type array {
 			 *         Activity arguments for your custom scope.
-			 *         See {@link BP_Activity_Query::_construct()} for more details.
+			 *         See {@link BBoss_Activity_Query::_construct()} for more details.
 			 *     }
 			 *     @type array  $override Optional. Override existing activity arguments passed by $r.
 			 *     }
 			 * }
-			 * @param array $r Current activity arguments passed in BP_Activity_Activity::get().
+			 * @param array $r Current activity arguments passed in BBoss_Activity_Activity::get().
 			 */
 			$scope_args = apply_filters( "bp_activity_set_{$scope}_scope_args", array(), $r );
 
@@ -1280,7 +1280,7 @@ class BP_Activity_Activity {
 			// Set relation to OR.
 			$query_args['relation'] = 'OR';
 
-			$query = new BP_Activity_Query( $query_args );
+			$query = new BBoss_Activity_Query( $query_args );
 			$sql   = $query->get_sql();
 			if ( ! empty( $sql ) ) {
 				$retval['sql'] = $sql;
@@ -1297,12 +1297,12 @@ class BP_Activity_Activity {
 	/**
 	 * In BuddyPress 1.2.x, this was used to retrieve specific activity feed items (for example, on an activity's permalink page).
 	 *
-	 * As of 1.5.x, use BP_Activity_Activity::get() with an 'in' parameter instead.
+	 * As of 1.5.x, use BBoss_Activity_Activity::get() with an 'in' parameter instead.
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
 	 * @deprecated 1.5
-	 * @deprecated Use BP_Activity_Activity::get() with an 'in' parameter instead.
+	 * @deprecated Use BBoss_Activity_Activity::get() with an 'in' parameter instead.
 	 *
 	 * @param mixed    $activity_ids     Array or comma-separated string of activity IDs to retrieve.
 	 * @param int|bool $max              Maximum number of results to return. (Optional; default is no maximum).
@@ -1338,7 +1338,7 @@ class BP_Activity_Activity {
 	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded, $date_updated ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$where_args = array();
 
@@ -1414,8 +1414,8 @@ class BP_Activity_Activity {
 	public static function delete( $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
-		$r  = bp_parse_args(
+		$bp = bboss();
+		$r  = bboss_parse_args(
 			$args,
 			array(
 				'id'                => false,
@@ -1583,7 +1583,7 @@ class BP_Activity_Activity {
 	 * Delete the comments associated with a set of activity items.
 	 *
 	 * This method is no longer used by BuddyPress, and it is recommended not to
-	 * use it going forward, and use BP_Activity_Activity::delete() instead.
+	 * use it going forward, and use BBoss_Activity_Activity::delete() instead.
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
@@ -1596,7 +1596,7 @@ class BP_Activity_Activity {
 	public static function delete_activity_item_comments( $activity_ids = array(), $delete_meta = true ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$delete_meta  = (bool) $delete_meta;
 		$activity_ids = implode( ',', wp_parse_id_list( $activity_ids ) );
@@ -1625,7 +1625,7 @@ class BP_Activity_Activity {
 		$activity_ids = wp_parse_id_list( $activity_ids );
 
 		foreach ( $activity_ids as $activity_id ) {
-			bp_activity_delete_meta( $activity_id );
+			bboss_activity_delete_meta( $activity_id );
 		}
 
 		return true;
@@ -1689,9 +1689,9 @@ class BP_Activity_Activity {
 		$function_args = func_get_args();
 
 		if (
-			bp_is_single_activity() ||
+			bboss_is_single_activity() ||
 			(
-				bb_is_rest() &&
+				bboss_is_rest() &&
 				! isset( $_GET['apply_limit'] )
 			)
 		) {
@@ -1703,7 +1703,7 @@ class BP_Activity_Activity {
 		}
 
 		if (
-			bb_is_rest() &&
+			bboss_is_rest() &&
 			isset( $_GET['apply_limit'] ) &&
 			! empty( (bool) $_GET['apply_limit'] ) &&
 			! empty( $_GET['last_comment_id'] ) &&
@@ -1714,7 +1714,7 @@ class BP_Activity_Activity {
 			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' );
 		}
 
-		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
+		if ( bboss_is_single_activity() || ( bboss_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
 			$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
 		} else {
 			// No caching for paginated comments.
@@ -1729,10 +1729,10 @@ class BP_Activity_Activity {
 			// A true cache miss.
 		} elseif ( empty( $comments ) ) {
 			$comments = array();
-			$bp       = buddypress();
+			$bp       = bboss();
 
 			// Select the user's fullname with the query.
-			if ( bp_is_active( 'xprofile' ) ) {
+			if ( bboss_is_active( 'xprofile' ) ) {
 				$fullname_select = ', pd.value as user_fullname';
 				$fullname_from   = ", {$bp->profile->table_name_data} pd ";
 				$fullname_where  = 'AND pd.user_id = a.user_id AND pd.field_id = 1';
@@ -1759,7 +1759,7 @@ class BP_Activity_Activity {
 			 * @since BuddyPress 2.0.0
 			 *
 			 * @param bool                 $value     Whether or not to use the legacy query.
-			 * @param BP_Activity_Activity $value     Magic method referring to currently called method.
+			 * @param BBoss_Activity_Activity $value     Magic method referring to currently called method.
 			 * @param array                $func_args Array of the method's argument list.
 			 */
 			if ( apply_filters( 'bp_use_legacy_activity_query', false, __METHOD__, $function_args ) ) {
@@ -1866,9 +1866,9 @@ class BP_Activity_Activity {
 
 				$sql['limit'] = '';
 				if (
-					! bp_is_single_activity() ||
+					! bboss_is_single_activity() ||
 					(
-						bb_is_rest() &&
+						bboss_is_rest() &&
 						! empty( (bool) $_GET['apply_limit'] )
 					)
 				) {
@@ -1914,14 +1914,14 @@ class BP_Activity_Activity {
 						);
 					}
 
-					if ( bb_is_rest() ) {
-						$limit = bb_get_activity_comment_loading();
+					if ( bboss_is_rest() ) {
+						$limit = bboss_get_activity_comment_loading();
 					} else {
-						$limit = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
+						$limit = ! empty( $args['limit'] ) ? $args['limit'] : bboss_get_activity_comment_visibility();
 						$limit++;
 					}
 
-					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
+					if ( bboss_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
 						$sql['limit'] = '';
 					} else {
 						$sql['limit'] = $wpdb->prepare( 'limit %d', $limit );
@@ -1963,7 +1963,7 @@ class BP_Activity_Activity {
 				if (
 					true === $exclude_childrens ||
 					(
-						bb_is_rest() && ! isset( $_GET['apply_limit'] )
+						bboss_is_rest() && ! isset( $_GET['apply_limit'] )
 					)
 				) {
 					$comments_count = self::bb_get_all_activity_comment_children_count(
@@ -1990,7 +1990,7 @@ class BP_Activity_Activity {
 					// When display_comments=stream, the parent comment may not be part of the
 					// returned results, so we manually fetch it.
 					if ( empty( $ref[ $parent_id ] ) ) {
-						$direct_parent = new BP_Activity_Activity( $parent_id );
+						$direct_parent = new BBoss_Activity_Activity( $parent_id );
 						if ( isset( $direct_parent->secondary_item_id ) ) {
 							// If the direct parent is not an activity update, that means we've reached
 							// the parent activity item (eg. new_blog_post).
@@ -2026,9 +2026,9 @@ class BP_Activity_Activity {
 			}
 
 			if (
-				bp_is_single_activity() ||
+				bboss_is_single_activity() ||
 				(
-					bb_is_rest() &&
+					bboss_is_rest() &&
 					isset( $_GET['apply_limit'] ) &&
 					empty( (bool) $_GET['apply_limit'] )
 				)
@@ -2054,12 +2054,12 @@ class BP_Activity_Activity {
 	 * visitor — including a logged-out one. Three values on each node carry a member's name and
 	 * must therefore be rebuilt for the current viewer rather than served from the cache:
 	 *
-	 * - `user_fullname`, resolved by bp_core_get_user_displayname(), which redacts a name part
+	 * - `user_fullname`, resolved by bboss_core_get_user_displayname(), which redacts a name part
 	 *   the viewer may not see;
 	 * - `action`, the rendered sentence ("<a…>Name</a> posted a new activity comment") that the
 	 *   REST endpoint returns as `title`. get_activity_data() generates it through
-	 *   bp_activity_generate_action_string() -> bp_core_get_userlink() ->
-	 *   bp_core_get_user_displayname(), so it is resolved for whoever populated the cache;
+	 *   bboss_activity_generate_action_string() -> bboss_core_get_userlink() ->
+	 *   bboss_core_get_user_displayname(), so it is resolved for whoever populated the cache;
 	 * - `display_name`, the raw wp_users column get_activity_data() copies onto each node. It is
 	 *   the same for every viewer, but it is refreshed here so a rename is not served stale — the
 	 *   cache is invalidated only when a comment is added, edited or deleted, never when a name
@@ -2071,7 +2071,7 @@ class BP_Activity_Activity {
 	 * @return array The same tree with its name values resolved for the current viewer.
 	 */
 	protected static function bb_refresh_comment_tree_viewer_fields( $comments ) {
-		if ( empty( $comments ) || ! is_array( $comments ) || ! bp_is_active( 'xprofile' ) ) {
+		if ( empty( $comments ) || ! is_array( $comments ) || ! bboss_is_active( 'xprofile' ) ) {
 			return $comments;
 		}
 
@@ -2086,7 +2086,7 @@ class BP_Activity_Activity {
 		// cache_users() and bb_core_prime_user_displayname_caches(), which fill the WP user,
 		// xprofile-data and visibility caches that the per-node action regeneration below reads
 		// back one member at a time — so rebuilding the action strings costs no extra queries.
-		$fullnames = (array) bp_core_get_user_displaynames( wp_list_pluck( $nodes, 'user_id' ) );
+		$fullnames = (array) bboss_core_get_user_displaynames( wp_list_pluck( $nodes, 'user_id' ) );
 
 		foreach ( $nodes as $node ) {
 			$user_id = isset( $node->user_id ) ? (int) $node->user_id : 0;
@@ -2100,7 +2100,7 @@ class BP_Activity_Activity {
 				// cache_users() filled above. get_userdata() resolves to the same value, but wraps
 				// the row in a WP_User whose construction also loads and maps the member's
 				// capabilities — work nothing here reads, paid once per node.
-				$user_data = BP_Core_User::get_core_userdata( $user_id );
+				$user_data = BBoss_Core_User::get_core_userdata( $user_id );
 
 				// Only when the user still exists: get_activity_data() leaves the property alone
 				// for a deleted user, and the cache-hit path must not diverge from it.
@@ -2116,7 +2116,7 @@ class BP_Activity_Activity {
 			// stored action column was empty" rule it also disinfects trees written by an earlier
 			// version — the group is persistent and has no TTL, so a leaking entry would otherwise
 			// survive the upgrade until the activity's comments changed.
-			$generated_action = bp_activity_generate_action_string( $node );
+			$generated_action = bboss_activity_generate_action_string( $node );
 			if ( false !== $generated_action ) {
 				$node->action = $generated_action;
 			}
@@ -2161,7 +2161,7 @@ class BP_Activity_Activity {
 	public static function rebuild_activity_comment_tree( $parent_id, $left = 1 ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// The right value of this node is the left value + 1.
 		$right = intval( $left + 1 );
@@ -2200,7 +2200,7 @@ class BP_Activity_Activity {
 	public static function get_child_comments( $parent_id ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_get_child_comments_' . $parent_id;
 		$result    = wp_cache_get( $cache_key, 'bp_activity_comments' );
 
@@ -2228,7 +2228,7 @@ class BP_Activity_Activity {
 	public static function get_recorded_components( $skip_last_activity = true ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( true === $skip_last_activity ) {
 			$components = $wpdb->get_col( "SELECT DISTINCT component FROM {$bp->activity->table_name} WHERE action != '' AND action != 'last_activity' ORDER BY component ASC" );
@@ -2248,7 +2248,7 @@ class BP_Activity_Activity {
 	 * @return array $activity_feed List of activity items, with RSS data added.
 	 */
 	public static function get_sitewide_items_for_feed( $limit = 35 ) {
-		$activities    = bp_activity_get_sitewide( array( 'max' => $limit ) );
+		$activities    = bboss_activity_get_sitewide( array( 'max' => $limit ) );
 		$activity_feed = array();
 
 		for ( $i = 0, $count = count( $activities ); $i < $count; ++$i ) {
@@ -2281,7 +2281,7 @@ class BP_Activity_Activity {
 	 * @return string SQL condition.
 	 */
 	public static function get_visible_sitewide_sql( $alias = 'a' ) {
-		$table = buddypress()->activity->table_name;
+		$table = bboss()->activity->table_name;
 
 		return "( {$alias}.hide_sitewide = 0 AND ( {$alias}.type <> 'activity_comment' OR COALESCE( ( SELECT hp.hide_sitewide FROM {$table} hp WHERE hp.id = {$alias}.item_id ), 0 ) = 0 ) )";
 	}
@@ -2291,7 +2291,7 @@ class BP_Activity_Activity {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Activity_Activity::get_filter_sql()
+	 * @see BBoss_Activity_Activity::get_filter_sql()
 	 *
 	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
@@ -2436,7 +2436,7 @@ class BP_Activity_Activity {
 	public static function get_last_updated() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->get_var( "SELECT date_recorded FROM {$bp->activity->table_name} ORDER BY date_recorded DESC LIMIT 1" );
 	}
@@ -2455,8 +2455,8 @@ class BP_Activity_Activity {
 	public static function total_favorite_count( $user_id, $activity_type = 'activity' ) {
 
 		// Get activities from user meta.
-		$favorite_activity_entries = function_exists( 'bb_activity_get_user_reacted_item_ids' )
-			? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+		$favorite_activity_entries = function_exists( 'bboss_activity_get_user_reacted_item_ids' )
+			? bboss_activity_get_user_reacted_item_ids( $user_id, $activity_type )
 			: array();
 		if ( ! empty( $favorite_activity_entries ) ) {
 			return count( $favorite_activity_entries );
@@ -2477,7 +2477,7 @@ class BP_Activity_Activity {
 	public static function check_exists_by_content( $content ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} WHERE content = %s", $content ) );
 
@@ -2495,7 +2495,7 @@ class BP_Activity_Activity {
 	public static function hide_all_for_user( $user_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->get_var( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = 1 WHERE user_id = %d", $user_id ) );
 	}
@@ -2514,8 +2514,8 @@ class BP_Activity_Activity {
 			foreach ( $activity_comments as $activity_id => $activity_comment ) {
 				if (
 					! empty( $activity_comment ) &&
-					bb_moderation_is_user_blocked_by( $activity_comment->user_id ) ||
-					bp_moderation_is_user_blocked( $activity_comment->user_id )
+					bboss_moderation_is_user_blocked_by( $activity_comment->user_id ) ||
+					bboss_moderation_is_user_blocked( $activity_comment->user_id )
 				) {
 					unset( $activity_comments[ $activity_id ] );
 				} elseif ( ! empty( $activity_comment->children ) ) {
@@ -2547,7 +2547,7 @@ class BP_Activity_Activity {
 
 		if (
 			empty( $activity ) &&
-			! $activity instanceof BP_Activity_Activity &&
+			! $activity instanceof BBoss_Activity_Activity &&
 			empty( $activity->id )
 		) {
 			return array(
@@ -2669,7 +2669,7 @@ class BP_Activity_Activity {
 
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bb_get_activity_status_' . $activity_id;
 		$status    = wp_cache_get( $cache_key, 'bp_activity' );
 
@@ -2701,7 +2701,7 @@ class BP_Activity_Activity {
 
 		if ( ! isset( $cache[ $activity_id ] ) ) {
 			global $wpdb;
-			$bp = buddypress();
+			$bp = bboss();
 
 			$cache[ $activity_id ] = $wpdb->get_col(
 				$wpdb->prepare(

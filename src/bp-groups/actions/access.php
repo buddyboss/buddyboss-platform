@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.1.0
  */
-function bp_groups_group_access_protection() {
-	if ( ! bp_is_group() ) {
+function bboss_groups_group_access_protection() {
+	if ( ! bboss_is_group() ) {
 		return;
 	}
 
 	global $wp;
 
-	$current_group   = groups_get_current_group();
+	$current_group   = bboss_groups_get_current_group();
 	$user_has_access = $current_group->user_has_access;
 	$is_visible      = $current_group->is_visible;
 	$no_access_args  = array();
@@ -32,7 +32,7 @@ function bp_groups_group_access_protection() {
 	if ( ! $user_has_access && $is_visible ) {
 
 		if ( ! is_user_logged_in() ) {
-			bp_core_redirect(
+			bboss_core_redirect(
 				add_query_arg(
 					array(
 						'bp-auth'       => 1,
@@ -45,10 +45,10 @@ function bp_groups_group_access_protection() {
 		}
 
 		// Always allow access to request-membership.
-		if ( bp_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
+		if ( bboss_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
 
-			$redirect = bp_get_group_permalink( $current_group );
-			bp_core_redirect(
+			$redirect = bboss_get_group_permalink( $current_group );
+			bboss_core_redirect(
 				add_query_arg(
 					array(
 						'bp-auth'       => 1,
@@ -58,25 +58,25 @@ function bp_groups_group_access_protection() {
 					wp_login_url( $redirect )
 				)
 			);
-		} elseif ( bp_is_current_action( 'request-membership' ) && is_user_logged_in() ) {
+		} elseif ( bboss_is_current_action( 'request-membership' ) && is_user_logged_in() ) {
 			$user_has_access = true;
 
 			// User doesn't have access, so set up redirect args.
 		} elseif ( is_user_logged_in() ) {
 			$no_access_args = array(
 				'message'  => __( 'You do not have access to this group.', 'buddyboss' ),
-				'root'     => bp_get_group_permalink( $current_group ) . 'home/',
+				'root'     => bboss_get_group_permalink( $current_group ) . 'home/',
 				'redirect' => false,
 			);
 		}
 	}
 
 	// Protect the admin tab from non-admins.
-	if ( bp_is_current_action( 'admin' ) && ! bp_is_item_admin() ) {
+	if ( bboss_is_current_action( 'admin' ) && ! bboss_is_item_admin() ) {
 		$user_has_access = false;
 		$no_access_args  = array(
 			'message'  => __( 'You are not an organizer or moderator of this group.', 'buddyboss' ),
-			'root'     => bp_get_group_permalink( $current_group ),
+			'root'     => bboss_get_group_permalink( $current_group ),
 			'redirect' => false,
 		);
 	}
@@ -92,7 +92,7 @@ function bp_groups_group_access_protection() {
 	 *
 	 * @param bool  $user_has_access True if the user has access to the
 	 *                               content, otherwise false.
-	 * @param array $no_access_args  Arguments to be passed to bp_core_no_access() in case
+	 * @param array $no_access_args  Arguments to be passed to bboss_core_no_access() in case
 	 *                               of no access. Note that this value is passed by reference,
 	 *                               so it can be modified by the filter callback.
 	 */
@@ -107,12 +107,12 @@ function bp_groups_group_access_protection() {
 	// Unset the current group so that you're not redirected
 	// to the default group tab.
 	if ( ! $is_visible ) {
-		buddypress()->groups->current_group = 0;
-		buddypress()->is_single_item        = false;
-		bp_do_404();
+		bboss()->groups->current_group = 0;
+		bboss()->is_single_item        = false;
+		bboss_do_404();
 		return;
 	} else {
-		bp_core_no_access( $no_access_args );
+		bboss_core_no_access( $no_access_args );
 	}
 
 }

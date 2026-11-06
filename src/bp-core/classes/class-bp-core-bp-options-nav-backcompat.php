@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
+class BBoss_Core_BP_Options_Nav_BackCompat extends BBoss_Core_BP_Nav_BackCompat {
 	/**
 	 * Parent slug of the current nav item.
 	 *
@@ -32,7 +32,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
-	 * @return BP_Core_BP_Nav_BackCompat
+	 * @return BBoss_Core_BP_Nav_BackCompat
 	 */
 	public function offsetGet( $offset ) {
 		_doing_it_wrong(

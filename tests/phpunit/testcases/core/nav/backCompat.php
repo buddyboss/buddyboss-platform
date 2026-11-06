@@ -12,18 +12,18 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->bp_nav = buddypress()->bp_nav;
-		$this->bp_options_nav = buddypress()->bp_options_nav;
+		$this->bp_nav = bboss()->bp_nav;
+		$this->bp_options_nav = bboss()->bp_options_nav;
 	}
 
 	public function tearDown() {
-		buddypress()->bp_nav = $this->bp_nav;
-		buddypress()->bp_options_nav = $this->bp_options_nav;
+		bboss()->bp_nav = $this->bp_nav;
+		bboss()->bp_options_nav = $this->bp_options_nav;
 		parent::tearDown();
 	}
 
 	protected function create_nav_items() {
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name'                => 'Foo',
 			'slug'                => 'foo',
 			'position'            => 25,
@@ -31,7 +31,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 			'default_subnav_slug' => 'foo-subnav'
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name'            => 'Foo Subnav',
 			'slug'            => 'foo-subnav',
 			'parent_url'      => 'example.com/foo',
@@ -49,12 +49,12 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 			'slug' => 'testgroup',
 		) );
 
-		$group = groups_get_group( $g );
-		$group_permalink = bp_get_group_permalink( $group );
+		$group = bboss_groups_get_group( $g );
+		$group_permalink = bboss_get_group_permalink( $group );
 
 		$this->go_to( $group_permalink );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name'            => 'Foo',
 			'slug'            => 'foo',
 			'parent_url'      => $group_permalink,
@@ -67,7 +67,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_nav_isset() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->assertTrue( isset( $bp->bp_nav ) );
 		$this->assertTrue( isset( $bp->bp_nav['foo'] ) );
@@ -77,7 +77,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_nav_unset() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// No support for this - it would create a malformed nav item.
 		/*
@@ -92,7 +92,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_nav_get() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$foo = $bp->bp_nav['foo'];
 		$this->assertSame( 'Foo', $foo['name'] );
@@ -103,11 +103,11 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_nav_set() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$bp->bp_nav['foo']['name'] = 'Bar';
 
-		$nav = bp_get_nav_menu_items();
+		$nav = bboss_get_nav_menu_items();
 
 		foreach ( $nav as $_nav ) {
 			if ( 'foo' === $_nav->css_id ) {
@@ -122,7 +122,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_isset() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->assertTrue( isset( $bp->bp_options_nav ) );
 		$this->assertTrue( isset( $bp->bp_options_nav['foo'] ) );
@@ -133,7 +133,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_unset() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// No support for this - it would create a malformed nav item.
 		/*
@@ -154,7 +154,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_get() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$foo_subnav = $bp->bp_options_nav['foo']['foo-subnav'];
 		$this->assertSame( 'Foo Subnav', $foo_subnav['name'] );
@@ -165,10 +165,10 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_set() {
 		$this->create_nav_items();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$bp->bp_options_nav['foo']['foo-subnav']['name'] = 'Bar';
-		$nav = bp_get_nav_menu_items();
+		$nav = bboss_get_nav_menu_items();
 
 		foreach ( $nav as $_nav ) {
 			if ( 'foo-subnav' === $_nav->css_id ) {
@@ -187,7 +187,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 			'user_has_access' => true,
 		);
 		$bp->bp_options_nav['foo']['foo-subnav'] = $subnav;
-		$nav = bp_get_nav_menu_items();
+		$nav = bboss_get_nav_menu_items();
 
 		foreach ( $nav as $_nav ) {
 			if ( 'bar-id' === $_nav->css_id ) {
@@ -205,7 +205,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_isset_group_nav() {
 		$this->set_up_group();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->assertTrue( isset( $bp->bp_options_nav ) );
 		$this->assertTrue( isset( $bp->bp_options_nav['testgroup'] ) );
@@ -219,7 +219,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_unset_group_nav() {
 		$this->set_up_group();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// No support for this - it would create a malformed nav item.
 		/*
@@ -240,7 +240,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_get_group_nav() {
 		$this->set_up_group();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$foo = $bp->bp_options_nav['testgroup']['foo'];
 		$this->assertSame( 'Foo', $foo['name'] );
@@ -254,10 +254,10 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_options_nav_set_group_nav() {
 		$this->set_up_group();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$bp->bp_options_nav['testgroup']['foo']['name'] = 'Bar';
-		$nav = bp_get_nav_menu_items( 'groups' );
+		$nav = bboss_get_nav_menu_items( 'groups' );
 
 		foreach ( $nav as $_nav ) {
 			if ( 'foo' === $_nav->css_id ) {
@@ -276,7 +276,7 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 			'user_has_access' => true,
 		);
 		$bp->bp_options_nav['testgroup']['foo'] = $subnav;
-		$nav = bp_get_nav_menu_items( 'groups' );
+		$nav = bboss_get_nav_menu_items( 'groups' );
 
 		foreach ( $nav as $_nav ) {
 			if ( 'bar-id' === $_nav->css_id ) {
@@ -294,20 +294,20 @@ class BP_Core_Nav_BackCompat extends BP_UnitTestCase {
 	public function test_bp_core_new_subnav_item_should_work_in_group_context() {
 		$this->set_up_group();
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'Foo Subnav',
 			'slug' => 'foo-subnav',
-			'parent_slug' => bp_get_current_group_slug(),
-			'parent_url' => bp_get_group_permalink( groups_get_current_group() ),
+			'parent_slug' => bboss_get_current_group_slug(),
+			'parent_url' => bboss_get_group_permalink( bboss_groups_get_current_group() ),
 			'screen_function' => 'foo_subnav',
 		) );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Touch bp_nav since we told PHPUnit it was expectedDeprecated.
-		$f = $bp->bp_options_nav[ bp_get_current_group_slug() ];
+		$f = $bp->bp_options_nav[ bboss_get_current_group_slug() ];
 
-		$nav = bp_get_nav_menu_items( 'groups' );
+		$nav = bboss_get_nav_menu_items( 'groups' );
 
 		foreach ( $nav as $_nav ) {
 			if ( 'foo-subnav' === $_nav->css_id ) {

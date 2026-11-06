@@ -67,7 +67,7 @@ class BP_Tests_Activity_Actions extends BP_UnitTestCase {
 		);
 
 		/**
-		 * 'public' must be set to true, otherwise bp_activity_get_post_types_tracking_args() fails.
+		 * 'public' must be set to true, otherwise bboss_activity_get_post_types_tracking_args() fails.
 		 */
 		register_post_type( 'foo', array(
 			'labels'      => $labels,
@@ -89,7 +89,7 @@ class BP_Tests_Activity_Actions extends BP_UnitTestCase {
 			'post_type'   => 'foo',
 		) );
 
-		$this->assertEmpty( bp_activity_get_activity_id( array( 'type' => 'new_foo' ) ) );
+		$this->assertEmpty( bboss_activity_get_activity_id( array( 'type' => 'new_foo' ) ) );
 
 		// Add the post type activity hook back.
 		add_action( 'transition_post_status', 'bp_activity_catch_transition_post_type_status', 10, 3 );
@@ -101,7 +101,7 @@ class BP_Tests_Activity_Actions extends BP_UnitTestCase {
 		) );
 
 		// Assert!
-		$this->assertNotEmpty( bp_activity_get_activity_id( array( 'type' => 'new_foo' ) ), 'Activity item was not created during an edit of an existing WordPress post.' );
+		$this->assertNotEmpty( bboss_activity_get_activity_id( array( 'type' => 'new_foo' ) ), 'Activity item was not created during an edit of an existing WordPress post.' );
 
 		// Clean up.
 		_unregister_post_type( 'foo' );
@@ -169,7 +169,7 @@ class BP_Tests_Activity_Actions extends BP_UnitTestCase {
 	}
 
 	protected function activity_exists_for_post( $post_id, $action ) {
-		$a = bp_activity_get( array(
+		$a = bboss_activity_get( array(
 			'action'            => $action,
 			'item_id'           => get_current_blog_id(),
 			'secondary_item_id' => $post_id,

@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_media_register_photos_panel_fields() {
+function bboss_media_register_photos_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Photos Settings
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'media',
 		'photos',
 		'photos_settings',
@@ -34,14 +34,14 @@ function bb_media_register_photos_panel_fields() {
 	);
 
 	// FIELD: Profiles — photos support.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'photos',
 		'photos_settings',
 		array(
 			'name'              => 'bp_media_profile_media_support',
 			'label'             => __( 'Profiles', 'buddyboss' ),
-			'description'       => bp_is_active( 'activity' )
+			'description'       => bboss_is_active( 'activity' )
 				? __( 'Allow members to upload photos in profiles and activity posts', 'buddyboss' )
 				: __( 'Allow members to upload photos in profiles', 'buddyboss' ),
 			'type'              => 'toggle',
@@ -52,7 +52,7 @@ function bb_media_register_photos_panel_fields() {
 	);
 
 	// FIELD: Profile Albums — conditional on profile media support.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'photos',
 		'photos_settings',
@@ -69,12 +69,12 @@ function bb_media_register_photos_panel_fields() {
 	);
 
 	// FIELD: Groups — photos support (conditional on groups component).
-	if ( bp_is_active( 'groups' ) ) {
-		$group_description = bb_media_get_group_context_description(
+	if ( bboss_is_active( 'groups' ) ) {
+		$group_description = bboss_media_get_group_context_description(
 			__( 'Allow members to upload photos in', 'buddyboss' )
 		);
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'media',
 			'photos',
 			'photos_settings',
@@ -90,7 +90,7 @@ function bb_media_register_photos_panel_fields() {
 		);
 
 		// FIELD: Group Albums — conditional on group media support.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'media',
 			'photos',
 			'photos_settings',
@@ -108,8 +108,8 @@ function bb_media_register_photos_panel_fields() {
 	}
 
 	// FIELD: Messages — photos support.
-	if ( bp_is_active( 'messages' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'messages' ) ) {
+		bboss_register_feature_field(
 			'media',
 			'photos',
 			'photos_settings',
@@ -126,8 +126,8 @@ function bb_media_register_photos_panel_fields() {
 	}
 
 	// FIELD: Forums — photos support.
-	if ( bp_is_active( 'forums' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'forums' ) ) {
+		bboss_register_feature_field(
 			'media',
 			'photos',
 			'photos_settings',
@@ -144,10 +144,10 @@ function bb_media_register_photos_panel_fields() {
 	}
 
 	// Get server max upload size for description text.
-	$server_max_mb = bb_media_get_server_max_upload_size();
+	$server_max_mb = bboss_media_get_server_max_upload_size();
 
 	// FIELD: Upload Size.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'photos',
 		'photos_settings',
@@ -162,13 +162,13 @@ function bb_media_register_photos_panel_fields() {
 			'type'              => 'number',
 			'default'           => $server_max_mb,
 			'suffix'            => __( 'MB', 'buddyboss' ),
-			'sanitize_callback' => 'bb_media_sanitize_upload_size',
+			'sanitize_callback' => 'bboss_media_sanitize_upload_size',
 			'order'             => 70,
 		)
 	);
 
 	// FIELD: Upload Limit.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'photos',
 		'photos_settings',
@@ -179,7 +179,7 @@ function bb_media_register_photos_panel_fields() {
 			'type'              => 'number',
 			'default'           => 10,
 			'suffix'            => __( 'per batch', 'buddyboss' ),
-			'sanitize_callback' => 'bb_media_sanitize_upload_limit',
+			'sanitize_callback' => 'bboss_media_sanitize_upload_limit',
 			'order'             => 80,
 		)
 	);

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Group Membership object.
  */
-class BP_Groups_Member {
+class BBoss_Groups_Member {
 
 	/**
 	 * ID of the membership.
@@ -173,7 +173,7 @@ class BP_Groups_Member {
 	public function populate() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( $this->user_id && $this->group_id && ! $this->id ) {
 			$sql = $wpdb->prepare( "SELECT * FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $this->user_id, $this->group_id );
@@ -207,7 +207,7 @@ class BP_Groups_Member {
 	 * @since BuddyPress 2.8.0
 	 *
 	 * @param string $key Key.
-	 * @return BP_Core_User|null
+	 * @return BBoss_Core_User|null
 	 */
 	public function __get( $key ) {
 		switch ( $key ) {
@@ -241,11 +241,11 @@ class BP_Groups_Member {
 	 *
 	 * @since BuddyPress 2.8.0
 	 *
-	 * @return BP_Core_User
+	 * @return BBoss_Core_User
 	 */
 	protected function get_user_object() {
 		if ( empty( $this->user ) ) {
-			$this->user = new BP_Core_User( $this->user_id );
+			$this->user = new BBoss_Core_User( $this->user_id );
 		}
 
 		return $this->user;
@@ -261,7 +261,7 @@ class BP_Groups_Member {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->user_id       = apply_filters( 'groups_member_user_id_before_save', $this->user_id, $this->id );
 		$this->group_id      = apply_filters( 'groups_member_group_id_before_save', $this->group_id, $this->id );
@@ -282,7 +282,7 @@ class BP_Groups_Member {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Groups_Member $this Current instance of the group membership item being saved. Passed by reference.
+		 * @param BBoss_Groups_Member $this Current instance of the group membership item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'groups_member_before_save', array( &$this ) );
 
@@ -324,13 +324,13 @@ class BP_Groups_Member {
 		 *
 		 * @since BuddyBoss 3.7.0
 		 *
-		 * @param BP_Groups_Member $member        The saved membership.
+		 * @param BBoss_Groups_Member $member        The saved membership.
 		 * @param bool             $is_member_add True when the row was inserted, false when it was updated.
 		 */
 		do_action( 'bb_groups_member_after_membership_save', $this, $is_member_add );
 
 		// Without the BuddyBoss Add-ons module, record the change so it can be replayed.
-		bb_groups_record_subscription_gap( $this->group_id, $this->user_id, 'save', $is_member_add, $this->is_confirmed, $this->is_banned );
+		bboss_groups_record_subscription_gap( $this->group_id, $this->user_id, 'save', $is_member_add, $this->is_confirmed, $this->is_banned );
 
 		/**
 		 * Fires after the current group membership item has been saved.
@@ -339,7 +339,7 @@ class BP_Groups_Member {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Groups_Member $this Current instance of the group membership item has been saved. Passed by reference.
+		 * @param BBoss_Groups_Member $this Current instance of the group membership item has been saved. Passed by reference.
 		 */
 		do_action_ref_array( 'groups_member_after_save', array( &$this ) );
 
@@ -428,7 +428,7 @@ class BP_Groups_Member {
 	public function accept_invite() {
 		$this->inviter_id    = 0;
 		$this->is_confirmed  = 1;
-		$this->date_modified = bp_core_current_time();
+		$this->date_modified = bboss_core_current_time();
 	}
 
 	/**
@@ -438,7 +438,7 @@ class BP_Groups_Member {
 	 */
 	public function accept_request() {
 		$this->is_confirmed  = 1;
-		$this->date_modified = bp_core_current_time();
+		$this->date_modified = bboss_core_current_time();
 	}
 
 	/**
@@ -456,11 +456,11 @@ class BP_Groups_Member {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param BP_Groups_Member $this Current group membership object.
+		 * @param BBoss_Groups_Member $this Current group membership object.
 		 */
 		do_action_ref_array( 'groups_member_before_remove', array( $this ) );
 
-		$bp  = buddypress();
+		$bp  = bboss();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $this->user_id, $this->group_id );
 
 		if ( ! $result = $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above (user_id/group_id as %d); table name from $bp->groups.
@@ -484,19 +484,19 @@ class BP_Groups_Member {
 		 *
 		 * @since BuddyBoss 3.7.0
 		 *
-		 * @param BP_Groups_Member $member The removed membership.
+		 * @param BBoss_Groups_Member $member The removed membership.
 		 */
 		do_action( 'bb_groups_member_after_membership_remove', $this );
 
 		// Without the BuddyBoss Add-ons module, record the change so it can be replayed.
-		bb_groups_record_subscription_gap( $this->group_id, $this->user_id, 'remove' );
+		bboss_groups_record_subscription_gap( $this->group_id, $this->user_id, 'remove' );
 
 		/**
 		 * Fires after a member is removed from a group.
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param BP_Groups_Member $this Current group membership object.
+		 * @param BBoss_Groups_Member $this Current group membership object.
 		 */
 		do_action_ref_array( 'groups_member_after_remove', array( $this ) );
 
@@ -514,7 +514,7 @@ class BP_Groups_Member {
 	 * @return bool True on success, false on failure.
 	 */
 	public static function refresh_total_group_count_for_user( $user_id ) {
-		return bp_update_user_meta( $user_id, 'total_group_count', (int) self::total_group_count( $user_id ) );
+		return bboss_update_user_meta( $user_id, 'total_group_count', (int) self::total_group_count( $user_id ) );
 	}
 
 	/**
@@ -526,7 +526,7 @@ class BP_Groups_Member {
 	 * @return bool|int True on success, false on failure.
 	 */
 	public static function refresh_total_member_count_for_group( $group_id ) {
-		return groups_update_groupmeta( $group_id, 'total_member_count', (int) BP_Groups_Group::get_total_member_count( $group_id ) );
+		return bboss_groups_update_groupmeta( $group_id, 'total_member_count', (int) BBoss_Groups_Group::get_total_member_count( $group_id ) );
 	}
 
 	/**
@@ -552,10 +552,10 @@ class BP_Groups_Member {
 		do_action( 'bp_groups_member_before_delete', $user_id, $group_id );
 
 		// Delete group member metas.
-		$member = new BP_Groups_Member( $user_id, $group_id );
+		$member = new BBoss_Groups_Member( $user_id, $group_id );
 		groups_delete_membermeta( $member->id );
 
-		$bp     = buddypress();
+		$bp     = bboss();
 		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $user_id, $group_id ) );
 
 		// Update the user's group count.
@@ -578,7 +578,7 @@ class BP_Groups_Member {
 		do_action( 'bb_groups_member_after_membership_delete', $user_id, $group_id );
 
 		// Without the BuddyBoss Add-ons module, record the change so it can be replayed.
-		bb_groups_record_subscription_gap( $group_id, $user_id, 'delete' );
+		bboss_groups_record_subscription_gap( $group_id, $user_id, 'delete' );
 
 		/**
 		 * Fires after a member is removed from a group.
@@ -613,7 +613,7 @@ class BP_Groups_Member {
 	 */
 	public static function get_group_ids( $user_id, $limit = false, $page = false, $force_all = false ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$pag_sql = '';
 		if ( ! empty( $limit ) && ! empty( $page ) ) {
@@ -621,7 +621,7 @@ class BP_Groups_Member {
 		}
 
 		// If the user is logged in and viewing their own groups, we can show hidden and private groups.
-		if ( bp_loggedin_user_id() != $user_id ) {
+		if ( bboss_loggedin_user_id() != $user_id ) {
 			$where_sql = $wpdb->prepare( "g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id );
 			if ( $force_all ) {
 				$where_sql = $wpdb->prepare( 'm.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $user_id );
@@ -635,19 +635,19 @@ class BP_Groups_Member {
 		}
 
 		// Get group details with pagination.
-		$cached = bp_core_get_incremented_cache( $group_sql, 'bp_groups_member' );
+		$cached = bboss_core_get_incremented_cache( $group_sql, 'bp_groups_member' );
 		if ( false === $cached ) {
 			$groups = $wpdb->get_col( $group_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $bp->groups; $where_sql and $pag_sql are $wpdb->prepare()'d above (%d), or the whole statement is prepared in the else branch.
-			bp_core_set_incremented_cache( $group_sql, 'bp_groups_member', $groups );
+			bboss_core_set_incremented_cache( $group_sql, 'bp_groups_member', $groups );
 		} else {
 			$groups = $cached;
 		}
 
 		// Get total group count.
-		$cached = bp_core_get_incremented_cache( $total_groups_sql, 'bp_groups_member' );
+		$cached = bboss_core_get_incremented_cache( $total_groups_sql, 'bp_groups_member' );
 		if ( false === $cached ) {
 			$total_groups = $wpdb->get_var( $total_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $bp->groups; $where_sql is $wpdb->prepare()'d above (%d), or the whole statement is prepared in the else branch.
-			bp_core_set_incremented_cache( $total_groups_sql, 'bp_groups_member', $total_groups );
+			bboss_core_set_incremented_cache( $total_groups_sql, 'bp_groups_member', $total_groups );
 		} else {
 			$total_groups = $cached;
 		}
@@ -687,15 +687,15 @@ class BP_Groups_Member {
 		}
 
 		if ( ! empty( $filter ) ) {
-			$search_terms_like = '%' . bp_esc_like( $filter ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $filter ) . '%';
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( $user_id != bboss_loggedin_user_id() ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 ORDER BY m.date_modified DESC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 0 AND m.is_confirmed = 1 ORDER BY m.date_modified DESC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
@@ -735,15 +735,15 @@ class BP_Groups_Member {
 		}
 
 		if ( ! empty( $filter ) ) {
-			$search_terms_like = '%' . bp_esc_like( $filter ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $filter ) . '%';
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( $user_id != bboss_loggedin_user_id() ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_admin = 1 ORDER BY m.date_modified ASC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_admin = 1 ORDER BY date_modified ASC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
@@ -783,15 +783,15 @@ class BP_Groups_Member {
 		}
 
 		if ( ! empty( $filter ) ) {
-			$search_terms_like = '%' . bp_esc_like( $filter ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $filter ) . '%';
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( $user_id != bboss_loggedin_user_id() ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_mod = 1 ORDER BY m.date_modified ASC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_mod = 1 ORDER BY date_modified ASC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
@@ -822,7 +822,7 @@ class BP_Groups_Member {
 	public static function get_is_banned_of( $user_id, $limit = false, $page = false, $filter = false ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$user_id_sql = $pag_sql = $hidden_sql = $filter_sql = '';
 		$user_id_sql = $wpdb->prepare( 'm.user_id = %d', $user_id );
@@ -832,11 +832,11 @@ class BP_Groups_Member {
 		}
 
 		if ( $filter ) {
-			$search_terms_like = '%' . bp_esc_like( $filter ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $filter ) . '%';
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id !== bp_loggedin_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( $user_id !== bboss_loggedin_user_id() && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
@@ -861,16 +861,16 @@ class BP_Groups_Member {
 		global $wpdb;
 
 		if ( empty( $user_id ) ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$sql['select'] = 'SELECT COUNT(DISTINCT m.group_id) ';
 		$sql['from'] = "FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g";
 		$sql['where'] = array( '1=1' );
 
-		if ( $user_id != bp_loggedin_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( $user_id != bboss_loggedin_user_id() && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$sql['where'][] = "m.group_id = g.id AND g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
 		} else {
 			$sql['where'][] = "m.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
@@ -920,7 +920,7 @@ class BP_Groups_Member {
 	 * }
 	 */
 	public static function get_invites( $user_id, $limit = false, $page = false, $exclude = false ) {
-		return groups_get_invites_for_user( $user_id, $limit, $page, $exclude );
+		return bboss_groups_get_invites_for_user( $user_id, $limit, $page, $exclude );
 	}
 
 	/**
@@ -932,7 +932,7 @@ class BP_Groups_Member {
 	 * @return int
 	 */
 	public static function get_invite_count_for_user( $user_id = 0 ) {
-		return groups_get_invite_count_for_user( $user_id );
+		return bboss_groups_get_invite_count_for_user( $user_id );
 	}
 
 	/**
@@ -956,7 +956,7 @@ class BP_Groups_Member {
 	public static function get_user_memberships( $user_id, $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$r = array_merge( array(
 			'page'     => 1,
@@ -973,7 +973,7 @@ class BP_Groups_Member {
 
 		switch ( $r['type'] ) {
 			case 'pending_request' :
-				return groups_get_requests( array(
+				return bboss_groups_get_requests( array(
 					'user_id'  => $user_id,
 					'page'     => $r['page'],
 					'per_page' => $r['per_page'],
@@ -981,7 +981,7 @@ class BP_Groups_Member {
 				break;
 
 			case 'pending_received_invitation' :
-				return groups_get_invites( array(
+				return bboss_groups_get_invites( array(
 					'user_id'  => $user_id,
 					'page'     => $r['page'],
 					'per_page' => $r['per_page'],
@@ -989,7 +989,7 @@ class BP_Groups_Member {
 				break;
 
 			case 'pending_sent_invitation' :
-				return groups_get_invites( array(
+				return bboss_groups_get_invites( array(
 					'inviter_id'  => $user_id,
 					'page'        => $r['page'],
 					'per_page'    => $r['per_page'],
@@ -1035,7 +1035,7 @@ class BP_Groups_Member {
 	 * @return int|null The ID of the invitation if found; null if not found.
 	 */
 	public static function check_has_invite( $user_id, $group_id, $type = 'sent' ) {
-		return groups_is_user_invited( $user_id, $group_id, $type );
+		return bboss_groups_is_user_invited( $user_id, $group_id, $type );
 	}
 
 	/**
@@ -1065,7 +1065,7 @@ class BP_Groups_Member {
 		 */
 		do_action( 'bp_groups_member_before_delete_invite', $user_id, $group_id, $inviter_id );
 
-		return groups_delete_invite( $user_id, $group_id, $inviter_id );
+		return bboss_groups_delete_invite( $user_id, $group_id, $inviter_id );
 	}
 
 	/**
@@ -1078,7 +1078,7 @@ class BP_Groups_Member {
 	 * @return int Number of records deleted.
 	 */
 	public static function delete_request( $user_id, $group_id ) {
-		return groups_delete_membership_request( false, $user_id, $group_id );
+		return bboss_groups_delete_membership_request( false, $user_id, $group_id );
 	}
 
 	/**
@@ -1097,7 +1097,7 @@ class BP_Groups_Member {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "SELECT id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d AND is_admin = 1 AND is_banned = 0", $user_id, $group_id ) );
 	}
@@ -1118,7 +1118,7 @@ class BP_Groups_Member {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "SELECT id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d AND is_mod = 1 AND is_banned = 0", $user_id, $group_id ) );
 	}
@@ -1139,7 +1139,7 @@ class BP_Groups_Member {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "SELECT id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d AND is_confirmed = 1 AND is_banned = 0", $user_id, $group_id ) );
 	}
@@ -1161,7 +1161,7 @@ class BP_Groups_Member {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$query = $wpdb->get_var( $wpdb->prepare( "SELECT is_banned FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $user_id, $group_id ) );
 
@@ -1184,7 +1184,7 @@ class BP_Groups_Member {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->groups->table_name} WHERE creator_id = %d AND id = %d", $user_id, $group_id ) );
 
@@ -1201,7 +1201,7 @@ class BP_Groups_Member {
 	 * @return int Database ID of the membership if found; int 0 on failure.
 	 */
 	public static function check_for_membership_request( $user_id, $group_id ) {
-		return groups_is_user_pending( $user_id, $group_id );
+		return bboss_groups_is_user_pending( $user_id, $group_id );
 	}
 
 	/**
@@ -1216,10 +1216,10 @@ class BP_Groups_Member {
 	public static function get_random_groups( $user_id = 0, $total_groups = 5 ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// If the user is logged in and viewing their random groups, we can show hidden and private groups.
-		if ( bp_is_my_profile() ) {
+		if ( bboss_is_my_profile() ) {
 			return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0 ORDER BY rand() LIMIT %d", $user_id, $total_groups ) ) );
 		} else {
 			return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id AND g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ORDER BY rand() LIMIT %d", $user_id, $total_groups ) ) );
@@ -1237,7 +1237,7 @@ class BP_Groups_Member {
 	public static function get_group_member_ids( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$sql['select'] = "SELECT u.user_id as user_id FROM {$bp->groups->table_name_members} u";
 
@@ -1320,10 +1320,10 @@ class BP_Groups_Member {
 	public static function prime_group_admins_mods_cache( $group_ids ) {
 		global $wpdb;
 
-		$uncached = bp_get_non_cached_ids( $group_ids, 'bp_group_admins' );
+		$uncached = bboss_get_non_cached_ids( $group_ids, 'bp_group_admins' );
 
 		if ( $uncached ) {
-			$bp               = buddypress();
+			$bp               = bboss();
 			$uncached_sql     = implode( ',', array_map( 'intval', $uncached ) );
 			$group_admin_mods = $wpdb->get_results( "SELECT user_id, group_id, date_modified, is_admin, is_mod FROM {$bp->groups->table_name_members} WHERE group_id IN ({$uncached_sql}) AND ( is_admin = 1 OR is_mod = 1 ) AND is_banned = 0" );
 
@@ -1399,7 +1399,7 @@ class BP_Groups_Member {
 	public static function get_memberships_by_id( $membership_ids ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$membership_ids = implode( ',', wp_parse_id_list( $membership_ids ) );
 		return $wpdb->get_results( "SELECT * FROM {$bp->groups->table_name_members} WHERE id IN ({$membership_ids})" );
@@ -1414,7 +1414,7 @@ class BP_Groups_Member {
 	 * @return array IDs of users with outstanding membership requests.
 	 */
 	public static function get_all_membership_request_user_ids( $group_id ) {
-		return groups_get_membership_requested_user_ids( $group_id );
+		return bboss_groups_get_membership_requested_user_ids( $group_id );
 	}
 
 	/**
@@ -1456,9 +1456,9 @@ class BP_Groups_Member {
 			$exclude_sql = " AND m.user_id NOT IN ({$exclude})";
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 
 			/**
 			 * Filters the SQL prepared statement used to fetch group members.
@@ -1499,8 +1499,8 @@ class BP_Groups_Member {
 
 		$user_ids = implode( ',', wp_parse_id_list( $user_ids ) );
 
-		if ( bp_is_active( 'friends' ) ) {
-			$friend_status = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ( {$user_ids} ) ) OR (initiator_user_id IN ( {$user_ids} ) AND friend_user_id = %d )", bp_loggedin_user_id(), bp_loggedin_user_id() ) );
+		if ( bboss_is_active( 'friends' ) ) {
+			$friend_status = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ( {$user_ids} ) ) OR (initiator_user_id IN ( {$user_ids} ) AND friend_user_id = %d )", bboss_loggedin_user_id(), bboss_loggedin_user_id() ) );
 			for ( $i = 0, $count = count( $members ); $i < $count; ++$i ) {
 				foreach ( (array) $friend_status as $status ) {
 					if ( $status->initiator_user_id == $members[ $i ]->user_id || $status->friend_user_id == $members[ $i ]->user_id ) {
@@ -1527,7 +1527,7 @@ class BP_Groups_Member {
 	public static function get_membership_ids_for_user( $user_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$group_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->groups->table_name_members} WHERE user_id = %d ORDER BY id ASC", $user_id ) );
 
@@ -1545,7 +1545,7 @@ class BP_Groups_Member {
 	public static function delete_all( $group_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_members} WHERE group_id = %d", $group_id ) );
 	}
@@ -1554,7 +1554,7 @@ class BP_Groups_Member {
 	 * Delete all group membership information for the specified user.
 	 *
 	 * In cases where the user is the sole member of a group, a site administrator is
-	 * assigned to be the group's administrator. Unhook `groups_remove_data_for_user()`
+	 * assigned to be the group's administrator. Unhook `bboss_groups_remove_data_for_user()`
 	 * to modify this behavior.
 	 *
 	 * @since BuddyPress 1.0.0
@@ -1564,14 +1564,14 @@ class BP_Groups_Member {
 	 * @return bool
 	 */
 	public static function delete_all_for_user( $user_id ) {
-		$group_ids = BP_Groups_Member::get_group_ids( $user_id, false, false, true );
+		$group_ids = BBoss_Groups_Member::get_group_ids( $user_id, false, false, true );
 
 		foreach ( $group_ids['groups'] as $group_id ) {
-			if ( groups_is_user_admin( $user_id, $group_id ) ) {
+			if ( bboss_groups_is_user_admin( $user_id, $group_id ) ) {
 				// If the user is a sole group admin, install a site admin as their replacement.
-				if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
+				if ( count( bboss_groups_get_group_admins( $group_id ) ) < 2 ) {
 					$admin = get_users( array(
-						'blog_id' => bp_get_root_blog_id(),
+						'blog_id' => bboss_get_root_blog_id(),
 						'fields'  => 'id',
 						'number'  => 1,
 						'orderby' => 'ID',
@@ -1580,15 +1580,15 @@ class BP_Groups_Member {
 					) );
 
 					if ( ! empty( $admin ) ) {
-						groups_join_group( $group_id, $admin[0] );
+						bboss_groups_join_group( $group_id, $admin[0] );
 
-						$member = new BP_Groups_Member( $admin[0], $group_id );
+						$member = new BBoss_Groups_Member( $admin[0], $group_id );
 						$member->promote( 'admin' );
 					}
 				}
 			}
 
-			BP_Groups_Member::delete( $user_id, $group_id );
+			BBoss_Groups_Member::delete( $user_id, $group_id );
 		}
 
 		return true;
@@ -1609,10 +1609,10 @@ class BP_Groups_Member {
 		$retval = false;
 
 		// Forcefully create the group subscription.
-		BP_Core_Notification_Abstract::$no_validate = true;
+		BBoss_Core_Notification_Abstract::$no_validate = true;
 
 		// Get group parent.
-		$parent_group_id = bp_get_parent_group_id( $group_id );
+		$parent_group_id = bboss_get_parent_group_id( $group_id );
 
 		$record_args = array(
 			'blog_id'           => get_current_blog_id(),
@@ -1624,7 +1624,7 @@ class BP_Groups_Member {
 
 		if ( null !== $status ) {
 			// Check if subscription is existed or not?.
-			$subscriptions = bb_get_subscriptions(
+			$subscriptions = bboss_get_subscriptions(
 				array(
 					'type'    => 'group',
 					'user_id' => $user_id,
@@ -1650,9 +1650,9 @@ class BP_Groups_Member {
 			}
 		}
 
-		$retval = bb_create_subscription( $record_args );
+		$retval = bboss_create_subscription( $record_args );
 
-		BP_Core_Notification_Abstract::$no_validate = false;
+		BBoss_Core_Notification_Abstract::$no_validate = false;
 		return $retval;
 	}
 
@@ -1669,9 +1669,9 @@ class BP_Groups_Member {
 	public static function bb_remove_group_subscription( $user_id, $group_id ) {
 
 		// Forcefully create the group subscription.
-		BP_Core_Notification_Abstract::$no_validate = true;
+		BBoss_Core_Notification_Abstract::$no_validate = true;
 		// Check if subscription is existed or not?.
-		$subscriptions = bb_get_subscriptions(
+		$subscriptions = bboss_get_subscriptions(
 			array(
 				'type'    => 'group',
 				'user_id' => $user_id,
@@ -1690,9 +1690,9 @@ class BP_Groups_Member {
 		$subscription = current( $subscriptions['subscriptions'] );
 
 		// Delete the subscription.
-		$is_deleted = bb_delete_subscription( $subscription->id );
+		$is_deleted = bboss_delete_subscription( $subscription->id );
 
-		BP_Core_Notification_Abstract::$no_validate = false;
+		BBoss_Core_Notification_Abstract::$no_validate = false;
 
 		return $is_deleted;
 	}

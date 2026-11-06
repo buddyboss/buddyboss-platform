@@ -5,7 +5,7 @@
  * This template handles the media move modal for moving media between albums.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
 						</h4>
 					</header>
 					<div class="bb-rl-field-wrap">
-						<?php bp_get_template_part( 'media/location-move' ); ?>
-						<?php bp_get_template_part( 'media/media-create-album' ); ?>
+						<?php bboss_get_template_part( 'media/location-move' ); ?>
+						<?php bboss_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-rl-model-footer">
 						<a href="#" class="bb-rl-create-album bb-rl-media-open-create-popup-folder"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>

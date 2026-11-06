@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_add_admin_menu() {
+function bboss_forums_add_admin_menu() {
 
-	if ( ! is_network_admin() && ! bp_is_network_activated() ) {
-		$forum_url = 'edit.php?post_type=' . bbp_get_forum_post_type();
+	if ( ! is_network_admin() && ! bboss_is_network_activated() ) {
+		$forum_url = 'edit.php?post_type=' . bboss_bbp_get_forum_post_type();
 
 		// Add our screen.
 		add_submenu_page(
@@ -34,12 +34,12 @@ function bp_forums_add_admin_menu() {
 
 
 }
-add_action( bp_core_admin_hook(), 'bp_forums_add_admin_menu', 61 );
+add_action( bboss_core_admin_hook(), 'bp_forums_add_admin_menu', 61 );
 
-function bp_forums_add_sub_menu_page_admin_menu() {
+function bboss_forums_add_sub_menu_page_admin_menu() {
 
-	if ( is_multisite() && bp_is_network_activated() ) {
-		$forum_url = 'edit.php?post_type=' . bbp_get_forum_post_type(); // buddyboss-settings
+	if ( is_multisite() && bboss_is_network_activated() ) {
+		$forum_url = 'edit.php?post_type=' . bboss_bbp_get_forum_post_type(); // buddyboss-settings
 		// Add our screen.
 		$hook = add_submenu_page( 'buddyboss-platform',
 			__( 'Forums', 'buddyboss' ),
@@ -59,7 +59,7 @@ add_action( 'admin_menu', 'bp_forums_add_sub_menu_page_admin_menu', 10 );
  * @param array $custom_menus The list of top-level BP menu items.
  * @return array $custom_menus List of top-level BP menu items, with Forums added.
  */
-function bp_forums_admin_menu_order( $custom_menus = array() ) {
+function bboss_forums_admin_menu_order( $custom_menus = array() ) {
 	array_push( $custom_menus, 'bp-forums' );
 	return $custom_menus;
 }
@@ -70,11 +70,11 @@ add_filter( 'bp_admin_menu_order', 'bp_forums_admin_menu_order' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_highlight_topic_tag_parent_menu( $parent_file ) {
+function bboss_forums_highlight_topic_tag_parent_menu( $parent_file ) {
 	$taxonomy  = isset( $_GET['taxonomy'] ) ? $_GET['taxonomy'] : '';
 	$post_type = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
 
-	if ( bbp_get_topic_tag_tax_id() == $taxonomy && bbp_get_topic_post_type() == $post_type ) {
+	if ( bboss_bbp_get_topic_tag_tax_id() == $taxonomy && bboss_bbp_get_topic_post_type() == $post_type ) {
 		return 'bp-forums';
 	}
 
@@ -87,12 +87,12 @@ add_filter( 'parent_file', 'bp_forums_highlight_topic_tag_parent_menu' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_highlight_topic_tag_submenu( $submenu_file ) {
+function bboss_forums_highlight_topic_tag_submenu( $submenu_file ) {
 	$taxonomy  = isset( $_GET['taxonomy'] ) ? $_GET['taxonomy'] : '';
 	$post_type = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
 
-	if ( bbp_get_topic_tag_tax_id() == $taxonomy && bbp_get_topic_post_type() == $post_type ) {
-		return 'edit-tags.php?taxonomy=' . bbp_get_topic_tag_tax_id() . '&post_type=' . bbp_get_topic_post_type();
+	if ( bboss_bbp_get_topic_tag_tax_id() == $taxonomy && bboss_bbp_get_topic_post_type() == $post_type ) {
+		return 'edit-tags.php?taxonomy=' . bboss_bbp_get_topic_tag_tax_id() . '&post_type=' . bboss_bbp_get_topic_post_type();
 	}
 
 	return $submenu_file;
@@ -104,11 +104,11 @@ add_filter( 'submenu_file', 'bp_forums_highlight_topic_tag_submenu' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_highlight_forums_new_parent_menu( $parent_file ) {
+function bboss_forums_highlight_forums_new_parent_menu( $parent_file ) {
 	global $pagenow;
 
 	$post_type         = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
-	$forums_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$forums_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	if ( $pagenow && 'post-new.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
 		return 'bp-forums';
@@ -123,11 +123,11 @@ add_filter( 'parent_file', 'bp_forums_highlight_forums_new_parent_menu' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_highlight_forums_new_submenu( $submenu_file ) {
+function bboss_forums_highlight_forums_new_submenu( $submenu_file ) {
 	global $pagenow;
 
 	$post_type         = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
-	$forums_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$forums_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	if ( $pagenow && 'post-new.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
 		return 'edit.php?post_type=' . $post_type;
@@ -142,11 +142,11 @@ add_filter( 'submenu_file', 'bp_forums_highlight_forums_new_submenu' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_highlight_forums_view_parent_menu( $parent_file ) {
+function bboss_forums_highlight_forums_view_parent_menu( $parent_file ) {
 	global $pagenow;
 
 	$post_type         = get_post_type();
-	$forums_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$forums_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	if ( $pagenow && 'post.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
 		return 'bp-forums';
@@ -161,11 +161,11 @@ add_filter( 'parent_file', 'bp_forums_highlight_forums_view_parent_menu' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_highlight_forums_view_submenu( $submenu_file ) {
+function bboss_forums_highlight_forums_view_submenu( $submenu_file ) {
 	global $pagenow;
 
 	$post_type         = get_post_type();
-	$forums_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$forums_post_types = array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	if ( $pagenow && 'post.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
 		return 'edit.php?post_type=' . $post_type;
@@ -182,7 +182,7 @@ add_filter( 'submenu_file', 'bp_forums_highlight_forums_view_submenu' );
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
-function bp_core_admin_forums_tabs( $active_tab = '' ) {
+function bboss_core_admin_forums_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = 'nav-tab';
 	$active_class = 'nav-tab nav-tab-active';
@@ -194,7 +194,7 @@ function bp_core_admin_forums_tabs( $active_tab = '' ) {
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
-	$tabs = apply_filters( 'bp_core_admin_forums_tabs', bp_core_get_forums_admin_tabs( $active_tab ) );
+	$tabs = apply_filters( 'bp_core_admin_forums_tabs', bboss_core_get_forums_admin_tabs( $active_tab ) );
 
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
@@ -222,30 +222,30 @@ function bp_core_admin_forums_tabs( $active_tab = '' ) {
  *
  * @return array
  */
-function bp_core_get_forums_admin_tabs( $active_tab = '' ) {
+function bboss_core_get_forums_admin_tabs( $active_tab = '' ) {
 
 	$tabs = array();
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bboss_bbp_get_forum_post_type() ), 'edit.php' ) ) : bboss_get_admin_url( add_query_arg( array( 'post_type' => bboss_bbp_get_forum_post_type() ), 'edit.php' ) ),
 		'name'  => __( 'Forums', 'buddyboss' ),
 		'class' => 'bp-forums',
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bboss_bbp_get_topic_post_type() ), 'edit.php' ) ) : bboss_get_admin_url( add_query_arg( array( 'post_type' => bboss_bbp_get_topic_post_type() ), 'edit.php' ) ),
 		'name'  => __( 'Discussions', 'buddyboss' ),
 		'class' => 'bp-discussions',
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ) : bp_get_admin_url( add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'taxonomy' =>  bboss_bbp_get_topic_tag_tax_id(), 'post_type' => bboss_bbp_get_topic_post_type() ), 'edit-tags.php' ) ) : bboss_get_admin_url( add_query_arg( array( 'taxonomy' =>  bboss_bbp_get_topic_tag_tax_id(), 'post_type' => bboss_bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
 		'name'  => __( 'Discussion Tags', 'buddyboss' ),
 		'class' => 'bp-tags',
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bboss_bbp_get_reply_post_type() ), 'edit.php' ) ) : bboss_get_admin_url( add_query_arg( array( 'post_type' => bboss_bbp_get_reply_post_type() ), 'edit.php' ) ),
 		'name'  => __( 'Replies', 'buddyboss' ),
 		'class' => 'bp-replies',
 	);
@@ -265,13 +265,13 @@ function bp_core_get_forums_admin_tabs( $active_tab = '' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_forums_admin_forums_listing_add_tab() {
+function bboss_forums_admin_forums_listing_add_tab() {
 	global $pagenow, $current_screen;
 
-	if ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( $current_screen->post_type == bboss_bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bboss_bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bboss_bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Forums', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bboss_core_admin_forums_tabs( __( 'Forums', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -284,13 +284,13 @@ add_action( 'admin_notices', 'bp_forums_admin_forums_listing_add_tab' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_discussions_admin_discussions_listing_add_tab() {
+function bboss_discussions_admin_discussions_listing_add_tab() {
 	global $pagenow, $current_screen;
 
-	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bboss_bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bboss_bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bboss_bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bboss_core_admin_forums_tabs( __( 'Discussions', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -303,13 +303,13 @@ add_action( 'admin_notices', 'bp_discussions_admin_discussions_listing_add_tab' 
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_replies_admin_replies_listing_add_tab() {
+function bboss_replies_admin_replies_listing_add_tab() {
 	global $pagenow, $current_screen;
 
-	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bboss_bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bboss_bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bboss_bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bboss_core_admin_forums_tabs( __( 'Replies', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -322,13 +322,13 @@ add_action( 'admin_notices', 'bp_replies_admin_replies_listing_add_tab' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_tags_admin_tags_listing_add_tab() {
+function bboss_tags_admin_tags_listing_add_tab() {
 	global $pagenow ,$current_screen;
 
-	if ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
+	if ( ( $current_screen->taxonomy == bboss_bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bboss_bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussion Tags', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bboss_core_admin_forums_tabs( __( 'Discussion Tags', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -344,16 +344,16 @@ add_filter( 'parent_file', 'bbp_set_platform_tab_submenu_active' );
  *
  * @return string $parent_file The filename of the parent menu.
  */
-function bbp_set_platform_tab_submenu_active( $parent_file ) {
+function bboss_bbp_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
-	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $post->post_type ) && $post->post_type == bboss_bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bboss_bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bboss_bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
-	} elseif ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
+	} elseif ( ( $current_screen->taxonomy == bboss_bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bboss_bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
 		$parent_file = 'buddyboss-platform';
-	} elseif ( ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
+	} elseif ( ( isset( $post->post_type ) && $post->post_type == bboss_bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bboss_bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bboss_bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
-	} elseif ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
+	} elseif ( ( $current_screen->post_type == bboss_bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bboss_bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bboss_bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
 	}
 	return $parent_file;

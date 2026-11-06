@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  * @since BuddyPress 2.3.0 We only support Akismet 3+.
  */
-class BP_Akismet {
+class BBoss_Akismet {
 
 	/**
 	 * The activity last marked as spam.
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @var BP_Activity_Activity
+	 * @var BBoss_Activity_Activity
 	 */
 	protected $last_activity = null;
 
@@ -75,12 +75,12 @@ class BP_Akismet {
 	 */
 	public function add_activity_stream_nonce() {
 		$form_id = '_bp_as_nonce';
-		$value   = '_bp_as_nonce_' . bp_loggedin_user_id();
+		$value   = '_bp_as_nonce_' . bboss_loggedin_user_id();
 
 		// If we're in the activity feed loop, we can use the current item's ID to make the nonce unique.
 		if ( 'bp_activity_entry_comments' == current_filter() ) {
-			$form_id .= '_' . bp_get_activity_id();
-			$value   .= '_' . bp_get_activity_id();
+			$form_id .= '_' . bboss_get_activity_id();
+			$value   .= '_' . bboss_get_activity_id();
 		}
 
 		wp_nonce_field( $value, $form_id, false );
@@ -95,7 +95,7 @@ class BP_Akismet {
 	 * usermeta, ensuring that it won't appear in the member header and
 	 * elsewhere in the theme.
 	 *
-	 * This can't be done in BP_Akismet::check_activity() due to the
+	 * This can't be done in BBoss_Akismet::check_activity() due to the
 	 * default AJAX implementation; see bp_dtheme_post_update().
 	 *
 	 * @since BuddyPress 1.6.0
@@ -118,7 +118,7 @@ class BP_Akismet {
 		}
 
 		// It was, so delete the member's latest activity update.
-		bp_delete_user_meta( $user_id, 'bp_latest_update' );
+		bboss_delete_user_meta( $user_id, 'bp_latest_update' );
 	}
 
 	/**
@@ -129,22 +129,22 @@ class BP_Akismet {
 	 * @since BuddyPress 1.6.0
 	 */
 	public function add_activity_spam_button() {
-		if ( ! bp_activity_user_can_mark_spam() ) {
+		if ( ! bboss_activity_user_can_mark_spam() ) {
 			return;
 		}
 
 		// By default, only handle activity updates and activity comments.
-		if ( ! in_array( bp_get_activity_type(), self::get_activity_types() ) ) {
+		if ( ! in_array( bboss_get_activity_type(), self::get_activity_types() ) ) {
 			return;
 		}
 
-		bp_button(
+		bboss_button(
 			array(
 				'block_self' => false,
 				'component'  => 'activity',
-				'id'         => 'activity_make_spam_' . bp_get_activity_id(),
+				'id'         => 'activity_make_spam_' . bboss_get_activity_id(),
 				'link_class' => 'bp-secondary-action spam-activity confirm button item-button',
-				'link_href'  => wp_nonce_url( bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . bp_get_activity_id() . '/', 'bp_activity_akismet_spam_' . bp_get_activity_id() ),
+				'link_href'  => wp_nonce_url( bboss_get_root_domain() . '/' . bboss_get_activity_slug() . '/spam/' . bboss_get_activity_id() . '/', 'bp_activity_akismet_spam_' . bboss_get_activity_id() ),
 				'link_text'  => __( 'Spam', 'buddyboss' ),
 				'wrapper'    => false,
 			)
@@ -159,23 +159,23 @@ class BP_Akismet {
 	 * @since BuddyPress 1.6.0
 	 */
 	public function add_activity_comment_spam_button() {
-		if ( ! bp_activity_user_can_mark_spam() ) {
+		if ( ! bboss_activity_user_can_mark_spam() ) {
 			return;
 		}
 
 		// By default, only handle activity updates and activity comments.
-		$current_comment = bp_activity_current_comment();
+		$current_comment = bboss_activity_current_comment();
 		if ( empty( $current_comment ) || ! in_array( $current_comment->type, self::get_activity_types() ) ) {
 			return;
 		}
 
-		bp_button(
+		bboss_button(
 			array(
 				'block_self' => false,
 				'component'  => 'activity',
-				'id'         => 'activity_make_spam_' . bp_get_activity_comment_id(),
+				'id'         => 'activity_make_spam_' . bboss_get_activity_comment_id(),
 				'link_class' => 'bp-secondary-action spam-activity-comment confirm',
-				'link_href'  => wp_nonce_url( bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . bp_get_activity_comment_id() . '/?cid=' . bp_get_activity_comment_id(), 'bp_activity_akismet_spam_' . bp_get_activity_comment_id() ),
+				'link_href'  => wp_nonce_url( bboss_get_root_domain() . '/' . bboss_get_activity_slug() . '/spam/' . bboss_get_activity_comment_id() . '/?cid=' . bboss_get_activity_comment_id(), 'bp_activity_akismet_spam_' . bboss_get_activity_comment_id() ),
 				'link_text'  => __( 'Spam', 'buddyboss' ),
 				'wrapper'    => false,
 			)
@@ -208,7 +208,7 @@ class BP_Akismet {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param BP_Activity_Activity $activity Activity item being spammed.
+	 * @param BBoss_Activity_Activity $activity Activity item being spammed.
 	 * @param string               $source   Either "by_a_person" (e.g. a person has
 	 *                                       manually marked the activity as spam) or
 	 *                                       "by_akismet" (automatically spammed).
@@ -222,7 +222,7 @@ class BP_Akismet {
 		 *
 		 * @since BuddyPress 1.6.0
 		 *
-		 * @param BP_Activity_Activity $activity Activity object being marked as spam.
+		 * @param BBoss_Activity_Activity $activity Activity object being marked as spam.
 		 * @param string               $source   Source of the whom marked as spam.
 		 *                                       Either "by_a_person" (e.g. a person has
 		 *                                       manually marked the activity as spam)
@@ -236,15 +236,15 @@ class BP_Akismet {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param BP_Activity_Activity $activity Activity item being hammed.
+	 * @param BBoss_Activity_Activity $activity Activity item being hammed.
 	 * @param string               $source   Either "by_a_person" (e.g. a person has
 	 *                                       manually marked the activity as ham) or
 	 *                                       "by_akismet" (automatically hammed).
 	 */
 	public function mark_as_ham( $activity, $source ) {
 		// If the activity was, originally, automatically marked as spam by Akismet, run the @mentions filter as it would have been skipped.
-		if ( 'true' == bp_activity_get_meta( $activity->id, '_bp_akismet_result' ) && ! bp_activity_get_meta( $activity->id, '_bp_akismet_user_result' ) ) {
-			$activity->content = bp_activity_at_name_filter( $activity->content, $activity->id );
+		if ( 'true' == bboss_activity_get_meta( $activity->id, '_bp_akismet_result' ) && ! bboss_activity_get_meta( $activity->id, '_bp_akismet_user_result' ) ) {
+			$activity->content = bboss_activity_at_name_filter( $activity->content, $activity->id );
 		}
 
 		/**
@@ -252,7 +252,7 @@ class BP_Akismet {
 		 *
 		 * @since BuddyPress 1.6.0
 		 *
-		 * @param BP_Activity_Activity $activity Activity object being marked as ham.
+		 * @param BBoss_Activity_Activity $activity Activity object being marked as ham.
 		 * @param string               $source   Source of the whom marked as ham.
 		 *                                       Either "by_a_person" (e.g. a person has
 		 *                                       manually marked the activity as ham) or
@@ -269,7 +269,7 @@ class BP_Akismet {
 	 * @see http://akismet.com/development/api/#comment-check
 	 * @static
 	 *
-	 * @param BP_Activity_Activity $activity Activity item data.
+	 * @param BBoss_Activity_Activity $activity Activity item data.
 	 * @return array $activity_data
 	 */
 	public static function build_akismet_data_package( $activity ) {
@@ -279,10 +279,10 @@ class BP_Akismet {
 		$activity_data['akismet_comment_nonce'] = 'inactive';
 		$activity_data['comment_author']        = $userdata->display_name;
 		$activity_data['comment_author_email']  = $userdata->user_email;
-		$activity_data['comment_author_url']    = bp_core_get_userlink( $userdata->ID, false, true );
+		$activity_data['comment_author_url']    = bboss_core_get_userlink( $userdata->ID, false, true );
 		$activity_data['comment_content']       = $activity->content;
 		$activity_data['comment_type']          = $activity->type;
-		$activity_data['permalink']             = bp_activity_get_permalink( $activity->id, $activity );
+		$activity_data['permalink']             = bboss_activity_get_permalink( $activity->id, $activity );
 		$activity_data['user_ID']               = $userdata->ID;
 		$activity_data['user_role']             = Akismet::get_user_roles( $userdata->ID );
 
@@ -308,7 +308,7 @@ class BP_Akismet {
 		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array                $activity_data Array of activity data for Akismet to inspect.
-		 * @param BP_Activity_Activity $activity      Activity item data.
+		 * @param BBoss_Activity_Activity $activity      Activity item data.
 		 */
 		return apply_filters( 'bp_akismet_build_akismet_data_package', $activity_data, $activity );
 	}
@@ -322,7 +322,7 @@ class BP_Akismet {
 	 * @todo Spam counter?
 	 * @todo Auto-delete old spam?
 	 *
-	 * @param BP_Activity_Activity $activity The activity item to check.
+	 * @param BBoss_Activity_Activity $activity The activity item to check.
 	 */
 	public function check_activity( $activity ) {
 		// By default, only handle activity updates and activity comments.
@@ -352,14 +352,14 @@ class BP_Akismet {
 			 *
 			 * @since BuddyPress 1.6.0
 			 *
-			 * @param BP_Activity_Activity $activity      The activity item proven to be spam.
+			 * @param BBoss_Activity_Activity $activity      The activity item proven to be spam.
 			 * @param array                $activity_data Array of activity data for item including
 			 *                                            Akismet check results data.
 			 */
 			do_action_ref_array( 'bp_activity_akismet_spam_caught', array( &$activity, $activity_data ) );
 
 			// Mark as spam.
-			bp_activity_mark_as_spam( $activity, 'by_akismet' );
+			bboss_activity_mark_as_spam( $activity, 'by_akismet' );
 
 			if (
 				Akismet::allow_discard() &&
@@ -368,9 +368,9 @@ class BP_Akismet {
 			) {
 				// If this is so spammy it's not worth your time, let's just delete it.
 				if ( $activity->type === 'activity_comment' ) {
-					bp_activity_delete_comment( $activity->item_id, $activity->id );
+					bboss_activity_delete_comment( $activity->item_id, $activity->id );
 				} else {
-					bp_activity_delete( array( 'id' => $activity->id ) );
+					bboss_activity_delete( array( 'id' => $activity->id ) );
 				}
 			}
 		}
@@ -384,7 +384,7 @@ class BP_Akismet {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param BP_Activity_Activity $activity The activity to check.
+	 * @param BBoss_Activity_Activity $activity The activity to check.
 	 */
 	public function update_activity_spam_meta( $activity ) {
 		// By default, only handle activity updates and activity comments.
@@ -393,9 +393,9 @@ class BP_Akismet {
 		}
 
 		/* translators: %s: member display name. */
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-spam' );
-		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
-		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bboss_get_loggedin_user_username() ), 'report-spam' );
+		bboss_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
+		bboss_activity_update_meta( $activity->id, '_bp_akismet_user', bboss_get_loggedin_user_username() );
 	}
 
 	/**
@@ -403,7 +403,7 @@ class BP_Akismet {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param BP_Activity_Activity $activity The activity to check.
+	 * @param BBoss_Activity_Activity $activity The activity to check.
 	 */
 	public function update_activity_ham_meta( $activity ) {
 		// By default, only handle activity updates and activity comments.
@@ -412,9 +412,9 @@ class BP_Akismet {
 		}
 
 		/* translators: %s: member display name. */
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-ham' );
-		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
-		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bboss_get_loggedin_user_username() ), 'report-ham' );
+		bboss_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
+		bboss_activity_update_meta( $activity->id, '_bp_akismet_user', bboss_get_loggedin_user_username() );
 	}
 
 	/**
@@ -422,7 +422,7 @@ class BP_Akismet {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param BP_Activity_Activity $activity The activity to check.
+	 * @param BBoss_Activity_Activity $activity The activity to check.
 	 */
 	public function update_activity_akismet_meta( $activity ) {
 		// Check we're dealing with what was last updated by Akismet.
@@ -437,23 +437,23 @@ class BP_Akismet {
 
 		// Spam.
 		if ( 'true' == $this->last_activity->akismet_submission['bp_as_result'] ) {
-			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'true' );
+			bboss_activity_update_meta( $activity->id, '_bp_akismet_result', 'true' );
 			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss' ), 'check-spam' );
 
 			// Not spam.
 		} elseif ( 'false' == $this->last_activity->akismet_submission['bp_as_result'] ) {
-			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'false' );
+			bboss_activity_update_meta( $activity->id, '_bp_akismet_result', 'false' );
 			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss' ), 'check-ham' );
 
 			// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
-			bp_activity_update_meta( $activity->id, '_bp_akismet_error', bp_core_current_time() );
+			bboss_activity_update_meta( $activity->id, '_bp_akismet_error', bboss_core_current_time() );
 			/* translators: %s: Akismet response. */
 			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 
 		// Record the original data which was submitted to Akismet for checking.
-		bp_activity_update_meta( $activity->id, '_bp_akismet_submission', $this->last_activity->akismet_submission );
+		bboss_activity_update_meta( $activity->id, '_bp_akismet_submission', $this->last_activity->akismet_submission );
 	}
 
 	/**
@@ -471,12 +471,12 @@ class BP_Akismet {
 	public function send_akismet_request( $activity_data, $check = 'check', $spam = 'spam' ) {
 		$query_string = $path = '';
 
-		$activity_data['blog']         = bp_get_option( 'home' );
-		$activity_data['blog_charset'] = bp_get_option( 'blog_charset' );
+		$activity_data['blog']         = bboss_get_option( 'home' );
+		$activity_data['blog_charset'] = bboss_get_option( 'blog_charset' );
 		$activity_data['blog_lang']    = get_locale();
 		$activity_data['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
-		$activity_data['user_agent']   = bp_core_current_user_ua();
-		$activity_data['user_ip']      = bp_core_current_user_ip();
+		$activity_data['user_agent']   = bboss_core_current_user_ua();
+		$activity_data['user_ip']      = bboss_core_current_user_ip();
 
 		if ( Akismet::is_test_mode() ) {
 			$activity_data['is_test'] = 'true';
@@ -543,7 +543,7 @@ class BP_Akismet {
 	 * @return string $user_agent Modified user agent string.
 	 */
 	public function buddypress_ua( $user_agent ) {
-		$user_agent = 'BuddyPress/' . bp_get_version() . ' | Akismet/' . constant( 'AKISMET_VERSION' );
+		$user_agent = 'BuddyPress/' . bboss_get_version() . ' | Akismet/' . constant( 'AKISMET_VERSION' );
 		return $user_agent;
 	}
 
@@ -561,11 +561,11 @@ class BP_Akismet {
 			'event'   => $event,
 			'message' => $message,
 			'time'    => Akismet::_get_microtime(),
-			'user'    => bp_loggedin_user_id(),
+			'user'    => bboss_loggedin_user_id(),
 		);
 
 		// Save the history data.
-		bp_activity_update_meta( $activity_id, '_bp_akismet_history', $event );
+		bboss_activity_update_meta( $activity_id, '_bp_akismet_history', $event );
 	}
 
 	/**
@@ -577,7 +577,7 @@ class BP_Akismet {
 	 * @return array The activity item's Akismet history.
 	 */
 	public function get_activity_history( $activity_id = 0 ) {
-		$history = bp_activity_get_meta( $activity_id, '_bp_akismet_history' );
+		$history = bboss_activity_get_meta( $activity_id, '_bp_akismet_history' );
 
 		// Ensure history is an array.
 		if ( empty( $history ) || ! is_array( $history ) ) {
@@ -602,7 +602,7 @@ class BP_Akismet {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+	 * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
 	 * @param string                       $component The component identifier.
 	 */
 	public function bb_register_activity_edit_field_history( $registry, $component = 'activity' ) {
@@ -615,7 +615,7 @@ class BP_Akismet {
 				'order'      => 200,
 				'context'    => 'after',
 				'get_value'  => function ( $activity ) {
-					$akismet = isset( buddypress()->activity->akismet ) ? buddypress()->activity->akismet : null;
+					$akismet = isset( bboss()->activity->akismet ) ? bboss()->activity->akismet : null;
 
 					if ( ! $akismet || ! method_exists( $akismet, 'get_activity_history' ) ) {
 						return null;
@@ -628,7 +628,7 @@ class BP_Akismet {
 
 						if ( is_array( $history ) && isset( $history['time'], $history['message'] ) ) {
 							return array(
-								'time_since' => bp_core_time_since( $history['time'] ),
+								'time_since' => bboss_core_time_since( $history['time'] ),
 								'message'    => esc_html( $history['message'] ),
 							);
 						}
@@ -638,7 +638,7 @@ class BP_Akismet {
 				},
 				'save_value' => null,
 				'is_visible' => function ( $activity ) {
-					$akismet = isset( buddypress()->activity->akismet ) ? buddypress()->activity->akismet : null;
+					$akismet = isset( bboss()->activity->akismet ) ? bboss()->activity->akismet : null;
 
 					return ( $akismet && method_exists( $akismet, 'get_activity_history' ) );
 				},

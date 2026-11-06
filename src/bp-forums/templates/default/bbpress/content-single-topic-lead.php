@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 <?php do_action( 'bbp_template_before_lead_topic' ); ?>
 
-<ul id="bbp-topic-<?php bbp_topic_id(); ?>-lead" class="bbp-lead-topic">
+<ul id="bbp-topic-<?php bboss_bbp_topic_id(); ?>-lead" class="bbp-lead-topic">
 
 	<li class="bbp-header">
 
@@ -23,9 +23,9 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php esc_html_e( 'Discussion', 'buddyboss' ); ?>
 
-			<?php bbp_topic_subscription_link(); ?>
+			<?php bboss_bbp_topic_subscription_link(); ?>
 
-			<?php bbp_topic_favorite_link(); ?>
+			<?php bboss_bbp_topic_favorite_link(); ?>
 
 		</div><!-- .bbp-topic-content -->
 
@@ -37,13 +37,13 @@ defined( 'ABSPATH' ) || exit;
 
 			<div class="bbp-meta">
 
-				<span class="bbp-topic-post-date"><?php bbp_topic_post_date(); ?></span>
+				<span class="bbp-topic-post-date"><?php bboss_bbp_topic_post_date(); ?></span>
 
-				<a href="<?php bbp_topic_permalink(); ?>" class="bbp-topic-permalink">#<?php bbp_topic_id(); ?></a>
+				<a href="<?php bboss_bbp_topic_permalink(); ?>" class="bbp-topic-permalink">#<?php bboss_bbp_topic_id(); ?></a>
 
 				<?php do_action( 'bbp_theme_before_topic_admin_links' ); ?>
 
-				<?php bbp_topic_admin_links(); ?>
+				<?php bboss_bbp_topic_admin_links(); ?>
 
 				<?php do_action( 'bbp_theme_after_topic_admin_links' ); ?>
 
@@ -51,14 +51,14 @@ defined( 'ABSPATH' ) || exit;
 
 		</div><!-- .bbp-topic-header -->
 
-		<div id="post-<?php bbp_topic_id(); ?>" <?php bbp_topic_class(); ?>>
+		<div id="post-<?php bboss_bbp_topic_id(); ?>" <?php bboss_bbp_topic_class(); ?>>
 
 			<div class="bbp-topic-author">
 
 				<?php do_action( 'bbp_theme_before_topic_author_details' ); ?>
 
 				<?php
-				bbp_topic_author_link(
+				bboss_bbp_topic_author_link(
 					array(
 						'sep'       => '<br />',
 						'show_role' => true,
@@ -74,13 +74,13 @@ defined( 'ABSPATH' ) || exit;
 
 				<?php do_action( 'bbp_theme_before_topic_content' ); ?>
 
-				<?php bbp_topic_content(); ?>
+				<?php bboss_bbp_topic_content(); ?>
 
 				<?php do_action( 'bbp_theme_after_topic_content' ); ?>
 
 			</div><!-- .bbp-topic-content -->
 
-		</div><!-- #post-<?php bbp_topic_id(); ?> -->
+		</div><!-- #post-<?php bboss_bbp_topic_id(); ?> -->
 
 	</li><!-- .bbp-body -->
 
@@ -96,6 +96,6 @@ defined( 'ABSPATH' ) || exit;
 
 	</li>
 
-</ul><!-- #bbp-topic-<?php bbp_topic_id(); ?>-lead -->
+</ul><!-- #bbp-topic-<?php bboss_bbp_topic_id(); ?>-lead -->
 
 <?php do_action( 'bbp_template_after_lead_topic' ); ?>

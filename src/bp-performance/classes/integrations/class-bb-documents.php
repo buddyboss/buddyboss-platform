@@ -250,7 +250,7 @@ class BB_Documents extends Integration_Abstract {
 	/**
 	 * Fires after the current group item has been saved.
 	 *
-	 * @param BP_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
+	 * @param BBoss_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
 	 */
 	public function event_groups_group_after_save( $group ) {
 		if ( ! empty( $group->id ) ) {
@@ -327,7 +327,7 @@ class BB_Documents extends Integration_Abstract {
 	/**
 	 * Update cache for document when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -344,7 +344,7 @@ class BB_Documents extends Integration_Abstract {
 	/**
 	 * Update cache for document when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -451,7 +451,7 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	private function get_document_ids_by_user_id( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE user_id = %d", $user_id );
 
@@ -468,7 +468,7 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	private function get_document_ids_by_group_id( $group_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE group_id = %d", $group_id );
 
@@ -485,7 +485,7 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	private function get_document_folder_ids_by_user_id( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->document->table_name_folder} WHERE user_id = %d", $user_id );
 
@@ -502,7 +502,7 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	private function get_document_folder_ids_by_group_id( $group_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->document->table_name_folder} WHERE group_id = %d", $group_id );
 

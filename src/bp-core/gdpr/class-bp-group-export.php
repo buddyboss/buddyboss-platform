@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Group_Export class
+ * Export API: BBoss_Group_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Group_Export
+ * Class BBoss_Group_Export
  */
-final class BP_Group_Export extends BP_Export {
+final class BBoss_Group_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,7 +23,7 @@ final class BP_Group_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Group_Export();
+			$instance = new BBoss_Group_Export();
 			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss' ) );
 		}
 
@@ -59,8 +59,8 @@ final class BP_Group_Export extends BP_Export {
 			$avatar      = false;
 			$cover_photo = false;
 
-			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-				$avatar = bp_core_fetch_avatar(
+			if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+				$avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => $item->id,
 						'object'  => 'group',
@@ -70,8 +70,8 @@ final class BP_Group_Export extends BP_Export {
 				);
 			}
 
-			if ( function_exists( 'bp_attachments_get_attachment' ) ) {
-				$cover_photo = bp_attachments_get_attachment(
+			if ( function_exists( 'bboss_attachments_get_attachment' ) ) {
+				$cover_photo = bboss_attachments_get_attachment(
 					'url',
 					array(
 						'item_id'    => $item->id,
@@ -88,7 +88,7 @@ final class BP_Group_Export extends BP_Export {
 				$cover_photo = __( 'N/A', 'buddyboss' );
 			}
 
-			$group_permalink = bp_get_group_permalink( $item );
+			$group_permalink = bboss_get_group_permalink( $item );
 
 			$data = array(
 				array(
@@ -192,7 +192,7 @@ final class BP_Group_Export extends BP_Export {
 		add_action( 'groups_delete_group', array( $this, 'additional_group_items_delete' ) );
 
 		// Remove Group Data for User.
-		groups_remove_data_for_user( $user->ID );
+		bboss_groups_remove_data_for_user( $user->ID );
 
 		$group_table = $bp->groups->table_name_members;
 
@@ -221,7 +221,7 @@ final class BP_Group_Export extends BP_Export {
 		do_action( 'buddyboss_bp_gdpr_group_additional_group_items_delete', $group_id );
 
 		// delete cover photo
-		bp_attachments_delete_file(
+		bboss_attachments_delete_file(
 			array(
 				'item_id'    => $group_id,
 				'object_dir' => 'groups',
@@ -230,7 +230,7 @@ final class BP_Group_Export extends BP_Export {
 		);
 
 		// delete group avatar
-		bp_core_delete_existing_avatar(
+		bboss_core_delete_existing_avatar(
 			array(
 				'item_id' => $group_id,
 				'object'  => 'group',

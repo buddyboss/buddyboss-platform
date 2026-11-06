@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_XProfile_Data_Endpoint class
+ * BP REST: BBoss_REST_XProfile_Data_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
+class BBoss_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * XProfile Fields Class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_XProfile_Fields_Endpoint
+	 * @var BBoss_REST_XProfile_Fields_Endpoint
 	 */
 	protected $fields_endpoint;
 
@@ -32,9 +32,9 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base       = buddypress()->profile->id;
-		$this->fields_endpoint = new BP_REST_XProfile_Fields_Endpoint();
+		$this->namespace       = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base       = bboss()->profile->id;
+		$this->fields_endpoint = new BBoss_REST_XProfile_Fields_Endpoint();
 	}
 
 	/**
@@ -125,7 +125,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires before a XProfile data is retrieved via the REST API.
 		 *
-		 * @param BP_XProfile_ProfileData $field_data The field data object.
+		 * @param BBoss_XProfile_ProfileData $field_data The field data object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -147,7 +147,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -170,12 +170,12 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( true === $retval && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$retval = $this->fields_endpoint->get_xprofile_field_display_permission( $retval, $field->id );
 		}
 
 		// Check the requested user exists.
-		if ( true === $retval && ! bp_rest_get_user( $request->get_param( 'user_id' ) ) ) {
+		if ( true === $retval && ! bboss_rest_get_user( $request->get_param( 'user_id' ) ) ) {
 			$retval = new WP_Error(
 				'bp_rest_member_invalid_id',
 				__( 'Invalid member ID.', 'buddyboss' ),
@@ -186,7 +186,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		}
 
 		// Check the user can view this field value.
-		$hidden_user_fields = bp_xprofile_get_hidden_fields_for_user( $request->get_param( 'user_id' ) );
+		$hidden_user_fields = bboss_xprofile_get_hidden_fields_for_user( $request->get_param( 'user_id' ) );
 
 		if ( true === $retval && in_array( $field->id, $hidden_user_fields, true ) ) {
 			$retval = new WP_Error(
@@ -243,7 +243,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$user  = bp_rest_get_user( $request->get_param( 'user_id' ) );
+		$user  = bboss_rest_get_user( $request->get_param( 'user_id' ) );
 		$value = $request->get_param( 'value' );
 
 		/**
@@ -263,7 +263,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			&& in_array( $field->type, apply_filters( 'bp_rest_xprofile_serialize', array( 'checkbox', 'multiselectbox' ) ), true )
 		) {
 			// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
-			$value = bb_xprofile_safe_unserialize( $value );
+			$value = bboss_xprofile_safe_unserialize( $value );
 
 			$value = json_decode( $value, true );
 
@@ -276,12 +276,12 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		// Format social network value.
 		if ( 'socialnetworks' === $field->type ) {
 			// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
-			$value = bb_xprofile_safe_unserialize( $value );
+			$value = bboss_xprofile_safe_unserialize( $value );
 
 			$value = $this->bb_rest_format_social_network_value( $value );
 		}
 
-		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
+		if ( ! bboss_xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
 			return new WP_Error(
 				'rest_user_cannot_save_xprofile_data',
 				__( 'Cannot save XProfile data.', 'buddyboss' ),
@@ -310,8 +310,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile data is saved via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field The field object.
-		 * @param BP_XProfile_ProfileData $field_data The field data object.
+		 * @param BBoss_XProfile_Field $field The field object.
+		 * @param BBoss_XProfile_ProfileData $field_data The field data object.
 		 * @param WP_User $user The user object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -344,7 +344,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			$retval = true;
 		}
 
-		$user = bp_rest_get_user( $request->get_param( 'user_id' ) );
+		$user = bboss_rest_get_user( $request->get_param( 'user_id' ) );
 
 		if ( true === $retval && ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
@@ -367,7 +367,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( true === $retval && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$retval = $this->fields_endpoint->get_xprofile_field_display_permission( $retval, $field->id );
 		}
 
@@ -425,7 +425,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$user = bp_rest_get_user( $request->get_param( 'user_id' ) );
+		$user = bboss_rest_get_user( $request->get_param( 'user_id' ) );
 
 		// Get the field data before it's deleted.
 		$field_data = $this->get_xprofile_field_data_object( $field->id, $user->ID );
@@ -456,8 +456,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile data is deleted via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field Deleted field object.
-		 * @param BP_XProfile_ProfileData $field_data Deleted field data object.
+		 * @param BBoss_XProfile_Field $field Deleted field object.
+		 * @param BBoss_XProfile_ProfileData $field_data Deleted field data object.
 		 * @param WP_User $user User object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -494,7 +494,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares XProfile data to return as an object.
 	 *
-	 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
+	 * @param BBoss_XProfile_ProfileData $field_data XProfile field data object.
 	 * @param WP_REST_Request         $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
@@ -510,7 +510,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value, $field_data->field_id ),
 				'rendered'     => $this->fields_endpoint->get_profile_field_rendered_value( $field_data->value, $field_data->field_id ),
 			),
-			'last_updated' => bp_rest_prepare_date_response( $field_data->last_updated ),
+			'last_updated' => bboss_rest_prepare_date_response( $field_data->last_updated ),
 		);
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -525,7 +525,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request Request used to generate the response.
-		 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
+		 * @param BBoss_XProfile_ProfileData $field_data XProfile field data object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -535,7 +535,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
+	 * @param BBoss_XProfile_ProfileData $field_data XProfile field data object.
 	 *
 	 * @return array
 	 * @since 0.1.0
@@ -549,7 +549,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base . $field_data->field_id ),
 			),
 			'user' => array(
-				'href'       => rest_url( bp_rest_get_user_url( $field_data->user_id ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $field_data->user_id ) ),
 				'embeddable' => true,
 			),
 		);
@@ -558,7 +558,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array $links The prepared links of the REST response.
-		 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
+		 * @param BBoss_XProfile_ProfileData $field_data XProfile field data object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -570,7 +570,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param int $field_id Field id.
 	 *
-	 * @return BP_XProfile_Field
+	 * @return BBoss_XProfile_Field
 	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_object( $field_id ) {
@@ -583,11 +583,11 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param int $field_id Field id.
 	 * @param int $user_id User id.
 	 *
-	 * @return BP_XProfile_ProfileData
+	 * @return BBoss_XProfile_ProfileData
 	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_data_object( $field_id, $user_id ) {
-		return new BP_XProfile_ProfileData( $field_id, $user_id );
+		return new BBoss_XProfile_ProfileData( $field_id, $user_id );
 	}
 
 	/**
@@ -599,7 +599,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $field_user_id ) {
-		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $field_user_id );
+		return ( bboss_current_user_can( 'bp_moderate' ) || bboss_loggedin_user_id() === $field_user_id );
 	}
 
 	/**
@@ -699,7 +699,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param string $value Social network value.
 	 *
-	 * @uses  bp_xprofile_social_network_provider() Default social networks.
+	 * @uses  bboss_xprofile_social_network_provider() Default social networks.
 	 *
 	 * @return array
 	 */
@@ -710,7 +710,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		}
 
 		$value    = json_decode( $value, true );
-		$networks = bp_xprofile_social_network_provider();
+		$networks = bboss_xprofile_social_network_provider();
 		$networks = wp_list_pluck( $networks, 'value' );
 
 		// Compare submited social network value with default social network value.
@@ -726,3 +726,11 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		return empty( $value ) ? array() : $value;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_XProfile_Data_Endpoint', false ) || interface_exists( 'BBoss_REST_XProfile_Data_Endpoint', false ) || trait_exists( 'BBoss_REST_XProfile_Data_Endpoint', false ) ) && ! class_exists( 'BP_REST_XProfile_Data_Endpoint', false ) && ! interface_exists( 'BP_REST_XProfile_Data_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_XProfile_Data_Endpoint', 'BP_REST_XProfile_Data_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

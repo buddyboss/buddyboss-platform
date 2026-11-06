@@ -15,46 +15,46 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Record an activity item related to the Connections component.
  *
- * A wrapper for {@link bp_activity_add()} that provides some Connections-specific
+ * A wrapper for {@link bboss_activity_add()} that provides some Connections-specific
  * defaults.
  *
  * @since BuddyPress 1.0.0
  *
- * @see bp_activity_add() for more detailed description of parameters and
+ * @see bboss_activity_add() for more detailed description of parameters and
  *      return values.
  *
  * @param array|string $args {
  *     An array of arguments for the new activity item. Accepts all parameters
- *     of {@link bp_activity_add()}. The one difference is the following
+ *     of {@link bboss_activity_add()}. The one difference is the following
  *     argument, which has a different default here:
  *     @type string $component Default: the id of your Connections component
  *                             (usually 'friends').
  * }
- * @return WP_Error|bool|int See {@link bp_activity_add()}.
+ * @return WP_Error|bool|int See {@link bboss_activity_add()}.
  */
-function friends_record_activity( $args = '' ) {
+function bboss_friends_record_activity( $args = '' ) {
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'action'            => '',
 			'content'           => '',
 			'primary_link'      => '',
-			'component'         => buddypress()->friends->id,
+			'component'         => bboss()->friends->id,
 			'type'              => false,
 			'item_id'           => false,
 			'secondary_item_id' => false,
-			'recorded_time'     => bp_core_current_time(),
+			'recorded_time'     => bboss_core_current_time(),
 			'hide_sitewide'     => false,
 		)
 	);
 
-	return bp_activity_add( $r );
+	return bboss_activity_add( $r );
 }
 
 /**
@@ -73,14 +73,14 @@ function friends_record_activity( $args = '' ) {
  * }
  * @return bool True on success, false on failure.
  */
-function friends_delete_activity( $args ) {
-	if ( ! bp_is_active( 'activity' ) ) {
+function bboss_friends_delete_activity( $args ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return;
 	}
 
-	bp_activity_delete_by_item_id(
+	bboss_activity_delete_by_item_id(
 		array(
-			'component' => buddypress()->friends->id,
+			'component' => bboss()->friends->id,
 			'item_id'   => $args['item_id'],
 			'type'      => $args['type'],
 			'user_id'   => $args['user_id'],
@@ -93,35 +93,35 @@ function friends_delete_activity( $args ) {
  *
  * @since BuddyPress 1.1.0
  */
-function friends_register_activity_actions() {
+function bboss_friends_register_activity_actions() {
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// These two added in BP 1.6.
-	bp_activity_set_action(
+	bboss_activity_set_action(
 		$bp->friends->id,
 		'friendship_accepted',
 		__( 'Connections accepted', 'buddyboss' ),
-		'bp_friends_format_activity_action_friendship_accepted',
+		'bboss_friends_format_activity_action_friendship_accepted',
 		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )
 	);
 
-	bp_activity_set_action(
+	bboss_activity_set_action(
 		$bp->friends->id,
 		'friendship_created',
 		__( 'New connections', 'buddyboss' ),
-		'bp_friends_format_activity_action_friendship_created',
+		'bboss_friends_format_activity_action_friendship_created',
 		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )
 	);
 
 	// < BP 1.6 backpat.
-	bp_activity_set_action( $bp->friends->id, 'friends_register_activity_action', __( 'New connection created', 'buddyboss' ) );
+	bboss_activity_set_action( $bp->friends->id, 'friends_register_activity_action', __( 'New connection created', 'buddyboss' ) );
 
 	/**
 	 * Fires after all default bp-friends activity actions have been registered.
@@ -141,9 +141,9 @@ add_action( 'bp_register_activity_actions', 'friends_register_activity_actions' 
  * @param object $activity Activity data.
  * @return string $action Formatted activity action.
  */
-function bp_friends_format_activity_action_friendship_accepted( $action, $activity ) {
-	$initiator_link = bp_core_get_userlink( $activity->user_id );
-	$friend_link    = bp_core_get_userlink( $activity->secondary_item_id );
+function bboss_friends_format_activity_action_friendship_accepted( $action, $activity ) {
+	$initiator_link = bboss_core_get_userlink( $activity->user_id );
+	$friend_link    = bboss_core_get_userlink( $activity->secondary_item_id );
 
 	/* translators: 1: initiator user link, 2: friend user link. */
 	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), $initiator_link, $friend_link );
@@ -152,7 +152,7 @@ function bp_friends_format_activity_action_friendship_accepted( $action, $activi
 	// The old filter has the $friendship object passed to it. We want to
 	// avoid having to build this object if it's not necessary.
 	if ( has_filter( 'friends_activity_friendship_accepted_action' ) ) {
-		$friendship = new BP_Friends_Friendship( $activity->item_id );
+		$friendship = new BBoss_Friends_Friendship( $activity->item_id );
 		$action     = apply_filters( 'friends_activity_friendsip_accepted_action', $action, $friendship );
 	}
 
@@ -176,9 +176,9 @@ function bp_friends_format_activity_action_friendship_accepted( $action, $activi
  * @param object $activity Activity data.
  * @return string $action Formatted activity action.
  */
-function bp_friends_format_activity_action_friendship_created( $action, $activity ) {
-	$initiator_link = bp_core_get_userlink( $activity->user_id );
-	$friend_link    = bp_core_get_userlink( $activity->secondary_item_id );
+function bboss_friends_format_activity_action_friendship_created( $action, $activity ) {
+	$initiator_link = bboss_core_get_userlink( $activity->user_id );
+	$friend_link    = bboss_core_get_userlink( $activity->secondary_item_id );
 
 	/* translators: 1: initiator user link, 2: friend user link. */
 	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), $initiator_link, $friend_link );
@@ -187,7 +187,7 @@ function bp_friends_format_activity_action_friendship_created( $action, $activit
 	// The old filter has the $friendship object passed to it. We want to
 	// avoid having to build this object if it's not necessary.
 	if ( has_filter( 'friends_activity_friendship_accepted_action' ) ) {
-		$friendship = new BP_Friends_Friendship( $activity->item_id );
+		$friendship = new BBoss_Friends_Friendship( $activity->item_id );
 		$action     = apply_filters( 'friends_activity_friendsip_accepted_action', $action, $friendship );
 	}
 
@@ -212,7 +212,7 @@ function bp_friends_format_activity_action_friendship_created( $action, $activit
  * @param array $activities Array of activity items.
  * @return array
  */
-function bp_friends_prefetch_activity_object_data( $activities ) {
+function bboss_friends_prefetch_activity_object_data( $activities ) {
 	if ( empty( $activities ) ) {
 		return $activities;
 	}
@@ -224,7 +224,7 @@ function bp_friends_prefetch_activity_object_data( $activities ) {
 			continue;
 		}
 
-		if ( buddypress()->friends->id !== $activity->component ) {
+		if ( bboss()->friends->id !== $activity->component ) {
 			continue;
 		}
 
@@ -233,7 +233,7 @@ function bp_friends_prefetch_activity_object_data( $activities ) {
 
 	if ( ! empty( $friend_ids ) ) {
 		// Fire a user query to prime user caches.
-		new BP_User_Query(
+		new BBoss_User_Query(
 			array(
 				'user_ids'          => $friend_ids,
 				'populate_extras'   => false,
@@ -249,7 +249,7 @@ add_filter( 'bp_activity_prefetch_object_data', 'bp_friends_prefetch_activity_ob
 /**
  * Set up activity arguments for use with the 'friends' scope.
  *
- * For details on the syntax, see {@link BP_Activity_Query}.
+ * For details on the syntax, see {@link BBoss_Activity_Query}.
  *
  * @since BuddyPress 2.2.0
  *
@@ -257,30 +257,30 @@ add_filter( 'bp_activity_prefetch_object_data', 'bp_friends_prefetch_activity_ob
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_friends_filter_activity_scope( $retval = array(), $filter = array() ) {
+function bboss_friends_filter_activity_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
-	if ( bp_is_single_activity() ) {
-		$user_id = bp_loggedin_user_id();
+	if ( bboss_is_single_activity() ) {
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	$mutual_friends = array();
 
 	// Determine friends of user.
-	$friends = friends_get_friend_user_ids( $user_id );
+	$friends = bboss_friends_get_friend_user_ids( $user_id );
 
 	if ( is_user_logged_in() ) {
-		$mutual_friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
-		if ( bp_loggedin_user_id() !== $user_id && in_array( $user_id, $mutual_friends ) ) {
-			$mutual_friends[] = bp_loggedin_user_id();
+		$mutual_friends = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
+		if ( bboss_loggedin_user_id() !== $user_id && in_array( $user_id, $mutual_friends ) ) {
+			$mutual_friends[] = bboss_loggedin_user_id();
 		}
 		if ( ! empty( $mutual_friends ) ) {
 			$mutual_friends = array_intersect( $friends, $mutual_friends );
@@ -348,7 +348,7 @@ add_filter( 'bp_activity_set_friends_scope_args', 'bp_friends_filter_activity_sc
 /**
  * Set up activity arguments for use with the 'just-me' scope.
  *
- * For details on the syntax, see {@link BP_Activity_Query}.
+ * For details on the syntax, see {@link BBoss_Activity_Query}.
  *
  * @since BuddyPress 2.2.0
  *
@@ -356,15 +356,15 @@ add_filter( 'bp_activity_set_friends_scope_args', 'bp_friends_filter_activity_sc
  * @param array $filter Current activity arguments.
  * @return array
  */
-function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = array() ) {
+function bboss_friends_filter_activity_just_me_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
 	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id()
+			? bboss_displayed_user_id()
+			: bboss_loggedin_user_id();
 	}
 
 	// Get the requested action.
@@ -433,13 +433,13 @@ add_filter( 'bp_activity_set_just-me_scope_args', 'bp_friends_filter_activity_ju
  * @param int         $friend_user_id      ID of user whose friendship is requested.
  * @param object|bool $friendship Optional Friendship object.
  */
-function bp_friends_friendship_accepted_activity( $friendship_id, $initiator_user_id, $friend_user_id, $friendship = false ) {
-	if ( ! bp_is_active( 'activity' ) ) {
+function bboss_friends_friendship_accepted_activity( $friendship_id, $initiator_user_id, $friend_user_id, $friendship = false ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return;
 	}
 
 	// Record in activity feeds for the initiator.
-	friends_record_activity(
+	bboss_friends_record_activity(
 		array(
 			'user_id'           => $initiator_user_id,
 			'type'              => 'friendship_created',
@@ -457,14 +457,14 @@ add_action( 'friends_friendship_accepted', 'bp_friends_friendship_accepted_activ
  *
  * @param int $user_id The ID of the user being deleted.
  */
-function bp_friends_delete_activity_on_user_delete( $user_id = 0 ) {
-	if ( ! bp_is_active( 'activity' ) ) {
+function bboss_friends_delete_activity_on_user_delete( $user_id = 0 ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return;
 	}
 
-	bp_activity_delete(
+	bboss_activity_delete(
 		array(
-			'component'         => buddypress()->friends->id,
+			'component'         => bboss()->friends->id,
 			'type'              => 'friendship_created',
 			'secondary_item_id' => $user_id,
 		)
@@ -479,8 +479,8 @@ add_action( 'friends_remove_data', 'bp_friends_delete_activity_on_user_delete' )
  *
  * @param int $friendship_id ID of the friendship.
  */
-function bp_friends_delete_activity_on_friendship_delete( $friendship_id ) {
-	friends_delete_activity(
+function bboss_friends_delete_activity_on_friendship_delete( $friendship_id ) {
+	bboss_friends_delete_activity(
 		array(
 			'item_id' => $friendship_id,
 			'type'    => 'friendship_created',
@@ -498,17 +498,17 @@ add_action( 'friends_friendship_deleted', 'bp_friends_delete_activity_on_friends
  * @param bool                 $send      Whether or not BuddyBoss should send a notification to the mentioned users.
  * @param array                $usernames Array of users potentially notified.
  * @param int                  $user_id   ID of the current user being notified.
- * @param BP_Activity_Activity $activity  Activity object.
+ * @param BBoss_Activity_Activity $activity  Activity object.
  *
  * @return bool
  */
-function bp_friends_activity_at_name_do_notifications( $send, $usernames, $user_id, $activity ) {
+function bboss_friends_activity_at_name_do_notifications( $send, $usernames, $user_id, $activity ) {
 
 	if ( 'friends' !== $activity->privacy ) {
 		return $send;
 	}
 
-	$friends = friends_get_friend_user_ids( $activity->user_id );
+	$friends = bboss_friends_get_friend_user_ids( $activity->user_id );
 
 
 	if ( ! empty( $friends ) && in_array( $user_id, $friends ) ) {

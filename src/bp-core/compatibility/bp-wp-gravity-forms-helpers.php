@@ -6,13 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_GFForms_Plugin_Compatibility Class
+ * BBoss_GFForms_Plugin_Compatibility Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
  * @since BuddyBoss 2.2.1
  */
-class BB_GFForms_Plugin_Compatibility {
+class BBoss_GFForms_Plugin_Compatibility {
 
 	/**
 	 * The single instance of the class.
@@ -24,7 +24,7 @@ class BB_GFForms_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * BB_GFForms_Plugin_Compatibility constructor.
+	 * BBoss_GFForms_Plugin_Compatibility constructor.
 	 */
 	public function __construct() {
 
@@ -72,4 +72,4 @@ class BB_GFForms_Plugin_Compatibility {
 
 }
 
-BB_GFForms_Plugin_Compatibility::instance();
+BBoss_GFForms_Plugin_Compatibility::instance();

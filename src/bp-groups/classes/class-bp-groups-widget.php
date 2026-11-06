@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.3
  */
-class BP_Groups_Widget extends WP_Widget {
+class BBoss_Groups_Widget extends WP_Widget {
 
 	/**
 	 * Working as a group, we get things done better.
@@ -40,8 +40,8 @@ class BP_Groups_Widget extends WP_Widget {
 	 * @since BuddyPress 2.6.0
 	 */
 	public function enqueue_scripts() {
-		$min = bp_core_get_minified_asset_suffix();
-		wp_enqueue_script( 'groups_widget_groups_list-js', buddypress()->plugin_url . "bp-groups/js/widget-groups{$min}.js", array( 'jquery' ), bp_get_version() );
+		$min = bboss_core_get_minified_asset_suffix();
+		wp_enqueue_script( 'groups_widget_groups_list-js', bboss()->plugin_url . "bp-groups/js/widget-groups{$min}.js", array( 'jquery' ), bboss_get_version() );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class BP_Groups_Widget extends WP_Widget {
 		 */
 		$user_id = apply_filters( 'bp_group_widget_user_id', get_current_user_id() );
 		
-		if ( 0 !== $user_id && empty( bp_get_total_group_count_for_user( $user_id ) ) ) {
+		if ( 0 !== $user_id && empty( bboss_get_total_group_count_for_user( $user_id ) ) ) {
 			$user_id = 0;
 		}
 
@@ -101,7 +101,7 @@ class BP_Groups_Widget extends WP_Widget {
 
 		echo wp_kses_post( $before_widget );
 
-		$title = ! empty( $instance['link_title'] ) ? '<a href="' . bp_get_groups_directory_permalink() . '">' . $title . '</a>' : $title;
+		$title = ! empty( $instance['link_title'] ) ? '<a href="' . bboss_get_groups_directory_permalink() . '">' . $title . '</a>' : $title;
 
 		echo wp_kses_post( $before_title ) . esc_html( $title ) . wp_kses_post( $after_title );
 
@@ -123,21 +123,21 @@ class BP_Groups_Widget extends WP_Widget {
 
 		?>
 
-		<?php if ( bp_has_groups( $group_args ) ) : ?>
+		<?php if ( bboss_has_groups( $group_args ) ) : ?>
 			<div class="item-options" id="groups-list-options">
-				<a href="<?php bp_groups_directory_permalink(); ?>" id="newest-groups"
+				<a href="<?php bboss_groups_directory_permalink(); ?>" id="newest-groups"
 																<?php
 																if ( $instance['group_default'] == 'newest' ) :
 																	?>
 					 class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_groups_directory_permalink(); ?>" id="recently-active-groups"
+				<a href="<?php bboss_groups_directory_permalink(); ?>" id="recently-active-groups"
 																<?php
 																if ( $instance['group_default'] == 'active' ) :
 																	?>
 					 class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups" 
+				<a href="<?php bboss_groups_directory_permalink(); ?>" id="popular-groups" 
 																<?php
 																if ( $instance['group_default'] == 'popular' ) :
 																	?>
@@ -146,29 +146,29 @@ class BP_Groups_Widget extends WP_Widget {
 
 			<ul id="groups-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 				<?php
-				while ( bp_groups() ) :
-					bp_the_group();
+				while ( bboss_groups() ) :
+					bboss_the_group();
 					?>
-					<li <?php bp_group_class(); ?>>
-					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
+					<li <?php bboss_group_class(); ?>>
+					<?php if ( ! bboss_disable_group_avatar_uploads() ) : ?>
 						<div class="item-avatar">
-							<a href="<?php bp_group_permalink(); ?>" data-bb-hp-group="<?php echo esc_attr( bp_get_group_id() ); ?>"><?php bp_group_avatar_thumb(); ?></a>
+							<a href="<?php bboss_group_permalink(); ?>" data-bb-hp-group="<?php echo esc_attr( bboss_get_group_id() ); ?>"><?php bboss_group_avatar_thumb(); ?></a>
 						</div>
 					<?php endif; ?>
 
 						<div class="item">
-							<div class="item-title"><?php bp_group_link(); ?></div>
+							<div class="item-title"><?php bboss_group_link(); ?></div>
 							<div class="item-meta">
 								<span class="activity">
 								<?php
 								if ( 'newest' == $instance['group_default'] ) {
 									/* translators: %s: human-readable time since the group was created. */
-									printf( esc_html__( 'created %s', 'buddyboss' ), esc_html( bp_get_group_date_created() ) );
+									printf( esc_html__( 'created %s', 'buddyboss' ), esc_html( bboss_get_group_date_created() ) );
 								} elseif ( 'popular' == $instance['group_default'] ) {
-									bp_group_member_count();
+									bboss_group_member_count();
 								} else {
 									/* translators: %s: human-readable time since the group was last active. */
-									printf( esc_html__( 'active %s', 'buddyboss' ), esc_html( bp_get_group_last_active() ) );
+									printf( esc_html__( 'active %s', 'buddyboss' ), esc_html( bboss_get_group_last_active() ) );
 								}
 								?>
 								</span>
@@ -181,7 +181,7 @@ class BP_Groups_Widget extends WP_Widget {
 			<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
 			<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $max_groups ); ?>" />
 
-			<div class="more-block <?php echo ( $groups_template->total_group_count > $max_groups ) ? '' : 'bp-hide'; ?>"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<div class="more-block <?php echo ( $groups_template->total_group_count > $max_groups ) ? '' : 'bp-hide'; ?>"><a href="<?php bboss_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 		<?php else : ?>
 
@@ -233,7 +233,7 @@ class BP_Groups_Widget extends WP_Widget {
 			'group_default' => 'active',
 			'link_title'    => false,
 		);
-		$instance = bp_parse_args( (array) $instance, $defaults, 'groups_widget_form' );
+		$instance = bboss_parse_args( (array) $instance, $defaults, 'groups_widget_form' );
 
 		$title         = wp_strip_all_tags( $instance['title'] );
 		$max_groups    = wp_strip_all_tags( $instance['max_groups'] );

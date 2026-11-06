@@ -19,18 +19,18 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BB_Feature_Registry class.
+ * BBoss_Feature_Registry class.
  *
  * @since BuddyBoss 3.0.0
  */
 #[\AllowDynamicProperties]
-class BB_Feature_Registry {
+class BBoss_Feature_Registry {
 
 	/**
 	 * Singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @var BB_Feature_Registry
+	 * @var BBoss_Feature_Registry
 	 */
 	private static $instance = null;
 
@@ -138,7 +138,7 @@ class BB_Feature_Registry {
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @return BB_Feature_Registry
+	 * @return BBoss_Feature_Registry
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -339,11 +339,11 @@ class BB_Feature_Registry {
 	 */
 	private function bb_register_feature_loaders( $feature_id, $args ) {
 		// Check if BB_Feature_Loader is available.
-		if ( ! function_exists( 'bb_feature_loader' ) ) {
+		if ( ! function_exists( 'bboss_feature_loader' ) ) {
 			return;
 		}
 
-		$loader = bb_feature_loader();
+		$loader = bboss_feature_loader();
 
 		// Register PHP loader.
 		if ( ! empty( $args['php_loader'] ) && is_callable( $args['php_loader'] ) ) {
@@ -921,7 +921,7 @@ class BB_Feature_Registry {
 		// Get pre-sorted features (cached).
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache['features'] ) ) {
 			$sorted = $this->features;
-			uasort( $sorted, 'bb_sort_by_order' );
+			uasort( $sorted, 'bboss_sort_by_order' );
 			$this->sorted_cache['features'] = $sorted;
 
 			// Reset flag so subsequent calls use cached data without re-sorting.
@@ -984,7 +984,7 @@ class BB_Feature_Registry {
 		$cache_key = 'side_panels_' . $feature_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->side_panels[ $feature_id ];
-			uasort( $sorted, 'bb_sort_by_order' );
+			uasort( $sorted, 'bboss_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1009,7 +1009,7 @@ class BB_Feature_Registry {
 		$cache_key = 'sections_' . $feature_id . '_' . $side_panel_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->sections[ $feature_id ][ $side_panel_id ];
-			uasort( $sorted, 'bb_sort_by_order' );
+			uasort( $sorted, 'bboss_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1065,7 +1065,7 @@ class BB_Feature_Registry {
 		$cache_key = 'fields_' . $feature_id . '_' . $side_panel_id . '_' . $section_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ];
-			uasort( $sorted, 'bb_sort_by_order' );
+			uasort( $sorted, 'bboss_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1157,7 +1157,7 @@ class BB_Feature_Registry {
 		}
 
 		if ( null === $cached_active_features ) {
-			$cached_active_features = bp_get_option( 'bb-active-features', array() );
+			$cached_active_features = bboss_get_option( 'bb-active-features', array() );
 		}
 
 		// If feature state exists in bb-active-features, use it.
@@ -1168,7 +1168,7 @@ class BB_Feature_Registry {
 		// Migration fallback: If not in bb-active-features, check legacy bp-active-components.
 		// This provides backward compatibility during migration.
 		if ( null === $cached_active_components ) {
-			$cached_active_components = bp_get_option( 'bp-active-components', array() );
+			$cached_active_components = bboss_get_option( 'bp-active-components', array() );
 		}
 		if ( isset( $cached_active_components[ $feature_id ] ) ) {
 			return ! empty( $cached_active_components[ $feature_id ] );
@@ -1277,15 +1277,15 @@ class BB_Feature_Registry {
 		}
 
 		// Primary storage: bb-active-features option (single source of truth).
-		$active_features                = bp_get_option( 'bb-active-features', array() );
+		$active_features                = bboss_get_option( 'bb-active-features', array() );
 		$active_features[ $feature_id ] = 1;
-		bp_update_option( 'bb-active-features', $active_features );
+		bboss_update_option( 'bb-active-features', $active_features );
 
 		// Best-effort sync to bp-active-components for backward compatibility.
 		// This ensures legacy code using bp_is_active() continues to work.
 		// Note: bp_update_option() returns false both on failure and when value is unchanged,
 		// so we cannot reliably detect actual write failures for rollback.
-		$active_components = bp_get_option( 'bp-active-components', array() );
+		$active_components = bboss_get_option( 'bp-active-components', array() );
 
 		// Check if this feature controls multiple components.
 		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
@@ -1298,17 +1298,17 @@ class BB_Feature_Registry {
 			$active_components[ $feature_id ] = 1;
 		}
 
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		// Run core install to create DB tables for newly activated components
 		// and create directory pages. This mirrors the behavior of the legacy
 		// component-toggle screen, which always called these after activation.
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php' ) ) {
+		if ( file_exists( bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
-			bp_core_install( $active_components );
+			require_once bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+			bboss_core_install( $active_components );
 		}
-		bp_core_add_page_mappings( $active_components );
+		bboss_core_add_page_mappings( $active_components );
 		$this->bb_schedule_rewrite_flush();
 
 		// Clear caches.
@@ -1384,8 +1384,8 @@ class BB_Feature_Registry {
 		}
 
 		// Batch write: update both options once for all features being deactivated.
-		$active_features   = bp_get_option( 'bb-active-features', array() );
-		$active_components = bp_get_option( 'bp-active-components', array() );
+		$active_features   = bboss_get_option( 'bb-active-features', array() );
+		$active_components = bboss_get_option( 'bp-active-components', array() );
 
 		foreach ( $all_to_deactivate as $fid_to_deactivate ) {
 			$active_features[ $fid_to_deactivate ] = 0;
@@ -1401,8 +1401,8 @@ class BB_Feature_Registry {
 			}
 		}
 
-		bp_update_option( 'bb-active-features', $active_features );
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_update_option( 'bb-active-features', $active_features );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		// Flush rewrite rules so deactivated component URLs return 404
 		// instead of serving stale content.

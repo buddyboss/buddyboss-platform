@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_members_register_profile_navigation_panel_fields() {
+function bboss_members_register_profile_navigation_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Navigation Settings.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_navigation',
 		'profile_navigation_settings',
@@ -36,7 +36,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 	);
 
 	// FIELD: Layout — Display profile navigation vertically.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_navigation',
 		'profile_navigation_settings',
@@ -52,7 +52,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 	);
 
 	// FIELD: Default Tab.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_navigation',
 		'profile_navigation_settings',
@@ -71,7 +71,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Navigation Order.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_navigation',
 		'profile_navigation_order',
@@ -83,7 +83,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 	);
 
 	// FIELD: Navigation Order (drag-and-drop checkbox list).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_navigation',
 		'profile_navigation_order',
@@ -94,7 +94,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 			'default'           => array(),
 			'options'           => array(), // Populated at AJAX time via bb_member_navigation_enrich_field_data().
 			'order'             => 10,
-			'sanitize_callback' => 'bb_sanitize_member_nav_order',
+			'sanitize_callback' => 'bboss_sanitize_member_nav_order',
 		)
 	);
 
@@ -124,38 +124,38 @@ function bb_members_register_profile_navigation_panel_fields() {
  *
  * @return array Array of [ 'value' => slug, 'label' => name ] items.
  */
-function bb_get_member_default_tab_options() {
+function bboss_get_member_default_tab_options() {
 	$options = array();
 
-	if ( bp_is_active( 'xprofile' ) ) {
+	if ( bboss_is_active( 'xprofile' ) ) {
 		$options['profile'] = __( 'Profile', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'activity' ) ) {
 		$options['activity'] = __( 'Timeline', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'friends' ) ) {
+	if ( bboss_is_active( 'friends' ) ) {
 		$options['friends'] = __( 'Connections', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'groups' ) ) {
+	if ( bboss_is_active( 'groups' ) ) {
 		$options['groups'] = __( 'Groups', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'forums' ) ) {
+	if ( bboss_is_active( 'forums' ) ) {
 		$options['forums'] = __( 'Forums', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) ) {
+	if ( bboss_is_active( 'media' ) ) {
 		$options['media'] = __( 'Photos', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
+	if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_document_support_enabled' ) && bboss_is_profile_document_support_enabled() ) {
 		$options['document'] = __( 'Documents', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled() ) {
+	if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_video_support_enabled' ) && bboss_is_profile_video_support_enabled() ) {
 		$options['video'] = __( 'Videos', 'buddyboss' );
 	}
 
@@ -187,7 +187,7 @@ function bb_get_member_default_tab_options() {
  *
  * Builds a static list of primary profile nav items based on active
  * components. This mirrors what the legacy Customizer renders via
- * bp_nouveau_member_customizer_nav(), which is not available in admin
+ * bboss_nouveau_member_customizer_nav(), which is not available in admin
  * AJAX context (requires a front-end user profile page to be loaded).
  *
  * Items whose parent feature is inactive get `disabled => true` and
@@ -197,7 +197,7 @@ function bb_get_member_default_tab_options() {
  *
  * @return array Array of checkbox_list option items.
  */
-function bb_get_member_profile_nav_items_for_settings() {
+function bboss_get_member_profile_nav_items_for_settings() {
 	static $cached_options = null;
 	if ( null !== $cached_options && ! doing_action( 'bb_admin_save_feature_settings_after' ) ) {
 		return $cached_options;
@@ -250,7 +250,7 @@ function bb_get_member_profile_nav_items_for_settings() {
 	// runs for the displayed user); admin AJAX has no displayed user, so we
 	// bootstrap one and read the resulting nav registry. Account-context slugs
 	// are filtered out to match the legacy display.
-	foreach ( bb_get_third_party_profile_nav_items() as $slug => $item ) {
+	foreach ( bboss_get_third_party_profile_nav_items() as $slug => $item ) {
 		if ( ! isset( $all_items[ $slug ] ) ) {
 			$all_items[ $slug ] = $item;
 		}
@@ -270,7 +270,7 @@ function bb_get_member_profile_nav_items_for_settings() {
 	 */
 	$all_items = apply_filters( 'bb_member_profile_nav_items', $all_items );
 
-	$inactive_slugs = bb_get_inactive_member_nav_slugs();
+	$inactive_slugs = bboss_get_inactive_member_nav_slugs();
 
 	$options = array();
 	foreach ( $all_items as $slug => $item ) {
@@ -301,34 +301,34 @@ function bb_get_member_profile_nav_items_for_settings() {
  *
  * @return array Array of nav item slugs that are inactive.
  */
-function bb_get_inactive_member_nav_slugs() {
+function bboss_get_inactive_member_nav_slugs() {
 	$inactive = array();
 
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		$inactive[] = 'activity';
 	}
 
-	if ( ! bp_is_active( 'friends' ) ) {
+	if ( ! bboss_is_active( 'friends' ) ) {
 		$inactive[] = 'friends';
 	}
 
-	if ( ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'groups' ) ) {
 		$inactive[] = 'groups';
 	}
 
-	if ( ! bp_is_active( 'forums' ) ) {
+	if ( ! bboss_is_active( 'forums' ) ) {
 		$inactive[] = 'forums';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! function_exists( 'bp_is_profile_media_support_enabled' ) || ! bp_is_profile_media_support_enabled() ) {
+	if ( ! bboss_is_active( 'media' ) || ! function_exists( 'bboss_is_profile_media_support_enabled' ) || ! bboss_is_profile_media_support_enabled() ) {
 		$inactive[] = 'photos';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! function_exists( 'bp_is_profile_document_support_enabled' ) || ! bp_is_profile_document_support_enabled() ) {
+	if ( ! bboss_is_active( 'media' ) || ! function_exists( 'bboss_is_profile_document_support_enabled' ) || ! bboss_is_profile_document_support_enabled() ) {
 		$inactive[] = 'documents';
 	}
 
-	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bp_is_profile_video_support_enabled' ) || ! bp_is_profile_video_support_enabled() ) {
+	if ( ! bboss_is_active( 'video' ) || ! function_exists( 'bboss_is_profile_video_support_enabled' ) || ! bboss_is_profile_video_support_enabled() ) {
 		$inactive[] = 'videos';
 	}
 
@@ -354,7 +354,7 @@ function bb_get_inactive_member_nav_slugs() {
  * Populate profile navigation field values from bp_nouveau_appearance.
  *
  * The standard Settings 2.0 get loop reads from individual wp_options
- * via bp_get_option(). Profile navigation values live inside the nested
+ * via bboss_get_option(). Profile navigation values live inside the nested
  * `bp_nouveau_appearance` option, so we intercept and override here.
  *
  * @since BuddyBoss 3.0.0
@@ -365,7 +365,7 @@ function bb_get_inactive_member_nav_slugs() {
  *
  * @return array Modified field data.
  */
-function bb_member_navigation_enrich_field_data( $field_data, $field, $feature_id = '' ) {
+function bboss_member_navigation_enrich_field_data( $field_data, $field, $feature_id = '' ) {
 	if ( 'members' !== $feature_id ) {
 		return $field_data;
 	}
@@ -378,7 +378,7 @@ function bb_member_navigation_enrich_field_data( $field_data, $field, $feature_i
 	}
 
 	// Fetch appearance settings once for all fields.
-	$appearance = bp_nouveau_get_appearance_settings();
+	$appearance = bboss_nouveau_get_appearance_settings();
 
 	switch ( $field_name ) {
 		case 'bb_user_nav_display':
@@ -386,15 +386,15 @@ function bb_member_navigation_enrich_field_data( $field_data, $field, $feature_i
 			break;
 
 		case 'bb_user_default_tab':
-			$field_data['options'] = bb_get_member_default_tab_options();
+			$field_data['options'] = bboss_get_member_default_tab_options();
 			$field_data['value']   = sanitize_key( isset( $appearance['user_default_tab'] ) ? $appearance['user_default_tab'] : 'profile' );
 			break;
 
 		case 'bb_user_nav_order':
 			// Populate options at AJAX time (admin_init has fired).
-			$options               = bb_get_member_profile_nav_items_for_settings();
+			$options               = bboss_get_member_profile_nav_items_for_settings();
 			$field_data['options'] = $options;
-			$field_data['value']   = bb_build_member_nav_order_value( $options, $appearance );
+			$field_data['value']   = bboss_build_member_nav_order_value( $options, $appearance );
 			break;
 	}
 
@@ -416,9 +416,9 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_member_navigation_enrich_
  *
  * @return array Associative array of slug => 1/0 in saved order.
  */
-function bb_build_member_nav_order_value( $options = array(), $appearance = array() ) {
+function bboss_build_member_nav_order_value( $options = array(), $appearance = array() ) {
 	if ( empty( $options ) ) {
-		$options = bb_get_member_profile_nav_items_for_settings();
+		$options = bboss_get_member_profile_nav_items_for_settings();
 	}
 
 	if ( empty( $options ) ) {
@@ -426,7 +426,7 @@ function bb_build_member_nav_order_value( $options = array(), $appearance = arra
 	}
 
 	if ( empty( $appearance ) ) {
-		$appearance = bp_nouveau_get_appearance_settings();
+		$appearance = bboss_nouveau_get_appearance_settings();
 	}
 
 	// Get saved order (array of slugs) and hidden items.
@@ -481,7 +481,7 @@ function bb_build_member_nav_order_value( $options = array(), $appearance = arra
  * @param array  $settings   Full submitted settings (JSON decoded).
  * @param array  $saved      Keys and values saved to options by core.
  */
-function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
+function bboss_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
 		return;
 	}
@@ -503,7 +503,7 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 	// Read current appearance option — use bp_nouveau_get_appearance_settings() so
 	// defaults are merged in. Using bp_get_option() directly would lose defaults on
 	// the first save if the option does not yet exist in the database.
-	$appearance = bp_nouveau_get_appearance_settings();
+	$appearance = bboss_nouveau_get_appearance_settings();
 	if ( ! is_array( $appearance ) ) {
 		$appearance = array();
 	}
@@ -527,7 +527,7 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 			// Extract ordered slugs and hidden slugs.
 			$order       = array();
 			$hide        = array();
-			$valid_slugs = wp_list_pluck( bb_get_member_profile_nav_items_for_settings(), 'value' );
+			$valid_slugs = wp_list_pluck( bboss_get_member_profile_nav_items_for_settings(), 'value' );
 
 			foreach ( $nav_order_data as $slug => $enabled ) {
 				$slug = sanitize_key( $slug );
@@ -551,7 +551,7 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 	// Update user_default_tab — validate against allowed options and hidden items.
 	$default_tab = isset( $appearance['user_default_tab'] ) ? $appearance['user_default_tab'] : 'profile';
 	if ( array_key_exists( 'bb_user_default_tab', $settings ) ) {
-		$valid_tabs = wp_list_pluck( bb_get_member_default_tab_options(), 'value' );
+		$valid_tabs = wp_list_pluck( bboss_get_member_default_tab_options(), 'value' );
 		$tab        = sanitize_key( $settings['bb_user_default_tab'] );
 
 		if ( in_array( $tab, $valid_tabs, true ) ) {
@@ -590,12 +590,12 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 	$appearance['user_default_tab'] = $default_tab;
 
 	// Save the merged appearance option.
-	bp_update_option( 'bp_nouveau_appearance', $appearance );
+	bboss_update_option( 'bp_nouveau_appearance', $appearance );
 
 	// Delete the temporary per-field options that the core save loop created.
 	foreach ( $nav_fields as $field_name ) {
 		if ( array_key_exists( $field_name, $saved ) ) {
-			bp_delete_option( $field_name );
+			bboss_delete_option( $field_name );
 		}
 	}
 }
@@ -618,23 +618,23 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_member_navigation_save_s
  *
  * @return array Sanitized array of slug => 0|1.
  */
-function bb_sanitize_member_nav_order( $value ) {
+function bboss_sanitize_member_nav_order( $value ) {
 	if ( is_string( $value ) ) {
 		$value = json_decode( $value, true );
 	}
 
-	return bb_members_sanitize_toggle_list( $value );
+	return bboss_members_sanitize_toggle_list( $value );
 }
 
 /**
  * Read third-party-registered profile nav items from the live BP nav registry.
  *
  * The legacy Customizer at `customize.php?autofocus[section]=bp_nouveau_user_primary_nav`
- * iterates `buddypress()->members->nav->get_primary()`, which is populated when
+ * iterates `bboss()->members->nav->get_primary()`, which is populated when
  * `bp_setup_nav` fires for a displayed user — the customizer iframe loads the
  * front-end, so that registration runs automatically. Admin AJAX has no
  * displayed user, so plugins like "BuddyPress User Profile Tabs Creator Pro"
- * (which call `bp_core_new_nav_item()` from a `bp_setup_nav` hook) never get
+ * (which call `bboss_core_new_nav_item()` from a `bp_setup_nav` hook) never get
  * a chance to register, and their tabs are silently missing from the React
  * Settings 2.0 Navigation Order list.
  *
@@ -653,14 +653,14 @@ function bb_sanitize_member_nav_order( $value ) {
  *               `label` and `component` keys (matching the shape of the
  *               canonical hardcoded list).
  */
-function bb_get_third_party_profile_nav_items() {
+function bboss_get_third_party_profile_nav_items() {
 	static $cached = null;
 	if ( null !== $cached ) {
 		return $cached;
 	}
 	$cached = array();
 
-	$bp = buddypress();
+	$bp = bboss();
 	if ( empty( $bp->members ) || empty( $bp->members->nav ) ) {
 		return $cached;
 	}
@@ -696,8 +696,8 @@ function bb_get_third_party_profile_nav_items() {
 
 		/**
 		 * Standard BP nav-registration action. Components and third-party
-		 * plugins hook this and call `bp_core_new_nav_item()`. Firing it
-		 * here in admin AJAX populates `buddypress()->members->nav` so we
+		 * plugins hook this and call `bboss_core_new_nav_item()`. Firing it
+		 * here in admin AJAX populates `bboss()->members->nav` so we
 		 * can read what plugins like BP User Profile Tabs Creator Pro
 		 * registered.
 		 */

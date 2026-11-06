@@ -12,16 +12,16 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class for generating the WHERE SQL clause for advanced moderation fetching.
  *
- * This is notably used in {@link BP_Moderation::get()} with the
+ * This is notably used in {@link BBoss_Moderation::get()} with the
  * 'filter_query' parameter.
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Query extends BP_Recursive_Query {
+class BBoss_Moderation_Query extends BBoss_Recursive_Query {
 	/**
 	 * Array of moderation queries.
 	 *
-	 * See {@see BP_Moderation_Query::__construct()} for information on query arguments.
+	 * See {@see BBoss_Moderation_Query::__construct()} for information on query arguments.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 * @var array
@@ -31,7 +31,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
 	 * Array of moderation queries.
 	 *
-	 * See {@see BP_Moderation_Query::__construct()} for information on query arguments.
+	 * See {@see BBoss_Moderation_Query::__construct()} for information on query arguments.
 	 *
 	 * @since BuddyBoss 2.1.3
 	 * @var array
@@ -101,7 +101,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
-	 *                      Default: 'a'. BP_Moderation::get() uses 'a', so we default to that.
+	 *                      Default: 'a'. BBoss_Moderation::get() uses 'a', so we default to that.
 	 *
 	 * @return array SQL fragment to append to the main query.
 	 */
@@ -134,7 +134,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 */
 	protected function get_sql_for_clause( $clause, $parent_query ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$sql_chunks = array(
 			'where' => array(),
@@ -206,7 +206,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 				// IN uses different syntax.
 				case 'IN':
 				case 'NOT IN':
-					$in_sql = BP_Moderation::get_in_operator_sql( "{$alias}{$column}", $value );
+					$in_sql = BBoss_Moderation::get_in_operator_sql( "{$alias}{$column}", $value );
 
 					// 'NOT IN' operator is as easy as a string replace!
 					if ( 'NOT IN' === $compare ) {
@@ -224,7 +224,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 
 				case 'LIKE':
 				case 'NOT LIKE':
-					$value = '%' . bp_esc_like( $value ) . '%';
+					$value = '%' . bboss_esc_like( $value ) . '%';
 					$where = $wpdb->prepare( '%s', $value );
 					break;
 
@@ -266,7 +266,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 * Validates a column name parameter.
 	 *
 	 * Column names are checked against a whitelist of known tables.
-	 * See {@link BP_Moderation_Query::db_tables}.
+	 * See {@link BBoss_Moderation_Query::db_tables}.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *

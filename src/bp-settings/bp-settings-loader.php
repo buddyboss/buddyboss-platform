@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_settings() {
-	buddypress()->settings = new BP_Settings_Component();
+function bboss_setup_settings() {
+	bboss()->settings = new BBoss_Settings_Component();
 }
 add_action( 'bp_setup_components', 'bp_setup_settings', 6 );

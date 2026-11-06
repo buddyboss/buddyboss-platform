@@ -9,10 +9,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Admin_Tab' ) ) :
+if ( ! class_exists( 'BBoss_Admin_Tab' ) ) :
 
 	#[\AllowDynamicProperties]
-	abstract class BP_Admin_Tab {
+	abstract class BBoss_Admin_Tab {
 
 		/**
 		 * Global variable name that store the tab instances
@@ -102,7 +102,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$screen    = get_current_screen();
 			$screen_id = $screen ? $screen->id : '';
 
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 
 			if ( 'buddyboss_page_bp-settings' === $screen_id ) {
 				wp_enqueue_script( 'bp-select2' );
@@ -111,9 +111,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			wp_enqueue_script(
 				'bp-admin',
-				buddypress()->plugin_url . 'bp-core/admin/js/settings-page'. $min . '.js',
+				bboss()->plugin_url . 'bp-core/admin/js/settings-page'. $min . '.js',
 				array( 'jquery', 'jquery-ui-sortable' ),
-				buddypress()->version,
+				bboss()->version,
 				true
 			);
 
@@ -121,8 +121,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			if ( 'edit-bp-email' === $screen_id ) {
 
-				$emails              = bp_email_get_schema();
-				$descriptions        = bp_email_get_type_schema( 'description' );
+				$emails              = bboss_email_get_schema();
+				$descriptions        = bboss_email_get_type_schema( 'description' );
 				$total_missing_count = 0;
 				$missing_email_label = array();
 
@@ -131,10 +131,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				// Add these emails to the database.
 				foreach ( $emails as $id => $email ) {
 					if (
-						term_exists( $id, bp_get_email_tax_type() ) &&
+						term_exists( $id, bboss_get_email_tax_type() ) &&
 						get_terms(
 							array(
-								'taxonomy' => bp_get_email_tax_type(),
+								'taxonomy' => bboss_get_email_tax_type(),
 								'slug'     => $id,
 								'fields'   => 'count',
 							)
@@ -203,7 +203,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 								<a href="
 								<?php
 								echo esc_url(
-									bp_get_admin_url(
+									bboss_get_admin_url(
 										add_query_arg(
 											array(
 												'page'     => 'bb-settings',
@@ -223,7 +223,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 								<a href="
 								<?php
 								echo esc_url(
-									bp_get_admin_url(
+									bboss_get_admin_url(
 										add_query_arg(
 											array(
 												'page'     => 'bb-settings',
@@ -250,7 +250,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$email_template = trim( ob_get_clean() );
 			}
 
-			$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions();
+			$cover_dimensions = bboss_attachments_get_default_custom_cover_image_dimensions();
 
 			$localize_arg = array(
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
@@ -268,8 +268,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
 				),
 				'avatar_settings'              => array(
-					'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
-					'wordpress_avatar_default' => bp_get_option( 'avatar_default', 'mystery' ),
+					'wordpress_show_avatar'    => bboss_get_option( 'show_avatars' ),
+					'wordpress_avatar_default' => bboss_get_option( 'avatar_default', 'mystery' ),
 					'wordpress_avatar_types'   => array(
 						'mystery',
 						'blank',
@@ -297,7 +297,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					'upload'            => array(
 						'nonce'           => wp_create_nonce( 'bp-uploader' ),
 						'action'          => 'bp_cover_image_upload',
-						'object'          => ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) ? 'user' : 'group',
+						'object'          => ( 'bp-xprofile' === bboss_core_get_admin_active_tab() ) ? 'user' : 'group',
 						'item_id'         => 0,
 						'item_type'       => 'default',
 						'has_cover_image' => false,
@@ -309,8 +309,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					),
 				),
 				'member_directories'           => array(
-					'profile_actions'    => function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array(),
-					'profile_action_btn' => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
+					'profile_actions'    => function_exists( 'bboss_get_member_directory_profile_actions' ) ? bboss_get_member_directory_profile_actions() : array(),
+					'profile_action_btn' => function_exists( 'bboss_get_member_directory_primary_action' ) ? bboss_get_member_directory_primary_action() : '',
 				),
 				'email_template'               => array(
 					'html' => $email_template,
@@ -326,12 +326,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
 					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
 				),
-				'components'                   => array_map( 'intval', bp_get_option( 'bp-active-components' ) ),
+				'components'                   => array_map( 'intval', bboss_get_option( 'bp-active-components' ) ),
 			);
 
-			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
-				$readylaunch                          = new BB_Readylaunch();
-				$localize_arg['register_integration'] = bp_enable_site_registration() && ! bp_allow_custom_registration();
+			if ( function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled() && class_exists( 'BBoss_Readylaunch' ) ) {
+				$readylaunch                          = new BBoss_Readylaunch();
+				$localize_arg['register_integration'] = bboss_enable_site_registration() && ! bboss_allow_custom_registration();
 				$localize_arg['courses_integration']  = $readylaunch->bb_is_sidebar_enabled_for_courses();
 			}
 
@@ -455,7 +455,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					}
 
-					bp_update_option( $setting_name, $value );
+					bboss_update_option( $setting_name, $value );
 				}
 			}
 		}
@@ -536,8 +536,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			if ( ! empty( $notice ) ) {
 				$wp_settings_sections[ $this->tab_name ][ $id ]['notice'] = $notice;
 			}
-			if ( function_exists( 'bb_admin_icons' ) ) {
-				$meta_icon = bb_admin_icons( $id );
+			if ( function_exists( 'bboss_admin_icons' ) ) {
+				$meta_icon = bboss_admin_icons( $id );
 				if ( ! empty( $meta_icon ) ) {
 					$wp_settings_sections[ $this->tab_name ][ $id ]['icon'] = $meta_icon;
 				}
@@ -569,7 +569,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_input_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_input_field_html' );
 
-			$callback_args = bp_parse_args(
+			$callback_args = bboss_parse_args(
 				$callback_args,
 				array(
 					'input_type'        => 'text',
@@ -592,7 +592,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_checkbox_field( $name, $label, $callback_args = array(), $field_args = 'intval', $id = null ) {
 			$callback = array( $this, 'render_checkbox_field_html' );
 
-			$callback_args = bp_parse_args(
+			$callback_args = bboss_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -616,7 +616,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function add_select_field( $name, $label, $callback_args = array(), $field_args = 'sanitize_text_field', $id = null ) {
 			$callback = array( $this, 'render_select_field_html' );
 
-			$callback_args = bp_parse_args(
+			$callback_args = bboss_parse_args(
 				$callback_args,
 				array(
 					'input_name'        => $this->get_input_name( $name ),
@@ -713,7 +713,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		}
 
 		protected function get_input_value( $key, $default = '' ) {
-			return bp_get_option( $key, $default );
+			return bboss_get_option( $key, $default );
 		}
 
 		/**

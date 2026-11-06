@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_setup_messages() {
-	buddypress()->messages = new BP_Messages_Component();
+function bboss_setup_messages() {
+	bboss()->messages = new BBoss_Messages_Component();
 }
 add_action( 'bp_setup_components', 'bp_setup_messages', 6 );

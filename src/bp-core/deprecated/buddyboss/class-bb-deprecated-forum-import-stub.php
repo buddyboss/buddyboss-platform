@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Shared stub the legacy converter class names are aliased to when BuddyBoss Tools is inactive.
  *
- * Every legacy name (see bb_deprecated_forum_import_class_map()) is a class_alias() of this class,
+ * Every legacy name (see bboss_deprecated_forum_import_class_map()) is a class_alias() of this class,
  * so `new Legacy()` and `class X extends Legacy` keep working; every method call returns null.
  *
  * @since BuddyBoss [BBVERSION]
  */
-class BB_Deprecated_Forum_Import_Stub {
+class BBoss_Deprecated_Forum_Import_Stub {
 
 	/**
 	 * Emits the deprecation notice.

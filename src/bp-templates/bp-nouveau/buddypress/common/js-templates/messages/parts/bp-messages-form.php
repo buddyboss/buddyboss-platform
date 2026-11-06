@@ -11,12 +11,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$os = bb_core_get_os();
+$os = bboss_core_get_os();
 
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-form">
-	<?php bp_nouveau_messages_hook( 'before', 'compose_content' ); ?>
+	<?php bboss_nouveau_messages_hook( 'before', 'compose_content' ); ?>
 
 	<div class="bp-messages-form-header">
 		<label class="bp-new-message-heading" for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
@@ -40,12 +40,12 @@ $os = bb_core_get_os();
 			<?php
 			if ( ! empty( $_GET['r'] ) ) :
 
-				if ( bp_is_username_compatibility_mode() ) {
-					$user_id = bp_core_get_userid( urldecode( $_GET['r'] ) );
+				if ( bboss_is_username_compatibility_mode() ) {
+					$user_id = bboss_core_get_userid( urldecode( $_GET['r'] ) );
 				} else {
-					$user_id = bp_core_get_userid_from_nicename( $_GET['r'] );
+					$user_id = bboss_core_get_userid_from_nicename( $_GET['r'] );
 				}
-				$name = bp_core_get_user_displayname( $user_id );
+				$name = bboss_core_get_user_displayname( $user_id );
 				?>
 				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo esc_attr( $user_id ); ?>"><?php echo esc_html( $name ); ?></option>
 			<?php endif; ?>
@@ -67,7 +67,7 @@ $os = bb_core_get_os();
 	}
 	?>
 
-	<?php bp_nouveau_messages_hook( 'after', 'compose_content' ); ?>
+	<?php bboss_nouveau_messages_hook( 'after', 'compose_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-form-submit">
 	<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>

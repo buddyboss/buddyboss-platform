@@ -16,7 +16,7 @@ add_action( 'bp_search_settings_items_to_search', 'bp_search_option_cpt_search' 
  * @param array $items_to_search
  * @since BuddyBoss 1.0.0
  */
-function bp_search_option_cpt_search( $items_to_search ) {
+function bboss_search_option_cpt_search( $items_to_search ) {
 	// all the cpts registered
 	$cpts = get_post_types(
 		array(
@@ -59,21 +59,21 @@ add_filter( 'bp_search_additional_search_helpers', 'bp_search_helpers_cpts' );
  * @return array
  * @since BuddyBoss 1.0.0
  */
-function bp_search_helpers_cpts( $helpers ) {
+function bboss_search_helpers_cpts( $helpers ) {
 
 	$post_types          = get_post_types( array( 'public' => true ) );
 	$custom_handler_cpts = array( 'post', 'forum', 'topic', 'reply', 'page' );
 
 	foreach ( $post_types as $post_type ) {
 		// if name starts with cpt-
-		if ( ! in_array( $post_type, $custom_handler_cpts ) && bp_is_search_post_type_enable( $post_type ) ) {
+		if ( ! in_array( $post_type, $custom_handler_cpts ) && bboss_is_search_post_type_enable( $post_type ) ) {
 			$searchable_type = 'cpt-' . $post_type;
 			$cpt_obj         = get_post_type_object( $post_type );
 			// is cpt still valid?
 			if ( $cpt_obj && ! is_wp_error( $cpt_obj ) ) {
-				require_once buddypress()->plugin_dir . 'bp-search/plugins/search-cpt/class-bp-search-cpt.php';
-				$helpers[ $searchable_type ]              = new BP_Search_CPT( $post_type, $searchable_type );
-				BP_Search::instance()->searchable_items[] = $searchable_type;
+				require_once bboss()->plugin_dir . 'bp-search/plugins/search-cpt/class-bp-search-cpt.php';
+				$helpers[ $searchable_type ]              = new BBoss_Search_CPT( $post_type, $searchable_type );
+				BBoss_Search::instance()->searchable_items[] = $searchable_type;
 			}
 		}
 	}
@@ -90,14 +90,14 @@ add_filter( 'bp_search_label_search_type', 'bp_search_label_search_type_cpts' );
  * @return string
  * @since BuddyBoss 1.0.0
  */
-function bp_search_label_search_type_cpts( $search_type_label ) {
+function bboss_search_label_search_type_cpts( $search_type_label ) {
 	/**
 	 * search type is 'cpt-movie', 'cpt-book' etc.
 	 * so removing 'cpt-' gives us the custom post type name
 	 */
 
 	// Return label from admin search items options
-	$items = bp_search_items();
+	$items = bboss_search_items();
 	if ( isset( $items[ $search_type_label ] ) ) {
 		return $items[ $search_type_label ];
 	}

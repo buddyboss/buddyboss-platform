@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Group_About_Widget extends WP_Widget {
+class BBoss_Group_About_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -38,18 +38,18 @@ class BB_Group_About_Widget extends WP_Widget {
 	 * @param array $instance Widget instance.
 	 */
 	public function widget( $args, $instance ) {
-		if ( ! function_exists( 'bp_is_group' ) || ! bp_is_group() ) {
+		if ( ! function_exists( 'bboss_is_group' ) || ! bboss_is_group() ) {
 			return;
 		}
 
-		$group_id = function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0;
+		$group_id = function_exists( 'bboss_get_current_group_id' ) ? bboss_get_current_group_id() : 0;
 		if ( empty( $group_id ) ) {
 			return;
 		}
 
-		$group = groups_get_group( $group_id );
+		$group = bboss_groups_get_group( $group_id );
 
-		$bb_rl_group = new BB_Group_Readylaunch();
+		$bb_rl_group = new BBoss_Group_Readylaunch();
 
 		echo wp_kses_post( $args['before_widget'] );
 		?>

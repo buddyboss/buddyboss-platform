@@ -32,17 +32,17 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 		$m2 = $message_2->id;
 
 		// star the second message
-		$star = bp_messages_star_set_action( array(
+		$star = bboss_messages_star_set_action( array(
 			'user_id'    => $u1,
 			'message_id' => $m2,
 		) );
 
 		// assert that star is set
 		$this->assertTrue( $star );
-		$this->assertTrue( bp_messages_is_message_starred( $m2, $u1 ) );
+		$this->assertTrue( bboss_messages_is_message_starred( $m2, $u1 ) );
 
 		// unstar the second message
-		$unstar = bp_messages_star_set_action( array(
+		$unstar = bboss_messages_star_set_action( array(
 			'user_id'    => $u1,
 			'message_id' => $m2,
 			'action'     => 'unstar'
@@ -50,7 +50,7 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 
 		// assert that star is removed
 		$this->assertTrue( $unstar );
-		$this->assertFalse( bp_messages_is_message_starred( $m2, $u1 ) );
+		$this->assertFalse( bboss_messages_is_message_starred( $m2, $u1 ) );
 	}
 
 	/**
@@ -81,21 +81,21 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 		$t1 = $message_1->thread_id;
 
 		// star all messages
-		bp_messages_star_set_action( array(
+		bboss_messages_star_set_action( array(
 			'user_id'    => $u1,
 			'message_id' => $m1,
 		) );
-		bp_messages_star_set_action( array(
+		bboss_messages_star_set_action( array(
 			'user_id'    => $u1,
 			'message_id' => $m2,
 		) );
 
 		// assert that stars are set
-		$this->assertTrue( bp_messages_is_message_starred( $m1, $u1 ) );
-		$this->assertTrue( bp_messages_is_message_starred( $m2, $u1 ) );
+		$this->assertTrue( bboss_messages_is_message_starred( $m1, $u1 ) );
+		$this->assertTrue( bboss_messages_is_message_starred( $m2, $u1 ) );
 
 		// unstar all messages
-		bp_messages_star_set_action( array(
+		bboss_messages_star_set_action( array(
 			'user_id'    => $u1,
 			'thread_id'  => $t1,
 			'action'     => 'unstar',
@@ -103,8 +103,8 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 		) );
 
 		// assert that star is removed
-		$this->assertFalse( bp_messages_is_message_starred( $m1, $u1 ) );
-		$this->assertFalse( bp_messages_is_message_starred( $m2, $u1 ) );
+		$this->assertFalse( bboss_messages_is_message_starred( $m1, $u1 ) );
+		$this->assertFalse( bboss_messages_is_message_starred( $m2, $u1 ) );
 	}
 
 	/**
@@ -143,27 +143,27 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 		$t2 = $message_2->thread_id;
 
 		// star all threads
-		bp_messages_star_set_action( array(
+		bboss_messages_star_set_action( array(
 			'user_id'    => $u2,
 			'message_id' => $m1,
 		) );
-		bp_messages_star_set_action( array(
+		bboss_messages_star_set_action( array(
 			'user_id'    => $u2,
 			'message_id' => $m2,
 		) );
-		bp_messages_star_set_action( array(
+		bboss_messages_star_set_action( array(
 			'user_id'    => $u2,
 			'message_id' => $m3,
 		) );
 
 		// delete the second thread
 		$this->set_current_user( $u2 );
-		messages_delete_thread( $t2 );
+		bboss_messages_delete_thread( $t2 );
 
 		// load the starred threads loop
 		global $messages_template;
 		add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
-		bp_has_message_threads();
+		bboss_has_message_threads();
 		remove_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 
 		// assert that second thread isn't in starred thread loop
@@ -181,7 +181,7 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 	 * @return array
 	 */
 	protected function get_message_ids( $thread_id = 0 ) {
-		$thread = new BP_Messages_Thread( $thread_id );
+		$thread = new BBoss_Messages_Thread( $thread_id );
 		return wp_list_pluck( $thread->messages, 'id' );
 	}
 }

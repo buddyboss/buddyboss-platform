@@ -20,13 +20,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_groups_feature() {
+function bboss_admin_settings_register_groups_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'groups',
 		array(
 			'label'              => __( 'Social Groups', 'buddyboss' ),
@@ -39,7 +39,7 @@ function bb_admin_settings_register_groups_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'groups' );
+				return bboss_is_active( 'groups' );
 			},
 			'settings_route'     => '/settings/groups',
 			'order'              => 90,
@@ -48,7 +48,7 @@ function bb_admin_settings_register_groups_feature() {
 
 	// When groups is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on groups functions that aren't loaded.
-	if ( ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
@@ -69,7 +69,7 @@ function bb_admin_settings_register_groups_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Group Settings (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'group_settings',
 		array(
@@ -78,7 +78,7 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -93,7 +93,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel 2: Group Images.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'group_images',
 		array(
@@ -102,7 +102,7 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -117,7 +117,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel 3: Group Headers.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'group_headers',
 		array(
@@ -126,7 +126,7 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -141,7 +141,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel 4: Group Directory.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'group_directory',
 		array(
@@ -150,7 +150,7 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -165,7 +165,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel 5: Access Controls.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'access_controls',
 		array(
@@ -179,7 +179,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel: All Groups (custom panel screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'all_groups',
 		array(
@@ -195,7 +195,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel: Group Types (custom panel screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'group_types',
 		array(
@@ -204,7 +204,7 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tag',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -218,7 +218,7 @@ function bb_admin_settings_register_groups_feature() {
 	);
 
 	// Side Panel: Group Navigation.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'groups',
 		'group_navigation',
 		array(
@@ -236,25 +236,25 @@ function bb_admin_settings_register_groups_feature() {
 	// =========================================================================
 
 	// Panel 1: Group Settings.
-	bb_groups_register_settings_panel_fields();
+	bboss_groups_register_settings_panel_fields();
 
 	// Panel 2: Group Images.
-	bb_groups_register_images_panel_fields();
+	bboss_groups_register_images_panel_fields();
 
 	// Panel 3: Group Headers.
-	bb_groups_register_headers_panel_fields();
+	bboss_groups_register_headers_panel_fields();
 
 	// Panel 4: Group Directory.
-	bb_groups_register_directory_panel_fields();
+	bboss_groups_register_directory_panel_fields();
 
 	// Panel 5: Access Controls.
-	bb_groups_register_access_control_fields();
+	bboss_groups_register_access_control_fields();
 
 	// Panel 6: Group Navigation.
-	bb_groups_register_navigation_panel_fields();
+	bboss_groups_register_navigation_panel_fields();
 
 	// Panel 7: Group Types (custom panel screen).
-	bb_groups_register_group_types_panel_fields();
+	bboss_groups_register_group_types_panel_fields();
 
 	/**
 	 * Fires after all Groups settings panels are registered.

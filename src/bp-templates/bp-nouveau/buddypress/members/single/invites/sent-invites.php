@@ -11,9 +11,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_member_hook( 'before', 'invites_sent_template' );
+bboss_nouveau_member_hook( 'before', 'invites_sent_template' );
 
-$email = trim( bb_filter_input_string( INPUT_GET, 'email' ) );
+$email = trim( bboss_filter_input_string( INPUT_GET, 'email' ) );
 if ( isset( $email ) && '' !== $email ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice success">
@@ -28,7 +28,7 @@ if ( isset( $email ) && '' !== $email ) {
 	<?php
 }
 
-$failed = trim( bb_filter_input_string( INPUT_GET, 'failed' ) );
+$failed = trim( bboss_filter_input_string( INPUT_GET, 'failed' ) );
 if ( isset( $failed ) && '' !== $failed ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -44,7 +44,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 	<?php
 }
 
-$exists = trim( bb_filter_input_string( INPUT_GET, 'exists' ) );
+$exists = trim( bboss_filter_input_string( INPUT_GET, 'exists' ) );
 if ( isset( $exists ) && '' !== $exists ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -60,7 +60,7 @@ if ( isset( $exists ) && '' !== $exists ) {
 	<?php
 }
 
-$duplicates = trim( bb_filter_input_string( INPUT_GET, 'duplicates' ) );
+$duplicates = trim( bboss_filter_input_string( INPUT_GET, 'duplicates' ) );
 if ( isset( $duplicates ) && '' !== $duplicates ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -76,7 +76,7 @@ if ( isset( $duplicates ) && '' !== $duplicates ) {
 	<?php
 }
 
-$restricted = trim( bb_filter_input_string( INPUT_GET, 'restricted' ) );
+$restricted = trim( bboss_filter_input_string( INPUT_GET, 'restricted' ) );
 if ( isset( $restricted ) && '' !== $restricted ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -125,8 +125,8 @@ if ( function_exists( 'wp_print_inline_script_tag' ) ) {
 	$sent_invites_pagination_count = apply_filters( 'sent_invites_pagination_count', 25 );
 	$args                          = array(
 		'posts_per_page' => $sent_invites_pagination_count,
-		'post_type'      => bp_get_invite_post_type(),
-		'author'         => bp_loggedin_user_id(),
+		'post_type'      => bboss_get_invite_post_type(),
+		'author'         => bboss_loggedin_user_id(),
 		'paged'          => $paged,
 	);
 	$the_query                     = new WP_Query( $args );
@@ -156,22 +156,22 @@ if ( function_exists( 'wp_print_inline_script_tag' ) ) {
 				<td class="field-email">
 					<?php
 
-					$allow_custom_registration = bp_allow_custom_registration();
+					$allow_custom_registration = bboss_allow_custom_registration();
 					$bp_invitee_status         = get_post_meta( $post_id, '_bp_invitee_status', true );
 
-					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+					if ( $allow_custom_registration && '' !== bboss_custom_register_page_url() ) {
 						$class       = ( '1' === $bp_invitee_status ) ? 'registered' : 'invited';
 						$revoke_link = '';
 						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Invited', 'buddyboss' );
 					} else {
 						$class       = ( '1' === $bp_invitee_status ) ? 'registered' : 'revoked-access';
-						$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite';
+						$revoke_link = bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_invites_slug() . '/revoke-invite';
 						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 					}
 					$alert_message = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
 					$icon          = ( '1' === $bp_invitee_status ) ? 'dashicons-yes' : 'dashicons-dismiss';
 
-					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+					if ( $allow_custom_registration && '' !== bboss_custom_register_page_url() ) {
 						?>
 						<span class="bp-invitee-status">
 							<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
@@ -234,4 +234,4 @@ if ( function_exists( 'wp_print_inline_script_tag' ) ) {
 </table>
 
 <?php
-bp_nouveau_member_hook( 'after', 'invites_sent_template' );
+bboss_nouveau_member_hook( 'after', 'invites_sent_template' );

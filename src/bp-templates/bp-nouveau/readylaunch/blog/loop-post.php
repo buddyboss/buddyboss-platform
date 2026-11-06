@@ -19,8 +19,8 @@ defined( 'ABSPATH' ) || exit;
 
 $bb_rl_blog_categories  = get_the_category();
 $bb_rl_blog_author_id   = (int) get_the_author_meta( 'ID' );
-$bb_rl_blog_author_url  = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $bb_rl_blog_author_id ) : get_author_posts_url( $bb_rl_blog_author_id );
-$bb_rl_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
+$bb_rl_blog_author_url  = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $bb_rl_blog_author_id ) : get_author_posts_url( $bb_rl_blog_author_id );
+$bb_rl_blog_author_name = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
 
 if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
 	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss' );
@@ -84,7 +84,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 				the_post_thumbnail( 'medium_large', array( 'class' => 'img-responsive' ) );
 			else :
 				?>
-				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
+				<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
 			<?php endif; ?>
 		</a>
 		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
@@ -145,11 +145,11 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 			<?php endif; ?>
 		</div>
 		<div class="bb-rl-blog-card__author">
-			<?php $bb_rl_blog_hp_attr = bb_get_hover_card_profile_attr( $bb_rl_blog_author_id ); ?>
+			<?php $bb_rl_blog_hp_attr = bboss_get_hover_card_profile_attr( $bb_rl_blog_author_id ); ?>
 			<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar"<?php echo $bb_rl_blog_hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in bb_get_hover_card_profile_attr(). ?>>
 				<?php
-				if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-					echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
+				if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+					echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
 						array(
 							'item_id' => $bb_rl_blog_author_id,
 							'html'    => true,

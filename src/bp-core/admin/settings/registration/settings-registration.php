@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_registration_register_panel_fields() {
+function bboss_registration_register_panel_fields() {
 
 	$feature_id = 'registration';
 	$panel_id   = 'registration';
@@ -27,7 +27,7 @@ function bb_registration_register_panel_fields() {
 	// SECTION 1: Registration — registration_general
 	// =========================================================================
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -40,7 +40,7 @@ function bb_registration_register_panel_fields() {
 	);
 
 	// Field 1: Enable Registration.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -63,10 +63,10 @@ function bb_registration_register_panel_fields() {
 	// refresh_panels on the toggle re-evaluates these on each change.
 	$reg_disable_conditional = array();
 	$reg_fields_disabled     = false;
-	if ( ! bp_is_active( 'invites' ) && ! bp_enable_site_registration() ) {
+	if ( ! bboss_is_active( 'invites' ) && ! bboss_enable_site_registration() ) {
 		$reg_fields_disabled = true;
 	}
-	if ( ! bp_is_active( 'invites' ) ) {
+	if ( ! bboss_is_active( 'invites' ) ) {
 		$reg_disable_conditional = array(
 			'field'  => 'bp-enable-site-registration',
 			'value'  => true,
@@ -81,11 +81,11 @@ function bb_registration_register_panel_fields() {
 		'description'       => sprintf(
 			/* translators: %s: URL to BuddyBoss Settings 2.0 → Appearance → Pages panel */
 			__( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.', 'buddyboss' ),
-			esc_url( bb_get_feature_settings_url( 'appearance', 'pages' ) )
+			esc_url( bboss_get_feature_settings_url( 'appearance', 'pages' ) )
 		),
 		'type'              => 'radio',
 		'default'           => 0,
-		'sanitize_callback' => 'bb_registration_sanitize_form_type',
+		'sanitize_callback' => 'bboss_registration_sanitize_form_type',
 		'options'           => array(
 			array(
 				'value' => '0',
@@ -102,10 +102,10 @@ function bb_registration_register_panel_fields() {
 	if ( ! empty( $reg_disable_conditional ) ) {
 		$reg_form_args['conditional'] = $reg_disable_conditional;
 	}
-	bb_register_feature_field( $feature_id, $panel_id, 'registration_general', $reg_form_args );
+	bboss_register_feature_field( $feature_id, $panel_id, 'registration_general', $reg_form_args );
 
 	// Field 3b: Custom URL (conditional: when Custom URL is truthy/selected).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -129,7 +129,7 @@ function bb_registration_register_panel_fields() {
 
 	// Field 4: Legal Agreement.
 	// Conditional: show when allow-custom-registration is falsy (BuddyBoss Registration).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -153,7 +153,7 @@ function bb_registration_register_panel_fields() {
 	);
 
 	// Field 5: Confirm Email.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -176,7 +176,7 @@ function bb_registration_register_panel_fields() {
 	);
 
 	// Field 6: Confirm Password.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -219,7 +219,7 @@ function bb_registration_register_panel_fields() {
 		);
 	}
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		$feature_id,
 		$panel_id,
 		'registration_restrictions',
@@ -233,7 +233,7 @@ function bb_registration_register_panel_fields() {
 	);
 
 	// Field 7: Domain Restrictions (custom repeater).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_restrictions',
@@ -243,13 +243,13 @@ function bb_registration_register_panel_fields() {
 			'description'       => __( 'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension. When multiple restrictions are in place, a domain will always take priority over an extension.', 'buddyboss' ),
 			'type'              => 'domain_restrictions',
 			'default'           => array(),
-			'sanitize_callback' => 'bb_registration_sanitize_domain_restrictions',
+			'sanitize_callback' => 'bboss_registration_sanitize_domain_restrictions',
 			'order'             => 10,
 		)
 	);
 
 	// Field 8: Email Restrictions (custom repeater).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_restrictions',
@@ -259,7 +259,7 @@ function bb_registration_register_panel_fields() {
 			'description'       => __( 'Enter the email addresses you want to allow for user registrations. Add one address per field.', 'buddyboss' ),
 			'type'              => 'email_restrictions',
 			'default'           => array(),
-			'sanitize_callback' => 'bb_registration_sanitize_email_restrictions',
+			'sanitize_callback' => 'bboss_registration_sanitize_email_restrictions',
 			'order'             => 20,
 		)
 	);
@@ -274,7 +274,7 @@ function bb_registration_register_panel_fields() {
 	// Field 9: Enable Social Login (Pro placeholder).
 	// Platform registers with a generic name. Pro enriches via bb_admin_settings_format_field_data
 	// filter to map to the actual option key (bb-enable-sso) and unlock the toggle.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -294,7 +294,7 @@ function bb_registration_register_panel_fields() {
 	// Field 10: SSO Provider Cards (Pro placeholder).
 	// Always visible as a preview — shows greyed-out provider cards when Pro is not active.
 	// Pro enriches via bb_admin_settings_format_field_data to inject real provider data.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
@@ -343,7 +343,7 @@ function bb_registration_register_panel_fields() {
 	);
 
 	// Field 11: SSO App Notice (hidden by default, Pro shows when bbapp() exists).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',

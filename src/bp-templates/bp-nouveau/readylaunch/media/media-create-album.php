@@ -5,7 +5,7 @@
  * This template handles the inline album creation functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<div class="bb-rl-footer-alt">
 		<?php
-		if ( ! bp_is_group() ) :
-			bp_get_template_part( 'media/media-privacy' );
+		if ( ! bboss_is_group() ) :
+			bboss_get_template_part( 'media/media-privacy' );
 		endif;
 		?>
 		<div class="db-modal-buttons">

@@ -9,7 +9,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BBP_Component' ) ) :
+if ( ! class_exists( 'BBoss_BBP_Component' ) ) :
 	/**
 	 * Forums Component Class
 	 *
@@ -20,7 +20,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 	 *
 	 * @since bbPress (r2688)
 	 */
-	class BBP_Component {
+	class BBoss_BBP_Component {
 
 		/**
 		 * @var string Unique name (for internal identification)
@@ -62,9 +62,9 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 *  - slug: Unique slug (used in query string and permalinks)
 		 *  - query: The loop for this component (WP_Query)
 		 *  - current_id: The current ID of the queried object
-		 * @uses BBP_Component::setup_globals() Setup the globals needed
-		 * @uses BBP_Component::includes() Include the required files
-		 * @uses BBP_Component::setup_actions() Setup the hooks and actions
+		 * @uses BBoss_BBP_Component::setup_globals() Setup the globals needed
+		 * @uses BBoss_BBP_Component::includes() Include the required files
+		 * @uses BBoss_BBP_Component::setup_actions() Setup the hooks and actions
 		 */
 		public function __construct( $args = '' ) {
 			if ( empty( $args ) ) {
@@ -82,8 +82,8 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 * @since bbPress (r2700)
 		 * @access private
 		 *
-		 * @uses apply_filters() Calls 'bbp_{@link BBP_Component::name}_id'
-		 * @uses apply_filters() Calls 'bbp_{@link BBP_Component::name}_slug'
+		 * @uses apply_filters() Calls 'bbp_{@link BBoss_BBP_Component::name}_id'
+		 * @uses apply_filters() Calls 'bbp_{@link BBoss_BBP_Component::name}_slug'
 		 */
 		private function setup_globals( $args = '' ) {
 			$this->name = $args['name'];
@@ -97,7 +97,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 * @since bbPress (r2700)
 		 * @access private
 		 *
-		 * @uses do_action() Calls 'bbp_{@link BBP_Component::name}includes'
+		 * @uses do_action() Calls 'bbp_{@link BBoss_BBP_Component::name}includes'
 		 */
 		private function includes() {
 			do_action( 'bbp_' . $this->name . 'includes' );
@@ -111,7 +111,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 *
 		 * @uses add_action() To add various actions
 		 * @uses do_action() Calls
-		 *                    'bbp_{@link BBP_Component::name}setup_actions'
+		 *                    'bbp_{@link BBoss_BBP_Component::name}setup_actions'
 		 */
 		private function setup_actions() {
 			add_action( 'bbp_register_post_types', array( $this, 'register_post_types' ), 10, 2 ); // Register post types
@@ -128,7 +128,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 *
 		 * @since bbPress (r2700)
 		 *
-		 * @uses do_action() Calls 'bbp_{@link BBP_Component::name}_register_post_types'
+		 * @uses do_action() Calls 'bbp_{@link BBoss_BBP_Component::name}_register_post_types'
 		 */
 		public function register_post_types() {
 			do_action( 'bbp_' . $this->name . '_register_post_types' );
@@ -139,7 +139,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 *
 		 * @since bbPress (r2700)
 		 *
-		 * @uses do_action() Calls 'bbp_{@link BBP_Component::name}_register_taxonomies'
+		 * @uses do_action() Calls 'bbp_{@link BBoss_BBP_Component::name}_register_taxonomies'
 		 */
 		public function register_taxonomies() {
 			do_action( 'bbp_' . $this->name . '_register_taxonomies' );
@@ -150,7 +150,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 *
 		 * @since bbPress (r2700)
 		 *
-		 * @uses do_action() Calls 'bbp_{@link BBP_Component::name}_add_rewrite_tags'
+		 * @uses do_action() Calls 'bbp_{@link BBoss_BBP_Component::name}_add_rewrite_tags'
 		 */
 		public function add_rewrite_tags() {
 			do_action( 'bbp_' . $this->name . '_add_rewrite_tags' );
@@ -161,7 +161,7 @@ if ( ! class_exists( 'BBP_Component' ) ) :
 		 *
 		 * @since bbPress (r2700)
 		 *
-		 * @uses do_action() Calls 'bbp_{@link BBP_Component::name}_generate_rewrite_rules'
+		 * @uses do_action() Calls 'bbp_{@link BBoss_BBP_Component::name}_generate_rewrite_rules'
 		 */
 		public function generate_rewrite_rules( $wp_rewrite ) {
 			do_action_ref_array( 'bbp_' . $this->name . '_generate_rewrite_rules', $wp_rewrite );
@@ -176,7 +176,7 @@ if ( class_exists( 'Walker' ) ) :
 	 * @since bbPress (r2746)
 	 * @uses Walker
 	 */
-	class BBP_Walker_Dropdown extends Walker {
+	class BBoss_BBP_Walker_Dropdown extends Walker {
 
 		/**
 		 * @see Walker::$tree_type
@@ -207,7 +207,7 @@ if ( class_exists( 'Walker' ) ) :
 		 * @since bbPress (r2746)
 		 */
 		public function __construct() {
-			$this->tree_type = bbp_get_forum_post_type();
+			$this->tree_type = bboss_bbp_get_forum_post_type();
 		}
 
 		/**
@@ -223,10 +223,10 @@ if ( class_exists( 'Walker' ) ) :
 		 * @param array  $args Uses 'selected' argument for selected post to set
 		 *                      selected HTML attribute for option element.
 		 * @param int    $current_object_id
-		 * @uses bbp_is_forum_category() To check if the forum is a category
+		 * @uses bboss_bbp_is_forum_category() To check if the forum is a category
 		 * @uses current_user_can() To check if the current user can post in
 		 *                           closed forums
-		 * @uses bbp_is_forum_closed() To check if the forum is closed
+		 * @uses bboss_bbp_is_forum_closed() To check if the forum is closed
 		 * @uses apply_filters() Calls 'bbp_walker_dropdown_post_title' with the
 		 *                        title, output, post, depth and args
 		 */
@@ -240,9 +240,9 @@ if ( class_exists( 'Walker' ) ) :
 			// - the forum is a category
 			// - forum is closed
 			if ( ( true === $args['disable_categories'] )
-				&& ( bbp_get_forum_post_type() === $object->post_type )
-				&& ( bbp_is_forum_category( $object->ID )
-					|| ( ! current_user_can( 'edit_forum', $object->ID ) && bbp_is_forum_closed( $object->ID )
+				&& ( bboss_bbp_get_forum_post_type() === $object->post_type )
+				&& ( bboss_bbp_is_forum_category( $object->ID )
+					|| ( ! current_user_can( 'edit_forum', $object->ID ) && bboss_bbp_is_forum_closed( $object->ID )
 				)
 			) ) {
 				$output .= ' disabled="disabled" value=""';
@@ -276,7 +276,7 @@ if ( class_exists( 'Walker' ) ) :
 	 *
 	 * @since bbPress (r4944)
 	 */
-	class BBP_Walker_Reply extends Walker {
+	class BBoss_BBP_Walker_Reply extends Walker {
 
 		/**
 		 * @see Walker::$tree_type
@@ -311,7 +311,7 @@ if ( class_exists( 'Walker' ) ) :
 		 * @param array  $args Uses 'style' argument for type of HTML list
 		 */
 		public function start_lvl( &$output = '', $depth = 0, $args = array() ) {
-			bbpress()->reply_query->reply_depth = $depth + 1;
+			bboss_forums()->reply_query->reply_depth = $depth + 1;
 
 			switch ( $args['style'] ) {
 				case 'div':
@@ -336,7 +336,7 @@ if ( class_exists( 'Walker' ) ) :
 		 * @param array  $args Will only append content if style argument value is 'ol' or 'ul'
 		 */
 		public function end_lvl( &$output = '', $depth = 0, $args = array() ) {
-			bbpress()->reply_query->reply_depth = (int) $depth + 1;
+			bboss_forums()->reply_query->reply_depth = (int) $depth + 1;
 
 			switch ( $args['style'] ) {
 				case 'div':
@@ -388,9 +388,9 @@ if ( class_exists( 'Walker' ) ) :
 
 			// Set up reply.
 			$depth++;
-			bbpress()->reply_query->reply_depth = $depth;
-			bbpress()->reply_query->post        = $object;
-			bbpress()->current_reply_id         = $object->ID;
+			bboss_forums()->reply_query->reply_depth = $depth;
+			bboss_forums()->reply_query->post        = $object;
+			bboss_forums()->current_reply_id         = $object->ID;
 
 			// Check for a callback and use it if specified.
 			if ( ! empty( $args['callback'] ) ) {
@@ -405,7 +405,7 @@ if ( class_exists( 'Walker' ) ) :
 				echo "<li class='depth-" . esc_attr( $depth ) . "' data-depth='" . esc_attr( $depth ) . "'>\n";
 			}
 
-			bbp_get_template_part( 'loop', 'single-reply' );
+			bboss_bbp_get_template_part( 'loop', 'single-reply' );
 		}
 
 		/**

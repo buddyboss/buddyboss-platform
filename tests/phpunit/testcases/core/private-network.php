@@ -63,7 +63,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 	/**
 	 * Turn a no-access redirect into an exception the test can assert on.
 	 *
-	 * @param array $args bp_core_no_access() arguments.
+	 * @param array $args bboss_core_no_access() arguments.
 	 *
 	 * @throws Exception Always.
 	 */
@@ -229,7 +229,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		$this->set_request( $request_uri, $script_name );
 		$_GET = $get;
 
-		$this->assertSame( $expected, bb_is_rss_feed_restriction_exempt_request() );
+		$this->assertSame( $expected, bboss_is_rss_feed_restriction_exempt_request() );
 	}
 
 	public function test_rss_restriction_exemption_ignores_login_path_info() {
@@ -237,14 +237,14 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		// WordPress derives $pagenow from PHP_SELF, which carries the PATH_INFO.
 		$_SERVER['PHP_SELF'] = '/index.php/wp-login.php';
 
-		$this->assertFalse( bb_is_rss_feed_restriction_exempt_request() );
+		$this->assertFalse( bboss_is_rss_feed_restriction_exempt_request() );
 	}
 
 	public function test_rss_restriction_exemption_allows_ajax() {
 		$this->set_request( '/wp-admin/admin-ajax.php?feed=x', '/wp-admin/admin-ajax.php' );
 		add_filter( 'wp_doing_ajax', '__return_true' );
 
-		$this->assertTrue( bb_is_rss_feed_restriction_exempt_request() );
+		$this->assertTrue( bboss_is_rss_feed_restriction_exempt_request() );
 	}
 
 	public function data_feed_urls_with_exemption_text() {
@@ -325,7 +325,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 	 * Skip when the Forums component is not loaded.
 	 */
 	protected function require_forums() {
-		if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
+		if ( ! function_exists( 'bboss_bbp_get_forum_post_type' ) ) {
 			$this->markTestSkipped( 'Forums component is not active.' );
 		}
 	}
@@ -354,7 +354,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 			// The provider uses a placeholder key; map it to the real view rewrite id.
 			$view = $query_vars['bbp_view'];
 			unset( $query_vars['bbp_view'] );
-			$query_vars[ bbp_get_view_rewrite_id() ] = $view;
+			$query_vars[ bboss_bbp_get_view_rewrite_id() ] = $view;
 		}
 		$this->set_request( $request_uri );
 		$this->enable_private_rss_feeds();
@@ -362,7 +362,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		$this->assertTrue(
 			$this->is_blocked(
 				function () use ( $query_vars ) {
-					bb_restricate_rss_feed_forums_request( $query_vars );
+					bboss_restricate_rss_feed_forums_request( $query_vars );
 				}
 			)
 		);
@@ -388,7 +388,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		$this->set_request( $request_uri );
 		$this->enable_private_rss_feeds();
 
-		$this->assertSame( $query_vars, bb_restricate_rss_feed_forums_request( $query_vars ) );
+		$this->assertSame( $query_vars, bboss_restricate_rss_feed_forums_request( $query_vars ) );
 	}
 
 	public function test_forum_feeds_stay_public_when_rss_feeds_are_public_or_member_is_logged_in() {
@@ -396,11 +396,11 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		$query_vars = array( 'post_type' => 'forum', 'feed' => 'feed', 'rest_route' => '/' );
 		$this->set_request( '/forums/feed/?rest_route=/' );
 
-		$this->assertSame( $query_vars, bb_restricate_rss_feed_forums_request( $query_vars ), 'Private RSS Feeds off.' );
+		$this->assertSame( $query_vars, bboss_restricate_rss_feed_forums_request( $query_vars ), 'Private RSS Feeds off.' );
 
 		$this->enable_private_rss_feeds();
 		$this->set_current_user( self::factory()->user->create() );
-		$this->assertSame( $query_vars, bb_restricate_rss_feed_forums_request( $query_vars ), 'Logged-in member.' );
+		$this->assertSame( $query_vars, bboss_restricate_rss_feed_forums_request( $query_vars ), 'Logged-in member.' );
 	}
 
 	public function test_forum_check_honours_public_rss_feeds_allowlist() {
@@ -412,7 +412,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		$this->assertFalse(
 			$this->is_blocked(
 				function () {
-					bb_restricate_rss_feed_forums_request( array( 'post_type' => 'forum', 'feed' => 'rss2' ) );
+					bboss_restricate_rss_feed_forums_request( array( 'post_type' => 'forum', 'feed' => 'rss2' ) );
 				}
 			)
 		);
@@ -467,7 +467,7 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 			$blocked,
 			$this->is_blocked(
 				function () use ( $is_feed ) {
-					bb_restricate_rss_feed( $is_feed );
+					bboss_restricate_rss_feed( $is_feed );
 				}
 			)
 		);

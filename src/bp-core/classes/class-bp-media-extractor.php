@@ -35,9 +35,9 @@ defined( 'ABSPATH' ) || exit;
  * Video:      [video]
  *             See wp_get_video_extensions() for supported video formats.
  *
- * @see BP_Media_Extractor::extract() Use this to extract media.
+ * @see BBoss_Media_Extractor::extract() Use this to extract media.
  */
-class BP_Media_Extractor {
+class BBoss_Media_Extractor {
 	/**
 	 * Media type.
 	 *
@@ -170,7 +170,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $media           Extracted media. See {@link BP_Media_Extractor::extract()} for format.
+		 * @param array  $media           Extracted media. See {@link BBoss_Media_Extractor::extract()} for format.
 		 * @param string $richtext        Content to parse.
 		 * @param int    $what_to_extract Media type to extract.
 		 * @param array  $extra_args      Bespoke data for a particular extractor.
@@ -183,7 +183,7 @@ class BP_Media_Extractor {
 	/**
 	 * Content type specific extraction methods.
 	 *
-	 * You shouldn't need to use these directly; just use {@link BP_Media_Extractor::extract()}.
+	 * You shouldn't need to use these directly; just use {@link BBoss_Media_Extractor::extract()}.
 	 */
 
 	/**
@@ -235,7 +235,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $data       Extracted links. See {@link BP_Media_Extractor::extract_links()} for format.
+		 * @param array  $data       Extracted links. See {@link BBoss_Media_Extractor::extract_links()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor.
@@ -276,8 +276,8 @@ class BP_Media_Extractor {
 		$mentions = array();
 
 		// If the Activity component is active, use it to parse @mentions.
-		if ( bp_is_active( 'activity' ) ) {
-			$mentions = bp_activity_find_mentions( $plaintext );
+		if ( bboss_is_active( 'activity' ) ) {
+			$mentions = bboss_activity_find_mentions( $plaintext );
 			if ( ! $mentions ) {
 				$mentions = array();
 			}
@@ -298,7 +298,7 @@ class BP_Media_Extractor {
 			$mention = array( 'name' => strtolower( $mention_name ) );
 
 			// If the Activity component is active, store the User ID, too.
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				$mention['user_id'] = (int) $user_id;
 			}
 
@@ -312,7 +312,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $data       Extracted @mentions. See {@link BP_Media_Extractor::extract_mentions()} for format.
+		 * @param array  $data       Extracted @mentions. See {@link BBoss_Media_Extractor::extract_mentions()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor (optional).
@@ -431,7 +431,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $media      Extracted images. See {@link BP_Media_Extractor::extract_images()} for format.
+		 * @param array  $media      Extracted images. See {@link BBoss_Media_Extractor::extract_images()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor.
@@ -498,7 +498,7 @@ class BP_Media_Extractor {
 		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted shortcodes.
-		 *                           See {@link BP_Media_Extractor::extract_shortcodes()} for format.
+		 *                           See {@link BBoss_Media_Extractor::extract_shortcodes()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor.
@@ -577,7 +577,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $data       Extracted embeds. See {@link BP_Media_Extractor::extract_embeds()} for format.
+		 * @param array  $data       Extracted embeds. See {@link BBoss_Media_Extractor::extract_embeds()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor.
@@ -676,7 +676,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $data       Extracted audio. See {@link BP_Media_Extractor::extract_audio()} for format.
+		 * @param array  $data       Extracted audio. See {@link BBoss_Media_Extractor::extract_audio()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor.
@@ -753,7 +753,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $data       Extracted videos. See {@link BP_Media_Extractor::extract_videos()} for format.
+		 * @param array  $data       Extracted videos. See {@link BBoss_Media_Extractor::extract_videos()} for format.
 		 * @param string $richtext   Content to parse.
 		 * @param string $plaintext  Copy of $richtext without any markup.
 		 * @param array  $extra_args Bespoke data for a particular extractor.
@@ -863,7 +863,7 @@ class BP_Media_Extractor {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array  $galleries_data Galleries. See {@link BP_Media_Extractor::extract_images_from_galleries()}.
+		 * @param array  $galleries_data Galleries. See {@link BBoss_Media_Extractor::extract_images_from_galleries()}.
 		 * @param string $richtext       Content to parse.
 		 * @param string $plaintext      Copy of $richtext without any markup.
 		 * @param array  $extra_args     Bespoke data for a particular extractor.

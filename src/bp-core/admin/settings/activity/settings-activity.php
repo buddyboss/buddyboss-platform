@@ -18,12 +18,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param array $edit_time_options Edit time options array built in bb-admin-settings-activity.php.
  */
-function bb_activity_register_settings_panel_fields( $edit_time_options = array() ) {
+function bboss_activity_register_settings_panel_fields( $edit_time_options = array() ) {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Activity Settings
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -35,7 +35,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -45,15 +45,15 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'type'                 => 'toggle',
 			// translators: %s: Edit time duration select control (e.g. "10 minutes").
 			'description'          => __( 'Allow members to edit their activity posts for a duration of %s', 'buddyboss' ),
-			'default'              => bp_is_activity_edit_enabled(),
+			'default'              => bboss_is_activity_edit_enabled(),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
 				array(
 					'type'              => 'select',
 					'name'              => '_bp_activity_edit_time',
-					'default'           => bp_get_activity_edit_time() ? bp_get_activity_edit_time() : 600,
+					'default'           => bboss_get_activity_edit_time() ? bboss_get_activity_edit_time() : 600,
 					'options'           => $edit_time_options,
-					'sanitize_callback' => 'bb_activity_sanitize_edit_time',
+					'sanitize_callback' => 'bboss_activity_sanitize_edit_time',
 					// The sanitizer resolves to one of the options above, and the getter applies
 					// the same rule, so a stored value may be resolved on read and repaired on save.
 					'resolve_invalid'   => true,
@@ -64,7 +64,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	);
 
 	// FIELD: Post Title.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -73,14 +73,14 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'             => __( 'Post Title', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Make post titles mandatory', 'buddyboss' ),
-			'default'           => bb_is_activity_post_title_enabled(),
+			'default'           => bboss_is_activity_post_title_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
 		)
 	);
 
 	// FIELD: Post Feature Image (Pro only).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -103,7 +103,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		'label'             => __( 'Activity auto-refresh', 'buddyboss' ),
 		'type'              => 'toggle',
 		'description'       => __( 'Automatically check for new activity posts', 'buddyboss' ),
-		'default'           => bp_is_activity_heartbeat_active(),
+		'default'           => bboss_is_activity_heartbeat_active(),
 		'sanitize_callback' => 'absint',
 		'order'             => 40,
 	);
@@ -113,7 +113,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		$heartbeat_args['help_text'] = __( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' );
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -121,7 +121,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	);
 
 	// FIELD: Close Comments.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -130,14 +130,14 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'             => __( 'Close Comments', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Allow your users to stop users commenting on their posts', 'buddyboss' ),
-			'default'           => bb_is_close_activity_comments_enabled(),
+			'default'           => bboss_is_close_activity_comments_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 50,
 		)
 	);
 
 	// FIELD: Polls (Pro only).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -154,7 +154,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	);
 
 	// FIELD: Pinned Post (Pro only — moved into the BuddyBoss Addons plugin).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -163,7 +163,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'             => __( 'Pinned Post', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Allow group owners and moderators to pin posts', 'buddyboss' ),
-			'default'           => bb_is_active_activity_pinned_posts(),
+			'default'           => bboss_is_active_activity_pinned_posts(),
 			'sanitize_callback' => 'absint',
 			'order'             => 70,
 			'pro_only'          => true,
@@ -171,7 +171,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	);
 
 	// FIELD: Schedule Posts (Pro only).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -188,7 +188,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	);
 
 	// FIELD: Follow.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -197,14 +197,14 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'             => __( 'Follow', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss' ),
-			'default'           => bp_is_activity_follow_active(),
+			'default'           => bboss_is_activity_follow_active(),
 			'sanitize_callback' => 'absint',
 			'order'             => 90,
 		)
 	);
 
 	// FIELD: Relevant Activity.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
@@ -214,7 +214,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'type'              => 'toggle',
 			'description'       => __( 'Show only relevant posts to the logged-in member in the activity feed.', 'buddyboss' ),
 			'help_text'         => __( 'When checked, logged-in members will see activity from their timeline, connections, followed members, joined groups, subscribed forums, and mentions.', 'buddyboss' ),
-			'default'           => bp_is_relevant_feed_enabled(),
+			'default'           => bboss_is_relevant_feed_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 100,
 		)
@@ -231,7 +231,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	// -------------------------------------------------------------------------
 	// SECTION: Activity Feed
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'activity',
 		'activity_settings',
 		'activity_feed',
@@ -244,7 +244,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	);
 
 	// FIELD: Activity Search.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_feed',
@@ -253,7 +253,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'             => __( 'Activity Search', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to search activity posts', 'buddyboss' ),
-			'default'           => bb_is_activity_search_enabled(),
+			'default'           => bboss_is_activity_search_enabled(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
@@ -261,8 +261,8 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 
 	// Activity Feed Filters: options from core labels (same keys/labels as legacy).
 	$activity_feed_filter_options = array();
-	if ( function_exists( 'bb_get_activity_filter_options_labels' ) ) {
-		foreach ( bb_get_activity_filter_options_labels() as $value => $label_or ) {
+	if ( function_exists( 'bboss_get_activity_filter_options_labels' ) ) {
+		foreach ( bboss_get_activity_filter_options_labels() as $value => $label_or ) {
 			$label  = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
 			$option = array(
 				'label' => $label,
@@ -278,7 +278,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		}
 	}
 	// FIELD: Activity Feed Filters (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_filter_options' )).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_feed',
@@ -287,17 +287,17 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'       => __( 'Activity Feed Filters', 'buddyboss' ),
 			'type'        => 'checkbox_list',
 			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
-			'default'           => bb_get_enabled_activity_filter_options(),
+			'default'           => bboss_get_enabled_activity_filter_options(),
 			'options'           => $activity_feed_filter_options,
-			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			'sanitize_callback' => 'bboss_sanitize_checkbox_list',
 			'order'             => 20,
 		)
 	);
 
 	// Profile Timeline Filters: options from core labels (same keys/labels as legacy).
 	$activity_timeline_filter_options = array();
-	if ( function_exists( 'bb_get_activity_timeline_filter_options_labels' ) ) {
-		foreach ( bb_get_activity_timeline_filter_options_labels() as $value => $label_or ) {
+	if ( function_exists( 'bboss_get_activity_timeline_filter_options_labels' ) ) {
+		foreach ( bboss_get_activity_timeline_filter_options_labels() as $value => $label_or ) {
 			$label  = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
 			$option = array(
 				'label' => $label,
@@ -313,7 +313,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		}
 	}
 	// FIELD: Profile Timeline Filters (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_timeline_filter_options' )).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_feed',
@@ -331,15 +331,15 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 				'following' => 1,
 			),
 			'options'           => $activity_timeline_filter_options,
-			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			'sanitize_callback' => 'bboss_sanitize_checkbox_list',
 			'order'             => 30,
 		)
 	);
 
 	// Activity Sorting: options from core labels (New Posts, Recent Activity).
 	$activity_sorting_options = array();
-	if ( function_exists( 'bb_get_activity_sorting_options_labels' ) ) {
-		foreach ( bb_get_activity_sorting_options_labels() as $value => $label_or ) {
+	if ( function_exists( 'bboss_get_activity_sorting_options_labels' ) ) {
+		foreach ( bboss_get_activity_sorting_options_labels() as $value => $label_or ) {
 			$label  = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
 			$option = array(
 				'label' => $label,
@@ -355,7 +355,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		}
 	}
 	// FIELD: Activity Sorting (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_sorting_options' )).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_feed',
@@ -364,9 +364,9 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'       => __( 'Activity Sorting', 'buddyboss' ),
 			'type'        => 'checkbox_list',
 			'description' => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
-			'default'     => bb_get_enabled_activity_sorting_options(),
+			'default'     => bboss_get_enabled_activity_sorting_options(),
 			'options'           => $activity_sorting_options,
-			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			'sanitize_callback' => 'bboss_sanitize_checkbox_list',
 			'order'             => 40,
 		)
 	);

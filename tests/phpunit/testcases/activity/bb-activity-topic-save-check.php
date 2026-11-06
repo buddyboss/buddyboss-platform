@@ -8,28 +8,28 @@
 // Pro owns these helpers; the Platform suite runs without Pro, so mirror their bodies.
 if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) ) {
 	function bb_is_enabled_group_activity_topics( $enable_group_topics = false ) {
-		return (bool) apply_filters( 'bb_is_enabled_group_activity_topics', bp_get_option( 'bb-enable-group-activity-topics', $enable_group_topics ) );
+		return (bool) apply_filters( 'bb_is_enabled_group_activity_topics', bboss_get_option( 'bb-enable-group-activity-topics', $enable_group_topics ) );
 	}
 }
 if ( ! function_exists( 'bb_can_user_post_to_group_activity_topic' ) ) {
 	function bb_can_user_post_to_group_activity_topic( $user_id, $group_id, $topic_id ) {
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bboss_is_active( 'groups' ) ) {
 			return false;
 		}
-		$topic_permission = bb_topics_manager_instance()->bb_get_topic_permission_type(
+		$topic_permission = bboss_topics_manager_instance()->bb_get_topic_permission_type(
 			array(
 				'topic_id'  => $topic_id,
 				'item_id'   => $group_id,
 				'item_type' => 'groups',
 			)
 		);
-		if ( groups_is_user_admin( $user_id, $group_id ) ) {
+		if ( bboss_groups_is_user_admin( $user_id, $group_id ) ) {
 			return true;
 		}
-		if ( groups_is_user_mod( $user_id, $group_id ) ) {
+		if ( bboss_groups_is_user_mod( $user_id, $group_id ) ) {
 			return in_array( $topic_permission, array( 'mods', 'members' ), true );
 		}
-		if ( groups_is_user_member( $user_id, $group_id ) ) {
+		if ( bboss_groups_is_user_member( $user_id, $group_id ) ) {
 			return 'members' === $topic_permission;
 		}
 
@@ -47,11 +47,11 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 		parent::set_up();
 
 		foreach ( array( 'bb_enable_activity_topics', 'bb_activity_topic_required', 'bb-enable-group-activity-topics' ) as $option ) {
-			$this->saved_options[ $option ] = bp_get_option( $option, null );
+			$this->saved_options[ $option ] = bboss_get_option( $option, null );
 		}
-		bp_update_option( 'bb_enable_activity_topics', 1 );
-		bp_update_option( 'bb_activity_topic_required', 0 );
-		bp_update_option( 'bb-enable-group-activity-topics', 1 );
+		bboss_update_option( 'bb_enable_activity_topics', 1 );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 1 );
 
 		if ( ! has_action( 'bp_activity_after_save', 'bb_activity_save_topic_data' ) ) {
 			add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
@@ -65,9 +65,9 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 		unset( $_POST['topic_id'], $_POST['group_id'] );
 		foreach ( $this->saved_options as $option => $value ) {
 			if ( null === $value ) {
-				bp_delete_option( $option );
+				bboss_delete_option( $option );
 			} else {
-				bp_update_option( $option, $value );
+				bboss_update_option( $option, $value );
 			}
 		}
 		parent::tear_down();
@@ -76,7 +76,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 	private function add_topic( $name, $permission = 'anyone', $item_type = 'activity', $item_id = 0 ) {
 		$current = get_current_user_id();
 		self::set_current_user( $this->admin );
-		$topic = bb_topics_manager_instance()->bb_add_topic(
+		$topic = bboss_topics_manager_instance()->bb_add_topic(
 			array(
 				'name'            => $name,
 				'permission_type' => $permission,
@@ -108,7 +108,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 		if ( $activity_id ) {
 			$args['id'] = $activity_id;
 		}
-		$id = bp_activity_add( $args );
+		$id = bboss_activity_add( $args );
 		unset( $_POST['topic_id'], $_POST['group_id'] );
 		$this->assertNotEmpty( $id );
 
@@ -117,7 +117,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 
 	private function stored_topic( $activity_id ) {
 		global $wpdb;
-		$table = bb_topics_manager_instance()->activity_topic_rel_table;
+		$table = bboss_topics_manager_instance()->activity_topic_rel_table;
 
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT topic_id FROM `{$table}` WHERE activity_id = %d", $activity_id ) ); // phpcs:ignore
 	}
@@ -138,7 +138,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 	public function test_a_deleted_topic_is_not_saved() {
 		$topic = $this->add_topic( 'S1b deleted' );
 		self::set_current_user( $this->admin );
-		bb_topics_manager_instance()->bb_delete_topic( array( 'topic_id' => $topic ) );
+		bboss_topics_manager_instance()->bb_delete_topic( array( 'topic_id' => $topic ) );
 
 		$a = $this->post( $this->member, $topic );
 
@@ -165,7 +165,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 		$this->assertSame( $topic, $this->stored_topic( $a ) );
 
 		global $wpdb;
-		$wpdb->update( bb_topics_manager_instance()->topic_rel_table, array( 'permission_type' => 'mods_admins' ), array( 'topic_id' => $topic, 'item_type' => 'activity', 'item_id' => 0 ) ); // phpcs:ignore
+		$wpdb->update( bboss_topics_manager_instance()->topic_rel_table, array( 'permission_type' => 'mods_admins' ), array( 'topic_id' => $topic, 'item_type' => 'activity', 'item_id' => 0 ) ); // phpcs:ignore
 
 		$other = $this->add_topic( 'S1b other open' );
 		$this->post( $this->member, $other, 0, $a );
@@ -175,7 +175,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 		$this->assertSame( $other, $this->stored_topic( $a ), 'Moving to the restricted topic is refused.' );
 
 		// A post that already carries the restricted topic may keep it on edit.
-		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+		bboss_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
 			array(
 				'topic_id'    => $topic,
 				'activity_id' => $a,
@@ -188,8 +188,8 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 
 		// The stored row is the same either way, so check the decision itself.
 		self::set_current_user( $this->member );
-		$this->assertTrue( bb_activity_user_can_save_topic( $topic, new BP_Activity_Activity( $a ) ), 'Own topic is allowed on edit.' );
-		$this->assertFalse( bb_activity_user_can_save_topic( $topic, new BP_Activity_Activity( $this->post( $this->member, 0 ) ) ), 'Another post may not take it.' );
+		$this->assertTrue( bboss_activity_user_can_save_topic( $topic, new BBoss_Activity_Activity( $a ) ), 'Own topic is allowed on edit.' );
+		$this->assertFalse( bboss_activity_user_can_save_topic( $topic, new BBoss_Activity_Activity( $this->post( $this->member, 0 ) ) ), 'Another post may not take it.' );
 	}
 
 	public function test_group_post_follows_the_group_topic_permission() {
@@ -218,13 +218,13 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 		$group = self::factory()->group->create( array( 'creator_id' => $this->admin ) );
 		self::add_user_to_group( $this->member, $group );
 		$topic = $this->add_topic( 'S1b group off', 'members', 'groups', $group );
-		bp_update_option( 'bb-enable-group-activity-topics', 0 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 0 );
 
 		$this->assertSame( 0, $this->stored_topic( $this->post( $this->member, $topic, $group ) ) );
 	}
 
 	public function test_required_mode_still_saves_an_allowed_topic() {
-		bp_update_option( 'bb_activity_topic_required', 1 );
+		bboss_update_option( 'bb_activity_topic_required', 1 );
 		$open       = $this->add_topic( 'S1b required open' );
 		$restricted = $this->add_topic( 'S1b required restricted', 'mods_admins' );
 
@@ -234,7 +234,7 @@ class BB_Tests_Activity_Topic_Save_Check extends BP_UnitTestCase {
 
 	public function test_helper_refuses_an_empty_topic() {
 		$a = self::factory()->activity->create( array( 'type' => 'activity_update', 'user_id' => $this->member ) );
-		$this->assertFalse( bb_activity_user_can_save_topic( 0, new BP_Activity_Activity( $a ) ) );
+		$this->assertFalse( bboss_activity_user_can_save_topic( 0, new BBoss_Activity_Activity( $a ) ) );
 	}
 }
 
@@ -257,7 +257,7 @@ class BB_Tests_Activity_Topic_Post_Update_Ajax extends BP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		if ( ! function_exists( 'bp_nouveau_ajax_post_update' ) ) {
+		if ( ! function_exists( 'bboss_nouveau_ajax_post_update' ) ) {
 			$this->markTestSkipped( 'bp-nouveau activity AJAX is not loaded.' );
 		}
 
@@ -267,11 +267,11 @@ class BB_Tests_Activity_Topic_Post_Update_Ajax extends BP_UnitTestCase {
 		error_reporting( $this->error_level & ~E_WARNING );
 
 		foreach ( array( 'bb_enable_activity_topics', 'bb_activity_topic_required', 'bb-enable-group-activity-topics' ) as $option ) {
-			$this->saved_options[ $option ] = bp_get_option( $option, null );
+			$this->saved_options[ $option ] = bboss_get_option( $option, null );
 		}
-		bp_update_option( 'bb_enable_activity_topics', 1 );
-		bp_update_option( 'bb_activity_topic_required', 0 );
-		bp_update_option( 'bb-enable-group-activity-topics', 1 );
+		bboss_update_option( 'bb_enable_activity_topics', 1 );
+		bboss_update_option( 'bb_activity_topic_required', 0 );
+		bboss_update_option( 'bb-enable-group-activity-topics', 1 );
 
 		$this->member = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 	}
@@ -284,9 +284,9 @@ class BB_Tests_Activity_Topic_Post_Update_Ajax extends BP_UnitTestCase {
 		error_reporting( $this->error_level );
 		foreach ( $this->saved_options as $option => $value ) {
 			if ( null === $value ) {
-				bp_delete_option( $option );
+				bboss_delete_option( $option );
 			} else {
-				bp_update_option( $option, $value );
+				bboss_update_option( $option, $value );
 			}
 		}
 
@@ -303,7 +303,7 @@ class BB_Tests_Activity_Topic_Post_Update_Ajax extends BP_UnitTestCase {
 	}
 
 	private function add_site_topic( $name, $permission = 'anyone' ) {
-		$topic = bb_topics_manager_instance()->bb_add_topic(
+		$topic = bboss_topics_manager_instance()->bb_add_topic(
 			array(
 				'name'            => $name,
 				'permission_type' => $permission,
@@ -330,7 +330,7 @@ class BB_Tests_Activity_Topic_Post_Update_Ajax extends BP_UnitTestCase {
 		$level               = ob_get_level();
 		ob_start();
 		try {
-			bp_nouveau_ajax_post_update();
+			bboss_nouveau_ajax_post_update();
 		} catch ( WPAjaxDieContinueException $e ) {
 			// The handler ended through wp_send_json_*.
 		} catch ( WPAjaxDieStopException $e ) {
@@ -387,7 +387,7 @@ class BB_Tests_Activity_Topic_Post_Update_Ajax extends BP_UnitTestCase {
 	}
 
 	public function test_stale_topic_is_not_refused_while_topics_are_off() {
-		bp_update_option( 'bb_enable_activity_topics', 0 );
+		bboss_update_option( 'bb_enable_activity_topics', 0 );
 
 		$message = $this->post_update(
 			array(

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since BuddyBoss 2.8.80
  */
 #[\AllowDynamicProperties]
-class BB_Activity_Topics_Manager {
+class BBoss_Activity_Topics_Manager {
 
 	/**
 	 * Instance of this class.
@@ -64,7 +64,7 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @since BuddyBoss 2.8.80
 	 *
-	 * @return BB_Activity_Topics_Manager The singleton instance.
+	 * @return BBoss_Activity_Topics_Manager The singleton instance.
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -82,9 +82,9 @@ class BB_Activity_Topics_Manager {
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$prefix     = bp_core_get_table_prefix();
+		$prefix     = bboss_core_get_table_prefix();
 
-		$this->activity_topic_rel_table = bb_topics_manager_instance()->activity_topic_rel_table;
+		$this->activity_topic_rel_table = bboss_topics_manager_instance()->activity_topic_rel_table;
 
 		$this->setup_hooks();
 	}
@@ -164,7 +164,7 @@ class BB_Activity_Topics_Manager {
 	 */
 	public function bb_add_activity_topic_relationship( $args ) {
 		// Parse and validate arguments with defaults.
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id'    => 0,
@@ -180,7 +180,7 @@ class BB_Activity_Topics_Manager {
 			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss' ) );
 		}
 
-		if ( bb_is_activity_topic_required() && empty( $r['topic_id'] ) ) {
+		if ( bboss_is_activity_topic_required() && empty( $r['topic_id'] ) ) {
 			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss' ) );
 		}
 
@@ -298,7 +298,7 @@ class BB_Activity_Topics_Manager {
 	 * @return bool True if the activity topic relationship was updated, false otherwise.
 	 */
 	public function bb_update_activity_topic_relationship( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'previous_id' => 0,
@@ -380,7 +380,7 @@ class BB_Activity_Topics_Manager {
 	 * @return bool True if the activity topic relationship was deleted, false otherwise.
 	 */
 	public function bb_delete_activity_topic_relationship( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id' => 0,
@@ -454,7 +454,7 @@ class BB_Activity_Topics_Manager {
 	 * @return int Rows deleted in this batch.
 	 */
 	public function bb_delete_orphan_activity_topic_relationships( $limit = 500 ) {
-		$bp    = buddypress();
+		$bp    = bboss();
 		$limit = max( 1, (int) $limit );
 
 		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- placeholders built below, table names are internal.
@@ -493,7 +493,7 @@ class BB_Activity_Topics_Manager {
 	 * @return array Array of activity topic relationship.
 	 */
 	public function bb_get_activity_topic_relationship( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'id' => 0,
@@ -604,7 +604,7 @@ class BB_Activity_Topics_Manager {
 	 * @return string Modified querystring.
 	 */
 	public function bb_activity_directory_set_topic_id( $querystring, $object_type ) {
-		if ( 'activity' !== $object_type || bp_is_single_activity() ) {
+		if ( 'activity' !== $object_type || bboss_is_single_activity() ) {
 			return $querystring;
 		}
 
@@ -613,7 +613,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		// Add topic id to querystring if it exists.
-		$querystring             = bp_parse_args( $querystring );
+		$querystring             = bboss_parse_args( $querystring );
 		$querystring['topic_id'] = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		return http_build_query( $querystring );
@@ -629,7 +629,7 @@ class BB_Activity_Topics_Manager {
 	public function bb_validate_activity_topic_before_added( $args ) {
 		if (
 			'activity' === $args['item_type'] &&
-			! bp_current_user_can( 'administrator' )
+			! bboss_current_user_can( 'administrator' )
 		) {
 			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss' );
 			if ( 'wp_error' === $args['error_type'] ) {
@@ -656,7 +656,7 @@ class BB_Activity_Topics_Manager {
 			return $join_sql;
 		}
 
-		$bp_prefix = bp_core_get_table_prefix();
+		$bp_prefix = bboss_core_get_table_prefix();
 		$join_sql .= " LEFT JOIN {$bp_prefix}bb_activity_topic_relationship AS atr ON a.id = atr.activity_id";
 
 		return $join_sql;
@@ -729,10 +729,10 @@ class BB_Activity_Topics_Manager {
 			)
 		);
 		// If group activity topics is not enabled, then don't show the topic lists.
-		if ( bp_is_group() ) {
+		if ( bboss_is_group() ) {
 			$topic_lists = array();
 			if (
-				bp_is_active( 'groups' ) &&
+				bboss_is_active( 'groups' ) &&
 				function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 				bb_is_enabled_group_activity_topics() &&
 				function_exists( 'bb_get_group_activity_topics' )
@@ -742,11 +742,11 @@ class BB_Activity_Topics_Manager {
 		}
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
-		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
-		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
+		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bboss_is_enabled_activity_topics' ) ? bboss_is_enabled_activity_topics() : false;
+		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bboss_is_activity_topic_required' ) ? bboss_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
 		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss' );
-		$strings['activity']['params']['topics']['is_activity_directory']               = bp_is_activity_directory();
+		$strings['activity']['params']['topics']['is_activity_directory']               = bboss_is_activity_directory();
 		return $strings;
 	}
 
@@ -760,7 +760,7 @@ class BB_Activity_Topics_Manager {
 	 * @return array Array of activity topics.
 	 */
 	public function bb_get_activity_topics( $args = array() ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => 0,
@@ -771,7 +771,7 @@ class BB_Activity_Topics_Manager {
 
 		$r['item_type'] = ! empty( $r['item_type'] ) ? ( is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] ) ) : array( 'activity' );
 		if ( ! empty( $r['can_post'] ) && in_array( 'activity', $r['item_type'], true ) ) {
-			if ( bp_current_user_can( 'administrator' ) ) {
+			if ( bboss_current_user_can( 'administrator' ) ) {
 				$r['permission_type'] = array( 'mods_admins', 'anyone' );
 			} else {
 				$r['permission_type'] = 'anyone';
@@ -786,14 +786,14 @@ class BB_Activity_Topics_Manager {
 		}
 
 		// Versions the cached list, so a reorder can refresh it without flushing the cache group.
-		$cache_key .= '_' . bp_core_get_incrementor( 'bb_activity_topic_lists' );
+		$cache_key .= '_' . bboss_core_get_incrementor( 'bb_activity_topic_lists' );
 
 		$topic_cache = wp_cache_get( $cache_key, $this->activity_topics_cache_key );
 		if ( false !== $topic_cache ) {
 			return $topic_cache;
 		}
 
-		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
+		$topic_lists = bboss_topics_manager_instance()->bb_get_topics( $r );
 
 		if ( ! empty( $r['count_total'] ) ) {
 			$topic_lists = ! empty( $topic_lists ) ? $topic_lists : array();
@@ -816,7 +816,7 @@ class BB_Activity_Topics_Manager {
 	 * @return bool True if the user can post to the topic, false otherwise.
 	 */
 	public function bb_can_user_post_to_activity_topic( $topic_id ) {
-		$get_permission_type = bb_topics_manager_instance()->bb_get_topic_permission_type(
+		$get_permission_type = bboss_topics_manager_instance()->bb_get_topic_permission_type(
 			array(
 				'topic_id'  => $topic_id,
 				'item_id'   => 0,
@@ -824,7 +824,7 @@ class BB_Activity_Topics_Manager {
 			)
 		);
 
-		if ( 'mods_admins' === $get_permission_type && ! bp_current_user_can( 'administrator' ) ) {
+		if ( 'mods_admins' === $get_permission_type && ! bboss_current_user_can( 'administrator' ) ) {
 			return false;
 		}
 		return true;
@@ -943,15 +943,15 @@ class BB_Activity_Topics_Manager {
 		// Get the appropriate directory permalink based on component.
 		$directory_permalink = '';
 		if (
-			bp_is_active( 'groups' ) &&
+			bboss_is_active( 'groups' ) &&
 			isset( $topic->component ) &&
 			'groups' === $topic->component &&
 			! empty( $topic->item_id )
 		) {
-			$group               = groups_get_group( $topic->item_id );
-			$directory_permalink = bp_get_group_permalink( $group ) . bp_get_activity_slug();
+			$group               = bboss_groups_get_group( $topic->item_id );
+			$directory_permalink = bboss_get_group_permalink( $group ) . bboss_get_activity_slug();
 		} else {
-			$directory_permalink = bp_get_activity_directory_permalink();
+			$directory_permalink = bboss_get_activity_directory_permalink();
 		}
 
 		if ( empty( $directory_permalink ) ) {
@@ -1011,14 +1011,14 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_user_activity_topics_after_post_form() {
-		$current_slug = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topic_slug_from_url() : '';
+		$current_slug = function_exists( 'bboss_topics_manager_instance' ) ? bboss_topics_manager_instance()->bb_get_topic_slug_from_url() : '';
 		$topics       = $this->bb_get_activity_topics();
 		if ( ! empty( $topics ) ) {
 			?>
 			<div class="activity-topic-selector">
 				<ul>
 					<li>
-						<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+						<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 					</li>
 					<?php
 					foreach ( $topics as $topic ) {
@@ -1047,9 +1047,9 @@ class BB_Activity_Topics_Manager {
 	 * @return array The arguments.
 	 */
 	public function bb_get_activity_topic_from_url( $args ) {
-		$topic_slug = bb_topics_manager_instance()->bb_get_topic_slug_from_url();
+		$topic_slug = bboss_topics_manager_instance()->bb_get_topic_slug_from_url();
 		if ( ! empty( $topic_slug ) ) {
-			$topic_data = bb_topics_manager_instance()->bb_get_topic_by( 'slug', urldecode( $topic_slug ) );
+			$topic_data = bboss_topics_manager_instance()->bb_get_topic_by( 'slug', urldecode( $topic_slug ) );
 			if ( ! empty( $topic_data ) && isset( $topic_data->id ) ) {
 				$args['topic_id'] = $topic_data->id;
 			}
@@ -1108,7 +1108,7 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
-	 * @param BB_Admin_Meta_Field_Registry $registry The registry instance.
+	 * @param BBoss_Admin_Meta_Field_Registry $registry The registry instance.
 	 * @param string                       $component The component identifier.
 	 */
 	public function bb_register_activity_edit_field_topic( $registry, $component = 'activity' ) {
@@ -1147,7 +1147,7 @@ class BB_Activity_Topics_Manager {
 							)
 						);
 					} else {
-						$activity_topics_manager = bb_activity_topics_manager_instance();
+						$activity_topics_manager = bboss_activity_topics_manager_instance();
 						if ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_get_activity_topics' ) ) {
 							$topics = $activity_topics_manager->bb_get_activity_topics();
 						}
@@ -1184,7 +1184,7 @@ class BB_Activity_Topics_Manager {
 					 * @since BuddyBoss 2.8.80
 					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 field registry save.
 					 *
-					 * @param BP_Activity_Activity $activity The activity object.
+					 * @param BBoss_Activity_Activity $activity The activity object.
 					 */
 					do_action( 'bb_before_save_activity_topic_metabox', $activity );
 
@@ -1215,7 +1215,7 @@ class BB_Activity_Topics_Manager {
 				},
 				'sanitize_callback' => 'absint',
 				'is_visible'        => function ( $activity ) {
-					return function_exists( 'bb_activity_topics_manager_instance' ) && bb_activity_topics_manager_instance();
+					return function_exists( 'bboss_activity_topics_manager_instance' ) && bboss_activity_topics_manager_instance();
 				},
 			)
 		);

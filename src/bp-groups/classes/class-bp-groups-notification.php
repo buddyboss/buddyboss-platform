@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Groups_Notification class.
+ * Set up the BBoss_Groups_Notification class.
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Groups_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Groups_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Groups_Notification|Controller|object
+	 * @return null|BBoss_Groups_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -83,7 +83,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		// Group membership request has been rejected.
 		$this->register_notification_for_group_membership_request_rejected();
 
-		if ( true === bp_disable_group_messages() ) {
+		if ( true === bboss_disable_group_messages() ) {
 			$this->register_notification_for_group_user_messages();
 		}
 
@@ -365,7 +365,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'bb_groups_new_message'
 		);
 
-		if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
+		if ( function_exists( 'bboss_check_delay_email_notification' ) && bboss_check_delay_email_notification() ) {
 			$this->register_email_type(
 				'group-message-digest',
 				array(
@@ -428,18 +428,18 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function bb_format_groups_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		// Group Details update.
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_details_updated' === $notification->component_action ) {
 
 			$group_id   = $item_id;
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
 			$notification_link = $group_link . '?n=1';
-			$title             = bp_get_group_name( $group );
+			$title             = bboss_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
 				$text = __( 'The group details were updated', 'buddyboss' );
@@ -467,7 +467,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $title,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$group_link,
 				$group->name,
@@ -481,12 +481,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_promoted' === $notification->component_action ) {
 
 			$group_id          = $item_id;
-			$group             = groups_get_group( $group_id );
-			$group_link        = bp_get_group_permalink( $group );
+			$group             = bboss_groups_get_group( $group_id );
+			$group_link        = bboss_get_group_permalink( $group );
 			$amount            = 'single';
 			$notification_link = $group_link . '?n=1';
-			$promote_text      = bp_notifications_get_meta( $notification_id, 'promoted_to', true );
-			$title             = bp_get_group_name( $group );
+			$promote_text      = bboss_notifications_get_meta( $notification_id, 'promoted_to', true );
+			$title             = bboss_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
 				if ( $promote_text ) {
@@ -531,7 +531,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $title,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$group_link,
 				$group->name,
@@ -545,16 +545,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_new_invite' === $notification->component_action ) {
 
 			$group_id   = $item_id;
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
-			$title      = bp_get_group_name( $group );
+			$title      = bboss_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
-				$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_groups_slug() . '/invites/?n=1';
+				$notification_link = bboss_core_get_user_domain( $notification->user_id ) . bboss_get_groups_slug() . '/invites/?n=1';
 				$text              = __( 'You\'ve been invited to join this group.', 'buddyboss' );
 			} else {
-				$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
+				$notification_link = bboss_loggedin_user_domain() . bboss_get_groups_slug() . '/invites/?n=1';
 
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
@@ -578,7 +578,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $title,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$group_link,
 				$group->name,
@@ -592,14 +592,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_new_request' === $notification->component_action ) {
 
 			$group_id          = $item_id;
-			$group             = groups_get_group( $group_id );
-			$group_link        = bp_get_group_permalink( $group );
+			$group             = bboss_groups_get_group( $group_id );
+			$group_link        = bboss_get_group_permalink( $group );
 			$amount            = 'single';
-			$title             = bp_get_group_name( $group );
+			$title             = bboss_get_group_name( $group );
 			$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
 			if ( 'web_push' === $screen ) {
-				$user_fullname = bp_core_get_user_displayname( $notification->secondary_item_id );
+				$user_fullname = bboss_core_get_user_displayname( $notification->secondary_item_id );
 				$text          = sprintf(
 					/* translators: user name */
 					__( '%s has requested to join this group', 'buddyboss' ),
@@ -615,7 +615,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					);
 					$amount = 'multiple';
 				} else {
-					$user_fullname = bp_core_get_user_displayname( $secondary_item_id );
+					$user_fullname = bboss_core_get_user_displayname( $secondary_item_id );
 					$text          = sprintf(
 						/* translators: 1. user name. 2.group name. */
 						esc_html__( '%1$s has requested to join "%2$s"', 'buddyboss' ),
@@ -631,7 +631,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $title,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$group_link,
 				$group->name,
@@ -645,11 +645,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_request_accepted' === $notification->component_action ) {
 
 			$group_id          = $item_id;
-			$group             = groups_get_group( $group_id );
-			$group_link        = bp_get_group_permalink( $group );
+			$group             = bboss_groups_get_group( $group_id );
+			$group_link        = bboss_get_group_permalink( $group );
 			$amount            = 'single';
 			$notification_link = $group_link . '?n=1';
-			$title             = bp_get_group_name( $group );
+			$title             = bboss_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
 				$text = __( 'Your request to join has been approved', 'buddyboss' );
@@ -663,7 +663,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					);
 
 					$amount            = 'multiple';
-					$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+					$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() ) . '?n=1';
 				} else {
 					$text = sprintf(
 					/* translators: group name. */
@@ -679,7 +679,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $title,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$group_link,
 				$group->name,
@@ -693,11 +693,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( ! empty( $notification ) && 'groups' === $notification->component_name && 'bb_groups_request_rejected' === $notification->component_action ) {
 
 			$group_id          = $item_id;
-			$group             = groups_get_group( $group_id );
-			$group_link        = bp_get_group_permalink( $group );
+			$group             = bboss_groups_get_group( $group_id );
+			$group_link        = bboss_get_group_permalink( $group );
 			$amount            = 'single';
 			$notification_link = $group_link . '?n=1';
-			$title             = bp_get_group_name( $group );
+			$title             = bboss_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
 				$text = __( 'Your request to join has been denied', 'buddyboss' );
@@ -711,7 +711,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					);
 
 					$amount            = 'multiple';
-					$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+					$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() ) . '?n=1';
 				} else {
 					$text = sprintf(
 					/* translators: group name. */
@@ -727,7 +727,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $title,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$group_link,
 				$group->name,

@@ -19,8 +19,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
-	define( 'BB_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
+if ( ! defined( 'BBOSS_SEARCH_STANDARD_POST_TYPES' ) ) {
+	define( 'BBOSS_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
 }
 
 /**
@@ -28,8 +28,8 @@ if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
  *
  * @since BuddyBoss 3.0.0
  */
-if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
-	define( 'BB_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
+if ( ! defined( 'BBOSS_SEARCH_EXCLUDED_POST_TYPES' ) ) {
+	define( 'BBOSS_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
 }
 
 /**
@@ -40,13 +40,13 @@ if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_search_feature() {
+function bboss_admin_settings_register_search_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'search',
 		array(
 			'label'              => __( 'Network Search', 'buddyboss' ),
@@ -59,7 +59,7 @@ function bb_admin_settings_register_search_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'search' );
+				return bboss_is_active( 'search' );
 			},
 			'settings_route'     => '/settings/search',
 			'order'              => 50,
@@ -68,7 +68,7 @@ function bb_admin_settings_register_search_feature() {
 
 	// When search is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on search functions that aren't loaded.
-	if ( ! bp_is_active( 'search' ) ) {
+	if ( ! bboss_is_active( 'search' ) ) {
 		return;
 	}
 
@@ -83,7 +83,7 @@ function bb_admin_settings_register_search_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Network Search (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'search',
 		'network_search',
 		array(
@@ -98,7 +98,7 @@ function bb_admin_settings_register_search_feature() {
 	);
 
 	// Side Panel 2: Pages and Posts Search.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'search',
 		'pages_posts',
 		array(
@@ -112,7 +112,7 @@ function bb_admin_settings_register_search_feature() {
 	);
 
 	// Side Panel 3: Autocomplete Settings.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'search',
 		'autocomplete',
 		array(
@@ -121,7 +121,7 @@ function bb_admin_settings_register_search_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-spinner-gap',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -139,13 +139,13 @@ function bb_admin_settings_register_search_feature() {
 	// =========================================================================
 
 	// Panel 1: Network Search.
-	bb_search_register_network_search_fields();
+	bboss_search_register_network_search_fields();
 
 	// Panel 2: Pages and Posts Search.
-	bb_search_register_pages_posts_fields();
+	bboss_search_register_pages_posts_fields();
 
 	// Panel 3: Autocomplete Settings.
-	bb_search_register_autocomplete_fields();
+	bboss_search_register_autocomplete_fields();
 
 	/**
 	 * Fires after all Search settings panels are registered.

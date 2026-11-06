@@ -5,7 +5,7 @@
  * This template handles the media theatre modal for viewing media in fullscreen.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 						</span>
 						<ul class="media-privacy">
 							<?php
-							foreach ( bp_media_get_visibility_levels() as $item_key => $privacy_item ) {
+							foreach ( bboss_media_get_visibility_levels() as $item_key => $privacy_item ) {
 								?>
 								<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?>">
 									<?php echo esc_attr( $privacy_item ); ?>

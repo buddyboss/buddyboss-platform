@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-class BP_Members_List_Table extends WP_Users_List_Table {
+class BBoss_Members_List_Table extends WP_Users_List_Table {
 
 	/**
 	 * Signup counts.
@@ -73,7 +73,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			$args['order'] = $_REQUEST['order'];
 		}
 
-		$signups = BP_Signup::get( $args );
+		$signups = BBoss_Signup::get( $args );
 
 		$this->items         = $signups['signups'];
 		$this->signup_counts = $signups['total'];
@@ -189,7 +189,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	 */
 	public function no_items() {
 
-		if ( bp_get_signup_allowed() ) {
+		if ( bboss_get_signup_allowed() ) {
 			esc_html_e( 'No pending accounts found.', 'buddyboss' );
 		} else {
 			$link = false;
@@ -198,7 +198,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			if ( is_multisite() && current_user_can( 'manage_network_users' ) ) {
 				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
 			} elseif ( current_user_can( 'manage_options' ) ) {
-				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( bp_get_admin_url( 'options-general.php' ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
+				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( bboss_get_admin_url( 'options-general.php' ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
 			}
 
 			/* translators: %s: link to edit registration settings. */
@@ -295,7 +295,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 				'signup_id' => $signup_object->id,
 				'action'    => 'resend',
 			),
-			bp_get_admin_url( 'users.php' )
+			bboss_get_admin_url( 'users.php' )
 		);
 
 		// Activate link.
@@ -305,7 +305,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 				'signup_id' => $signup_object->id,
 				'action'    => 'activate',
 			),
-			bp_get_admin_url( 'users.php' )
+			bboss_get_admin_url( 'users.php' )
 		);
 
 		// Delete link.
@@ -315,7 +315,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 				'signup_id' => $signup_object->id,
 				'action'    => 'delete',
 			),
-			bp_get_admin_url( 'users.php' )
+			bboss_get_admin_url( 'users.php' )
 		);
 
 		echo wp_kses_post( $avatar . sprintf( '<strong><a href="%1$s" class="edit">%2$s</a></strong><br/>', esc_url( $activate_link ), esc_html( $signup_object->user_login ) ) );

@@ -14,7 +14,7 @@
  *
  * The legacy `?page=bp-tools` admin page (Repair Community + Repair Forums +
  * Default Data + Forum Import) is replaced by this feature. The legacy URL
- * 301-redirects via `bb_redirect_bp_settings_before_permission_check()`.
+ * 301-redirects via `bboss_redirect_bp_settings_before_permission_check()`.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.1.0
@@ -33,13 +33,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_settings_register_tools_feature() {
+function bboss_admin_settings_register_tools_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'tools',
 		array(
 			'label'              => __( 'Tools', 'buddyboss' ),
@@ -63,7 +63,7 @@ function bb_admin_settings_register_tools_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Repair Platform (always rendered by Platform).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'tools',
 		'repair_platform',
 		array(
@@ -77,7 +77,7 @@ function bb_admin_settings_register_tools_feature() {
 		)
 	);
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'tools',
 		'repair_platform',
 		'repair_platform_section',
@@ -89,7 +89,7 @@ function bb_admin_settings_register_tools_feature() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'tools',
 		'repair_platform',
 		'repair_platform_section',
@@ -103,7 +103,7 @@ function bb_admin_settings_register_tools_feature() {
 	);
 
 	// Side Panel 2: Sample Data (Tools-active → React panel; inactive → CTA).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'tools',
 		'sample_data',
 		array(
@@ -117,7 +117,7 @@ function bb_admin_settings_register_tools_feature() {
 		)
 	);
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'tools',
 		'sample_data',
 		'sample_data_section',
@@ -129,7 +129,7 @@ function bb_admin_settings_register_tools_feature() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'tools',
 		'sample_data',
 		'sample_data_section',
@@ -143,7 +143,7 @@ function bb_admin_settings_register_tools_feature() {
 	);
 
 	// Side Panel 3: Migration Tools (Tools-active → React panel; inactive → CTA).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'tools',
 		'migration_tools',
 		array(
@@ -157,7 +157,7 @@ function bb_admin_settings_register_tools_feature() {
 		)
 	);
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'tools',
 		'migration_tools',
 		'migration_tools_section',
@@ -168,7 +168,7 @@ function bb_admin_settings_register_tools_feature() {
 		)
 	);
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'tools',
 		'migration_tools',
 		'migration_tools_section',
@@ -199,8 +199,8 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_tools_feature', 
 /**
  * Localize Repair Platform config for the React component.
  *
- * Provides the merged repair-items list (`bp_admin_repair_list()` +
- * `bbp_admin_repair_list()`) with each item tagged by its dispatching AJAX
+ * Provides the merged repair-items list (`bboss_admin_repair_list()` +
+ * `bboss_bbp_admin_repair_list()`) with each item tagged by its dispatching AJAX
  * endpoint, the item-categories taxonomy used to group items in the UI, the
  * multisite context flag, and the network-sites array when applicable.
  *
@@ -214,7 +214,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_tools_feature', 
  *
  * @return void
  */
-function bb_admin_settings_localize_tools_repair_config() {
+function bboss_admin_settings_localize_tools_repair_config() {
 	if ( ! is_admin() ) {
 		return;
 	}
@@ -233,7 +233,7 @@ function bb_admin_settings_localize_tools_repair_config() {
 	// own `bp_current_user_can( 'bp_moderate' )` matches the adjacent
 	// admin code (this file's localize block above, `bb-admin-settings-page.php:268`,
 	// `bp_admin_repair_tools_wrapper_function()` at `bp-core-admin-tools.php:992`).
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
 
@@ -247,19 +247,19 @@ function bb_admin_settings_localize_tools_repair_config() {
 	// loaded when the user is on `?page=bp-tools` / `?page=bbp-repair`. The
 	// `bp_admin_repair_list()` and `bbp_admin_repair_list()` functions live
 	// inside these files (locked-BC, third-party-extensible).
-	$bp_tools_file  = buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
-	$bbp_tools_file = buddypress()->plugin_dir . 'bp-forums/admin/tools.php';
-	if ( ! function_exists( 'bp_admin_repair_list' ) && file_exists( $bp_tools_file ) ) {
+	$bp_tools_file  = bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-tools.php';
+	$bbp_tools_file = bboss()->plugin_dir . 'bp-forums/admin/tools.php';
+	if ( ! function_exists( 'bboss_admin_repair_list' ) && file_exists( $bp_tools_file ) ) {
 		require_once $bp_tools_file;
 	}
-	if ( ! function_exists( 'bbp_admin_repair_list' ) && file_exists( $bbp_tools_file ) ) {
+	if ( ! function_exists( 'bboss_bbp_admin_repair_list' ) && file_exists( $bbp_tools_file ) ) {
 		require_once $bbp_tools_file;
 	}
 
 	$repair_items = array();
 
-	if ( function_exists( 'bp_admin_repair_list' ) ) {
-		$bp_list = (array) bp_admin_repair_list();
+	if ( function_exists( 'bboss_admin_repair_list' ) ) {
+		$bp_list = (array) bboss_admin_repair_list();
 		foreach ( $bp_list as $item ) {
 			if ( ! is_array( $item ) || count( $item ) < 2 ) {
 				continue;
@@ -267,15 +267,15 @@ function bb_admin_settings_localize_tools_repair_config() {
 			$repair_items[] = array(
 				'id'       => (string) $item[0],
 				'label'    => html_entity_decode( (string) $item[1], ENT_QUOTES, 'UTF-8' ),
-				'category' => bb_admin_repair_categorize_item( (string) $item[0] ),
+				'category' => bboss_admin_repair_categorize_item( (string) $item[0] ),
 				'endpoint' => 'bp_admin_repair_tools_wrapper_function',
 				'nonce'    => 'repair',
 			);
 		}
 	}
 
-	if ( function_exists( 'bbp_admin_repair_list' ) ) {
-		$bbp_list = (array) bbp_admin_repair_list();
+	if ( function_exists( 'bboss_bbp_admin_repair_list' ) ) {
+		$bbp_list = (array) bboss_bbp_admin_repair_list();
 		foreach ( $bbp_list as $item ) {
 			if ( ! is_array( $item ) || count( $item ) < 2 ) {
 				continue;
@@ -339,8 +339,8 @@ function bb_admin_settings_localize_tools_repair_config() {
 	);
 
 	$network_sites = array();
-	if ( is_multisite() && is_network_admin() && function_exists( 'bbp_get_network_sites' ) ) {
-		$sites = bbp_get_network_sites();
+	if ( is_multisite() && is_network_admin() && function_exists( 'bboss_bbp_get_network_sites' ) ) {
+		$sites = bboss_bbp_get_network_sites();
 		foreach ( (array) $sites as $site ) {
 			$network_sites[] = array(
 				'blog_id' => (int) $site->blog_id,
@@ -378,7 +378,7 @@ add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repa
 /**
  * Map a `bp_admin_repair_*` item id to one of the Figma category buckets.
  *
- * The legacy `bp_admin_repair_list()` returns a flat list — Figma groups the
+ * The legacy `bboss_admin_repair_list()` returns a flat list — Figma groups the
  * items under five headings. This map decides which heading each item lands
  * under. Items not matched fall through to `connections`.
  *
@@ -387,7 +387,7 @@ add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repa
  * @param string $item_id The legacy repair-item id (e.g. "bp-last-activity").
  * @return string Category id matching the `item_categories` taxonomy above.
  */
-function bb_admin_repair_categorize_item( $item_id ) {
+function bboss_admin_repair_categorize_item( $item_id ) {
 	// 50 items total in the legacy lists (28 from bp_admin_repair_list,
 	// 22 from bbp_admin_repair_list) — every entry below should map to one
 	// of the nine Figma categories defined in $item_categories above. Pro

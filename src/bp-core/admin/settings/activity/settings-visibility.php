@@ -29,12 +29,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_activity_register_visibility_panel_fields() {
+function bboss_activity_register_visibility_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Posts Visibility in Activity Feed
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'activity',
 		'posts_visibility',
 		'posts_visibility',
@@ -49,7 +49,7 @@ function bb_activity_register_visibility_panel_fields() {
 	// FIELD: BuddyBoss Platform activity types (toggle list).
 	// Legacy stores each type in a separate option (bp-feed-platform-{activity_name}). Core AJAX
 	// reads/writes per-option when option_prefix is set (see class-bb-admin-settings-ajax.php).
-	$platform_activity_types = function_exists( 'bp_platform_default_activity_types' ) ? bp_platform_default_activity_types() : array();
+	$platform_activity_types = function_exists( 'bboss_platform_default_activity_types' ) ? bboss_platform_default_activity_types() : array();
 	$platform_type_options   = array();
 
 	foreach ( $platform_activity_types as $type ) {
@@ -59,7 +59,7 @@ function bb_activity_register_visibility_panel_fields() {
 		);
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'posts_visibility',
 		'posts_visibility',
@@ -70,7 +70,7 @@ function bb_activity_register_visibility_panel_fields() {
 			'description'          => '',
 			'options'              => $platform_type_options,
 			'default'              => array(),
-			'sanitize_callback'    => 'bb_activity_sanitize_platform_activity_types',
+			'sanitize_callback'    => 'bboss_activity_sanitize_platform_activity_types',
 			'order'                => 10,
 			'option_prefix'        => 'bp-feed-platform-',
 			'option_value_truthy'  => array( 1, '1', true ),
@@ -89,13 +89,13 @@ function bb_activity_register_visibility_panel_fields() {
  *
  * @param string $feature_id The feature being loaded.
  */
-function bb_activity_register_visibility_post_type_fields( $feature_id ) {
+function bboss_activity_register_visibility_post_type_fields( $feature_id ) {
 	// Only run for the activity feature.
 	if ( 'activity' !== $feature_id ) {
 		return;
 	}
 
-	$all_feed_post_types = function_exists( 'bb_feed_post_types' ) ? bb_feed_post_types() : array();
+	$all_feed_post_types = function_exists( 'bboss_feed_post_types' ) ? bboss_feed_post_types() : array();
 	$field_order         = 20;
 
 	// -------------------------------------------------------------------------
@@ -103,11 +103,11 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 	// Toggle + checkbox grouped together. Checkbox depends on toggle via conditional.
 	// -------------------------------------------------------------------------
 	if ( in_array( 'post', $all_feed_post_types, true ) ) {
-		$wp_post_option_name    = bb_post_type_feed_option_name( 'post' );
-		$wp_comment_option_name = bb_post_type_feed_comment_option_name( 'post' );
+		$wp_post_option_name    = bboss_post_type_feed_option_name( 'post' );
+		$wp_comment_option_name = bboss_post_type_feed_comment_option_name( 'post' );
 
 		// Toggle: Show WordPress Posts.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'activity',
 			'posts_visibility',
 			'posts_visibility',
@@ -117,7 +117,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'type'              => 'toggle',
 				'description'       => __( 'Show WordPress Posts', 'buddyboss' ),
 				'help_text'         => __( 'When checked, new blog posts published by members will appear in the activity feed.', 'buddyboss' ),
-				'default'           => function_exists( 'bp_is_post_type_feed_enable' ) ? bp_is_post_type_feed_enable( 'post', false ) : false,
+				'default'           => function_exists( 'bboss_is_post_type_feed_enable' ) ? bboss_is_post_type_feed_enable( 'post', false ) : false,
 				'sanitize_callback' => 'absint',
 				'order'             => $field_order,
 				'group'             => 'wordpress_feed',
@@ -125,7 +125,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 		);
 
 		// Checkbox: Enable WordPress Post comments in the activity feed.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'activity',
 			'posts_visibility',
 			'posts_visibility',
@@ -135,7 +135,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'type'              => 'checkbox',
 				'description'       => __( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ),
 				'help_text'         => __( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ),
-				'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( 'post', false ) : false,
+				'default'           => function_exists( 'bboss_is_post_type_feed_comment_enable' ) ? bboss_is_post_type_feed_comment_enable( 'post', false ) : false,
 				'sanitize_callback' => 'absint',
 				'order'             => $field_order + 1,
 				'group'             => 'wordpress_feed',
@@ -160,24 +160,24 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 		$group_id  = '';
 
 		// Compute once outside the loop — the result is the same for every iteration.
-		$no_comment_post_types = function_exists( 'bb_feed_not_allowed_comment_post_types' ) ? bb_feed_not_allowed_comment_post_types() : array();
+		$no_comment_post_types = function_exists( 'bboss_feed_not_allowed_comment_post_types' ) ? bboss_feed_not_allowed_comment_post_types() : array();
 
 		foreach ( $custom_post_types as $post_type ) {
 			$post_type_obj       = get_post_type_object( $post_type );
 			$post_type_label     = $post_type_obj ? $post_type_obj->labels->name : $post_type;
-			$post_option_name    = bb_post_type_feed_option_name( $post_type );
-			$comment_option_name = bb_post_type_feed_comment_option_name( $post_type );
+			$post_option_name    = bboss_post_type_feed_option_name( $post_type );
+			$comment_option_name = bboss_post_type_feed_comment_option_name( $post_type );
 			$group_id            = 'cpt_feed_' . sanitize_key( $post_type );
 
 			// Check if the post type supports comments (same logic as legacy).
 			// Also checks bb_activity_is_enabled_cpt_global_comment() so that LearnDash/TutorLMS
 			// CPTs with comments disabled in their own settings are treated as unsupported.
 			$comments_not_supported = in_array( $post_type, $no_comment_post_types, true )
-				|| ( function_exists( 'bb_activity_is_enabled_cpt_global_comment' ) && ! bb_activity_is_enabled_cpt_global_comment( $post_type ) );
+				|| ( function_exists( 'bboss_activity_is_enabled_cpt_global_comment' ) && ! bboss_activity_is_enabled_cpt_global_comment( $post_type ) );
 
 			// Toggle: Post type name.
 			// Only first CPT gets the "Custom Post Types" label.
-			bb_register_feature_field(
+			bboss_register_feature_field(
 				'activity',
 				'posts_visibility',
 				'posts_visibility',
@@ -186,7 +186,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 					'label'             => 0 === $cpt_index ? __( 'Custom Post Types', 'buddyboss' ) : '',
 					'type'              => 'toggle',
 					'description'       => $post_type_label,
-					'default'           => function_exists( 'bp_is_post_type_feed_enable' ) ? bp_is_post_type_feed_enable( $post_type, false ) : false,
+					'default'           => function_exists( 'bboss_is_post_type_feed_enable' ) ? bboss_is_post_type_feed_enable( $post_type, false ) : false,
 					'sanitize_callback' => 'absint',
 					'order'             => $field_order,
 					'group'             => $group_id,
@@ -195,7 +195,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 
 			if ( $comments_not_supported ) {
 				// Notice: Comments not supported (shown only when toggle is ON).
-				bb_register_feature_field(
+				bboss_register_feature_field(
 					'activity',
 					'posts_visibility',
 					'posts_visibility',
@@ -219,7 +219,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				);
 			} else {
 				// Checkbox: Enable comments.
-				bb_register_feature_field(
+				bboss_register_feature_field(
 					'activity',
 					'posts_visibility',
 					'posts_visibility',
@@ -228,7 +228,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 						'label'             => '',
 						'type'              => 'checkbox',
 						'description'       => __( 'Enable comments', 'buddyboss' ),
-						'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( $post_type, false ) : false,
+						'default'           => function_exists( 'bboss_is_post_type_feed_comment_enable' ) ? bboss_is_post_type_feed_comment_enable( $post_type, false ) : false,
 						'sanitize_callback' => 'absint',
 						'order'             => $field_order + 1,
 						'group'             => $group_id,
@@ -249,7 +249,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 		// notice_type 'plain' renders as standalone helper text (no boxed background,
 		// no icon) per Figma — used for section-level help where a full notice card
 		// would be too heavy.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'activity',
 			'posts_visibility',
 			'posts_visibility',

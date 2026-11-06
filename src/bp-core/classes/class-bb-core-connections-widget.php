@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Core_Connections_Widget
+ * Class BBoss_Core_Connections_Widget
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Core_Connections_Widget extends WP_Widget {
+class BBoss_Core_Connections_Widget extends WP_Widget {
 
 	/**
 	 * Constructor.
@@ -43,11 +43,11 @@ class BB_Core_Connections_Widget extends WP_Widget {
 		}
 
 		// Use displayed user if on profile, otherwise logged-in user.
-		$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
+		$user_id = bboss_displayed_user_id() ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 		$max     = 10;
 
-		$friends = function_exists( 'friends_get_friend_user_ids' )
-			? friends_get_friend_user_ids( $user_id )
+		$friends = function_exists( 'bboss_friends_get_friend_user_ids' )
+			? bboss_friends_get_friend_user_ids( $user_id )
 			: array();
 
 		// Current: "No connections found, don't display the widget."
@@ -61,7 +61,7 @@ class BB_Core_Connections_Widget extends WP_Widget {
 		$friends = array_slice( $friends, 0, $max );
 
 		// Build "See all" link for the displayed user.
-		$see_all_url = bp_core_get_user_domain( $user_id ) . bp_get_friends_slug() . '/';
+		$see_all_url = bboss_core_get_user_domain( $user_id ) . bboss_get_friends_slug() . '/';
 		?>
 		<div class="widget-header">
 			<h2 class="widget-title"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></h2>
@@ -74,10 +74,10 @@ class BB_Core_Connections_Widget extends WP_Widget {
 			foreach ( $friends as $friend_id ) {
 				?>
 				<li>
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $friend_id ) ); ?>" class="item-avatar bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $friend_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $friend_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+					<a href="<?php echo esc_url( bboss_core_get_user_domain( $friend_id ) ); ?>" class="item-avatar bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_core_get_user_displayname( $friend_id ) ); ?>"<?php echo bboss_get_hover_card_profile_attr( $friend_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						echo wp_kses_post(
-							bp_core_fetch_avatar(
+							bboss_core_fetch_avatar(
 								array(
 									'item_id' => $friend_id,
 									'type'    => 'full',
@@ -89,8 +89,8 @@ class BB_Core_Connections_Widget extends WP_Widget {
 						);
 						?>
 						<?php
-						if ( function_exists( 'bb_user_presence_html' ) ) {
-							bb_user_presence_html( $friend_id );
+						if ( function_exists( 'bboss_user_presence_html' ) ) {
+							bboss_user_presence_html( $friend_id );
 						}
 						?>
 					</a>

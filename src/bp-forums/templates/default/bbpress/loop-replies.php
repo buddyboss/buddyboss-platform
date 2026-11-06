@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 <?php do_action( 'bbp_template_before_replies_loop' ); ?>
 
-<ul id="topic-<?php bbp_topic_id(); ?>-replies" class="forums bbp-replies">
+<ul id="topic-<?php bboss_bbp_topic_id(); ?>-replies" class="forums bbp-replies">
 
 	<li class="bbp-header">
 
@@ -21,13 +21,13 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="bbp-reply-content">
 
-			<?php if ( ! bbp_show_lead_topic() ) : ?>
+			<?php if ( ! bboss_bbp_show_lead_topic() ) : ?>
 
 				<?php esc_html_e( 'Posts', 'buddyboss' ); ?>
 
-				<?php bbp_topic_subscription_link(); ?>
+				<?php bboss_bbp_topic_subscription_link(); ?>
 
-				<?php bbp_user_favorites_link(); ?>
+				<?php bboss_bbp_user_favorites_link(); ?>
 
 			<?php else : ?>
 
@@ -41,18 +41,18 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-body">
 
-		<?php if ( bbp_thread_replies() ) : ?>
+		<?php if ( bboss_bbp_thread_replies() ) : ?>
 
-			<?php bbp_list_replies(); ?>
+			<?php bboss_bbp_list_replies(); ?>
 
 		<?php else : ?>
 
 			<?php
-			while ( bbp_replies() ) :
-				bbp_the_reply();
+			while ( bboss_bbp_replies() ) :
+				bboss_bbp_the_reply();
 				?>
 
-				<?php bbp_get_template_part( 'loop', 'single-reply' ); ?>
+				<?php bboss_bbp_get_template_part( 'loop', 'single-reply' ); ?>
 
 			<?php endwhile; ?>
 
@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="bbp-reply-content">
 
-			<?php if ( ! bbp_show_lead_topic() ) : ?>
+			<?php if ( ! bboss_bbp_show_lead_topic() ) : ?>
 
 				<?php esc_html_e( 'Posts', 'buddyboss' ); ?>
 
@@ -80,6 +80,6 @@ defined( 'ABSPATH' ) || exit;
 
 	</li><!-- .bbp-footer -->
 
-</ul><!-- #topic-<?php bbp_topic_id(); ?>-replies -->
+</ul><!-- #topic-<?php bboss_bbp_topic_id(); ?>-replies -->
 
 <?php do_action( 'bbp_template_after_replies_loop' ); ?>

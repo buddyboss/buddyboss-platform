@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
 						</p>
 						<ul>
-							<?php if ( bp_is_active( 'activity' ) ) : ?>
+							<?php if ( bboss_is_active( 'activity' ) ) : ?>
 							<li>
 								<?php
 								esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
@@ -42,21 +42,21 @@ defined( 'ABSPATH' ) || exit;
 								esc_html_e( 'Mention this member in posts', 'buddyboss' );
 								?>
 							</li>
-							<?php if ( bp_is_active( 'groups' ) ) : ?>
+							<?php if ( bboss_is_active( 'groups' ) ) : ?>
 							<li>
 								<?php
 								esc_html_e( 'Invite this member to groups', 'buddyboss' );
 								?>
 							</li>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'messages' ) ) : ?>
+							<?php if ( bboss_is_active( 'messages' ) ) : ?>
 							<li>
 								<?php
 								esc_html_e( 'Message this member', 'buddyboss' );
 								?>
 							</li>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'friends' ) ) : ?>
+							<?php if ( bboss_is_active( 'friends' ) ) : ?>
 							<li>
 								<?php
 								esc_html_e( 'Add this member as a connection', 'buddyboss' );
@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) || exit;
 						</ul>
 
 						<p>
-							<?php if ( bp_is_active( 'friends' ) ) : ?>
+							<?php if ( bboss_is_active( 'friends' ) ) : ?>
 								<strong><?php esc_html_e( 'Please note: ', 'buddyboss' ); ?></strong>
 								<?php esc_html_e( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' ); ?>
 							<?php endif; ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * BP_Bbp_Gdpr_Forums base class
+ * BBoss_Bbp_Gdpr_Forums base class
  *
  * This class
  *
@@ -12,11 +12,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Bbp_Gdpr_Forums
+ * Class BBoss_Bbp_Gdpr_Forums
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_Bbp_Gdpr_Forums {
+class BBoss_Bbp_Gdpr_Forums {
 
 	/**
 	 * @var string

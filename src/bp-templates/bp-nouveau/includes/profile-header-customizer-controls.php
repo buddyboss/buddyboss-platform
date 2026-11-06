@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.2
  */
 
-class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
+class BBoss_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 
 	/**
 	 * @var string
@@ -34,8 +34,8 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 		$hide    = false;
 		$setting = "bp_nouveau_appearance[user_profile_actions_order]";
 
-		$order           = bp_nouveau_get_user_profile_actions();
-		$profile_buttons = bp_nouveau_customizer_user_profile_actions();
+		$order           = bboss_nouveau_get_user_profile_actions();
+		$profile_buttons = bboss_nouveau_customizer_user_profile_actions();
 
 		uksort( $profile_buttons, function ( $key1, $key2 ) use ( $order ) {
 			$pos1 = array_search( $key1, $order );
@@ -81,10 +81,10 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 		<?php endif; ?>
 
 		<?php
-		if ( is_array( bp_nouveau_get_user_profile_actions() ) ) {
-			$bp_user_profile_actions_order_value = implode( ',', bp_nouveau_get_user_profile_actions() );
+		if ( is_array( bboss_nouveau_get_user_profile_actions() ) ) {
+			$bp_user_profile_actions_order_value = implode( ',', bboss_nouveau_get_user_profile_actions() );
 		} else {
-			$bp_user_profile_actions_order_value = bp_nouveau_get_user_profile_actions();
+			$bp_user_profile_actions_order_value = bboss_nouveau_get_user_profile_actions();
 		}
 		?>
 		<input id="bp_user_profile_actions_order" type="hidden"

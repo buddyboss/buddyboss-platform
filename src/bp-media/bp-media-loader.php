@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_setup_media() {
-	buddypress()->media = new BP_Media_Component();
+function bboss_setup_media() {
+	bboss()->media = new BBoss_Media_Component();
 }
 add_action( 'bp_setup_components', 'bp_setup_media', 5 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Notification_Export class
+ * Export API: BBoss_Notification_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Notification_Export
+ * Class BBoss_Notification_Export
  */
-final class BP_Notification_Export extends BP_Export {
+final class BBoss_Notification_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,7 +23,7 @@ final class BP_Notification_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Notification_Export();
+			$instance = new BBoss_Notification_Export();
 			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss' ) );
 		}
 
@@ -42,7 +42,7 @@ final class BP_Notification_Export extends BP_Export {
 	/**
 	 * Resolve member names for the data subject while their export is rendered.
 	 *
-	 * Filters the viewer bp_core_get_user_displayname() falls back to when no viewer is passed.
+	 * Filters the viewer bboss_core_get_user_displayname() falls back to when no viewer is passed.
 	 * Only name resolution is re-pointed - capabilities and the logged-in user are untouched - so a
 	 * notification the subject received reads with the names the subject is allowed to see, not the
 	 * names the administrator running the export can see.
@@ -117,7 +117,7 @@ final class BP_Notification_Export extends BP_Export {
 			$group_label = __( 'Notifications', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$notification = bp_notifications_get_notification( $item->id );
+			$notification = bboss_notifications_get_notification( $item->id );
 
 			$action = $this->bp_get_the_notification_description( $notification );
 			$action = wp_strip_all_tags( $action );
@@ -182,7 +182,7 @@ final class BP_Notification_Export extends BP_Export {
 		/**
 		 * Make use of buddypress default data remover.
 		 */
-		bp_notifications_delete_notifications_on_user_delete( $user->ID );
+		bboss_notifications_delete_notifications_on_user_delete( $user->ID );
 
 		$done = true;
 
@@ -205,7 +205,7 @@ final class BP_Notification_Export extends BP_Export {
 
 		$wpdb->show_errors( false );
 
-		$table  = bp_core_get_table_prefix() . 'bp_notifications item';
+		$table  = bboss_core_get_table_prefix() . 'bp_notifications item';
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 
 		// Table name from bp_core_get_table_prefix(); user ID, LIMIT and OFFSET bound as %d.
@@ -234,7 +234,7 @@ final class BP_Notification_Export extends BP_Export {
 	 * @return mixed|void
 	 */
 	function bp_get_the_notification_description( $notification ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Callback function exists.
 		if ( isset( $bp->{$notification->component_name}->notification_callback ) && is_callable( $bp->{$notification->component_name}->notification_callback ) ) {

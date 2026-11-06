@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
+if ( ! class_exists( 'BBoss_Search_bbPress_Topics' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbpress forums topics class
 	 */
-	class Bp_Search_bbPress_Topics extends Bp_Search_bbPress {
+	class BBoss_Search_bbPress_Topics extends BBoss_Search_bbPress {
 		public $type = 'topic';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			static $bbp_search_group_forum_ids = array();
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$bp_prefix = bboss_core_get_table_prefix();
 
 			$query_placeholder = array();
 
@@ -46,8 +46,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$tax = array();
 
-			if ( bp_is_search_post_type_taxonomy_enable( bbpress()->topic_tag_tax_id, $this->type ) ) {
-				$tax[] = bbpress()->topic_tag_tax_id;
+			if ( bboss_is_search_post_type_taxonomy_enable( bboss_forums()->topic_tag_tax_id, $this->type ) ) {
+				$tax[] = bboss_forums()->topic_tag_tax_id;
 			}
 
 			$where_clause = ' WHERE ';
@@ -88,7 +88,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			// Initialize forum exclusion variables.
 			$excluded_forum_ids = array();
 
-			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+			if ( bboss_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
 				// Get user accessible groups using shared method from parent class.
 				$groups_data        = $this->get_user_accessible_groups();
 				$excluded_group_ids = $groups_data['excluded_group_ids'];
@@ -108,7 +108,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					$excluded_forum_args = array(
 						'fields'      => 'ids',
 						'post_status' => $post_status,
-						'post_type'   => bbp_get_forum_post_type(),
+						'post_type'   => bboss_bbp_get_forum_post_type(),
 						'numberposts' => -1,
 						'meta_query'  => array(
 							'relation' => 'AND',
@@ -153,7 +153,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$forum_args = array(
 				'fields'      => 'ids',
 				'post_status' => $post_status,
-				'post_type'   => bbp_get_forum_post_type(),
+				'post_type'   => bboss_bbp_get_forum_post_type(),
 				'numberposts' => -1,
 			);
 
@@ -174,7 +174,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$where   = array();
 			$where[] = '1=1';
 
-			$search_term_array  = bb_search_get_search_keywords_by_term( $search_term, $this->type );
+			$search_term_array  = bboss_search_get_search_keywords_by_term( $search_term, $this->type );
 			$every_word_clauses = array();
 			foreach ( $search_term_array as $term ) {
 				$every_word_clauses[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
@@ -193,7 +193,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$forum_id_in = implode( ',', $forum_ids );
 				$where[]     = "p.post_parent IN ( $forum_id_in )";
 				// No accessible forums - return no results.
-			} elseif ( bp_is_active( 'groups' ) && ! empty( $excluded_forum_ids ) ) {
+			} elseif ( bboss_is_active( 'groups' ) && ! empty( $excluded_forum_ids ) ) {
 				// If we have excluded forums but no allowed forums, return empty.
 				$where[] = '1=0';
 			}
@@ -234,7 +234,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_bbPress_Topics();
+				$instance = new BBoss_Search_bbPress_Topics();
 			}
 
 			// Always return the instance.

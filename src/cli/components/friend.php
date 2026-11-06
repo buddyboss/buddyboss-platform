@@ -64,18 +64,18 @@ class Friend extends BuddypressCommand {
 		}
 
 		// Check if users are already friends, and bail if they do.
-		if ( friends_check_friendship( $initiator->ID, $friend->ID ) ) {
+		if ( bboss_friends_check_friendship( $initiator->ID, $friend->ID ) ) {
 			WP_CLI::error( 'These users are already friends.' );
 		}
 
 		$force = WP_CLI\Utils\get_flag_value( $assoc_args, 'force-accept' );
 
-		if ( ! friends_add_friend( $initiator->ID, $friend->ID, $force ) ) {
+		if ( ! bboss_friends_add_friend( $initiator->ID, $friend->ID, $force ) ) {
 			WP_CLI::error( 'There was a problem while creating the friendship.' );
 		}
 
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'porcelain' ) ) {
-			WP_CLI::line( \BP_Friends_Friendship::get_friendship_id( $initiator->ID, $friend->ID ) );
+			WP_CLI::line( \BBoss_Friends_Friendship::get_friendship_id( $initiator->ID, $friend->ID ) );
 		} else {
 			if ( $force ) {
 				WP_CLI::success( 'Connection successfully created.' );
@@ -109,11 +109,11 @@ class Friend extends BuddypressCommand {
 		$friend    = $this->get_user_id_from_identifier( $args[1] );
 
 		// Check if users are already friends, if not, bail.
-		if ( ! friends_check_friendship( $initiator->ID, $friend->ID ) ) {
+		if ( ! bboss_friends_check_friendship( $initiator->ID, $friend->ID ) ) {
 			WP_CLI::error( 'These users are not friends.' );
 		}
 
-		if ( friends_remove_friend( $initiator->ID, $friend->ID ) ) {
+		if ( bboss_friends_remove_friend( $initiator->ID, $friend->ID ) ) {
 			WP_CLI::success( 'Connection successfully removed.' );
 		} else {
 			WP_CLI::error( 'There was a problem while removing the friendship.' );
@@ -140,7 +140,7 @@ class Friend extends BuddypressCommand {
 	 */
 	public function accept( $args, $assoc_args ) {
 		foreach ( $args as $friendship_id ) {
-			if ( friends_accept_friendship( (int) $friendship_id ) ) {
+			if ( bboss_friends_accept_friendship( (int) $friendship_id ) ) {
 				WP_CLI::success( 'Connection successfully accepted.' );
 			} else {
 				WP_CLI::error( 'There was a problem accepting the friendship.' );
@@ -168,7 +168,7 @@ class Friend extends BuddypressCommand {
 	 */
 	public function reject( $args, $assoc_args ) {
 		foreach ( $args as $friendship_id ) {
-			if ( friends_reject_friendship( (int) $friendship_id ) ) {
+			if ( bboss_friends_reject_friendship( (int) $friendship_id ) ) {
 				WP_CLI::success( 'Connection successfully rejected.' );
 			} else {
 				WP_CLI::error( 'There was a problem rejecting the friendship.' );
@@ -202,7 +202,7 @@ class Friend extends BuddypressCommand {
 		$user   = $this->get_user_id_from_identifier( $args[0] );
 		$friend = $this->get_user_id_from_identifier( $args[1] );
 
-		if ( friends_check_friendship( $user->ID, $friend->ID ) ) {
+		if ( bboss_friends_check_friendship( $user->ID, $friend->ID ) ) {
 			WP_CLI::success( 'Yes, they are friends.' );
 		} else {
 			WP_CLI::error( 'No, they are not friends.' );
@@ -242,7 +242,7 @@ class Friend extends BuddypressCommand {
 	public function _list( $args, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 		$user      = $this->get_user_id_from_identifier( $args[0] );
-		$friends   = \BP_Friends_Friendship::get_friendships( $user->ID );
+		$friends   = \BBoss_Friends_Friendship::get_friendships( $user->ID );
 
 		if ( empty( $friends ) ) {
 			WP_CLI::error( 'This member has no friends.' );

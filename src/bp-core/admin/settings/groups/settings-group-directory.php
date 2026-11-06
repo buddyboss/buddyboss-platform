@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_directory_panel_fields() {
+function bboss_groups_register_directory_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Directory
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_directory',
 		'group_directory',
@@ -34,7 +34,7 @@ function bb_groups_register_directory_panel_fields() {
 	);
 
 	// FIELD: Enabled View(s).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_directory',
 		'group_directory',
@@ -43,8 +43,8 @@ function bb_groups_register_directory_panel_fields() {
 			'label'             => __( 'Enabled View(s)', 'buddyboss' ),
 			'type'              => 'select',
 			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ),
-			'default'           => bp_get_option( 'bp-group-layout-format', 'grid' ),
-			'sanitize_callback' => 'bb_groups_sanitize_layout_format',
+			'default'           => bboss_get_option( 'bp-group-layout-format', 'grid' ),
+			'sanitize_callback' => 'bboss_groups_sanitize_layout_format',
 			'options'           => array(
 				array(
 					'label' => __( 'Grid and List', 'buddyboss' ),
@@ -64,7 +64,7 @@ function bb_groups_register_directory_panel_fields() {
 	);
 
 	// FIELD: Default View (conditional — only when both grid and list are enabled).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_directory',
 		'group_directory',
@@ -73,8 +73,8 @@ function bb_groups_register_directory_panel_fields() {
 			'label'             => __( 'Default View', 'buddyboss' ),
 			'type'              => 'radio',
 			'description'       => '',
-			'default'           => bp_group_layout_default_format( 'grid' ),
-			'sanitize_callback' => 'bb_groups_sanitize_default_format',
+			'default'           => bboss_group_layout_default_format( 'grid' ),
+			'sanitize_callback' => 'bboss_groups_sanitize_default_format',
 			'options'           => array(
 				array(
 					'label' => __( 'Grid', 'buddyboss' ),
@@ -95,7 +95,7 @@ function bb_groups_register_directory_panel_fields() {
 
 	// FIELD: Grid Style (Pro only, image_radio).
 	// Visible when layout includes grid view (list_grid or grid), hidden for list-only.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_directory',
 		'group_directory',
@@ -105,7 +105,7 @@ function bb_groups_register_directory_panel_fields() {
 			'type'              => 'image_radio',
 			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss' ),
 			'default'           => function_exists( 'bb_get_group_directory_grid_style' ) ? bb_get_group_directory_grid_style() : 'left',
-			'sanitize_callback' => 'bb_groups_sanitize_grid_style',
+			'sanitize_callback' => 'bboss_groups_sanitize_grid_style',
 			'options'           => array(
 				array(
 					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
@@ -128,7 +128,7 @@ function bb_groups_register_directory_panel_fields() {
 	);
 
 	// FIELD: Elements (Pro only, toggle_list).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_directory',
 		'group_directory',
@@ -138,7 +138,7 @@ function bb_groups_register_directory_panel_fields() {
 			'type'              => 'toggle_list',
 			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ),
 			'default'           => array(),
-			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
+			'sanitize_callback' => 'bboss_groups_sanitize_toggle_list',
 			'options'           => array(
 				array(
 					'label' => __( 'Cover Images', 'buddyboss' ),

@@ -31,7 +31,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	 */
 	public function set_up() {
 		parent::set_up();
-		$this->group_messages_option = bp_get_option( 'bp-disable-group-messages' );
+		$this->group_messages_option = bboss_get_option( 'bp-disable-group-messages' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	public function tear_down() {
 		// Release's setting-change hook unsets a group straight from WP_Object_Cache::$cache (notice under the test cache).
 		wp_cache_flush();
-		bp_update_option( 'bp-disable-group-messages', $this->group_messages_option );
+		bboss_update_option( 'bp-disable-group-messages', $this->group_messages_option );
 		wp_cache_flush();
 		parent::tear_down();
 	}
@@ -56,7 +56,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	 */
 	protected function set_group_messages( $enabled ) {
 		wp_cache_flush();
-		bp_update_option( 'bp-disable-group-messages', $enabled ? 1 : 0 );
+		bboss_update_option( 'bp-disable-group-messages', $enabled ? 1 : 0 );
 	}
 
 	/**
@@ -67,7 +67,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	 * @return array Item HTML keyed by thread ID.
 	 */
 	protected function render( $user_id ) {
-		$template = BP_PLUGIN_DIR . 'bp-templates/bp-nouveau/readylaunch/header/unread-messages.php';
+		$template = BBOSS_PLUGIN_DIR . 'bp-templates/bp-nouveau/readylaunch/header/unread-messages.php';
 		$this->assertFileExists( $template );
 
 		$this->set_current_user( $user_id );
@@ -113,12 +113,12 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	 * @return void
 	 */
 	protected function flag_group_message( $message_id, $thread_id, $group_id ) {
-		bp_messages_update_meta( $message_id, 'group_id', $group_id );
-		bp_messages_update_meta( $message_id, 'group_message_thread_id', $thread_id );
-		bp_messages_update_meta( $message_id, 'group_message_users', 'all' );
-		bp_messages_update_meta( $message_id, 'group_message_type', 'open' );
-		bp_messages_update_meta( $message_id, 'group_message_thread_type', 'new' );
-		bp_messages_update_meta( $message_id, 'message_from', 'group' );
+		bboss_messages_update_meta( $message_id, 'group_id', $group_id );
+		bboss_messages_update_meta( $message_id, 'group_message_thread_id', $thread_id );
+		bboss_messages_update_meta( $message_id, 'group_message_users', 'all' );
+		bboss_messages_update_meta( $message_id, 'group_message_type', 'open' );
+		bboss_messages_update_meta( $message_id, 'group_message_thread_type', 'new' );
+		bboss_messages_update_meta( $message_id, 'message_from', 'group' );
 	}
 
 	/**
@@ -161,8 +161,8 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 		$u2       = self::factory()->user->create();
 		$u3       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
-		groups_join_group( $group_id, $u2 );
-		groups_join_group( $group_id, $u3 );
+		bboss_groups_join_group( $group_id, $u2 );
+		bboss_groups_join_group( $group_id, $u3 );
 
 		$this->set_group_messages( false );
 		$group_thread   = $this->create_group_thread( $u1, array( $u2, $u3 ), $group_id );
@@ -198,8 +198,8 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 				'name'       => 'rock & roll club',
 			)
 		);
-		groups_join_group( $group_id, $u2 );
-		groups_join_group( $group_id, $u3 );
+		bboss_groups_join_group( $group_id, $u2 );
+		bboss_groups_join_group( $group_id, $u3 );
 
 		$this->set_group_messages( true );
 		$group_thread = $this->create_group_thread( $u1, array( $u2, $u3 ), $group_id );
@@ -219,7 +219,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 	public function test_partial_page_counts_other_active_members_like_release() {
 		global $wpdb, $messages_template;
 
-		$bp     = buddypress();
+		$bp     = bboss();
 		$viewer = self::factory()->user->create();
 		$others = array();
 		for ( $i = 0; $i < 24; $i++ ) {
@@ -235,8 +235,8 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 			)
 		)->thread_id;
 
-		$per_page = (int) bb_messages_recipients_per_page();
-		$page     = BP_Messages_Thread::get(
+		$per_page = (int) bboss_messages_recipients_per_page();
+		$page     = BBoss_Messages_Thread::get(
 			array(
 				'include_threads' => array( $thread_id ),
 				'per_page'        => $per_page,
@@ -262,7 +262,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 		$keep   = current( array_diff( $page_ids, array( $viewer ) ) );
 		$leaver = array_diff( $page_ids, array( $viewer, $keep ) );
 		$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = {$thread_id} AND user_id IN (" . implode( ',', array_map( 'intval', $leaver ) ) . ')' ); // phpcs:ignore
-		bp_core_reset_incrementor( 'bp_messages' );
+		bboss_core_reset_incrementor( 'bp_messages' );
 
 		$active_others = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND is_deleted = 0 AND user_id != %d", $thread_id, $viewer ) ); // phpcs:ignore
 		$this->assertGreaterThanOrEqual( 2, $active_others, 'Release (full list) would count two or more others.' );
@@ -270,7 +270,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 		$items = $this->render( $viewer );
 		$this->assertArrayHasKey( $thread_id, $items );
 		$this->assertStringStartsWith(
-			bp_core_get_user_displayname( $last_sender ) . ':',
+			bboss_core_get_user_displayname( $last_sender ) . ':',
 			$this->span_text( $items[ $thread_id ], 'posted' ),
 			'More than one other member: the last sender name is shown, as in release.'
 		);
@@ -317,7 +317,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 
 	/**
 	 * Thread of 25 members that is larger than one recipient page, rendered through the header fallback branch
-	 * (bp_messages_get_avatars() returns nothing, as when a site filters it out).
+	 * (bboss_messages_get_avatars() returns nothing, as when a site filters it out).
 	 *
 	 * @return array {
 	 *     @type int   $thread_id Thread ID.
@@ -342,8 +342,8 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 			)
 		)->thread_id;
 
-		$per_page = (int) bb_messages_recipients_per_page();
-		$page     = BP_Messages_Thread::get(
+		$per_page = (int) bboss_messages_recipients_per_page();
+		$page     = BBoss_Messages_Thread::get(
 			array(
 				'include_threads' => array( $thread_id ),
 				'per_page'        => $per_page,
@@ -375,9 +375,9 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 			return;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 		$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = " . (int) $thread_id . ' AND user_id IN (' . implode( ',', $user_ids ) . ')' ); // phpcs:ignore
-		bp_core_reset_incrementor( 'bp_messages' );
+		bboss_core_reset_incrementor( 'bp_messages' );
 	}
 
 	/**
@@ -424,7 +424,7 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 		$this->assertArrayHasKey( $t['thread_id'], $items );
 		$avatar = $this->avatar_html( $items[ $t['thread_id'] ] );
 		$this->assertStringNotContainsString( 'data-bb-hp-profile="' . $last_sender . '"', $avatar );
-		$this->assertStringContainsString( esc_url( bp_core_get_user_domain( $last_sender ) ), $avatar, 'The avatar still links to the last sender.' );
+		$this->assertStringContainsString( esc_url( bboss_core_get_user_domain( $last_sender ) ), $avatar, 'The avatar still links to the last sender.' );
 	}
 
 	/**

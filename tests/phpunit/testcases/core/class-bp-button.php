@@ -2,7 +2,7 @@
 
 /**
  * @group core
- * @group BP_Button
+ * @group BBoss_Button
  */
 class BP_Tests_BP_Button extends BP_UnitTestCase {
 	/**
@@ -12,9 +12,9 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 		$u = self::factory()->user->create();
 		$this->set_current_user( $u );
 
-		$this->go_to( bp_core_get_user_domain( $u ) );
+		$this->go_to( bboss_core_get_user_domain( $u ) );
 
-		$b = new BP_Button( array(
+		$b = new BBoss_Button( array(
 			'id' => 'foo',
 			'component' => 'members',
 			'block_self' => true,
@@ -31,9 +31,9 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 		$this->set_current_user( $u1 );
 
 		$u2 = self::factory()->user->create();
-		$this->go_to( bp_core_get_user_domain( $u2 ) );
+		$this->go_to( bboss_core_get_user_domain( $u2 ) );
 
-		$b = new BP_Button( array(
+		$b = new BBoss_Button( array(
 			'id' => 'foo',
 			'component' => 'members',
 			'block_self' => true,
@@ -57,17 +57,17 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 		$this->set_current_user( $u1 );
 
 		$found = array();
-		if ( bp_has_members() ) {
-			while ( bp_members() ) {
-				bp_the_member();
+		if ( bboss_has_members() ) {
+			while ( bboss_members() ) {
+				bboss_the_member();
 
-				$b = new BP_Button( array(
+				$b = new BBoss_Button( array(
 					'id' => 'foo',
 					'component' => 'members',
 					'block_self' => true,
 				) );
 
-				$found[ bp_get_member_user_id() ] = empty( $b->contents );
+				$found[ bboss_get_member_user_id() ] = empty( $b->contents );
 			}
 		}
 
@@ -97,17 +97,17 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 		$this->set_current_user( $u1 );
 
 		$found = array();
-		if ( bp_has_members() ) {
-			while ( bp_members() ) {
-				bp_the_member();
+		if ( bboss_has_members() ) {
+			while ( bboss_members() ) {
+				bboss_the_member();
 
-				$b = new BP_Button( array(
+				$b = new BBoss_Button( array(
 					'id' => 'foo',
 					'component' => 'members',
 					'block_self' => false,
 				) );
 
-				$found[ bp_get_member_user_id() ] = empty( $b->contents );
+				$found[ bboss_get_member_user_id() ] = empty( $b->contents );
 			}
 		}
 
@@ -135,20 +135,20 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 		) );
 
 		$this->set_current_user( $u1 );
-		$this->go_to( bp_core_get_user_domain( $u1 ) );
+		$this->go_to( bboss_core_get_user_domain( $u1 ) );
 
 		$found = array();
-		if ( bp_has_members() ) {
-			while ( bp_members() ) {
-				bp_the_member();
+		if ( bboss_has_members() ) {
+			while ( bboss_members() ) {
+				bboss_the_member();
 
-				$b = new BP_Button( array(
+				$b = new BBoss_Button( array(
 					'id' => 'foo',
 					'component' => 'members',
 					'block_self' => true,
 				) );
 
-				$found[ bp_get_member_user_id() ] = empty( $b->contents );
+				$found[ bboss_get_member_user_id() ] = empty( $b->contents );
 			}
 		}
 
@@ -167,7 +167,7 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 	 * @ticket BP7226
 	 */
 	public function test_bp_button_new_args() {
-		$b = new BP_Button( array(
+		$b = new BBoss_Button( array(
 			'id' => 'foo',
 			'component' => 'members',
 			'block_self' => false,
@@ -200,7 +200,7 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 	 * @ticket BP7226
 	 */
 	public function test_bp_button_deprecated_args_should_still_render() {
-		$b = new BP_Button( array(
+		$b = new BBoss_Button( array(
 			'id' => 'foo',
 			'component' => 'members',
 			'block_self' => false,
@@ -229,7 +229,7 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 	 * @ticket BP7226
 	 */
 	public function test_bp_button_new_element_attrs_have_precedence_over_deprecated_element_attrs() {
-		$b = new BP_Button( array(
+		$b = new BBoss_Button( array(
 			'id' => 'foo',
 			'component' => 'members',
 			'block_self' => false,
@@ -248,7 +248,7 @@ class BP_Tests_BP_Button extends BP_UnitTestCase {
 	 * @ticket BP7226
 	 */
 	public function test_bp_button_new_element_attrs_should_not_render_for_empty_attrs() {
-		$b = new BP_Button( array(
+		$b = new BBoss_Button( array(
 			'id' => 'foo',
 			'component' => 'members',
 			'block_self' => false,

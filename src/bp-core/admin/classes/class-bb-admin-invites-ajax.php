@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Invites_Ajax
+ * Class BBoss_Admin_Invites_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Invites_Ajax {
+class BBoss_Admin_Invites_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -75,7 +75,7 @@ class BB_Admin_Invites_Ajax {
 	 * @return void
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -88,7 +88,7 @@ class BB_Admin_Invites_Ajax {
 	public function bb_admin_get_invites() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'invites' ) ) {
+		if ( ! bboss_is_active( 'invites' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -117,7 +117,7 @@ class BB_Admin_Invites_Ajax {
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) );
 		$page     = max( 1, $page );
 
-		$post_type = bp_get_invite_post_type();
+		$post_type = bboss_get_invite_post_type();
 
 		// Build WP_Query args.
 		$query_args = array(
@@ -164,7 +164,7 @@ class BB_Admin_Invites_Ajax {
 		}
 
 		// Check custom registration once before the loop (avoids per-item call).
-		$is_custom_registration = bp_allow_custom_registration() && '' !== bp_custom_register_page_url();
+		$is_custom_registration = bboss_allow_custom_registration() && '' !== bboss_custom_register_page_url();
 
 		// Build items.
 		$items = array();
@@ -178,8 +178,8 @@ class BB_Admin_Invites_Ajax {
 			$items[] = array(
 				'id'              => $post->ID,
 				'sender_id'       => $author_id,
-				'sender_name'     => bp_core_get_user_displayname( $author_id ),
-				'sender_avatar'   => bp_core_fetch_avatar(
+				'sender_name'     => bboss_core_get_user_displayname( $author_id ),
+				'sender_avatar'   => bboss_core_fetch_avatar(
 					array(
 						'item_id' => $author_id,
 						'type'    => 'thumb',
@@ -188,7 +188,7 @@ class BB_Admin_Invites_Ajax {
 						'html'    => false,
 					)
 				),
-				'sender_url'      => bp_core_get_user_domain( $author_id ),
+				'sender_url'      => bboss_core_get_user_domain( $author_id ),
 				'recipient_name'  => $invitee_name ? $invitee_name : '',
 				'recipient_email' => $invitee_email ? $invitee_email : '',
 				'status'          => $is_registered ? 'registered' : 'pending',
@@ -200,7 +200,7 @@ class BB_Admin_Invites_Ajax {
 					),
 				'date_invited'    => get_the_date( 'd M Y H:i', $post ),
 				'can_revoke'      => ! $is_registered && ! $is_custom_registration,
-				'view_url'        => bp_core_get_user_domain( $author_id ),
+				'view_url'        => bboss_core_get_user_domain( $author_id ),
 				'edit_url'        => admin_url( 'user-edit.php?user_id=' . $author_id ),
 			);
 		}
@@ -252,7 +252,7 @@ class BB_Admin_Invites_Ajax {
 	public function bb_admin_invites_bulk_action() {
 		$this->bb_verify_request();
 
-		if ( ! bp_is_active( 'invites' ) ) {
+		if ( ! bboss_is_active( 'invites' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -279,7 +279,7 @@ class BB_Admin_Invites_Ajax {
 		// Cap to prevent abuse.
 		$id_array = array_slice( $id_array, 0, self::BULK_CAP );
 
-		$post_type = bp_get_invite_post_type();
+		$post_type = bboss_get_invite_post_type();
 
 		if ( 'revoke' === $action ) {
 			// Prime post and meta caches to avoid N+1 queries.
@@ -340,7 +340,7 @@ class BB_Admin_Invites_Ajax {
 	private function bb_get_invite_views() {
 		global $wpdb;
 
-		$post_type = bp_get_invite_post_type();
+		$post_type = bboss_get_invite_post_type();
 
 		// Total count.
 		$all_count = (int) wp_count_posts( $post_type )->publish;
@@ -446,4 +446,4 @@ class BB_Admin_Invites_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Invites_Ajax();
+new BBoss_Admin_Invites_Ajax();

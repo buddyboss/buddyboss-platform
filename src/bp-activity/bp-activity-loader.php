@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_setup_activity() {
-	buddypress()->activity = new BP_Activity_Component();
+function bboss_setup_activity() {
+	bboss()->activity = new BBoss_Activity_Component();
 }
 add_action( 'bp_setup_components', 'bp_setup_activity', 6 );

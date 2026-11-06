@@ -6,7 +6,7 @@
  * with member selection, custom messages, and invite management.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -23,15 +23,15 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-groups-invites-left-inner">
 
 				<?php
-				if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
-					bp_get_template_part( 'groups/single/parts/invite-subnav' );
+				if ( ! bboss_is_group_creation_step( 'group-invites' ) ) {
+					bboss_get_template_part( 'groups/single/parts/invite-subnav' );
 				}
 				?>
 
 				<div class="group-invites-search subnav-search clearfix" role="search">
 					<div class="bp-search">
 						<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form search-form-has-reset" data-bp-search="group-invites">
-							<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss' ), false ); ?></label>
+							<label for="group_invites_search" class="bp-screen-reader-text"><?php bboss_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss' ), false ); ?></label>
 							<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search members', 'buddyboss' ); ?>"/>
 							<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit search-form_submit">
 								<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 							</button>
 						</form>
 					</div>
-					<?php if ( bp_is_active( 'friends' ) ) { ?>
+					<?php if ( bboss_is_active( 'friends' ) ) { ?>
 						<div class="flex items-center bb-rl-members-is-friends">
 							<div class="bp-group-message-wrap">
 								<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox" />

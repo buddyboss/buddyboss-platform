@@ -55,7 +55,7 @@ class BB_License_Page {
 	 * Renders the page.
 	 */
 	public static function render(): void {
-		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . 'bp-core/admin/css/mothership.css', array(), buddypress()->version );
+		wp_enqueue_style( 'bb-mothership-admin', bboss()->plugin_url . 'bp-core/admin/css/mothership.css', array(), bboss()->version );
 
 		include_once __DIR__ . '/views/admin.php';
 	}

@@ -26,13 +26,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_settings_register_registration_feature() {
+function bboss_admin_settings_register_registration_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'registration',
 		array(
 			'label'              => __( 'Login & Registration', 'buddyboss' ),
@@ -63,7 +63,7 @@ function bb_admin_settings_register_registration_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Registration (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'registration',
 		'registration',
 		array(
@@ -72,7 +72,7 @@ function bb_admin_settings_register_registration_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-identification-badge',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -87,7 +87,7 @@ function bb_admin_settings_register_registration_feature() {
 	);
 
 	// Side Panel 2: Login Redirects.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'registration',
 		'login_redirects',
 		array(
@@ -96,7 +96,7 @@ function bb_admin_settings_register_registration_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrow-elbow-right',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -114,10 +114,10 @@ function bb_admin_settings_register_registration_feature() {
 	// =========================================================================
 
 	// Panel 1: Registration.
-	bb_registration_register_panel_fields();
+	bboss_registration_register_panel_fields();
 
 	// Panel 2: Login Redirects.
-	bb_registration_register_login_redirects_panel_fields();
+	bboss_registration_register_login_redirects_panel_fields();
 
 	/**
 	 * Fires after all Registration settings panels are registered.

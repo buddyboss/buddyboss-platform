@@ -1,14 +1,14 @@
 <?php
 /**
  * @group core
- * @group BP_Media_Extractor
+ * @group BBoss_Media_Extractor
  */
 class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	public static $media_extractor = null;
 	public static $richtext        = '';
 
 	public static function wpSetUpBeforeClass( $f ) {
-		self::$media_extractor = new BP_Media_Extractor();
+		self::$media_extractor = new BBoss_Media_Extractor();
 		self::$richtext        = "Hello world.
 
 		This sample text is used to test the media extractor parsing class. @paulgibbs thinks it's pretty cool.
@@ -141,7 +141,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_multiple_media_types_from_content() {
 		self::factory()->user->create( array( 'user_login' => 'paulgibbs' ) );
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::LINKS | BP_Media_Extractor::MENTIONS );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::LINKS | BBoss_Media_Extractor::MENTIONS );
 
 		$this->assertNotEmpty( $media['links'] );
 		$this->assertNotEmpty( $media['mentions'] );
@@ -150,7 +150,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_media_from_a_wp_post() {
 		$post_id = self::factory()->post->create( array( 'post_content' => self::$richtext ) );
-		$media   = self::$media_extractor->extract( get_post( $post_id ), BP_Media_Extractor::LINKS );
+		$media   = self::$media_extractor->extract( get_post( $post_id ), BBoss_Media_Extractor::LINKS );
 
 		$this->assertArrayHasKey( 'links', $media );
 		$this->assertSame( 'https://example.com', $media['links'][0]['url'] );
@@ -163,7 +163,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	 */
 
 	public function test_extract_links_from_content() {
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::LINKS );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::LINKS );
 
 		$this->assertArrayHasKey( 'links', $media );
 		$this->assertSame( 'https://example.com', $media['links'][0]['url'] );
@@ -176,7 +176,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 		<a href='phone:004400'>weird protocols should be ignored, too</a>.
 		";
 
-		$media = self::$media_extractor->extract( $richtext, BP_Media_Extractor::LINKS );
+		$media = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::LINKS );
 		$this->assertSame( 0, $media['has']['links'] );
 	}
 
@@ -187,7 +187,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_mentions_from_content_with_activity_enabled() {
 		self::factory()->user->create( array( 'user_login' => 'paulgibbs' ) );
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::MENTIONS );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::MENTIONS );
 
 		$this->assertArrayHasKey( 'user_id', $media['mentions'][0] );
 		$this->assertSame( 'paulgibbs', $media['mentions'][0]['name'] );
@@ -198,13 +198,13 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 		$was_activity_enabled = false;
 
 		// Turn activity off.
-		if ( isset( buddypress()->active_components['activity'] ) ) {
-			unset( buddypress()->active_components['activity'] );
+		if ( isset( bboss()->active_components['activity'] ) ) {
+			unset( bboss()->active_components['activity'] );
 			$was_activity_enabled = true;
 		}
 
 
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::MENTIONS );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::MENTIONS );
 
 		$this->assertArrayNotHasKey( 'user_id', $media['mentions'][0] );
 		$this->assertSame( 'paulgibbs', $media['mentions'][0]['name'] );
@@ -212,7 +212,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 		// Turn activity on.
 		if ( $was_activity_enabled ) {
-			buddypress()->active_components['activity'] = 1;
+			bboss()->active_components['activity'] = 1;
 		}
 	}
 
@@ -222,7 +222,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	 */
 
 	public function test_extract_shortcodes_from_content() {
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::SHORTCODES );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::SHORTCODES );
 
 		$this->assertArrayHasKey( 'shortcodes', $media );
 
@@ -248,7 +248,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	public function test_extract_no_shortcodes_from_content_with_unregistered_shortcodes() {
 		$richtext = 'This sample text has some made-up [fake]shortcodes[/fake].';
 
-		$media = self::$media_extractor->extract( $richtext, BP_Media_Extractor::SHORTCODES );
+		$media = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::SHORTCODES );
 		$this->assertSame( 0, $media['has']['shortcodes'] );
 	}
 
@@ -258,7 +258,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	 */
 
 	public function test_extract_oembeds_from_content() {
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::EMBEDS );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::EMBEDS );
 
 		$this->assertArrayHasKey( 'embeds', $media );
 		$this->assertSame( 'https://www.youtube.com/watch?v=2mjvfnUAfyo', $media['embeds'][0]['url'] );
@@ -272,7 +272,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	// both quote styles
 	public function test_extract_images_from_content_with_src_tags() {
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::IMAGES );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::IMAGES );
 
 		$this->assertArrayHasKey( 'images', $media );
 		$media = array_values( wp_list_filter( $media['images'], array( 'source' => 'html' ) ) );
@@ -287,7 +287,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 		<img src="data://abcd"> or <img src="phone://0123" />.
 		';
 
-		$media = self::$media_extractor->extract( $richtext, BP_Media_Extractor::IMAGES );
+		$media = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::IMAGES );
 
 		$this->assertArrayHasKey( 'images', $media );
 		$this->assertSame( 0, $media['has']['images'] );
@@ -309,7 +309,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 
 		// Extract the gallery images.
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::IMAGES, array(
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::IMAGES, array(
 			'post' => get_post( $post_id ),
 		) );
 
@@ -328,7 +328,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 		$post_id          = self::factory()->post->create( array( 'post_content' => "[gallery ids='{$attachment_ids}']" ) );
 
 		// Extract the gallery images.
-		$media = self::$media_extractor->extract( '', BP_Media_Extractor::IMAGES, array(
+		$media = self::$media_extractor->extract( '', BBoss_Media_Extractor::IMAGES, array(
 			'post' => get_post( $post_id ),
 		) );
 
@@ -342,7 +342,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_no_images_from_content_with_invalid_galleries_variant_no_ids() {
 		$post_id = self::factory()->post->create( array( 'post_content' => self::$richtext ) );
-		$media   = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::IMAGES, array(
+		$media   = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::IMAGES, array(
 			'post' => get_post( $post_id ),
 		) );
 
@@ -353,7 +353,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_no_images_from_content_with_invalid_galleries_variant_ids() {
 		$post_id = self::factory()->post->create( array( 'post_content' => '[gallery ids="117,4529"]' ) );
-		$media   = self::$media_extractor->extract( '', BP_Media_Extractor::IMAGES, array(
+		$media   = self::$media_extractor->extract( '', BBoss_Media_Extractor::IMAGES, array(
 			'post' => get_post( $post_id ),
 		) );
 
@@ -377,7 +377,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 
 		// Extract the gallery images.
-		$media = self::$media_extractor->extract( '', BP_Media_Extractor::IMAGES, array(
+		$media = self::$media_extractor->extract( '', BBoss_Media_Extractor::IMAGES, array(
 			'post' => get_post( $post_id ),
 		) );
 
@@ -390,7 +390,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_images_from_content_without_featured_image() {
 		$post_id = self::factory()->post->create( array( 'post_content' => self::$richtext ) );
-		$media   = self::$media_extractor->extract( '', BP_Media_Extractor::IMAGES, array(
+		$media   = self::$media_extractor->extract( '', BBoss_Media_Extractor::IMAGES, array(
 			'post' => get_post( $post_id ),
 		) );
 
@@ -405,7 +405,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	 */
 
 	public function test_extract_audio_from_content() {
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::AUDIO );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::AUDIO );
 
 		$this->assertArrayHasKey( 'audio', $media );
 		$this->assertCount( 3, $media['audio'] );
@@ -421,7 +421,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_audio_shortcode_with_no_src_param() {
 		$richtext = '[audio http://example.com/a-song.mp3]';
-		$media = self::$media_extractor->extract( $richtext, BP_Media_Extractor::AUDIO );
+		$media = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::AUDIO );
 
 		$this->assertArrayHasKey( 'audio', $media );
 		$this->assertCount( 1, $media['audio'] );
@@ -432,12 +432,12 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 		$richtext = '[audio src="http://example.com/not_audio.gif"]
 		<a href="http://example.com/more_not_audio.mp33">Hello</a>.';
 
-		$media = self::$media_extractor->extract( $richtext, BP_Media_Extractor::AUDIO );
+		$media = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::AUDIO );
 		$this->assertSame( 0, $media['has']['audio'] );
 	}
 
 	public function test_extract_no_audio_from_empty_audio_shortcode() {
-		$media = self::$media_extractor->extract( '[audio]', BP_Media_Extractor::AUDIO );
+		$media = self::$media_extractor->extract( '[audio]', BBoss_Media_Extractor::AUDIO );
 		$this->assertSame( 0, $media['has']['audio'] );
 	}
 
@@ -447,7 +447,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 	 */
 
 	public function test_extract_video_from_content() {
-		$media = self::$media_extractor->extract( self::$richtext, BP_Media_Extractor::VIDEOS );
+		$media = self::$media_extractor->extract( self::$richtext, BBoss_Media_Extractor::VIDEOS );
 
 		$this->assertArrayHasKey( 'videos', $media );
 		$this->assertCount( 2, $media['videos'] );
@@ -462,7 +462,7 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_video_shortcode_with_no_src_param() {
 		$richtext = '[video http://example.com/source.ogv]';
-		$media = self::$media_extractor->extract( $richtext, BP_Media_Extractor::VIDEOS );
+		$media = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::VIDEOS );
 
 		$this->assertArrayHasKey( 'videos', $media );
 		$this->assertCount( 1, $media['videos'] );
@@ -471,13 +471,13 @@ class BP_Tests_Media_Extractor extends BP_UnitTestCase {
 
 	public function test_extract_no_video_from_invalid_content() {
 		$richtext = '[video src="http://example.com/not_video.mp3"]';
-		$media    = self::$media_extractor->extract( $richtext, BP_Media_Extractor::VIDEOS );
+		$media    = self::$media_extractor->extract( $richtext, BBoss_Media_Extractor::VIDEOS );
 
 		$this->assertSame( 0, $media['has']['videos'] );
 	}
 
 	public function test_extract_no_videos_from_empty_video_shortcodes() {
-		$media = self::$media_extractor->extract( '[video]', BP_Media_Extractor::VIDEOS );
+		$media = self::$media_extractor->extract( '[video]', BBoss_Media_Extractor::VIDEOS );
 		$this->assertSame( 0, $media['has']['videos'] );
 	}
 }

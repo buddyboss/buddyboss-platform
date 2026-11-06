@@ -10,7 +10,7 @@
  *
  * Strategy mirrors the groups bridge:
  *   1. Hook bb_register_activity_meta_fields late (priority 999) — by then,
- *      the activity admin AJAX handler (BB_Activity_Admin_Ajax::bb_admin_get_activity)
+ *      the activity admin AJAX handler (BBoss_Activity_Admin_Ajax::bb_admin_get_activity)
  *      has already fired `bp_activity_admin_meta_boxes`, populating $wp_meta_boxes.
  *   2. Walk $wp_meta_boxes; skip core/known/already-migrated boxes; capture
  *      each remaining box's HTML output via output buffering.
@@ -22,15 +22,15 @@
  *      third-party plugin's hook reads $_POST and persists the data.
  *
  * Differences from the groups bridge:
- *   - No `BP_Group_Extension`-style class-based extension model exists for
+ *   - No `BBoss_Group_Extension`-style class-based extension model exists for
  *     activity, so there's no settings_screen_save() to replay manually.
  *     Plugins save via `bp_activity_admin_edit_after`, which the activity
  *     AJAX save handler fires automatically after the bridge's save_value
  *     closures have populated $_POST.
  *   - Activity uses `$_GET['aid']` instead of `$_GET['gid']` for the legacy
  *     admin context, so capture has to swap the right key.
- *   - Canonical keys are derived from `BP_Activity_Activity` properties,
- *     not `BP_Groups_Group`.
+ *   - Canonical keys are derived from `BBoss_Activity_Activity` properties,
+ *     not `BBoss_Groups_Group`.
  *
  * Known limitations are inherited from the groups bridge — array-notation
  * names, file uploads, custom AJAX submit endpoints, role-conditional UI,
@@ -61,14 +61,14 @@ require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
  * activity AJAX save handler — so the slot would be dead state.
  *
  * The parsed-XPath cache is module-level (a `static $cache` inside
- * `bb_legacy_get_xpath()` in legacy-meta-bridge-utils.php), so every
+ * `bboss_legacy_get_xpath()` in legacy-meta-bridge-utils.php), so every
  * component bridge transparently shares it within a single request.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Reference to mutable state array.
  */
-function &bb_legacy_activity_bridge_state() {
+function &bboss_legacy_activity_bridge_state() {
 	static $state = null;
 	if ( null === $state ) {
 		$state = array(
@@ -83,10 +83,10 @@ function &bb_legacy_activity_bridge_state() {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier ('activity').
  */
-function bb_legacy_activity_meta_bridge_register( $registry, $component ) {
+function bboss_legacy_activity_meta_bridge_register( $registry, $component ) {
 	if ( 'activity' !== $component ) {
 		return;
 	}
@@ -103,7 +103,7 @@ function bb_legacy_activity_meta_bridge_register( $registry, $component ) {
 
 	$in_bridge = true;
 	try {
-		bb_legacy_activity_meta_bridge_register_inner( $registry, $component );
+		bboss_legacy_activity_meta_bridge_register_inner( $registry, $component );
 	} finally {
 		$in_bridge = false;
 	}
@@ -115,10 +115,10 @@ add_action( 'bb_register_activity_meta_fields', 'bb_legacy_activity_meta_bridge_
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
  */
-function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) {
+function bboss_legacy_activity_meta_bridge_register_inner( $registry, $component ) {
 	global $wp_meta_boxes;
 
 	// Self-bootstrap. The activity GET handler (bb_admin_get_activity) fires
@@ -199,7 +199,7 @@ function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) 
 				if ( in_array( $box_id, $skip_box_ids, true ) ) {
 					continue;
 				}
-				bb_legacy_activity_bridge_box( $registry, $component, $box, $order, $existing_ids );
+				bboss_legacy_activity_bridge_box( $registry, $component, $box, $order, $existing_ids );
 			}
 		}
 	}
@@ -210,25 +210,25 @@ function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) 
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry     Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry     Registry instance.
  * @param string                       $component    Component identifier.
  * @param array                        $box          Metabox descriptor from $wp_meta_boxes.
  * @param int                          $order        Order counter (passed by reference).
  * @param array                        $existing_ids Field IDs already registered via canonical path.
  */
-function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $existing_ids = array() ) {
-	$version   = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+function bboss_legacy_activity_bridge_box( $registry, $component, $box, &$order, $existing_ids = array() ) {
+	$version   = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	$cache_key = 'bb_legacy_activity_box_inputs_' . md5( $box['id'] . '|' . $version );
 	$inputs    = get_transient( $cache_key );
 
 	if ( ! is_array( $inputs ) ) {
-		$html = bb_legacy_activity_capture_box_html( $box, null );
+		$html = bboss_legacy_activity_capture_box_html( $box, null );
 		if ( ! $html ) {
 			set_transient( $cache_key, array(), 5 * MINUTE_IN_SECONDS );
 			return;
 		}
 
-		$inputs = bb_legacy_parse_box_inputs( $html );
+		$inputs = bboss_legacy_parse_box_inputs( $html );
 		set_transient( $cache_key, $inputs, HOUR_IN_SECONDS );
 	}
 
@@ -241,7 +241,7 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 			continue;
 		}
 
-		if ( ! bb_legacy_is_safe_activity_post_key( $input['name'] ) ) {
+		if ( ! bboss_legacy_is_safe_activity_post_key( $input['name'] ) ) {
 			continue;
 		}
 
@@ -272,7 +272,7 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 		$raw_label       = $input['label'] ? $input['label'] : $box['title'];
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
 
-		$sanitize_cb = bb_legacy_resolve_sanitize_callback( $input['type'] );
+		$sanitize_cb = bboss_legacy_resolve_sanitize_callback( $input['type'] );
 
 		$args = array(
 			'label'             => sanitize_text_field( $raw_label ),
@@ -291,9 +291,9 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 			'field_group_label' => isset( $box['title'] ) && '' !== (string) $box['title']
 				? (string) $box['title']
 				: ( isset( $box['id'] ) ? (string) $box['id'] : '' ),
-			'get_value'         => bb_legacy_activity_make_get_value( $box, $input['name'], $input['type'] ),
+			'get_value'         => bboss_legacy_activity_make_get_value( $box, $input['name'], $input['type'] ),
 			'save_value'        => function ( $activity, $value ) use ( $input ) {
-				if ( ! bb_legacy_is_safe_activity_post_key( $input['name'] ) ) {
+				if ( ! bboss_legacy_is_safe_activity_post_key( $input['name'] ) ) {
 					return;
 				}
 				// Don't clobber a key already populated by a canonical Settings 2.0
@@ -310,13 +310,13 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 
 		if ( 'select' === $input['type'] || 'toggle_list' === $input['type'] ) {
 			$args['get_options'] = function ( $activity ) use ( $box, $input ) {
-				$html = bb_legacy_activity_capture_box_html( $box, $activity );
-				return bb_legacy_extract_select_options( $html, $input['name'] );
+				$html = bboss_legacy_activity_capture_box_html( $box, $activity );
+				return bboss_legacy_extract_select_options( $html, $input['name'] );
 			};
 		} elseif ( 'radio' === $input['type'] ) {
 			$args['get_options'] = function ( $activity ) use ( $box, $input ) {
-				$html = bb_legacy_activity_capture_box_html( $box, $activity );
-				return bb_legacy_extract_radio_options( $html, $input['name'] );
+				$html = bboss_legacy_activity_capture_box_html( $box, $activity );
+				return bboss_legacy_extract_radio_options( $html, $input['name'] );
 			};
 		}
 
@@ -327,8 +327,8 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 /**
  * $_POST safety check for activity bridge fields.
  *
- * Layers on top of the generic checks done in bb_legacy_is_safe_post_key()
- * by also rejecting BP_Activity_Activity property names so a malicious
+ * Layers on top of the generic checks done in bboss_legacy_is_safe_post_key()
+ * by also rejecting BBoss_Activity_Activity property names so a malicious
  * metabox can't overwrite core activity columns through the bridge.
  *
  * @since BuddyBoss 3.0.0
@@ -336,7 +336,7 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
  * @param string $name $_POST key.
  * @return bool True if the key is safe to write to $_POST via the bridge.
  */
-function bb_legacy_is_safe_activity_post_key( $name ) {
+function bboss_legacy_is_safe_activity_post_key( $name ) {
 	if ( ! is_string( $name ) || '' === $name ) {
 		return false;
 	}
@@ -344,36 +344,36 @@ function bb_legacy_is_safe_activity_post_key( $name ) {
 	// Generic structural denylist (prefixes _, bb_admin_, bp_admin_, wp_,
 	// names like _wpnonce, action, role, pass1 — and the canonical-group
 	// keys, which we don't care about here but are harmless).
-	if ( ! bb_legacy_is_safe_post_key( $name ) ) {
+	if ( ! bboss_legacy_is_safe_post_key( $name ) ) {
 		return false;
 	}
 
 	// Also block activity-canonical property names so the bridge can't
 	// shadow the registry's core activity fields.
-	$canonical = bb_legacy_canonical_activity_keys();
+	$canonical = bboss_legacy_canonical_activity_keys();
 	return ! in_array( strtolower( $name ), $canonical, true );
 }
 
 /**
  * Build the canonical-keys list for activities.
  *
- * Uses Reflection on `BP_Activity_Activity` so the list stays in sync with
+ * Uses Reflection on `BBoss_Activity_Activity` so the list stays in sync with
  * any new column added to the activity object. Cached per-request.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return string[] Lowercase activity property names.
  */
-function bb_legacy_canonical_activity_keys() {
+function bboss_legacy_canonical_activity_keys() {
 	static $keys = null;
 	if ( null !== $keys ) {
 		return $keys;
 	}
 	$keys = array();
 
-	if ( class_exists( 'BP_Activity_Activity' ) && class_exists( 'ReflectionClass' ) ) {
+	if ( class_exists( 'BBoss_Activity_Activity' ) && class_exists( 'ReflectionClass' ) ) {
 		try {
-			$reflection = new ReflectionClass( 'BP_Activity_Activity' );
+			$reflection = new ReflectionClass( 'BBoss_Activity_Activity' );
 			foreach ( $reflection->getProperties( ReflectionProperty::IS_PUBLIC ) as $prop ) {
 				$keys[] = strtolower( $prop->getName() );
 			}
@@ -422,15 +422,15 @@ function bb_legacy_canonical_activity_keys() {
  * @since BuddyBoss 3.0.0
  *
  * @param array                     $box      Metabox descriptor.
- * @param BP_Activity_Activity|null $activity Activity to capture against, or null.
+ * @param BBoss_Activity_Activity|null $activity Activity to capture against, or null.
  * @return string Captured HTML, or '' on error / oversize.
  */
-function bb_legacy_activity_capture_box_html( $box, $activity ) {
+function bboss_legacy_activity_capture_box_html( $box, $activity ) {
 	if ( empty( $box['callback'] ) || empty( $box['id'] ) ) {
 		return '';
 	}
 
-	$state       = &bb_legacy_activity_bridge_state();
+	$state       = &bboss_legacy_activity_bridge_state();
 	$activity_id = ( is_object( $activity ) && isset( $activity->id ) ) ? (int) $activity->id : 0;
 	$cache_key   = $box['id'] . '|' . $activity_id;
 	if ( isset( $state['html_cache'][ $cache_key ] ) ) {
@@ -450,7 +450,7 @@ function bb_legacy_activity_capture_box_html( $box, $activity ) {
 
 	$result = '';
 	try {
-		$result = bb_legacy_with_wp_die_safety(
+		$result = bboss_legacy_with_wp_die_safety(
 			function () use ( $box, $activity ) {
 				ob_start();
 				try {
@@ -472,7 +472,7 @@ function bb_legacy_activity_capture_box_html( $box, $activity ) {
 		}
 	}
 
-	if ( strlen( $result ) > BB_LEGACY_BRIDGE_MAX_HTML ) {
+	if ( strlen( $result ) > BBOSS_LEGACY_BRIDGE_MAX_HTML ) {
 		$result = '';
 	}
 
@@ -493,10 +493,10 @@ function bb_legacy_activity_capture_box_html( $box, $activity ) {
  * @param string $type Detected field type.
  * @return callable get_value callback.
  */
-function bb_legacy_activity_make_get_value( $box, $name, $type ) {
+function bboss_legacy_activity_make_get_value( $box, $name, $type ) {
 	return function ( $activity ) use ( $box, $name, $type ) {
-		$html = bb_legacy_activity_capture_box_html( $box, $activity );
-		return bb_legacy_extract_input_value( $html, $name, $type );
+		$html = bboss_legacy_activity_capture_box_html( $box, $activity );
+		return bboss_legacy_extract_input_value( $html, $name, $type );
 	};
 }
 
@@ -506,10 +506,10 @@ function bb_legacy_activity_make_get_value( $box, $name, $type ) {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_legacy_activity_clear_bridge_cache() {
+function bboss_legacy_activity_clear_bridge_cache() {
 	if ( wp_using_ext_object_cache() ) {
 		global $wp_meta_boxes;
-		$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+		$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 		$screens = isset( $wp_meta_boxes ) && is_array( $wp_meta_boxes ) ? $wp_meta_boxes : array();
 		foreach ( $screens as $contexts ) {
 			if ( ! is_array( $contexts ) ) {
@@ -556,7 +556,7 @@ add_action( 'switch_theme', 'bb_legacy_activity_clear_bridge_cache' );
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_legacy_activity_auto_enqueue_widget_scripts() {
+function bboss_legacy_activity_auto_enqueue_widget_scripts() {
 	static $did_enqueue = false;
 	if ( $did_enqueue ) {
 		return;
@@ -596,7 +596,7 @@ function bb_legacy_activity_auto_enqueue_widget_scripts() {
 				if ( ! is_array( $box ) || empty( $box['callback'] ) || empty( $box['id'] ) ) {
 					continue;
 				}
-				$combined_html .= bb_legacy_activity_capture_box_html( $box, null );
+				$combined_html .= bboss_legacy_activity_capture_box_html( $box, null );
 			}
 		}
 	}

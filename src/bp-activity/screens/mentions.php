@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_screen_mentions() {
-	bp_update_is_item_admin( bp_current_user_can( 'bp_moderate' ), 'activity' );
+function bboss_activity_screen_mentions() {
+	bboss_update_is_item_admin( bboss_current_user_can( 'bp_moderate' ), 'activity' );
 
 	/**
 	 * Fires right before the loading of the "Mentions" screen template file.
@@ -31,7 +31,7 @@ function bp_activity_screen_mentions() {
 	 *
 	 * @param string $template Path to the activity template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_activity_template_mention_activity', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bp_activity_template_mention_activity', 'members/single/home' ) );
 }
 
 /**
@@ -39,9 +39,9 @@ function bp_activity_screen_mentions() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_reset_my_new_mentions() {
-	if ( bp_is_my_profile() ) {
-		bp_activity_clear_new_mentions( bp_loggedin_user_id() );
+function bboss_activity_reset_my_new_mentions() {
+	if ( bboss_is_my_profile() ) {
+		bboss_activity_clear_new_mentions( bboss_loggedin_user_id() );
 	}
 }
 add_action( 'bp_activity_screen_mentions', 'bp_activity_reset_my_new_mentions' );

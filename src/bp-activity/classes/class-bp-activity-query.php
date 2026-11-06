@@ -12,16 +12,16 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class for generating the WHERE SQL clause for advanced activity fetching.
  *
- * This is notably used in {@link BP_Activity_Activity::get()} with the
+ * This is notably used in {@link BBoss_Activity_Activity::get()} with the
  * 'filter_query' parameter.
  *
  * @since BuddyPress 2.2.0
  */
-class BP_Activity_Query extends BP_Recursive_Query {
+class BBoss_Activity_Query extends BBoss_Recursive_Query {
 	/**
 	 * Array of activity queries.
 	 *
-	 * See {@see BP_Activity_Query::__construct()} for information on query arguments.
+	 * See {@see BBoss_Activity_Query::__construct()} for information on query arguments.
 	 *
 	 * @since BuddyPress 2.2.0
 	 * @var array
@@ -95,7 +95,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	 * @since BuddyPress 2.2.0
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
-	 *                      Default: 'a'. BP_Activity_Activity::get() uses 'a', so we default to that.
+	 *                      Default: 'a'. BBoss_Activity_Activity::get() uses 'a', so we default to that.
 	 * @return string SQL fragment to append to the main WHERE clause.
 	 */
 	public function get_sql( $alias = 'a' ) {
@@ -187,7 +187,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 			// Tinyint.
 			if ( 'hide_sitewide' === $column && ! empty( $this->table_alias ) && is_scalar( $value ) && 0 === (int) $value ) {
 				// Scopes ask for site-wide visible rows here; a comment also needs its item visible (PROD-10649).
-				$sql_chunks['where'][] = BP_Activity_Activity::get_visible_sitewide_sql( $this->table_alias );
+				$sql_chunks['where'][] = BBoss_Activity_Activity::get_visible_sitewide_sql( $this->table_alias );
 
 			} elseif ( ! empty( $column ) && true === in_array( $column, array( 'hide_sitewide', 'is_spam' ) ) ) {
 				$sql_chunks['where'][] = $wpdb->prepare( "{$alias}{$column} = %d", $value );
@@ -197,7 +197,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 					// IN uses different syntax.
 					case 'IN':
 					case 'NOT IN':
-						$in_sql = BP_Activity_Activity::get_in_operator_sql( "{$alias}{$column}", $value );
+						$in_sql = BBoss_Activity_Activity::get_in_operator_sql( "{$alias}{$column}", $value );
 
 						// 'NOT IN' operator is as easy as a string replace!
 						if ( 'NOT IN' === $compare ) {
@@ -215,7 +215,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 
 					case 'LIKE':
 					case 'NOT LIKE':
-						$value = '%' . bp_esc_like( $value ) . '%';
+						$value = '%' . bboss_esc_like( $value ) . '%';
 						$where = $wpdb->prepare( '%s', $value );
 						break;
 
@@ -257,7 +257,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	 * Validates a column name parameter.
 	 *
 	 * Column names are checked against a whitelist of known tables.
-	 * See {@link BP_Activity_Query::db_tables}.
+	 * See {@link BBoss_Activity_Query::db_tables}.
 	 *
 	 * @since BuddyPress 2.2.0
 	 *

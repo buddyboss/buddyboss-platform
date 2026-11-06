@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-define( 'BP_PS_FORM', 'bp_profile_search' );
+define( 'BBOSS_PS_FORM', 'bp_profile_search' );
 
 // Legacy admin metabox UI removed — now managed via Settings 2.0.
 require 'bps-directory.php';
@@ -24,7 +24,7 @@ require 'bps-xprofile.php';
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_meta( $form ) {
+function bboss_ps_meta( $form ) {
 	static $options;
 	if ( isset( $options[ $form ] ) ) {
 		return $options[ $form ];
@@ -51,7 +51,7 @@ add_action( 'init', 'bp_profile_search_register_post_type' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_register_post_type() {
+function bboss_profile_search_register_post_type() {
 	$args = array(
 		'labels'          => array(
 			'name'               => __( 'Profile Search Forms', 'buddyboss' ),
@@ -102,7 +102,7 @@ function bp_profile_search_register_post_type() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_prevent_delete() {
+function bboss_profile_search_prevent_delete() {
 	global $wp_roles;
 	$wp_roles->remove_cap( 'administrator', 'delete_bp_ps_forms' );
 	$wp_roles->remove_cap( 'administrator', 'delete_published_bp_ps_forms' );
@@ -128,7 +128,7 @@ add_action( 'init', 'bp_profile_search_prevent_delete' );
  *
  * @return mixed Option value or default.
  */
-function bp_ps_get_option( $name, $default ) {
+function bboss_ps_get_option( $name, $default ) {
 	$settings = get_option( 'bp_ps_settings' );
 	return isset( $settings->{$name} ) ? $settings->{$name} : $default;
 }
@@ -138,7 +138,7 @@ function bp_ps_get_option( $name, $default ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_main_form() {
+function bboss_profile_search_main_form() {
 	/**
 	 * Filters the BuddyBoss Profile Search form ID.
 	 *
@@ -146,7 +146,7 @@ function bp_profile_search_main_form() {
 	 *
 	 * @param int $form_id BuddyBoss Profile Search form ID.
 	 */
-	return (int) apply_filters( 'bp_profile_search_main_form', bp_get_option( 'bp_profile_search_main_form' ) );
+	return (int) apply_filters( 'bp_profile_search_main_form', bboss_get_option( 'bp_profile_search_main_form' ) );
 }
 
 /**
@@ -154,7 +154,7 @@ function bp_profile_search_main_form() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_add_main_form() {
+function bboss_profile_search_add_main_form() {
 	$post_args = array(
 		'post_title'  => __( 'Filter Results', 'buddyboss' ),
 		'post_type'   => 'bp_ps_form',
@@ -163,7 +163,7 @@ function bp_profile_search_add_main_form() {
 
 	$post_id = wp_insert_post( $post_args, true );
 	if ( ! is_wp_error( $post_id ) ) {
-		bp_update_option( 'bp_profile_search_main_form', $post_id );
+		bboss_update_option( 'bp_profile_search_main_form', $post_id );
 	}
 }
 

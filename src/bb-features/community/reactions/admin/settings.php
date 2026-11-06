@@ -19,7 +19,7 @@ require_once __DIR__ . '/callbacks.php';
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_reactions_settings() {
+function bboss_admin_settings_register_reactions_settings() {
 
 	// Static caches: these call bp_get_option() which is cheap with object cache, but avoids
 	// redundant DB hits on the rare case this function is invoked more than once per request.
@@ -27,17 +27,17 @@ function bb_admin_settings_register_reactions_settings() {
 	static $cached_button_settings = null;
 
 	if ( null === $cached_reaction_mode ) {
-		$cached_reaction_mode = function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes';
+		$cached_reaction_mode = function_exists( 'bboss_get_reaction_mode' ) ? bboss_get_reaction_mode() : 'likes';
 	}
 
 	if ( null === $cached_button_settings ) {
-		$cached_button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+		$cached_button_settings = function_exists( 'bboss_reaction_button_options' ) ? bboss_reaction_button_options() : array();
 	}
 
 	// =========================================================================
 	// SIDE PANEL: DISPLAY SETTINGS
 	// =========================================================================
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'reactions',
 		'display_settings',
 		array(
@@ -46,7 +46,7 @@ function bb_admin_settings_register_reactions_settings() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -63,7 +63,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// =========================================================================
 	// SIDE PANEL: REACTIONS (navigation item)
 	// =========================================================================
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'reactions',
 		'reactions',
 		array(
@@ -83,7 +83,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// Card Title: "Display Settings" (from side panel)
 	// Section Title: "Enable Reactions"
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'reactions',
 		'display_settings',
 		'enable_reactions',
@@ -96,14 +96,14 @@ function bb_admin_settings_register_reactions_settings() {
 	);
 
 	// Use titles (and optional sanitize_callback) from bb_reactions_get_settings_fields() so the filter applies to Settings 2.0.
-	$reactions_legacy_fields = bb_reactions_get_settings_fields();
+	$reactions_legacy_fields = bboss_reactions_get_settings_fields();
 	$reaction_titles         = isset( $reactions_legacy_fields['bp_reaction_settings_section'] ) ? $reactions_legacy_fields['bp_reaction_settings_section'] : array();
 
 	// -------------------------------------------------------------------------
 	// FIELD: Enable Reactions (Toggle list for content types)
 	// -------------------------------------------------------------------------
 	$field_all_reactions = isset( $reaction_titles['bb_all_reactions'] ) ? $reaction_titles['bb_all_reactions'] : array();
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'reactions',
 		'display_settings',
 		'enable_reactions',
@@ -126,7 +126,7 @@ function bb_admin_settings_register_reactions_settings() {
 				'activity'         => 1,
 				'activity_comment' => 1,
 			),
-			'sanitize_callback' => 'bb_reactions_sanitize_content_types',
+			'sanitize_callback' => 'bboss_reactions_sanitize_content_types',
 			'order'             => 10,
 		)
 	);
@@ -135,7 +135,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// SECTION: REACTIONS (under reactions side panel)
 	// For Reactions Mode and Button settings
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'reactions',
 		'reactions',
 		'reactions_settings',
@@ -187,7 +187,7 @@ function bb_admin_settings_register_reactions_settings() {
 					// feature's new home). Each is function_exists-guarded so
 					// Platform never hard-depends on an optional plugin.
 					( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) ||
-					bb_addons_provides_module( 'reactions' )
+					bboss_addons_provides_module( 'reactions' )
 				)
 			),
 		),
@@ -220,7 +220,7 @@ function bb_admin_settings_register_reactions_settings() {
 	);
 
 	$field_reaction_mode = isset( $reaction_titles['bb_reaction_mode'] ) ? $reaction_titles['bb_reaction_mode'] : array();
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'reactions',
 		'reactions',
 		'reactions_settings',
@@ -231,7 +231,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'description'       => '',
 			'options'           => $reaction_mode_options,
 			'default'           => $cached_reaction_mode,
-			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'bb_reactions_sanitize_mode',
+			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'bboss_reactions_sanitize_mode',
 			'order'             => 10,
 			'pro_only'          => true,
 		)
@@ -257,7 +257,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'icon' => $button_icon,
 			'text' => $button_text,
 		),
-		'sanitize_callback' => 'bb_reactions_sanitize_button_settings',
+		'sanitize_callback' => 'bboss_reactions_sanitize_button_settings',
 		'order'             => 20,
 		'pro_only'          => true,
 	);
@@ -271,7 +271,7 @@ function bb_admin_settings_register_reactions_settings() {
 		);
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'reactions',
 		'reactions',
 		'reactions_settings',

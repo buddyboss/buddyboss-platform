@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return mixed
  */
-function bp_get_group_type_post_id( $group_type = '' ) {
+function bboss_get_group_type_post_id( $group_type = '' ) {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_group_get_group_type_id' );
 
@@ -46,12 +46,12 @@ function bp_get_group_type_post_id( $group_type = '' ) {
  *
  * @return array
  */
-function bp_get_removed_group_types(){
+function bboss_get_removed_group_types(){
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_excluded_group_types' );
 
 	$bp_group_type_ids = array();
-	$post_type = bp_get_group_type_post_type();
+	$post_type = bboss_get_group_type_post_type();
 	$bp_group_type_args = array(
 		'post_type' => $post_type,
 		'meta_query' => array(
@@ -70,7 +70,7 @@ function bp_get_removed_group_types(){
 			$bp_group_type_query->the_post();
 
 			$post_id = get_the_ID();
-			$name = bp_get_group_type_key( $post_id );
+			$name = bboss_get_group_type_key( $post_id );
 			$bp_group_type_ids[] = array(
 				'ID' => $post_id,
 				'name' => $name,
@@ -92,16 +92,16 @@ function bp_get_removed_group_types(){
  *
  * @return bool|string
  */
-function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $object=false ) {
+function bboss_group_type_exclude_groups_from_directory_and_searches( $qs=false, $object=false ) {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_exclude_group_type' );
 
-	$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+	$exclude_group_ids = array_unique( bboss_get_groups_of_removed_group_types() );
 
 	if( $object != 'groups' )
 		return $qs;
 
-	$args = bp_parse_args( $qs );
+	$args = bboss_parse_args( $qs );
 
 	if( ! empty( $args['exclude'] ) )
 		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
@@ -119,20 +119,20 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
  * @param string $group_type The group type.
  * @param string $taxonomy The group taxonomy.
  */
-function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+function bboss_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_group_get_count_by_group_type' );
 
 	global $wpdb;
 
-	$group_types = bp_groups_get_group_types();
+	$group_types = bboss_groups_get_group_types();
 
 	if ( empty( $group_type ) || empty( $group_types[ $group_type ] ) ) {
 		return false;
 	}
 
-	if ( ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
+	if ( ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
 	}
 
 	$bp_group_type_query         = array(
@@ -160,7 +160,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
  * @param $post_id
  * @return mixed|string
  */
-function bp_get_group_type_key( $post_id ) {
+function bboss_get_group_type_key( $post_id ) {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_group_get_group_type_key' );
 
@@ -193,7 +193,7 @@ function bp_get_group_type_key( $post_id ) {
  *
  * @return array
  */
-function bp_get_group_type_post_type_supports() {
+function bboss_get_group_type_post_type_supports() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_group_type_post_type_supports' );
 
@@ -217,7 +217,7 @@ function bp_get_group_type_post_type_supports() {
  *
  * @return array
  */
-function bp_get_group_type_post_type_labels() {
+function bboss_get_group_type_post_type_labels() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_group_type_post_type_labels' );
 
@@ -249,7 +249,7 @@ function bp_get_group_type_post_type_labels() {
  *
  * @return string The name of the group type post type.
  */
-function bp_get_group_type_post_type() {
+function bboss_get_group_type_post_type() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_group_type_post_type' );
 
@@ -260,7 +260,7 @@ function bp_get_group_type_post_type() {
 	 *
 	 * @param string $value group Type post type name.
 	 */
-	return apply_filters( 'bp_get_group_type_post_type', buddypress()->group_type_post_type );
+	return apply_filters( 'bp_get_group_type_post_type', bboss()->group_type_post_type );
 }
 
 /**
@@ -270,11 +270,11 @@ function bp_get_group_type_post_type() {
  *
  * @return string   custom post type of group type.
  */
-function bp_group_type_post_type() {
+function bboss_group_type_post_type() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_group_type_post_type' );
 
-	echo esc_attr( bp_get_group_type_post_type() );
+	echo esc_attr( bboss_get_group_type_post_type() );
 }
 
 /**
@@ -284,14 +284,14 @@ function bp_group_type_post_type() {
  *
  * @return array
  */
-function bp_get_groups_of_removed_group_types() {
+function bboss_get_groups_of_removed_group_types() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_excluded_group_ids_by_type' );
 
 	$group_id = array();
 
 	// get removed group type post ids
-	$bp_group_type_ids = bp_get_removed_group_types();
+	$bp_group_type_ids = bboss_get_removed_group_types();
 
 	// get removed group type names/slugs
 	$bp_group_type_names = array();
@@ -304,7 +304,7 @@ function bp_get_groups_of_removed_group_types() {
 	// get group group ids
 	if( isset($bp_group_type_names) && !empty($bp_group_type_names) ){
 		foreach($bp_group_type_names as $type_name){
-			$group_ids = bp_get_removed_group_types( $type_name );
+			$group_ids = bboss_get_removed_group_types( $type_name );
 
 			if( isset($group_ids) && !empty($group_ids) ){
 				foreach($group_ids as $single){
@@ -314,7 +314,7 @@ function bp_get_groups_of_removed_group_types() {
 		}
 	}
 
-	return bp_group_ids_array_flatten( $group_id );
+	return bboss_group_ids_array_flatten( $group_id );
 
 }
 
@@ -329,7 +329,7 @@ function bp_get_groups_of_removed_group_types() {
  *
  * @return type int
  */
-function bp_member_type_type_id( $type_name ) {
+function bboss_member_type_type_id( $type_name ) {
 
 	_deprecated_function( __FUNCTION__, '1.1.9' );
 
@@ -350,7 +350,7 @@ function bp_member_type_type_id( $type_name ) {
  *
  * @return array
  */
-function bp_active_member_type_by_type( $type_id ) {
+function bboss_active_member_type_by_type( $type_id ) {
 
 	_deprecated_function( __FUNCTION__, '1.1.9' );
 
@@ -362,7 +362,7 @@ function bp_active_member_type_by_type( $type_id ) {
 	$get_user_ids = $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d", $type_id ) );
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
-			$table = bp_core_get_table_prefix() . 'bp_activity';
+			$table = bboss_core_get_table_prefix() . 'bp_activity';
 			$member_activity = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = %d", $single ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table from bp_core_get_table_prefix().
 			if ( $member_activity > 0 ) {
 				$member_ids[] = $single;

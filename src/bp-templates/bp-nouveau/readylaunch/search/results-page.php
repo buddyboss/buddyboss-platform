@@ -5,7 +5,7 @@
  * Template for displaying the search results page with BuddyPress container.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -19,7 +19,7 @@ $no_results = '';
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 	$post_title = __( 'No results found', 'buddyboss' );
 	$no_results = ' bb-rl-no-search-results';
-} elseif ( BP_Search::instance()->has_search_results() ) {
+} elseif ( BBoss_Search::instance()->has_search_results() ) {
 	/* translators: %s: search query. */
 	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', 'buddyboss' ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
 } else {
@@ -38,7 +38,7 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 		</header>
 
 		<div id="buddypress">
-			<?php bp_get_template_part( 'search/results-page-content' ); ?>
+			<?php bboss_get_template_part( 'search/results-page-content' ); ?>
 		</div>
 
 	</div>

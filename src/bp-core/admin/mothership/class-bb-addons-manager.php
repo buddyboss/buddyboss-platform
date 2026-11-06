@@ -302,8 +302,8 @@ class BB_Addons_Manager extends AddonsManager {
 		} catch ( \Throwable $e ) {
 			// Container unavailable (stale vendor / failed boot) — the add-ons refresh below
 			// still runs; there is simply nothing to re-validate against.
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( sprintf( 'BuddyBoss: license status refresh failed: %s', $e->getMessage() ), true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( sprintf( 'BuddyBoss: license status refresh failed: %s', $e->getMessage() ), true );
 			}
 		}
 	}

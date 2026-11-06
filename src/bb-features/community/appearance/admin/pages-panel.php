@@ -23,7 +23,7 @@
  * Storage is identical to the legacy screen:
  *   - `bp-pages` option (serialized array of component/static-page → post ID)
  *   - `_bbp_root_slug` / `_bbp_root_slug_custom_slug` for Forums (see
- *     `bb_appearance_pages_save_side_effects()` for the split logic).
+ *     `bboss_appearance_pages_save_side_effects()` for the split logic).
  *
  * @package BuddyBoss\Features\Community\Appearance
  * @since BuddyBoss 3.0.0
@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * and determine its title.
  *
  * Mirrors the three legacy branches in
- * `bp_core_admin_register_registration_page_fields()`:
+ * `bboss_core_admin_register_registration_page_fields()`:
  *   - hidden entirely when a custom-registration plugin owns signup
  *   - title flips to "Login Pages" when registration is off AND invites are off
  *   - otherwise titled "Registration Pages"
@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array{ render:bool, title:string, description:string, show_register:bool } Flags and copy.
  */
-function bb_appearance_get_registration_section_meta() {
+function bboss_appearance_get_registration_section_meta() {
 	$meta = array(
 		'render'        => true,
 		'title'         => __( 'Registration Pages', 'buddyboss' ),
@@ -53,13 +53,13 @@ function bb_appearance_get_registration_section_meta() {
 		'show_register' => true,
 	);
 
-	if ( function_exists( 'bp_allow_custom_registration' ) && bp_allow_custom_registration() ) {
+	if ( function_exists( 'bboss_allow_custom_registration' ) && bboss_allow_custom_registration() ) {
 		$meta['render'] = false;
 		return $meta;
 	}
 
-	$reg_on     = function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration();
-	$invites_on = function_exists( 'bp_is_active' ) && bp_is_active( 'invites' );
+	$reg_on     = function_exists( 'bboss_enable_site_registration' ) && bboss_enable_site_registration();
+	$invites_on = function_exists( 'bboss_is_active' ) && bboss_is_active( 'invites' );
 
 	if ( ! $reg_on && ! $invites_on ) {
 		$meta['title']         = __( 'Login Pages', 'buddyboss' );
@@ -75,7 +75,7 @@ function bb_appearance_get_registration_section_meta() {
  *
  * Dynamic because the terms/privacy description copy depends on whether the
  * popup will appear on register+login or login-only. Also used by the save
- * whitelist via `bp_core_admin_get_static_pages()` — we only diverge on the
+ * whitelist via `bboss_core_admin_get_static_pages()` — we only diverge on the
  * description text here.
  *
  * @since BuddyBoss 3.0.0
@@ -83,10 +83,10 @@ function bb_appearance_get_registration_section_meta() {
  * @param string $name Static page key (register / terms / privacy / activate).
  * @return string Field help text, or '' when no help text applies.
  */
-function bb_appearance_get_static_page_description( $name ) {
+function bboss_appearance_get_static_page_description( $name ) {
 	$popup_is_register_and_login = (
-		( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() )
-		|| ( function_exists( 'bp_is_active' ) && bp_is_active( 'invites' ) )
+		( function_exists( 'bboss_enable_site_registration' ) && bboss_enable_site_registration() )
+		|| ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'invites' ) )
 	);
 
 	switch ( $name ) {
@@ -120,7 +120,7 @@ function bb_appearance_get_static_page_description( $name ) {
  *
  * @return bool True if saves should be blocked because WPML is on a non-default language.
  */
-function bb_appearance_pages_is_wpml_non_default_language() {
+function bboss_appearance_pages_is_wpml_non_default_language() {
 	// WPML is only relevant when its main class is loaded — a common proxy
 	// for "WPML is active" used throughout the BP codebase.
 	if ( ! class_exists( 'SitePress' ) ) {
@@ -156,18 +156,18 @@ function bb_appearance_pages_is_wpml_non_default_language() {
  * without three near-identical copies of the `switch_to_blog` boilerplate.
  *
  * Returns `false` when no switch happened (single-site, already on root
- * blog, or `bp_get_root_blog_id()` unavailable) — callers use that signal to
+ * blog, or `bboss_get_root_blog_id()` unavailable) — callers use that signal to
  * decide whether to `restore_current_blog()`.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return bool True if we switched (caller must restore), false otherwise.
  */
-function bb_appearance_pages_switch_to_root_blog() {
-	if ( ! is_multisite() || ! function_exists( 'bp_get_root_blog_id' ) ) {
+function bboss_appearance_pages_switch_to_root_blog() {
+	if ( ! is_multisite() || ! function_exists( 'bboss_get_root_blog_id' ) ) {
 		return false;
 	}
-	$root_blog_id = bp_get_root_blog_id();
+	$root_blog_id = bboss_get_root_blog_id();
 	if ( ! $root_blog_id || get_current_blog_id() === $root_blog_id ) {
 		return false;
 	}
@@ -176,7 +176,7 @@ function bb_appearance_pages_switch_to_root_blog() {
 }
 
 /**
- * Paired teardown for `bb_appearance_pages_switch_to_root_blog()`.
+ * Paired teardown for `bboss_appearance_pages_switch_to_root_blog()`.
  *
  * Always safe to call with whatever the switch helper returned — no-ops on
  * `false`, calls `restore_current_blog()` on `true`. Centralised so every
@@ -192,10 +192,10 @@ function bb_appearance_pages_switch_to_root_blog() {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param bool $switched Whatever `bb_appearance_pages_switch_to_root_blog()` returned.
+ * @param bool $switched Whatever `bboss_appearance_pages_switch_to_root_blog()` returned.
  * @return void
  */
-function bb_appearance_pages_restore_root_blog( $switched ) {
+function bboss_appearance_pages_restore_root_blog( $switched ) {
 	if ( $switched ) {
 		restore_current_blog();
 	}
@@ -215,25 +215,25 @@ function bb_appearance_pages_restore_root_blog( $switched ) {
  * @param string $feature_id The feature being fetched / saved.
  * @return void
  */
-function bb_appearance_register_pages_fields( $feature_id ) {
+function bboss_appearance_register_pages_fields( $feature_id ) {
 	if ( 'appearance' !== $feature_id ) {
 		return;
 	}
-	if ( ! function_exists( 'bb_register_feature_section' ) || ! function_exists( 'bb_register_feature_field' ) ) {
+	if ( ! function_exists( 'bboss_register_feature_section' ) || ! function_exists( 'bboss_register_feature_field' ) ) {
 		return;
 	}
-	if ( ! function_exists( 'bp_core_admin_get_directory_pages' ) || ! function_exists( 'bp_core_admin_get_static_pages' ) ) {
+	if ( ! function_exists( 'bboss_core_admin_get_directory_pages' ) || ! function_exists( 'bboss_core_admin_get_static_pages' ) ) {
 		return;
 	}
 
 	// Scope WP post lookups below (get_post_status for forums, etc.) to the
 	// BP root blog. See `bb_appearance_pages_switch_to_root_blog()` docblock.
-	$switched = bb_appearance_pages_switch_to_root_blog();
+	$switched = bboss_appearance_pages_switch_to_root_blog();
 
 	// =========================================================================
 	// SECTION: Component Pages
 	// =========================================================================
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'pages',
 		'component_pages',
@@ -254,8 +254,8 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 	// the server side without cooperation from the React form, so we (1) show
 	// this notice to explain the situation and (2) block the save-side
 	// handler from writing bp-pages (see `bb_appearance_pages_save_side_effects`).
-	if ( bb_appearance_pages_is_wpml_non_default_language() ) {
-		bb_register_feature_field(
+	if ( bboss_appearance_pages_is_wpml_non_default_language() ) {
+		bboss_register_feature_field(
 			'appearance',
 			'pages',
 			'component_pages',
@@ -271,7 +271,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 		);
 	}
 
-	$existing_pages = bp_core_get_directory_page_ids();
+	$existing_pages = bboss_core_get_directory_page_ids();
 	if ( ! is_array( $existing_pages ) ) {
 		$existing_pages = array();
 	}
@@ -279,7 +279,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 	// Defensive (array) cast — `bp_core_admin_get_directory_pages()` ends with
 	// `apply_filters( 'bp_directory_pages', … )` and a third-party filter
 	// returning null / non-iterable would fatal a `foreach` on PHP 8+.
-	$directory_pages = (array) bp_core_admin_get_directory_pages();
+	$directory_pages = (array) bboss_core_admin_get_directory_pages();
 	$order           = 10;
 
 	foreach ( $directory_pages as $name => $label ) {
@@ -288,7 +288,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 		// the forum root slug. Everything else reads from `bp-pages` via the
 		// cached `$existing_pages` map.
 		if ( 'new_forums_page' === $name ) {
-			$current_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+			$current_id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 			// Only surface the ID when the target post is published — otherwise
 			// the dropdown would render a stale/trashed page as "selected".
 			// Prime the single post first so get_post_status() is a cache hit
@@ -307,7 +307,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 			$current_id = ! empty( $existing_pages[ $name ] ) ? (int) $existing_pages[ $name ] : 0;
 		}
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'appearance',
 			'pages',
 			'component_pages',
@@ -317,7 +317,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 				'type'              => 'async_select',
 				'async_action'      => 'bb_admin_search_pages_list',
 				'placeholder'       => __( '— Select a page —', 'buddyboss' ),
-				'description'       => bb_appearance_get_directory_page_description( $name ),
+				'description'       => bboss_appearance_get_directory_page_description( $name ),
 				'default'           => $current_id ? (string) $current_id : '',
 				'sanitize_callback' => 'absint',
 				// Consumed by `bb_admin_settings_format_field_data` →
@@ -333,13 +333,13 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 	// =========================================================================
 	// SECTION: Registration Pages (conditional)
 	// =========================================================================
-	$reg_meta = bb_appearance_get_registration_section_meta();
+	$reg_meta = bboss_appearance_get_registration_section_meta();
 	if ( ! $reg_meta['render'] ) {
-		bb_appearance_pages_restore_root_blog( $switched );
+		bboss_appearance_pages_restore_root_blog( $switched );
 		return;
 	}
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'appearance',
 		'pages',
 		'registration_pages',
@@ -362,12 +362,12 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 	// to go to re-enable signup. Deep-links go to Settings 2.0 routes,
 	// not legacy `?page=bp-settings&tab=…` URLs, so clicking lands directly
 	// in the React admin without a 301 hop.
-	$signup_allowed = function_exists( 'bp_get_signup_allowed' ) ? bp_get_signup_allowed() : false;
+	$signup_allowed = function_exists( 'bboss_get_signup_allowed' ) ? bboss_get_signup_allowed() : false;
 	if ( ! $signup_allowed ) {
 		$general_settings_url = admin_url( 'admin.php?page=bb-settings&tab=registration' );
 
 		$invite_text = '';
-		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'invites' ) ) {
+		if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'invites' ) ) {
 			$invites_url = admin_url( 'admin.php?page=bb-settings&tab=invites' );
 			$invite_text = sprintf(
 				/* translators: %s: Email Invites admin link. */
@@ -383,7 +383,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 			'<a href="' . esc_url( $general_settings_url ) . '">' . esc_html__( 'General Settings', 'buddyboss' ) . '</a>'
 		);
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'appearance',
 			'pages',
 			'registration_pages',
@@ -402,7 +402,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 	}
 
 	// Same defensive cast — filterable return, PHP 8 iterator contract.
-	$static_pages = (array) bp_core_admin_get_static_pages();
+	$static_pages = (array) bboss_core_admin_get_static_pages();
 	$order        = 10;
 
 	foreach ( $static_pages as $name => $label ) {
@@ -426,7 +426,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 
 		$current_id = ! empty( $existing_pages[ $name ] ) ? (int) $existing_pages[ $name ] : 0;
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'appearance',
 			'pages',
 			'registration_pages',
@@ -436,7 +436,7 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 				'type'              => 'async_select',
 				'async_action'      => 'bb_admin_search_pages_list',
 				'placeholder'       => __( '— Select a page —', 'buddyboss' ),
-				'description'       => bb_appearance_get_static_page_description( $name ),
+				'description'       => bboss_appearance_get_static_page_description( $name ),
 				'default'           => $current_id ? (string) $current_id : '',
 				'sanitize_callback' => 'absint',
 				'page_directory'    => $name,
@@ -446,23 +446,23 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 		$order += 10;
 	}
 
-	bb_appearance_pages_restore_root_blog( $switched );
+	bboss_appearance_pages_restore_root_blog( $switched );
 }
 add_action( 'bb_admin_settings_before_get_feature', 'bb_appearance_register_pages_fields' );
 
 /**
  * Return the description copy for a Component Pages dropdown.
  *
- * Matches the legacy strings in `bp_core_admin_register_page_fields()` so
+ * Matches the legacy strings in `bboss_core_admin_register_page_fields()` so
  * translations are reused. Returns '' for any directory that doesn't ship a
  * description (legacy behaviour — no paragraph under the dropdown).
  *
  * @since BuddyBoss 3.0.0
  *
- * @param string $name Directory key from `bp_core_admin_get_directory_pages()`.
+ * @param string $name Directory key from `bboss_core_admin_get_directory_pages()`.
  * @return string Localized description, or '' when none applies.
  */
-function bb_appearance_get_directory_page_description( $name ) {
+function bboss_appearance_get_directory_page_description( $name ) {
 	switch ( $name ) {
 		case 'members':
 			return __( 'This directory shows a listing of all members.', 'buddyboss' );
@@ -488,15 +488,15 @@ function bb_appearance_get_directory_page_description( $name ) {
  * Runs on `bb_admin_save_feature_settings_after` for the `appearance` feature
  * and reconciles `$saved` against the legacy `bp-pages` option + the forums
  * root-slug options. Mirrors the write branches of
- * `bp_core_admin_maybe_save_pages_settings()`.
+ * `bboss_core_admin_maybe_save_pages_settings()`.
  *
  *   - `new_forums_page` → `_bbp_root_slug_custom_slug` (page ID) and
  *     `_bbp_root_slug` (`get_page_uri`) — NOT in `bp-pages`.
  *   - every other dropdown → staged into one array and written in a single
- *     `bp_core_update_directory_page_ids()` call so the cached option +
+ *     `bboss_core_update_directory_page_ids()` call so the cached option +
  *     downstream actions fire exactly once per save.
  *   - rewrite rules flushed on `shutdown` via a static idempotency guard —
- *     same pattern as `bb_appearance_apply_configuration()`.
+ *     same pattern as `bboss_appearance_apply_configuration()`.
  *
  * @since BuddyBoss 3.0.0
  *
@@ -506,11 +506,11 @@ function bb_appearance_get_directory_page_description( $name ) {
  *                           save loop.
  * @return void
  */
-function bb_appearance_pages_save_side_effects( $feature_id, $settings, $saved ) {
+function bboss_appearance_pages_save_side_effects( $feature_id, $settings, $saved ) {
 	if ( 'appearance' !== $feature_id || ! is_array( $saved ) ) {
 		return;
 	}
-	if ( ! function_exists( 'bp_core_admin_get_directory_pages' ) || ! function_exists( 'bp_core_admin_get_static_pages' ) ) {
+	if ( ! function_exists( 'bboss_core_admin_get_directory_pages' ) || ! function_exists( 'bboss_core_admin_get_static_pages' ) ) {
 		return;
 	}
 
@@ -520,22 +520,22 @@ function bb_appearance_pages_save_side_effects( $feature_id, $settings, $saved )
 	// the primary site. The panel renders an in-place notice explaining this
 	// to the user (see `bb_appearance_register_pages_fields`); this is the
 	// defensive server-side half of the same contract.
-	if ( bb_appearance_pages_is_wpml_non_default_language() ) {
+	if ( bboss_appearance_pages_is_wpml_non_default_language() ) {
 		return;
 	}
 
 	// Route post lookups below (get_page_uri for forums slug, etc.) at the
 	// root blog so a sub-site admin can't inadvertently slug the forum root
 	// against their own blog. See `bb_appearance_pages_switch_to_root_blog()`.
-	$switched = bb_appearance_pages_switch_to_root_blog();
+	$switched = bboss_appearance_pages_switch_to_root_blog();
 
 	// Defensive (array) casts — both helpers pass their return through
 	// `apply_filters(…)`, and `array_merge()` fatals when fed a non-array
 	// under PHP 8+. Keeps the save side robust against third-party filters
 	// that drop one of the lists.
 	$valid_pages = array_merge(
-		(array) bp_core_admin_get_directory_pages(),
-		(array) bp_core_admin_get_static_pages()
+		(array) bboss_core_admin_get_directory_pages(),
+		(array) bboss_core_admin_get_static_pages()
 	);
 
 	$directory_updates = array();
@@ -568,13 +568,13 @@ function bb_appearance_pages_save_side_effects( $feature_id, $settings, $saved )
 		// `bp-pages` option — so bbPress's permalink rewriter stays in sync.
 		if ( 'new_forums_page' === $directory_key ) {
 			if ( $value <= 0 ) {
-				bp_update_option( '_bbp_root_slug_custom_slug', '' );
+				bboss_update_option( '_bbp_root_slug_custom_slug', '' );
 			} else {
 				$slug = get_page_uri( $value );
 				if ( $slug ) {
-					bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
+					bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
 				}
-				bp_update_option( '_bbp_root_slug_custom_slug', $value );
+				bboss_update_option( '_bbp_root_slug_custom_slug', $value );
 			}
 			continue;
 		}
@@ -596,7 +596,7 @@ function bb_appearance_pages_save_side_effects( $feature_id, $settings, $saved )
 		// action's `$saved` arg is passed by value — mutating it has no effect
 		// on subsequent subscribers of the same hook invocation, so removing
 		// the key locally would just be a silent no-op.
-		bp_delete_option( $field_name );
+		bboss_delete_option( $field_name );
 	}
 
 	if ( ! empty( $directory_updates ) ) {
@@ -611,15 +611,15 @@ function bb_appearance_pages_save_side_effects( $feature_id, $settings, $saved )
 		// the page IDs of any component that happens to be deactivated at
 		// save time (visible when a customer toggles media off, saves any
 		// appearance page field, and finds their media directory page lost).
-		$current = bp_core_get_directory_page_ids( 'all' );
+		$current = bboss_core_get_directory_page_ids( 'all' );
 		if ( ! is_array( $current ) ) {
 			$current = array();
 		}
-		bp_core_update_directory_page_ids( array_merge( $current, $directory_updates ) );
+		bboss_core_update_directory_page_ids( array_merge( $current, $directory_updates ) );
 	}
 
 	if ( ! $touched ) {
-		bb_appearance_pages_restore_root_blog( $switched );
+		bboss_appearance_pages_restore_root_blog( $switched );
 		return;
 	}
 
@@ -640,14 +640,14 @@ function bb_appearance_pages_save_side_effects( $feature_id, $settings, $saved )
 		add_action(
 			'shutdown',
 			static function () {
-				$flush_switched = bb_appearance_pages_switch_to_root_blog();
+				$flush_switched = bboss_appearance_pages_switch_to_root_blog();
 				flush_rewrite_rules();
-				bb_appearance_pages_restore_root_blog( $flush_switched );
+				bboss_appearance_pages_restore_root_blog( $flush_switched );
 			}
 		);
 	}
 
-	bb_appearance_pages_restore_root_blog( $switched );
+	bboss_appearance_pages_restore_root_blog( $switched );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_pages_save_side_effects', 10, 3 );
 
@@ -668,7 +668,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_pages_save_si
  * `FeatureSettingsScreen.js:427`) that React listens for to invalidate its
  * feature cache and refetch. Piggy-backing on it avoids inventing a new
  * round-trip primitive for this single case; the refetched payload naturally
- * has fresh `bb_appearance_enrich_page_field_data()` output.
+ * has fresh `bboss_appearance_enrich_page_field_data()` output.
  *
  * Only signal when a Pages field was actually written — don't refetch on
  * unrelated Appearance saves (Site Layout, Branding, etc.).
@@ -681,7 +681,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_pages_save_si
  * @param array  $saved         Sanitized values written to options.
  * @return array Response with `refresh_panels` set when Pages fields changed.
  */
-function bb_appearance_pages_flag_refresh_on_save( $response_data, $feature_id, $settings, $saved ) {
+function bboss_appearance_pages_flag_refresh_on_save( $response_data, $feature_id, $settings, $saved ) {
 	if ( 'appearance' !== $feature_id || ! is_array( $saved ) ) {
 		return $response_data;
 	}
@@ -740,7 +740,7 @@ add_filter( 'bb_admin_save_feature_settings_response', 'bb_appearance_pages_flag
  * @param string $feature_id  The feature being formatted.
  * @return array Enriched field data.
  */
-function bb_appearance_enrich_page_field_data( $field_data, $field, $feature_id ) {
+function bboss_appearance_enrich_page_field_data( $field_data, $field, $feature_id ) {
 	if ( 'appearance' !== $feature_id ) {
 		return $field_data;
 	}
@@ -765,12 +765,12 @@ function bb_appearance_enrich_page_field_data( $field_data, $field, $feature_id 
 	// AJAX handler doesn't depend on pre-switch blog context.
 	static $request_switched = null;
 	if ( null === $request_switched ) {
-		$request_switched = bb_appearance_pages_switch_to_root_blog();
+		$request_switched = bboss_appearance_pages_switch_to_root_blog();
 		if ( $request_switched ) {
 			add_action(
 				'shutdown',
 				static function () {
-					bb_appearance_pages_restore_root_blog( true );
+					bboss_appearance_pages_restore_root_blog( true );
 				},
 				0
 			);
@@ -780,7 +780,7 @@ function bb_appearance_enrich_page_field_data( $field_data, $field, $feature_id 
 	// Current page ID lookup — mirrors registration-time logic but runs at
 	// AJAX format time so the resolved title is always fresh.
 	if ( 'new_forums_page' === $directory ) {
-		$page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+		$page_id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 		if ( $page_id && 'publish' !== get_post_status( $page_id ) ) {
 			$page_id = 0;
 		}
@@ -792,7 +792,7 @@ function bb_appearance_enrich_page_field_data( $field_data, $field, $feature_id 
 		// still see fresh data.
 		static $cached_page_ids = null;
 		if ( null === $cached_page_ids ) {
-			$cached_page_ids = bp_core_get_directory_page_ids();
+			$cached_page_ids = bboss_core_get_directory_page_ids();
 			if ( ! is_array( $cached_page_ids ) ) {
 				$cached_page_ids = array();
 			}

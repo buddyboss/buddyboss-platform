@@ -9,7 +9,7 @@ namespace BuddyBoss\Performance\Integration;
 
 use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Cache;
-use BP_Notifications_Notification;
+use BBoss_Notifications_Notification;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -112,7 +112,7 @@ class BB_Notifications extends Integration_Abstract {
 	/**
 	 * When new notification created
 	 *
-	 * @param BP_Notifications_Notification $n Current instance of the notification item being saved.
+	 * @param BBoss_Notifications_Notification $n Current instance of the notification item being saved.
 	 */
 	public function event_bp_notification_after_save( $n ) {
 		Cache::instance()->purge_by_group( 'bp-notifications_' . $n->id );
@@ -121,12 +121,12 @@ class BB_Notifications extends Integration_Abstract {
 	/**
 	 * When notification updated
 	 *
-	 * @param array $update_args See BP_Notifications_Notification::update().
-	 * @param array $where_args  See BP_Notifications_Notification::update().
+	 * @param array $update_args See BBoss_Notifications_Notification::update().
+	 * @param array $where_args  See BBoss_Notifications_Notification::update().
 	 */
 	public function event_bp_notification_before_update( $update_args, $where_args ) {
 		if ( ! empty( $where_args['id'] ) ) {
-			$n = bp_notifications_get_notification( $where_args['id'] );
+			$n = bboss_notifications_get_notification( $where_args['id'] );
 			Cache::instance()->purge_by_group( 'bp-notifications_' . $n->id );
 		}
 	}
@@ -140,7 +140,7 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	public function event_bp_notification_before_delete( $args ) {
 		// Pull up a list of items matching the args (those about te be deleted).
-		$ns = BP_Notifications_Notification::get( $args );
+		$ns = BBoss_Notifications_Notification::get( $args );
 
 		if ( ! empty( $ns ) ) {
 			$n_ids = wp_list_pluck( $ns, 'id' );
@@ -192,7 +192,7 @@ class BB_Notifications extends Integration_Abstract {
 	/**
 	 * When Group member ban, unban, promoted, demoted
 	 *
-	 * @param BP_Groups_Member $member Current instance of the group membership item has been saved.
+	 * @param BBoss_Groups_Member $member Current instance of the group membership item has been saved.
 	 */
 	public function event_groups_member_after_save( $member ) {
 		$group_id = $member->group_id;
@@ -365,7 +365,7 @@ class BB_Notifications extends Integration_Abstract {
 	/**
 	 * Update cache for notifications when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -382,7 +382,7 @@ class BB_Notifications extends Integration_Abstract {
 	/**
 	 * Update cache for notifications when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -420,7 +420,7 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	private function get_notification_ids_by_userid( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->notifications->table_name} WHERE user_id = %d", $user_id );
 
@@ -437,7 +437,7 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	private function get_notification_id_by_friendship_id( $friendship_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->notifications->table_name} WHERE component_action='friends' AND component_action like 'friendship_%' AND secondary_item_id = %d LIMIT 1", $friendship_id );
 
@@ -454,7 +454,7 @@ class BB_Notifications extends Integration_Abstract {
 	 */
 	private function get_notification_id_by_group_id( $group_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->notifications->table_name} WHERE component_action='groups' AND component_action = 'group_invite' AND item_id = %d LIMIT 1", $group_id );
 

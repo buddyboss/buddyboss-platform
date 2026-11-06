@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @subpackage Widgets
  */
-class BP_Core_Follow_Follower_Widget extends WP_Widget {
+class BBoss_Core_Follow_Follower_Widget extends WP_Widget {
 	/**
 	 * Constructor.
 	 */
@@ -39,17 +39,17 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 
 		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
+		if ( ! is_user_logged_in() || ! bboss_is_activity_follow_active() ) {
 			return;
 		}
 
-		$id = bp_displayed_user_id();
+		$id = bboss_displayed_user_id();
 		$filter = $show_more = false;
 
 		if ( ! $id ) {
 			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
 			add_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
-			$id     = bp_displayed_user_id();
+			$id     = bboss_displayed_user_id();
 			$filter = true;
 
 			// If $id still blank then return.
@@ -63,23 +63,23 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		}
 
 		// logged-in user isn't follower anyone, so stop!
-		if ( ! $follower = bp_get_follower_ids( array( 'user_id' => $id ) ) ) {
+		if ( ! $follower = bboss_get_follower_ids( array( 'user_id' => $id ) ) ) {
 			return false;
 		}
 
-		$follower_ids          = bp_get_follower_ids( array( 'user_id' => $id ) );
+		$follower_ids          = bboss_get_follower_ids( array( 'user_id' => $id ) );
 		$follower_array        = explode( ',', $follower_ids );
 		$follower_count        = '<span class="widget-num-count">' . count( $follower_array ) . '</span>';
 		$follower_count_number = count( $follower_array );
 
 		$instance['title'] = (
-			bp_loggedin_user_id() === bp_displayed_user_id()
+			bboss_loggedin_user_id() === bboss_displayed_user_id()
 			? __( "My Followers", 'buddyboss' )
 			/* translators: %s: member display name. */
 			: sprintf( __( "%s's Followers", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
-		if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
+		if ( bboss_loggedin_user_id() === bboss_displayed_user_id() ) {
 			$show_more = true;
 		}
 
@@ -100,7 +100,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
 		// show the users the logged-in user is follower.
-		if ( bp_has_members(
+		if ( bboss_has_members(
 			array(
 				'include'             => $follower,
 				'per_page'            => $instance['max_users'],
@@ -121,16 +121,16 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 
 			<div class="avatar-block">
 				<?php
-				while ( bp_members() ) :
-					bp_the_member();
+				while ( bboss_members() ) :
+					bboss_the_member();
 					?>
 					<div class="item-avatar">
-						<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_avatar() ?></a>
+						<a href="<?php bboss_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_core_get_user_displayname( bboss_get_member_user_id() ) ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bboss_member_avatar() ?></a>
 					</div>
 				<?php endwhile; ?>
 			</div>
 			<?php if ( $follower_count_number > $instance['max_users'] && $show_more ) { ?>
-				<div class="more-block more-followers"><a href="<?php bp_members_directory_permalink(); ?>#followers" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+				<div class="more-block more-followers"><a href="<?php bboss_members_directory_permalink(); ?>#followers" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
 			<?php echo wp_kses_post( $args['after_widget'] ); ?>
@@ -155,7 +155,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	 * Widget settings form.
 	 */
 	function form( $instance ) {
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 			(array) $instance,
 			array(
 				'max_users' => 16,
@@ -176,7 +176,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	 */
 	public function set_display_user( $id ) {
 		if ( ! $id ) {
-			$id = bp_loggedin_user_id();
+			$id = bboss_loggedin_user_id();
 		}
 		return $id;
 	}
@@ -192,16 +192,16 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 			return;
 		}
 
-		$format = bp_core_display_name_format();
+		$format = bboss_core_display_name_format();
 
 		if (
 			'first_name' === $format
 			|| 'first_last_name' === $format
 		) {
-			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$first_name_id = (int) bboss_get_option( 'bp-xprofile-firstname-field-id' );
+			$display_name = bboss_xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
-			$display_name = bp_core_get_user_displayname( $user_id );
+			$display_name = bboss_core_get_user_displayname( $user_id );
 		}
 
 		return apply_filters( 'bp_core_widget_user_display_name', $display_name, $user_id );

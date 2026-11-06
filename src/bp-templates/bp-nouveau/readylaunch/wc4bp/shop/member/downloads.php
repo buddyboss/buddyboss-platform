@@ -5,7 +5,7 @@
  * This template is a Readylaunch-specific version of the WC4BP downloads template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
+ * @subpackage BBoss_Nouveau\ReadyLaunch\WC4BP
  * @since BuddyBoss 3.1.0
  * @version 1.0.0
  */

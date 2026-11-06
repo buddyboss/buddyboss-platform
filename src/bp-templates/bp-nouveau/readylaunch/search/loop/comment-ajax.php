@@ -5,7 +5,7 @@
  * The template for AJAX search results for comments.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -23,7 +23,7 @@ global $current_comment; ?>
 
 	<div class="item">
 		<a href="<?php comment_link( $current_comment ); ?>">
-			<div class="item-desc"><?php echo wp_kses_post( bp_search_result_intro( $current_comment->comment_content, 100 ) ); ?></div>
+			<div class="item-desc"><?php echo wp_kses_post( bboss_search_result_intro( $current_comment->comment_content, 100 ) ); ?></div>
 		</a>
 	</div>
 </div>

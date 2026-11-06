@@ -21,8 +21,8 @@ defined( 'ABSPATH' ) || exit;
 		<input id="new_album_name_input" class="popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
 	</div>
 	<?php
-	if ( ! bp_is_group() ) :
-		bp_get_template_part( 'media/media-privacy' );
+	if ( ! bboss_is_group() ) :
+		bboss_get_template_part( 'media/media-privacy' );
 	endif;
 	?>
 	<div class="db-modal-buttons">

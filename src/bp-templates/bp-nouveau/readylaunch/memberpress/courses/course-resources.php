@@ -48,13 +48,13 @@ defined( 'ABSPATH' ) || exit;
 									<div class="bb-mpcs-file-meta">
 										<?php if ( ! empty( $file_size ) ) : ?>
 											<span class="bb-mpcs-filesize">
-												<?php echo esc_html( bp_core_format_size_units( $file_size, true ) ); ?>
+												<?php echo esc_html( bboss_core_format_size_units( $file_size, true ) ); ?>
 											</span>
 										<?php endif; ?>
 
 										<?php if ( ! empty( $file_type ) ) : ?>
 											<span class="bb-mpcs-file-type" style="text-transform: uppercase;">
-												<?php echo esc_html( bb_rl_get_normalized_file_type( $file_type ) ); ?>
+												<?php echo esc_html( bboss_rl_get_normalized_file_type( $file_type ) ); ?>
 											</span>
 										<?php endif; ?>
 									</div>

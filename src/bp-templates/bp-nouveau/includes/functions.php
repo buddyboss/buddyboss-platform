@@ -29,22 +29,22 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  * @since BuddyBoss 3.7.1 Builds the query string with http_build_query() so request values stay values.
  */
-function bp_nouveau_ajax_querystring( $query_string, $object ) {
+function bboss_nouveau_ajax_querystring( $query_string, $object ) {
 	if ( empty( $object ) ) {
 		return '';
 	}
 
-	$default_scope = bp_is_user_activity() ? 'just-me' : 'all';
+	$default_scope = bboss_is_user_activity() ? 'just-me' : 'all';
 	if (
 		'activity' === $object &&
 		(
-			bp_is_activity_directory() ||
-			bp_is_user_activity()
+			bboss_is_activity_directory() ||
+			bboss_is_user_activity()
 		)
 	) {
 
-		$activity_filters = bp_is_user_activity() ? bb_get_enabled_activity_timeline_filter_options() : bb_get_enabled_activity_filter_options();
-		$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+		$activity_filters = bboss_is_user_activity() ? bboss_get_enabled_activity_timeline_filter_options() : bboss_get_enabled_activity_filter_options();
+		$activity_filters = bboss_filter_activity_filter_scope_keys( $activity_filters );
 		if ( ! empty( $activity_filters ) ) {
 			foreach ( $activity_filters as $key => $is_enabled ) {
 
@@ -52,7 +52,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 				if (
 					empty( $is_enabled ) ||
 					(
-						bp_is_activity_directory() &&
+						bboss_is_activity_directory() &&
 						'all' !== $key &&
 						! is_user_logged_in()
 					)
@@ -80,7 +80,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	if ( ! empty( $_POST ) ) {
 
-		$post_query = bp_parse_args( $_POST, $post_query );
+		$post_query = bboss_parse_args( $_POST, $post_query );
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
 		if ( ! empty( $post_query['data']['bp_heartbeat'] ) ) {
@@ -88,7 +88,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 			// Remove heartbeat specific vars
 			$post_query = array_diff_key(
-				bp_parse_args( $bp_heartbeat, $post_query ),
+				bboss_parse_args( $bp_heartbeat, $post_query ),
 				array(
 					'data'      => false,
 					'interval'  => false,
@@ -110,7 +110,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	// An activity scope nothing handles would add no condition to the query (PROD-10649).
 	if ( 'activity' === $object ) {
-		$post_query['scope'] = bb_activity_get_request_scope( $post_query['scope'] );
+		$post_query['scope'] = bboss_activity_get_request_scope( $post_query['scope'] );
 	}
 
 	// Init the query arguments.
@@ -132,12 +132,12 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	if ( 'personal' === $post_query['scope'] && 'document' !== $object ) {
-		$user_id       = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+		$user_id       = ( bboss_displayed_user_id() ) ? bboss_displayed_user_id() : bboss_loggedin_user_id();
 		$qs['user_id'] = $user_id;
 	}
 
 	// Activity feed scope only on activity directory.
-	if ( 'all' !== $post_query['scope'] && ! bp_is_single_item() ) {
+	if ( 'all' !== $post_query['scope'] && ! bboss_is_single_item() ) {
 		$qs['scope'] = $post_query['scope'];
 	}
 
@@ -168,7 +168,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs['group_type'] = $group_type;
 	}
 
-	$object_search_text = bp_get_search_default_text( $object );
+	$object_search_text = bboss_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
 		$qs['search_terms'] = $_POST['search_terms'];
 	}
@@ -176,16 +176,16 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	if (
 		'activity' === $object &&
 		(
-			bp_is_activity_directory() ||
-			bp_is_user_activity() ||
-			bp_is_group_activity()
+			bboss_is_activity_directory() ||
+			bboss_is_user_activity() ||
+			bboss_is_group_activity()
 		)
 	) {
 		if ( ! empty( $post_query['order_by'] ) ) {
 			$order_by = $post_query['order_by'];
 		} else {
 			// Default order.
-			$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+			$avail_sorting_options = bboss_get_enabled_activity_sorting_options();
 			arsort( $avail_sorting_options );
 			if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) ) {
 				$order_by = key( $avail_sorting_options );
@@ -210,11 +210,11 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	// Single activity.
-	if ( 'activity' === $object && bp_is_single_activity() ) {
+	if ( 'activity' === $object && bboss_is_single_activity() ) {
 		$qs = array(
 			'display_comments' => 'threaded',
 			'show_hidden'      => 'true',
-			'include'          => bp_current_action(),
+			'include'          => bboss_current_action(),
 		);
 	}
 
@@ -248,7 +248,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
  * @return string
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $after = '', $r = array() ) {
+function bboss_nouveau_ajax_button( $output = '', $button = null, $before = '', $after = '', $r = array() ) {
 	if ( empty( $button->component ) ) {
 		return $output;
 	}
@@ -299,7 +299,7 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 	}
 
 	// Re-render the button with our custom data attribute.
-	$output = new BP_Core_HTML_Element(
+	$output = new BBoss_Core_HTML_Element(
 		array(
 			'element'    => $r['button_element'],
 			'attr'       => $r['button_attr'],
@@ -326,16 +326,16 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
  * }
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_wrapper( $args = array() ) {
+function bboss_nouveau_wrapper( $args = array() ) {
 	/**
 	 * Classes need to be determined & set by component to a certain degree
 	 *
 	 * Check the component to find a default container_class to add
 	 */
-	$current_component_class = bp_current_component() . '-meta';
+	$current_component_class = bboss_current_component() . '-meta';
 	$generic_class           = 'bp-generic-meta';
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'container'         => 'div',
@@ -388,7 +388,7 @@ function bp_nouveau_wrapper( $args = array() ) {
  * @return bool
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_is_object_nav_in_sidebar() {
+function bboss_nouveau_is_object_nav_in_sidebar() {
 	return is_active_widget( false, false, 'bp_nouveau_sidebar_object_nav_widget', true );
 }
 
@@ -398,7 +398,7 @@ function bp_nouveau_is_object_nav_in_sidebar() {
  * @return bool
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_current_user_can( $capability = '' ) {
+function bboss_nouveau_current_user_can( $capability = '' ) {
 	/**
 	 * Filters whether or not the current user can perform an action for BuddyPress Nouveau.
 	 *
@@ -408,7 +408,7 @@ function bp_nouveau_current_user_can( $capability = '' ) {
 	 *
 	 * @since BuddyPress 3.0.0
 	 */
-	return apply_filters( 'bp_nouveau_current_user_can', is_user_logged_in(), $capability, bp_loggedin_user_id() );
+	return apply_filters( 'bp_nouveau_current_user_can', is_user_logged_in(), $capability, bboss_loggedin_user_id() );
 }
 
 /**
@@ -421,7 +421,7 @@ function bp_nouveau_current_user_can( $capability = '' ) {
  * @return array A list of component's dir nav items
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position = 99 ) {
+function bboss_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position = 99 ) {
 	$extra_nav_items = array();
 
 	if ( empty( $hook ) || empty( $component ) || ! has_action( $hook ) ) {
@@ -432,7 +432,7 @@ function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position
 	ob_start();
 
 	/**
-	 * Fires at the start of the output for `bp_nouveau_parse_hooked_dir_nav()`.
+	 * Fires at the start of the output for `bboss_nouveau_parse_hooked_dir_nav()`.
 	 *
 	 * This hook is variable and depends on the hook parameter passed in.
 	 *
@@ -503,7 +503,7 @@ function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position
  * @return array
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
+function bboss_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
 	if ( empty( $hook ) ) {
 		return $filters;
 	}
@@ -511,7 +511,7 @@ function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
 	ob_start();
 
 	/**
-	 * Fires at the start of the output for `bp_nouveau_parse_hooked_options()`.
+	 * Fires at the start of the output for `bboss_nouveau_parse_hooked_options()`.
 	 *
 	 * This hook is variable and depends on the hook parameter passed in.
 	 *
@@ -543,13 +543,13 @@ function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
  * @return array the dropdown filters
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
+function bboss_nouveau_get_component_filters( $context = '', $component = '' ) {
 	$filters = array();
 
 	if ( empty( $context ) ) {
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			$context = 'user';
-		} elseif ( bp_is_group() ) {
+		} elseif ( bboss_is_group() ) {
 			$context = 'group';
 
 			// Defaults to directory
@@ -560,34 +560,34 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 
 	if ( empty( $component ) ) {
 		if ( 'directory' === $context || 'user' === $context ) {
-			$component = bp_current_component();
+			$component = bboss_current_component();
 
-			if ( function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === $component ) {
+			if ( function_exists( 'bboss_get_friends_slug' ) && bboss_get_friends_slug() === $component ) {
 				$context   = 'friends';
 				$component = 'members';
 			}
-		} elseif ( 'group' === $context && bp_is_group_activity() ) {
+		} elseif ( 'group' === $context && bboss_is_group_activity() ) {
 			$component = 'activity';
-		} elseif ( 'group' === $context && bp_is_group_members() ) {
+		} elseif ( 'group' === $context && bboss_is_group_members() ) {
 			$component = 'members';
 		}
 	}
 
-	if ( ! bp_is_active( $component ) ) {
+	if ( ! bboss_is_active( $component ) ) {
 		return $filters;
 	}
 
 	if ( 'members' === $component ) {
-		$filters = bp_nouveau_get_members_filters( $context );
+		$filters = bboss_nouveau_get_members_filters( $context );
 	} elseif ( 'activity' === $component ) {
-		$filters = bp_nouveau_get_activity_filters();
+		$filters = bboss_nouveau_get_activity_filters();
 
 		// Specific case for the activity dropdown
 		$filters = array_merge( array( '-1' => __( '- View All -', 'buddyboss' ) ), $filters );
 	} elseif ( 'groups' === $component ) {
-		$filters = bp_nouveau_get_groups_filters( $context );
+		$filters = bboss_nouveau_get_groups_filters( $context );
 	} elseif ( 'blogs' === $component ) {
-		$filters = bp_nouveau_get_blogs_filters( $context );
+		$filters = bboss_nouveau_get_blogs_filters( $context );
 	}
 
 	return $filters;
@@ -603,7 +603,7 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
  * @return mixed The value for the requested option.
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
+function bboss_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 	if ( empty( $option ) || ! isset( $_POST['customized'] ) ) {
 		return $retval;
 	}
@@ -647,7 +647,7 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
  * @return array|false|mixed
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_appearance_settings( $option = '' ) {
+function bboss_nouveau_get_appearance_settings( $option = '' ) {
 
 	$default_args = array(
 		'user_nav_display'             => 0, // O is default (horizontally). 1 is vertically.
@@ -662,16 +662,16 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'user_default_tab'             => 'profile',
 	);
 
-	if ( bp_is_active( 'friends' ) ) {
+	if ( bboss_is_active( 'friends' ) ) {
 		$default_args['members_friends_layout'] = 4;
 	}
 
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bboss_is_active( 'activity' ) ) {
 		$default_args['activity_dir_layout'] = 0;
 		$default_args['activity_dir_tabs']   = 0; // default = no tabs
 	}
 
-	if ( bp_is_active( 'groups' ) ) {
+	if ( bboss_is_active( 'groups' ) ) {
 		$default_args = array_merge(
 			$default_args,
 			array(
@@ -690,7 +690,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		);
 	}
 
-	if ( is_multisite() && bp_is_active( 'blogs' ) ) {
+	if ( is_multisite() && bboss_is_active( 'blogs' ) ) {
 		$default_args = array_merge(
 			$default_args,
 			array(
@@ -700,8 +700,8 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		);
 	}
 
-	$settings = bp_parse_args(
-		bp_get_option( 'bp_nouveau_appearance', array() ),
+	$settings = bboss_parse_args(
+		bboss_get_option( 'bp_nouveau_appearance', array() ),
 		$default_args,
 		'nouveau_appearance_settings'
 	);
@@ -725,7 +725,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  * @return array An array of nav items slugs.
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_sanitize_nav_order( $option = '' ) {
+function bboss_nouveau_sanitize_nav_order( $option = '' ) {
 	if ( ! is_array( $option ) ) {
 		$option = explode( ',', $option );
 	}
@@ -741,7 +741,7 @@ function bp_nouveau_sanitize_nav_order( $option = '' ) {
  * @return array An array of nav items slugs.
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_sanitize_nav_hide( $option = '' ) {
+function bboss_nouveau_sanitize_nav_hide( $option = '' ) {
 	if ( ! is_array( $option ) ) {
 		$option = explode( ',', $option );
 	}
@@ -757,30 +757,30 @@ function bp_nouveau_sanitize_nav_hide( $option = '' ) {
  * @return string
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_theme_cover_image( $params = array() ) {
+function bboss_nouveau_theme_cover_image( $params = array() ) {
 	if ( empty( $params ) ) {
 		return '';
 	}
 
 	// Avatar height - padding - 1/2 avatar height.
-	$avatar_offset = $params['height'] - 5 - round( (int) bp_core_avatar_full_height() / 2 );
+	$avatar_offset = $params['height'] - 5 - round( (int) bboss_core_avatar_full_height() / 2 );
 
 	// Header content offset + spacing.
-	$top_offset  = bp_core_avatar_full_height() - 10;
-	$left_offset = bp_core_avatar_full_width() + 20;
+	$top_offset  = bboss_core_avatar_full_height() - 10;
+	$left_offset = bboss_core_avatar_full_width() + 20;
 
 	$cover_image       = isset( $params['cover_image'] ) ? 'background-image: url( ' . $params['cover_image'] . ' );' : '';
 	$hide_avatar_style = '';
 
 	// Adjust the cover photo header, in case avatars are completely disabled.
-	if ( ! buddypress()->avatar->show_avatars ) {
+	if ( ! bboss()->avatar->show_avatars ) {
 		$hide_avatar_style = '
 			#buddypress #item-header-cover-image #item-header-avatar {
 				display:  none;
 			}
 		';
 
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			$hide_avatar_style = '
 				#buddypress #item-header-cover-image #item-header-avatar a {
 					display: block;
@@ -875,7 +875,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
  * @return string|false The list of parameters for the message
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
+function bboss_nouveau_get_user_feedback( $feedback_id = '' ) {
 	/**
 	 * Filters the BuddyPress Nouveau feedback messages.
 	 *
@@ -1159,12 +1159,12 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	/*
 	 * Adjust some messages to the context.
 	 */
-	if ( 'completed-confirmation' === $feedback_id && bp_registration_needs_activation() ) {
+	if ( 'completed-confirmation' === $feedback_id && bboss_registration_needs_activation() ) {
 		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
 	} elseif ( 'member-notifications-none' === $feedback_id ) {
-		$is_myprofile = bp_is_my_profile();
+		$is_myprofile = bboss_is_my_profile();
 
-		if ( bp_is_current_action( 'unread' ) ) {
+		if ( bboss_is_current_action( 'unread' ) ) {
 			$feedback_messages['member-notifications-none']['message'] = __( 'This member has no unread notifications.', 'buddyboss' );
 
 			if ( $is_myprofile ) {
@@ -1173,17 +1173,17 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		} elseif ( $is_myprofile ) {
 			$feedback_messages['member-notifications-none']['message'] = __( 'You have no notifications.', 'buddyboss' );
 		}
-	} elseif ( 'member-wp-profile-none' === $feedback_id && bp_is_user_profile() ) {
-		$feedback_messages['member-wp-profile-none']['message'] = sprintf( /* translators: %s: member display name. */ $feedback_messages['member-wp-profile-none']['message'], bp_get_displayed_user_fullname() );
-	} elseif ( 'member-delete-account' === $feedback_id && bp_is_my_profile() ) {
+	} elseif ( 'member-wp-profile-none' === $feedback_id && bboss_is_user_profile() ) {
+		$feedback_messages['member-wp-profile-none']['message'] = sprintf( /* translators: %s: member display name. */ $feedback_messages['member-wp-profile-none']['message'], bboss_get_displayed_user_fullname() );
+	} elseif ( 'member-delete-account' === $feedback_id && bboss_is_my_profile() ) {
 		$feedback_messages['member-delete-account']['message'] = __( 'Deleting your account will delete all of the content you have created. It will be completely irrecoverable.', 'buddyboss' );
-	} elseif ( 'member-activity-loading' === $feedback_id && bp_is_my_profile() ) {
+	} elseif ( 'member-activity-loading' === $feedback_id && bboss_is_my_profile() ) {
 		$feedback_messages['member-activity-loading']['message'] = __( 'Loading your updates. Please wait.', 'buddyboss' );
-	} elseif ( 'member-blogs-loading' === $feedback_id && bp_is_my_profile() ) {
+	} elseif ( 'member-blogs-loading' === $feedback_id && bboss_is_my_profile() ) {
 		$feedback_messages['member-blogs-loading']['message'] = __( 'Loading your blogs. Please wait.', 'buddyboss' );
-	} elseif ( 'member-friends-loading' === $feedback_id && bp_is_my_profile() ) {
+	} elseif ( 'member-friends-loading' === $feedback_id && bboss_is_my_profile() ) {
 		$feedback_messages['member-friends-loading']['message'] = __( 'Loading your connections. Please wait.', 'buddyboss' );
-	} elseif ( 'member-groups-loading' === $feedback_id && bp_is_my_profile() ) {
+	} elseif ( 'member-groups-loading' === $feedback_id && bboss_is_my_profile() ) {
 		$feedback_messages['member-groups-loading']['message'] = __( 'Loading your groups. Please wait.', 'buddyboss' );
 	}
 
@@ -1205,7 +1205,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
  * @return array|false The list of signup fields for the requested section. False if not found.
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_signup_fields( $section = '' ) {
+function bboss_nouveau_get_signup_fields( $section = '' ) {
 	if ( empty( $section ) ) {
 		return false;
 	}
@@ -1221,8 +1221,8 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	 * @since BuddyPress 3.0.0
 	 */
 
-	$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
-	$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
+	$email_opt    = function_exists( 'bboss_register_confirm_email' ) && true === bboss_register_confirm_email() ? true : false;
+	$password_opt = function_exists( 'bboss_register_confirm_password' ) && true === bboss_register_confirm_password() ? true : false;
 
 	if ( true === $email_opt && true === $password_opt ) {
 		$fields = apply_filters(
@@ -1490,7 +1490,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 		);
 	}
 
-	if ( ! bp_get_blog_signup_allowed() ) {
+	if ( ! bboss_get_blog_signup_allowed() ) {
 		unset( $fields['blog_details'] );
 	}
 
@@ -1510,7 +1510,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
  *                     False if no actions were found.
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_submit_button( $action = '' ) {
+function bboss_nouveau_get_submit_button( $action = '' ) {
 	if ( empty( $action ) ) {
 		return false;
 	}
@@ -1658,7 +1658,7 @@ function bp_nouveau_get_submit_button( $action = '' ) {
  * @return bool True on success. False otherwise.
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_slug = '' ) {
+function bboss_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_slug = '' ) {
 	if ( ! is_object( $nav ) || empty( $order ) || ! is_array( $order ) ) {
 		return false;
 	}
@@ -1695,8 +1695,8 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
  * @return mixed|void
  */
 
-function bp_nouveau_get_user_profile_actions() {
-	$bp_nouveau_appearance     = maybe_unserialize( bp_get_option( 'bp_nouveau_appearance' ) );
+function bboss_nouveau_get_user_profile_actions() {
+	$bp_nouveau_appearance     = maybe_unserialize( bboss_get_option( 'bp_nouveau_appearance' ) );
 	$profile_header_btn_orders = isset( $bp_nouveau_appearance['user_profile_actions_order'] )
 		? $bp_nouveau_appearance['user_profile_actions_order'] : array();
 
@@ -1713,8 +1713,8 @@ function bp_nouveau_get_user_profile_actions() {
  * Provide safe fallbacks for the Video and Document localized script data when
  * those components are not active (for example, removed from the build).
  *
- * The activity post form, media and messages scripts read `BP_Nouveau.video`
- * and `BP_Nouveau.document` (exposed as the `bbRlVideo` and `bbRlDocument`
+ * The activity post form, media and messages scripts read `BBoss_Nouveau.video`
+ * and `BBoss_Nouveau.document` (exposed as the `bbRlVideo` and `bbRlDocument`
  * globals). Those keys are only populated by the Video and Document component
  * localizers (`bp_nouveau_video_localize_scripts()` /
  * `bp_nouveau_document_localize_scripts()`), which never run when the component
@@ -1724,12 +1724,12 @@ function bp_nouveau_get_user_profile_actions() {
  *
  * @since BuddyBoss 3.7.0
  *
- * @param array $params Localized data passed to the BP_Nouveau script object.
+ * @param array $params Localized data passed to the BBoss_Nouveau script object.
  *
  * @return array Localized data with safe video/document fallbacks.
  */
-function bb_nouveau_inactive_media_localize_fallback( $params = array() ) {
-	if ( ! bp_is_active( 'video' ) && ! isset( $params['video'] ) ) {
+function bboss_nouveau_inactive_media_localize_fallback( $params = array() ) {
+	if ( ! bboss_is_active( 'video' ) && ! isset( $params['video'] ) ) {
 		$params['video'] = array(
 			'profile_video'         => false,
 			'group_video'           => false,
@@ -1742,7 +1742,7 @@ function bb_nouveau_inactive_media_localize_fallback( $params = array() ) {
 		);
 	}
 
-	if ( ! bp_is_active( 'document' ) && ! isset( $params['document'] ) ) {
+	if ( ! bboss_is_active( 'document' ) && ! isset( $params['document'] ) ) {
 		$params['document'] = array(
 			'profile_document'  => false,
 			'group_document'    => false,

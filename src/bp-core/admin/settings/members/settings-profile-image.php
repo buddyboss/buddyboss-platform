@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_members_register_profile_image_panel_fields() {
+function bboss_members_register_profile_image_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Avatar
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_image',
 		'profile_avatar',
@@ -34,7 +34,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Profile Avatar Type (BuddyBoss or WordPress).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_avatar',
@@ -47,8 +47,8 @@ function bb_members_register_profile_image_panel_fields() {
 				__( 'Select whether to use the BuddyBoss or WordPress avatar systems. You can manage WordPress avatars in the <a href="%s">Discussion</a> settings.', 'buddyboss' ),
 				esc_url( admin_url( 'options-discussion.php' ) )
 			),
-			'default'           => bb_get_profile_avatar_type(),
-			'sanitize_callback' => 'bb_members_sanitize_avatar_type',
+			'default'           => bboss_get_profile_avatar_type(),
+			'sanitize_callback' => 'bboss_members_sanitize_avatar_type',
 			'options'           => array(
 				array(
 					'label' => __( 'WordPress', 'buddyboss' ),
@@ -67,7 +67,7 @@ function bb_members_register_profile_image_panel_fields() {
 	// Grouped with Gravatars under a shared "Avatars" label.
 	// Note: No conditional on avatar type — in legacy this field is always visible
 	// regardless of WordPress/BuddyBoss selection.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_avatar',
@@ -76,7 +76,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'label'             => __( 'Avatars', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to upload a profile avatar', 'buddyboss' ),
-			'default'           => bp_disable_avatar_uploads(),
+			'default'           => bboss_disable_avatar_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'group'             => 'avatar_settings_group',
@@ -85,7 +85,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Enable Gravatars (sub-toggle, grouped with Upload Avatars).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_avatar',
@@ -99,7 +99,7 @@ function bb_members_register_profile_image_panel_fields() {
 				__( 'When enabled, members will be able to use avatars from their %s account.', 'buddyboss' ),
 				'<a href="https://gravatar.com/" target="_blank">' . __( 'Gravatar', 'buddyboss' ) . '</a>'
 			),
-			'default'           => bp_enable_profile_gravatar(),
+			'default'           => bboss_enable_profile_gravatar(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-profile-avatar-type',
@@ -111,7 +111,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Default Profile Avatar (image_radio, depends on avatar type = BuddyBoss).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_avatar',
@@ -123,16 +123,16 @@ function bb_members_register_profile_image_panel_fields() {
 				? sprintf(
 					/* translators: 1: Profile settings link, 2: Imagick link. */
 					__( 'Display name shows as one or two initials based on your %1$s. Select a default image for members without a profile avatar. Note: Your server needs %2$s installed to use the "Display Name" option.', 'buddyboss' ),
-					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_name' ) ) . '">' . __( 'profile settings', 'buddyboss' ) . '</a>',
+					'<a href="' . esc_url( bboss_get_feature_settings_url( 'members', 'profile_name' ) ) . '">' . __( 'profile settings', 'buddyboss' ) . '</a>',
 					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank" rel="noopener noreferrer">Imagick</a>'
 				)
 				: sprintf(
 					/* translators: %s: Profile settings link. */
 					__( 'Display name shows as one or two initials based on your %s. Select a default image for members without a profile avatar.', 'buddyboss' ),
-					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_name' ) ) . '">' . __( 'profile settings', 'buddyboss' ) . '</a>'
+					'<a href="' . esc_url( bboss_get_feature_settings_url( 'members', 'profile_name' ) ) . '">' . __( 'profile settings', 'buddyboss' ) . '</a>'
 				),
-			'default'           => ( 'legacy' === bb_get_default_profile_avatar_type() ) ? 'buddyboss' : bb_get_default_profile_avatar_type(),
-			'sanitize_callback' => 'bb_members_sanitize_default_avatar_type',
+			'default'           => ( 'legacy' === bboss_get_default_profile_avatar_type() ) ? 'buddyboss' : bboss_get_default_profile_avatar_type(),
+			'sanitize_callback' => 'bboss_members_sanitize_default_avatar_type',
 			'options'           => array(
 				array(
 					'label' => __( 'BuddyBoss', 'buddyboss' ),
@@ -185,7 +185,7 @@ function bb_members_register_profile_image_panel_fields() {
 	// BP_Nouveau always registers cover_image support for BuddyBoss Platform.
 	// -------------------------------------------------------------------------
 
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_image',
 		'profile_cover',
@@ -198,7 +198,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Profile Cover Images (toggle, inverted — DB stores 1=disabled).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_cover',
@@ -208,7 +208,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Enable cover images for member profiles', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, members will be able to upload cover images in their profile settings.', 'buddyboss' ),
-			'default'           => bp_disable_cover_image_uploads(),
+			'default'           => bboss_disable_cover_image_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
@@ -216,7 +216,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Cover Image Width (Pro only, select, grouped with height).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_cover',
@@ -225,8 +225,8 @@ function bb_members_register_profile_image_panel_fields() {
 			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
 			'type'              => 'select',
 			'description'       => '',
-			'default'           => bb_get_profile_cover_image_width(),
-			'sanitize_callback' => 'bb_members_sanitize_cover_width',
+			'default'           => bboss_get_profile_cover_image_width(),
+			'sanitize_callback' => 'bboss_members_sanitize_cover_width',
 			'pro_only'          => true,
 			'options'           => array(
 				array(
@@ -251,7 +251,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Cover Image Height (Pro only, select, grouped with width).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_cover',
@@ -260,8 +260,8 @@ function bb_members_register_profile_image_panel_fields() {
 			'label'             => '',
 			'type'              => 'select',
 			'description'       => __( 'Changing the cover image size will reposition existing member images.', 'buddyboss' ),
-			'default'           => bb_get_profile_cover_image_height(),
-			'sanitize_callback' => 'bb_members_sanitize_cover_height',
+			'default'           => bboss_get_profile_cover_image_height(),
+			'sanitize_callback' => 'bboss_members_sanitize_cover_height',
 			'pro_only'          => true,
 			'options'           => array(
 				array(
@@ -287,7 +287,7 @@ function bb_members_register_profile_image_panel_fields() {
 
 	// FIELD: Default Profile Cover Image (image_radio, depends on cover enabled).
 	// Order 40 to sort after Cover Image Height (order 30).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_cover',
@@ -296,8 +296,8 @@ function bb_members_register_profile_image_panel_fields() {
 			'label'             => __( 'Default Profile Cover Image', 'buddyboss' ),
 			'type'              => 'image_radio',
 			'description'       => __( 'Select which image should be used for members who haven\'t uploaded a profile cover image.', 'buddyboss' ),
-			'default'           => bb_get_default_profile_cover_type(),
-			'sanitize_callback' => 'bb_members_sanitize_default_cover_type',
+			'default'           => bboss_get_default_profile_cover_type(),
+			'sanitize_callback' => 'bboss_members_sanitize_default_cover_type',
 			'options'           => array(
 				array(
 					'label' => __( 'BuddyBoss', 'buddyboss' ),

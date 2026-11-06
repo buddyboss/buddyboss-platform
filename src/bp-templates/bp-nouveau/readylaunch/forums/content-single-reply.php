@@ -3,7 +3,7 @@
  * Single Reply Content Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -21,11 +21,11 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php if ( post_password_required() ) : ?>
 
-				<?php bbp_get_template_part( 'form', 'protected' ); ?>
+				<?php bboss_bbp_get_template_part( 'form', 'protected' ); ?>
 
 			<?php else : ?>
 
-				<?php bbp_get_template_part( 'loop', 'single-reply' ); ?>
+				<?php bboss_bbp_get_template_part( 'loop', 'single-reply' ); ?>
 
 			<?php endif; ?>
 

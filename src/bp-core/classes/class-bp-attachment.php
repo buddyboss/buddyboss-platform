@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.3.0
  */
-abstract class BP_Attachment {
+abstract class BBoss_Attachment {
 
 	/** Upload properties *****************************************************/
 
@@ -80,7 +80,7 @@ abstract class BP_Attachment {
 		 */
 		$this->default_args['original_max_filesize'] = (int) wp_max_upload_size();
 
-		$params = bp_parse_args( $args, $this->default_args, $this->action . '_upload_params' );
+		$params = bboss_parse_args( $args, $this->default_args, $this->action . '_upload_params' );
 
 		foreach ( $params as $key => $param ) {
 			if ( 'upload_error_strings' === $key ) {
@@ -111,7 +111,7 @@ abstract class BP_Attachment {
 	 */
 	public function set_upload_dir() {
 		// Set the directory, path, & url variables.
-		$this->upload_dir = bp_upload_dir();
+		$this->upload_dir = bboss_upload_dir();
 
 		if ( empty( $this->upload_dir ) ) {
 			return false;
@@ -142,7 +142,7 @@ abstract class BP_Attachment {
 	/**
 	 * Set Upload error messages.
 	 *
-	 * Used into the $overrides argument of BP_Attachment->upload()
+	 * Used into the $overrides argument of BBoss_Attachment->upload()
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
@@ -207,7 +207,7 @@ abstract class BP_Attachment {
 		/**
 		 * Upload action and the file input name are required parameters.
 		 *
-		 * @see BP_Attachment:__construct()
+		 * @see BBoss_Attachment:__construct()
 		 */
 		if ( empty( $this->action ) || empty( $this->file_input ) ) {
 			return false;
@@ -250,7 +250,7 @@ abstract class BP_Attachment {
 		 * and no specific filter has been requested, use a default
 		 * filter to create the specific $base dir
 		 *
-		 * @see  BP_Attachment->upload_dir_filter()
+		 * @see  BBoss_Attachment->upload_dir_filter()
 		 */
 		if ( empty( $upload_dir_filter ) && ! empty( $this->base_dir ) ) {
 			$upload_dir_filter = array( $this, 'upload_dir_filter' );
@@ -341,7 +341,7 @@ abstract class BP_Attachment {
 	 * By default, if an original_max_filesize is provided, a check will be done
 	 * on the file size.
 	 *
-	 * @see BP_Attachment_Avatar->validate_upload() for an example of use
+	 * @see BBoss_Attachment_Avatar->validate_upload() for an example of use
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
@@ -447,7 +447,7 @@ abstract class BP_Attachment {
 	public function crop( $args = array() ) {
 		$wp_error = new WP_Error();
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'original_file' => '',
@@ -632,7 +632,7 @@ abstract class BP_Attachment {
 			return new WP_Error( 'missing_parameter' );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'file'    => '',
@@ -655,7 +655,7 @@ abstract class BP_Attachment {
 		$editor = wp_get_image_editor( $r['file'] );
 
 		if ( is_wp_error( $editor ) ) {
-			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+			if ( ! bboss_is_gd_or_imagick_library_enabled() ) {
 				return new WP_Error( 'image_no_editor', esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
 			}
 

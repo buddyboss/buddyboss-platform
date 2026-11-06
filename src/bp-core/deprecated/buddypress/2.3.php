@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string The referrer URL.
  */
-function bp_core_referrer() {
+function bboss_core_referrer() {
 	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_get_referer_path()' );
 	$referer = explode( '/', wp_get_referer() );
 	unset( $referer[0], $referer[1], $referer[2] );

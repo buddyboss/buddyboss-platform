@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Topic_Tags_Ajax
+ * Class BBoss_Admin_Topic_Tags_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Topic_Tags_Ajax {
+class BBoss_Admin_Topic_Tags_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -77,13 +77,13 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function get_topic_tags() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		if ( empty( $tag_tax_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Topic tags are not available.', 'buddyboss' ) ) );
 		}
@@ -194,9 +194,9 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function get_topic_tag() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -207,7 +207,7 @@ class BB_Admin_Topic_Tags_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss' ) ) );
 		}
 
-		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$term       = get_term( $term_id, $tag_tax_id );
 
 		if ( ! $term || is_wp_error( $term ) ) {
@@ -244,9 +244,9 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function create_topic_tag() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -260,7 +260,7 @@ class BB_Admin_Topic_Tags_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Tag name is required.', 'buddyboss' ) ) );
 		}
 
-		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 
 		$args = array();
 		if ( ! empty( $slug ) ) {
@@ -292,9 +292,9 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function save_topic_tag() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -313,7 +313,7 @@ class BB_Admin_Topic_Tags_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Tag name is required.', 'buddyboss' ) ) );
 		}
 
-		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$term       = get_term( $term_id, $tag_tax_id );
 
 		if ( ! $term || is_wp_error( $term ) ) {
@@ -351,9 +351,9 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function delete_topic_tag() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -364,7 +364,7 @@ class BB_Admin_Topic_Tags_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Tag ID is required.', 'buddyboss' ) ) );
 		}
 
-		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$term       = get_term( $term_id, $tag_tax_id );
 
 		if ( ! $term || is_wp_error( $term ) ) {
@@ -394,9 +394,9 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function topic_tag_bulk_action() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
@@ -422,7 +422,7 @@ class BB_Admin_Topic_Tags_Ajax {
 		// Cap bulk operations.
 		$term_ids = array_slice( $term_ids, 0, self::BULK_CAP );
 
-		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		$tag_tax_id = bboss_bbp_get_topic_tag_tax_id();
 		$processed  = 0;
 		$failed     = 0;
 
@@ -473,4 +473,4 @@ class BB_Admin_Topic_Tags_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Topic_Tags_Ajax();
+new BBoss_Admin_Topic_Tags_Ajax();

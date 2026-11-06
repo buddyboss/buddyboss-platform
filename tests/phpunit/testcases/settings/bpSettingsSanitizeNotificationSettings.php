@@ -21,7 +21,7 @@ class BP_Tests_Settings_BpSettingsSanitizeNotificationSettings extends BP_UnitTe
 			'foo' => 'yes',
 		);
 
-		$sanitized = bp_settings_sanitize_notification_settings( $settings );
+		$sanitized = bboss_settings_sanitize_notification_settings( $settings );
 
 		$this->assertArrayNotHasKey( 'foo', $sanitized );
 	}
@@ -32,7 +32,7 @@ class BP_Tests_Settings_BpSettingsSanitizeNotificationSettings extends BP_UnitTe
 		);
 
 		add_action( 'bp_notification_settings', array( $this, 'add_custom_notification_setting' ) );
-		$sanitized = bp_settings_sanitize_notification_settings( $settings );
+		$sanitized = bboss_settings_sanitize_notification_settings( $settings );
 		remove_action( 'bp_notification_settings', array( $this, 'add_custom_notification_setting' ) );
 
 		$this->assertArrayHasKey( 'foo', $sanitized );
@@ -47,7 +47,7 @@ class BP_Tests_Settings_BpSettingsSanitizeNotificationSettings extends BP_UnitTe
 		}
 
 		add_action( 'bp_notification_settings', array( $this, 'add_core_notification_settings' ) );
-		$sanitized = bp_settings_sanitize_notification_settings( $settings );
+		$sanitized = bboss_settings_sanitize_notification_settings( $settings );
 		remove_action( 'bp_notification_settings', array( $this, 'add_core_notification_settings' ) );
 
 		$expected = array();
@@ -64,7 +64,7 @@ class BP_Tests_Settings_BpSettingsSanitizeNotificationSettings extends BP_UnitTe
 		);
 
 		add_action( 'bp_notification_settings', array( $this, 'add_custom_notification_setting' ) );
-		$sanitized = bp_settings_sanitize_notification_settings( $settings );
+		$sanitized = bboss_settings_sanitize_notification_settings( $settings );
 		remove_action( 'bp_notification_settings', array( $this, 'add_custom_notification_setting' ) );
 
 		$this->assertArrayHasKey( 'foo', $sanitized );

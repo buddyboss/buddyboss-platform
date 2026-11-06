@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  */
-function bp_core_get_member_display_name( $display_name, $user_id = null ) {
+function bboss_core_get_member_display_name( $display_name, $user_id = null ) {
 
 	_deprecated_function( __FUNCTION__, '1.2.3', 'bp_core_get_user_displayname' );
 
@@ -29,7 +29,7 @@ function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 
 	$old_display_name = $display_name;
 
-	$display_name = bp_xprofile_get_member_display_name( $user_id );
+	$display_name = bboss_xprofile_get_member_display_name( $user_id );
 
 	if ( empty( $display_name ) ) {
 		$display_name = $old_display_name;

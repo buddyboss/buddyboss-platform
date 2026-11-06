@@ -116,7 +116,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		$comment_content = wp_specialchars_decode( $comment->comment_content );
 
 		// Get customizer setting options
-		$settings = bp_email_get_appearance_settings();
+		$settings = bboss_email_get_appearance_settings();
 
 		switch ( $comment->comment_type ) {
 			case 'trackback':
@@ -152,7 +152,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		?>
 		<p>
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
-				<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>">
+				<a href="<?php echo esc_attr( bboss_core_get_user_domain( $comment->user_id ) ); ?>">
 					<?php echo esc_html( $comment->comment_author ); ?>
 				</a>
 				<?php
@@ -171,10 +171,10 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 							<tbody>
 							<tr>
 								<td valign="middle" width="65px" style="vertical-align: middle;">
-									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
+									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bboss_core_get_user_domain( $comment->user_id ) ); ?>"
 									   target="_blank" rel="nofollow">
 										<?php
-										$avatar_url = bp_core_fetch_avatar(
+										$avatar_url = bboss_core_fetch_avatar(
 											array(
 												'item_id' => $comment->user_id,
 												'width'   => 100,
@@ -191,7 +191,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo esc_html( bp_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
+										<?php echo esc_html( bboss_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
 									</div>
 								</td>
 							</tr>
@@ -350,7 +350,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		foreach ( $emails as $email ) {
-			$email_notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
+			$email_notify_message = bboss_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
 			@wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
 		}
 
@@ -435,7 +435,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		$comment_content = wp_specialchars_decode( $comment->comment_content );
 
 		// Get customizer setting options
-		$settings = bp_email_get_appearance_settings();
+		$settings = bboss_email_get_appearance_settings();
 
 		switch ( $comment->comment_type ) {
 			case 'trackback':
@@ -468,7 +468,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		?>
 		<p>
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
-				<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>">
+				<a href="<?php echo esc_attr( bboss_core_get_user_domain( $comment->user_id ) ); ?>">
 					<?php echo esc_html( $comment->comment_author ); ?>
 				</a>
 				<?php
@@ -486,10 +486,10 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 							<tbody>
 							<tr>
 								<td valign="middle" width="65px" style="vertical-align: middle;">
-									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
+									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bboss_core_get_user_domain( $comment->user_id ) ); ?>"
 									   target="_blank" rel="nofollow">
 										<?php
-										$avatar_url = bp_core_fetch_avatar(
+										$avatar_url = bboss_core_fetch_avatar(
 											array(
 												'item_id' => $comment->user_id,
 												'width'   => 100,
@@ -506,7 +506,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo esc_html( bp_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
+										<?php echo esc_html( bboss_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
 									</div>
 								</td>
 							</tr>
@@ -653,7 +653,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		foreach ( $emails as $email ) {
-			$email_notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
+			$email_notify_message = bboss_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
 			@wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
 		}
 
@@ -713,7 +713,7 @@ if ( ! function_exists( 'wp_password_change_notification' ) ) :
 
 			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
-			$wp_password_change_notification_email['message'] = bp_email_core_wp_get_template( $wp_password_change_notification_email['message'], $user );
+			$wp_password_change_notification_email['message'] = bboss_email_core_wp_get_template( $wp_password_change_notification_email['message'], $user );
 
 			wp_mail(
 				$wp_password_change_notification_email['to'],
@@ -796,7 +796,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 
 			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
-			$wp_new_user_notification_email_admin['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email_admin['message'], $user );
+			$wp_new_user_notification_email_admin['message'] = bboss_email_core_wp_get_template( $wp_new_user_notification_email_admin['message'], $user );
 
 			@wp_mail(
 				$wp_new_user_notification_email_admin['to'],
@@ -873,7 +873,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
-		$wp_new_user_notification_email['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email['message'], $user );
+		$wp_new_user_notification_email['message'] = bboss_email_core_wp_get_template( $wp_new_user_notification_email['message'], $user );
 
 		wp_mail(
 			$wp_new_user_notification_email['to'],
@@ -890,7 +890,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 	}
 }
 
-if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
+if ( ! function_exists( 'bboss_email_retrieve_password_message' ) ) {
 	/**
 	 * Filters the message body of the password reset mail.
 	 *
@@ -903,7 +903,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	 * @param string  $user_login The username for the user.
 	 * @param WP_User $user_data  WP_User object.
 	 */
-	function bp_email_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+	function bboss_email_retrieve_password_message( $message, $key, $user_login, $user_data ) {
 
 		if ( is_multisite() ) {
 			$site_name = get_network()->site_name;
@@ -924,7 +924,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 		/* translators: %s: password reset URL. */
 		$message .= '<p>' . sprintf( __( 'To reset your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) ) . '</p>';
 
-		$message = bp_email_core_wp_get_template( $message, $user_data );
+		$message = bboss_email_core_wp_get_template( $message, $user_data );
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
@@ -938,7 +938,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
 }
 
-if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
+if ( ! function_exists( 'bboss_email_wp_password_change_email' ) ) {
 	/**
 	 * Filters the contents of the email sent when the user's password is changed.
 	 *
@@ -962,9 +962,9 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 *
 	 * @return array $pass_change_email Password Change Email data.
 	 */
-	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
+	function bboss_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		if ( bb_enabled_legacy_email_preference() || is_admin() ) {
+		if ( bboss_enabled_legacy_email_preference() || is_admin() ) {
 
 			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
 			$pass_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
@@ -983,7 +983,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 
 			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
 
-			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+			$pass_change_email['message'] = bboss_email_core_wp_get_template( $pass_change_email['message'], $user );
 
 		} else {
 			/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
@@ -998,7 +998,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 
 			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
 
-			$pass_change_email['message'] = bp_email_core_wp_get_template( $pass_change_email['message'], $user );
+			$pass_change_email['message'] = bboss_email_core_wp_get_template( $pass_change_email['message'], $user );
 		}
 
 		return $pass_change_email;
@@ -1007,7 +1007,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	add_filter( 'password_change_email', 'bp_email_wp_password_change_email', 10, 3 );
 }
 
-if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
+if ( ! function_exists( 'bboss_email_wp_email_change_email' ) ) {
 	/**
 	 * Filters the contents of the email sent when the user's email is changed.
 	 *
@@ -1032,7 +1032,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	 *
 	 * @return array $email_change_email Email change array
 	 */
-	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
+	function bboss_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
 
 		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
 		$email_change_text  = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
@@ -1051,7 +1051,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_change_email['message'] = bp_email_core_wp_get_template( $email_change_email['message'], $user );
+		$email_change_email['message'] = bboss_email_core_wp_get_template( $email_change_email['message'], $user );
 
 		return $email_change_email;
 	}
@@ -1059,7 +1059,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	add_filter( 'email_change_email', 'bp_email_wp_email_change_email', 10, 3 );
 }
 
-if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
+if ( ! function_exists( 'bboss_email_wp_new_user_email_content' ) ) {
 	/**
 	 * Filters the text of the email sent when a change of user email address is attempted.
 	 *
@@ -1080,7 +1080,7 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 	 *     @type string $newemail The proposed new email address.
 	 * }
 	 */
-	function bp_email_wp_new_user_email_content( $email_text, $new_user_email ) {
+	function bboss_email_wp_new_user_email_content( $email_text, $new_user_email ) {
 
 		$current_user = wp_get_current_user();
 
@@ -1098,7 +1098,7 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
+		$email_text = bboss_email_core_wp_get_template( $email_text, $current_user );
 
 		return $email_text;
 	}
@@ -1106,7 +1106,7 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 	add_filter( 'new_user_email_content', 'bp_email_wp_new_user_email_content', 10, 2 );
 }
 
-if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
+if ( ! function_exists( 'bboss_email_wp_user_confirmed_action_email_content' ) ) {
 	/**
 	 * Filters the body of the user request confirmation email.
 	 *
@@ -1134,7 +1134,7 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	 *     @type string          $admin_email The administrator email receiving the mail.
 	 * }
 	 */
-	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
+	function bboss_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
 
 		if ( ! empty( $email_data['admin_email'] ) ) {
 
@@ -1170,7 +1170,7 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email ) );
+		$email_text = bboss_email_core_wp_get_template( $email_text, get_user_by( 'email', $email ) );
 
 		return $email_text;
 	}
@@ -1178,7 +1178,7 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
 }
 
-if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
+if ( ! function_exists( 'bboss_email_wp_user_request_action_email_content' ) ) {
 	/**
 	 * Filters the text of the email sent when an account action is attempted.
 	 *
@@ -1203,7 +1203,7 @@ if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
 	 *     @type string          $siteurl     The site URL sending the mail.
 	 * }
 	 */
-	function bp_email_wp_user_request_action_email_content( $email_text, $email_data ) {
+	function bboss_email_wp_user_request_action_email_content( $email_text, $email_data ) {
 
 		/* translators: Do not translate DESCRIPTION, CONFIRM_URL, SITENAME, SITEURL: those are placeholders. */
 		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
@@ -1214,7 +1214,7 @@ if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['email'] ) );
+		$email_text = bboss_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['email'] ) );
 
 		return $email_text;
 	}
@@ -1222,7 +1222,7 @@ if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
 	add_filter( 'user_request_action_email_content', 'bp_email_wp_user_request_action_email_content', 10, 2 );
 }
 
-if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
+if ( ! function_exists( 'bboss_email_wp_new_admin_email_content' ) ) {
 	/**
 	 * Filters the text of the email sent when a change of site admin email address is attempted.
 	 *
@@ -1243,7 +1243,7 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
 	 *     @type string $newemail The proposed new site admin email address.
 	 * }
 	 */
-	function bp_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
+	function bboss_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
 
 		$admin_email = get_option( 'admin_email' );
 
@@ -1261,7 +1261,7 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $admin_email ) );
+		$email_text = bboss_email_core_wp_get_template( $email_text, get_user_by( 'email', $admin_email ) );
 
 		return $email_text;
 	}
@@ -1272,7 +1272,7 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
 /**
  * WPMU Emails Strat Here
  */
-if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
+if ( ! function_exists( 'bboss_email_wpmu_signup_blog_notification_email' ) ) {
 	/**
 	 * Filters the message content of the new blog notification email.
 	 *
@@ -1289,11 +1289,11 @@ if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 	 * @param string $key        Activation key created in wpmu_signup_blog().
 	 * @param array  $meta       Signup meta data. By default, contains the requested privacy setting and lang_id.
 	 */
-	function bp_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta ) {
+	function bboss_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$content = bp_email_core_wp_get_template( $content, get_user_by( 'email', $user_email ) );
+		$content = bboss_email_core_wp_get_template( $content, get_user_by( 'email', $user_email ) );
 
 		return $content;
 	}
@@ -1301,7 +1301,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 	add_filter( 'wpmu_signup_blog_notification_email', 'bp_email_wpmu_signup_blog_notification_email', 10, 8 );
 }
 
-if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
+if ( ! function_exists( 'bboss_email_wpmu_signup_user_notification_email' ) ) {
 	/**
 	 * Filters the content of the notification email for new user sign-up.
 	 *
@@ -1315,7 +1315,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 	 * @param string $key        Activation key created in wpmu_signup_user().
 	 * @param array  $meta       Signup meta data. Default empty array.
 	 */
-	function bp_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
+	function bboss_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email.
 
@@ -1326,7 +1326,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 					$content,
 					site_url( "wp-activate.php?key=$key" )
 				);
-				$args['message'] = bp_email_core_wp_get_template( $args['message'], get_user_by( 'email', $user_email ) );
+				$args['message'] = bboss_email_core_wp_get_template( $args['message'], get_user_by( 'email', $user_email ) );
 
 				return $args;
 			}
@@ -1338,7 +1338,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 	add_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 999, 5 );
 }
 
-if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
+if ( ! function_exists( 'bboss_email_newblog_notify_siteadmin' ) ) {
 	/**
 	 * Filters the message body of the new site activation email sent
 	 * to the network administrator.
@@ -1347,7 +1347,7 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 	 *
 	 * @param string $msg Email body.
 	 */
-	function bp_email_newblog_notify_siteadmin( $msg ) {
+	function bboss_email_newblog_notify_siteadmin( $msg ) {
 
 		$email = get_site_option( 'admin_email' );
 		if ( is_email( $email ) == false ) {
@@ -1370,7 +1370,7 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$msg = bp_email_core_wp_get_template( $msg, get_user_by( 'email', $email ) );
+		$msg = bboss_email_core_wp_get_template( $msg, get_user_by( 'email', $email ) );
 
 		return $msg;
 	}
@@ -1378,7 +1378,7 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 	add_filter( 'newblog_notify_siteadmin', 'bp_email_newblog_notify_siteadmin', 10 );
 }
 
-if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
+if ( ! function_exists( 'bboss_email_newuser_notify_siteadmin' ) ) {
 	/**
 	 * Filters the message body of the new user activation email sent
 	 * to the network administrator.
@@ -1388,11 +1388,11 @@ if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
 	 * @param string  $msg  Email body.
 	 * @param WP_User $user WP_User instance of the new user.
 	 */
-	function bp_email_newuser_notify_siteadmin( $msg, $user ) {
+	function bboss_email_newuser_notify_siteadmin( $msg, $user ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$msg = bp_email_core_wp_get_template( $msg, $user );
+		$msg = bboss_email_core_wp_get_template( $msg, $user );
 
 		return $msg;
 	}
@@ -1400,7 +1400,7 @@ if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
 	add_filter( 'newuser_notify_siteadmin', 'bp_email_newuser_notify_siteadmin', 10, 2 );
 }
 
-if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
+if ( ! function_exists( 'bboss_email_update_welcome_email' ) ) {
 	/**
 	 * Filters the content of the welcome email after site activation.
 	 *
@@ -1415,7 +1415,7 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 	 * @param string $title         Site title.
 	 * @param array  $meta          Signup meta data. By default, contains the requested privacy setting and lang_id.
 	 */
-	function bp_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
+	function bboss_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
 
 		if ( $welcome_email == false ) {
 			/* translators: Do not translate USERNAME, SITE_NAME, BLOG_URL, PASSWORD: those are placeholders. */
@@ -1430,7 +1430,7 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$welcome_email = bp_email_core_wp_get_template( $welcome_email, get_userdata( $user_id ) );
+		$welcome_email = bboss_email_core_wp_get_template( $welcome_email, get_userdata( $user_id ) );
 
 		return $welcome_email;
 	}
@@ -1438,7 +1438,7 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 	add_filter( 'update_welcome_email', 'bp_email_update_welcome_email', 10, 6 );
 }
 
-if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
+if ( ! function_exists( 'bboss_email_update_welcome_user_email' ) ) {
 	/**
 	 * Filters the content of the welcome email after user activation.
 	 *
@@ -1451,11 +1451,11 @@ if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
 	 * @param string $password      User password.
 	 * @param array  $meta          Signup meta data. Default empty array.
 	 */
-	function bp_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta ) {
+	function bboss_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$welcome_email = bp_email_core_wp_get_template( $welcome_email, get_userdata( $user_id ) );
+		$welcome_email = bboss_email_core_wp_get_template( $welcome_email, get_userdata( $user_id ) );
 
 		return $welcome_email;
 	}
@@ -1463,7 +1463,7 @@ if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
 	add_filter( 'update_welcome_user_email', 'bp_email_update_welcome_user_email', 10, 4 );
 }
 
-if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
+if ( ! function_exists( 'bboss_email_new_network_admin_email_content' ) ) {
 	/**
 	 * Filters the text of the email sent when a change of network admin email address is attempted.
 	 *
@@ -1484,7 +1484,7 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 	 *     @type string $newemail The proposed new network admin email address.
 	 * }
 	 */
-	function bp_email_new_network_admin_email_content( $email_text, $new_admin_email ) {
+	function bboss_email_new_network_admin_email_content( $email_text, $new_admin_email ) {
 
 		$current_user = wp_get_current_user();
 		if ( empty( $current_user->ID ) ) {
@@ -1501,7 +1501,7 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
+		$email_text = bboss_email_core_wp_get_template( $email_text, $current_user );
 
 		return $email_text;
 	}
@@ -1509,7 +1509,7 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 	add_filter( 'new_network_admin_email_content', 'bp_email_new_network_admin_email_content', 10, 2 );
 }
 
-if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
+if ( ! function_exists( 'bboss_email_network_admin_email_change_email' ) ) {
 	/**
 	 * Filters the contents of the email notification sent when the network admin email address is changed.
 	 *
@@ -1532,7 +1532,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 	 * @param string $new_email  The new network admin email address.
 	 * @param int    $network_id ID of the network.
 	 */
-	function bp_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
+	function bboss_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
 
 		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */
 		$email_change_text  = '<p>' . __( 'Hi,', 'buddyboss' ) . '</p>';
@@ -1551,7 +1551,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_change_email = bp_email_core_wp_get_template( $email_change_email, get_user_by( 'email', $new_email ) );
+		$email_change_email = bboss_email_core_wp_get_template( $email_change_email, get_user_by( 'email', $new_email ) );
 
 		return $email_change_email;
 	}
@@ -1559,7 +1559,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 	add_filter( 'network_admin_email_change_email', 'bp_email_network_admin_email_change_email', 10, 4 );
 }
 
-if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
+if ( ! function_exists( 'bboss_email_site_admin_email_change_email' ) ) {
 	/**
 	 * Filters the contents of the email notification sent when the site admin email address is changed.
 	 *
@@ -1581,7 +1581,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 	 * @param string $old_email The old site admin email address.
 	 * @param string $new_email The new site admin email address.
 	 */
-	function bp_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
+	function bboss_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
 
 		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */
 		$email_change_text  = '<p>' . __( 'Hi,', 'buddyboss' ) . '</p>';
@@ -1594,7 +1594,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 			'to'      => $old_email,
 			/* translators: Site admin email change notification email subject. %s: Site title */
 			'subject' => __( '[%s] Notice of Admin Email Change', 'buddyboss' ),
-			'message' => bp_email_core_wp_get_template( $email_change_text, get_user_by( 'email', $new_email ) ),
+			'message' => bboss_email_core_wp_get_template( $email_change_text, get_user_by( 'email', $new_email ) ),
 			'headers' => '',
 		);
 
@@ -1606,7 +1606,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 	add_filter( 'site_admin_email_change_email', 'bp_email_site_admin_email_change_email', 10, 3 );
 }
 
-if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
+if ( ! function_exists( 'bboss_email_wp_privacy_personal_data_email_content' ) ) {
 
 	/**
 	 * Filters the text of the email sent with a personal data export file.
@@ -1622,7 +1622,7 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 	 * @param string $email_text     Text in the email.
 	 * @param int    $request_id     The request ID for this personal data export.
 	 */
-	function bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
+	function bboss_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
 		// Get the request data.
 		$request = wp_get_user_request( $request_id );
 
@@ -1633,7 +1633,7 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $request->email ) );
+		$email_text = bboss_email_core_wp_get_template( $email_text, get_user_by( 'email', $request->email ) );
 
 		return $email_text;
 	}

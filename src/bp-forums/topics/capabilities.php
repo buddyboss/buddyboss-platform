@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses apply_filters() Calls 'bbp_get_topic_caps' with the capabilities
  * @return array Topic capabilities
  */
-function bbp_get_topic_caps() {
+function bboss_bbp_get_topic_caps() {
 	return apply_filters(
 		'bbp_get_topic_caps',
 		array(
@@ -42,7 +42,7 @@ function bbp_get_topic_caps() {
  * @uses apply_filters() Calls 'bbp_get_topic_tag_caps' with the capabilities
  * @return array Topic tag capabilities
  */
-function bbp_get_topic_tag_caps() {
+function bboss_bbp_get_topic_tag_caps() {
 	return apply_filters(
 		'bbp_get_topic_tag_caps',
 		array(
@@ -68,7 +68,7 @@ function bbp_get_topic_tag_caps() {
  * @uses apply_filters() Filter capability map results
  * @return array Actual capabilities for meta capability
  */
-function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+function bboss_bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
 	// What capability is being checked?
 	switch ( $cap ) {
@@ -91,7 +91,7 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 					$post_type = get_post_type_object( $_post->post_type );
 
 					// Post is public
-					if ( bbp_get_public_status_id() === $_post->post_status ) {
+					if ( bboss_bbp_get_public_status_id() === $_post->post_status ) {
 						$caps = array( 'spectate' );
 
 						// User is author so allow read
@@ -144,7 +144,7 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				$caps      = array();
 
 				// Add 'do_not_allow' cap if user is spam or deleted
-				if ( bbp_is_user_inactive( $user_id ) ) {
+				if ( bboss_bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
 					// User is author so allow edit if not in admin
@@ -171,7 +171,7 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				$caps      = array();
 
 				// Add 'do_not_allow' cap if user is spam or deleted
-				if ( bbp_is_user_inactive( $user_id ) ) {
+				if ( bboss_bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
 					// Moderators can always edit forum content
@@ -218,7 +218,7 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
  * @uses apply_filters() Filter capability map results
  * @return array Actual capabilities for meta capability
  */
-function bbp_map_topic_tag_meta_caps( $caps, $cap, $user_id, $args ) {
+function bboss_bbp_map_topic_tag_meta_caps( $caps, $cap, $user_id, $args ) {
 
 	// What capability is being checked?
 	switch ( $cap ) {

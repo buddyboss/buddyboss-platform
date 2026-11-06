@@ -10,4 +10,4 @@
 defined( 'ABSPATH' ) || exit;
 
 // Load the Sitewide Notices Admin
-add_action( bp_core_admin_hook(), array( 'BP_Messages_Notices_Admin', 'register_notices_admin' ), 9 );
+add_action( bboss_core_admin_hook(), array( 'BP_Messages_Notices_Admin', 'register_notices_admin' ), 9 );

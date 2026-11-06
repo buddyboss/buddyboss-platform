@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_setup_search() {
-	buddypress()->search = new BP_Search_Component();
+function bboss_setup_search() {
+	bboss()->search = new BBoss_Search_Component();
 }
 
 add_action( 'bp_setup_components', 'bp_setup_search', 6 );
 
-require buddypress()->plugin_dir . 'bp-search/classes/class-bp-search-core.php';
+require bboss()->plugin_dir . 'bp-search/classes/class-bp-search-core.php';

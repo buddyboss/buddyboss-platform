@@ -17,13 +17,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Icon_Registry {
+class BBoss_Icon_Registry {
 
 	/**
 	 * Singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @var BB_Icon_Registry
+	 * @var BBoss_Icon_Registry
 	 */
 	private static $instance = null;
 
@@ -39,7 +39,7 @@ class BB_Icon_Registry {
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @return BB_Icon_Registry
+	 * @return BBoss_Icon_Registry
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -175,13 +175,13 @@ class BB_Icon_Registry {
 				// Cache realpath() results to avoid repeated filesystem stat calls.
 				static $plugin_dir = null;
 				if ( null === $plugin_dir ) {
-					$plugin_dir = realpath( buddypress()->plugin_dir );
+					$plugin_dir = realpath( bboss()->plugin_dir );
 				}
-				$candidate_1 = realpath( buddypress()->plugin_dir . $safe_path );
+				$candidate_1 = realpath( bboss()->plugin_dir . $safe_path );
 				$candidate_2 = realpath( plugin_dir_path( __FILE__ ) . '../' . $safe_path );
 
 				if ( $candidate_1 && 0 === strpos( $candidate_1, $plugin_dir ) ) {
-					$args['url'] = buddypress()->plugin_url . $safe_path;
+					$args['url'] = bboss()->plugin_url . $safe_path;
 				} elseif ( $candidate_2 && 0 === strpos( $candidate_2, $plugin_dir ) ) {
 					$args['url'] = plugin_dir_url( __FILE__ ) . '../' . $safe_path;
 				}

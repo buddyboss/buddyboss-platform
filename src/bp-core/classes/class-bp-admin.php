@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Admin' ) ) :
+if ( ! class_exists( 'BBoss_Admin' ) ) :
 
 	/**
 	 * Load BuddyPress plugin admin area.
@@ -19,7 +19,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 	 * @since BuddyPress 1.6.0
 	 */
 	#[\AllowDynamicProperties]
-	class BP_Admin {
+	class BBoss_Admin {
 
 		/** Directory *************************************************************/
 
@@ -94,7 +94,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyPress 1.6.0
 		 */
 		private function setup_globals() {
-			$bp = buddypress();
+			$bp = bboss();
 
 			// Paths and URLs
 			$this->admin_dir  = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ); // Admin path.
@@ -107,10 +107,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$this->settings_page = 'buddyboss-platform'; // always use custom menu item, instead of setting page
 
 			// Child Admin Settings page will redirect to BuddyPress integration page.
-			$this->child_settings_page = bp_core_do_network_admin() ? 'settings.php' : 'options-general.php';
+			$this->child_settings_page = bboss_core_do_network_admin() ? 'settings.php' : 'options-general.php';
 
 			// Main capability.
-			$this->capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
+			$this->capability = bboss_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
 		}
 
 		/**
@@ -148,10 +148,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'bp_admin_head', array( $this, 'admin_head' ), 999 );
 
 			// Add menu item to settings menu.
-			add_action( bp_core_admin_hook(), array( $this, 'site_admin_menus' ), 68 );
-			add_action( bp_core_admin_hook(), array( $this, 'admin_menus' ), 5 );
+			add_action( bboss_core_admin_hook(), array( $this, 'site_admin_menus' ), 68 );
+			add_action( bboss_core_admin_hook(), array( $this, 'admin_menus' ), 5 );
 			// add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
-			add_action( bp_core_admin_hook(), array( $this, 'adjust_buddyboss_menus' ), 100 );
+			add_action( bboss_core_admin_hook(), array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 			// Redirect the legacy `?page=bp-help` admin URL to the new Settings 2.0
 			// Help tab. The `bp-help` submenu no longer exists, so WordPress denies
@@ -211,7 +211,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_filter( 'menu_order', array( $this, 'buddyboss_plugins_menu_order' ) );
 
 			add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
-			add_action( bp_core_admin_hook(), array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
+			add_action( bboss_core_admin_hook(), array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
@@ -373,7 +373,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				__( 'Settings', 'buddyboss' ),
 				$this->capability,
 				'bb-settings',
-				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
+				function_exists( 'bboss_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
 			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. Integrations
@@ -394,17 +394,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			global $menu;
 
 			// Bail if user cannot moderate.
-			if ( ! bp_current_user_can( 'manage_options' ) ) {
+			if ( ! bboss_current_user_can( 'manage_options' ) ) {
 				return;
 			}
 			// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
-			if ( bp_current_user_can( 'manage_options' ) ) {
+			if ( bboss_current_user_can( 'manage_options' ) ) {
 				$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
 				$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
 			}
 
 			$hooks = array();
-			if ( is_multisite() && bp_is_network_activated() && ! bp_is_multiblog_mode() ) {
+			if ( is_multisite() && bboss_is_network_activated() && ! bboss_is_multiblog_mode() ) {
 				$hooks[] = add_menu_page(
 					'BuddyBoss',
 					'BuddyBoss',
@@ -429,12 +429,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			global $menu;
 
 			// Bail if user cannot moderate.
-			if ( ! bp_current_user_can( 'manage_options' ) ) {
+			if ( ! bboss_current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
 			// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
-			if ( bp_current_user_can( 'manage_options' ) ) {
+			if ( bboss_current_user_can( 'manage_options' ) ) {
 				$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
 				$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
 			}
@@ -503,7 +503,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				__( 'Settings', 'buddyboss' ),
 				$this->capability,
 				'bb-settings',
-				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
+				function_exists( 'bboss_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
 			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. The
@@ -584,7 +584,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return;
 			}
 
-			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=help' ) );
+			wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=help' ) );
 			exit;
 		}
 
@@ -642,7 +642,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyPress 2.5.0
 		 */
 		public function site_admin_menus() {
-			if ( ! bp_current_user_can( 'manage_options' ) ) {
+			if ( ! bboss_current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
@@ -657,7 +657,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_email_redirect_to_customizer'
 			);
 
-			if ( ! is_network_admin() && ! bp_is_network_activated() ) {
+			if ( ! is_network_admin() && ! bboss_is_network_activated() ) {
 				$email_url = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
 				$hooks[]   = add_submenu_page(
 					'buddyboss-platform',
@@ -676,8 +676,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 		public function bp_emails_add_sub_menu_page_admin_menu() {
 
-			if ( is_multisite() && bp_is_network_activated() && bp_is_root_blog() ) {
-				$email_url = get_admin_url( bp_get_root_blog_id(), 'admin.php?page=bb-settings&tab=emails&panel=all_emails' );
+			if ( is_multisite() && bboss_is_network_activated() && bboss_is_root_blog() ) {
+				$email_url = get_admin_url( bboss_get_root_blog_id(), 'admin.php?page=bb-settings&tab=emails&panel=all_emails' );
 				// Add our screen.
 				$hook = add_submenu_page(
 					'buddyboss-platform',
@@ -697,7 +697,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 */
 		public function register_admin_settings() {
 
-			$bp = buddypress();
+			$bp = bboss();
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
@@ -710,7 +710,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 */
 		public function register_admin_integrations() {
 
-			$bp = buddypress();
+			$bp = bboss();
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-integration-tab.php';
 
@@ -730,7 +730,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function modify_plugin_action_links( $links, $file ) {
 
 			// Return normal links if not BuddyPress.
-			if ( plugin_basename( buddypress()->basename ) != $file ) {
+			if ( plugin_basename( bboss()->basename ) != $file ) {
 				return $links;
 			}
 
@@ -738,8 +738,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
-					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bboss_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+					'about'         => '<a href="' . esc_url( bboss_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
 					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss' ) . '</a>',
 				)
 			);
@@ -775,7 +775,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-wp-api-js' );
 				wp_enqueue_script( 'bp-help-js' );
 
-				$bp_help_base_url = bp_get_admin_url(
+				$bp_help_base_url = bboss_get_admin_url(
 					add_query_arg(
 						array(
 							'page' => 'bp-help',
@@ -829,7 +829,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Return true/false based on whether a query argument is set.
 		 *
-		 * @see bp_do_activation_redirect()
+		 * @see bboss_do_activation_redirect()
 		 *
 		 * @since BuddyPress 2.2.0
 		 *
@@ -855,7 +855,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( '' === $display ) {
 
 				// Get current version.
-				$version = bp_get_version();
+				$version = bboss_get_version();
 
 				// Check for prerelease hyphen.
 				$pre = strpos( $version, '-' );
@@ -885,10 +885,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function emails_admin_menu_order( $custom_menus = array() ) {
 			array_push( $custom_menus, 'admin.php?page=bb-settings&tab=emails&panel=all_emails' );
 
-			if ( is_network_admin() && bp_is_network_activated() ) {
+			if ( is_network_admin() && bboss_is_network_activated() ) {
 				array_push(
 					$custom_menus,
-					get_admin_url( bp_get_root_blog_id(), 'admin.php?page=bb-settings&tab=emails&panel=all_emails' )
+					get_admin_url( bboss_get_root_blog_id(), 'admin.php?page=bb-settings&tab=emails&panel=all_emails' )
 				);
 			}
 
@@ -901,7 +901,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyPress 2.5.0
 		 */
 		public function admin_register_styles() {
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 			$url = $this->css_url;
 
 			/**
@@ -943,7 +943,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				)
 			);
 
-			$version = bp_get_version();
+			$version = bboss_get_version();
 
 			foreach ( $styles as $id => $style ) {
 				wp_register_style( $id, $style['file'], $style['dependencies'], $version );
@@ -961,7 +961,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyPress 2.5.0
 		 */
 		public function admin_register_scripts() {
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 			$url = $this->js_url;
 
 			/**
@@ -1010,7 +1010,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				)
 			);
 
-			$version = bp_get_version();
+			$version = bboss_get_version();
 
 			foreach ( $scripts as $id => $script ) {
 				wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
@@ -1282,7 +1282,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * WordPress registers for every active plugin; handing it the
 			 * already-relative basename is a no-op that keeps the wrong name.
 			 */
-			return plugin_basename( BP_PLUGIN_DIR . 'bp-loader.php' );
+			return plugin_basename( BBOSS_PLUGIN_DIR . 'bp-loader.php' );
 		}
 
 		/**
@@ -1636,7 +1636,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return $result;
 			}
 
-			$new_version = BP_PLATFORM_VERSION;
+			$new_version = BBOSS_PLATFORM_VERSION;
 			$package     = '';
 			$update      = $this->bb_get_plugin_update_entry( $plugin_file );
 

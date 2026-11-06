@@ -24,8 +24,8 @@ defined( 'ABSPATH' ) || exit;
  * @param string $default
  * @param bool   $slug
  */
-function bp_search_form_option( $option, $default = '', $slug = false ) {
-	echo esc_attr( bp_search_get_form_option( $option, $default, $slug ) );
+function bboss_search_form_option( $option, $default = '', $slug = false ) {
+	echo esc_attr( bboss_search_get_form_option( $option, $default, $slug ) );
 }
 
 /**
@@ -43,7 +43,7 @@ function bp_search_form_option( $option, $default = '', $slug = false ) {
  *
  * @return mixed
  */
-function bp_search_get_form_option( $option, $default = '', $slug = false ) {
+function bboss_search_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Get the option and sanitize it
 	$value = get_option( $option, $default );
@@ -76,7 +76,7 @@ function bp_search_get_form_option( $option, $default = '', $slug = false ) {
  * @uses get_option() To get the bp_search_autocomplete option
  * @return bool Is search autocomplete enabled or not
  */
-function bp_is_search_autocomplete_enable( $default = 1 ) {
+function bboss_is_search_autocomplete_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_autocomplete_enable', (bool) get_option( 'bp_search_autocomplete', $default ) );
 }
 
@@ -87,10 +87,10 @@ function bp_is_search_autocomplete_enable( $default = 1 ) {
  *
  * @param $default bool Optional.Default value true
  *
- * @uses get_option() To get the bp_search_members option
+ * @uses get_option() To get the BBoss_Search_Members option
  * @return bool Is members search enabled or not
  */
-function bp_is_search_members_enable( $default = 1 ) {
+function bboss_is_search_members_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_members_enable', (bool) get_option( 'bp_search_members', $default ) );
 }
 
@@ -101,10 +101,10 @@ function bp_is_search_members_enable( $default = 1 ) {
  *
  * @param $id integer
  *
- * @uses get_option() To get the bp_search_members option
+ * @uses get_option() To get the BBoss_Search_Members option
  * @return bool Is members search enabled or not
  */
-function bp_is_search_xprofile_enable( $id ) {
+function bboss_is_search_xprofile_enable( $id ) {
 	return (bool) apply_filters( 'bp_is_search_xprofile_enable', (bool) get_option( "bp_search_xprofile_$id" ) );
 }
 
@@ -115,10 +115,10 @@ function bp_is_search_xprofile_enable( $id ) {
  *
  * @param $id integer
  *
- * @uses get_option() To get the bp_search_members option
+ * @uses get_option() To get the BBoss_Search_Members option
  * @return bool Is members search enabled or not
  */
-function bp_is_search_user_field_enable( $id ) {
+function bboss_is_search_user_field_enable( $id ) {
 	return (bool) apply_filters( 'bp_is_search_user_field_enable', (bool) get_option( "bp_search_user_field_$id" ) );
 }
 
@@ -131,7 +131,7 @@ function bp_is_search_user_field_enable( $id ) {
  *
  * @return bool Is members search enabled or not
  */
-function bp_is_search_post_type_enable( $post_type, $default = 1 ) {
+function bboss_is_search_post_type_enable( $post_type, $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type", $default ) );
 }
 
@@ -144,7 +144,7 @@ function bp_is_search_post_type_enable( $post_type, $default = 1 ) {
  *
  * @return bool Is post type meta search enabled or not
  */
-function bp_is_search_post_type_meta_enable( $post_type ) {
+function bboss_is_search_post_type_meta_enable( $post_type ) {
 	return (bool) apply_filters( 'bp_is_search_post_type_meta_enable', (bool) get_option( "bp_search_post_type_meta_$post_type" ) );
 }
 
@@ -157,7 +157,7 @@ function bp_is_search_post_type_meta_enable( $post_type ) {
  *
  * @return bool Is groups search enabled or not
  */
-function bp_is_search_groups_enable( $default = 1 ) {
+function bboss_is_search_groups_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_groups_enable', (bool) get_option( 'bp_search_groups', $default ) );
 }
 
@@ -170,7 +170,7 @@ function bp_is_search_groups_enable( $default = 1 ) {
  *
  * @return bool Is media search enabled or not
  */
-function bp_is_search_photos_enable( $default = 0 ) {
+function bboss_is_search_photos_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_photos_enable', (bool) get_option( 'bp_search_photos', $default ) );
 }
 
@@ -183,7 +183,7 @@ function bp_is_search_photos_enable( $default = 0 ) {
  *
  * @return bool Is albums search enabled or not
  */
-function bp_is_search_albums_enable( $default = 0 ) {
+function bboss_is_search_albums_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_albums_enable', (bool) get_option( 'bp_search_albums', $default ) );
 }
 
@@ -196,7 +196,7 @@ function bp_is_search_albums_enable( $default = 0 ) {
  *
  * @return bool Is video media search enabled or not.
  */
-function bp_is_search_videos_enable( $default = 0 ) {
+function bboss_is_search_videos_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_videos_enable', (bool) get_option( 'bp_search_videos', $default ) );
 }
 
@@ -209,7 +209,7 @@ function bp_is_search_videos_enable( $default = 0 ) {
  *
  * @return bool Is documents search enabled or not
  */
-function bp_is_search_documents_enable( $default = 0 ) {
+function bboss_is_search_documents_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_documents_enable', (bool) get_option( 'bp_search_documents', $default ) );
 }
 
@@ -222,7 +222,7 @@ function bp_is_search_documents_enable( $default = 0 ) {
  *
  * @return bool Is documents search enabled or not
  */
-function bp_is_search_folders_enable( $default = 0 ) {
+function bboss_is_search_folders_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_folders_enable', (bool) get_option( 'bp_search_folders', $default ) );
 }
 
@@ -235,7 +235,7 @@ function bp_is_search_folders_enable( $default = 0 ) {
  *
  * @return bool Is Activity search enabled or not
  */
-function bp_is_search_activity_enable( $default = 1 ) {
+function bboss_is_search_activity_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_activity_enable', (bool) get_option( 'bp_search_activity', $default ) );
 }
 
@@ -248,7 +248,7 @@ function bp_is_search_activity_enable( $default = 1 ) {
  *
  * @return bool Is Activity Comments search enabled or not
  */
-function bp_is_search_activity_comments_enable( $default = 1 ) {
+function bboss_is_search_activity_comments_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_activity_comments_enable', (bool) get_option( 'bp_search_activity_comments', $default ) );
 }
 
@@ -262,6 +262,6 @@ function bp_is_search_activity_comments_enable( $default = 1 ) {
  *
  * @return bool Is post type Taxonomy search enabled or not
  */
-function bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) {
+function bboss_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) {
 	return (bool) apply_filters( 'bp_is_search_post_type_taxonomy_enable', (bool) get_option( "bp_search_{$post_type}_tax_{$taxonomy}" ) );
 }

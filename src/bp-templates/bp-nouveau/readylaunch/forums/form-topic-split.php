@@ -3,7 +3,7 @@
  * Split Topic Form Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
 
 <div id="bbpress-forums">
 
-	<?php if ( is_user_logged_in() && current_user_can( 'edit_topic', bbp_get_topic_id() ) ) : ?>
+	<?php if ( is_user_logged_in() && current_user_can( 'edit_topic', bboss_bbp_get_topic_id() ) ) : ?>
 
-		<div id="split-topic-<?php bbp_topic_id(); ?>" class="bbp-topic-split bb-rl-forum-modal bb-rl-forum-modal--static">
+		<div id="split-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-topic-split bb-rl-forum-modal bb-rl-forum-modal--static">
 
 			<form id="split_topic" class="bb-rl-forum-form" name="split_topic" method="post" action="<?php the_permalink(); ?>">
 
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 					<h3>
 						<?php
 						/* translators: %s: Topic title */
-						printf( esc_html__( 'Split discussion "%s"', 'buddyboss' ), bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is escaped via its own bbp_get_topic_title filter; format string uses esc_html__().
+						printf( esc_html__( 'Split discussion "%s"', 'buddyboss' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is escaped via its own bbp_get_topic_title filter; format string uses esc_html__().
 						?>
 					</h3>
 				</div>
@@ -51,35 +51,35 @@ defined( 'ABSPATH' ) || exit;
 
 								<div class="bb-rl-forum-fieldset">
 									<div class="bp-radio-wrap">
-										<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bbp_tab_index(); ?>" />
-										<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ printf( wp_kses_post( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ) ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ) ); ?></label>
+										<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bboss_bbp_tab_index(); ?>" />
+										<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ printf( wp_kses_post( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ) ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ) ) ) ); ?></label>
 									</div>
-									<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: Topic title */ printf( esc_attr__( 'Split: %s', 'buddyboss' ), wp_kses_post( bbp_get_topic_title() ) ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
+									<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: Topic title */ printf( esc_attr__( 'Split: %s', 'buddyboss' ), wp_kses_post( bboss_bbp_get_topic_title() ) ); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 								</div>
 
 								<?php
-								if ( bbp_has_topics(
+								if ( bboss_bbp_has_topics(
 									array(
 										'show_stickies' => false,
-										'post_parent'   => bbp_get_topic_forum_id( bbp_get_topic_id() ),
-										'post__not_in'  => array( bbp_get_topic_id() ),
+										'post_parent'   => bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ),
+										'post__not_in'  => array( bboss_bbp_get_topic_id() ),
 									)
 								) ) :
 									?>
 
 									<div>
 										<div class="bp-radio-wrap">
-											<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bbp_tab_index(); ?>" />
+											<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bboss_bbp_tab_index(); ?>" />
 											<label for="bbp_topic_split_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss' ); ?></label>
 										</div>
 
 										<?php
-										bbp_dropdown(
+										bboss_bbp_dropdown(
 											array(
-												'post_type' => bbp_get_topic_post_type(),
-												'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
+												'post_type' => bboss_bbp_get_topic_post_type(),
+												'post_parent' => bboss_bbp_get_topic_forum_id( bboss_bbp_get_topic_id() ),
 												'selected' => -1,
-												'exclude'  => bbp_get_topic_id(),
+												'exclude'  => bboss_bbp_get_topic_id(),
 												'select_id' => 'bbp_destination_topic',
 											)
 										);
@@ -94,21 +94,21 @@ defined( 'ABSPATH' ) || exit;
 								<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss' ); ?></legend>
 
 								<div>
-									<?php if ( bb_is_enabled_subscription( 'topic' ) ) : ?>
+									<?php if ( bboss_is_enabled_subscription( 'topic' ) ) : ?>
 										<div class="bp-checkbox-wrap">
-											<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+											<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
 											<label for="bbp_topic_subscribers"><?php esc_html_e( 'Copy subscribers to the new discussion', 'buddyboss' ); ?></label>
 										</div>
 									<?php endif; ?>
 
 									<div class="bp-checkbox-wrap">
-										<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+										<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
 										<label for="bbp_topic_favoriters"><?php esc_html_e( 'Copy favoriters to the new discussion', 'buddyboss' ); ?></label>
 									</div>
 
-									<?php if ( bbp_allow_topic_tags() ) : ?>
+									<?php if ( bboss_bbp_allow_topic_tags() ) : ?>
 										<div class="bp-checkbox-wrap">
-											<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+											<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bboss_bbp_tab_index(); ?>" />
 											<label for="bbp_topic_tags"><?php esc_html_e( 'Copy discussion tags to the new discussion', 'buddyboss' ); ?></label>
 										</div>
 									<?php endif; ?>
@@ -124,12 +124,12 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="bb-rl-forum-modal-footer bb-rl-forum-modal-footer--static">
 							<div class="bbp-submit-wrapper">
-								<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Submit', 'buddyboss' ); ?></button>
+								<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Submit', 'buddyboss' ); ?></button>
 							</div>
 						</div>
 					</div>
 
-					<?php bbp_split_topic_form_fields(); ?>
+					<?php bboss_bbp_split_topic_form_fields(); ?>
 
 				</fieldset>
 			</form>
@@ -137,7 +137,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<?php else : ?>
 
-		<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
+		<div id="no-topic-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-topic">
 			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss' ); ?></div>
 		</div>
 

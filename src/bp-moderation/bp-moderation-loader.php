@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_setup_moderation() {
-	buddypress()->moderation = new BP_Moderation_Component();
+function bboss_setup_moderation() {
+	bboss()->moderation = new BBoss_Moderation_Component();
 }
 
 add_action( 'bp_setup_components', 'bp_setup_moderation', 1 );

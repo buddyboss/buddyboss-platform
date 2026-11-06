@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity_comment">
-	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_activity_thread_permalink() ) ); ?>'>
+	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bboss_get_activity_thread_permalink() ) ); ?>'>
 		<div class="item-avatar">
 			<?php
-			bp_activity_avatar(
+			bboss_activity_avatar(
 				array(
 					'type'   => 'thumb',
 					'height' => 50,
@@ -27,21 +27,21 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 		<div class="item">
 			<h3 class="entry-title item-title">
-				<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
+				<a href="<?php bboss_activity_user_link(); ?>"><?php echo wp_kses_post( bboss_core_get_user_displayname( bboss_get_activity_user_id() ) ); ?></a>
 				<?php esc_html_e( 'replied to a post', 'buddyboss' ); ?>
 			</h3>
-			<?php if ( bp_activity_has_content() ) : ?>
+			<?php if ( bboss_activity_has_content() ) : ?>
 				<div class="item-desc">
-					<?php echo wp_kses_post( bp_search_activity_intro( 30 ) ); ?>
+					<?php echo wp_kses_post( bboss_search_activity_intro( 30 ) ); ?>
 				</div>
 			<?php endif; ?>
 			<div class="item-meta activity-header">
 				<?php
-				$activity_comment_date_recorded = bp_get_activity_date_recorded();
+				$activity_comment_date_recorded = bboss_get_activity_date_recorded();
 				printf(
 					'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-					esc_attr( bp_core_get_iso8601_date( $activity_comment_date_recorded ) ),
-					esc_html( bp_core_time_since( $activity_comment_date_recorded ) )
+					esc_attr( bboss_core_get_iso8601_date( $activity_comment_date_recorded ) ),
+					esc_html( bboss_core_time_since( $activity_comment_date_recorded ) )
 				);
 				?>
 			</div>

@@ -27,8 +27,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Transient key.
  */
-function bb_placeholder_features_transient_key() {
-	$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+function bboss_placeholder_features_transient_key() {
+	$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	return 'bb_placeholder_features_data_v_' . md5( $version );
 }
 
@@ -38,14 +38,14 @@ function bb_placeholder_features_transient_key() {
  * Hot path — called from the `bb_admin_get_features` AJAX response. Never
  * performs a synchronous remote fetch; missing data just means no placeholder
  * cards render. The catalog is populated asynchronously by a daily cron event
- * and refreshed opportunistically via `bb_refresh_placeholder_features_data()`.
+ * and refreshed opportunistically via `bboss_refresh_placeholder_features_data()`.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array|false Decoded catalog data with 'items' key, or false when unavailable.
  */
-function bb_get_placeholder_features_data() {
-	$data = get_transient( bb_placeholder_features_transient_key() );
+function bboss_get_placeholder_features_data() {
+	$data = get_transient( bboss_placeholder_features_transient_key() );
 
 	if ( false !== $data ) {
 		return $data;
@@ -54,7 +54,7 @@ function bb_get_placeholder_features_data() {
 	// Cache miss. Prefer the stale catalog (keeps the AJAX path non-blocking);
 	// meanwhile schedule an async refresh for the next request.
 	$stale = get_option( 'bb_placeholder_features_data_stale', false );
-	bb_schedule_placeholder_features_refresh();
+	bboss_schedule_placeholder_features_refresh();
 
 	if ( is_array( $stale ) && ! empty( $stale['items'] ) ) {
 		return $stale;
@@ -66,7 +66,7 @@ function bb_get_placeholder_features_data() {
 	// on sites without heavy traffic can take hours. Do one blocking fetch
 	// so placeholders render immediately; subsequent requests stay fast via
 	// the transient + stale-while-revalidate path above.
-	return bb_refresh_placeholder_features_data();
+	return bboss_refresh_placeholder_features_data();
 }
 
 /**
@@ -77,7 +77,7 @@ function bb_get_placeholder_features_data() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_schedule_placeholder_features_refresh() {
+function bboss_schedule_placeholder_features_refresh() {
 	// Skip scheduling during WP-CLI, cron itself, or when cron is disabled globally.
 	if ( ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 		return;
@@ -105,7 +105,7 @@ function bb_schedule_placeholder_features_refresh() {
  *
  * @return array|false Fetched data on success, false on any failure.
  */
-function bb_refresh_placeholder_features_data() {
+function bboss_refresh_placeholder_features_data() {
 	delete_transient( 'bb_placeholder_features_fetching' );
 
 	/**
@@ -145,7 +145,7 @@ function bb_refresh_placeholder_features_data() {
 		return false;
 	}
 
-	set_transient( bb_placeholder_features_transient_key(), $data, 6 * HOUR_IN_SECONDS );
+	set_transient( bboss_placeholder_features_transient_key(), $data, 6 * HOUR_IN_SECONDS );
 	// Persist a copy that survives transient expiry so stale-while-revalidate works.
 	update_option( 'bb_placeholder_features_data_stale', $data, false );
 
@@ -161,7 +161,7 @@ add_action( 'bb_placeholder_features_daily_refresh', 'bb_refresh_placeholder_fea
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_schedule_placeholder_features_daily_refresh() {
+function bboss_schedule_placeholder_features_daily_refresh() {
 	if ( ! wp_next_scheduled( 'bb_placeholder_features_daily_refresh' ) ) {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'bb_placeholder_features_daily_refresh' );
 	}
@@ -176,7 +176,7 @@ add_action( 'admin_init', 'bb_schedule_placeholder_features_daily_refresh' );
  * @param array $item Catalog item with optional 'slug' and 'plugin_file'.
  * @return string Product slug, or '' when the item carries neither key.
  */
-function bb_get_placeholder_product_slug( $item ) {
+function bboss_get_placeholder_product_slug( $item ) {
 	// The activate/install actions (mosh_addon_*) and the addon-plan lookup
 	// both key off the Mothership product slug, which is not always the
 	// plugin's folder name — e.g. the product "buddyboss-membership" ships in
@@ -203,7 +203,7 @@ function bb_get_placeholder_product_slug( $item ) {
  * @param array $active_plugins Optional active plugin basenames for the current site.
  * @return string One of: 'not_in_plan', 'not_installed', 'installed_inactive', 'active'.
  */
-function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
+function bboss_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
 
 	if ( empty( $plugin_file ) ) {
@@ -225,7 +225,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	if ( ! $in_plan && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		// Same slug resolution as the injected card's plugin_slug — the plan
 		// lookup keys off the Mothership product slug, not the folder name.
-		$plugin_slug = bb_get_placeholder_product_slug( $item );
+		$plugin_slug = bboss_get_placeholder_product_slug( $item );
 		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
 		$in_plan     = ! empty( $product );
 
@@ -259,7 +259,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	 * @param array  $item    The placeholder catalog item (id, plugin_file, …).
 	 * @param string $slug    The resolved Mothership product slug.
 	 */
-	$in_plan = $in_plan && (bool) apply_filters( 'bb_placeholder_feature_in_plan', $in_plan, $item, bb_get_placeholder_product_slug( $item ) );
+	$in_plan = $in_plan && (bool) apply_filters( 'bb_placeholder_feature_in_plan', $in_plan, $item, bboss_get_placeholder_product_slug( $item ) );
 
 	if ( ! $in_plan ) {
 		return 'not_in_plan';
@@ -301,7 +301,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
  * @param array $active_plugins Active plugin basenames for the current site.
  * @return bool True when all required plugins are active (or none are declared).
  */
-function bb_placeholder_requirements_met( $requires, $active_plugins ) {
+function bboss_placeholder_requirements_met( $requires, $active_plugins ) {
 	if ( empty( $requires ) || ! is_array( $requires ) ) {
 		return true;
 	}
@@ -330,7 +330,7 @@ function bb_placeholder_requirements_met( $requires, $active_plugins ) {
  * Append placeholder features to the AJAX features response.
  *
  * Fetches the remote JSON catalog (cached via transient), deduplicates
- * against BB_Feature_Registry, and returns the augmented features array.
+ * against BBoss_Feature_Registry, and returns the augmented features array.
  * Placeholders are only appended for product IDs not already registered
  * in the registry, ensuring no duplicate cards appear when the
  * corresponding plugin is installed and active.
@@ -345,18 +345,18 @@ function bb_placeholder_requirements_met( $requires, $active_plugins ) {
  * @param array $features Existing formatted feature objects from AJAX handler.
  * @return array Features array with placeholder objects appended for unregistered products.
  */
-function bb_admin_inject_placeholder_features( $features ) {
-	$data = bb_get_placeholder_features_data();
+function bboss_admin_inject_placeholder_features( $features ) {
+	$data = bboss_get_placeholder_features_data();
 
 	if ( false === $data ) {
 		return $features;
 	}
 
-	if ( ! function_exists( 'bb_feature_registry' ) ) {
+	if ( ! function_exists( 'bboss_feature_registry' ) ) {
 		return $features;
 	}
 
-	$registry = bb_feature_registry();
+	$registry = bboss_feature_registry();
 
 	// Read active_plugins once per request rather than calling is_plugin_active() per item.
 	$active_plugins = (array) get_option( 'active_plugins', array() );
@@ -387,14 +387,14 @@ function bb_admin_inject_placeholder_features( $features ) {
 		// renders its action button disabled — the same treatment as the
 		// Add-ons page. Core's activate_plugin() dependency check remains the
 		// hard gate behind the UI.
-		$requires_unmet = isset( $item['requires'] ) && ! bb_placeholder_requirements_met( $item['requires'], $active_plugins );
+		$requires_unmet = isset( $item['requires'] ) && ! bboss_placeholder_requirements_met( $item['requires'], $active_plugins );
 
 		// Mothership product slug (catalog `slug`, falling back to the plugin
 		// folder) — shared with the in-plan lookup via
 		// bb_get_placeholder_product_slug() so both resolve identically.
-		$plugin_slug = bb_get_placeholder_product_slug( $item );
+		$plugin_slug = bboss_get_placeholder_product_slug( $item );
 
-		$plugin_status = bb_get_placeholder_plugin_status( $item, $active_plugins );
+		$plugin_status = bboss_get_placeholder_plugin_status( $item, $active_plugins );
 
 		$features[] = array(
 			'id'                  => sanitize_key( $item['id'] ),
@@ -430,7 +430,7 @@ function bb_admin_inject_placeholder_features( $features ) {
 			'upgrade_video_url'   => isset( $item['upgrade_video_url'] ) ? esc_url_raw( $item['upgrade_video_url'] ) : '',
 			// Pre-computed media payload — same shape as field upgrades modal.
 			// React renders {type, url, poster} without sniffing URLs.
-			'upgrade_media'       => bb_admin_build_upgrade_media(
+			'upgrade_media'       => bboss_admin_build_upgrade_media(
 				isset( $item['upgrade_video_url'] ) ? $item['upgrade_video_url'] : '',
 				isset( $item['upgrade_image_url'] ) ? $item['upgrade_image_url'] : ''
 			),
@@ -464,7 +464,7 @@ add_filter( 'bb_admin_features_response', 'bb_admin_inject_placeholder_features'
  * @param array $features Full features list after placeholder + DRM filters.
  * @return array Sorted list.
  */
-function bb_admin_sort_features_response( $features ) {
+function bboss_admin_sort_features_response( $features ) {
 	if ( ! is_array( $features ) || count( $features ) < 2 ) {
 		return $features;
 	}
@@ -519,20 +519,20 @@ add_filter( 'bb_admin_features_response', 'bb_admin_sort_features_response', 30 
  * @param array $features Formatted feature objects from the AJAX handler.
  * @return array Features array with DRM lock data added where applicable.
  */
-function bb_admin_mark_drm_locked_features( $features ) {
+function bboss_admin_mark_drm_locked_features( $features ) {
 	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\DRM\\BB_DRM_Registry' ) ) {
 		return $features;
 	}
 
-	if ( ! function_exists( 'bb_feature_registry' ) ) {
+	if ( ! function_exists( 'bboss_feature_registry' ) ) {
 		return $features;
 	}
 
-	$registry = bb_feature_registry();
+	$registry = bboss_feature_registry();
 
 	// Build a lookup from the S3 catalog for upgrade_tier/url/image data.
 	$catalog_lookup = array();
-	$catalog_data   = bb_get_placeholder_features_data();
+	$catalog_data   = bboss_get_placeholder_features_data();
 	if ( false !== $catalog_data ) {
 		foreach ( $catalog_data['items'] as $item ) {
 			if ( ! empty( $item['id'] ) ) {
@@ -594,8 +594,8 @@ function bb_admin_mark_drm_locked_features( $features ) {
 		// feature CARD here so both surfaces agree until the remote catalog carries
 		// the correct tier (a catalog-supplied value above always wins).
 		if (
-			function_exists( 'bb_admin_addon_upsell_feature_ids' )
-			&& in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true )
+			function_exists( 'bboss_admin_addon_upsell_feature_ids' )
+			&& in_array( $feature_id, bboss_admin_addon_upsell_feature_ids(), true )
 			&& ( empty( $feature['upgrade_tier'] ) || 'pro' === $feature['upgrade_tier'] )
 		) {
 			$feature['upgrade_tier'] = 'start';
@@ -630,7 +630,7 @@ add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 2
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_maybe_clear_placeholder_features_cache() {
+function bboss_maybe_clear_placeholder_features_cache() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only cache clear, admin-only.
 	if ( empty( $_GET['bb_clear_placeholder_cache'] ) || ! current_user_can( 'manage_options' ) ) {
 		return;
@@ -639,11 +639,11 @@ function bb_maybe_clear_placeholder_features_cache() {
 	// Delegate to the canonical flusher used by plugin lifecycle hooks so every
 	// Settings 2.0 cache layer drops together. It handles discovery paths,
 	// the feature registry, the search index, and the placeholder transient.
-	if ( function_exists( 'bb_flush_feature_caches_on_plugin_change' ) ) {
-		bb_flush_feature_caches_on_plugin_change();
+	if ( function_exists( 'bboss_flush_feature_caches_on_plugin_change' ) ) {
+		bboss_flush_feature_caches_on_plugin_change();
 	} else {
 		// Defensive fallback for the unlikely case the init file hasn't loaded.
-		delete_transient( bb_placeholder_features_transient_key() );
+		delete_transient( bboss_placeholder_features_transient_key() );
 	}
 
 	// The canonical flusher doesn't touch the stale-while-revalidate fallback
@@ -652,7 +652,7 @@ function bb_maybe_clear_placeholder_features_cache() {
 	delete_option( 'bb_placeholder_features_data_stale' );
 
 	// Trigger an immediate background refresh so the next AJAX call has data.
-	bb_schedule_placeholder_features_refresh();
+	bboss_schedule_placeholder_features_refresh();
 
 	// Field-upgrades catalog (per-field upgrade modal copy + UTM URLs) lives
 	// in a parallel S3 file with its own stale-while-revalidate option. The
@@ -664,15 +664,15 @@ function bb_maybe_clear_placeholder_features_cache() {
 	// the admin who hits `?bb_clear_placeholder_cache=1` wants fresh data
 	// NOW, not last-known-good. Call the heavier `*_full()` variant which
 	// also drops the stale option, mirroring the placeholder catalog above.
-	if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
-		bb_flush_field_upgrades_cache_full();
+	if ( function_exists( 'bboss_flush_field_upgrades_cache_full' ) ) {
+		bboss_flush_field_upgrades_cache_full();
 	}
 
 	// Flush the help-content REST proxy's per-article transients. The
 	// BB_REST_Help_Content_Endpoint controller uses keys of the form
 	// `bb_help_content_<id>` with a 12h TTL; clearing here forces the next
 	// help-slider open to re-fetch from buddyboss.com.
-	bb_clear_help_content_transients();
+	bboss_clear_help_content_transients();
 
 	// Raise a one-shot signal for the React admin app to clear matching
 	// localStorage entries on its next mount. Stored as a transient so it
@@ -685,7 +685,7 @@ add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
 /**
  * Delete every help-content REST proxy transient.
  *
- * The BB_REST_Help_Content_Endpoint controller writes one transient per
+ * The BBoss_REST_Help_Content_Endpoint controller writes one transient per
  * article ID via `set_transient( 'bb_help_content_<id>', ... )`. Without
  * a registry of fetched IDs we can't iterate `delete_transient()` per
  * key, so we collect every matching key from the storage layer and call
@@ -705,7 +705,7 @@ add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
  *
  * @return void
  */
-function bb_clear_help_content_transients() {
+function bboss_clear_help_content_transients() {
 	global $wpdb;
 
 	$prefix = 'bb_help_content_';
@@ -763,9 +763,9 @@ function bb_clear_help_content_transients() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_clear_placeholder_cache_on_license_change() {
-	delete_transient( bb_placeholder_features_transient_key() );
-	bb_schedule_placeholder_features_refresh();
+function bboss_clear_placeholder_cache_on_license_change() {
+	delete_transient( bboss_placeholder_features_transient_key() );
+	bboss_schedule_placeholder_features_refresh();
 }
 
 /**
@@ -775,15 +775,15 @@ function bb_clear_placeholder_cache_on_license_change() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_register_placeholder_cache_clear_hooks() {
+function bboss_register_placeholder_cache_clear_hooks() {
 	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {
 		return;
 	}
 
 	// Network-wide when Platform is network-activated.
 	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
-	if ( empty( $plugin_id ) && defined( 'PLATFORM_EDITION' ) ) {
-		$plugin_id = PLATFORM_EDITION;
+	if ( empty( $plugin_id ) && defined( 'BBOSS_PLATFORM_EDITION' ) ) {
+		$plugin_id = BBOSS_PLATFORM_EDITION;
 	}
 
 	if ( ! empty( $plugin_id ) ) {

@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Readylaunch' ) ) {
+if ( ! class_exists( 'BBoss_Readylaunch' ) ) {
 	/**
 	 * BuddyBoss Readylaunch object.
 	 *
 	 * @since BuddyBoss 2.9.00
 	 */
 	#[\AllowDynamicProperties]
-	class BB_Readylaunch {
+	class BBoss_Readylaunch {
 
 		/**
 		 * The single instance of the class.
@@ -51,7 +51,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss 2.9.00
 		 *
-		 * @return BB_Readylaunch|null
+		 * @return BBoss_Readylaunch|null
 		 */
 		public static function instance() {
 			if ( null === self::$instance ) {
@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function __construct() {
-			$enabled = bb_is_readylaunch_enabled();
+			$enabled = bboss_is_readylaunch_enabled();
 
 			add_filter( 'bb_telemetry_platform_options', array( $this, 'bb_rl_telemetry_platform_options' ), 10, 1 );
 
@@ -121,7 +121,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$this->load_hooks();
 
 			// Added support for Forums integration.
-			if ( bp_is_active( 'forums' ) ) {
+			if ( bboss_is_active( 'forums' ) ) {
 				add_filter( 'bbp_use_template_canvas', '__return_false' );
 				add_filter( 'bbp_get_page_by_path', array( $this, 'bb_rl_forums_get_page_by_path' ), 99, 1 );
 
@@ -156,14 +156,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// MemberPress Courses integration.
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_meprlms_enqueue_styles' ), 10 );
 
-				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
-				BB_Readylaunch_Memberpress_Courses_Helper::instance();
+				require_once bboss()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
+				BBoss_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
 
 			if ( $enabled_for_page && class_exists( 'WC4BP_Manager' ) ) {
 				// WC4BP (WooCommerce BuddyPress Integration) integration.
-				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
-				BB_Readylaunch_WC4BP_Helper::instance();
+				require_once bboss()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
+				BBoss_Readylaunch_WC4BP_Helper::instance();
 			}
 		}
 
@@ -191,7 +191,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb_rl_onboarding_completed',
 				'bb_rl_progress_rl_onboarding',
 			);
-			if ( bb_is_readylaunch_enabled() ) {
+			if ( bboss_is_readylaunch_enabled() ) {
 				$op_options[] = 'bb_rl_theme_mode';
 				$op_options[] = 'bb_rl_enabled_pages';
 				$op_options[] = 'bb_rl_activity_sidebars';
@@ -237,23 +237,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		protected function load_component_integration() {
-			if ( bp_is_active( 'activity' ) ) {
-				BB_Activity_Readylaunch::instance();
+			if ( bboss_is_active( 'activity' ) ) {
+				BBoss_Activity_Readylaunch::instance();
 			}
 
 			if (
-				bp_is_active( 'groups' ) &&
+				bboss_is_active( 'groups' ) &&
 				(
-					bp_is_groups_directory() ||
-					bp_is_group_single() ||
-					bp_is_group_create()
+					bboss_is_groups_directory() ||
+					bboss_is_group_single() ||
+					bboss_is_group_create()
 				)
 			) {
-				BB_Group_Readylaunch::instance();
+				BBoss_Group_Readylaunch::instance();
 			}
 
-			if ( bp_is_messages_component() ) {
-				BB_Messages_Readylaunch::instance();
+			if ( bboss_is_messages_component() ) {
+				BBoss_Messages_Readylaunch::instance();
 			}
 		}
 
@@ -325,7 +325,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Restore the default BuddyBoss/BuddyPress template stack.
 		 *
 		 * Removes ReadyLaunch template locations and re-adds the standard ones so that
-		 * bp_locate_template() and bp_locate_template_asset() resolve files from the
+		 * bboss_locate_template() and bboss_locate_template_asset() resolve files from the
 		 * default template directories instead of ReadyLaunch.
 		 *
 		 * @since BuddyBoss 2.21.0
@@ -369,7 +369,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
 
-			if ( bp_is_active( 'messages' ) ) {
+			if ( bboss_is_active( 'messages' ) ) {
 				add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
 			}
 
@@ -393,7 +393,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'bp_nouveau_get_nav_link_text', array( $this, 'bb_rl_get_nav_link_text' ), 10, 3 );
 
-			if ( bp_is_active( 'search' ) ) {
+			if ( bboss_is_active( 'search' ) ) {
 				add_filter( 'bp_search_results_group_start_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
 				add_filter( 'bp_search_results_group_end_html', array( $this, 'bb_rl_modify_search_results_group_start_html' ), 11 );
 			}
@@ -403,11 +403,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_media_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 			add_filter( 'bp_video_get_visibility_levels', array( $this, 'bb_rl_modify_visibility_levels' ), 10 );
 
-			if ( bp_is_active( 'xprofile' ) ) {
+			if ( bboss_is_active( 'xprofile' ) ) {
 				add_filter( 'bp_xprofile_get_visibility_levels', array( $this, 'bb_rl_modify_xprofile_visibility_levels' ) );
 			}
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				add_filter( 'bp_get_add_friend_button', array( $this, 'bb_rl_modify_add_friend_button' ) );
 			}
 
@@ -417,7 +417,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'bp_moderation_user_report_button', array( $this, 'bb_rl_modify_member_report_button' ), 10 );
 
-			if ( bb_enable_content_counts() ) {
+			if ( bboss_enable_content_counts() ) {
 				add_filter( 'bp_nouveau_nav_has_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 				add_filter( 'bp_nouveau_get_nav_count', array( $this, 'bb_rl_modify_nav_get_count' ), 10, 2 );
 			}
@@ -468,11 +468,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			remove_filter( 'bp_get_the_notification_delete_link', 'bp_nouveau_notifications_delete_link', 10, 1 );
 
 			// Remove BuddyPressHelper search filter at a later priority to ensure it's already added.
-			if ( bp_is_active( 'search' ) ) {
+			if ( bboss_is_active( 'search' ) ) {
 				add_action( 'bp_init', array( $this, 'bb_rl_remove_buddypress_helper_search_filter' ), 20 );
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
+			if ( bboss_is_active( 'forums' ) ) {
 				add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'bb_rl_activity_inner_buttons' ), 20, 2 );
 				add_filter( 'bbp_ajax_reply', array( $this, 'bb_rl_ajax_reply' ) );
 				add_action( 'bbp_new_reply_pre_extras', array( $this, 'bb_rl_new_reply_pre_extras' ), 99 );
@@ -500,13 +500,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			 * templates render.
 			 *
 			 * The LearnDash integration (buddyboss-learndash) used to live
-			 * at buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php'
+			 * at bboss()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php'
 			 * inside Platform. It now hooks this action from inside the
 			 * addon instead.
 			 *
 			 * @since BuddyBoss 3.0.0
 			 *
-			 * @param BB_Readylaunch $readylaunch The current ReadyLaunch instance.
+			 * @param BBoss_Readylaunch $readylaunch The current ReadyLaunch instance.
 			 */
 			do_action( 'bb_integration_readylaunch_loaded', $this );
 		}
@@ -658,19 +658,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				),
 			);
 
-			if ( ! bp_is_active( 'activity' ) ) {
+			if ( ! bboss_is_active( 'activity' ) ) {
 				unset( $defaults['activity_feed'] );
 			}
-			if ( ! bp_is_active( 'groups' ) ) {
+			if ( ! bboss_is_active( 'groups' ) ) {
 				unset( $defaults['groups'] );
 			}
-			if ( ! bp_is_active( 'forums' ) ) {
+			if ( ! bboss_is_active( 'forums' ) ) {
 				unset( $defaults['forums'] );
 			}
-			if ( ! bp_is_active( 'messages' ) ) {
+			if ( ! bboss_is_active( 'messages' ) ) {
 				unset( $defaults['messages'] );
 			}
-			if ( ! bp_is_active( 'notifications' ) ) {
+			if ( ! bboss_is_active( 'notifications' ) ) {
 				unset( $defaults['notifications'] );
 			}
 			if ( ! $this->bb_is_sidebar_enabled_for_courses() ) {
@@ -678,7 +678,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$raw_settings = wp_parse_args(
-				bp_get_option( 'bb_rl_side_menu', array() ),
+				bboss_get_option( 'bb_rl_side_menu', array() ),
 				$defaults
 			);
 
@@ -710,21 +710,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			foreach ( $settings as $key => $item ) {
 				if ( ! empty( $item['enabled'] ) ) {
 					$is_active = false;
-					if ( 'activity_feed' === $key && bp_is_active( 'activity' ) ) {
+					if ( 'activity_feed' === $key && bboss_is_active( 'activity' ) ) {
 						$is_active     = true;
-						$item['url']   = bp_get_activity_directory_permalink();
+						$item['url']   = bboss_get_activity_directory_permalink();
 						$item['label'] = __( 'News Feed', 'buddyboss' );
 					} elseif ( 'members' === $key ) {
 						$is_active     = true;
-						$item['url']   = bp_get_members_directory_permalink();
+						$item['url']   = bboss_get_members_directory_permalink();
 						$item['label'] = __( 'Members', 'buddyboss' );
-					} elseif ( 'groups' === $key && bp_is_active( 'groups' ) ) {
+					} elseif ( 'groups' === $key && bboss_is_active( 'groups' ) ) {
 						$is_active     = true;
-						$item['url']   = bp_get_groups_directory_permalink();
+						$item['url']   = bboss_get_groups_directory_permalink();
 						$item['label'] = __( 'Groups', 'buddyboss' );
-					} elseif ( 'forums' === $key && bp_is_active( 'forums' ) ) {
+					} elseif ( 'forums' === $key && bboss_is_active( 'forums' ) ) {
 						$is_active     = true;
-						$item['url']   = bbp_get_forums_url();
+						$item['url']   = bboss_bbp_get_forums_url();
 						$item['label'] = __( 'Forums', 'buddyboss' );
 					} elseif ( 'courses' === $key ) {
 						$item['label'] = __( 'Courses', 'buddyboss' );
@@ -774,13 +774,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							$is_active   = true;
 							$item['url'] = get_post_type_archive_link( memberpress\courses\models\Course::$cpt );
 						}
-					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) && is_user_logged_in() ) {
+					} elseif ( 'messages' === $key && bboss_is_active( 'messages' ) && is_user_logged_in() ) {
 						$is_active     = true;
-						$item['url']   = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+						$item['url']   = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
 						$item['label'] = __( 'Messages', 'buddyboss' );
-					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) && is_user_logged_in() ) {
+					} elseif ( 'notifications' === $key && bboss_is_active( 'notifications' ) && is_user_logged_in() ) {
 						$is_active     = true;
-						$item['url']   = bp_get_notifications_permalink();
+						$item['url']   = bboss_get_notifications_permalink();
 						$item['label'] = __( 'Notifications', 'buddyboss' );
 					}
 					if ( $is_active ) {
@@ -856,17 +856,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Load appropriate template based on page type.
 			if ( $is_ld_course_archive ) {
-				bp_get_template_part( 'learndash/ld30/course-loop' );
+				bboss_get_template_part( 'learndash/ld30/course-loop' );
 			} elseif ( $is_mp_course_archive ) {
-				bp_get_template_part( 'memberpress/courses/archive-mpcs-courses' );
+				bboss_get_template_part( 'memberpress/courses/archive-mpcs-courses' );
 			} elseif ( $is_mp_course_single ) {
-				bp_get_template_part( 'memberpress/courses/single-mpcs-course' );
+				bboss_get_template_part( 'memberpress/courses/single-mpcs-course' );
 			} elseif ( $is_mp_lesson_single ) {
-				bp_get_template_part( 'memberpress/courses/single-mpcs-lesson' );
+				bboss_get_template_part( 'memberpress/courses/single-mpcs-lesson' );
 			} elseif ( $is_mp_assignment_single ) {
-				bp_get_template_part( 'memberpress/assignments/single-mpcs-assignment' );
+				bboss_get_template_part( 'memberpress/assignments/single-mpcs-assignment' );
 			} elseif ( $is_mp_quiz_single ) {
-				bp_get_template_part( 'memberpress/quizzes/single-mpcs-quiz' );
+				bboss_get_template_part( 'memberpress/quizzes/single-mpcs-quiz' );
 			} elseif (
 				$is_ld_topic_archive ||
 				$is_ld_lesson_archive ||
@@ -884,7 +884,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				} elseif ( $this->bb_rl_is_learndash_reset_password_page() ) {
 					$page_class = 'learndash-reset-password';
 				}
-				bp_get_template_part(
+				bboss_get_template_part(
 					'learndash/ld30/default',
 					null,
 					array(
@@ -893,13 +893,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					)
 				);
 			} elseif ( $is_ld_assignment ) {
-				bp_get_template_part( 'learndash/ld30/assignment' );
+				bboss_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
-				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+				bboss_get_template_part( 'learndash/ld30/challenge-exam' );
 			} elseif ( is_singular( 'post' ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
-				bp_get_template_part( 'blog/single-post' );
+				bboss_get_template_part( 'blog/single-post' );
 			} elseif ( ( is_home() || is_author() || is_category() || is_tag() || is_date() ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
-				bp_get_template_part( 'blog/loop-post' );
+				bboss_get_template_part( 'blog/loop-post' );
 			} else {
 				the_content();
 			}
@@ -959,32 +959,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_is_readylaunch_enabled_for_page() {
 
 			$retval = (
-				bp_is_members_directory() ||
-				bp_is_video_directory() ||
-				bp_is_media_directory() ||
-				bp_is_document_directory() ||
-				bp_is_activity_directory() ||
-				bp_is_groups_directory() ||
-				bp_is_group_single() ||
-				bp_is_group_activity() ||
-				bp_is_group_create() ||
-				bp_is_user() ||
-				bp_is_single_activity() ||
-				bp_is_user_activity() ||
-				bp_is_messages_component() ||
-				bp_is_current_component( 'video' ) ||
-				bp_is_current_component( 'media' ) ||
+				bboss_is_members_directory() ||
+				bboss_is_video_directory() ||
+				bboss_is_media_directory() ||
+				bboss_is_document_directory() ||
+				bboss_is_activity_directory() ||
+				bboss_is_groups_directory() ||
+				bboss_is_group_single() ||
+				bboss_is_group_activity() ||
+				bboss_is_group_create() ||
+				bboss_is_user() ||
+				bboss_is_single_activity() ||
+				bboss_is_user_activity() ||
+				bboss_is_messages_component() ||
+				bboss_is_current_component( 'video' ) ||
+				bboss_is_current_component( 'media' ) ||
 				is_admin() ||
 				wp_doing_ajax() ||
 				self::bb_is_network_search() ||
 				(
 					(
 						is_login() ||
-						bp_is_register_page()
+						bboss_is_register_page()
 					) &&
 					$this->bb_rl_is_page_enabled_for_integration( 'registration' )
 				) ||
-				bp_is_activation_page() ||
+				bboss_is_activation_page() ||
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
 				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 			);
@@ -1006,7 +1006,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$bp_search = isset( $_REQUEST['bp_search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['bp_search'] ) ) : '';
 			if (
-				bp_is_active( 'search' ) &&
+				bboss_is_active( 'search' ) &&
 				! empty( $bp_search )
 			) {
 				return true;
@@ -1092,10 +1092,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// @since BuddyBoss 2.21.0 Only use ReadyLaunch register template when setting is enabled.
-			if ( bp_is_register_page() ) {
+			if ( bboss_is_register_page() ) {
 				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
 					$this->bb_rl_required_load();
-					return bp_locate_template( 'register.php' );
+					return bboss_locate_template( 'register.php' );
 				}
 
 				// Login & Registration is disabled — restore default template stack
@@ -1113,8 +1113,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
-			if ( bp_is_activation_page() ) {
-				return bp_locate_template( 'activate.php' );
+			if ( bboss_is_activation_page() ) {
+				return bboss_locate_template( 'activate.php' );
 			}
 
 			if (
@@ -1122,7 +1122,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->bb_is_readylaunch_enabled_for_page()
 			) {
 				$this->bb_rl_required_load();
-				return bp_locate_template( 'layout.php' );
+				return bboss_locate_template( 'layout.php' );
 			}
 
 			if (
@@ -1157,8 +1157,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_forums_get_page_by_path( $retval ) {
 			if (
 				(
-					bbp_is_topic_archive() ||
-					bbp_is_forum_archive()
+					bboss_bbp_is_topic_archive() ||
+					bboss_bbp_is_forum_archive()
 				) &&
 				is_object( $retval ) &&
 				! empty( $retval->post_content )
@@ -1224,7 +1224,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$stack = array_flip( $stack );
 
 			// Add ReadyLaunch forum template directory at the first index (highest priority).
-			$readylaunch_forum_dir = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/forums/';
+			$readylaunch_forum_dir = bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/forums/';
 			array_unshift( $stack, $readylaunch_forum_dir );
 
 			return $stack;
@@ -1236,9 +1236,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_enqueue_scripts() {
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bp_get_version(), true );
+			wp_enqueue_script( 'bb-readylaunch-front', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-select2', 'bp-nouveau' ), bboss_get_version(), true );
 
 			// Enqueue select2 CSS to ensure it's available for ReadyLaunch.
 			wp_enqueue_style( 'bp-select2' );
@@ -1247,31 +1247,31 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_script( 'bb-cropper-js' );
 			wp_enqueue_style( 'bb-cropper-css' );
 
-			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
-			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-font', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-style-main', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bboss_get_version() );
 			wp_style_add_data( 'bb-readylaunch-style-main', 'rtl', 'replace' );
 			if ( $min ) {
 				wp_style_add_data( 'bb-readylaunch-style-main', 'suffix', $min );
 			}
 
 			// Register only if it's an Activity component.
-			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
-				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+			if ( bboss_is_active( 'activity' ) && bboss_is_activity_component() ) {
+				wp_enqueue_style( 'bb-readylaunch-activity', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bboss_get_version() );
 				wp_style_add_data( 'bb-readylaunch-activity', 'rtl', 'replace' );
 				if ( $min ) {
 					wp_style_add_data( 'bb-readylaunch-activity', 'suffix', $min );
 				}
 
 				// BB icon version.
-				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
-				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
-				wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
-				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
+				$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
+				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
+				wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 			}
 
 			// Register only if it's Message component.
-			if ( bp_is_active( 'messages' ) && bp_is_messages_component() ) {
-				wp_enqueue_style( 'bb-readylaunch-message', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/message{$min}.css", array(), bp_get_version() );
+			if ( bboss_is_active( 'messages' ) && bboss_is_messages_component() ) {
+				wp_enqueue_style( 'bb-readylaunch-message', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/message{$min}.css", array(), bboss_get_version() );
 				wp_style_add_data( 'bb-readylaunch-message', 'rtl', 'replace' );
 				if ( $min ) {
 					wp_style_add_data( 'bb-readylaunch-message', 'suffix', $min );
@@ -1279,13 +1279,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Register only if it's Groups component.
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				if (
-					bp_is_group_single() ||
-					bp_is_group_create() ||
-					bp_is_user_groups()
+					bboss_is_group_single() ||
+					bboss_is_group_create() ||
+					bboss_is_user_groups()
 				) {
-					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
+					wp_enqueue_style( 'bb-readylaunch-group-single', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bboss_get_version() );
 					wp_style_add_data( 'bb-readylaunch-group-single', 'rtl', 'replace' );
 					if ( $min ) {
 						wp_style_add_data( 'bb-readylaunch-group-single', 'suffix', $min );
@@ -1295,39 +1295,39 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'bb-rl-groups',
 						'bbReadyLaunchGroupsVars',
 						array(
-							'group_id' => bp_get_current_group_id(),
+							'group_id' => bboss_get_current_group_id(),
 						)
 					);
 
-					if ( bp_is_group_invites() || bp_is_group_creation_step( 'group-invites' ) ) {
+					if ( bboss_is_group_invites() || bboss_is_group_creation_step( 'group-invites' ) ) {
 						wp_enqueue_script( 'bb-rl-group-invites' );
 					}
 				}
 			}
 
-			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-icons-rl-css', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bboss_get_version() );
 			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
 			if ( $min ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
 			}
 
 			// Register only if it's a Blog page, or the member profile Blogs tab.
-			if ( ( $this->bb_rl_is_page_enabled_for_integration( 'blog' ) && ( is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date() ) ) || ( function_exists( 'bp_is_current_component' ) && bp_is_current_component( 'blog' ) ) ) {
-				wp_enqueue_style( 'bb-readylaunch-blog', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/blog{$min}.css", array(), bp_get_version() );
+			if ( ( $this->bb_rl_is_page_enabled_for_integration( 'blog' ) && ( is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date() ) ) || ( function_exists( 'bboss_is_current_component' ) && bboss_is_current_component( 'blog' ) ) ) {
+				wp_enqueue_style( 'bb-readylaunch-blog', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/blog{$min}.css", array(), bboss_get_version() );
 				wp_style_add_data( 'bb-readylaunch-blog', 'rtl', 'replace' );
 				if ( $min ) {
 					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
 				}
 
-				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bp_get_version(), true );
+				wp_enqueue_script( 'bb-readylaunch-blog', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bboss_get_version(), true );
 			}
 
-			if ( bp_is_members_directory() ) {
+			if ( bboss_is_members_directory() ) {
 				wp_register_script(
 					'bb-rl-members',
-					buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members{$min}.js",
+					bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members{$min}.js",
 					array( 'bp-nouveau' ),
-					bp_get_version(),
+					bboss_get_version(),
 					true
 				);
 				wp_enqueue_script( 'bb-rl-members' );
@@ -1344,7 +1344,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				);
 			}
 
-			if ( bp_is_user_profile_edit() || bp_is_user_profile() ) {
+			if ( bboss_is_user_profile_edit() || bboss_is_user_profile() ) {
 				wp_enqueue_script( 'bb-rl-xprofile' );
 			}
 
@@ -1373,8 +1373,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_admin_enqueue_scripts() {
-			$min = bp_core_get_minified_asset_suffix();
-			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			$min = bboss_core_get_minified_asset_suffix();
+			wp_enqueue_style( 'bb-icons-rl-css', bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bboss_get_version() );
 			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
 			if ( $min ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
@@ -1387,15 +1387,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_admin_enqueue_scripts() {
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 
 			// BB icon version.
-			$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
-			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
+			$bb_icon_version = function_exists( 'bboss_icon_font_map_data' ) ? bboss_icon_font_map_data( 'version' ) : '';
+			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bboss_get_version();
 
 			// Enqueue BB icons for admin pages.
-			wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
-			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons', bboss()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', bboss()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 		}
 
 		/**
@@ -1534,7 +1534,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$type = ! empty( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : 'all';
 
 			ob_start();
-			bp_get_template_part( 'header/unread-messages', null, array( 'type' => $type ) );
+			bboss_get_template_part( 'header/unread-messages', null, array( 'type' => $type ) );
 			$messages = ob_get_clean();
 			wp_send_json_success( $messages );
 		}
@@ -1552,14 +1552,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// notifications helpers) which are loaded by the notifications
 			// component. Mirrors the gating used by sibling handlers like
 			// `bb_mark_notification_read()` and `bb_heartbeat_unread_notifications()`.
-			if ( ! bp_is_active( 'notifications' ) ) {
+			if ( ! bboss_is_active( 'notifications' ) ) {
 				wp_send_json_error();
 			}
 
 			$page = ! empty( $_POST['page'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['page'] ) ) ) : 1;
 
 			ob_start();
-			bp_get_template_part( 'header/unread-notifications', null, array( 'page' => $page ) );
+			bboss_get_template_part( 'header/unread-notifications', null, array( 'page' => $page ) );
 			$notifications = ob_get_clean();
 			wp_send_json_success( $notifications );
 		}
@@ -1628,7 +1628,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
-			bp_parse_args(
+			bboss_parse_args(
 				$args,
 				array(
 					'integration' => '',
@@ -1671,7 +1671,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @param array $args Array of arguments for the left sidebar middle content.
 		 */
 		public function bb_render_left_sidebar_middle_html( $args = array() ) {
-			bp_parse_args(
+			bboss_parse_args(
 				$args,
 				array(
 					'heading'    => '',
@@ -1781,19 +1781,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_heartbeat_unread_notifications( $response = array(), $data = array() ) {
 			if (
-				bp_loggedin_user_id() &&
-				bp_is_active( 'notifications' ) &&
+				bboss_loggedin_user_id() &&
+				bboss_is_active( 'notifications' ) &&
 				! empty( $data['bb_fetch_header_notifications'] )
 			) {
 				// Handle the mark_as_read_notifications.
 				if ( ! empty( $data['mark_as_read_notifications'] ) ) {
 					$ids = array_map( 'intval', explode( ',', $data['mark_as_read_notifications'] ) );
 					foreach ( $ids as $id ) {
-						BP_Notifications_Notification::update(
+						BBoss_Notifications_Notification::update(
 							array( 'is_new' => 0 ),
 							array(
 								'id'      => $id,
-								'user_id' => bp_loggedin_user_id(),
+								'user_id' => bboss_loggedin_user_id(),
 							)
 						);
 					}
@@ -1806,10 +1806,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( ! empty( $data['mark_as_delete_notifications'] ) ) {
 					$ids = array_map( 'intval', explode( ',', $data['mark_as_delete_notifications'] ) );
 					foreach ( $ids as $id ) {
-						BP_Notifications_Notification::delete(
+						BBoss_Notifications_Notification::delete(
 							array(
 								'id'      => $id,
-								'user_id' => bp_loggedin_user_id(),
+								'user_id' => bboss_loggedin_user_id(),
 							)
 						);
 					}
@@ -1818,9 +1818,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					$response['mark_as_delete_processed'] = true;
 				}
 				ob_start();
-				bp_get_template_part( 'header/unread-notifications' );
+				bboss_get_template_part( 'header/unread-notifications' );
 				$response['unread_notifications'] = ob_get_clean();
-				$response['total_notifications']  = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+				$response['total_notifications']  = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 			}
 
 			return $response;
@@ -1840,13 +1840,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return void
 		 */
 		public function bb_mark_notification_read() {
-			if ( ! bp_is_active( 'notifications' ) ) {
+			if ( ! bboss_is_active( 'notifications' ) ) {
 				return;
 			}
 
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 
 			$id = ! empty( $_POST['read_notification_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['read_notification_ids'] ) ) : '';
 			if ( 'all' !== $id ) {
@@ -1861,7 +1861,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$deleted_notification_ids = ! empty( $deleted_notification_ids ) ? array_map( 'intval', explode( ',', $deleted_notification_ids ) ) : array();
 			if ( ! empty( $deleted_notification_ids ) ) {
 				foreach ( $deleted_notification_ids as $deleted_notification_id ) {
-					BP_Notifications_Notification::delete(
+					BBoss_Notifications_Notification::delete(
 						array(
 							'id'      => $deleted_notification_id,
 							'user_id' => $user_id,
@@ -1872,7 +1872,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( ! empty( $id ) && 'all' !== $id ) {
 				foreach ( $id as $notification_id ) {
-					BP_Notifications_Notification::update(
+					BBoss_Notifications_Notification::update(
 						array( 'is_new' => 0 ),
 						array(
 							'id'      => $notification_id,
@@ -1881,7 +1881,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					);
 				}
 			} elseif ( 'all' === $id ) {
-				$notification_ids = BP_Notifications_Notification::get(
+				$notification_ids = BBoss_Notifications_Notification::get(
 					array(
 						'user_id'           => $user_id,
 						'order_by'          => 'date_notified',
@@ -1893,7 +1893,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				);
 				if ( $notification_ids ) {
 					foreach ( $notification_ids as $notification_id ) {
-						BP_Notifications_Notification::update(
+						BBoss_Notifications_Notification::update(
 							array( 'is_new' => 0 ),
 							array(
 								'id'      => $notification_id->id,
@@ -1905,9 +1905,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 			$response = array();
 			ob_start();
-			bp_get_template_part( 'header/unread-notifications' );
+			bboss_get_template_part( 'header/unread-notifications' );
 			$response['contents']            = ob_get_clean();
-			$response['total_notifications'] = bp_notifications_get_unread_notification_count( $user_id );
+			$response['total_notifications'] = bboss_notifications_get_unread_notification_count( $user_id );
 			wp_send_json_success( $response );
 		}
 
@@ -2198,28 +2198,28 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$scripts,
 				array(
 					'bb-rl-groups'              => array(
-						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-groups%s.js',
+						'file'         => bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-groups%s.js',
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
 					),
 					'bb-rl-group-invites'       => array(
-						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-group-invites%s.js',
+						'file'         => bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-group-invites%s.js',
 						'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 						'footer'       => true,
 					),
 					'bp-nouveau-magnific-popup' => array(
-						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+						'file'         => bboss()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 						'dependencies' => array( 'jquery' ),
 						'footer'       => false,
 					),
 					'guillotine-js'             => array(
-						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/js/jquery.guillotine.min.js',
+						'file'         => bboss()->plugin_url . 'bp-templates/bp-nouveau/js/jquery.guillotine.min.js',
 						'dependencies' => array( 'jquery' ),
-						'version'      => bp_get_version(),
+						'version'      => bboss_get_version(),
 						'footer'       => true,
 					),
 					'bb-rl-xprofile'            => array(
-						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-xprofile%s.js',
+						'file'         => bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-xprofile%s.js',
 						'dependencies' => array( 'bp-nouveau', 'jquery-ui-sortable' ),
 						'footer'       => true,
 					),
@@ -2313,7 +2313,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_send_json_error( $response );
 			}
 
-			$loggedin_user_id = bp_loggedin_user_id();
+			$loggedin_user_id = bboss_loggedin_user_id();
 
 			// Check if the user is logged in.
 			if ( ! $loggedin_user_id ) {
@@ -2321,7 +2321,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_send_json_error( $response );
 			}
 
-			if ( ! bp_is_active( 'invites' ) || ! bp_is_post_request() || empty( $_POST['bb-rl-invite-email'] ) ) {
+			if ( ! bboss_is_active( 'invites' ) || ! bboss_is_post_request() || empty( $_POST['bb-rl-invite-email'] ) ) {
 				wp_send_json_error( $response );
 			}
 
@@ -2329,13 +2329,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( email_exists( $email ) ) {
 				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss' );
 				wp_send_json_error( $response );
-			} elseif ( bb_is_email_address_already_invited( $email, $loggedin_user_id ) ) {
+			} elseif ( bboss_is_email_address_already_invited( $email, $loggedin_user_id ) ) {
 				$response['message'] = esc_html__( 'The email has already been invited', 'buddyboss' );
 				wp_send_json_error( $response );
-			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
+			} elseif ( ! bboss_is_allowed_register_email_address( $email ) ) {
 				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
 				wp_send_json_error( $response );
-			} elseif ( ! bp_allow_user_to_send_invites() ) {
+			} elseif ( ! bboss_allow_user_to_send_invites() ) {
 				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' );
 				wp_send_json_error( $response );
 			}
@@ -2343,16 +2343,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$name        = isset( $_POST['bb-rl-invite-name'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) ) : '';
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
 
-			$subject = bp_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
+			$subject = bboss_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
 				? stripslashes( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )
-				: stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
+				: stripslashes( wp_strip_all_tags( bboss_get_member_invitation_subject() ) );
 
-			$message = bp_disable_invite_member_email_content() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
+			$message = bboss_disable_invite_member_email_content() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
 				? stripslashes( wp_strip_all_tags( sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) ) )
-				: stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
+				: stripslashes( wp_strip_all_tags( bboss_get_member_invitation_message() ) );
 
-			$message .= ' ' . bp_get_member_invites_wildcard_replace(
-				stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ),
+			$message .= ' ' . bboss_get_member_invites_wildcard_replace(
+				stripslashes( wp_strip_all_tags( bboss_get_invites_member_invite_url() ) ),
 				$email
 			);
 
@@ -2360,15 +2360,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// member behind it, so the request viewer is the wrong audience - it is the inviter, who
 			// is never denied their own name. Pin it to the public, logged-out view. Matches the
 			// non-ReadyLaunch handler in bp-invites/actions/invites.php.
-			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id, bb_core_guest_viewer_id() );
+			$inviter_name = bboss_core_get_user_displayname( $loggedin_user_id, bboss_core_guest_viewer_id() );
 			$email_encode = rawurlencode( $email );
-			$inviter_url  = bp_loggedin_user_domain();
+			$inviter_url  = bboss_loggedin_user_domain();
 
 			$_POST['custom_user_email']  = $email;
 			$_POST['custom_user_name']   = $name;
 			$_POST['custom_user_avatar'] = apply_filters(
 				'bp_sent_invite_email_avatar',
-				bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) )
+				bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) )
 			);
 
 			$accept_link = add_query_arg(
@@ -2378,7 +2378,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Used for legitimate encoding of user ID in invite URL
 					'inviter'    => base64_encode( (string) $loggedin_user_id ),
 				),
-				trailingslashit( bp_get_root_domain() ) . bp_get_signup_slug() . '/'
+				trailingslashit( bboss_get_root_domain() ) . bboss_get_signup_slug() . '/'
 			);
 			$accept_link = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 
@@ -2391,11 +2391,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			add_filter( 'bp_email_get_salutation', '__return_false' );
-			if ( ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
-				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
+			if ( ! function_exists( 'bboss_invites_kses_allowed_tags' ) ) {
+				require trailingslashit( bboss()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
 			}
 
-			bp_send_email( 'invites-member-invite', $email, $args );
+			bboss_send_email( 'invites-member-invite', $email, $args );
 
 			$post_id = wp_insert_post(
 				array(
@@ -2403,7 +2403,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'post_content' => $message,
 					'post_title'   => $subject,
 					'post_status'  => 'publish',
-					'post_type'    => bp_get_invite_post_type(),
+					'post_type'    => bboss_get_invite_post_type(),
 				)
 			);
 
@@ -2466,7 +2466,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_script_loader_src( $src, $handle ) {
 			global $bp;
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 			if ( ! empty( $src ) && 'bb-topics-manager' === $handle ) {
 				$src = trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager{$min}.js";
 			}
@@ -2502,11 +2502,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $buttons Filtered buttons.
 		 */
 		public function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
-			$enabled_message_action = ! function_exists( 'bb_enabled_member_directory_profile_action' ) || bb_enabled_member_directory_profile_action( 'message' );
+			$enabled_message_action = ! function_exists( 'bboss_enabled_member_directory_profile_action' ) || bboss_enabled_member_directory_profile_action( 'message' );
 
 			// Member directories' primary actions.
-			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' )
-				? bb_get_member_directory_primary_action()
+			$primary_action_btn = function_exists( 'bboss_get_member_directory_primary_action' )
+				? bboss_get_member_directory_primary_action()
 				: '';
 
 			if ( $enabled_message_action ) {
@@ -2522,9 +2522,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_force_friendship_to_message', '__return_false' );
 				$is_message_active = apply_filters(
 					'bb_member_loop_show_message_button',
-					bp_is_active( 'messages' ),
+					bboss_is_active( 'messages' ),
 					$user_id,
-					bp_loggedin_user_id()
+					bboss_loggedin_user_id()
 				);
 				remove_filter( 'bp_force_friendship_to_message', '__return_false' );
 
@@ -2533,17 +2533,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
 
 					if ( 'message' === $primary_action_btn ) {
-						$primary_button_args               = function_exists( 'bb_member_get_profile_action_arguments' )
-							? bb_member_get_profile_action_arguments()
+						$primary_button_args               = function_exists( 'bboss_member_get_profile_action_arguments' )
+							? bboss_member_get_profile_action_arguments()
 							: array();
 						$primary_button_args['link_class'] = 'bb-rl-send-message-disabled';
-						$buttons['primary']                = bp_get_send_message_button( $primary_button_args );
+						$buttons['primary']                = bboss_get_send_message_button( $primary_button_args );
 					} else {
-						$secondary_button_args               = function_exists( 'bb_member_get_profile_action_arguments' )
-							? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
+						$secondary_button_args               = function_exists( 'bboss_member_get_profile_action_arguments' )
+							? bboss_member_get_profile_action_arguments( 'directory', 'secondary' )
 							: array();
 						$secondary_button_args['link_class'] = 'bb-rl-send-message-disabled';
-						$buttons['secondary']               .= bp_get_send_message_button( $secondary_button_args );
+						$buttons['secondary']               .= bboss_get_send_message_button( $secondary_button_args );
 					}
 
 					remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
@@ -2566,7 +2566,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_group_default_group_avatar_image( $avatar_image_url, $params ) {
 			if ( isset( $params['object'] ) && 'group' === $params['object'] ) {
-				$avatar_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_avatar_image.jpeg' );
+				$avatar_image_url = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_avatar_image.jpeg' );
 			}
 
 			return $avatar_image_url;
@@ -2580,9 +2580,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the user is a group admin, false otherwise.
 		 */
 		public static function bb_is_group_admin() {
-			return bp_is_active( 'groups' ) &&
-					bp_is_group_single() &&
-					bp_get_group_current_admin_tab();
+			return bboss_is_active( 'groups' ) &&
+					bboss_is_group_single() &&
+					bboss_get_group_current_admin_tab();
 		}
 
 		/**
@@ -2595,8 +2595,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $scripts Array of registered scripts.
 		 */
 		public function bb_rl_register_common_scripts( $scripts ) {
-			$min = bp_core_get_minified_asset_suffix();
-			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
+			$min = bboss_core_get_minified_asset_suffix();
+			$url = bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
 
 
 
@@ -2625,8 +2625,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $styles Array of registered styles.
 		 */
 		public function bb_rl_register_common_styles( $styles ) {
-			$min = bp_core_get_minified_asset_suffix();
-			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
+			$min = bboss_core_get_minified_asset_suffix();
+			$url = bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
 
 
 
@@ -2670,9 +2670,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public static function bb_rl_member_profile_buttons( $buttons, $user_id, $type ) {
 			if (
-				bp_loggedin_user_id() &&
-				bp_displayed_user_id() === bp_loggedin_user_id() &&
-				bp_loggedin_user_id() === $user_id
+				bboss_loggedin_user_id() &&
+				bboss_displayed_user_id() === bboss_loggedin_user_id() &&
+				bboss_loggedin_user_id() === $user_id
 			) {
 				$buttons['edit_profile'] = array(
 					'id'                => 'edit_profile',
@@ -2682,10 +2682,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'button_element'    => 'a',
 					'button_attr'       => array(
 						'class' => 'button edit-profile',
-						'href'  => bp_loggedin_user_domain() . 'profile/edit/',
+						'href'  => bboss_loggedin_user_domain() . 'profile/edit/',
 					),
 					'link_text'         => esc_html__( 'Edit Profile', 'buddyboss' ),
-					'link_url'          => bp_loggedin_user_domain() . 'profile/edit/',
+					'link_url'          => bboss_loggedin_user_domain() . 'profile/edit/',
 					'link_class'        => 'bb-rl-edit-profile',
 					'prefix_link_text'  => '<i class="bb-icons-rl-pencil-simple-line"></i>',
 				);
@@ -2700,12 +2700,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			if ( ! empty( $buttons['reject_friendship'] ) && bp_is_current_action( 'requests' ) ) {
+			if ( ! empty( $buttons['reject_friendship'] ) && bboss_is_current_action( 'requests' ) ) {
 				$buttons['reject_friendship']['link_text']        = esc_html__( 'Reject', 'buddyboss' );
 				$buttons['reject_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-x"></i>';
 			}
 
-			if ( ! empty( $buttons['accept_friendship'] ) && bp_is_current_action( 'requests' ) ) {
+			if ( ! empty( $buttons['accept_friendship'] ) && bboss_is_current_action( 'requests' ) ) {
 				$buttons['accept_friendship']['link_text']        = esc_html__( 'Accept', 'buddyboss' );
 				$buttons['accept_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-check"></i>';
 			}
@@ -2725,30 +2725,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_modify_js_strings( $strings ) {
 			$translated_string = __( '\'s post', 'buddyboss' );
 
-			if ( bp_is_active( 'media' ) || bp_is_active( 'video' ) || bp_is_active( 'document' ) ) {
+			if ( bboss_is_active( 'media' ) || bboss_is_active( 'video' ) || bboss_is_active( 'document' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
 				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss' );
 				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss' );
 				$strings['media']['bb_rl_invalid_media_type']      = __( 'Different types of media cannot be uploaded to a post', 'buddyboss' );
 			}
 
-			if ( bp_is_active( 'messages' ) ) {
+			if ( bboss_is_active( 'messages' ) ) {
 				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss' );
 			}
 
-			if ( bp_is_active( 'moderation' ) ) {
+			if ( bboss_is_active( 'moderation' ) ) {
 				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss' );
 			}
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$strings['groups']['i18n']['sending_request']      = esc_html__( 'Sending request', 'buddyboss' );
 				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss' );
-				$strings['groups']['member_invites_none']          = bp_nouveau_get_user_feedback( 'member-invites-none' );
+				$strings['groups']['member_invites_none']          = bboss_nouveau_get_user_feedback( 'member-invites-none' );
 			}
 
-			if ( bp_is_active( 'friends' ) ) {
-				$strings['friends']['member_requests_none'] = bp_nouveau_get_user_feedback( 'member-requests-none' );
-				$strings['friends']['members_loop_none']    = bp_nouveau_get_user_feedback( 'members-loop-none' );
+			if ( bboss_is_active( 'friends' ) ) {
+				$strings['friends']['member_requests_none'] = bboss_nouveau_get_user_feedback( 'member-requests-none' );
+				$strings['friends']['members_loop_none']    = bboss_nouveau_get_user_feedback( 'members-loop-none' );
 			}
 
 			return $strings;
@@ -2760,10 +2760,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_enqueue_scripts() {
-			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
-			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			wp_enqueue_style( 'bb-rl-login-fonts', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bboss_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bboss_get_version() );
 			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
-			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style-icons', bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bboss_get_version() );
 			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 		}
 
@@ -2773,7 +2773,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_header() {
-			bp_get_template_part( 'common/header-register' );
+			bboss_get_template_part( 'common/header-register' );
 		}
 
 
@@ -2783,8 +2783,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_header_url() {
-			if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
-				$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+			if ( function_exists( 'bboss' ) && isset( bboss()->buddyboss ) ) {
+				$enable_private_network = bboss_get_option( 'bp-enable-private-network' );
 
 				if ( '0' === $enable_private_network ) {
 					return '#';
@@ -3032,8 +3032,8 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_dynamic_colors() {
-			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
-			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+			$color_light = bboss_get_option( 'bb_rl_color_light', '#4946fe' );
+			$color_dark  = bboss_get_option( 'bb_rl_color_dark', '#9747FF' );
 
 			// Generate color shades for light mode (500 is base).
 			$light_shades = $this->bb_rl_generate_color_shades( $color_light );
@@ -3103,10 +3103,10 @@ JS;
 			// Register block assets.
 			$this->register_readylaunch_header_assets();
 
-			bb_register_block(
+			bboss_register_block(
 				array(
-					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
-					'render_callback' => 'bb_block_render_readylaunch_header_block',
+					'metadata'        => trailingslashit( bboss()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
+					'render_callback' => 'bboss_block_render_readylaunch_header_block',
 				)
 			);
 		}
@@ -3117,9 +3117,9 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		private function register_readylaunch_header_assets() {
-			$plugin_url = trailingslashit( buddypress()->plugin_url );
-			$plugin_dir = trailingslashit( buddypress()->plugin_dir );
-			$min        = bp_core_get_minified_asset_suffix();
+			$plugin_url = trailingslashit( bboss()->plugin_url );
+			$plugin_dir = trailingslashit( bboss()->plugin_dir );
+			$min        = bboss_core_get_minified_asset_suffix();
 
 			// Register the editor script.
 			$asset_file = $plugin_dir . 'bp-core/blocks/readylaunch-header/index.asset.php';
@@ -3139,14 +3139,14 @@ JS;
 				true
 			);
 
-			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
+			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', bboss()->plugin_dir . 'languages/' );
 
 			// Register the view script.
 			wp_register_script(
 				'bb-readylaunch-header-view',
 				$plugin_url . 'bp-core/blocks/readylaunch-header/view.js',
 				array( 'jquery', 'bp-nouveau', 'bp-select2', 'wp-i18n' ),
-				bp_get_version(),
+				bboss_get_version(),
 				true
 			);
 
@@ -3162,13 +3162,13 @@ JS;
 				)
 			);
 
-			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
+			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss', bboss()->plugin_dir . 'languages/' );
 
 			wp_register_style(
 				'bb-icons-rl-css',
 				$plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
 				array(),
-				bp_get_version()
+				bboss_get_version()
 			);
 		}
 
@@ -3178,16 +3178,16 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_readylaunch_lms_enqueue_styles() {
-			if ( ! bb_is_readylaunch_enabled() || ( ! class_exists( 'SFWD_LMS' ) && ! class_exists( 'memberpress\courses\helpers\Courses' ) ) ) {
+			if ( ! bboss_is_readylaunch_enabled() || ( ! class_exists( 'SFWD_LMS' ) && ! class_exists( 'memberpress\courses\helpers\Courses' ) ) ) {
 				return;
 			}
 
 			// Enqueue LearnDash ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-lms',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/lms.css',
+				bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/lms.css',
 				array(),
-				bp_get_version()
+				bboss_get_version()
 			);
 			wp_style_add_data( 'bb-readylaunch-lms', 'rtl', 'replace' );
 		}
@@ -3198,25 +3198,25 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_readylaunch_meprlms_enqueue_styles() {
-			if ( ! bb_is_readylaunch_enabled() || ! class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+			if ( ! bboss_is_readylaunch_enabled() || ! class_exists( 'memberpress\courses\helpers\Courses' ) ) {
 				return;
 			}
 
 			// Enqueue MemberPress Courses ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-meprlms',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/meprlms.css',
+				bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/meprlms.css',
 				array(),
-				bp_get_version()
+				bboss_get_version()
 			);
 			wp_style_add_data( 'bb-readylaunch-meprlms', 'rtl', 'replace' );
 
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-meprlms-js',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
+				bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
 				array( 'jquery' ),
-				bp_get_version(),
+				bboss_get_version(),
 				true
 			);
 
@@ -3280,7 +3280,7 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_get_theme_mode() {
-			$bb_rl_theme_mode = bp_get_option( 'bb_rl_theme_mode', 'light' );
+			$bb_rl_theme_mode = bboss_get_option( 'bb_rl_theme_mode', 'light' );
 
 			return $bb_rl_theme_mode;
 		}
@@ -3302,7 +3302,7 @@ JS;
 		 * @return array Empty array, or array with `id`, `url`, `alt` and `title` keys.
 		 */
 		public function bb_rl_get_theme_logo( $key ) {
-			$raw  = bp_get_option( 'bb_rl_' . sanitize_key( $key ) . '_logo', array() );
+			$raw  = bboss_get_option( 'bb_rl_' . sanitize_key( $key ) . '_logo', array() );
 			$logo = array();
 
 			if ( is_numeric( $raw ) ) {
@@ -3345,11 +3345,11 @@ JS;
 		 * @return bool True if the page is enabled for integration, false otherwise.
 		 */
 		public function bb_rl_is_page_enabled_for_integration( $page ) {
-			if ( 'registration' === $page && ( ! bp_enable_site_registration() || bp_allow_custom_registration() ) ) {
+			if ( 'registration' === $page && ( ! bboss_enable_site_registration() || bboss_allow_custom_registration() ) ) {
 				return false;
 			}
 
-			$enabled_pages = bp_get_option( 'bb_rl_enabled_pages' );
+			$enabled_pages = bboss_get_option( 'bb_rl_enabled_pages' );
 
 			return ! empty( $enabled_pages[ $page ] );
 		}
@@ -3497,7 +3497,7 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_get_header_menu_location() {
-			$header_menu_slug = bp_get_option( 'bb_rl_header_menu', 'readylaunch' );
+			$header_menu_slug = bboss_get_option( 'bb_rl_header_menu', 'readylaunch' );
 
 			if ( empty( $header_menu_slug ) ) {
 				return '';
@@ -3520,35 +3520,35 @@ JS;
 		 * @return bool True if the current page is a ReadyLaunch Forums page, false otherwise.
 		 */
 		public function bb_is_readylaunch_forums() {
-			return bp_is_active( 'forums' )
+			return bboss_is_active( 'forums' )
 					&& (
-						bbp_is_forum_archive() ||
-						bbp_is_topic_archive() ||
-						bbp_is_single_forum() ||
-						bbp_is_forum_edit() ||
-						( bbp_is_single_topic() && ! bp_is_activity_component() ) ||
-						bbp_is_topic_edit() ||
-						bbp_is_topic_split() ||
-						bbp_is_topic_merge() ||
-						bbp_is_single_reply() ||
-						bbp_is_reply_edit() ||
-						bbp_is_reply_move() ||
-						bbp_is_single_view() ||
-						bbp_is_search() ||
-						bbp_is_topic_tag_edit() ||
-						bbp_is_topic_tag() ||
-						is_singular( bbp_get_topic_post_type() ) ||
-						is_singular( bbp_get_forum_post_type() ) ||
-						is_singular( bbp_get_reply_post_type() ) ||
-						is_post_type_archive( bbp_get_topic_post_type() ) ||
-						is_post_type_archive( bbp_get_forum_post_type() ) ||
-						is_post_type_archive( bbp_get_reply_post_type() ) ||
+						bboss_bbp_is_forum_archive() ||
+						bboss_bbp_is_topic_archive() ||
+						bboss_bbp_is_single_forum() ||
+						bboss_bbp_is_forum_edit() ||
+						( bboss_bbp_is_single_topic() && ! bboss_is_activity_component() ) ||
+						bboss_bbp_is_topic_edit() ||
+						bboss_bbp_is_topic_split() ||
+						bboss_bbp_is_topic_merge() ||
+						bboss_bbp_is_single_reply() ||
+						bboss_bbp_is_reply_edit() ||
+						bboss_bbp_is_reply_move() ||
+						bboss_bbp_is_single_view() ||
+						bboss_bbp_is_search() ||
+						bboss_bbp_is_topic_tag_edit() ||
+						bboss_bbp_is_topic_tag() ||
+						is_singular( bboss_bbp_get_topic_post_type() ) ||
+						is_singular( bboss_bbp_get_forum_post_type() ) ||
+						is_singular( bboss_bbp_get_reply_post_type() ) ||
+						is_post_type_archive( bboss_bbp_get_topic_post_type() ) ||
+						is_post_type_archive( bboss_bbp_get_forum_post_type() ) ||
+						is_post_type_archive( bboss_bbp_get_reply_post_type() ) ||
 						(
-							bbp_is_group_forums_active() &&
+							bboss_bbp_is_group_forums_active() &&
 							(
-								bp_is_group_single() ||
-								bp_is_group_forum_topic() ||
-								bp_is_group_forum_topic_edit()
+								bboss_is_group_single() ||
+								bboss_is_group_forum_topic() ||
+								bboss_is_group_forum_topic_edit()
 							)
 						)
 					);
@@ -3570,7 +3570,7 @@ JS;
 		 *  - Raising the priority does not help either. The bbPress theme
 		 *    compat class hooks its `enqueue_scripts()` to **both**
 		 *    `bbp_enqueue_scripts` AND `wp_footer`, and the enqueue goes
-		 *    through `bbp_enqueue_script()`, which calls `wp_register_script()`
+		 *    through `bboss_bbp_enqueue_script()`, which calls `wp_register_script()`
 		 *    and `wp_enqueue_script()`. The footer pass therefore re-registers
 		 *    and re-enqueues the handle, undoing any dequeue that ran earlier
 		 *    in the request — including one at `PHP_INT_MAX`.
@@ -3649,19 +3649,19 @@ JS;
 			if (
 				! $this->bb_is_readylaunch_forums() &&
 				! (
-					bp_is_active( 'forums' ) &&
-					bbp_is_single_user()
+					bboss_is_active( 'forums' ) &&
+					bboss_bbp_is_single_user()
 				) &&
 				! (
-					bp_is_active( 'forums' ) &&
-					bp_is_active( 'activity' ) &&
-					bp_is_activity_component()
+					bboss_is_active( 'forums' ) &&
+					bboss_is_active( 'activity' ) &&
+					bboss_is_activity_component()
 				)
 			) {
 				return;
 			}
 
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 
 			// enqueue select2, emojionearea, medium editor.
 			wp_enqueue_script( 'bp-select2' );
@@ -3679,9 +3679,9 @@ JS;
 			// Enqueue Forum ReadyLaunch styles.
 			wp_enqueue_style(
 				'bb-readylaunch-forums',
-				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/forums{$min}.css",
+				bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/forums{$min}.css",
 				array(),
-				bp_get_version()
+				bboss_get_version()
 			);
 			wp_style_add_data( 'bb-readylaunch-forums', 'rtl', 'replace' );
 			if ( $min ) {
@@ -3691,18 +3691,18 @@ JS;
 			// Enqueue Topic Reply Draft JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-topic-reply-draft',
-				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft{$min}.js",
+				bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-topic-reply-draft{$min}.js",
 				array( 'jquery' ),
-				bp_get_version(),
+				bboss_get_version(),
 				true
 			);
 
 			// Enqueue our Forum helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-forums-js',
-				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums{$min}.js",
+				bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-forums{$min}.js",
 				array( 'jquery', 'bp-nouveau' ),
-				bp_get_version(),
+				bboss_get_version(),
 				true
 			);
 
@@ -3718,35 +3718,35 @@ JS;
 			);
 
 			$no_load_topic = true;
-			if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+			if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
 				$no_load_topic = false;
 			}
 
 			$common_array = array(
 				'loading_text' => __( 'Loading', 'buddyboss' ),
-				'ajax_url'     => bp_core_ajax_url(),
+				'ajax_url'     => bboss_core_ajax_url(),
 				'nonce'        => wp_create_nonce( 'search_tag' ),
 				'load'         => $no_load_topic,
 				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
 			);
 
 			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
-			if ( bbp_is_single_topic() || ( function_exists( 'bp_is_group' ) && bp_is_group() ) ) {
+			if ( bboss_bbp_is_single_topic() || ( function_exists( 'bboss_is_group' ) && bboss_is_group() ) ) {
 				ob_start();
-				bbp_get_template_part( 'form', 'reply' );
+				bboss_bbp_get_template_part( 'form', 'reply' );
 				$reply_form_html = ob_get_clean();
 				wp_localize_script(
 					'bb-readylaunch-forums-js',
 					'bbpReplyAjaxJS',
 					array(
-						'bbp_ajaxurl'          => bbp_get_ajax_url(),
+						'bbp_ajaxurl'          => bboss_bbp_get_ajax_url(),
 						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
 						'is_user_logged_in'    => is_user_logged_in(),
 						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
-						'topic_id'             => bbp_get_topic_id(),
+						'topic_id'             => bboss_bbp_get_topic_id(),
 						'reply_form_html'      => $reply_form_html,
-						'threaded_reply'       => bbp_allow_threaded_replies(),
-						'threaded_reply_depth' => bbp_thread_replies_depth(),
+						'threaded_reply'       => bboss_bbp_allow_threaded_replies(),
+						'threaded_reply_depth' => bboss_bbp_thread_replies_depth(),
 						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss' ),
 						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss' ),
 					)
@@ -3766,7 +3766,7 @@ JS;
 		 */
 		public function bb_rl_activity_inner_buttons( $buttons, $activity_id ) {
 			// Get activity post data.
-			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+			$activities = bboss_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
 			if ( empty( $activities['activities'] ) ) {
 				return $buttons;
@@ -3787,8 +3787,8 @@ JS;
 
 				// bbp_get_topic_author_id.
 				$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
-				$user_id     = bbp_get_topic_author_id( $topic_id );
-				$author      = bp_core_get_user_displayname( $user_id );
+				$user_id     = bboss_bbp_get_topic_author_id( $topic_id );
+				$author      = bboss_core_get_user_displayname( $user_id );
 
 				// New meta button as 'Quick Reply'.
 				$buttons['quick_reply'] = array(
@@ -3826,9 +3826,9 @@ JS;
 			// phpcs:ignore
 			$action = $_POST['bbp_reply_form_action'];
 			if ( 'bbp-new-reply' === $action ) {
-				bbp_new_reply_handler( $action );
+				bboss_bbp_new_reply_handler( $action );
 			} elseif ( 'bbp-edit-reply' === $action ) {
-				bbp_edit_reply_handler( $action );
+				bboss_bbp_edit_reply_handler( $action );
 			}
 		}
 
@@ -3838,19 +3838,19 @@ JS;
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_new_reply_pre_extras() {
-			if ( ! bbp_is_ajax() ) {
+			if ( ! bboss_bbp_is_ajax() ) {
 				return;
 			}
 
 			// if reply posting has errors then show them in form.
-			if ( bbp_has_errors() ) {
+			if ( bboss_bbp_has_errors() ) {
 				ob_start();
-				bbp_template_notices();
+				bboss_bbp_template_notices();
 				$reply_error_html = ob_get_clean();
 				$extra_info       = array(
 					'error' => '1',
 				);
-				bbp_ajax_response( false, $reply_error_html, 200, $extra_info );
+				bboss_bbp_ajax_response( false, $reply_error_html, 200, $extra_info );
 			}
 		}
 
@@ -3864,7 +3864,7 @@ JS;
 		 * @uses bb_rl_reply_ajax_response() Generate an Ajax response.
 		 */
 		public function bb_rl_new_reply_post_extras( $reply_id ) {
-			if ( ! bbp_is_ajax() ) {
+			if ( ! bboss_bbp_is_ajax() ) {
 				return;
 			}
 			$this->bb_rl_reply_ajax_response( $reply_id, 'new' );
@@ -3875,7 +3875,7 @@ JS;
 		 *
 		 * @since BuddyBoss 2.9.00
 		 *
-		 * @uses  bbp_get_template_part() Load required template.
+		 * @uses  bboss_bbp_get_template_part() Load required template.
 		 *
 		 * @return void
 		 */
@@ -3892,10 +3892,10 @@ JS;
 				add_filter( 'bb_forum_attachment_forum_id', array( $this, 'bb_rl_forum_attachment_forum_id' ) );
 
 				// Timeline quick reply form template.
-				bbp_get_template_part( 'form', 'reply-activity' );
+				bboss_bbp_get_template_part( 'form', 'reply-activity' );
 
 				// Success message template.
-				bbp_get_template_part( 'form-reply', 'success' );
+				bboss_bbp_get_template_part( 'form-reply', 'success' );
 				?>
 			</div>
 			<?php
@@ -3918,17 +3918,17 @@ JS;
 			/**
 			 * Redirect to last page when anyone reply from begging of the page.
 			 */
-			$redirect_to = bbp_get_redirect_to();
-			$reply_url   = bbp_get_reply_url( $reply_id, $redirect_to );
+			$redirect_to = bboss_bbp_get_redirect_to();
+			$reply_url   = bboss_bbp_get_reply_url( $reply_id, $redirect_to );
 			$total_pages = '';
-			if ( bbp_thread_replies() ) {
-				if ( function_exists( 'bbp_get_total_parent_reply' ) ) {
-					$parent_reply = (int) bbp_get_total_parent_reply( $topic_id );
-					$parent_reply = ( bbp_show_lead_topic() ? $parent_reply - 1 : $parent_reply );
-					$total_pages  = ceil( (int) $parent_reply / (int) bbp_get_replies_per_page() ); // 1;
+			if ( bboss_bbp_thread_replies() ) {
+				if ( function_exists( 'bboss_bbp_get_total_parent_reply' ) ) {
+					$parent_reply = (int) bboss_bbp_get_total_parent_reply( $topic_id );
+					$parent_reply = ( bboss_bbp_show_lead_topic() ? $parent_reply - 1 : $parent_reply );
+					$total_pages  = ceil( (int) $parent_reply / (int) bboss_bbp_get_replies_per_page() ); // 1;
 				}
 			} else {
-				$total_pages = ceil( (int) bbp_get_reply_position( $reply_id, $topic_id ) / (int) bbp_get_replies_per_page() );
+				$total_pages = ceil( (int) bboss_bbp_get_reply_position( $reply_id, $topic_id ) / (int) bboss_bbp_get_replies_per_page() );
 			}
 			$current_page = get_query_var( 'paged', $reply_url );
 			if ( 0 === (int) $current_page ) {
@@ -3936,12 +3936,12 @@ JS;
 			}
 
 			ob_start();
-			if ( bbp_show_lead_topic() ) {
-				$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
+			if ( bboss_bbp_show_lead_topic() ) {
+				$topic_reply_count = (int) bboss_bbp_get_topic_reply_count( $topic_id );
 				echo esc_html( $topic_reply_count );
 				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
 			} else {
-				$topic_post_count = (int) bbp_get_topic_post_count( $topic_id );
+				$topic_post_count = (int) bboss_bbp_get_topic_post_count( $topic_id );
 				echo esc_html( $topic_post_count );
 				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss' ) : esc_html__( 'Post', 'buddyboss' );
 			}
@@ -3961,7 +3961,7 @@ JS;
 				'total_pages'       => $total_pages, // Get total pages - Redirect to last page when anyone reply from begging of the page.
 				'total_reply_count' => $topic_total_reply_count_html, // Get total pages - Redirect to last page when anyone reply from begging of the page.
 			);
-			bbp_ajax_response( true, $reply_html, 200, $extra_info );
+			bboss_bbp_ajax_response( true, $reply_html, 200, $extra_info );
 		}
 
 		/**
@@ -3978,13 +3978,13 @@ JS;
 			$reply_query      = new \WP_Query(
 				array(
 					'p'         => (int) $reply_id,
-					'post_type' => bbp_get_reply_post_type(),
+					'post_type' => bboss_bbp_get_reply_post_type(),
 				)
 			);
-			$bbp              = bbpress();
+			$bbp              = bboss_forums();
 			$bbp->reply_query = $reply_query;
 
-			if ( function_exists( 'bbp_make_clickable' ) ) {
+			if ( function_exists( 'bboss_bbp_make_clickable' ) ) {
 				// Convert plaintext URI to HTML links.
 				add_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
 			}
@@ -3993,7 +3993,7 @@ JS;
 				add_filter( 'bbp_get_reply_content', 'convert_smilies', 20 );
 			}
 
-			if ( function_exists( 'bp_media_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments' ) ) {
+			if ( function_exists( 'bboss_media_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments' ) ) {
 				add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
 			}
 			if ( function_exists( 'bp_video_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments' ) ) {
@@ -4007,13 +4007,13 @@ JS;
 				add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
 			}
 
-			bbp_reply_content_autoembed();
+			bboss_bbp_reply_content_autoembed();
 
 			// Add mentioned to be clickable.
 			add_filter( 'bbp_get_reply_content', 'bbp_make_mentions_clickable' );
 
 			// Link Preview.
-			if ( function_exists( 'bb_forums_link_preview' ) && ! has_filter( 'bbp_get_reply_content', 'bb_forums_link_preview' ) ) {
+			if ( function_exists( 'bboss_forums_link_preview' ) && ! has_filter( 'bbp_get_reply_content', 'bb_forums_link_preview' ) ) {
 				add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 			}
 
@@ -4021,25 +4021,25 @@ JS;
 			// topic the same way the topic page does (group-forum requests carry no singular
 			// topic, which otherwise leaves a guest's new reply without its Reply link until
 			// the page is reloaded). Mirrors BBP_Forums_Group_Extension::display_topics().
-			$topic_id              = bbp_get_reply_topic_id( $reply_id );
+			$topic_id              = bboss_bbp_get_reply_topic_id( $reply_id );
 			$previous_topic_id     = ! empty( $bbp->current_topic_id ) ? (int) $bbp->current_topic_id : 0;
 			$bbp->current_topic_id = $topic_id;
-			bbp_set_query_name( 'bbp_single_topic' );
+			bboss_bbp_set_query_name( 'bbp_single_topic' );
 
-			while ( bbp_replies() ) :
-				bbp_the_reply();
-				bbp_get_template_part( 'loop', 'single-reply' );
+			while ( bboss_bbp_replies() ) :
+				bboss_bbp_the_reply();
+				bboss_bbp_get_template_part( 'loop', 'single-reply' );
 			endwhile;
 			$reply_html = ob_get_clean();
 
 			$bbp->current_topic_id = $previous_topic_id;
-			bbp_reset_query_name();
+			bboss_bbp_reset_query_name();
 
-			if ( function_exists( 'bbp_make_clickable' ) ) {
+			if ( function_exists( 'bboss_bbp_make_clickable' ) ) {
 				remove_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
 			}
 
-			if ( function_exists( 'bp_media_forums_embed_attachments' ) ) {
+			if ( function_exists( 'bboss_media_forums_embed_attachments' ) ) {
 				remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
 			}
 
@@ -4063,8 +4063,8 @@ JS;
 		 */
 		public function bb_rl_forum_attachment_group_id( $group_id ) {
 			if (
-				function_exists( 'bp_is_active' ) &&
-				bp_is_active( 'groups' ) &&
+				function_exists( 'bboss_is_active' ) &&
+				bboss_is_active( 'groups' ) &&
 				isset( $_POST['group_id'] ) && // phpcs:ignore
 				! empty( $_POST['group_id'] ) // phpcs:ignore
 			) {
@@ -4085,13 +4085,13 @@ JS;
 		 */
 		public function bb_rl_forum_attachment_forum_id( $forum_id ) {
 			if (
-				function_exists( 'bp_is_active' ) &&
-				bp_is_active( 'forums' ) &&
+				function_exists( 'bboss_is_active' ) &&
+				bboss_is_active( 'forums' ) &&
 				isset( $_POST['topic_id'] ) && // phpcs:ignore
 				! empty( $_POST['topic_id'] ) // phpcs:ignore
 			) {
 				$topic_id = $_POST['topic_id']; // phpcs:ignore
-				$forum_id = bbp_get_topic_forum_id( $topic_id );
+				$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 			}
 
 			return $forum_id;
@@ -4114,12 +4114,12 @@ JS;
 			if ( ! empty( $topic_id ) ) {
 
 				// Topic is spammed so display pre-spam terms.
-				if ( bbp_is_topic_spam( $topic_id ) ) {
+				if ( bboss_bbp_is_topic_spam( $topic_id ) ) {
 					$new_terms = get_post_meta( $topic_id, '_bbp_spam_topic_tags', true );
 
 					// Topic is not spam so get real terms.
 				} else {
-					$terms     = array_filter( (array) get_the_terms( $topic_id, bbp_get_topic_tag_tax_id() ) );
+					$terms     = array_filter( (array) get_the_terms( $topic_id, bboss_bbp_get_topic_tag_tax_id() ) );
 					$new_terms = wp_list_pluck( $terms, 'name' );
 				}
 			}
@@ -4128,7 +4128,7 @@ JS;
 			$html    = '';
 			if ( $new_terms ) {
 				foreach ( $new_terms as $tag ) {
-					$html_li .= '<li><a href="' . bbp_get_topic_tag_link( $tag ) . '">' . $tag . '</a></li>';
+					$html_li .= '<li><a href="' . bboss_bbp_get_topic_tag_link( $tag ) . '">' . $tag . '</a></li>';
 				}
 
 				$html = '<ul> ' . rtrim( $html_li, ',' ) . '</ul>';
@@ -4154,30 +4154,30 @@ JS;
 			wp_dequeue_script( 'bp-fitvids-js' );
 
 			$component_pages = array();
-			if ( bp_is_active( 'activity' ) ) {
-				$component_pages['activity'] = bp_get_activity_directory_permalink();
+			if ( bboss_is_active( 'activity' ) ) {
+				$component_pages['activity'] = bboss_get_activity_directory_permalink();
 			}
 
-			$component_pages['xprofile'] = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) );
+			$component_pages['xprofile'] = esc_url( bboss_core_get_user_domain( bboss_loggedin_user_id() ) );
 
-			if ( bp_is_active( 'groups' ) ) {
-				$groups = groups_get_groups(
+			if ( bboss_is_active( 'groups' ) ) {
+				$groups = bboss_groups_get_groups(
 					array(
-						'user_id'  => bp_loggedin_user_id(),
+						'user_id'  => bboss_loggedin_user_id(),
 						'type'     => 'active',
 						'per_page' => 1,
 					)
 				);
 
 				if ( ! empty( $groups ) && ! empty( $groups['groups'] ) ) {
-					$component_pages['single_group'] = bp_get_group_permalink( $groups['groups'][0] );
+					$component_pages['single_group'] = bboss_get_group_permalink( $groups['groups'][0] );
 				}
 			}
 
 			$localize_arg['component_pages'] = $component_pages;
 
 			// Check if ReadyLaunch onboarding is completed.
-			$localize_arg['rl_onboarding_completed'] = bp_get_option( 'bb_rl_onboarding_completed', false );
+			$localize_arg['rl_onboarding_completed'] = bboss_get_option( 'bb_rl_onboarding_completed', false );
 
 			return $localize_arg;
 		}
@@ -4291,12 +4291,12 @@ JS;
 		 * @return string
 		 */
 		public function bb_rl_modify_group_members_search_placeholder( $default_text ) {
-			if ( ! bp_is_active( 'groups' ) ) {
+			if ( ! bboss_is_active( 'groups' ) ) {
 				return $default_text;
 			}
 
-			$current_component        = function_exists( 'bp_current_component' ) ? bp_current_component() : '';
-			$current_action_variables = function_exists( 'bp_action_variables' ) ? bp_action_variables() : array();
+			$current_component        = function_exists( 'bboss_current_component' ) ? bboss_current_component() : '';
+			$current_action_variables = function_exists( 'bboss_action_variables' ) ? bboss_action_variables() : array();
 			$current_action_variables = ! empty( $current_action_variables ) ? $current_action_variables[0] : '';
 			if ( 'groups' === $current_component && 'members' === $current_action_variables ) {
 				$default_text = __( 'Search member', 'buddyboss' );
@@ -4386,7 +4386,7 @@ JS;
 		 */
 		public function bb_rl_modify_visibility_levels( $visibility_levels ) {
 			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss' );
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				$visibility_levels['friends'] = __( 'My connections', 'buddyboss' );
 			}
 			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss' );
@@ -4518,22 +4518,22 @@ JS;
 				return $count;
 			}
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				if ( 'my-friends' === $nav_item->slug ) {
-					$count = friends_get_total_friend_count();
+					$count = bboss_friends_get_total_friend_count();
 				} elseif ( 'requests' === $nav_item->slug ) {
-					$count = bp_friend_get_total_requests_count();
+					$count = bboss_friend_get_total_requests_count();
 				} elseif ( 'mutual' === $nav_item->slug ) {
-					$mutual_friendships_ids      = bp_get_mutual_friendships();
+					$mutual_friendships_ids      = bboss_get_mutual_friendships();
 					$mutual_friendships_exploded = ! empty( $mutual_friendships_ids ) ? explode( ',', $mutual_friendships_ids ) : array();
 					$count                       = ! empty( $mutual_friendships_exploded ) ? count( $mutual_friendships_exploded ) : 0;
 				}
 			}
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				if ( 'my-groups' === $nav_item->slug ) {
-					$count = bp_get_total_group_count_for_user( bp_loggedin_user_id() );
+					$count = bboss_get_total_group_count_for_user( bboss_loggedin_user_id() );
 				} elseif ( 'invites' === $nav_item->slug ) {
-					$count = groups_get_invite_count_for_user();
+					$count = bboss_groups_get_invite_count_for_user();
 				}
 			}
 
@@ -4568,7 +4568,7 @@ JS;
 		 */
 		public function bb_rl_modify_xprofile_visibility_levels( $visibility_levels ) {
 			$visibility_levels['loggedin']['label'] = __( 'All members', 'buddyboss' );
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				$visibility_levels['friends']['label'] = __( 'My connections', 'buddyboss' );
 			}
 			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
@@ -4587,12 +4587,12 @@ JS;
 			);
 
 			// Bail if not a POST action.
-			if ( ! bp_is_post_request() ) {
+			if ( ! bboss_is_post_request() ) {
 				wp_send_json_error( $response );
 			}
 
 			// Check if document component is active.
-			if ( ! bp_is_active( 'document' ) ) {
+			if ( ! bboss_is_active( 'document' ) ) {
 				wp_send_json_error( $response );
 			}
 
@@ -4602,16 +4602,16 @@ JS;
 			}
 
 			// Nonce check.
-			$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+			$nonce = bboss_filter_input_string( INPUT_POST, '_wpnonce' );
 			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
 				wp_send_json_error( $response );
 			}
 
 			$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
 			$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
-			$type                   = bb_filter_input_string( INPUT_POST, 'document_type' );
-			$name                   = bb_filter_input_string( INPUT_POST, 'name' );
-			$privacy                = bb_filter_input_string( INPUT_POST, 'privacy' );
+			$type                   = bboss_filter_input_string( INPUT_POST, 'document_type' );
+			$name                   = bboss_filter_input_string( INPUT_POST, 'name' );
+			$privacy                = bboss_filter_input_string( INPUT_POST, 'privacy' );
 			$update_name            = filter_input( INPUT_POST, 'update_name', FILTER_VALIDATE_BOOLEAN );
 			$update_privacy         = filter_input( INPUT_POST, 'update_privacy', FILTER_VALIDATE_BOOLEAN );
 
@@ -4680,7 +4680,7 @@ JS;
 					) {
 						while ( bp_document() ) {
 							bp_the_document();
-							bp_get_template_part( 'document/document-entry' );
+							bboss_get_template_part( 'document/document-entry' );
 						}
 					}
 					$result['document'] = ob_get_clean();

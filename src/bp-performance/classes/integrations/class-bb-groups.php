@@ -157,7 +157,7 @@ class BB_Groups extends Integration_Abstract {
 	 * When Group created from Manage
 	 */
 	public function event_groups_create_group_step_complete() {
-		$bp       = buddypress();
+		$bp       = bboss();
 		$group_id = $bp->groups->new_group_id;
 		if ( ! empty( $group_id ) ) {
 			$this->purge_item_cache_by_item_id( $group_id );
@@ -377,7 +377,7 @@ class BB_Groups extends Integration_Abstract {
 	/**
 	 * When Group has been subscribed.
 	 *
-	 * @param BB_Subscriptions $subscription Subscription object.
+	 * @param BBoss_Subscriptions $subscription Subscription object.
 	 */
 	public function event_bb_subscriptions_after_save( $subscription ) {
 		if (
@@ -395,7 +395,7 @@ class BB_Groups extends Integration_Abstract {
 	 * @param int $subscription_id  Subscription id.
 	 */
 	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
-		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 		if (
 			! empty( $subscription->type ) &&
 			! empty( $subscription->item_id ) &&
@@ -498,7 +498,7 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	private function get_group_ids_by_userid( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->groups->table_name} WHERE creator_id = %d", $user_id );
 
@@ -513,8 +513,8 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_item_id( $group_id ) {
 		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
-		$group = new \BP_Groups_Group( $group_id );
-		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) ) );
+		$group = new \BBoss_Groups_Group( $group_id );
+		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bboss_get_group_permalink( $group ) ) );
 	}
 
 	/**
@@ -540,9 +540,9 @@ class BB_Groups extends Integration_Abstract {
 	 * @return string
 	 */
 	public function prepare_group_deeplink( $group_id ) {
-		$group = new \BP_Groups_Group( $group_id );
+		$group = new \BBoss_Groups_Group( $group_id );
 
-		return 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) );
+		return 'bbapp-deeplinking_' . untrailingslashit( bboss_get_group_permalink( $group ) );
 	}
 
 	/**

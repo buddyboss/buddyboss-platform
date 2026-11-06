@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_before_activity_directory_content() {
+function bboss_nouveau_before_activity_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
@@ -35,7 +35,7 @@ function bp_nouveau_before_activity_directory_content() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_after_activity_directory_content() {
+function bboss_nouveau_after_activity_directory_content() {
 	/**
 	 * Fires after the display of the activity list.
 	 *
@@ -62,7 +62,7 @@ function bp_nouveau_after_activity_directory_content() {
 	 */
 	do_action( 'bp_after_directory_activity' );
 
-	bp_get_template_part( 'common/js-templates/activity/comments' );
+	bboss_get_template_part( 'common/js-templates/activity/comments' );
 }
 
 /**
@@ -70,7 +70,7 @@ function bp_nouveau_after_activity_directory_content() {
  *
  * @since BuddyBoss 1.2.2
  */
-function bp_nouveau_before_single_activity_content() {
+function bboss_nouveau_before_single_activity_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
@@ -91,7 +91,7 @@ function bp_nouveau_before_single_activity_content() {
  *
  * @since BuddyBoss 1.2.2
  */
-function bp_nouveau_after_single_activity_content() {
+function bboss_nouveau_after_single_activity_content() {
 	/**
 	 * Fires after the single activity display content.
 	 *
@@ -112,8 +112,8 @@ function bp_nouveau_after_single_activity_content() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_before_activity_post_form() {
-	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
+function bboss_nouveau_before_activity_post_form() {
+	if ( bboss_nouveau_current_user_can( 'publish_activity' ) ) {
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 	}
 
@@ -130,7 +130,7 @@ function bp_nouveau_before_activity_post_form() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_after_activity_post_form() {
+function bboss_nouveau_after_activity_post_form() {
 
 	/**
 	 * Fires after the activity post form.
@@ -147,7 +147,7 @@ function bp_nouveau_after_activity_post_form() {
  *
  * @return string HTML.
  */
-function bp_nouveau_activity_member_post_form() {
+function bboss_nouveau_activity_member_post_form() {
 
 	/**
 	 * Fires before the display of the member activity post form.
@@ -156,8 +156,8 @@ function bp_nouveau_activity_member_post_form() {
 	 */
 	do_action( 'bp_before_member_activity_post_form' );
 
-	if ( is_user_logged_in() && bp_is_user_activity() ) {
-		bp_get_template_part( 'activity/post-form' );
+	if ( is_user_logged_in() && bboss_is_user_activity() ) {
+		bboss_get_template_part( 'activity/post-form' );
 	}
 
 	/**
@@ -176,7 +176,7 @@ function bp_nouveau_activity_member_post_form() {
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
  */
-function bp_nouveau_activity_hook( $when = '', $suffix = '' ) {
+function bboss_nouveau_activity_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
 
 	if ( $when ) {
@@ -190,7 +190,7 @@ function bp_nouveau_activity_hook( $when = '', $suffix = '' ) {
 		$hook[] = $suffix;
 	}
 
-	bp_nouveau_hook( $hook );
+	bboss_nouveau_hook( $hook );
 }
 
 /**
@@ -200,8 +200,8 @@ function bp_nouveau_activity_hook( $when = '', $suffix = '' ) {
  *
  * @return bool True if the activity has some content. False Otherwise.
  */
-function bp_nouveau_activity_has_content() {
-	return bp_activity_has_content() || (bool) has_action( 'bp_activity_entry_content' );
+function bboss_nouveau_activity_has_content() {
+	return bboss_activity_has_content() || (bool) has_action( 'bp_activity_entry_content' );
 }
 
 /**
@@ -209,9 +209,9 @@ function bp_nouveau_activity_has_content() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_content() {
-	if ( bp_nouveau_activity_has_content() ) {
-		bp_activity_content_body();
+function bboss_nouveau_activity_content() {
+	if ( bboss_nouveau_activity_has_content() ) {
+		bboss_activity_content_body();
 	}
 
 	/**
@@ -227,8 +227,8 @@ function bp_nouveau_activity_content() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_timestamp() {
-	echo esc_attr( bp_nouveau_get_activity_timestamp() );
+function bboss_nouveau_activity_timestamp() {
+	echo esc_attr( bboss_nouveau_get_activity_timestamp() );
 }
 
 /**
@@ -236,8 +236,8 @@ function bp_nouveau_activity_timestamp() {
  *
  * @since BuddyBoss 2.8.20
  */
-function bb_nouveau_activity_updated_timestamp() {
-	echo esc_attr( bb_nouveau_get_activity_updated_timestamp() );
+function bboss_nouveau_activity_updated_timestamp() {
+	echo esc_attr( bboss_nouveau_get_activity_updated_timestamp() );
 }
 
 /**
@@ -247,7 +247,7 @@ function bb_nouveau_activity_updated_timestamp() {
  *
  * @return integer The Activity timestamp.
  */
-function bp_nouveau_get_activity_timestamp() {
+function bboss_nouveau_get_activity_timestamp() {
 	/**
 	 * Filter here to edit the activity timestamp.
 	 *
@@ -255,7 +255,7 @@ function bp_nouveau_get_activity_timestamp() {
 	 *
 	 * @param integer $value The Activity timestamp.
 	 */
-	return apply_filters( 'bp_nouveau_get_activity_timestamp', strtotime( bp_get_activity_date_recorded() ) );
+	return apply_filters( 'bp_nouveau_get_activity_timestamp', strtotime( bboss_get_activity_date_recorded() ) );
 }
 
 /**
@@ -265,7 +265,7 @@ function bp_nouveau_get_activity_timestamp() {
  *
  * @return integer The Activity updated timestamp.
  */
-function bb_nouveau_get_activity_updated_timestamp() {
+function bboss_nouveau_get_activity_updated_timestamp() {
 	/**
 	 * Filter here to edit the activity updated timestamp.
 	 *
@@ -273,7 +273,7 @@ function bb_nouveau_get_activity_updated_timestamp() {
 	 *
 	 * @param integer $value The Activity updated timestamp.
 	 */
-	return apply_filters( 'bb_nouveau_get_activity_updated_timestamp', strtotime( bb_get_activity_date_updated() ) );
+	return apply_filters( 'bb_nouveau_get_activity_updated_timestamp', strtotime( bboss_get_activity_date_updated() ) );
 }
 
 /**
@@ -281,12 +281,12 @@ function bb_nouveau_get_activity_updated_timestamp() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_state() {
+function bboss_nouveau_activity_state() {
 
-	$activity_id    = bp_get_activity_id();
-	$comment_count  = bp_activity_get_comment_count();
-	$reactions      = bb_active_reactions();
-	$reaction       = bb_load_reaction();
+	$activity_id    = bboss_get_activity_id();
+	$comment_count  = bboss_activity_get_comment_count();
+	$reactions      = bboss_active_reactions();
+	$reaction       = bboss_load_reaction();
 	$reaction_count = $reaction ? $reaction->bb_get_user_reactions_count(
 		array(
 			'item_id'     => $activity_id,
@@ -297,8 +297,8 @@ function bp_nouveau_activity_state() {
 	?>
 	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
-		if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
-			echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_id ) );
+		if ( bboss_is_reaction_activity_posts_enabled() && function_exists( 'bboss_get_activity_post_user_reactions_html' ) ) {
+			echo wp_kses_post( bboss_get_activity_post_user_reactions_html( $activity_id ) );
 		}
 
 		/**
@@ -311,7 +311,7 @@ function bp_nouveau_activity_state() {
 		do_action( 'bp_activity_state_after_reactions', $activity_id );
 		?>
 
-		<?php if ( bp_activity_can_comment() ) :
+		<?php if ( bboss_activity_can_comment() ) :
 			?>
 			<?php
 			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
@@ -354,11 +354,11 @@ function bp_nouveau_activity_state() {
  *
  * @since BuddyBoss 1.7.2
  *
- * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bb_nouveau_activity_inner_buttons( $args = array() ) {
+function bboss_nouveau_activity_inner_buttons( $args = array() ) {
 
-	$output = join( ' ', bb_nouveau_get_activity_inner_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_activity_inner_buttons( $args ) );
 
 	ob_start();
 
@@ -380,7 +380,7 @@ function bb_nouveau_activity_inner_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'activity-inner-meta' ) );
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -392,7 +392,7 @@ function bb_nouveau_activity_inner_buttons( $args = array() ) {
  *
  * @return array
  */
-function bb_nouveau_get_activity_inner_buttons( $args ) {
+function bboss_nouveau_get_activity_inner_buttons( $args ) {
 	global $activities_template;
 
 	$buttons = array();
@@ -401,8 +401,8 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 		return $buttons;
 	}
 
-	$activity_id    = bp_get_activity_id();
-	$activity_type  = bp_get_activity_type();
+	$activity_id    = bboss_get_activity_id();
+	$activity_type  = bboss_get_activity_type();
 
 	if ( ! $activity_id ) {
 		return $buttons;
@@ -423,17 +423,17 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 	}
 
 	// It's the first entry of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->activity->inner_buttons ) || ! is_a( bp_nouveau()->activity->inner_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->activity->inner_buttons ) || ! is_a( bboss_nouveau()->activity->inner_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                                 = true;
-		bp_nouveau()->activity->inner_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->activity->inner_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->activity->inner_buttons->update( $buttons_group );
+		bboss_nouveau()->activity->inner_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->activity->inner_buttons->get( $sort );
+	$return = bboss_nouveau()->activity->inner_buttons->get( $sort );
 
 	return $return;
 }
@@ -443,10 +443,10 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_activity_entry_buttons( $args = array() ) {
-	$output = join( ' ', bp_nouveau_get_activity_entry_buttons( $args ) );
+function bboss_nouveau_activity_entry_buttons( $args = array() ) {
+	$output = join( ' ', bboss_nouveau_get_activity_entry_buttons( $args ) );
 
 	ob_start();
 
@@ -462,8 +462,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	if ( function_exists( 'bb_get_activity_post_emotions_popup' ) ) {
-		$output .= bb_get_activity_post_emotions_popup();
+	if ( function_exists( 'bboss_get_activity_post_emotions_popup' ) ) {
+		$output .= bboss_get_activity_post_emotions_popup();
 	}
 
 	if ( ! $has_content ) {
@@ -474,7 +474,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 		$args = array( 'classes' => array( 'activity-meta' ) );
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -483,15 +483,15 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
  * @since BuddyPress 3.0.0
  * @todo  This function is too large and needs refactoring and reviewing.
  */
-function bp_nouveau_get_activity_entry_buttons( $args ) {
+function bboss_nouveau_get_activity_entry_buttons( $args ) {
 	$buttons = array();
 
 	if ( ! isset( $GLOBALS['activities_template'] ) ) {
 		return $buttons;
 	}
 
-	$activity_id    = bp_get_activity_id();
-	$activity_type  = bp_get_activity_type();
+	$activity_id    = bboss_get_activity_id();
+	$activity_type  = bboss_get_activity_type();
 	$parent_element = '';
 	$button_element = 'a';
 
@@ -524,7 +524,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		$button_element = $args['button_element'];
 	}
 
-	if ( bp_activity_can_favorite() && bp_is_activity_like_active() && function_exists( 'bb_get_reaction_button_settings' ) ) {
+	if ( bboss_activity_can_favorite() && bboss_is_activity_like_active() && function_exists( 'bboss_get_reaction_button_settings' ) ) {
 
 		// If button element set attr needs to be data-* else 'href'.
 		if ( 'button' === $button_element ) {
@@ -533,12 +533,12 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			$key = 'href';
 		}
 
-		$button_settings = bb_get_reaction_button_settings();
+		$button_settings = bboss_get_reaction_button_settings();
 
 		$fav_args = array(
 			'link_class'        => 'button fav bp-secondary-action bp-like-button',
 			'data-pressed' => 'false',
-			'link_attr'    => bp_get_activity_favorite_link(),
+			'link_attr'    => bboss_get_activity_favorite_link(),
 			'link_text'    => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
 				$button_settings['text']
@@ -546,7 +546,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		);
 
 		$reacted_id = 0;
-		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
+		if ( ! bboss_activity_is_item_favorite( $activity_id ) ) {
 			$fav_args['link_class'] = $fav_args['link_class'] . ' reaction';
 
 			$fav_args['link_text'] = sprintf(
@@ -559,16 +559,16 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 		} else {
 			// Get user reacted reaction data and prepare the link.
-			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_id );
+			$reaction_data = bboss_activity_get_user_reaction_by_item( $activity_id );
 			if ( ! empty( $reaction_data['id'] ) ) {
 				$reacted_id    = $reaction_data['id'];
 				$reaction_type = $reaction_data['type'];
-				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
+				$prepared_icon = bboss_activity_get_reaction_button( $reaction_data['id'], true );
 				$link_classes  = empty( $reaction_type ) ? ' has-like has-reaction' : ' has-emotion has-reaction';
 
 				$fav_args['link_class']   = str_replace( 'fav', 'unfav', $fav_args['link_class'] ) . $link_classes;
 				$fav_args['data-pressed'] = true;
-				$fav_args['link_attr']    = bp_get_activity_unfavorite_link();
+				$fav_args['link_attr']    = bboss_get_activity_unfavorite_link();
 				$fav_args['link_text']    = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
 						%2$s
@@ -618,7 +618,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	 */
 
 	// Add the Comment button if the user can comment.
-	if ( bp_activity_can_comment() ) {
+	if ( bboss_activity_can_comment() ) {
 		if ( 'activity_comment' === $activity_type ) {
 			$buttons['activity_conversation'] = array(
 				'id'                => 'activity_conversation',
@@ -641,9 +641,9 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 			// If button element set add url link to data-attr.
 			if ( 'button' === $button_element ) {
-				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_thread_permalink();
+				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bboss_get_activity_thread_permalink();
 			} else {
-				$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_thread_permalink();
+				$buttons['activity_conversation']['button_attr']['href'] = bboss_get_activity_thread_permalink();
 				$buttons['activity_conversation']['button_attr']['role'] = 'button';
 			}
 
@@ -674,9 +674,9 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 
 			// If button element set add href link to data-attr.
 			if ( 'button' === $button_element ) {
-				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
+				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bboss_get_activity_comment_link();
 			} else {
-				$buttons['activity_conversation']['button_attr']['href'] = bp_get_activity_comment_link();
+				$buttons['activity_conversation']['button_attr']['href'] = bboss_get_activity_comment_link();
 				$buttons['activity_conversation']['button_attr']['role'] = 'button';
 			}
 		}
@@ -697,17 +697,17 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	}
 
 	// It's the first entry of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->activity->entry_buttons ) || ! is_a( bp_nouveau()->activity->entry_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->activity->entry_buttons ) || ! is_a( bboss_nouveau()->activity->entry_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                                 = true;
-		bp_nouveau()->activity->entry_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->activity->entry_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->activity->entry_buttons->update( $buttons_group );
+		bboss_nouveau()->activity->entry_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->activity->entry_buttons->get( $sort );
+	$return = bboss_nouveau()->activity->entry_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
@@ -736,7 +736,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
  *
  * @param array $args Optional. To limit the number of comments to load.
  */
-function bp_nouveau_activity_comments( $args = array() ) {
+function bboss_nouveau_activity_comments( $args = array() ) {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity->children ) ) {
@@ -744,12 +744,12 @@ function bp_nouveau_activity_comments( $args = array() ) {
 	}
 
 
-	bp_nouveau_activity_recurse_comments( $activities_template->activity, $args );
+	bboss_nouveau_activity_recurse_comments( $activities_template->activity, $args );
 }
 
 /**
  * Loops through a level of activity comments and loads the template for each.
- * Note: This is an adaptation of the bp_activity_recurse_comments() BuddyPress core function
+ * Note: This is an adaptation of the bboss_activity_recurse_comments() BuddyPress core function
  *
  * @since BuddyPress 3.0.0
  *
@@ -765,14 +765,14 @@ function bp_nouveau_activity_comments( $args = array() ) {
  * }
  *
  */
-function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
+function bboss_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
 
 	if ( empty( $comment ) ) {
 		return;
 	}
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'limit_comments'     => false,
@@ -820,7 +820,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 			 */
 			do_action( 'bp_before_activity_comment' );
 
-			bp_get_template_part( 'activity/comment' );
+			bboss_get_template_part( 'activity/comment' );
 
 			/**
 			 * Fires after the display of an activity comment.
@@ -850,8 +850,8 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_comment_action() {
-	echo wp_kses_post( bp_nouveau_get_activity_comment_action() );
+function bboss_nouveau_activity_comment_action() {
+	echo wp_kses_post( bboss_nouveau_get_activity_comment_action() );
 }
 
 /**
@@ -859,7 +859,7 @@ function bp_nouveau_activity_comment_action() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_activity_comment_action() {
+function bboss_nouveau_get_activity_comment_action() {
 
 	/**
 	 * Filter to edit the activity comment action.
@@ -873,10 +873,10 @@ function bp_nouveau_get_activity_comment_action() {
 		sprintf(
 			/* translators: 1: User profile link, 2: Username, 3: Edited text */
 			__( '<a class="author-name" href="%1$s" %4$s>%2$s</a>%3$s', 'buddyboss' ),
-			esc_url( bp_get_activity_comment_user_link() ),
-			esc_html( bp_get_activity_comment_name() ),
-			bb_nouveau_activity_comment_is_edited(),
-			'data-bb-hp-profile="' . esc_attr( bp_get_activity_comment_user_id() ) . '"',
+			esc_url( bboss_get_activity_comment_user_link() ),
+			esc_html( bboss_get_activity_comment_name() ),
+			bboss_nouveau_activity_comment_is_edited(),
+			'data-bb-hp-profile="' . esc_attr( bboss_get_activity_comment_user_id() ) . '"',
 		)
 	);
 }
@@ -886,8 +886,8 @@ function bp_nouveau_get_activity_comment_action() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_activity_comment_form() {
-	bp_get_template_part( 'activity/comment-form' );
+function bboss_nouveau_activity_comment_form() {
+	bboss_get_template_part( 'activity/comment-form' );
 }
 
 /**
@@ -895,10 +895,10 @@ function bp_nouveau_activity_comment_form() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_activity_comment_buttons( $args = array() ) {
-	$output = join( ' ', bp_nouveau_get_activity_comment_buttons( $args ) );
+function bboss_nouveau_activity_comment_buttons( $args = array() ) {
+	$output = join( ' ', bboss_nouveau_get_activity_comment_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -912,8 +912,8 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	if ( function_exists( 'bb_get_activity_post_comment_emotions_popup' ) ) {
-		$output .= bb_get_activity_post_comment_emotions_popup();
+	if ( function_exists( 'bboss_get_activity_post_comment_emotions_popup' ) ) {
+		$output .= bboss_get_activity_post_comment_emotions_popup();
 	}
 
 	if ( ! $has_content ) {
@@ -924,7 +924,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		$args = array( 'classes' => array( 'acomment-options' ) );
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -932,19 +932,19 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  *
  * @return array
  */
-function bp_nouveau_get_activity_comment_buttons( $args ) {
+function bboss_nouveau_get_activity_comment_buttons( $args ) {
 	$buttons = array();
 
 	if ( ! isset( $GLOBALS['activities_template'] ) ) {
 		return $buttons;
 	}
 
-	$activity_comment_id = bp_get_activity_comment_id();
-	$activity_id         = bp_get_activity_id();
+	$activity_comment_id = bboss_get_activity_comment_id();
+	$activity_id         = bboss_get_activity_id();
 
 	if ( ! $activity_comment_id || ! $activity_id ) {
 		return $buttons;
@@ -981,8 +981,8 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 
 	// Add like button for activity comment.
 	if (
-		bb_activity_comment_can_favorite() &&
-		bb_is_reaction_activity_comments_enabled()
+		bboss_activity_comment_can_favorite() &&
+		bboss_is_reaction_activity_comments_enabled()
 	) {
 
 		// If button element set attr needs to be data-* else 'href'.
@@ -991,7 +991,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$fav_args = array(
 			'class'           => 'button fav reaction bp-secondary-action bp-like-button',
 			'data-pressed'    => 'false',
-			$key              => bb_get_activity_comment_favorite_link(),
+			$key              => bboss_get_activity_comment_favorite_link(),
 			'link_text'       => sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span><span class="like-count">%1$s</span>',
 				esc_html__( 'Like', 'buddyboss' )
@@ -999,23 +999,23 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			'data-reacted-id' => '',
 		);
 
-		if ( ! bb_get_activity_comment_is_favorite() ) {
-			$button_settings       = function_exists( 'bb_get_reaction_button_settings' ) ? bb_get_reaction_button_settings() : array();
+		if ( ! bboss_get_activity_comment_is_favorite() ) {
+			$button_settings       = function_exists( 'bboss_get_reaction_button_settings' ) ? bboss_get_reaction_button_settings() : array();
 			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
 				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
 			);
-		} elseif ( function_exists( 'bb_activity_get_user_reaction_by_item' ) ) {
+		} elseif ( function_exists( 'bboss_activity_get_user_reaction_by_item' ) ) {
 			// Get user reacted reaction data and prepare the link.
-			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
-			if ( ! empty( $reaction_data ) && function_exists( 'bb_activity_get_reaction_button' ) ) {
+			$reaction_data = bboss_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
+			if ( ! empty( $reaction_data ) && function_exists( 'bboss_activity_get_reaction_button' ) ) {
 				$link_classes  = empty( $reaction_data['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
-				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
+				$prepared_icon = bboss_activity_get_reaction_button( $reaction_data['id'], true );
 
 				$fav_args['class']           = str_replace( 'fav', 'unfav', $fav_args['class'] ) . ' ' . $link_classes;
 				$fav_args['data-pressed']    = true;
-				$fav_args[ $key ]            = bb_get_activity_comment_unfavorite_link();
+				$fav_args[ $key ]            = bboss_get_activity_comment_unfavorite_link();
 				$fav_args['link_text']       = sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>
 						<span class="like-count reactions_item" style="%2$s">%1$s</span>',
@@ -1091,17 +1091,17 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	}
 
 	// It's the first comment of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->activity->comment_buttons ) || ! is_a( bboss_nouveau()->activity->comment_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                                   = true;
-		bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->activity->comment_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->activity->comment_buttons->update( $buttons_group );
+		bboss_nouveau()->activity->comment_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->activity->comment_buttons->get( $sort );
+	$return = bboss_nouveau()->activity->comment_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
@@ -1111,7 +1111,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	 * If post comment / Activity comment sync is on, it's safer
 	 * to unset the comment button just before returning it.
 	 */
-	if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
+	if ( ! bboss_activity_can_comment_reply( bboss_activity_current_comment() ) ) {
 		unset( $return['activity_comment_reply'] );
 	}
 
@@ -1146,7 +1146,7 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
  *
  * @return void
  */
-function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
+function bboss_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 	$buttons = array();
 
 	/*
@@ -1179,7 +1179,7 @@ function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 		),
 	);
 
-	$nonce = wp_nonce_url( trailingslashit( bp_get_activity_directory_permalink() . 'delete/' . $comment->comment_ID ) . '?cid=' . $comment->comment_ID, 'bp_activity_delete_link' );
+	$nonce = wp_nonce_url( trailingslashit( bboss_get_activity_directory_permalink() . 'delete/' . $comment->comment_ID ) . '?cid=' . $comment->comment_ID, 'bp_activity_delete_link' );
 
 	// If button element set add nonce link to data-attr attr.
 	if ( 'button' === $button_element ) {
@@ -1191,8 +1191,8 @@ function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 	}
 
 	// It's the first entry of the loop, so build the Group and sort it.
-	bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons );
-	$returns                                = bp_nouveau()->activity->comment_buttons->get( true );
+	bboss_nouveau()->activity->comment_buttons = new BBoss_Buttons_Group( $buttons );
+	$returns                                = bboss_nouveau()->activity->comment_buttons->get( true );
 
 	$content = '';
 
@@ -1209,14 +1209,14 @@ function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
  *
  * @since BuddyBoss 1.2.3
  */
-function bp_nouveau_activity_privacy() {
-	if ( bp_activity_user_can_edit( false, true ) && ! bp_is_group() ) {
+function bboss_nouveau_activity_privacy() {
+	if ( bboss_activity_user_can_edit( false, true ) && ! bboss_is_group() ) {
 
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
+		if ( bboss_is_active( 'groups' ) && bboss()->groups->id === bboss_get_activity_object_name() ) {
 			return;
 		}
 
-		$privacy                   = bp_get_activity_privacy();
+		$privacy                   = bboss_get_activity_privacy();
 		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && ( 'media_get_activity' === $_REQUEST['action'] || 'media_get_media_description' === $_REQUEST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && ( 'document_get_activity' === $_REQUEST['action'] || 'document_get_document_description' === $_REQUEST['action'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$video_activity            = ( 'video' === $privacy || ( isset( $_REQUEST['action'] ) && 'video_get_activity' === $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -1229,10 +1229,10 @@ function bp_nouveau_activity_privacy() {
 		$folder_url                = '';
 
 		// Get media privacy to show.
-		if ( bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'media' ) ) {
 			if ( $media_activity ) {
-				$media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
-				$media    = new BP_Media( $media_id );
+				$media_id = BBoss_Media::get_activity_media_id( bboss_get_activity_id() );
+				$media    = new BBoss_Media( $media_id );
 
 				if ( ! empty( $media ) ) {
 					$privacy  = $media->privacy;
@@ -1240,18 +1240,18 @@ function bp_nouveau_activity_privacy() {
 					$album_id = $media->album_id;
 
 					if ( ! empty( $album_id ) ) {
-						$album     = new BP_Media_Album( $album_id );
+						$album     = new BBoss_Media_Album( $album_id );
 						$privacy   = $album->privacy;
-						$album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						$album_url = trailingslashit( bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/' . $album_id );
 					} else {
 						$parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
-						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+						$parent_activity_permalink = bboss_activity_get_permalink( $parent_activity_id );
 					}
 				}
 			}
 
-			if ( $document_activity && bp_is_active( 'document' ) ) {
-				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
+			if ( $document_activity && bboss_is_active( 'document' ) ) {
+				$document_id = BP_Document::get_activity_document_id( bboss_get_activity_id() );
 				$document    = new BP_Document( $document_id );
 				if ( ! empty( $document ) ) {
 					$privacy   = $document->privacy;
@@ -1262,16 +1262,16 @@ function bp_nouveau_activity_privacy() {
 						$folder_id  = bp_document_get_root_parent_id( $folder_id );
 						$folder     = new BP_Document_Folder( $folder_id );
 						$privacy    = $folder->privacy;
-						$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+						$folder_url = trailingslashit( bboss_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
 					} else {
 						$parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
-						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+						$parent_activity_permalink = bboss_activity_get_permalink( $parent_activity_id );
 					}
 				}
 			}
 
-			if ( $video_activity && bp_is_active( 'video' ) ) {
-				$video_id = BP_Video::get_activity_video_id( bp_get_activity_id() );
+			if ( $video_activity && bboss_is_active( 'video' ) ) {
+				$video_id = BP_Video::get_activity_video_id( bboss_get_activity_id() );
 				$video    = new BP_Video( $video_id );
 
 				if ( ! empty( $video ) ) {
@@ -1282,48 +1282,48 @@ function bp_nouveau_activity_privacy() {
 					if ( ! empty( $album_id ) ) {
 						$album     = new BP_Video_Album( $album_id );
 						$privacy   = $album->privacy;
-						$album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						$album_url = trailingslashit( bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/' . $album_id );
 					} else {
 						$parent_activity_id        = get_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', true );
-						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+						$parent_activity_permalink = bboss_activity_get_permalink( $parent_activity_id );
 					}
 				}
 			}
 
-			$activity_metas = bb_activity_get_metadata( bp_get_activity_id() );
+			$activity_metas = bboss_activity_get_metadata( bboss_get_activity_id() );
 
 			$activity_album_id = $activity_metas['bp_media_album_activity'][0] ?? '';
 			if ( ! empty( $activity_album_id ) ) {
 				$album_id       = $activity_album_id;
-				$album          = new BP_Media_Album( $album_id );
+				$album          = new BBoss_Media_Album( $album_id );
 				$privacy        = $album->privacy;
-				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+				$album_url      = trailingslashit( bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/' . $album_id );
 				$media_activity = true;
 			} else {
 				$media_ids = $activity_metas['bp_media_ids'][0] ?? '';
 				if ( ! empty( $media_ids ) ) {
 					$media_ids = explode( ',', $media_ids );
 					$media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
-					$media     = new BP_Media( $media_id );
+					$media     = new BBoss_Media( $media_id );
 
 					if ( ! empty( $media->album_id ) ) {
 						$album_id       = $media->album_id;
-						$album          = new BP_Media_Album( $album_id );
+						$album          = new BBoss_Media_Album( $album_id );
 						$privacy        = $album->privacy;
-						$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						$album_url      = trailingslashit( bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/' . $album_id );
 						$media_activity = true;
-						bp_activity_update_meta( bp_get_activity_id(), 'bp_media_album_activity', $album_id );
+						bboss_activity_update_meta( bboss_get_activity_id(), 'bp_media_album_activity', $album_id );
 					}
 				}
 			}
 
-			if ( bp_is_active( 'video' ) ) {
+			if ( bboss_is_active( 'video' ) ) {
 				$activity_video_album_id = $activity_metas['bp_video_album_activity'][0] ?? '';
 				if ( ! empty( $activity_video_album_id ) ) {
 					$album_id       = $activity_video_album_id;
 					$album          = new BP_Video_Album( $album_id );
 					$privacy        = $album->privacy;
-					$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+					$album_url      = trailingslashit( bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/' . $album_id );
 					$media_activity = true;
 				} else {
 					$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
@@ -1336,22 +1336,22 @@ function bp_nouveau_activity_privacy() {
 							$album_id       = $video->album_id;
 							$album          = new BP_Video_Album( $album_id );
 							$privacy        = $album->privacy;
-							$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+							$album_url      = trailingslashit( bboss_core_get_user_domain( $album->user_id ) . bboss_get_media_slug() . '/albums/' . $album_id );
 							$media_activity = true;
-							bp_activity_update_meta( bp_get_activity_id(), 'bp_video_album_activity', $album_id );
+							bboss_activity_update_meta( bboss_get_activity_id(), 'bp_video_album_activity', $album_id );
 						}
 					}
 				}
 			}
 
-			if ( bp_is_active( 'document' ) ) {
+			if ( bboss_is_active( 'document' ) ) {
 				$activity_folder_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
 				if ( ! empty( $activity_folder_id ) ) {
 					$folder_id         = $activity_folder_id;
 					$folder_id         = bp_document_get_root_parent_id( $folder_id );
 					$folder            = new BP_Document_Folder( $folder_id );
 					$privacy           = $folder->privacy;
-					$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+					$folder_url        = trailingslashit( bboss_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
 					$document_activity = true;
 				} else {
 					$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
@@ -1365,9 +1365,9 @@ function bp_nouveau_activity_privacy() {
 							$folder_id         = bp_document_get_root_parent_id( $folder_id );
 							$folder            = new BP_Document_Folder( $folder_id );
 							$privacy           = $folder->privacy;
-							$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+							$folder_url        = trailingslashit( bboss_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
 							$document_activity = true;
-							bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
+							bboss_activity_update_meta( bboss_get_activity_id(), 'bp_document_folder_activity', $folder_id );
 						}
 					}
 				}
@@ -1375,7 +1375,7 @@ function bp_nouveau_activity_privacy() {
 		}
 
 		if ( ( $media_activity || $document_activity || $video_activity ) && empty( $group_id ) && $parent_activity_id ) {
-			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+			$parent_activity = new BBoss_Activity_Activity( $parent_activity_id );
 
 			if ( ! empty( $parent_activity->id ) ) {
 				$group_id = $parent_activity->item_id;
@@ -1386,9 +1386,9 @@ function bp_nouveau_activity_privacy() {
 			return;
 		}
 
-		$privacy_items = bp_activity_get_visibility_levels();
+		$privacy_items = bboss_activity_get_visibility_levels();
 
-		if ( ( $media_activity || $video_activity ) && ( ( $parent_activity_id && $parent_activity_permalink && bb_user_can_create_activity() ) || ( $album_id && ! empty( $album_url ) ) ) ) {
+		if ( ( $media_activity || $video_activity ) && ( ( $parent_activity_id && $parent_activity_permalink && bboss_user_can_create_activity() ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 			?>
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? esc_attr( $privacy_items[ $privacy ] ) : esc_attr( $privacy ); ?>">
@@ -1407,7 +1407,7 @@ function bp_nouveau_activity_privacy() {
 				</ul>
 			</div>
 			<?php
-		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink && bb_user_can_create_activity() ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
+		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink && bboss_user_can_create_activity() ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
 			?>
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? esc_attr( $privacy_items[ $privacy ] ) : esc_attr( $privacy ); ?>">
@@ -1429,7 +1429,7 @@ function bp_nouveau_activity_privacy() {
 				</ul>
 			</div>
 			<?php
-		} elseif ( bb_user_can_create_activity() ) {
+		} elseif ( bboss_user_can_create_activity() ) {
 			?>
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? esc_attr( $privacy_items[ $privacy ] ) : esc_attr( $privacy ); ?>">
@@ -1468,17 +1468,17 @@ function bp_nouveau_activity_privacy() {
  *
  * @return string text.
  */
-function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
+function bboss_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 
 	if ( empty( $activity_id ) ) {
-		$activity_id = bp_get_activity_id();
+		$activity_id = bboss_get_activity_id();
 	}
 
 	if ( empty( $activity_id ) ) {
 		return;
 	}
 
-	$activity_metas = bb_activity_get_metadata( $activity_id );
+	$activity_metas = bboss_activity_get_metadata( $activity_id );
 	$is_edited      = $activity_metas['_is_edited'][0] ?? '';
 
 	if ( $is_edited ) {
@@ -1503,9 +1503,9 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
  *
  * @param int $activity_id The current activity ID.
  */
-function bp_nouveau_video_activity_description( $activity_id = 0 ) {
+function bboss_nouveau_video_activity_description( $activity_id = 0 ) {
 	if ( empty( $activity_id ) ) {
-		$activity_id = bp_get_activity_id();
+		$activity_id = bboss_get_activity_id();
 	}
 
 	if ( empty( $activity_id ) ) {
@@ -1524,7 +1524,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . $video->description . '</div>'; // phpcs:ignore
 
-	if ( bp_activity_user_can_edit( false, true ) ) {
+	if ( bboss_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $video->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
@@ -1536,7 +1536,7 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
 		<?php
 	}
 
-	if ( bp_activity_user_can_edit( false, true ) ) {
+	if ( bboss_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<div class="bp-edit-media-activity-description" style="display: none;">
@@ -1563,28 +1563,28 @@ function bp_nouveau_video_activity_description( $activity_id = 0 ) {
  *
  * @param int $activity_id The current activity ID.
  */
-function bp_nouveau_activity_description( $activity_id = 0 ) {
+function bboss_nouveau_activity_description( $activity_id = 0 ) {
 	if ( empty( $activity_id ) ) {
-		$activity_id = bp_get_activity_id();
+		$activity_id = bboss_get_activity_id();
 	}
 
 	if ( empty( $activity_id ) ) {
 		return;
 	}
 
-	$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
-	$media_id      = BP_Media::get_activity_media_id( $activity_id );
+	$attachment_id = BBoss_Media::get_activity_attachment_id( $activity_id );
+	$media_id      = BBoss_Media::get_activity_media_id( $activity_id );
 
 	if ( empty( $attachment_id ) ) {
 		return;
 	}
 
-	$media = new BP_Media( $media_id );
+	$media = new BBoss_Media( $media_id );
 
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . esc_html( $media->description ) . '</div>';
 
-	if ( bp_activity_user_can_edit( false, true ) ) {
+	if ( bboss_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $media->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
@@ -1616,9 +1616,9 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
  *
  * @param int $activity_id The current activity ID.
  */
-function bp_nouveau_document_activity_description( $activity_id = 0 ) {
+function bboss_nouveau_document_activity_description( $activity_id = 0 ) {
 	if ( empty( $activity_id ) ) {
-		$activity_id = bp_get_activity_id();
+		$activity_id = bboss_get_activity_id();
 	}
 
 	if ( empty( $activity_id ) ) {
@@ -1637,7 +1637,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	echo '<div class="activity-media-description">' .
 		 '<div class="bp-media-activity-description">' . esc_html( $document->description ) . '</div>';
 
-	if ( bp_activity_user_can_edit( false, true ) ) {
+	if ( bboss_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $document->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
@@ -1667,13 +1667,13 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
  *
  * @since BuddyBoss 1.4.0
  *
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  *
  * @param integer              $content  Activity Content
  *
  * @return bool
  */
-function bp_nouveau_clear_activity_content_body( $content, $activity ) {
+function bboss_nouveau_clear_activity_content_body( $content, $activity ) {
 	return false;
 }
 
@@ -1682,8 +1682,8 @@ function bp_nouveau_clear_activity_content_body( $content, $activity ) {
  *
  * @since BuddyBoss 1.5.0
  */
-function bp_nouveau_edit_activity_data() {
-	echo bp_nouveau_get_edit_activity_data(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is htmlentities-encoded JSON.
+function bboss_nouveau_edit_activity_data() {
+	echo bboss_nouveau_get_edit_activity_data(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is htmlentities-encoded JSON.
 }
 
 /**
@@ -1693,8 +1693,8 @@ function bp_nouveau_edit_activity_data() {
  *
  * @return string The Activity edit data.
  */
-function bp_nouveau_get_edit_activity_data() {
-	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+function bboss_nouveau_get_edit_activity_data() {
+	return htmlentities( wp_json_encode( bboss_activity_get_edit_data( bboss_get_activity_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
 /**
@@ -1702,10 +1702,10 @@ function bp_nouveau_get_edit_activity_data() {
  *
  * @since BuddyBoss 1.7.2
  *
- * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
-	$output = join( ' ', bb_nouveau_get_activity_entry_bubble_buttons( $args ) );
+function bboss_nouveau_activity_entry_bubble_buttons( $args = array() ) {
+	$output = join( ' ', bboss_nouveau_get_activity_entry_bubble_buttons( $args ) );
 
 	ob_start();
 
@@ -1728,7 +1728,7 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 	}
 
 	ob_start();
-	bp_get_template_part( 'common/more-options-view' );
+	bboss_get_template_part( 'common/more-options-view' );
 	$template_part_content = ob_get_clean();
 
 	$output = sprintf(
@@ -1745,24 +1745,24 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$output
 	);
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
  * Get the action buttons inside an Activity Loop,
  *
- * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args See bboss_nouveau_wrapper() for the description of parameters.
  *
  * @since BuddyBoss 1.7.2
  */
-function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
+function bboss_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	$buttons = array();
 	if ( ! isset( $GLOBALS['activities_template'] ) ) {
 		return $buttons;
 	}
 
-	$activity_id    = bp_get_activity_id();
-	$activity_type  = bp_get_activity_type();
+	$activity_id    = bboss_get_activity_id();
+	$activity_type  = bboss_get_activity_type();
 	$parent_element = '';
 	$button_element = 'a';
 
@@ -1796,7 +1796,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	// Add activity edit button.
-	if ( 'activity_comment' !== $activity_type && bp_activity_user_can_edit() && bp_is_activity_edit_enabled() ) {
+	if ( 'activity_comment' !== $activity_type && bboss_activity_user_can_edit() && bboss_is_activity_edit_enabled() ) {
 		$buttons['activity_edit'] = array(
 			'id'                => 'activity_edit',
 			'position'          => 30,
@@ -1818,8 +1818,8 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_report'] = bp_activity_get_report_link(
+	if ( bboss_is_active( 'moderation' ) ) {
+		$buttons['activity_report'] = bboss_activity_get_report_link(
 			array(
 				'position'       => 33,
 				'parent_element' => $parent_element,
@@ -1829,15 +1829,15 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( bp_is_active( 'video' ) && $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
+	if ( bboss_is_active( 'video' ) && $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
 		$video_id       = BP_Video::get_activity_video_id( $activity_id );
 		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {
 			$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
 			if ( ! empty( $attachment_id ) ) {
-				$video_privacy = bb_media_user_can_access( $video_id, 'video' );
+				$video_privacy = bboss_media_user_can_access( $video_id, 'video' );
 				$can_edit      = true === (bool) $video_privacy['can_edit'];
-				if ( $can_edit && ( bb_user_can_create_video() || $video_group_id > 0 ) ) {
+				if ( $can_edit && ( bboss_user_can_create_video() || $video_group_id > 0 ) ) {
 					$parent_activity_id          = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 					$attachment_urls             = bb_video_get_attachments_symlinks( $attachment_id, $video_id );
 					$buttons['change_thumbnail'] = array(
@@ -1867,7 +1867,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	if ( bp_activity_user_can_delete() ) {
+	if ( bboss_activity_user_can_delete() ) {
 		$delete_args = array();
 
 		/*
@@ -1876,7 +1876,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		 * a button out of it.
 		 */
 		if ( has_filter( 'bp_get_activity_delete_link' ) ) {
-			preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bp_get_activity_delete_link(), $link );
+			preg_match( '/<a\s[^>]*>(.*)<\/a>/siU', bboss_get_activity_delete_link(), $link );
 
 			if ( ! empty( $link[0] ) && ! empty( $link[1] ) ) {
 				$delete_args['link_text'] = $link[1];
@@ -1891,7 +1891,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 				}
 			}
 
-			$delete_args = bp_parse_args(
+			$delete_args = bboss_parse_args(
 				$delete_args,
 				array(
 					'link_text'   => '',
@@ -1918,10 +1918,10 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 
 			// If button element set add nonce link to data-attr attr.
 			if ( 'button' === $button_element ) {
-				$delete_args['data-attr'] = bp_get_activity_delete_url();
+				$delete_args['data-attr'] = bboss_get_activity_delete_url();
 				$delete_args['link_href'] = '';
 			} else {
-				$delete_args['link_href'] = bp_get_activity_delete_url();
+				$delete_args['link_href'] = bboss_get_activity_delete_url();
 				$delete_args['data-attr'] = '';
 			}
 		}
@@ -1948,11 +1948,11 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	// Close comments related menu.
-	if ( bb_is_close_activity_comments_enabled() && bp_activity_can_comment() ) {
+	if ( bboss_is_close_activity_comments_enabled() && bboss_activity_can_comment() ) {
 
 		$closed_action_label     = esc_html__( 'Turn off commenting', 'buddyboss' );
 		$closed_action_class     = 'close-activity-comment';
-		$is_closed_comments      = bb_is_activity_comments_closed( $activity_id );
+		$is_closed_comments      = bboss_is_activity_comments_closed( $activity_id );
 		$closed_action_permitted = false;
 
 		$check_args = array(
@@ -1960,7 +1960,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 			'action'      => $is_closed_comments ? 'unclose_comments' : 'close_comments',
 		);
 
-		$retval = bb_activity_comments_close_action_allowed( $check_args );
+		$retval = bboss_activity_comments_close_action_allowed( $check_args );
 		if ( 'allowed' === $retval ) {
 			$closed_action_permitted = true;
 		}
@@ -1995,14 +1995,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	// Download link for the medias and documents.
-	$media_id = bp_is_active( 'media' ) ? BP_Media::get_activity_media_id( $activity_id ) : 0;
+	$media_id = bboss_is_active( 'media' ) ? BBoss_Media::get_activity_media_id( $activity_id ) : 0;
 	if ( ! empty( $media_id ) ) {
-		$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+		$attachment_id = BBoss_Media::get_activity_attachment_id( $activity_id );
 		if ( ! empty( $attachment_id ) ) {
-			$media_privacy    = bb_media_user_can_access( $media_id, 'photo' );
+			$media_privacy    = bboss_media_user_can_access( $media_id, 'photo' );
 			$can_download_btn = true === (bool) $media_privacy['can_download'];
 			if ( $can_download_btn ) {
-				$download_url = bp_media_download_link( $attachment_id, $media_id );
+				$download_url = bboss_media_download_link( $attachment_id, $media_id );
 				if ( $download_url ) {
 					// Button for media download.
 					$buttons['activity_media_download'] = array(
@@ -2029,11 +2029,11 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	$video_id = bp_is_active( 'video' ) ? BP_Video::get_activity_video_id( $activity_id ) : 0;
+	$video_id = bboss_is_active( 'video' ) ? BP_Video::get_activity_video_id( $activity_id ) : 0;
 	if ( ! empty( $video_id ) ) {
 		$attachment_id = BP_Video::get_activity_attachment_id( $activity_id );
 		if ( ! empty( $attachment_id ) ) {
-			$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
+			$video_privacy    = bboss_media_user_can_access( $video_id, 'video' );
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
 			if ( $can_download_btn ) {
 				$download_url = bp_video_download_link( $attachment_id, $video_id );
@@ -2063,11 +2063,11 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	$document_id = bp_is_active( 'document' ) ? BP_Document::get_activity_document_id( $activity_id ) : 0;
+	$document_id = bboss_is_active( 'document' ) ? BP_Document::get_activity_document_id( $activity_id ) : 0;
 	if ( ! empty( $document_id ) ) {
 		$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
 		if ( ! empty( $attachment_id ) ) {
-			$document_privacy = bb_media_user_can_access( $document_id, 'document' );
+			$document_privacy = bboss_media_user_can_access( $document_id, 'document' );
 			$can_download_btn = true === (bool) $document_privacy['can_download'];
 			if ( $can_download_btn ) {
 				$download_url = bp_document_download_link( $attachment_id, $document_id );
@@ -2097,13 +2097,13 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
-	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( bp_get_activity_user_id() === bp_loggedin_user_id() || in_array( bp_loggedin_user_id(), bp_activity_get_comments_user_ids(), true ) ) ) {
+	$notification_type = bboss_activity_enabled_notification( 'bb_activity_comment', bboss_loggedin_user_id() );
+	if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( bboss_get_activity_user_id() === bboss_loggedin_user_id() || in_array( bboss_loggedin_user_id(), bboss_activity_get_comments_user_ids(), true ) ) ) {
 
 		$unmute_action_class = 'bb-icon-bell-slash';
 		$unmute_action_label = __( 'Turn off notifications', 'buddyboss' );
 
-		if ( bb_user_has_mute_notification( $activity_id, bp_loggedin_user_id() ) ) {
+		if ( bboss_user_has_mute_notification( $activity_id, bboss_loggedin_user_id() ) ) {
 			$unmute_action_class = 'bb-icon-bell';
 			$unmute_action_label = __( 'Turn on notifications', 'buddyboss' );
 		}
@@ -2146,24 +2146,24 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	}
 
 	// It's the first entry of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->activity->entry_buttons ) || ! is_a( bp_nouveau()->activity->entry_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->activity->entry_buttons ) || ! is_a( bboss_nouveau()->activity->entry_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                                 = true;
-		bp_nouveau()->activity->entry_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->activity->entry_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->activity->entry_buttons->update( $buttons_group );
+		bboss_nouveau()->activity->entry_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->activity->entry_buttons->get( $sort );
+	$return = bboss_nouveau()->activity->entry_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
 	}
 
 	// Remove the Delete button if the user can't delete.
-	if ( ! bp_activity_user_can_delete() ) {
+	if ( ! bboss_activity_user_can_delete() ) {
 		unset( $return['activity_delete'] );
 	}
 
@@ -2185,10 +2185,10 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
  *
  * @since BuddyBoss 1.7.3
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
-	$output = join( ' ', bb_nouveau_get_activity_comment_bubble_buttons( $args ) );
+function bboss_nouveau_activity_comment_bubble_buttons( $args = array() ) {
+	$output = join( ' ', bboss_nouveau_get_activity_comment_bubble_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -2210,7 +2210,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 	}
 
 	ob_start();
-	bp_get_template_part( 'common/more-options-view' );
+	bboss_get_template_part( 'common/more-options-view' );
 	$template_part_content = ob_get_clean();
 
 	$output = sprintf(
@@ -2227,7 +2227,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 		$output
 	);
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 /**
@@ -2235,11 +2235,11 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
  *
  * @since BuddyBoss 1.7.3
  *
- * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args Optional. See bboss_nouveau_wrapper() for the description of parameters.
  *
  * @return array
  */
-function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
+function bboss_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 	$buttons = array();
 
@@ -2247,9 +2247,9 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		return $buttons;
 	}
 
-	$activity_comment_id = bp_get_activity_comment_id();
-	$activity_id         = bp_get_activity_id();
-	$current_comment     = bp_activity_current_comment();
+	$activity_comment_id = bboss_get_activity_comment_id();
+	$activity_id         = bboss_get_activity_id();
+	$current_comment     = bboss_activity_current_comment();
 
 	if ( ! $activity_comment_id || ! $activity_id ) {
 		return $buttons;
@@ -2284,7 +2284,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 	$buttons = array();
 
-	if ( 'activity_comment' === $current_comment->type && bb_activity_comment_user_can_edit() && bb_is_activity_comment_edit_enabled() ) {
+	if ( 'activity_comment' === $current_comment->type && bboss_activity_comment_user_can_edit() && bboss_is_activity_comment_edit_enabled() ) {
 		$buttons['activity_comment_edit'] = array(
 			'id'                => 'activity_comment_edit',
 			'position'          => 30,
@@ -2306,8 +2306,8 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
+	if ( bboss_is_active( 'moderation' ) ) {
+		$buttons['activity_comment_report'] = bboss_activity_comment_get_report_link(
 			array(
 				'parent_element' => $parent_element,
 				'parent_attr'    => $parent_attr,
@@ -2323,7 +2323,7 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 		$buttons['activity_comment_reply']['button_attr']['href']  = sprintf( '#acomment-%s', $activity_comment_id );
 	}
 
-	if ( bp_activity_user_can_delete() ) {
+	if ( bboss_activity_user_can_delete() ) {
 
 		$buttons['activity_comment_delete'] = array(
 			'id'                => 'activity_comment_delete',
@@ -2341,9 +2341,9 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 
 		// If button element set add nonce link to data-attr attr.
 		if ( 'button' === $button_element ) {
-			$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bp_get_activity_comment_delete_link();
+			$buttons['activity_comment_delete']['button_attr']['data-bp-act-reply-delete-nonce'] = bboss_get_activity_comment_delete_link();
 		} else {
-			$buttons['activity_comment_delete']['button_attr']['href'] = bp_get_activity_comment_delete_link();
+			$buttons['activity_comment_delete']['button_attr']['href'] = bboss_get_activity_comment_delete_link();
 		}
 	}
 
@@ -2363,17 +2363,17 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
 	}
 
 	// It's the first comment of the loop, so build the Group and sort it.
-	if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
+	if ( ! isset( bboss_nouveau()->activity->comment_buttons ) || ! is_a( bboss_nouveau()->activity->comment_buttons, 'BBoss_Buttons_Group' ) ) {
 		$sort                                   = true;
-		bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
+		bboss_nouveau()->activity->comment_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
 	} else {
 		$sort = false;
-		bp_nouveau()->activity->comment_buttons->update( $buttons_group );
+		bboss_nouveau()->activity->comment_buttons->update( $buttons_group );
 	}
 
-	$return = bp_nouveau()->activity->comment_buttons->get( $sort );
+	$return = bboss_nouveau()->activity->comment_buttons->get( $sort );
 
 	if ( ! $return ) {
 		return array();
@@ -2405,8 +2405,8 @@ function bb_nouveau_get_activity_comment_bubble_buttons( $args ) {
  *
  * @since BuddyBoss 2.4.40
  */
-function bb_nouveau_activity_comment_timestamp() {
-	echo esc_attr( bb_nouveau_get_activity_comment_timestamp() );
+function bboss_nouveau_activity_comment_timestamp() {
+	echo esc_attr( bboss_nouveau_get_activity_comment_timestamp() );
 }
 
 /**
@@ -2416,7 +2416,7 @@ function bb_nouveau_activity_comment_timestamp() {
  *
  * @return integer The Activity comment timestamp.
  */
-function bb_nouveau_get_activity_comment_timestamp() {
+function bboss_nouveau_get_activity_comment_timestamp() {
 	/**
 	 * Filter here to edit the activity comment timestamp.
 	 *
@@ -2424,7 +2424,7 @@ function bb_nouveau_get_activity_comment_timestamp() {
 	 *
 	 * @param integer $value The Activity comment timestamp.
 	 */
-	return apply_filters( 'bb_nouveau_get_activity_comment_timestamp', strtotime( bp_get_activity_comment_date_recorded() ) );
+	return apply_filters( 'bb_nouveau_get_activity_comment_timestamp', strtotime( bboss_get_activity_comment_date_recorded() ) );
 }
 
 /**
@@ -2432,8 +2432,8 @@ function bb_nouveau_get_activity_comment_timestamp() {
  *
  * @since BuddyBoss 2.4.40
  */
-function bb_nouveau_edit_activity_comment_data() {
-	echo bb_nouveau_get_edit_activity_comment_data(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is htmlentities-encoded JSON.
+function bboss_nouveau_edit_activity_comment_data() {
+	echo bboss_nouveau_get_edit_activity_comment_data(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is htmlentities-encoded JSON.
 }
 
 /**
@@ -2443,8 +2443,8 @@ function bb_nouveau_edit_activity_comment_data() {
  *
  * @return string The Activity comment edit data.
  */
-function bb_nouveau_get_edit_activity_comment_data() {
-	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+function bboss_nouveau_get_edit_activity_comment_data() {
+	return htmlentities( wp_json_encode( bboss_activity_comment_get_edit_data( bboss_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
 /**
@@ -2457,22 +2457,22 @@ function bb_nouveau_get_edit_activity_comment_data() {
  *
  * @return string text.
  */
-function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo = false ) {
+function bboss_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo = false ) {
 	$activity_comment_text = '';
 
 	if ( empty( $activity_comment_id ) ) {
-		$activity_comment_id = bp_get_activity_comment_id();
+		$activity_comment_id = bboss_get_activity_comment_id();
 	}
 
 	if ( empty( $activity_comment_id ) ) {
 		return $activity_comment_text;
 	}
 
-	$activity_metas = bb_activity_get_metadata( $activity_comment_id );
+	$activity_metas = bboss_activity_get_metadata( $activity_comment_id );
 	$is_edited      = $activity_metas['_is_edited'][0] ?? '';
 
 	if ( $is_edited ) {
-		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bp_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
+		$activity_comment_text = '<span class="bb-activity-edited-text" data-balloon-pos="up" data-balloon="' . bboss_core_time_since( $is_edited ) . '"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
 	}
 
 	$rendered_text = apply_filters( 'bb_nouveau_activity_comment_is_edited', $activity_comment_text, $activity_comment_id );
@@ -2489,7 +2489,7 @@ function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo 
  *
  * @since BuddyBoss 2.5.80
  */
-function bb_activity_load_progress_bar_state() {
+function bboss_activity_load_progress_bar_state() {
 	?>
 	<div class="activity-sync-loader">
 		<div class="activity-sync-bar"></div>
@@ -2504,8 +2504,8 @@ function bb_activity_load_progress_bar_state() {
  *
  * @since BuddyBoss 2.5.80
  */
-function bp_nouveau_activity_comment_meta() {
-	echo bp_nouveau_get_activity_comment_meta(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped comment meta markup (esc_url/esc_attr/esc_html per value); wp_kses_post() strips the datetime attribute from the time-since <span>.
+function bboss_nouveau_activity_comment_meta() {
+	echo bboss_nouveau_get_activity_comment_meta(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped comment meta markup (esc_url/esc_attr/esc_html per value); wp_kses_post() strips the datetime attribute from the time-since <span>.
 }
 
 /**
@@ -2513,7 +2513,7 @@ function bp_nouveau_activity_comment_meta() {
  *
  * @since BuddyBoss 2.5.80
  */
-function bp_nouveau_get_activity_comment_meta() {
+function bboss_nouveau_get_activity_comment_meta() {
 
 	/**
 	 * Filter to the activity comment meta data.
@@ -2527,11 +2527,11 @@ function bp_nouveau_get_activity_comment_meta() {
 		sprintf(
 			/* translators: 1: activity permalink, 2: activity recorded date, 3: activity timestamp, 4: activity timestamp, 5: activity human time since */
 			__( '<a href="%1$s" class="activity-time-since"><span class="time-since" datetime="%2$s" data-bp-timestamp="%3$d" data-livestamp="%4$s">%5$s</span></a>', 'buddyboss' ),
-			esc_url( bp_get_activity_comment_permalink() ),
-			esc_attr( bp_get_activity_comment_date_recorded_raw() ),
-			esc_attr( strtotime( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded_raw() ) ),
-			esc_attr( bp_core_time_since( bp_get_activity_comment_date_recorded() ) )
+			esc_url( bboss_get_activity_comment_permalink() ),
+			esc_attr( bboss_get_activity_comment_date_recorded_raw() ),
+			esc_attr( strtotime( bboss_get_activity_comment_date_recorded_raw() ) ),
+			esc_attr( bboss_core_get_iso8601_date( bboss_get_activity_comment_date_recorded_raw() ) ),
+			esc_attr( bboss_core_time_since( bboss_get_activity_comment_date_recorded() ) )
 		)
 	);
 }

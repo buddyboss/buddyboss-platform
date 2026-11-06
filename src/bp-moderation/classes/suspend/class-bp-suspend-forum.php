@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Forum extends BP_Suspend_Abstract {
+class BBoss_Suspend_Forum extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,13 +24,13 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	public static $type = 'forum';
 
 	/**
-	 * BP_Suspend_Forum constructor.
+	 * BBoss_Suspend_Forum constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
 
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			return;
 		}
 
@@ -42,7 +42,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		add_action( "bp_suspend_hide_{$this->item_type}", array( $this, 'manage_hidden_forum' ), 10, 3 );
 		add_action( "bp_suspend_unhide_{$this->item_type}", array( $this, 'manage_unhidden_forum' ), 10, 4 );
 
-		$forum_post_type = bbp_get_forum_post_type();
+		$forum_post_type = bboss_bbp_get_forum_post_type();
 		// Add moderation data when forum is added.
 		add_action( "save_post_{$forum_post_type}", array( $this, 'sync_moderation_data_on_save' ), 10, 2 );
 
@@ -66,8 +66,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		add_filter( 'bbp_get_forum', array( $this, 'restrict_single_item' ), 10, 2 );
 
-		if ( bp_is_active( 'activity' ) ) {
-			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
+		if ( bboss_is_active( 'activity' ) ) {
+			add_filter( 'bb_moderation_restrict_single_item_' . BBoss_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
 		}
 
 		// Update the where condition for forum Subscriptions.
@@ -90,7 +90,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$args = array(
 			'fields'                 => 'ids',
-			'post_type'              => bbp_get_forum_post_type(),
+			'post_type'              => bboss_bbp_get_forum_post_type(),
 			'post_status'            => 'publish',
 			'author'                 => $member_id,
 			'posts_per_page'         => - 1,
@@ -113,7 +113,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		if ( 'hide' === $action && ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $k => $form_id ) {
-				if ( BP_Core_Suspend::check_suspended_content( $form_id, self::$type, true ) ) {
+				if ( BBoss_Core_Suspend::check_suspended_content( $form_id, self::$type, true ) ) {
 					unset( $forum_ids[ $k ] );
 				}
 			}
@@ -159,7 +159,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			$join_sql = apply_filters( 'bp_suspend_forum_get_join', $join_sql, $this );
 
 		} else {
-			$forum_slug = bbp_get_forum_post_type();
+			$forum_slug = bboss_bbp_get_forum_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( false === $wp_query->get( 'moderation_query' ) || ! empty( $post_types ) && in_array( $forum_slug, $post_types, true ) ) {
 				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
@@ -193,7 +193,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		$action_name = current_filter();
 
 		if ( 'bp_forums_search_where_sql' !== $action_name ) {
-			$forum_slug = bbp_get_forum_post_type();
+			$forum_slug = bboss_bbp_get_forum_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( false === $wp_query->get( 'moderation_query' ) || empty( $post_types ) || ! in_array( $forum_slug, $post_types, true ) ) {
 				return $where_conditions;
@@ -202,7 +202,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$where = array();
 		// Remove suspended members forum from widget.
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
 			$where['suspend_where'] = $this->exclude_where_query();
 		}
 		/**
@@ -264,7 +264,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		// if Group forums then return.
-		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 		if ( ! empty( $group_ids ) && ( ! isset( $args['type'] ) || empty( $args['type'] ) ) ) {
 			return;
 		}
@@ -275,7 +275,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $forum_id,
@@ -297,7 +297,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $forum_id;
 
@@ -341,7 +341,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $forum_id,
@@ -359,7 +359,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$forum_author_id = BP_Moderation_Forums::get_content_owner_id( $forum_id );
+			$forum_author_id = BBoss_Moderation_Forums::get_content_owner_id( $forum_id );
 			if ( isset( $suspend_args['blocked_user'] ) && $forum_author_id === $suspend_args['blocked_user'] ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -375,7 +375,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $forum_id;
 
@@ -412,12 +412,12 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
-		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id, $page );
+		if ( bboss_is_active( 'forums' ) ) {
+			$related_contents[ BBoss_Suspend_Forum_Topic::$type ] = BBoss_Suspend_Forum_Topic::get_forum_topics_ids( $forum_id, $page );
 		}
 
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $forum_id, $page );
+		if ( bboss_is_active( 'activity' ) ) {
+			$related_contents[ BBoss_Suspend_Activity::$type ] = BBoss_Suspend_Activity::get_bbpress_activity_ids( $forum_id, $page );
 		}
 
 		return $related_contents;
@@ -437,14 +437,14 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items     = bp_moderation_get_sub_items( $post_id, BP_Moderation_Forums::$moderation_type );
+		$sub_items     = bboss_moderation_get_sub_items( $post_id, BBoss_Moderation_Forums::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $post_id;
-		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Forums::$moderation_type;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BBoss_Moderation_Forums::$moderation_type;
 
-		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+		$suspended_record = BBoss_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
 		if ( empty( $suspended_record ) ) {
-			$suspended_record = BP_Core_Suspend::get_recode( $post->post_author, BP_Moderation_Members::$moderation_type );
+			$suspended_record = BBoss_Core_Suspend::get_recode( $post->post_author, BBoss_Moderation_Members::$moderation_type );
 		}
 
 		if ( empty( $suspended_record ) ) {
@@ -469,11 +469,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$post = get_post( $post_id );
 
-		if ( ! isset( $post->post_type ) || bbp_get_forum_post_type() !== $post->post_type ) {
+		if ( ! isset( $post->post_type ) || bboss_bbp_get_forum_post_type() !== $post->post_type ) {
 			return;
 		}
 
-		BP_Core_Suspend::delete_suspend( $post_id, $this->item_type );
+		BBoss_Core_Suspend::delete_suspend( $post_id, $this->item_type );
 	}
 
 	/**

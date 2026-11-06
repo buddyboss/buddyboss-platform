@@ -33,7 +33,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		$this->root = self::factory()->activity->create(
 			array(
-				'component'     => buddypress()->groups->id,
+				'component'     => bboss()->groups->id,
 				'type'          => 'activity_update',
 				'user_id'       => $this->author,
 				'item_id'       => $this->group_id,
@@ -42,7 +42,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			)
 		);
 
-		$this->comment = bp_activity_new_comment(
+		$this->comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $this->root,
@@ -52,7 +52,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		$this->public_post = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->activity->id,
+				'component' => bboss()->activity->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'content'   => 'public profile post',
@@ -66,19 +66,19 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	}
 
 	/**
-	 * Render a feed's items the way BP_Activity_Feed::output() does, without its die().
+	 * Render a feed's items the way BBoss_Activity_Feed::output() does, without its die().
 	 *
 	 * The args match bp_activity_action_*_feed(); setup_properties() adds the stream default.
 	 */
 	protected function render_feed( $viewer_id, $displayed_id, $activity_args, $ungated = false ) {
 		$this->set_current_user( $viewer_id );
-		buddypress()->displayed_user->id = $displayed_id;
+		bboss()->displayed_user->id = $displayed_id;
 
-		$feed = ( new ReflectionClass( 'BP_Activity_Feed' ) )->newInstanceWithoutConstructor();
+		$feed = ( new ReflectionClass( 'BBoss_Activity_Feed' ) )->newInstanceWithoutConstructor();
 		foreach ( array( 'id' => 'personal', 'title' => 'Feed', 'link' => home_url(), 'description' => 'Feed', 'ttl' => 30, 'update_period' => 'hourly', 'update_frequency' => 2 ) as $key => $value ) {
 			$feed->{$key} = $value;
 		}
-		$feed->activity_args = bp_parse_args(
+		$feed->activity_args = bboss_parse_args(
 			$activity_args,
 			array(
 				'max'              => 50,
@@ -99,13 +99,13 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		$xml = ob_get_clean();
 
 		remove_filter( 'bb_activity_user_can_view', '__return_true' );
-		buddypress()->displayed_user->id = 0;
+		bboss()->displayed_user->id = 0;
 
 		return $xml;
 	}
 
 	/**
-	 * The personal feed of bp_activity_action_personal_feed(): the 'feed' action is the scope.
+	 * The personal feed of bboss_activity_action_personal_feed(): the 'feed' action is the scope.
 	 */
 	protected function personal_feed( $viewer_id, $ungated = false ) {
 		return $this->render_feed(
@@ -120,7 +120,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	}
 
 	/**
-	 * The mentions feed of bp_activity_action_mentions_feed() for $mentioned_id.
+	 * The mentions feed of bboss_activity_action_mentions_feed() for $mentioned_id.
 	 */
 	protected function mentions_feed( $viewer_id, $mentioned_id, $ungated = false ) {
 		return $this->render_feed(
@@ -128,7 +128,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			$mentioned_id,
 			array(
 				// The feed searches '@username'; test users get a mention name that differs.
-				'search_terms' => '@' . bp_activity_get_user_mentionname( $mentioned_id ),
+				'search_terms' => '@' . bboss_activity_get_user_mentionname( $mentioned_id ),
 				'scope'        => 'mentions',
 			),
 			$ungated
@@ -137,11 +137,11 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 	public function test_mentions_feed_skips_private_group_comment() {
 		$mentioned = $this->stranger;
-		bp_activity_new_comment(
+		bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $this->root,
-				'content'     => '@' . bp_activity_get_user_mentionname( $mentioned ) . ' mention in private group',
+				'content'     => '@' . bboss_activity_get_user_mentionname( $mentioned ) . ' mention in private group',
 			)
 		);
 
@@ -156,14 +156,14 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	public function test_personal_feed_skips_friends_only_post_and_comment_for_guest() {
 		$friends_post = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->activity->id,
+				'component' => bboss()->activity->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'privacy'   => 'friends',
 				'content'   => 'friends only post',
 			)
 		);
-		bp_activity_new_comment(
+		bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $friends_post,
@@ -191,14 +191,14 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		self::add_user_to_group( $this->member, $group );
 		$post = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->groups->id,
+				'component' => bboss()->groups->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'item_id'   => $group,
 				'content'   => 'once public group post',
 			)
 		);
-		bp_activity_new_comment(
+		bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $post,
@@ -206,7 +206,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			)
 		);
 
-		groups_edit_group_settings( $group, false, 'private' );
+		bboss_groups_edit_group_settings( $group, false, 'private' );
 
 		// The status change hides the group's rows but not the comment row. The query leaves the
 		// comment out anyway, because its post is hidden, even without the feed's own check.
@@ -245,7 +245,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		ob_start();
 		try {
-			bb_nouveau_ajax_activity_sync_from_modal();
+			bboss_nouveau_ajax_activity_sync_from_modal();
 		} catch ( WPDieException $e ) {
 			unset( $e );
 		}
@@ -285,13 +285,13 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		$this->set_current_user( $user_id );
 
 		$request = new WP_REST_Request( 'GET', '/oembed/1.0/embed/activity' );
-		$request->set_param( 'url', bp_core_get_user_domain( $this->author ) . bp_get_activity_slug() . '/' . $activity_id . '/' );
+		$request->set_param( 'url', bboss_core_get_user_domain( $this->author ) . bboss_get_activity_slug() . '/' . $activity_id . '/' );
 
 		return rest_do_request( $request );
 	}
 
 	public function test_oembed_refuses_private_group_post_and_comment_to_guest() {
-		if ( ! bp_is_active( 'activity', 'embeds' ) ) {
+		if ( ! bboss_is_active( 'activity', 'embeds' ) ) {
 			$this->markTestSkipped( 'Activity embeds are off.' );
 		}
 
@@ -303,11 +303,11 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	public function test_oembed_accepts_public_post_and_member_view() {
 		// Rendering the 200 response needs wp-embed.js, which the test install lacks, so ask
 		// the URL validator that gates the route.
-		$extension = ( new ReflectionClass( 'BP_Activity_oEmbed_Extension' ) )->newInstanceWithoutConstructor();
+		$extension = ( new ReflectionClass( 'BBoss_Activity_oEmbed_Extension' ) )->newInstanceWithoutConstructor();
 		$validate  = new ReflectionMethod( $extension, 'validate_url_to_item_id' );
 		$validate->setAccessible( true );
 		$url = function ( $activity_id ) {
-			return bp_core_get_user_domain( $this->author ) . bp_get_activity_slug() . '/' . $activity_id . '/';
+			return bboss_core_get_user_domain( $this->author ) . bboss_get_activity_slug() . '/' . $activity_id . '/';
 		};
 
 		$this->set_current_user( 0 );
@@ -352,7 +352,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	protected function single_activity_loop( $user_id, $activity_id ) {
 		$this->set_current_user( $user_id );
 
-		$bp                    = buddypress();
+		$bp                    = bboss();
 		$bp->current_component = 'activity';
 		$bp->current_action    = (string) $activity_id;
 
@@ -371,7 +371,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	}
 
 	public function test_single_activity_loop_refuses_private_group_items() {
-		$this->assertTrue( bp_is_active( 'activity' ) );
+		$this->assertTrue( bboss_is_active( 'activity' ) );
 
 		$this->assertFalse( $this->single_activity_loop( 0, $this->root )['success'] );
 		$this->assertFalse( $this->single_activity_loop( 0, $this->comment )['success'] );
@@ -401,19 +401,19 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	}
 
 	public function test_reactions_list_follows_root_privacy() {
-		if ( ! function_exists( 'bb_get_activity_reaction_ajax_callback' ) ) {
+		if ( ! function_exists( 'bboss_get_activity_reaction_ajax_callback' ) ) {
 			$this->markTestSkipped( 'Reactions are not loaded.' );
 		}
 
 		$only_me = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->activity->id,
+				'component' => bboss()->activity->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'privacy'   => 'onlyme',
 			)
 		);
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $only_me,
@@ -464,7 +464,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	protected function filtered_loop_ids( $user_id, $post ) {
 		$this->set_current_user( $user_id );
 
-		$bp                    = buddypress();
+		$bp                    = bboss();
 		$bp->current_component = 'activity';
 		$bp->current_action    = '';
 
@@ -477,12 +477,12 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			$post
 		);
 
-		$query_string = bp_nouveau_ajax_querystring( '', 'activity' );
+		$query_string = bboss_nouveau_ajax_querystring( '', 'activity' );
 		$ids          = array();
-		if ( bp_has_activities( $query_string ) ) {
-			while ( bp_activities() ) {
-				bp_the_activity();
-				$ids[] = (int) bp_get_activity_id();
+		if ( bboss_has_activities( $query_string ) ) {
+			while ( bboss_activities() ) {
+				bboss_the_activity();
+				$ids[] = (int) bboss_get_activity_id();
 			}
 		}
 
@@ -511,7 +511,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 	public function test_activity_filter_keeps_request_values_as_values() {
 		$this->set_current_user( $this->member );
-		buddypress()->current_component = 'activity';
+		bboss()->current_component = 'activity';
 
 		$_POST        = array(
 			'object'   => 'activity',
@@ -520,7 +520,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			'order_by' => 'date_updated',
 			'page'     => 1,
 		);
-		$query_string = wp_parse_args( bp_nouveau_ajax_querystring( '', 'activity' ) );
+		$query_string = wp_parse_args( bboss_nouveau_ajax_querystring( '', 'activity' ) );
 
 		$this->assertSame( 'activity_update,new_avatar', $query_string['type'] );
 		$this->assertSame( 'just-me', $query_string['scope'] );
@@ -528,19 +528,19 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		// An injected argument stays inside the value it was sent in.
 		$_POST['filter'] = 'activity_update&include=' . $this->root . '&show_hidden=1';
-		$query_string    = wp_parse_args( bp_nouveau_ajax_querystring( '', 'activity' ) );
+		$query_string    = wp_parse_args( bboss_nouveau_ajax_querystring( '', 'activity' ) );
 
 		$this->assertSame( $_POST['filter'], $query_string['type'] );
 		$this->assertArrayNotHasKey( 'include', $query_string );
 		$this->assertArrayNotHasKey( 'show_hidden', $query_string );
 
-		buddypress()->current_component = '';
+		bboss()->current_component = '';
 	}
 
 	public function test_loggedin_privacy_checks_the_given_user_without_a_session() {
 		$loggedin_post = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->activity->id,
+				'component' => bboss()->activity->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'privacy'   => 'loggedin',
@@ -549,9 +549,9 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		// CLI and cron run with no current user but pass the member they act for.
 		$this->set_current_user( 0 );
-		$this->assertTrue( bb_activity_user_can_view( $loggedin_post, $this->member ) );
+		$this->assertTrue( bboss_activity_user_can_view( $loggedin_post, $this->member ) );
 		$this->assertIsInt(
-			bp_activity_new_comment(
+			bboss_activity_new_comment(
 				array(
 					'user_id'     => $this->member,
 					'activity_id' => $loggedin_post,
@@ -562,13 +562,13 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		);
 
 		// A guest is still refused.
-		$this->assertFalse( bb_activity_user_can_view( $loggedin_post, 0 ) );
+		$this->assertFalse( bboss_activity_user_can_view( $loggedin_post, 0 ) );
 	}
 
 	public function test_new_comment_refuses_a_comment_as_the_root() {
 		$this->set_current_user( $this->member );
 
-		$result = bp_activity_new_comment(
+		$result = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->member,
 				'activity_id' => $this->comment,
@@ -582,7 +582,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		// Replying to the comment through its root still works.
 		$this->assertIsInt(
-			bp_activity_new_comment(
+			bboss_activity_new_comment(
 				array(
 					'user_id'     => $this->member,
 					'activity_id' => $this->root,
@@ -600,25 +600,25 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		$group   = self::factory()->group->create( array( 'creator_id' => $this->author ) );
 		$post    = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->groups->id,
+				'component' => bboss()->groups->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'item_id'   => $group,
 			)
 		);
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $post,
 				'content'     => 'comment from public days',
 			)
 		);
-		groups_edit_group_settings( $group, false, 'private' );
+		bboss_groups_edit_group_settings( $group, false, 'private' );
 
-		$this->assertSame( 0, (int) ( new BP_Activity_Activity( $comment ) )->hide_sitewide );
+		$this->assertSame( 0, (int) ( new BBoss_Activity_Activity( $comment ) )->hide_sitewide );
 
 		$listed = function ( $args ) {
-			return wp_list_pluck( bp_activity_get( array_merge( array( 'display_comments' => 'stream', 'per_page' => 0, 'count_total' => true ), $args ) )['activities'], 'id' );
+			return wp_list_pluck( bboss_activity_get( array_merge( array( 'display_comments' => 'stream', 'per_page' => 0, 'count_total' => true ), $args ) )['activities'], 'id' );
 		};
 
 		$this->assertNotContains( $comment, array_map( 'intval', $listed( array() ) ) );
@@ -631,7 +631,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		// Comments on visible posts are still listed.
 		$this->assertContains( $this->comment, array_map( 'intval', $listed( array( 'show_hidden' => true ) ) ) );
-		$public_comment = bp_activity_new_comment(
+		$public_comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $this->public_post,
@@ -646,15 +646,15 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		// WP-CLI and cron: no current user, acting for a site admin who is not a member.
 		$this->set_current_user( 0 );
-		$this->assertTrue( bb_activity_user_can_view( $this->root, $admin ) );
+		$this->assertTrue( bboss_activity_user_can_view( $this->root, $admin ) );
 
 		// The admin's own session still sees everything.
 		$this->set_current_user( $admin );
-		$this->assertTrue( bb_activity_user_can_view( $this->root ) );
+		$this->assertTrue( bboss_activity_user_can_view( $this->root ) );
 
 		// A member's session does not borrow anyone's moderator rights.
 		$this->set_current_user( $this->member );
-		$this->assertFalse( bb_activity_user_can_view( $this->root, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( $this->root, $this->stranger ) );
 	}
 
 	public function test_activity_filter_query_string_ignores_the_arg_separator_setting() {
@@ -662,7 +662,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		ini_set( 'arg_separator.output', '&amp;' ); // phpcs:ignore WordPress.PHP.IniSet.Risky
 
 		$this->set_current_user( $this->member );
-		buddypress()->current_component = 'activity';
+		bboss()->current_component = 'activity';
 		$_POST = array(
 			'object' => 'activity',
 			'filter' => 'activity_update',
@@ -670,10 +670,10 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			'page'   => 2,
 		);
 
-		$query_string = wp_parse_args( bp_nouveau_ajax_querystring( '', 'activity' ) );
+		$query_string = wp_parse_args( bboss_nouveau_ajax_querystring( '', 'activity' ) );
 
 		ini_set( 'arg_separator.output', $separator ); // phpcs:ignore WordPress.PHP.IniSet.Risky
-		buddypress()->current_component = '';
+		bboss()->current_component = '';
 
 		$this->assertSame( '2', $query_string['page'] );
 		$this->assertSame( 'just-me', $query_string['scope'] );
@@ -683,7 +683,7 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 	public function test_request_scope_nothing_handles_falls_back_to_the_default() {
 		$friends_post  = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->activity->id,
+				'component' => bboss()->activity->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'privacy'   => 'friends',
@@ -691,17 +691,17 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		);
 		$loggedin_post = self::factory()->activity->create(
 			array(
-				'component' => buddypress()->activity->id,
+				'component' => bboss()->activity->id,
 				'type'      => 'activity_update',
 				'user_id'   => $this->author,
 				'privacy'   => 'loggedin',
 			)
 		);
 
-		$this->assertSame( 'all', bb_activity_get_request_scope( 'xyz' ) );
-		$this->assertSame( 'all', bb_activity_get_request_scope( 'all,xyz' ) );
-		$this->assertSame( 'just-me', bb_activity_get_request_scope( 'just-me,xyz' ) );
-		$this->assertSame( 'favorites,mentions', bb_activity_get_request_scope( 'favorites, mentions' ) );
+		$this->assertSame( 'all', bboss_activity_get_request_scope( 'xyz' ) );
+		$this->assertSame( 'all', bboss_activity_get_request_scope( 'all,xyz' ) );
+		$this->assertSame( 'just-me', bboss_activity_get_request_scope( 'just-me,xyz' ) );
+		$this->assertSame( 'favorites,mentions', bboss_activity_get_request_scope( 'favorites, mentions' ) );
 
 		// The activity loop AJAX and heartbeat, as a guest.
 		foreach ( array( 'xyz', 'all,xyz', 'video', 'document' ) as $scope ) {
@@ -714,17 +714,17 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		// `?scope=` read by bp_has_activities() itself.
 		$this->set_current_user( 0 );
-		buddypress()->current_component = 'activity';
+		bboss()->current_component = 'activity';
 		$_REQUEST['scope'] = 'xyz';
 		$ids               = array();
-		if ( bp_has_activities( array( 'per_page' => 0 ) ) ) {
-			while ( bp_activities() ) {
-				bp_the_activity();
-				$ids[] = (int) bp_get_activity_id();
+		if ( bboss_has_activities( array( 'per_page' => 0 ) ) ) {
+			while ( bboss_activities() ) {
+				bboss_the_activity();
+				$ids[] = (int) bboss_get_activity_id();
 			}
 		}
 		unset( $_REQUEST['scope'] );
-		buddypress()->current_component = '';
+		bboss()->current_component = '';
 
 		$this->assertNotContains( $friends_post, $ids );
 		$this->assertNotContains( $loggedin_post, $ids );

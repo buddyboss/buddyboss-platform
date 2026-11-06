@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
+class BBoss_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 	/**
 	 * @var string
 	 */
@@ -45,7 +45,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			$setting  = "bp_nouveau_appearance[{$this->type}_nav_hide]";
 		}
 
-		$hidden_options = bp_nouveau_get_appearance_settings( "{$this->type}_nav_hide" );
+		$hidden_options = bboss_nouveau_get_appearance_settings( "{$this->type}_nav_hide" );
 		$item_nav       = array();
 		$type           = '';
 
@@ -65,7 +65,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			}
 
 			// Try to fetch any random group:
-			$random = groups_get_groups( array(
+			$random = bboss_groups_get_groups( array(
 				'type'        => 'random',
 				'per_page'    => 1,
 				'slug'        => $slug,
@@ -74,7 +74,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 			if ( ! empty( $random['groups'] ) ) {
 				$group    = reset( $random['groups'] );
-				$nav      = new BP_Nouveau_Customizer_Group_Nav( $group->id );
+				$nav      = new BBoss_Nouveau_Customizer_Group_Nav( $group->id );
 				$item_nav = $nav->get_group_nav();
 			}
 
@@ -84,7 +84,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 			// It's a user!
 		} else {
-			$item_nav = bp_nouveau_member_customizer_nav();
+			$item_nav = bboss_nouveau_member_customizer_nav();
 			$type     = 'user';
 
 			$guide = __( 'Drag and drop each tab to change the profile navigation order.', 'buddyboss' );
@@ -115,12 +115,12 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 					if ( 'user' === $this->type ) {
 						$default_tab = 'profile';
-						$tab         = bp_nouveau_get_appearance_settings( 'user_default_tab' );
-						$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+						$tab         = bboss_nouveau_get_appearance_settings( 'user_default_tab' );
+						$default_tab = bboss_is_active( $tab ) ? $tab : $default_tab;
 					} else {
 						$default_tab = 'members';
-						$tab 		 = bp_nouveau_get_appearance_settings( 'group_default_tab' );
-						$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+						$tab 		 = bboss_nouveau_get_appearance_settings( 'group_default_tab' );
+						$default_tab = bboss_is_active( $tab ) ? $tab : $default_tab;
 					}
 
 					// Check if theme is BuddyBoss
@@ -136,7 +136,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 								<div class="menu-item-bar">
 									<div class="menu-item-handle ui-sortable-handle">
 									<span class="item-title" aria-hidden="true">
-										<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+										<span class="menu-item-title"><?php echo esc_html( bboss__bp_strip_spans_from_title( $item->name ) ); ?></span>
 											<?php
 											$class = '';
 											if ( $default_tab === $item->slug ) {
@@ -169,7 +169,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 							<div class="menu-item-bar">
 								<div class="menu-item-handle ui-sortable-handle">
 									<span class="item-title" aria-hidden="true">
-										<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+										<span class="menu-item-title"><?php echo esc_html( bboss__bp_strip_spans_from_title( $item->name ) ); ?></span>
 											<?php
 											$class = '';
 											if ( $default_tab === $item->slug ) {

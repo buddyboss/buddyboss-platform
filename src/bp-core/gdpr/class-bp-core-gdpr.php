@@ -1,6 +1,6 @@
 <?php
 /**
- * BP_Core_Gdpr base class
+ * BBoss_Core_Gdpr base class
  *
  * This class calls all other classes associated with GDPR member data export.
  *
@@ -12,18 +12,18 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Core_Gdpr
+ * Class BBoss_Core_Gdpr
  */
-class BP_Core_Gdpr {
+class BBoss_Core_Gdpr {
 
 	/**
-	 * BP_Core_Gdpr constructor.
+	 * BBoss_Core_Gdpr constructor.
 	 *
 	 * Runs on `bp_loaded` priority 0, and schedules the registration for priority 10 of the same
 	 * action. Both halves of that matter:
 	 *
-	 * - It cannot register here. Every check below is a bp_is_active() call, and the active
-	 *   components are not set up until bp_setup_components() on priority 2.
+	 * - It cannot register here. Every check below is a bboss_is_active() call, and the active
+	 *   components are not set up until bboss_setup_components() on priority 2.
 	 * - It cannot schedule itself on priority 0 either, which is what it used to do. WordPress
 	 *   iterates one priority bucket with a foreach over a snapshot of that bucket, so a callback
 	 *   appended to the priority that is already executing is never reached - WP_Hook::add_filter()
@@ -46,32 +46,32 @@ class BP_Core_Gdpr {
 	 */
 	function load_on_bp_dependency() {
 
-		if ( bp_is_active( 'xprofile' ) ) {
-			BP_Xprofile_Export::instance();
+		if ( bboss_is_active( 'xprofile' ) ) {
+			BBoss_Xprofile_Export::instance();
 		}
-		if ( bp_is_active( 'activity' ) ) {
-			BP_Activity_Export::instance();
+		if ( bboss_is_active( 'activity' ) ) {
+			BBoss_Activity_Export::instance();
 		}
-		if ( bp_is_active( 'notifications' ) ) {
-			BP_Notification_Export::instance();
+		if ( bboss_is_active( 'notifications' ) ) {
+			BBoss_Notification_Export::instance();
 		}
-		if ( bp_is_active( 'messages' ) ) {
-			BP_Message_Export::instance();
+		if ( bboss_is_active( 'messages' ) ) {
+			BBoss_Message_Export::instance();
 		}
-		if ( bp_is_active( 'groups' ) ) {
-			BP_Group_Export::instance();
-			BP_Group_Membership_Export::instance();
+		if ( bboss_is_active( 'groups' ) ) {
+			BBoss_Group_Export::instance();
+			BBoss_Group_Membership_Export::instance();
 		}
-		if ( bp_is_active( 'friends' ) ) {
-			BP_Friendship_Export::instance();
+		if ( bboss_is_active( 'friends' ) ) {
+			BBoss_Friendship_Export::instance();
 		}
-		if ( bp_is_active( 'settings' ) ) {
-			BP_Settings_Export::instance();
+		if ( bboss_is_active( 'settings' ) ) {
+			BBoss_Settings_Export::instance();
 		}
-		if ( bp_is_active( 'forums' ) ) {
-			new BP_Bbp_Gdpr_Forums();
-			new BP_Bbp_Gdpr_Replies();
-			new BP_Bbp_Gdpr_Topics();
+		if ( bboss_is_active( 'forums' ) ) {
+			new BBoss_Bbp_Gdpr_Forums();
+			new BBoss_Bbp_Gdpr_Replies();
+			new BBoss_Bbp_Gdpr_Topics();
 		}
 
 	}

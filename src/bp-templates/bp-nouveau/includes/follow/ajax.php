@@ -15,13 +15,13 @@ add_action(
 		$ajax_actions = array(
 			array(
 				'follow_follow' => array(
-					'function' => 'bp_nouveau_ajax_followunfollow_member',
+					'function' => 'bboss_nouveau_ajax_followunfollow_member',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'follow_unfollow' => array(
-					'function' => 'bp_nouveau_ajax_followunfollow_member',
+					'function' => 'bboss_nouveau_ajax_followunfollow_member',
 					'nopriv'   => false,
 				),
 			),
@@ -45,7 +45,7 @@ add_action(
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_ajax_followunfollow_member() {
+function bboss_nouveau_ajax_followunfollow_member() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
@@ -54,7 +54,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -82,7 +82,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 
 	$current_page     = isset( $_POST['current_page'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page'] ) ) : '';
 	$button_clicked   = isset( $_POST['button_clicked'] ) ? sanitize_text_field( wp_unslash( $_POST['button_clicked'] ) ) : '';
-	$button_arguments = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments( $current_page, $button_clicked ) : array();
+	$button_arguments = function_exists( 'bboss_member_get_profile_action_arguments' ) ? bboss_member_get_profile_action_arguments( $current_page, $button_clicked ) : array();
 
 	// Actions button arguments to display different style based on arguments.
 	$button_arguments = array_merge(
@@ -108,19 +108,19 @@ function bp_nouveau_ajax_followunfollow_member() {
 		}
 	}
 
-	$is_following = bp_is_following(
+	$is_following = bboss_is_following(
 		array(
 			'leader_id'   => $leader_id,
-			'follower_id' => bp_loggedin_user_id(),
+			'follower_id' => bboss_loggedin_user_id(),
 		)
 	);
 
 	// Trying to unfollow.
 	if ( $is_following ) {
-		if ( ! bp_stop_following(
+		if ( ! bboss_stop_following(
 			array(
 				'leader_id'   => $leader_id,
-				'follower_id' => bp_loggedin_user_id(),
+				'follower_id' => bboss_loggedin_user_id(),
 			)
 		) ) {
 
@@ -133,18 +133,18 @@ function bp_nouveau_ajax_followunfollow_member() {
 		} else {
 
 			ob_start();
-			bb_get_followers_count( $leader_id );
+			bboss_get_followers_count( $leader_id );
 			$total_followers = ob_get_clean();
 
-			if ( bp_has_members( 'include=' . $leader_id ) ) {
-				while ( bp_members() ) {
-					bp_the_member();
+			if ( bboss_has_members( 'include=' . $leader_id ) ) {
+				while ( bboss_members() ) {
+					bboss_the_member();
 
 					wp_send_json_success(
 						array(
-							'contents' => bp_get_add_follow_button(
+							'contents' => bboss_get_add_follow_button(
 								$leader_id,
-								bp_loggedin_user_id(),
+								bboss_loggedin_user_id(),
 								$button_arguments
 							),
 							'count'    => $total_followers,
@@ -154,9 +154,9 @@ function bp_nouveau_ajax_followunfollow_member() {
 			} else {
 				wp_send_json_success(
 					array(
-						'contents' => bp_get_add_follow_button(
+						'contents' => bboss_get_add_follow_button(
 							$leader_id,
-							bp_loggedin_user_id(),
+							bboss_loggedin_user_id(),
 							$button_arguments
 						),
 						'count'    => $total_followers,
@@ -167,10 +167,10 @@ function bp_nouveau_ajax_followunfollow_member() {
 
 		// Trying to follow.
 	} elseif ( ! $is_following ) {
-		if ( ! bp_start_following(
+		if ( ! bboss_start_following(
 			array(
 				'leader_id'   => $leader_id,
-				'follower_id' => bp_loggedin_user_id(),
+				'follower_id' => bboss_loggedin_user_id(),
 			)
 		) ) {
 
@@ -183,18 +183,18 @@ function bp_nouveau_ajax_followunfollow_member() {
 		} else {
 
 			ob_start();
-			bb_get_followers_count( $leader_id );
+			bboss_get_followers_count( $leader_id );
 			$total_followers = ob_get_clean();
 
-			if ( bp_has_members( 'include=' . $leader_id ) ) {
-				while ( bp_members() ) {
-					bp_the_member();
+			if ( bboss_has_members( 'include=' . $leader_id ) ) {
+				while ( bboss_members() ) {
+					bboss_the_member();
 
 					wp_send_json_success(
 						array(
-							'contents' => bp_get_add_follow_button(
+							'contents' => bboss_get_add_follow_button(
 								$leader_id,
-								bp_loggedin_user_id(),
+								bboss_loggedin_user_id(),
 								$button_arguments
 							),
 							'count'    => $total_followers,
@@ -204,9 +204,9 @@ function bp_nouveau_ajax_followunfollow_member() {
 			} else {
 				wp_send_json_success(
 					array(
-						'contents' => bp_get_add_follow_button(
+						'contents' => bboss_get_add_follow_button(
 							$leader_id,
-							bp_loggedin_user_id(),
+							bboss_loggedin_user_id(),
 							$button_arguments
 						),
 						'count'    => $total_followers,

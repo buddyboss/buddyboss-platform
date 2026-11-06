@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array
  */
-function bb_reactions_sanitize_content_types( $value ) {
+function bboss_reactions_sanitize_content_types( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -57,7 +57,7 @@ function bb_reactions_sanitize_content_types( $value ) {
  *
  * @return array
  */
-function bb_reactions_sanitize_button_settings( $value ) {
+function bboss_reactions_sanitize_button_settings( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -87,7 +87,7 @@ function bb_reactions_sanitize_button_settings( $value ) {
  *
  * @return string Sanitized mode value.
  */
-function bb_reactions_sanitize_mode( $value ) {
+function bboss_reactions_sanitize_mode( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'likes', 'emotions' );
 
@@ -106,7 +106,7 @@ function bb_reactions_sanitize_mode( $value ) {
  *
  * @return array
  */
-function bb_reactions_get_settings_fields() {
+function bboss_reactions_get_settings_fields() {
 
 	$fields = array();
 
@@ -117,7 +117,7 @@ function bb_reactions_get_settings_fields() {
 
 		'bb_reaction_mode'     => array(
 			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
-			'sanitize_callback' => 'bb_reactions_sanitize_mode',
+			'sanitize_callback' => 'bboss_reactions_sanitize_mode',
 		),
 
 		'bb_reaction_emotions' => array(),

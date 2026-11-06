@@ -23,18 +23,18 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) && file_exists(
 $bp_loader = dirname( __FILE__ ) . '/src/bp-loader.php';
 $subdir    = 'src';
 
-if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
+if ( ! defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) ) {
 	// Set source subdirectory.
-	define( 'BP_SOURCE_SUBDIRECTORY', $subdir );
+	define( 'BBOSS_SOURCE_SUBDIRECTORY', $subdir );
 }
 
 // Define overrides - only applicable to those running trunk.
-if ( ! defined( 'BP_PLUGIN_DIR' ) ) {
-	define( 'BP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+if ( ! defined( 'BBOSS_PLUGIN_DIR' ) ) {
+	define( 'BBOSS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
-if ( ! defined( 'BP_PLUGIN_URL' ) ) {
+if ( ! defined( 'BBOSS_PLUGIN_URL' ) ) {
 	// Be nice to symlinked directories.
-	define( 'BP_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BP_PLUGIN_DIR' ) ) ) ) );
+	define( 'BBOSS_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BBOSS_PLUGIN_DIR' ) ) ) ) );
 }
 
 // Include BuddyBoss Platform.

@@ -19,12 +19,12 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 		) );
 
 		// temporarily turn on groups, shut off messages
-		$groups_toggle = isset( buddypress()->active_components['groups'] );
-		$messages_toggle = isset( buddypress()->active_components['messages'] );
-		buddypress()->active_components['groups'] = 1;
-		unset( buddypress()->active_components['messages'] );
+		$groups_toggle = isset( bboss()->active_components['groups'] );
+		$messages_toggle = isset( bboss()->active_components['messages'] );
+		bboss()->active_components['groups'] = 1;
+		unset( bboss()->active_components['messages'] );
 
-		$n = BP_Notifications_Notification::get( array(
+		$n = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 		) );
 
@@ -35,15 +35,15 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 
 		// reset copmonent toggles
 		if ( $groups_toggle ) {
-			buddypress()->active_components['groups'] = 1;
+			bboss()->active_components['groups'] = 1;
 		} else {
-			unset( buddypress()->active_components['groups'] );
+			unset( bboss()->active_components['groups'] );
 		}
 
 		if ( $messages_toggle ) {
-			buddypress()->active_components['messages'] = 1;
+			bboss()->active_components['messages'] = 1;
 		} else {
-			unset( buddypress()->active_components['messages'] );
+			unset( bboss()->active_components['messages'] );
 		}
 	}
 
@@ -63,12 +63,12 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 		) );
 
 		// temporarily turn on groups, shut off messages
-		$groups_toggle = isset( buddypress()->active_components['groups'] );
-		$messages_toggle = isset( buddypress()->active_components['messages'] );
-		buddypress()->active_components['groups'] = 1;
-		unset( buddypress()->active_components['messages'] );
+		$groups_toggle = isset( bboss()->active_components['groups'] );
+		$messages_toggle = isset( bboss()->active_components['messages'] );
+		bboss()->active_components['groups'] = 1;
+		unset( bboss()->active_components['messages'] );
 
-		$n = BP_Notifications_Notification::get_total_count( array(
+		$n = BBoss_Notifications_Notification::get_total_count( array(
 			'user_id' => $u,
 		) );
 
@@ -77,15 +77,15 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 
 		// reset copmonent toggles
 		if ( $groups_toggle ) {
-			buddypress()->active_components['groups'] = 1;
+			bboss()->active_components['groups'] = 1;
 		} else {
-			unset( buddypress()->active_components['groups'] );
+			unset( bboss()->active_components['groups'] );
 		}
 
 		if ( $messages_toggle ) {
-			buddypress()->active_components['messages'] = 1;
+			bboss()->active_components['messages'] = 1;
 		} else {
-			unset( buddypress()->active_components['messages'] );
+			unset( bboss()->active_components['messages'] );
 		}
 	}
 
@@ -108,7 +108,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$n = BP_Notifications_Notification::get_total_count( array(
+		$n = BBoss_Notifications_Notification::get_total_count( array(
 			'user_id' => $u,
 			'component_name' => array( 'messages' ),
 		) );
@@ -139,7 +139,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			'date_notified' => date( 'Y-m-d H:i:s', $now - 1000 ),
 		) );
 
-		$n = BP_Notifications_Notification::get( array(
+		$n = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 			'order_by' => 'date_notified',
 			'sort_order' => 'DESC',
@@ -172,7 +172,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			'is_new' => true,
 		) );
 
-		$n = BP_Notifications_Notification::get( array(
+		$n = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 			'is_new' => true,
 		) );
@@ -204,7 +204,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			'is_new' => true,
 		) );
 
-		$n = BP_Notifications_Notification::get( array(
+		$n = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 			'is_new' => false,
 		) );
@@ -236,7 +236,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			'is_new' => true,
 		) );
 
-		$n = BP_Notifications_Notification::get( array(
+		$n = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 			'is_new' => 'both',
 		) );
@@ -269,7 +269,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			'is_new' => true,
 		) );
 
-		$n = BP_Notifications_Notification::get( array(
+		$n = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 			'search_terms' => 'roup',
 		) );
@@ -297,7 +297,7 @@ class BP_Tests_BP_Notifications_Notification_TestCases extends BP_UnitTestCase {
 			) );
 		}
 
-		$found = BP_Notifications_Notification::get( array(
+		$found = BBoss_Notifications_Notification::get( array(
 			'user_id' => $u,
 			'is_new' => true,
 			'page' => 2,

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Message extends BP_Suspend_Abstract {
+class BBoss_Suspend_Message extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public static $type = 'message_thread';
 
 	/**
-	 * BP_Suspend_Member constructor.
+	 * BBoss_Suspend_Member constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -62,7 +62,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 	public static function get_group_message_thread_ids( $group_id ) {
 		$mthread_ids = array();
 
-		$mthread_id = groups_get_groupmeta( $group_id, 'group_message_thread', true );
+		$mthread_id = bboss_groups_get_groupmeta( $group_id, 'group_message_thread', true );
 		if ( ! empty( $mthread_id ) ) {
 			$mthread_ids = array( $mthread_id );
 		}
@@ -168,7 +168,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $message_id,
@@ -190,7 +190,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $message_id;
 
@@ -228,7 +228,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $message_id,
@@ -246,7 +246,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$thread_author_id = BP_Moderation_Message::get_content_owner_id( $message_id );
+			$thread_author_id = BBoss_Moderation_Message::get_content_owner_id( $message_id );
 			if ( isset( $suspend_args['blocked_user'] ) && $thread_author_id === $suspend_args['blocked_user'] ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -262,7 +262,7 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $message_id;
 
@@ -310,6 +310,6 @@ class BP_Suspend_Message extends BP_Suspend_Abstract {
 			return;
 		}
 
-		BP_Core_Suspend::delete_suspend( $thread_id, $this->item_type );
+		BBoss_Core_Suspend::delete_suspend( $thread_id, $this->item_type );
 	}
 }

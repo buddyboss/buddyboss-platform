@@ -36,8 +36,8 @@ defined( 'ABSPATH' ) || exit;
  * @param string       $component The component the navigation is attached to. Defaults to 'members'.
  * @return null|false Returns false on failure.
  */
-function bp_core_new_nav_item( $args, $component = 'members' ) {
-	if ( ! bp_is_active( $component ) ) {
+function bboss_core_new_nav_item( $args, $component = 'members' ) {
+	if ( ! bboss_is_active( $component ) ) {
 		return;
 	}
 
@@ -53,10 +53,10 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 
 	// Validate nav link data.
-	$nav_item = bp_core_create_nav_link( $r, $component );
+	$nav_item = bboss_core_create_nav_link( $r, $component );
 
 	/*
 	 * To mimic legacy behavior, if bp_core_create_nav_link() returns false, we make
@@ -67,7 +67,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 	}
 
 	// Then, hook the screen function for the added nav item.
-	$hooked = bp_core_register_nav_screen_function( $nav_item );
+	$hooked = bboss_core_register_nav_screen_function( $nav_item );
 	if ( false === $hooked ) {
 		return false;
 	}
@@ -91,7 +91,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
  * Add a link to the main BuddyPress navigation.
  *
  * @since BuddyPress 2.4.0
- * @since BuddyPress 2.6.0 Introduced the `$component` parameter. Began returning a BP_Core_Nav_Item object on success.
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter. Began returning a BBoss_Core_Nav_Item object on success.
  *
  * @param array|string $args {
  *     Array describing the new nav item.
@@ -112,8 +112,8 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
  * @param string       $component Optional. Component that the nav belongs to.
  * @return false|array Returns false on failure, new nav item on success.
  */
-function bp_core_create_nav_link( $args = '', $component = 'members' ) {
-	$bp = buddypress();
+function bboss_core_create_nav_link( $args = '', $component = 'members' ) {
+	$bp = bboss();
 
 	$defaults = array(
 		'name'                    => false, // Display name for the nav item.
@@ -127,7 +127,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 
 	// If we don't have the required info we need, don't create this nav item.
 	if ( empty( $r['name'] ) || empty( $r['slug'] ) ) {
@@ -135,7 +135,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 	}
 
 	// If this is for site admins only and the user is not one, don't create the nav item.
-	if ( ! empty( $r['site_admin_only'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! empty( $r['site_admin_only'] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
@@ -148,7 +148,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		array(
 			'name'                    => $r['name'],
 			'slug'                    => $r['slug'],
-			'link'                    => trailingslashit( bp_loggedin_user_domain() . $r['slug'] ),
+			'link'                    => trailingslashit( bboss_loggedin_user_domain() . $r['slug'] ),
 			'css_id'                  => $r['item_css_id'],
 			'css_class'               => $r['item_css_class'],
 			'show_for_displayed_user' => $r['show_for_displayed_user'],
@@ -159,7 +159,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 	);
 
 	// Add the item to the nav.
-	buddypress()->{$component}->nav->add_nav( $nav_item );
+	bboss()->{$component}->nav->add_nav( $nav_item );
 
 	/**
 	 * Fires after a link is added to the main BuddyPress nav.
@@ -199,8 +199,8 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
  * }
  * @return false|null Returns false on failure.
  */
-function bp_core_register_nav_screen_function( $args = '' ) {
-	$bp = buddypress();
+function bboss_core_register_nav_screen_function( $args = '' ) {
+	$bp = bboss();
 
 	$defaults = array(
 		'name'                    => false, // Display name for the nav item.
@@ -213,7 +213,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 
 	// If we don't have the required info we need, don't register this screen function.
 	if ( empty( $r['slug'] ) ) {
@@ -224,7 +224,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 	 * If this is for site admins only and the user is not one,
 	 * don't register this screen function.
 	 */
-	if ( ! empty( $r['site_admin_only'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! empty( $r['site_admin_only'] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
@@ -233,7 +233,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 	 * the logged in user is not the displayed user
 	 * looking at their own profile, don't don't register this screen function.
 	 */
-	if ( empty( $r['show_for_displayed_user'] ) && ! bp_user_has_access() ) {
+	if ( empty( $r['show_for_displayed_user'] ) && ! bboss_user_has_access() ) {
 		return false;
 	}
 
@@ -242,19 +242,19 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 	 * component, don't attach the default subnav function so we can display a
 	 * directory or something else.
 	 */
-	if ( ( -1 != $r['position'] ) && bp_is_root_component( $r['slug'] ) && ! bp_displayed_user_id() ) {
+	if ( ( -1 != $r['position'] ) && bboss_is_root_component( $r['slug'] ) && ! bboss_displayed_user_id() ) {
 		return;
 	}
 
 	// Look for current component.
-	if ( bp_is_current_component( $r['slug'] ) || bp_is_current_item( $r['slug'] ) ) {
+	if ( bboss_is_current_component( $r['slug'] ) || bboss_is_current_item( $r['slug'] ) ) {
 
 		// The requested URL has explicitly included the default subnav
 		// (eg: http://example.com/members/membername/activity/just-me/)
 		// The canonical version will not contain this subnav slug.
-		if ( ! empty( $r['default_subnav_slug'] ) && bp_is_current_action( $r['default_subnav_slug'] ) && ! bp_action_variable( 0 ) ) {
+		if ( ! empty( $r['default_subnav_slug'] ) && bboss_is_current_action( $r['default_subnav_slug'] ) && ! bboss_action_variable( 0 ) ) {
 			unset( $bp->canonical_stack['action'] );
-		} elseif ( ! bp_current_action() ) {
+		} elseif ( ! bboss_current_action() ) {
 
 			// Add our screen hook if screen function is callable.
 			if ( is_callable( $r['screen_function'] ) ) {
@@ -301,8 +301,8 @@ function bp_core_register_nav_screen_function( $args = '' ) {
  *     @type string   $subnav_slug     The slug of the new default subnav item.
  * }
  */
-function bp_core_new_nav_default( $args = '' ) {
-	$bp = buddypress();
+function bboss_core_new_nav_default( $args = '' ) {
+	$bp = bboss();
 
 	$defaults = array(
 		'parent_slug'     => false, // Slug of the parent.
@@ -310,7 +310,7 @@ function bp_core_new_nav_default( $args = '' ) {
 		'subnav_slug'     => false,  // The slug of the subnav item to select when clicked.
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 
 	// This is specific to Members - it's not available in Groups.
 	$parent_nav = $bp->members->nav->get_primary( array( 'slug' => $r['parent_slug'] ), false );
@@ -337,7 +337,7 @@ function bp_core_new_nav_default( $args = '' ) {
 		$parent_nav->slug
 	);
 
-	if ( bp_is_current_component( $parent_nav->slug ) ) {
+	if ( bboss_is_current_component( $parent_nav->slug ) ) {
 
 		// The only way to tell whether to set the subnav is to peek at the unfiltered_uri
 		// Find the component.
@@ -351,7 +351,7 @@ function bp_core_new_nav_default( $args = '' ) {
 
 		// No subnav item has been requested in the URL, so set a new nav default.
 		if ( empty( $unfiltered_action ) ) {
-			if ( ! bp_is_current_action( $r['subnav_slug'] ) ) {
+			if ( ! bboss_is_current_action( $r['subnav_slug'] ) ) {
 				if ( is_callable( $r['screen_function'] ) ) {
 					add_action( 'bp_screens', $r['screen_function'], 3 );
 				}
@@ -369,7 +369,7 @@ function bp_core_new_nav_default( $args = '' ) {
 			// is explicitly called in the URL), the canonical URL will contain the
 			// subnav slug.
 		} else {
-			$bp->canonical_stack['action'] = bp_current_action();
+			$bp->canonical_stack['action'] = bboss_current_action();
 		}
 	}
 
@@ -392,7 +392,7 @@ function bp_core_new_nav_default( $args = '' ) {
  *     @type bool|string $item_css_id       Optional. 'id' attribute for the nav item. Default: the value of `$slug`.
  *     @type bool        $user_has_access   Optional. True if the logged-in user has access to the subnav item,
  *                                          otherwise false. Can be set dynamically when registering the subnav;
- *                                          eg, use `bp_is_my_profile()` to restrict access to profile owners only.
+ *                                          eg, use `bboss_is_my_profile()` to restrict access to profile owners only.
  *                                          Default: true.
  *     @type bool        $site_admin_only   Optional. Whether the nav item should be visible only to site admins
  *                                          (those with the 'bp_moderate' cap). Default: false.
@@ -407,20 +407,20 @@ function bp_core_new_nav_default( $args = '' ) {
  * @param string|null  $component The component the navigation is attached to. Defaults to 'members'.
  * @return null|false Returns false on failure.
  */
-function bp_core_new_subnav_item( $args, $component = null ) {
+function bboss_core_new_subnav_item( $args, $component = null ) {
 	// Backward compatibility for plugins using `bp_core_new_subnav_item()` without `$component`
 	// to add group subnav items.
-	if ( null === $component && bp_is_active( 'groups' ) && bp_is_group() && isset( $args['parent_slug'] ) ) {
+	if ( null === $component && bboss_is_active( 'groups' ) && bboss_is_group() && isset( $args['parent_slug'] ) ) {
 		/*
 		 * Assume that this item is intended to belong to the current group if:
 		 * a) the 'parent_slug' is the same as the slug of the current group, or
 		 * b) the 'parent_slug' starts with the slug of the current group, and the members nav doesn't have
 		 *    a primary item with that slug.
 		 */
-		$group_slug = bp_get_current_group_slug();
+		$group_slug = bboss_get_current_group_slug();
 		if (
 			$group_slug === $args['parent_slug'] ||
-			( 0 === strpos( $args['parent_slug'], $group_slug ) && ! buddypress()->members->nav->get_primary( array( 'slug' => $args['parent_slug'] ), false ) )
+			( 0 === strpos( $args['parent_slug'], $group_slug ) && ! bboss()->members->nav->get_primary( array( 'slug' => $args['parent_slug'] ), false ) )
 		) {
 			$component = 'groups';
 		}
@@ -430,12 +430,12 @@ function bp_core_new_subnav_item( $args, $component = null ) {
 		$component = 'members';
 	}
 
-	if ( ! bp_is_active( $component ) ) {
+	if ( ! bboss_is_active( $component ) ) {
 		return;
 	}
 
 	// First, register the subnav item in the nav.
-	$subnav_item = bp_core_create_subnav_link( $args, $component );
+	$subnav_item = bboss_core_create_subnav_link( $args, $component );
 
 	/*
 	 * To mimic legacy behavior, if bp_core_create_subnav_link() returns false, we make an
@@ -446,7 +446,7 @@ function bp_core_new_subnav_item( $args, $component = null ) {
 	}
 
 	// Then, hook the screen function for the added subnav item.
-	$hooked = bp_core_register_subnav_screen_function( $subnav_item, $component );
+	$hooked = bboss_core_register_subnav_screen_function( $subnav_item, $component );
 	if ( false === $hooked ) {
 		return false;
 	}
@@ -456,7 +456,7 @@ function bp_core_new_subnav_item( $args, $component = null ) {
  * Add a subnav link to the BuddyPress navigation.
  *
  * @since BuddyPress 2.4.0
- * @since BuddyPress 2.6.0 Introduced the `$component` parameter. Began returning a BP_Core_Nav_Item object on success.
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter. Began returning a BBoss_Core_Nav_Item object on success.
  *
  * @param array|string $args {
  *     Array describing the new subnav item.
@@ -469,7 +469,7 @@ function bp_core_new_subnav_item( $args, $component = null ) {
  *                                          item. Default: the value of $slug.
  *     @type bool        $user_has_access   Optional. True if the logged-in user has access to the
  *                                          subnav item, otherwise false. Can be set dynamically
- *                                          when registering the subnav; eg, use bp_is_my_profile()
+ *                                          when registering the subnav; eg, use bboss_is_my_profile()
  *                                          to restrict access to profile owners only. Default: true.
  *     @type bool        $site_admin_only   Optional. Whether the nav item should be visible only
  *                                          to site admins (those with the 'bp_moderate' cap).
@@ -485,12 +485,12 @@ function bp_core_new_subnav_item( $args, $component = null ) {
  *                                          Default: false.
  * }
  * @param string       $component The component the navigation is attached to. Defaults to 'members'.
- * @return false|array Returns false on failure, new BP_Core_Nav_Item instance on success.
+ * @return false|array Returns false on failure, new BBoss_Core_Nav_Item instance on success.
  */
-function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
-	$bp = buddypress();
+function bboss_core_create_subnav_link( $args = '', $component = 'members' ) {
+	$bp = bboss();
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'name'              => false, // Display name for the nav item.
@@ -530,7 +530,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 	}
 
 	// If this is for site admins only and the user is not one, don't create the subnav item.
-	if ( ! empty( $r['site_admin_only'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! empty( $r['site_admin_only'] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
@@ -552,7 +552,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 		'show_in_admin_bar' => (bool) $r['show_in_admin_bar'],
 	);
 
-	buddypress()->{$component}->nav->add_nav( $subnav_item );
+	bboss()->{$component}->nav->add_nav( $subnav_item );
 
 	return $subnav_item;
 }
@@ -571,7 +571,7 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
  *     @type string   $parent_url        URL of the parent nav item.
  *     @type bool     $user_has_access   Optional. True if the logged-in user has access to the
  *                                       subnav item, otherwise false. Can be set dynamically
- *                                       when registering the subnav; eg, use bp_is_my_profile()
+ *                                       when registering the subnav; eg, use bboss_is_my_profile()
  *                                       to restrict access to profile owners only. Default: true.
  *     @type bool     $site_admin_only   Optional. Whether the nav item should be visible
  *                                       only to site admins (those with the 'bp_moderate' cap).
@@ -589,10 +589,10 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
  * @param string       $component The component the navigation is attached to. Defaults to 'members'.
  * @return null|false Returns false on failure.
  */
-function bp_core_register_subnav_screen_function( $args = '', $component = 'members' ) {
-	$bp = buddypress();
+function bboss_core_register_subnav_screen_function( $args = '', $component = 'members' ) {
+	$bp = bboss();
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'slug'            => false, // URL slug for the screen.
@@ -622,7 +622,7 @@ function bp_core_register_subnav_screen_function( $args = '', $component = 'memb
 	 */
 
 	// If we *don't* meet condition (1), return.
-	if ( ! bp_is_current_component( $r['parent_slug'] ) && ! bp_is_current_item( $r['parent_slug'] ) ) {
+	if ( ! bboss_is_current_component( $r['parent_slug'] ) && ! bboss_is_current_item( $r['parent_slug'] ) ) {
 		return;
 	}
 
@@ -632,18 +632,18 @@ function bp_core_register_subnav_screen_function( $args = '', $component = 'memb
 	}
 
 	// If we *do* meet condition (2), then the added subnav item is currently being requested.
-	if ( ( bp_current_action() && bp_is_current_action( $r['slug'] ) ) || ( bp_is_user() && ! bp_current_action() && ! empty( $parent_nav->screen_function ) && $r['screen_function'] == $parent_nav->screen_function ) ) {
+	if ( ( bboss_current_action() && bboss_is_current_action( $r['slug'] ) ) || ( bboss_is_user() && ! bboss_current_action() && ! empty( $parent_nav->screen_function ) && $r['screen_function'] == $parent_nav->screen_function ) ) {
 
 		// If this is for site admins only and the user is not one, don't create the subnav item.
-		if ( ! empty( $r['site_admin_only'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! empty( $r['site_admin_only'] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			return false;
 		}
 
-		$hooked = bp_core_maybe_hook_new_subnav_screen_function( $r, $component );
+		$hooked = bboss_core_maybe_hook_new_subnav_screen_function( $r, $component );
 
 		// If redirect args have been returned, perform the redirect now.
 		if ( ! empty( $hooked['status'] ) && 'failure' === $hooked['status'] && isset( $hooked['redirect_args'] ) ) {
-			bp_core_no_access( $hooked['redirect_args'] );
+			bboss_core_no_access( $hooked['redirect_args'] );
 		}
 	}
 }
@@ -655,18 +655,18 @@ function bp_core_register_subnav_screen_function( $args = '', $component = 'memb
  * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param array  $subnav_item The subnav array added to the secondary navigation of
- *                            the component in bp_core_new_subnav_item().
+ *                            the component in bboss_core_new_subnav_item().
  * @param string $component   The component the navigation is attached to. Defaults to 'members'.
  * @return array
  */
-function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component = 'members' ) {
+function bboss_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component = 'members' ) {
 	$retval = array(
 		'status' => '',
 	);
 
 	// Is this accessible by site admins only?
 	$site_admin_restricted = false;
-	if ( ! empty( $subnav_item['site_admin_only'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! empty( $subnav_item['site_admin_only'] ) && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		$site_admin_restricted = true;
 	}
 
@@ -690,7 +690,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 
 		if ( is_user_logged_in() ) {
 
-			$bp = buddypress();
+			$bp = bboss();
 
 			// If a redirect URL has been passed to the subnav item, respect it.
 			if ( ! empty( $subnav_item['no_access_url'] ) ) {
@@ -699,7 +699,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 
 				// In the case of a user page, we try to assume a
 				// redirect URL.
-			} elseif ( bp_is_user() ) {
+			} elseif ( bboss_is_user() ) {
 
 				$parent_nav_default = $bp->{$component}->nav->get_primary( array( 'slug' => $bp->default_component ), false );
 				if ( $parent_nav_default ) {
@@ -709,20 +709,20 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 				// Redirect to the displayed user's default
 				// component, as long as that component is
 				// publicly accessible.
-				if ( bp_is_my_profile() || ( isset( $parent_nav_default_item ) && $parent_nav_default_item->show_for_displayed_user ) ) {
+				if ( bboss_is_my_profile() || ( isset( $parent_nav_default_item ) && $parent_nav_default_item->show_for_displayed_user ) ) {
 					$message     = __( 'You do not have access to this page.', 'buddyboss' );
-					$redirect_to = bp_displayed_user_domain();
+					$redirect_to = bboss_displayed_user_domain();
 
 					// In some cases, the default tab is not accessible to
 					// the logged-in user. So we fall back on a tab that we
 					// know will be accessible.
 				} else {
 					// Try 'activity' first.
-					if ( bp_is_active( 'activity' ) && isset( $bp->pages->activity ) ) {
-						$redirect_to = trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() );
+					if ( bboss_is_active( 'activity' ) && isset( $bp->pages->activity ) ) {
+						$redirect_to = trailingslashit( bboss_displayed_user_domain() . bboss_get_activity_slug() );
 						// Then try 'profile'.
 					} else {
-						$redirect_to = trailingslashit( bp_displayed_user_domain() . ( 'xprofile' == $bp->profile->id ? 'profile' : $bp->profile->id ) );
+						$redirect_to = trailingslashit( bboss_displayed_user_domain() . ( 'xprofile' == $bp->profile->id ? 'profile' : $bp->profile->id ) );
 					}
 
 					$message = '';
@@ -731,7 +731,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 				// Fall back to the home page.
 			} else {
 				$message     = __( 'You do not have access to this page.', 'buddyboss' );
-				$redirect_to = bp_get_root_domain();
+				$redirect_to = bboss_get_root_domain();
 			}
 
 			$retval['redirect_args'] = array(
@@ -763,18 +763,18 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
  * @param string $component The component the navigation is attached to. Defaults to 'members'.
  * @return bool $has_subnav True if the nav item is found and has subnav items; false otherwise.
  */
-function bp_nav_item_has_subnav( $nav_item = '', $component = 'members' ) {
-	$bp = buddypress();
+function bboss_nav_item_has_subnav( $nav_item = '', $component = 'members' ) {
+	$bp = bboss();
 
 	if ( ! isset( $bp->{$component}->nav ) ) {
 		return false;
 	}
 
 	if ( ! $nav_item ) {
-		$nav_item = bp_current_component();
+		$nav_item = bboss_current_component();
 
-		if ( bp_is_group() ) {
-			$nav_item = bp_current_item();
+		if ( bboss_is_group() ) {
+			$nav_item = bboss_current_item();
 		}
 	}
 
@@ -801,11 +801,11 @@ function bp_nav_item_has_subnav( $nav_item = '', $component = 'members' ) {
  * @param string|null $component The component the navigation is attached to. Defaults to 'members'.
  * @return bool Returns false on failure, True on success.
  */
-function bp_core_remove_nav_item( $slug, $component = null ) {
-	$bp = buddypress();
+function bboss_core_remove_nav_item( $slug, $component = null ) {
+	$bp = bboss();
 
 	// Backward compatibility for removing group nav items using the group slug as `$parent_slug`.
-	if ( ! $component && bp_is_active( 'groups' ) && isset( $bp->groups->nav ) ) {
+	if ( ! $component && bboss_is_active( 'groups' ) && isset( $bp->groups->nav ) ) {
 		if ( $bp->groups->nav->get_primary( array( 'slug' => $slug ) ) ) {
 			$component = 'groups';
 		}
@@ -850,11 +850,11 @@ function bp_core_remove_nav_item( $slug, $component = null ) {
  * @param string|null $component   The component the navigation is attached to. Defaults to 'members'.
  * @return bool Returns false on failure, True on success.
  */
-function bp_core_remove_subnav_item( $parent_slug, $slug, $component = null ) {
-	$bp = buddypress();
+function bboss_core_remove_subnav_item( $parent_slug, $slug, $component = null ) {
+	$bp = bboss();
 
 	// Backward compatibility for removing group nav items using the group slug as `$parent_slug`.
-	if ( ! $component && bp_is_active( 'groups' ) && isset( $bp->groups->nav ) ) {
+	if ( ! $component && bboss_is_active( 'groups' ) && isset( $bp->groups->nav ) ) {
 		if ( $bp->groups->nav->get_primary( array( 'slug' => $parent_slug ) ) ) {
 			$component = 'groups';
 		}
@@ -897,8 +897,8 @@ function bp_core_remove_subnav_item( $parent_slug, $slug, $component = null ) {
  * @param string $parent_slug The slug of the parent navigation item.
  * @param string $component   The component the navigation is attached to. Defaults to 'members'.
  */
-function bp_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
-	$bp = buddypress();
+function bboss_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
+	$bp = bboss();
 
 	if ( ! isset( $bp->{$component}->nav ) ) {
 		return;
@@ -927,7 +927,7 @@ function bp_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
  * @param int    $user    Optional. ID of the user to check. Default: 0 (which falls back to the logged-in user's ID).
  * @return bool True if the toolbar should be showing for this user.
  */
-function bp_get_admin_bar_pref( $context, $user = 0 ) {
+function bboss_get_admin_bar_pref( $context, $user = 0 ) {
 	$pref = get_user_option( "show_admin_bar_{$context}", $user );
 	if ( false === $pref ) {
 		return true;

@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.6.0
  */
-class BB_Two_Factor_Integration extends BP_Integration {
+class BBoss_Two_Factor_Integration extends BBoss_Integration {
 
 	/**
 	 * Legacy integrations tab file. Empty: Settings 2.0 owns the admin UI.
 	 *
-	 * Declared because BP_Integration reads it on every
+	 * Declared because BBoss_Integration reads it on every
 	 * bp_register_admin_integrations pass without declaring it.
 	 *
 	 * @since BuddyBoss 3.6.0
@@ -42,7 +42,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 			__( 'Two-Factor Authentication', 'buddyboss' ),
 			'two-factor',
 			array(
-				'required_plugin' => bb_two_factor_plugin_basename(),
+				'required_plugin' => bboss_two_factor_plugin_basename(),
 			)
 		);
 	}
@@ -50,7 +50,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	/**
 	 * Directory of this integration.
 	 *
-	 * BP_Integration::start() resolves $this->path under bp-integrations/, which is
+	 * BBoss_Integration::start() resolves $this->path under bp-integrations/, which is
 	 * the wrong tree for this integration.
 	 *
 	 * @since BuddyBoss 3.6.0
@@ -58,7 +58,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	 * @return string
 	 */
 	private function get_integration_dir() {
-		return trailingslashit( buddypress()->plugin_dir ) . 'bb-features/integrations/' . $this->id . '/';
+		return trailingslashit( bboss()->plugin_dir ) . 'bb-features/integrations/' . $this->id . '/';
 	}
 
 	/**
@@ -72,7 +72,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	 * @param array $includes Unused; signature inherited.
 	 */
 	public function includes( $includes = array() ) {
-		if ( ! bb_two_factor_is_active() ) {
+		if ( ! bboss_two_factor_is_active() ) {
 			return;
 		}
 

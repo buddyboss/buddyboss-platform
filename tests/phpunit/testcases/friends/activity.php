@@ -14,15 +14,15 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->friends->id,
+			'component' => bboss()->friends->id,
 			'type' => 'friendship_accepted',
 			'user_id' => $u1,
 			'secondary_item_id' => $u2,
 		) );
 
-		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bp_core_get_userlink( $u1 ), bp_core_get_userlink( $u2 ) );
+		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bboss_core_get_userlink( $u1 ), bboss_core_get_userlink( $u2 ) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
@@ -36,15 +36,15 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->friends->id,
+			'component' => bboss()->friends->id,
 			'type' => 'friendship_created',
 			'user_id' => $u1,
 			'secondary_item_id' => $u2,
 		) );
 
-		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bp_core_get_userlink( $u1 ), bp_core_get_userlink( $u2 ) );
+		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bboss_core_get_userlink( $u1 ), bboss_core_get_userlink( $u2 ) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
@@ -58,12 +58,12 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		friends_add_friend( $u2, $u1 );
-		$friendship_id = friends_get_friendship_id( $u2, $u1 );
+		bboss_friends_add_friend( $u2, $u1 );
+		$friendship_id = bboss_friends_get_friendship_id( $u2, $u1 );
 
 		// Set current user to u1 to accepte the friendship
 		$this->set_current_user( $u1 );
-		friends_accept_friendship( $friendship_id );
+		bboss_friends_accept_friendship( $friendship_id );
 
 		// Reset the current user
 		$this->set_current_user( $old_user );
@@ -72,8 +72,8 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$au1 = self::factory()->activity->create( array( 'user_id' => $u1 ) );
 		$au2 = self::factory()->activity->create( array( 'user_id' => $u2 ) );
 
-		$fc_act = bp_activity_get( array(
-			'component'   => buddypress()->friends->id,
+		$fc_act = bboss_activity_get( array(
+			'component'   => bboss()->friends->id,
 			'item_id'     => $friendship_id,
 			'filter'      => array( 'action' => array( 'friendship_created' ) ),
 			'show_hidden' => false
@@ -82,12 +82,12 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$this->assertTrue( count( $fc_act['activities'] ) == 1, '1 public activity should be created when a friendship is confirmed' );
 
 		// Remove the friendship
-		friends_remove_friend( $u2, $u1 );
+		bboss_friends_remove_friend( $u2, $u1 );
 
-		$this->assertFalse( friends_check_friendship( $u2, $u1 ), '2 users should not be friend once the friendship is removed' );
+		$this->assertFalse( bboss_friends_check_friendship( $u2, $u1 ), '2 users should not be friend once the friendship is removed' );
 
-		$fd_act = bp_activity_get( array(
-			'component'   => buddypress()->friends->id,
+		$fd_act = bboss_activity_get( array(
+			'component'   => bboss()->friends->id,
 			'item_id'     => $friendship_id,
 			'filter'      => array( 'action' => array( 'friendship_created' ) ),
 			'show_hidden' => true
@@ -105,18 +105,18 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		friends_add_friend( $u2, $u1 );
-		$friendship_id = friends_get_friendship_id( $u2, $u1 );
+		bboss_friends_add_friend( $u2, $u1 );
+		$friendship_id = bboss_friends_get_friendship_id( $u2, $u1 );
 
 		// Set current user to u1 to accept the friendship
 		$this->set_current_user( $u1 );
-		friends_accept_friendship( $friendship_id );
+		bboss_friends_accept_friendship( $friendship_id );
 
 		// Reset the current user
 		$this->set_current_user( $old_user );
 
-		$u1_act = bp_activity_get( array(
-			'component'   => buddypress()->friends->id,
+		$u1_act = bboss_activity_get( array(
+			'component'   => bboss()->friends->id,
 			'item_id'     => $friendship_id,
 			'scope'       => 'just-me',
 			'filter'      => array( 'action' => array( 'friendship_created' ), 'user_id' => $u1 ),
@@ -124,8 +124,8 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 
 		$this->assertTrue( count( $u1_act['activities'] ) == 1, 'a public activity should be listed in the friend stream' );
 
-		$u2_act = bp_activity_get( array(
-			'component'   => buddypress()->friends->id,
+		$u2_act = bboss_activity_get( array(
+			'component'   => bboss()->friends->id,
 			'item_id'     => $friendship_id,
 			'scope'       => 'just-me',
 			'filter'      => array( 'action' => array( 'friendship_created' ), 'user_id' => $u2 ),
@@ -144,12 +144,12 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 		$users = array( $u1, $u2 );
 
-		friends_add_friend( $u2, $u1 );
-		$friendship_id = friends_get_friendship_id( $u2, $u1 );
+		bboss_friends_add_friend( $u2, $u1 );
+		$friendship_id = bboss_friends_get_friendship_id( $u2, $u1 );
 
 		// Set current user to u1 to accepte the friendship and generate a public activity
 		$this->set_current_user( $u1 );
-		friends_accept_friendship( $friendship_id );
+		bboss_friends_accept_friendship( $friendship_id );
 
 		// Reset the current user
 		$this->set_current_user( $old_user );
@@ -158,25 +158,25 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$users[] = self::factory()->user->create();
 
 		foreach( $users as $u ) {
-			bp_activity_add( array(
+			bboss_activity_add( array(
 				'user_id'       => $u,
 				'item_id'       => $friendship_id,
 				'type'          => 'friendship_created',
-				'component'     => buddypress()->friends->id,
+				'component'     => bboss()->friends->id,
 				'hide_sitewide' => true,
 			) );
 		}
 
-		$hidden = bp_activity_get( array(
-			'component'   => buddypress()->friends->id,
+		$hidden = bboss_activity_get( array(
+			'component'   => bboss()->friends->id,
 			'filter'      => array( 'action' => array( 'friendship_created' ) ),
 			'show_hidden' => true,
 		) );
 
-		bp_cleanup_friendship_activities();
+		bboss_cleanup_friendship_activities();
 
-		$check = bp_activity_get( array(
-			'component'   => buddypress()->friends->id,
+		$check = bboss_activity_get( array(
+			'component'   => bboss()->friends->id,
 			'item_id'     => $friendship_id,
 			'filter'      => array( 'action' => array( 'friendship_created' ) ),
 			'show_hidden' => true,
@@ -194,12 +194,12 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		friends_add_friend( $u2, $u1 );
-		$friendship_id = friends_get_friendship_id( $u2, $u1 );
+		bboss_friends_add_friend( $u2, $u1 );
+		$friendship_id = bboss_friends_get_friendship_id( $u2, $u1 );
 
 		// Set current user to u1 to accept the friendship
 		$this->set_current_user( $u1 );
-		friends_accept_friendship( $friendship_id );
+		bboss_friends_accept_friendship( $friendship_id );
 
 		// Reset the current user
 		$this->set_current_user( $old_user );
@@ -208,8 +208,8 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		wp_delete_user( $u1 );
 
 		// 'friendship_created' activity item should not exist.
-		$friendship_activity = bp_activity_get( array(
-			'component' => buddypress()->friends->id,
+		$friendship_activity = bboss_activity_get( array(
+			'component' => bboss()->friends->id,
 			'filter'    => array(
 				'action' => array( 'friendship_created' ),
 				'primary_id' => $friendship_id,
@@ -224,7 +224,7 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$this->set_current_user( $u1 );
 
-		bp_activity_remove_all_user_data( $u1 );
+		bboss_activity_remove_all_user_data( $u1 );
 		wp_cache_delete( $u1, 'bp_last_activity' );
 		wp_delete_user( $u1 );
 

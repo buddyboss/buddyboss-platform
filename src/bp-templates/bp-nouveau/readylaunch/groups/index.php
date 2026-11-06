@@ -6,7 +6,7 @@
  * It includes search filters, create group button, and groups listing with skeleton loading.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,15 +14,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-bp_nouveau_before_groups_directory_content();
-bp_nouveau_template_notices();
+bboss_nouveau_before_groups_directory_content();
+bboss_nouveau_template_notices();
 ?>
 <div class="groups-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_get_total_group_count() ) : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bboss_get_total_group_count() ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -33,12 +33,12 @@ bp_nouveau_template_notices();
 			 */
 			do_action( 'bb_before_directory_groups_filters' );
 
-			bp_get_template_part( 'common/search-and-filters-bar' );
+			bboss_get_template_part( 'common/search-and-filters-bar' );
 
-			if ( is_user_logged_in() && bp_user_can_create_groups() ) {
+			if ( is_user_logged_in() && bboss_user_can_create_groups() ) {
 				?>
 				<div class="bb-rl-action-button">
-					<a href="<?php echo esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( trailingslashit( bboss_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
 				</div>
 				<?php
 			}
@@ -56,7 +56,7 @@ bp_nouveau_template_notices();
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
 						?>
-						<div class="bb-rl-skeleton-grid <?php bp_nouveau_loop_classes(); ?>">
+						<div class="bb-rl-skeleton-grid <?php bboss_nouveau_loop_classes(); ?>">
 							<?php for ( $i = 0; $i < 8; $i++ ) : ?>
 								<div class="bb-rl-skeleton-grid-block bb-rl-skeleton-grid-block--cover">
 									<div class="bb-rl-skeleton-cover bb-rl-skeleton-loader"></div>
@@ -79,13 +79,13 @@ bp_nouveau_template_notices();
 						<?php
 						echo '</div>';
 					} else {
-						bp_get_template_part( 'groups/groups-loop' );
+						bboss_get_template_part( 'groups/groups-loop' );
 					}
 					?>
 				</div><!-- #members-dir-list -->
 
 				<?php
-				bp_nouveau_after_groups_directory_content();
+				bboss_nouveau_after_groups_directory_content();
 				?>
 			</div><!-- // .screen-content -->
 		</div>

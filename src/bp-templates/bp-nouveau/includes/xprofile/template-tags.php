@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
  */
-function bp_nouveau_xprofile_hook( $when = '', $suffix = '' ) {
+function bboss_nouveau_xprofile_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
 
 	if ( $when ) {
@@ -31,7 +31,7 @@ function bp_nouveau_xprofile_hook( $when = '', $suffix = '' ) {
 		$hook[] = $suffix;
 	}
 
-	bp_nouveau_hook( $hook );
+	bboss_nouveau_hook( $hook );
 }
 
 /**
@@ -39,7 +39,7 @@ function bp_nouveau_xprofile_hook( $when = '', $suffix = '' ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_xprofile_edit_visibilty() {
+function bboss_nouveau_xprofile_edit_visibilty() {
 	/**
 	 * Fires before the display of visibility options for the field.
 	 *
@@ -47,7 +47,7 @@ function bp_nouveau_xprofile_edit_visibilty() {
 	 */
 	do_action( 'bp_custom_profile_edit_fields_pre_visibility' );
 
-	bp_get_template_part( 'members/single/parts/profile-visibility' );
+	bboss_get_template_part( 'members/single/parts/profile-visibility' );
 
 	/**
 	 * Fires after the visibility options for a field.
@@ -63,10 +63,10 @@ function bp_nouveau_xprofile_edit_visibilty() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_base_account_has_xprofile() {
+function bboss_nouveau_base_account_has_xprofile() {
 	$fields = $_POST['signup_profile_field_ids'] ?? array();
 	$args   = array(
-		'profile_group_id' => bp_xprofile_base_group_id(),
+		'profile_group_id' => bboss_xprofile_base_group_id(),
 		'fetch_field_data' => false,
 	);
 
@@ -74,5 +74,5 @@ function bp_nouveau_base_account_has_xprofile() {
 		$args['include_fields'] = $fields;
 	}
 
-	return (bool) bp_has_profile( $args );
+	return (bool) bboss_has_profile( $args );
 }

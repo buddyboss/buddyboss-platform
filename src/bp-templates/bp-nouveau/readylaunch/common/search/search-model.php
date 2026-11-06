@@ -6,7 +6,7 @@
  * for advanced search features across the platform.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
 							<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
 							<div class="bb-rl-network-search-filter bb-rl-filter bb-rl-filter-rounded">
 								<?php
-								$searchable_items = BP_Search::instance()->get_available_search();
+								$searchable_items = BBoss_Search::instance()->get_available_search();
 								if ( ! empty( $searchable_items ) ) {
 									echo '<select class="bb-rl-search-filter-select" name="subset" data-bb-caret="caret-arrow" data-bb-border="rounded" data-dropdown-align="true">';
 									foreach ( $searchable_items as $key => $label ) {

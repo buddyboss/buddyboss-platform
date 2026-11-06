@@ -30,11 +30,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $theme Optional. The unique ID identifier of a theme package.
  */
-function bp_setup_theme_compat( $theme = '' ) {
-	$bp = buddypress();
+function bboss_setup_theme_compat( $theme = '' ) {
+	$bp = bboss();
 
 	// Make sure theme package is available, set to default if not.
-	if ( ! isset( $bp->theme_compat->packages[ $theme ] ) || ! is_a( $bp->theme_compat->packages[ $theme ], 'BP_Theme_Compat' ) ) {
+	if ( ! isset( $bp->theme_compat->packages[ $theme ] ) || ! is_a( $bp->theme_compat->packages[ $theme ], 'BBoss_Theme_Compat' ) ) {
 		$theme = 'nouveau';
 	}
 
@@ -52,7 +52,7 @@ function bp_setup_theme_compat( $theme = '' ) {
  *
  * @return string ID of the theme package in use.
  */
-function bp_get_theme_compat_id() {
+function bboss_get_theme_compat_id() {
 
 	/**
 	 * Filters the ID of the theme package being used.
@@ -61,7 +61,7 @@ function bp_get_theme_compat_id() {
 	 *
 	 * @param string $id ID of the theme package in use.
 	 */
-	return apply_filters( 'bp_get_theme_compat_id', buddypress()->theme_compat->theme->id );
+	return apply_filters( 'bp_get_theme_compat_id', bboss()->theme_compat->theme->id );
 }
 
 /**
@@ -74,7 +74,7 @@ function bp_get_theme_compat_id() {
  *
  * @return string Name of the theme package currently in use.
  */
-function bp_get_theme_compat_name() {
+function bboss_get_theme_compat_name() {
 
 	/**
 	 * Filters the name of the theme package being used.
@@ -83,7 +83,7 @@ function bp_get_theme_compat_name() {
 	 *
 	 * @param string $name Name of the theme package in use.
 	 */
-	return apply_filters( 'bp_get_theme_compat_name', buddypress()->theme_compat->theme->name );
+	return apply_filters( 'bp_get_theme_compat_name', bboss()->theme_compat->theme->name );
 }
 
 /**
@@ -96,7 +96,7 @@ function bp_get_theme_compat_name() {
  *
  * @return string The version string of the theme package currently in use.
  */
-function bp_get_theme_compat_version() {
+function bboss_get_theme_compat_version() {
 
 	/**
 	 * Filters the version of the theme package being used.
@@ -105,7 +105,7 @@ function bp_get_theme_compat_version() {
 	 *
 	 * @param string $version The version string of the theme package in use.
 	 */
-	return apply_filters( 'bp_get_theme_compat_version', buddypress()->theme_compat->theme->version );
+	return apply_filters( 'bp_get_theme_compat_version', bboss()->theme_compat->theme->version );
 }
 
 /**
@@ -118,7 +118,7 @@ function bp_get_theme_compat_version() {
  *
  * @return string The absolute path of the theme package currently in use.
  */
-function bp_get_theme_compat_dir() {
+function bboss_get_theme_compat_dir() {
 
 	/**
 	 * Filters the absolute path of the theme package being used.
@@ -127,7 +127,7 @@ function bp_get_theme_compat_dir() {
 	 *
 	 * @param string $dir The absolute path of the theme package in use.
 	 */
-	return apply_filters( 'bp_get_theme_compat_dir', buddypress()->theme_compat->theme->dir );
+	return apply_filters( 'bp_get_theme_compat_dir', bboss()->theme_compat->theme->dir );
 }
 
 /**
@@ -141,7 +141,7 @@ function bp_get_theme_compat_dir() {
  *
  * @return string URL of the theme package currently in use.
  */
-function bp_get_theme_compat_url() {
+function bboss_get_theme_compat_url() {
 
 	/**
 	 * Filters the URL of the theme package being used.
@@ -150,22 +150,22 @@ function bp_get_theme_compat_url() {
 	 *
 	 * @param string $url URL of the theme package in use.
 	 */
-	return apply_filters( 'bp_get_theme_compat_url', buddypress()->theme_compat->theme->url );
+	return apply_filters( 'bp_get_theme_compat_url', bboss()->theme_compat->theme->url );
 }
 
 /**
  * Should we use theme compat for this theme?
  *
  * If the current theme's need for theme compat hasn't yet been detected, we
- * do so using bp_detect_theme_compat_with_current_theme().
+ * do so using bboss_detect_theme_compat_with_current_theme().
  *
  * @since BuddyPress 1.9.0
  *
  * @return bool True if the current theme needs theme compatibility.
  */
-function bp_use_theme_compat_with_current_theme() {
-	if ( ! isset( buddypress()->theme_compat->use_with_current_theme ) ) {
-		bp_detect_theme_compat_with_current_theme();
+function bboss_use_theme_compat_with_current_theme() {
+	if ( ! isset( bboss()->theme_compat->use_with_current_theme ) ) {
+		bboss_detect_theme_compat_with_current_theme();
 	}
 
 	/**
@@ -175,7 +175,7 @@ function bp_use_theme_compat_with_current_theme() {
 	 *
 	 * @param bool $use_with_current_theme True if the current theme needs theme compatibility.
 	 */
-	return apply_filters( 'bp_use_theme_compat_with_current_theme', buddypress()->theme_compat->use_with_current_theme );
+	return apply_filters( 'bp_use_theme_compat_with_current_theme', bboss()->theme_compat->use_with_current_theme );
 }
 
 /**
@@ -194,9 +194,9 @@ function bp_use_theme_compat_with_current_theme() {
  *
  * @return bool True if the current theme needs theme compatibility.
  */
-function bp_detect_theme_compat_with_current_theme() {
-	if ( isset( buddypress()->theme_compat->use_with_current_theme ) ) {
-		return buddypress()->theme_compat->use_with_current_theme;
+function bboss_detect_theme_compat_with_current_theme() {
+	if ( isset( bboss()->theme_compat->use_with_current_theme ) ) {
+		return bboss()->theme_compat->use_with_current_theme;
 	}
 
 	// Theme compat enabled by default.
@@ -220,7 +220,7 @@ function bp_detect_theme_compat_with_current_theme() {
 	}
 
 	// Set a flag in the buddypress() singleton so we don't have to run this again.
-	buddypress()->theme_compat->use_with_current_theme = $theme_compat;
+	bboss()->theme_compat->use_with_current_theme = $theme_compat;
 
 	return $theme_compat;
 }
@@ -232,8 +232,8 @@ function bp_detect_theme_compat_with_current_theme() {
  *
  * @return bool True if the current page uses theme compatibility.
  */
-function bp_is_theme_compat_active() {
-	$bp = buddypress();
+function bboss_is_theme_compat_active() {
+	$bp = bboss();
 
 	if ( empty( $bp->theme_compat->active ) ) {
 		return false;
@@ -250,10 +250,10 @@ function bp_is_theme_compat_active() {
  * @param bool $set True to set the flag to true, false to set it to false.
  * @return bool Returns the value of $set.
  */
-function bp_set_theme_compat_active( $set = true ) {
-	buddypress()->theme_compat->active = $set;
+function bboss_set_theme_compat_active( $set = true ) {
+	bboss()->theme_compat->active = $set;
 
-	return (bool) buddypress()->theme_compat->active;
+	return (bool) bboss()->theme_compat->active;
 }
 
 /**
@@ -267,10 +267,10 @@ function bp_set_theme_compat_active( $set = true ) {
  * @param array $templates The template stack.
  * @return array The template stack (value of $templates).
  */
-function bp_set_theme_compat_templates( $templates = array() ) {
-	buddypress()->theme_compat->templates = $templates;
+function bboss_set_theme_compat_templates( $templates = array() ) {
+	bboss()->theme_compat->templates = $templates;
 
-	return buddypress()->theme_compat->templates;
+	return bboss()->theme_compat->templates;
 }
 
 /**
@@ -284,10 +284,10 @@ function bp_set_theme_compat_templates( $templates = array() ) {
  * @param string $template The template currently in use.
  * @return string The template currently in use (value of $template).
  */
-function bp_set_theme_compat_template( $template = '' ) {
-	buddypress()->theme_compat->template = $template;
+function bboss_set_theme_compat_template( $template = '' ) {
+	bboss()->theme_compat->template = $template;
 
-	return buddypress()->theme_compat->template;
+	return bboss()->theme_compat->template;
 }
 
 /**
@@ -301,10 +301,10 @@ function bp_set_theme_compat_template( $template = '' ) {
  * @param string $template The template originally selected by WP.
  * @return string The template originally selected by WP (value of $template).
  */
-function bp_set_theme_compat_original_template( $template = '' ) {
-	buddypress()->theme_compat->original_template = $template;
+function bboss_set_theme_compat_original_template( $template = '' ) {
+	bboss()->theme_compat->original_template = $template;
 
-	return buddypress()->theme_compat->original_template;
+	return bboss()->theme_compat->original_template;
 }
 
 /**
@@ -315,19 +315,19 @@ function bp_set_theme_compat_original_template( $template = '' ) {
  * @param string $theme_id The theme id (eg: legacy).
  * @param array  $feature  An associative array (eg: array( name => 'feature_name', 'settings' => array() )).
  */
-function bp_set_theme_compat_feature( $theme_id, $feature = array() ) {
+function bboss_set_theme_compat_feature( $theme_id, $feature = array() ) {
 	if ( empty( $theme_id ) || empty( $feature['name'] ) ) {
 		return;
 	}
 
 	// Get BuddyPress instance.
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Get current theme compat theme.
 	$theme_compat_theme = $bp->theme_compat->theme;
 
 	// Bail if the Theme Compat theme is not in use.
-	if ( $theme_id !== bp_get_theme_compat_id() ) {
+	if ( $theme_id !== bboss_get_theme_compat_id() ) {
 		return;
 	}
 
@@ -375,9 +375,9 @@ function bp_set_theme_compat_feature( $theme_id, $feature = array() ) {
  * @param string $feature The feature (eg: cover_image).
  * @return object The feature settings.
  */
-function bp_get_theme_compat_feature( $feature = '' ) {
+function bboss_get_theme_compat_feature( $feature = '' ) {
 	// Get current theme compat theme.
-	$theme_compat_theme = buddypress()->theme_compat->theme;
+	$theme_compat_theme = bboss()->theme_compat->theme;
 
 	// Get features.
 	$features = $theme_compat_theme->__get( 'features' );
@@ -398,8 +398,8 @@ function bp_get_theme_compat_feature( $feature = '' ) {
  * @return bool True if the value of $template is the same as the
  *              "original_template" originally selected by WP. Otherwise false.
  */
-function bp_is_theme_compat_original_template( $template = '' ) {
-	$bp = buddypress();
+function bboss_is_theme_compat_original_template( $template = '' ) {
+	$bp = bboss();
 
 	if ( empty( $bp->theme_compat->original_template ) ) {
 		return false;
@@ -416,26 +416,26 @@ function bp_is_theme_compat_original_template( $template = '' ) {
  *
  * @since BuddyPress 1.7.0
  *
- * @see BP_Theme_Compat for a description of the $theme parameter arguments.
+ * @see BBoss_Theme_Compat for a description of the $theme parameter arguments.
  *
- * @param array $theme    See {@link BP_Theme_Compat}.
+ * @param array $theme    See {@link BBoss_Theme_Compat}.
  * @param bool  $override If true, overrides whatever package is currently set.
  *                        Default: true.
  */
-function bp_register_theme_package( $theme = array(), $override = true ) {
+function bboss_register_theme_package( $theme = array(), $override = true ) {
 
 	// Create new BP_Theme_Compat object from the $theme array.
 	if ( is_array( $theme ) ) {
-		$theme = new BP_Theme_Compat( $theme );
+		$theme = new BBoss_Theme_Compat( $theme );
 	}
 
 	// Bail if $theme isn't a proper object.
-	if ( ! is_a( $theme, 'BP_Theme_Compat' ) ) {
+	if ( ! is_a( $theme, 'BBoss_Theme_Compat' ) ) {
 		return;
 	}
 
 	// Load up BuddyPress.
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Only set if the theme package was not previously registered or if the
 	// override flag is set.
@@ -460,12 +460,12 @@ function bp_register_theme_package( $theme = array(), $override = true ) {
  * @param array $args Array of optional arguments. Arguments parallel the properties
  *                    of {@link WP_Post}; see that class for more details.
  */
-function bp_theme_compat_reset_post( $args = array() ) {
+function bboss_theme_compat_reset_post( $args = array() ) {
 	global $wp_query, $post;
 
 	// Switch defaults if post is set.
 	if ( isset( $wp_query->post ) ) {
-		$dummy = bp_parse_args(
+		$dummy = bboss_parse_args(
 			$args,
 			array(
 				'ID'                    => $wp_query->post->ID,
@@ -501,7 +501,7 @@ function bp_theme_compat_reset_post( $args = array() ) {
 			)
 		);
 	} else {
-		$dummy = bp_parse_args(
+		$dummy = bboss_parse_args(
 			$args,
 			array(
 				'ID'                    => -9999,
@@ -571,7 +571,7 @@ function bp_theme_compat_reset_post( $args = array() ) {
 	}
 
 	// If we are resetting a post, we are in theme compat.
-	bp_set_theme_compat_active( true );
+	bboss_set_theme_compat_active( true );
 
 	// If we are in theme compat, we don't need the 'Edit' post link.
 	add_filter( 'get_edit_post_link', 'bp_core_filter_edit_post_link', 10, 2 );
@@ -585,14 +585,14 @@ function bp_theme_compat_reset_post( $args = array() ) {
  * @param string $template Template name.
  * @return string $template Template name.
  */
-function bp_template_include_theme_compat( $template = '' ) {
+function bboss_template_include_theme_compat( $template = '' ) {
 	// If embed template, bail.
 	if ( true === function_exists( 'is_embed' ) && is_embed() ) {
 		return $template;
 	}
 
 	// If the current theme doesn't need theme compat, bail at this point.
-	if ( ! bp_use_theme_compat_with_current_theme() ) {
+	if ( ! bboss_use_theme_compat_with_current_theme() ) {
 		return $template;
 	}
 
@@ -608,7 +608,7 @@ function bp_template_include_theme_compat( $template = '' ) {
 	do_action( 'bp_template_include_reset_dummy_post_data' );
 
 	// Bail if the template already matches a BuddyPress template.
-	if ( ! empty( buddypress()->theme_compat->found_template ) ) {
+	if ( ! empty( bboss()->theme_compat->found_template ) ) {
 		return $template;
 	}
 
@@ -622,15 +622,15 @@ function bp_template_include_theme_compat( $template = '' ) {
 	 * the context, and then uses the built in shortcodes to output the
 	 * correct results from inside an output buffer.
 	 *
-	 * Uses bp_get_theme_compat_templates() to provide fall-backs that
+	 * Uses bboss_get_theme_compat_templates() to provide fall-backs that
 	 * should be coded without superfluous mark-up and logic (prev/next
 	 * navigation, comments, date/time, etc...)
 	 *
 	 * Hook into 'bp_get_buddypress_template' to override the array of
 	 * possible templates, or 'bp_buddypress_template' to override the result.
 	 */
-	if ( bp_is_theme_compat_active() ) {
-		$template = bp_get_theme_compat_templates();
+	if ( bboss_is_theme_compat_active() ) {
+		$template = bboss_get_theme_compat_templates();
 
 		add_filter( 'the_content', 'bp_replace_the_content' );
 
@@ -662,16 +662,16 @@ function bp_template_include_theme_compat( $template = '' ) {
  * @param string $content Original post content.
  * @return string $content Post content, potentially modified.
  */
-function bp_replace_the_content( $content = '' ) {
+function bboss_replace_the_content( $content = '' ) {
 
 	// Bail if not the main loop where theme compat is happening.
-	if ( ! bp_do_theme_compat() ) {
+	if ( ! bboss_do_theme_compat() ) {
 		return $content;
 	}
 
 	// Set theme compat to false early, to avoid recursion from nested calls to
 	// the_content() that execute before theme compat has unhooked itself.
-	bp_set_theme_compat_active( false );
+	bboss_set_theme_compat_active( false );
 
 	/**
 	 * Filters the content to replace in the post.
@@ -707,8 +707,8 @@ function bp_replace_the_content( $content = '' ) {
  * @return bool True if the_content is currently in the process of being
  *              filtered and replaced.
  */
-function bp_do_theme_compat() {
-	return (bool) ( ! bp_is_template_included() && in_the_loop() && bp_is_theme_compat_active() );
+function bboss_do_theme_compat() {
+	return (bool) ( ! bboss_is_template_included() && in_the_loop() && bboss_is_theme_compat_active() );
 }
 
 /** Filters *******************************************************************/
@@ -730,10 +730,10 @@ function bp_do_theme_compat() {
  *                           attached to the tag will be removed, regardless of priority.
  * @return bool True on success.
  */
-function bp_remove_all_filters( $tag, $priority = false ) {
+function bboss_remove_all_filters( $tag, $priority = false ) {
 	global $wp_filter, $merged_filters;
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Filters exist.
 	if ( isset( $wp_filter[ $tag ] ) ) {
@@ -772,7 +772,7 @@ function bp_remove_all_filters( $tag, $priority = false ) {
 }
 
 /**
- * Restore filters that were removed using bp_remove_all_filters().
+ * Restore filters that were removed using bboss_remove_all_filters().
  *
  * @since BuddyPress 1.7.0
  *
@@ -785,10 +785,10 @@ function bp_remove_all_filters( $tag, $priority = false ) {
  *                           all available filters will be restored, regardless of priority.
  * @return bool True on success.
  */
-function bp_restore_all_filters( $tag, $priority = false ) {
+function bboss_restore_all_filters( $tag, $priority = false ) {
 	global $wp_filter, $merged_filters;
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Filters exist.
 	if ( isset( $bp->filters->wp_filter[ $tag ] ) ) {
@@ -835,9 +835,9 @@ function bp_restore_all_filters( $tag, $priority = false ) {
  * @param int  $post_id ID of the post to check.
  * @return bool True if open, false if closed.
  */
-function bp_comments_open( $open, $post_id = 0 ) {
+function bboss_comments_open( $open, $post_id = 0 ) {
 
-	$retval = is_buddypress() ? false : $open;
+	$retval = bboss_is_buddypress() ? false : $open;
 
 	/**
 	 * Filters whether or not to force comments_status to closed for BuddyPress post types.
@@ -855,7 +855,7 @@ function bp_comments_open( $open, $post_id = 0 ) {
  * Do not allow {@link comments_template()} to render during theme compatibility.
  *
  * When theme compatibility sets the 'is_page' flag to true via
- * {@link bp_theme_compat_reset_post()}, themes that use comments_template()
+ * {@link bboss_theme_compat_reset_post()}, themes that use comments_template()
  * in their page template will run.
  *
  * To prevent comments_template() from rendering, we set the 'is_page' and
@@ -870,14 +870,14 @@ function bp_comments_open( $open, $post_id = 0 ) {
  * @param string $retval The current post content.
  * @return string $retval
  */
-function bp_theme_compat_toggle_is_page( $retval = '' ) {
+function bboss_theme_compat_toggle_is_page( $retval = '' ) {
 	global $wp_query;
 
 	if ( $wp_query->is_page ) {
 		$wp_query->is_page = false;
 
 		// Set a switch so we know that we've toggled these WP_Query properties.
-		buddypress()->theme_compat->is_page_toggled = true;
+		bboss()->theme_compat->is_page_toggled = true;
 	}
 
 	return $retval;
@@ -889,13 +889,13 @@ add_filter( 'bp_replace_the_content', 'bp_theme_compat_toggle_is_page', 9999 );
  *
  * @since BuddyPress 1.9.2
  *
- * @see bp_theme_compat_toggle_is_page()
+ * @see bboss_theme_compat_toggle_is_page()
  * @param object $query The WP_Query object.
  */
-function bp_theme_compat_loop_end( $query ) {
+function bboss_theme_compat_loop_end( $query ) {
 
 	// Get BuddyPress.
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Bail if page is not toggled.
 	if ( ! isset( $bp->theme_compat->is_page_toggled ) ) {
@@ -915,12 +915,12 @@ add_action( 'loop_end', 'bp_theme_compat_loop_end' );
  *
  * @since BuddyPress 3.0.0
  */
-function bp_check_theme_template_pack_dependency() {
-	if ( bp_is_deactivation() ) {
+function bboss_check_theme_template_pack_dependency() {
+	if ( bboss_is_deactivation() ) {
 		return;
 	}
 
-	$all_packages = array_keys( buddypress()->theme_compat->packages );
+	$all_packages = array_keys( bboss()->theme_compat->packages );
 
 	foreach ( $all_packages as $package ) {
 		// e.g. "buddypress-use-nouveau", "buddypress-use-legacy".
@@ -928,7 +928,7 @@ function bp_check_theme_template_pack_dependency() {
 			continue;
 		}
 
-		bp_setup_theme_compat( $package );
+		bboss_setup_theme_compat( $package );
 		return;
 	}
 }

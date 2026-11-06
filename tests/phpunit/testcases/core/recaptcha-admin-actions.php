@@ -38,13 +38,13 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 
 	public function set_up() {
 		parent::set_up();
-		$this->old_option = bp_get_option( 'bb_recaptcha', array() );
-		bp_update_option( 'bb_recaptcha', $this->settings );
+		$this->old_option = bboss_get_option( 'bb_recaptcha', array() );
+		bboss_update_option( 'bb_recaptcha', $this->settings );
 		unset( $_POST['g-recaptcha-response'] );
 	}
 
 	public function tear_down() {
-		bp_update_option( 'bb_recaptcha', $this->old_option );
+		bboss_update_option( 'bb_recaptcha', $this->old_option );
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 		set_current_screen( 'front' );
 		parent::tear_down();
@@ -57,11 +57,11 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 	 * @return WP_Error
 	 */
 	protected function validate_lost_password( $user_data ) {
-		return bb_recaptcha_validate_lost_password( new WP_Error(), $user_data );
+		return bboss_recaptcha_validate_lost_password( new WP_Error(), $user_data );
 	}
 
 	public function test_activate_is_verified_on_the_front_end() {
-		$result = bb_recaptcha_validate_activate( true );
+		$result = bboss_recaptcha_validate_activate( true );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_recaptcha_token_missing', $result->get_error_code() );
@@ -70,14 +70,14 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 	public function test_activate_skips_verification_on_the_pending_signups_screen() {
 		set_current_screen( 'users_page_bp-signups' );
 
-		$this->assertTrue( bb_recaptcha_validate_activate( true ) );
+		$this->assertTrue( bboss_recaptcha_validate_activate( true ) );
 	}
 
 	public function test_activate_is_verified_on_admin_ajax() {
 		set_current_screen( 'users_page_bp-signups' );
 		add_filter( 'wp_doing_ajax', '__return_true' );
 
-		$this->assertWPError( bb_recaptcha_validate_activate( true ) );
+		$this->assertWPError( bboss_recaptcha_validate_activate( true ) );
 	}
 
 	/**

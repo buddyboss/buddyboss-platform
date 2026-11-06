@@ -14,19 +14,19 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_member_hook( 'before', 'plugin_template' );
+bboss_nouveau_member_hook( 'before', 'plugin_template' );
 
-if ( ! bp_is_current_component_core() ) {
-	bp_get_template_part( 'members/single/parts/item-subnav' );
-	bp_nouveau_member_hook( '', 'plugin_options_nav' );
+if ( ! bboss_is_current_component_core() ) {
+	bboss_get_template_part( 'members/single/parts/item-subnav' );
+	bboss_nouveau_member_hook( '', 'plugin_options_nav' );
 }
 
 if ( has_action( 'bp_template_title' ) ) {
 	?>
-	<h2><?php bp_nouveau_plugin_hook( 'title' ); ?></h2>
+	<h2><?php bboss_nouveau_plugin_hook( 'title' ); ?></h2>
 	<?php
 }
 
-bp_nouveau_plugin_hook( 'content' );
+bboss_nouveau_plugin_hook( 'content' );
 
-bp_nouveau_member_hook( 'after', 'plugin_template' );
+bboss_nouveau_member_hook( 'after', 'plugin_template' );

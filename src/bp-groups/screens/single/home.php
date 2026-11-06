@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_group_home() {
+function bboss_groups_screen_group_home() {
 
-	if ( ! bp_is_single_item() ) {
+	if ( ! bboss_is_single_item() ) {
 		return false;
 	}
 
@@ -34,5 +34,5 @@ function groups_screen_group_home() {
 	 *
 	 * @param string $value Path to a single group's template to load.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }

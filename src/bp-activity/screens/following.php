@@ -14,12 +14,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.6
  */
-function bp_activity_screen_following() {
-	if ( ! bp_is_activity_follow_active() ) {
+function bboss_activity_screen_following() {
+	if ( ! bboss_is_activity_follow_active() ) {
 		return false;
 	}
 
-	bp_update_is_item_admin( bp_current_user_can( 'bp_moderate' ), 'activity' );
+	bboss_update_is_item_admin( bboss_current_user_can( 'bp_moderate' ), 'activity' );
 
 	/**
 	 * Fires right before the loading of the "My Following" screen template file.
@@ -35,5 +35,5 @@ function bp_activity_screen_following() {
 	 *
 	 * @param string $template Path to the activity template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_activity_template_following_activity', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bp_activity_template_following_activity', 'members/single/home' ) );
 }

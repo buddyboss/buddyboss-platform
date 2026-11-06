@@ -15,7 +15,7 @@
  * @since   BuddyBoss 2.9.00
  * @package BuddyBoss\Messages\Classes
  */
-class BB_Messages_Readylaunch {
+class BBoss_Messages_Readylaunch {
 
 	/**
 	 * The single instance of the class.
@@ -46,7 +46,7 @@ class BB_Messages_Readylaunch {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @return BB_Messages_Readylaunch|null
+	 * @return BBoss_Messages_Readylaunch|null
 	 */
 	public static function instance() {
 
@@ -105,13 +105,13 @@ class BB_Messages_Readylaunch {
 		$type      = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'participants';
 
 		// Ensure user has access to this thread.
-		if ( ! bp_is_active( 'messages' ) || ! messages_check_thread_access( $thread_id ) ) {
+		if ( ! bboss_is_active( 'messages' ) || ! bboss_messages_check_thread_access( $thread_id ) ) {
 			wp_send_json_error( array( 'message' => 'You do not have access to this conversation' ) );
 
 			return;
 		}
 
-		$admins = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
+		$admins = function_exists( 'bboss_get_all_admin_users' ) ? bboss_get_all_admin_users() : '';
 
 		$response = array(
 			'participants' => array(),
@@ -122,8 +122,8 @@ class BB_Messages_Readylaunch {
 		);
 
 		// Get thread participants.
-		$thread   = new BP_Messages_Thread( false );
-		$per_page = bb_messages_recipients_per_page();
+		$thread   = new BBoss_Messages_Thread( false );
+		$per_page = bboss_messages_recipients_per_page();
 
 		if ( 'participants' === $type ) {
 			$results                           = $thread->get_pagination_recipients(
@@ -138,12 +138,12 @@ class BB_Messages_Readylaunch {
 			$response['has_more']              = ( $page * $per_page ) < $thread->total_recipients_count;
 
 			foreach ( $results as $recipient ) {
-				$is_current_user = (int) bp_loggedin_user_id() === (int) $recipient->user_id;
+				$is_current_user = (int) bboss_loggedin_user_id() === (int) $recipient->user_id;
 
 				$participant = array(
 					'id'            => $recipient->user_id,
-					'name'          => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
-					'avatar'        => bp_core_fetch_avatar(
+					'name'          => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bboss_core_get_user_displayname( $recipient->user_id ),
+					'avatar'        => bboss_core_fetch_avatar(
 						array(
 							'item_id' => $recipient->user_id,
 							'type'    => 'thumb',
@@ -152,52 +152,52 @@ class BB_Messages_Readylaunch {
 							'html'    => false,
 						)
 					),
-					'profile_url'   => bp_core_get_user_domain( $recipient->user_id ),
+					'profile_url'   => bboss_core_get_user_domain( $recipient->user_id ),
 					'is_you'        => $is_current_user,
-					'user_presence' => ! $is_current_user ? bb_get_user_presence_html( $recipient->user_id ) : '',
+					'user_presence' => ! $is_current_user ? bboss_get_user_presence_html( $recipient->user_id ) : '',
 				);
 
-				if ( bp_is_active( 'moderation' ) ) {
-					$participant['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
-					$participant['can_be_blocked']     = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id );
-					$participant['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
-					$participant['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
-					$participant['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
-					$participant['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
-					$participant['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
+				if ( bboss_is_active( 'moderation' ) ) {
+					$participant['is_user_blocked']    = bboss_moderation_is_user_blocked( $recipient->user_id );
+					$participant['can_be_blocked']     = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bboss_moderation_is_user_suspended( $recipient->user_id );
+					$participant['is_user_suspended']  = bboss_moderation_is_user_suspended( $recipient->user_id );
+					$participant['is_user_blocked_by'] = bboss_moderation_is_user_blocked_by( $recipient->user_id );
+					$participant['is_user_reported']   = bboss_moderation_report_exist( $recipient->user_id, BBoss_Moderation_Members::$moderation_type_report );
+					$participant['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bboss_moderation_user_can( bboss_loggedin_user_id(), BBoss_Moderation_Members::$moderation_type_report );
+					$participant['reported_type']      = bboss_moderation_get_report_type( BBoss_Moderation_Members::$moderation_type_report, $recipient->user_id );
 				}
 
 				$response['participants'][] = $participant;
 			}
 		}
 
-		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id' );
-		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from' ); // group.
+		$first_message = BBoss_Messages_Thread::get_first_message( $thread_id );
+		$group_id      = (int) bboss_messages_get_meta( $first_message->id, 'group_id' );
+		$message_from  = bboss_messages_get_meta( $first_message->id, 'message_from' ); // group.
 
 		// Get media attachments if BuddyBoss Media component is active.
-		$media_component = bp_is_active( 'media' ) &&
+		$media_component = bboss_is_active( 'media' ) &&
 		(
 			(
 				$group_id &&
 				'group' === $message_from &&
-				bp_is_group_media_support_enabled()
+				bboss_is_group_media_support_enabled()
 			) ||
 			(
 				'group' !== $message_from &&
-				bp_is_messages_media_support_enabled()
+				bboss_is_messages_media_support_enabled()
 			)
 		);
-		$video_component = bp_is_active( 'video' ) &&
+		$video_component = bboss_is_active( 'video' ) &&
 		(
 			(
 				$group_id &&
 				'group' === $message_from &&
-				bp_is_group_video_support_enabled()
+				bboss_is_group_video_support_enabled()
 			) ||
 			(
 				'group' !== $message_from &&
-				bp_is_messages_video_support_enabled()
+				bboss_is_messages_video_support_enabled()
 			)
 		);
 		if ( 'media' === $type && ( $media_component || $video_component ) ) {
@@ -277,24 +277,24 @@ class BB_Messages_Readylaunch {
 						$args['thumbnail'] = $thumbnail_url;
 						$args['full']      = $poster_id ? bb_video_get_thumb_url( $media->id, $poster_id, 'bb-video-poster-popup-image' ) : '';
 					} elseif ( $media_component && 'photo' === $media->type ) {
-						$args['thumbnail'] = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
-						$args['full']      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' );
+						$args['thumbnail'] = bboss_media_get_preview_image_url( $media->id, $media->attachment_id );
+						$args['full']      = bboss_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' );
 					}
 					$response['media'][] = $args;
 				}
 			}
 		}
 
-		$document_component = bp_is_active( 'document' ) &&
+		$document_component = bboss_is_active( 'document' ) &&
 		(
 			(
 				$group_id &&
 				'group' === $message_from &&
-				bp_is_group_document_support_enabled()
+				bboss_is_group_document_support_enabled()
 			) ||
 			(
 				'group' !== $message_from &&
-				bp_is_messages_document_support_enabled()
+				bboss_is_messages_document_support_enabled()
 			)
 		);
 		// Get document files with pagination.
@@ -346,7 +346,7 @@ class BB_Messages_Readylaunch {
 						'url'            => bp_document_get_preview_url( $document->id, $attachment_id ),
 						'full_title'     => $document->title,
 						'id'             => $document->id,
-						'svg_icon'       => class_exists( 'BB_Readylaunch' ) ? bb_load_readylaunch()->bb_rl_document_svg_icon( '', $extension ) : '',
+						'svg_icon'       => class_exists( 'BBoss_Readylaunch' ) ? bboss_load_readylaunch()->bb_rl_document_svg_icon( '', $extension ) : '',
 						'attachment_id'  => $attachment_id,
 						'privacy'        => $document->privacy,
 						'extension'      => $extension,
@@ -383,7 +383,7 @@ class BB_Messages_Readylaunch {
 
 			if ( 'unread' === $thread_type ) {
 				// Only unread messages.
-				$where_conditions .= ' AND ( r.unread_count > 0 AND r.is_deleted = 0 AND r.user_id = ' . bp_loggedin_user_id() . ' )';
+				$where_conditions .= ' AND ( r.unread_count > 0 AND r.is_deleted = 0 AND r.user_id = ' . bboss_loggedin_user_id() . ' )';
 			}
 		}
 

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.3
  */
-class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Member_Types extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the Member Types field type.
@@ -30,11 +30,11 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		$this->supports_options = false;
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Member_Types class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Member_Types class.
 		 *
 		 * @since BuddyBoss 1.1.3
 		 *
-		 * @param BP_XProfile_Field_Type_Member_Types $this Current instance of
+		 * @param BBoss_XProfile_Field_Type_Member_Types $this Current instance of
 		 *                                               the field type select box.
 		 */
 		do_action( 'bp_xprofile_field_type_select_member_type_post_type', $this );
@@ -43,24 +43,24 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type's children options on the wp-admin Profile Fields "Add Field" and "Edit Field" screens.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.1.3
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = 'radio' ) {
-		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = 'radio' ) {
+		$type = array_search( get_class( $this ), bboss_xprofile_get_field_types() );
 		if ( false === $type ) {
 			return;
 		}
 
 		$class            = $current_field->type != $type ? 'display: none;' : '';
-		$current_type_obj = bp_xprofile_create_field_type( $type );
+		$current_type_obj = bboss_xprofile_create_field_type( $type );
 
-		$active_member_type = bp_get_active_member_types();
+		$active_member_type = bboss_get_active_member_types();
 		if ( empty( $active_member_type ) ) {
 			?>
 			<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
@@ -76,7 +76,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 							esc_url(
 								add_query_arg(
 									array(
-										'post_type' => bp_get_member_type_post_type(),
+										'post_type' => bboss_get_member_type_post_type(),
 									),
 									admin_url( 'edit.php' )
 								)
@@ -94,7 +94,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.1.3
 	 *
@@ -109,33 +109,33 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			$user_id = (int) $raw_properties['user_id'];
 			unset( $raw_properties['user_id'] );
 		} else {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
-		if ( function_exists( 'bp_check_member_type_field_have_options' ) && true === bp_check_member_type_field_have_options() ) {
+		if ( function_exists( 'bboss_check_member_type_field_have_options' ) && true === bboss_check_member_type_field_have_options() ) {
 			?>
 
-			<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-				<?php bp_the_profile_field_name(); ?>
-				<?php if ( bp_is_register_page() ) : ?>
-					<?php bp_the_profile_field_optional_label(); ?>
+			<legend id="<?php bboss_the_profile_field_input_name(); ?>-1">
+				<?php bboss_the_profile_field_name(); ?>
+				<?php if ( bboss_is_register_page() ) : ?>
+					<?php bboss_the_profile_field_optional_label(); ?>
 				<?php else : ?>
-					<?php bp_the_profile_field_required_label(); ?>
+					<?php bboss_the_profile_field_required_label(); ?>
 				<?php endif; ?>
 			</legend>
 
-			<?php if ( bp_get_the_profile_field_description() ) : ?>
-				<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
+			<?php if ( bboss_get_the_profile_field_description() ) : ?>
+				<p class="description" id="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_description(); ?></p>
 			<?php endif; ?>
 
 			<?php
 
 			/** This action is documented in bp-xprofile/bp-xprofile-classes */
-			do_action( bp_get_the_profile_field_errors_action() );
+			do_action( bboss_get_the_profile_field_errors_action() );
 
 			?>
-			<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
-				<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
+			<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bboss_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-3">
+				<?php bboss_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
 			</select>
 			<?php
 
@@ -148,19 +148,19 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * BuddyPress considers a field's "options" to be, for example, the items in a selectbox.
 	 * These are stored separately in the database, and their templating is handled separately.
 	 *
-	 * This templating is separate from {@link BP_XProfile_Field_Type::edit_field_html()} because
+	 * This templating is separate from {@link BBoss_XProfile_Field_Type::edit_field_html()} because
 	 * it's also used in the wp-admin screens when creating new fields, and for backwards compatibility.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.1.3
 	 *
-	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
+	 * @param array $args Optional. The arguments passed to {@link bboss_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {
 		global $field;
 		$post_type_selected = $this->get_selected_post_type( $field->id );
-		$post_selected      = BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] );
+		$post_selected      = BBoss_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] );
 
 		$html = '';
 
@@ -171,14 +171,14 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 
 		// Add Profile Type selected if users have previously added profile type in his/her account.
 		if ( '' === $post_selected ) {
-			$member_type = bp_get_member_type( (int) $args['user_id'] );
+			$member_type = bboss_get_member_type( (int) $args['user_id'] );
 			if ( '' !== $member_type ) {
-				$post_selected = bp_member_type_post_by_type( $member_type );
+				$post_selected = bboss_member_type_post_by_type( $member_type );
 			}
 		}
 
 		// Get all active member types.
-		$bp_active_member_types = bp_get_active_member_types();
+		$bp_active_member_types = bboss_get_active_member_types();
 
 		if ( ! empty( $bp_active_member_types ) ) {
 
@@ -204,7 +204,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.1.3
 	 *
@@ -214,7 +214,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		$html = $this->get_edit_field_html_elements( $raw_properties );
 		?>
 		<select <?php echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html holds get_edit_field_html_elements() esc_attr'd attribute markup. ?>>
-			<?php bp_the_profile_field_options(); ?>
+			<?php bboss_the_profile_field_options(); ?>
 		</select>
 		<?php
 	}
@@ -227,9 +227,9 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * let a crafted signup/profile payload store an unrelated post ID in this
 	 * field. Whether that member type may be self-selected at registration is
 	 * enforced separately at registration input (see the member-type check in
-	 * bp_core_screen_signup(), src/bp-members/screens/register.php) and, as a
+	 * bboss_core_screen_signup(), src/bp-members/screens/register.php) and, as a
 	 * backstop, at activation
-	 * (see bp_assign_default_member_type_to_activate_user()), so this check
+	 * (see bboss_assign_default_member_type_to_activate_user()), so this check
 	 * stays context-free and does not break profile edits that keep a member's
 	 * currently-assigned type.
 	 *
@@ -241,7 +241,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * @return bool
 	 */
 	public function is_valid( $values ) {
-		return empty( $values ) || ( bp_get_member_type_post_type() === get_post_type( $values ) );
+		return empty( $values ) || ( bboss_get_member_type_post_type() === get_post_type( $values ) );
 	}
 
 	/**
@@ -257,7 +257,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			return '';
 		}
 
-		return bp_xprofile_get_meta( $field_id, 'field', 'selected_post_type', true );
+		return bboss_xprofile_get_meta( $field_id, 'field', 'selected_post_type', true );
 	}
 
 	/**

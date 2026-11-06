@@ -39,12 +39,12 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 
 	public function set_up() {
 		parent::set_up();
-		$this->old_option = bp_get_option( 'bb_recaptcha', array() );
+		$this->old_option = bboss_get_option( 'bb_recaptcha', array() );
 		$this->reset_scripts();
 	}
 
 	public function tear_down() {
-		bp_update_option( 'bb_recaptcha', $this->old_option );
+		bboss_update_option( 'bb_recaptcha', $this->old_option );
 		$this->reset_scripts();
 		remove_action( 'login_footer', 'bb_recaptcha_add_scripts_login_footer' );
 		remove_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
@@ -52,7 +52,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Drop the handles bb_recaptcha_display() registers so each test starts clean.
+	 * Drop the handles bboss_recaptcha_display() registers so each test starts clean.
 	 */
 	protected function reset_scripts() {
 		wp_deregister_script( 'bb-recaptcha' );
@@ -62,14 +62,14 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Run bb_recaptcha_display() and return what it printed.
+	 * Run bboss_recaptcha_display() and return what it printed.
 	 *
 	 * @param string $action reCAPTCHA action.
 	 * @return string
 	 */
 	protected function render( $action ) {
 		ob_start();
-		bb_recaptcha_display( $action );
+		bboss_recaptcha_display( $action );
 		return ob_get_clean();
 	}
 
@@ -87,7 +87,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	public function test_display_prints_the_v3_response_field_the_script_writes_into() {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
 		$html = $this->render( 'bb_login' );
 
@@ -97,7 +97,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	public function test_display_registers_google_api_in_v3_render_mode_and_the_handler_script() {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
 		$this->render( 'bb_login' );
 		$scripts = wp_scripts();
@@ -118,7 +118,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	 * @dataProvider provider_actions
 	 */
 	public function test_display_localizes_the_action_and_both_submit_time_notice_strings( $action ) {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
 		$this->render( $action );
 		$data = $this->localized_data();
@@ -145,7 +145,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	public function test_display_notice_strings_are_translatable_and_match_the_source_strings() {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
 		$this->render( 'bb_login' );
 		$data = $this->localized_data();
@@ -163,7 +163,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	public function test_display_prints_nothing_and_registers_nothing_when_not_connected() {
 		$settings                      = $this->v3_settings;
 		$settings['connection_status'] = 'not_connected';
-		bp_update_option( 'bb_recaptcha', $settings );
+		bboss_update_option( 'bb_recaptcha', $settings );
 
 		$html = $this->render( 'bb_login' );
 
@@ -173,7 +173,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	public function test_display_prints_nothing_for_an_empty_action() {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
 		$this->assertSame( '', $this->render( '' ) );
 		$this->assertFalse( wp_scripts()->query( 'bb-recaptcha', 'registered' ) );
@@ -182,7 +182,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	public function test_display_prints_nothing_when_the_visitor_ip_is_excluded() {
 		$settings               = $this->v3_settings;
 		$settings['exclude_ip'] = '203.0.113.7';
-		bp_update_option( 'bb_recaptcha', $settings );
+		bboss_update_option( 'bb_recaptcha', $settings );
 
 		$old_ip                 = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null;
 		$_SERVER['REMOTE_ADDR'] = '203.0.113.7';
@@ -200,10 +200,10 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	public function test_login_form_hook_prints_the_field_and_schedules_the_footer_enqueue() {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
 		ob_start();
-		bb_recaptcha_login();
+		bboss_recaptcha_login();
 		$html = ob_get_clean();
 
 		$this->assertStringContainsString( 'id="bb_recaptcha_response_id"', $html );
@@ -213,10 +213,10 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	public function test_login_form_hook_prints_nothing_when_login_is_not_enabled() {
 		$settings                            = $this->v3_settings;
 		$settings['enabled_for']['bb_login'] = 0;
-		bp_update_option( 'bb_recaptcha', $settings );
+		bboss_update_option( 'bb_recaptcha', $settings );
 
 		ob_start();
-		bb_recaptcha_login();
+		bboss_recaptcha_login();
 		$html = ob_get_clean();
 
 		$this->assertSame( '', $html );
@@ -224,9 +224,9 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	}
 
 	public function test_wp_login_form_embed_receives_the_same_field_and_schedules_the_site_footer_enqueue() {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
-		$content = bb_recaptcha_wp_login_form( '<p>before</p>' );
+		$content = bboss_recaptcha_wp_login_form( '<p>before</p>' );
 
 		$this->assertStringStartsWith( '<p>before</p>', $content );
 		$this->assertStringContainsString( 'name="g-recaptcha-response"', $content );
@@ -236,9 +236,9 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	public function test_wp_login_form_embed_is_untouched_when_not_connected() {
 		$settings                      = $this->v3_settings;
 		$settings['connection_status'] = 'not_connected';
-		bp_update_option( 'bb_recaptcha', $settings );
+		bboss_update_option( 'bb_recaptcha', $settings );
 
-		$this->assertSame( '<p>before</p>', bb_recaptcha_wp_login_form( '<p>before</p>' ) );
+		$this->assertSame( '<p>before</p>', bboss_recaptcha_wp_login_form( '<p>before</p>' ) );
 		$this->assertFalse( has_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' ) );
 	}
 
@@ -249,9 +249,9 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	 * @dataProvider provider_actions
 	 */
 	public function test_verification_fails_closed_when_the_token_is_missing( $action ) {
-		bp_update_option( 'bb_recaptcha', $this->v3_settings );
+		bboss_update_option( 'bb_recaptcha', $this->v3_settings );
 
-		$result = bb_recaptcha_verification_front( $action );
+		$result = bboss_recaptcha_verification_front( $action );
 
 		$this->assertInstanceOf( 'WP_Error', $result );
 		$this->assertSame( 'bb_recaptcha_token_missing', $result->get_error_code() );
@@ -261,9 +261,9 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	public function test_verification_fails_closed_for_v2_too_when_the_token_is_missing() {
 		$settings                      = $this->v3_settings;
 		$settings['recaptcha_version'] = 'recaptcha_v2';
-		bp_update_option( 'bb_recaptcha', $settings );
+		bboss_update_option( 'bb_recaptcha', $settings );
 
-		$result = bb_recaptcha_verification_front( 'bb_login' );
+		$result = bboss_recaptcha_verification_front( 'bb_login' );
 
 		$this->assertInstanceOf( 'WP_Error', $result );
 		$this->assertSame( 'bb_recaptcha_token_missing', $result->get_error_code() );
@@ -272,12 +272,12 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	public function test_verification_is_skipped_for_an_excluded_ip() {
 		$settings               = $this->v3_settings;
 		$settings['exclude_ip'] = '203.0.113.7';
-		bp_update_option( 'bb_recaptcha', $settings );
+		bboss_update_option( 'bb_recaptcha', $settings );
 
 		$old_ip                 = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null;
 		$_SERVER['REMOTE_ADDR'] = '203.0.113.7';
 
-		$result = bb_recaptcha_verification_front( 'bb_login' );
+		$result = bboss_recaptcha_verification_front( 'bb_login' );
 
 		if ( null === $old_ip ) {
 			unset( $_SERVER['REMOTE_ADDR'] );
@@ -293,7 +293,7 @@ class BB_Tests_Core_Recaptcha extends BP_UnitTestCase {
 	 * twin ships the old behaviour while every SCRIPT_DEBUG check looks green.
 	 */
 	public function test_minified_twin_carries_the_submit_time_refresh() {
-		$dir    = buddypress()->plugin_dir . 'bb-features/integrations/recaptcha/assets/js/';
+		$dir    = bboss()->plugin_dir . 'bb-features/integrations/recaptcha/assets/js/';
 		$source = file_get_contents( $dir . 'bb-recaptcha.js' );
 		$min    = file_get_contents( $dir . 'bb-recaptcha.min.js' );
 

@@ -9,21 +9,21 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
+if ( ! class_exists( 'BBoss_XProfile_User_Admin' ) ) :
 
 	/**
 	 * Load xProfile Profile admin area.
 	 *
 	 * @since BuddyPress 2.0.0
 	 */
-	class BP_XProfile_User_Admin {
+	class BBoss_XProfile_User_Admin {
 
 		/**
 		 * Setup xProfile User Admin.
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @return BP_XProfile_User_Admin
+		 * @return BBoss_XProfile_User_Admin
 		 */
 		public static function register_xprofile_user_admin() {
 
@@ -32,7 +32,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				return;
 			}
 
-			$bp = buddypress();
+			$bp = bboss();
 
 			if ( empty( $bp->profile->admin ) ) {
 				$bp->profile->admin = new self();
@@ -76,9 +76,9 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		public function enqueue_scripts( $screen_id ) {
 			if ( ( false === strpos( $screen_id, 'users_page_bp-profile-edit' )
 			&& false === strpos( $screen_id, 'profile_page_bp-profile-edit' ) )
-			|| bp_core_get_root_option( 'bp-disable-avatar-uploads' )
-			|| ! buddypress()->avatar->show_avatars
-			|| ! bp_attachments_is_wp_version_supported() ) {
+			|| bboss_core_get_root_option( 'bp-disable-avatar-uploads' )
+			|| ! bboss()->avatar->show_avatars
+			|| ! bboss_attachments_is_wp_version_supported() ) {
 				return;
 			}
 
@@ -94,7 +94,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			wp_enqueue_script( 'media-upload' );
 
 			// Get Avatar Uploader.
-			bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
+			bboss_attachments_enqueue_scripts( 'BBoss_Attachment_Avatar' );
 		}
 
 		/**
@@ -110,7 +110,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 			// Set the screen ID if none was passed.
 			if ( empty( $screen_id ) ) {
-				$screen_id = buddypress()->members->admin->user_page;
+				$screen_id = bboss()->members->admin->user_page;
 			}
 
 			// Setup a new metabox class if none was passed.
@@ -128,7 +128,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				'user_id'      => $user_id,
 			);
 
-			if ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( $user_id ) && bp_has_profile( $profile_args ) ) {
+			if ( bboss_is_active( 'moderation' ) && bboss_moderation_is_user_suspended( $user_id ) && bboss_has_profile( $profile_args ) ) {
 
 				// If member is already a suspended , show a generic metabox.
 				add_meta_box(
@@ -140,19 +140,19 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					'core'
 				);
 
-			} elseif ( ! bp_is_user_spammer( $user_id ) && bp_has_profile( $profile_args ) ) {
+			} elseif ( ! bboss_is_user_spammer( $user_id ) && bboss_has_profile( $profile_args ) ) {
 
 				// Loop through field groups and add a metabox for each one.
-				while ( bp_profile_groups() ) :
-					bp_the_profile_group();
+				while ( bboss_profile_groups() ) :
+					bboss_the_profile_group();
 					add_meta_box(
-						'bp_xprofile_user_admin_fields_' . sanitize_key( bp_get_the_profile_group_slug() ),
-						bp_get_the_profile_group_name(), // Pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D" in the meta box title.
+						'bp_xprofile_user_admin_fields_' . sanitize_key( bboss_get_the_profile_group_slug() ),
+						bboss_get_the_profile_group_name(), // Pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D" in the meta box title.
 						array( $this, 'user_admin_profile_metaboxes' ),
 						$screen_id,
 						'normal',
 						'core',
-						array( 'profile_group_id' => bp_get_the_profile_group_id() )
+						array( 'profile_group_id' => bboss_get_the_profile_group_id() )
 					);
 				endwhile;
 			} else {
@@ -167,7 +167,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				);
 			}
 
-			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
+			if ( ! bboss_disable_avatar_uploads() && bboss()->avatar->show_avatars ) {
 				// Avatar Metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_avatar',
@@ -202,13 +202,13 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 				$redirect_to = remove_query_arg( '_wpnonce', $redirect_to );
 
-				if ( bp_core_delete_existing_avatar( array( 'item_id' => $user_id ) ) ) {
+				if ( bboss_core_delete_existing_avatar( array( 'item_id' => $user_id ) ) ) {
 					$redirect_to = add_query_arg( 'updated', 'avatar', $redirect_to );
 				} else {
 					$redirect_to = add_query_arg( 'error', 'avatar', $redirect_to );
 				}
 
-				bp_core_redirect( $redirect_to );
+				bboss_core_redirect( $redirect_to );
 
 			} elseif ( isset( $_POST['field_ids'] ) ) {
 				// Update profile fields.
@@ -218,7 +218,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				// Check we have field ID's.
 				if ( empty( $_POST['field_ids'] ) ) {
 					$redirect_to = add_query_arg( 'error', '1', $redirect_to );
-					bp_core_redirect( $redirect_to );
+					bboss_core_redirect( $redirect_to );
 				}
 
 				/**
@@ -239,12 +239,12 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 				// Loop through the posted fields formatting any datebox values then validate the field.
 				foreach ( (array) $posted_field_ids as $field_id ) {
-					bp_xprofile_maybe_format_datebox_post_data( $field_id );
+					bboss_xprofile_maybe_format_datebox_post_data( $field_id );
 
-					$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id ) && ! bp_current_user_can( 'bp_moderate' );
+					$is_required[ $field_id ] = bboss_xprofile_check_is_required_field( $field_id ) && ! bboss_current_user_can( 'bp_moderate' );
 					if ( $is_required[ $field_id ] && empty( $_POST[ 'field_' . $field_id ] ) ) {
 						$redirect_to = add_query_arg( 'error', '2', $redirect_to );
-						bp_core_redirect( $redirect_to );
+						bboss_core_redirect( $redirect_to );
 					}
 
 					// Validate xprofile
@@ -258,7 +258,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 							$redirect_to
 						);
 
-						bp_core_redirect( $redirect_to );
+						bboss_core_redirect( $redirect_to );
 					}
 				}
 
@@ -283,8 +283,8 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					 * whether an activity item should be posted.
 					 */
 					$old_values[ $field_id ] = array(
-						'value'      => xprofile_get_field_data( $field_id, $user_id ),
-						'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
+						'value'      => bboss_xprofile_get_field_data( $field_id, $user_id ),
+						'visibility' => bboss_xprofile_get_field_visibility_level( $field_id, $user_id ),
 					);
 
 					// Update the visibility level, but only for fields the current user
@@ -292,19 +292,19 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					// same capability, so an ungated save here would let a hidden control's
 					// 'public' fallback (or a crafted POST) overwrite a locked field's
 					// admin-set level. The field value itself always saves.
-					if ( bb_xprofile_can_change_field_visibility( $field_id ) ) {
-						xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+					if ( bboss_xprofile_can_change_field_visibility( $field_id ) ) {
+						bboss_xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 					}
-					$field_updated = xprofile_set_field_data( $field_id, $user_id, $value, $is_required[ $field_id ] );
+					$field_updated = bboss_xprofile_set_field_data( $field_id, $user_id, $value, $is_required[ $field_id ] );
 
 					// We need to pass post value here.
 					// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
 					$new_values[ $field_id ] = array(
 						'value'      => $value,
-						'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
+						'visibility' => bboss_xprofile_get_field_visibility_level( $field_id, $user_id ),
 					);
 
-					$value = xprofile_get_field_data( $field_id, $user_id );
+					$value = bboss_xprofile_get_field_data( $field_id, $user_id );
 
 					if ( ! $field_updated ) {
 						$errors = true;
@@ -343,7 +343,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					$redirect_to = add_query_arg( 'updated', '1', $redirect_to );
 				}
 
-				bp_core_redirect( $redirect_to );
+				bboss_core_redirect( $redirect_to );
 			}
 		}
 
@@ -362,7 +362,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				return;
 			}
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args['args'],
 				array(
 					'profile_group_id' => 0,
@@ -376,7 +376,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				return;
 			}
 
-			$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $r['profile_group_id'], 'is_repeater_enabled' );
+			$is_repeater_enabled = 'on' === BBoss_XProfile_Group::get_group_meta( $r['profile_group_id'], 'is_repeater_enabled' );
 			$meta_box_id         = 'profile-edit-form-id'; // Default for non empty id.
 			$meta_box_class      = '';
 			$profile_field_class = 'bp-profile-field';
@@ -388,7 +388,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			}
 
 			// Bail if no profile fields are available.
-			if ( ! bp_has_profile( $r ) ) {
+			if ( ! bboss_has_profile( $r ) ) {
 				return;
 			}
 			?>
@@ -396,18 +396,18 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			<?php
 
 			// Loop through profile groups & fields.
-			while ( bp_profile_groups() ) :
-				bp_the_profile_group();
+			while ( bboss_profile_groups() ) :
+				bboss_the_profile_group();
 
-				if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-					$ids     = bp_get_the_profile_group_field_ids();
+				if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() > 0 ) {
+					$ids     = bboss_get_the_profile_group_field_ids();
 					$ids_arr = explode( ',', $ids );
-					if ( ( $key = array_search( bp_get_xprofile_member_type_field_id(), $ids_arr ) ) !== false ) {
+					if ( ( $key = array_search( bboss_get_xprofile_member_type_field_id(), $ids_arr ) ) !== false ) {
 						unset( $ids_arr[ $key ] );
 					}
 					$ids = implode( ',', $ids_arr );
 				} else {
-					$ids = bp_get_the_profile_group_field_ids();
+					$ids = bboss_get_the_profile_group_field_ids();
 				}
 
 				if ( $is_repeater_enabled ) {
@@ -418,19 +418,19 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					<?php
 				}
 				?>
-				<input type="hidden" name="field_ids[<?php echo esc_attr( $r['profile_group_id'] ); ?>]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
+				<input type="hidden" name="field_ids[<?php echo esc_attr( $r['profile_group_id'] ); ?>]" id="<?php echo esc_attr( 'field_ids_' . bboss_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
 
-				<?php if ( bp_get_the_profile_group_description() ) : ?>
+				<?php if ( bboss_get_the_profile_group_description() ) : ?>
 
-					<p class="description"><?php bp_the_profile_group_description(); ?></p>
+					<p class="description"><?php bboss_the_profile_group_description(); ?></p>
 
 					<?php
 				endif;
 
-				while ( bp_profile_fields() ) :
-					bp_the_profile_field();
+				while ( bboss_profile_fields() ) :
+					bboss_the_profile_field();
 
-					$field = new BP_XProfile_Field( bp_get_the_profile_field_id() );
+					$field = new BBoss_XProfile_Field( bboss_get_the_profile_field_id() );
 					if ( 'membertypes' === $field->type ) {
 						continue;
 					}
@@ -438,12 +438,12 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					do_action( 'bp_before_profile_field_html', array( 'group_id' => $r['profile_group_id'] ) );
 					?>
 
-				<div<?php bp_field_css_class( $profile_field_class ); ?>>
+				<div<?php bboss_field_css_class( $profile_field_class ); ?>>
 					<fieldset>
 
 					<?php
 
-					$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
+					$field_type = bboss_xprofile_create_field_type( bboss_get_the_profile_field_type() );
 					$field_type->edit_field_html( array( 'user_id' => $r['user_id'] ) );
 
 					/**
@@ -453,34 +453,34 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					 */
 					do_action( 'bp_custom_profile_edit_fields_pre_visibility' );
 
-					$can_change_visibility = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
+					$can_change_visibility = bboss_current_user_can( 'bp_xprofile_change_field_visibility' );
 					?>
 
-					<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id(); ?>"><span id="<?php bp_the_profile_field_input_name(); ?>-2">
+					<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bboss_the_profile_field_id(); ?>"><span id="<?php bboss_the_profile_field_input_name(); ?>-2">
 
 						<?php
 						printf(
 							/* translators: %s: field visibility level label. */
 							esc_html__( 'This field can be seen by: %s', 'buddyboss' ),
-							'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
+							'<span class="current-visibility-level">' . esc_html( bboss_get_the_profile_field_visibility_level_label() ) . '</span>'
 						);
 						?>
 						</span>
 
 						<?php if ( $can_change_visibility ) : ?>
 
-							<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+							<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
 
 						<?php endif; ?>
 					</p>
 
 					<?php if ( $can_change_visibility ) : ?>
 
-						<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
+						<div class="field-visibility-settings" id="field-visibility-settings-<?php bboss_the_profile_field_id(); ?>">
 							<fieldset>
 								<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 
-								<?php bp_profile_visibility_radio_buttons(); ?>
+								<?php bboss_profile_visibility_radio_buttons(); ?>
 
 							</fieldset>
 							<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
@@ -523,7 +523,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			?>
 			<p><?php
 			/* translators: %s: user display name. */
-			printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bboss_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -538,7 +538,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			?>
 			<p><?php
 			/* translators: %s: member display name. */
-			printf( esc_html__( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			printf( esc_html__( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bboss_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -559,7 +559,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		<div class="avatar">
 
 			<?php
-			echo wp_kses_post( bp_core_fetch_avatar(
+			echo wp_kses_post( bboss_core_fetch_avatar(
 				array(
 					'item_id' => $user->ID,
 					'object'  => 'user',
@@ -570,7 +570,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			?>
 
 				<?php
-				if ( bp_get_user_has_avatar( $user->ID ) ) :
+				if ( bboss_get_user_has_avatar( $user->ID ) ) :
 
 					$query_args = array(
 						'user_id' => $user->ID,
@@ -584,7 +584,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 						$query_args['wp_http_referer'] = urlencode( $wp_http_referer );
 					}
 
-					$community_url = add_query_arg( $query_args, buddypress()->members->admin->edit_profile_url );
+					$community_url = add_query_arg( $query_args, bboss()->members->admin->edit_profile_url );
 					$delete_link   = wp_nonce_url( $community_url, 'delete_avatar' );
 					?>
 
@@ -594,11 +594,11 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			endif;
 
 				// Load the Avatar UI templates if user avatar uploads are enabled and current WordPress version is supported.
-				if ( ! bp_core_get_root_option( 'bp-disable-avatar-uploads' ) && bp_attachments_is_wp_version_supported() ) :
+				if ( ! bboss_core_get_root_option( 'bp-disable-avatar-uploads' ) && bboss_attachments_is_wp_version_supported() ) :
 					?>
 				<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Edit Profile Photo', 'buddyboss' ); ?></a>
 				<div id="bp-xprofile-avatar-editor" style="display:none;">
-						<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
+						<?php bboss_attachments_get_template_part( 'avatars/index' ); ?>
 				</div>
 				<?php endif; ?>
 

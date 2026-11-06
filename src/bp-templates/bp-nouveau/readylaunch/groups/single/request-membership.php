@@ -6,7 +6,7 @@
  * parent group validation, and membership request forms.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,20 +14,20 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_group_hook( 'before', 'request_membership_content' );
+bboss_nouveau_group_hook( 'before', 'request_membership_content' );
 
-$current_group_id = bp_get_current_group_id();
-$loggedin_user_id = bp_loggedin_user_id();
+$current_group_id = bboss_get_current_group_id();
+$loggedin_user_id = bboss_loggedin_user_id();
 
-if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
+if ( bboss_groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 	?>
 	<aside class="bp-feedback bp-messages loading">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$inviter = bp_groups_get_invited_by( $loggedin_user_id, $current_group_id );
+			$inviter = bboss_groups_get_invited_by( $loggedin_user_id, $current_group_id );
 			if ( ! empty( $inviter ) ) :
-				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
+				$groups_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() );
 				printf(
 					/* translators: 1: inviter profile link, 2: time since the invitation, 3: link to view the invitation. */
 					esc_html__( 'You are already invited to this group by %1$s %2$s. %3$s', 'buddyboss' ),
@@ -38,7 +38,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 					),
 					sprintf(
 						'<span class="last-activity">%s</span>',
-						esc_html( bp_core_time_since( $inviter['date_modified'] ) )
+						esc_html( bboss_core_time_since( $inviter['date_modified'] ) )
 					),
 					sprintf(
 						'<a href="%s" >%s</a>',
@@ -52,33 +52,33 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 	</aside>
 
 	<?php
-} elseif ( ! bp_group_has_requested_membership() ) {
-	$parent_group_id = bp_get_parent_group_id( $current_group_id );
-	$is_member       = groups_is_user_member( $loggedin_user_id, $parent_group_id );
+} elseif ( ! bboss_group_has_requested_membership() ) {
+	$parent_group_id = bboss_get_parent_group_id( $current_group_id );
+	$is_member       = bboss_groups_is_user_member( $loggedin_user_id, $parent_group_id );
 
 	if (
-		bb_groups_user_can_send_membership_requests( $current_group_id ) &&
+		bboss_groups_user_can_send_membership_requests( $current_group_id ) &&
 		(
 			empty( $parent_group_id ) ||
 			(
 				! empty( $parent_group_id ) &&
 				false !== $is_member
 			) ||
-			false === bp_enable_group_restrict_invites()
+			false === bboss_enable_group_restrict_invites()
 		)
 	) {
 
 		$get_selected_member_type_join   = array();
 		$get_requesting_user_member_type = '';
 		if (
-			true === bp_member_type_enable_disable() &&
-			true === bp_disable_group_type_creation()
+			true === bboss_member_type_enable_disable() &&
+			true === bboss_disable_group_type_creation()
 		) {
-			$group_type                      = bp_groups_get_group_type( $current_group_id );
-			$group_type_id                   = bp_group_get_group_type_id( $group_type );
+			$group_type                      = bboss_groups_get_group_type( $current_group_id );
+			$group_type_id                   = bboss_group_get_group_type_id( $group_type );
 			$get_selected_member_type_join   = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
 			$get_selected_member_type_join   = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
-			$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+			$get_requesting_user_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
 		}
 		if (
 			! empty( $get_selected_member_type_join ) &&
@@ -86,18 +86,18 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			! empty( $get_requesting_user_member_type ) &&
 			in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true )
 		) {
-			bp_nouveau_user_feedback( 'group-request-join-member-type' );
+			bboss_nouveau_user_feedback( 'group-request-join-member-type' );
 		} else {
 			?>
 			<p>
-				<?php /* translators: %s: group name. */ printf( esc_html__( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), esc_html( bp_get_group_name() ) ); ?>
+				<?php /* translators: %s: group name. */ printf( esc_html__( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), esc_html( bboss_get_group_name() ) ); ?>
 			</p>
 
-			<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
+			<form action="<?php bboss_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
 				<label for="group-request-membership-comments"><?php esc_html_e( 'Comments (optional)', 'buddyboss' ); ?></label>
 				<textarea name="group-request-membership-comments" id="group-request-membership-comments" aria-label="<?php esc_attr_e( 'Group Request Comments', 'buddyboss' ); ?>"></textarea>
 
-				<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
+				<?php bboss_nouveau_group_hook( '', 'request_membership_content' ); ?>
 
 				<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php esc_attr_e( 'Send Request', 'buddyboss' ); ?>" /></p>
 
@@ -106,11 +106,11 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			<?php
 		}
 	} else {
-		$parent_group      = groups_get_group( $parent_group_id );
+		$parent_group      = bboss_groups_get_group( $parent_group_id );
 		$parent_group_name = sprintf(
 			'<a class="bp-parent-group-title" href="%s">%s</a>',
-			esc_url( bp_get_group_permalink( $parent_group ) ),
-			esc_html( bp_get_group_name( $parent_group ) )
+			esc_url( bboss_get_group_permalink( $parent_group ) ),
+			esc_html( bboss_get_group_name( $parent_group ) )
 		);
 
 		if ( ! empty( $parent_group_id ) ) {
@@ -119,7 +119,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		}
 	}
 } else {
-	bp_nouveau_user_feedback( 'group-requested-membership' );
+	bboss_nouveau_user_feedback( 'group-requested-membership' );
 }
 
-bp_nouveau_group_hook( 'after', 'request_membership_content' );
+bboss_nouveau_group_hook( 'after', 'request_membership_content' );

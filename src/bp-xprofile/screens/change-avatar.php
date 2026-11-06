@@ -14,20 +14,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function xprofile_screen_change_avatar() {
+function bboss_xprofile_screen_change_avatar() {
 
 	// Bail if not the correct screen.
-	if ( ! bp_is_my_profile() && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_is_my_profile() && ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
 	// Bail if there are action variables.
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( ! isset( $bp->avatar_admin ) ) {
 		$bp->avatar_admin = new stdClass();
@@ -41,7 +41,7 @@ function xprofile_screen_change_avatar() {
 		check_admin_referer( 'bp_avatar_upload' );
 
 		// Pass the file to the avatar upload handler.
-		if ( bp_core_avatar_handle_upload( $_FILES, 'xprofile_avatar_upload_dir' ) ) {
+		if ( bboss_core_avatar_handle_upload( $_FILES, 'bboss_xprofile_avatar_upload_dir' ) ) {
 			$bp->avatar_admin->step = 'crop-image';
 
 			// Make sure we include the jQuery jCrop file for image cropping.
@@ -56,7 +56,7 @@ function xprofile_screen_change_avatar() {
 		check_admin_referer( 'bp_avatar_cropstore' );
 
 		$args = array(
-			'item_id'       => bp_displayed_user_id(),
+			'item_id'       => bboss_displayed_user_id(),
 			'original_file' => $_POST['image_src'],
 			'crop_x'        => $_POST['x'],
 			'crop_y'        => $_POST['y'],
@@ -64,8 +64,8 @@ function xprofile_screen_change_avatar() {
 			'crop_h'        => $_POST['h'],
 		);
 
-		if ( ! bp_core_avatar_handle_crop( $args ) ) {
-			bp_core_add_message( __( 'There was a problem cropping your profile photo.', 'buddyboss' ), 'error' );
+		if ( ! bboss_core_avatar_handle_crop( $args ) ) {
+			bboss_core_add_message( __( 'There was a problem cropping your profile photo.', 'buddyboss' ), 'error' );
 		} else {
 
 			/**
@@ -79,8 +79,8 @@ function xprofile_screen_change_avatar() {
 			 * @param string $value   Inform about the way the avatar was set ('crop').
 			 */
 			do_action( 'xprofile_avatar_uploaded', (int) $args['item_id'], 'crop' );
-			bp_core_add_message( __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ) );
-			bp_core_redirect( bp_displayed_user_domain() );
+			bboss_core_add_message( __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ) );
+			bboss_core_redirect( bboss_displayed_user_domain() );
 		}
 	}
 
@@ -98,5 +98,5 @@ function xprofile_screen_change_avatar() {
 	 *
 	 * @param string $template Path to the XProfile change avatar template to load.
 	 */
-	bp_core_load_template( apply_filters( 'xprofile_template_change_avatar', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'xprofile_template_change_avatar', 'members/single/home' ) );
 }

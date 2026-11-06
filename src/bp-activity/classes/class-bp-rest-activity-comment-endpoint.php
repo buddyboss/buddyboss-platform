@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Activity_Comment_Endpoint class
+ * BP REST: BBoss_REST_Activity_Comment_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Activity endpoints class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Activity_Endpoint
+	 * @var BBoss_REST_Activity_Endpoint
 	 */
 	protected $activity_endpoint;
 
@@ -37,9 +37,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace         = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base         = buddypress()->activity->id;
-		$this->activity_endpoint = new BP_REST_Activity_Endpoint();
+		$this->namespace         = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base         = bboss()->activity->id;
+		$this->activity_endpoint = new BBoss_REST_Activity_Endpoint();
 	}
 
 	/**
@@ -149,7 +149,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				$request->set_param( 'context', 'view' );
 			}
 
-			$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
+			$comments_count = BBoss_Activity_Activity::bb_get_all_activity_comment_children_count(
 				array(
 					'spam'     => 'ham_only',
 					'activity' => $activity,
@@ -194,7 +194,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -204,7 +204,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_is_active( 'activity' ) ) {
+		if ( true === $retval && ! bboss_is_active( 'activity' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
 				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
@@ -287,7 +287,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 *
-		 * @param BP_Activity_Activity $activity_comment Fetched activity comment.
+		 * @param BBoss_Activity_Activity $activity_comment Fetched activity comment.
 		 * @param WP_REST_Response     $response         The response data.
 		 * @param WP_REST_Request      $request          The request sent to the API.
 		 */
@@ -307,7 +307,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -370,12 +370,12 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		} else {
 			$group_id = 0;
 			// Get the parent activity.
-			$parent_activity = new BP_Activity_Activity( $request['id'] );
-			if ( bp_is_active( 'groups' ) && isset( $parent_activity->component ) && buddypress()->groups->id === $parent_activity->component ) {
+			$parent_activity = new BBoss_Activity_Activity( $request['id'] );
+			if ( bboss_is_active( 'groups' ) && isset( $parent_activity->component ) && bboss()->groups->id === $parent_activity->component ) {
 				$group_id = isset( $parent_activity->group_id ) ? $parent_activity->group_id : 0;
 			}
-			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-				$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bboss_user_has_access_upload_media' ) ) {
+				$can_send_media = bboss_user_has_access_upload_media( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_media ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_media',
@@ -387,8 +387,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-				$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bboss_user_has_access_upload_document' ) ) {
+				$can_send_document = bboss_user_has_access_upload_document( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_document ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_document',
@@ -400,8 +400,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-				$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bboss_user_has_access_upload_video' ) ) {
+				$can_send_video = bboss_user_has_access_upload_video( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_video ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_video',
@@ -413,8 +413,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['media_gif'] ) && function_exists( 'bboss_user_has_access_upload_gif' ) ) {
+				$can_send_gif = bboss_user_has_access_upload_gif( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_gif ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_gif',
@@ -435,13 +435,13 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			'content'           => $request['content'],
 			'parent_id'         => $request['parent_id'],
 			'activity_id'       => $request['id'],
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'skip_notification' => true,
 			// Without it a refused comment comes back as false and is reported as created (PROD-10649).
 			'error_type'        => 'wp_error',
 		);
 
-		$comment_id = bp_activity_new_comment( $args );
+		$comment_id = bboss_activity_new_comment( $args );
 
 		if ( is_wp_error( $comment_id ) || empty( $comment_id ) ) {
 			$status_by_code = array(
@@ -459,7 +459,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$activity_comment = new BP_Activity_Activity( $comment_id );
+		$activity_comment = new BBoss_Activity_Activity( $comment_id );
 
 		$fields_update = $this->update_additional_fields_for_object( $activity_comment, $request );
 
@@ -467,9 +467,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$activity = new BP_Activity_Activity( $request['id'] );
+		$activity = new BBoss_Activity_Activity( $request['id'] );
 
-		bp_activity_at_name_send_emails( $activity_comment );
+		bboss_activity_at_name_send_emails( $activity_comment );
 
 		/**
 		 * Fires near the end of an activity comment posting, before the returning of the comment ID.
@@ -477,14 +477,14 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param int                  $comment_id ID of the newly posted activity comment.
 		 * @param array                $args       Array of parsed comment arguments.
-		 * @param BP_Activity_Activity $activity   Activity item being commented on.
+		 * @param BBoss_Activity_Activity $activity   Activity item being commented on.
 		 *
-		 * @see   bp_activity_new_comment_notification_helper().
+		 * @see   bboss_activity_new_comment_notification_helper().
 		 */
 		do_action( 'bp_activity_comment_posted', $comment_id, $args, $activity );
 
 		// Update current user's last activity.
-		bp_update_user_last_activity();
+		bboss_update_user_last_activity();
 
 		$retval            = array();
 		$retval['created'] = true;
@@ -554,9 +554,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
-				bb_is_close_activity_comments_enabled() &&
-				bb_is_activity_comments_closed( $activity->id )
+				function_exists( 'bboss_is_close_activity_comments_enabled' ) &&
+				bboss_is_close_activity_comments_enabled() &&
+				bboss_is_activity_comments_closed( $activity->id )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -623,36 +623,36 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			'content'           => $request['content'],
 			'parent_id'         => $request['parent_id'],
 			'activity_id'       => $request['id'],
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'skip_notification' => true,
 			'error_type'        => 'wp_error',
 		);
 
-		if ( bp_is_active( 'video' ) ) {
+		if ( bboss_is_active( 'video' ) ) {
 			remove_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 			remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 		}
-		if ( bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'media' ) ) {
 			remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 			remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 		}
-		if ( bp_is_active( 'document' ) ) {
+		if ( bboss_is_active( 'document' ) ) {
 			remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 			remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 		}
 		remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
 
-		$comment_id = bp_activity_new_comment( $args );
+		$comment_id = bboss_activity_new_comment( $args );
 
-		if ( bp_is_active( 'video' ) ) {
+		if ( bboss_is_active( 'video' ) ) {
 			add_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 			add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 		}
-		if ( bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'media' ) ) {
 			add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 			add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 		}
-		if ( bp_is_active( 'document' ) ) {
+		if ( bboss_is_active( 'document' ) ) {
 			add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 			add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 		}
@@ -668,7 +668,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$activity_comment               = new BP_Activity_Activity( $comment_id );
+		$activity_comment               = new BBoss_Activity_Activity( $comment_id );
 		$activity_comment->edit_comment = true;
 
 		$fields_update = $this->update_additional_fields_for_object( $activity_comment, $request );
@@ -688,7 +688,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 *
-		 * @param BP_Activity_Activity $activity_comment The updated activity comment.
+		 * @param BBoss_Activity_Activity $activity_comment The updated activity comment.
 		 * @param WP_REST_Response     $response         The response data.
 		 * @param WP_REST_Request      $request          The request sent to the API.
 		 */
@@ -727,9 +727,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				);
 			} elseif (
 				! empty( $request['id'] ) &&
-				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
-				bb_is_close_activity_comments_enabled() &&
-				bb_is_activity_comments_closed( $request['id'] )
+				function_exists( 'bboss_is_close_activity_comments_enabled' ) &&
+				bboss_is_close_activity_comments_enabled() &&
+				bboss_is_activity_comments_closed( $request['id'] )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -740,12 +740,12 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				);
 			} elseif (
 				(
-					function_exists( 'bb_is_activity_comment_edit_enabled' )
-					&& ! bb_is_activity_comment_edit_enabled()
+					function_exists( 'bboss_is_activity_comment_edit_enabled' )
+					&& ! bboss_is_activity_comment_edit_enabled()
 				) ||
 				(
-					function_exists( 'bb_activity_comment_user_can_edit' )
-					&& ! bb_activity_comment_user_can_edit( $activity_comment )
+					function_exists( 'bboss_activity_comment_user_can_edit' )
+					&& ! bboss_activity_comment_user_can_edit( $activity_comment )
 				)
 			) {
 				$retval = new WP_Error(
@@ -755,7 +755,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 						'status' => rest_authorization_required_code(),
 					)
 				);
-			} elseif ( bp_activity_user_can_delete( $activity_comment ) ) {
+			} elseif ( bboss_activity_user_can_delete( $activity_comment ) ) {
 				$retval = true;
 			}
 		}
@@ -796,7 +796,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		$activity_comment = $this->get_activity_comment_object( $request );
 		$previous         = $this->prepare_activity_comments( array( $activity_comment ), $request );
 
-		$retval = bp_activity_delete_comment( $activity_comment->item_id, $activity_comment->id );
+		$retval = bboss_activity_delete_comment( $activity_comment->item_id, $activity_comment->id );
 
 		if ( ! $retval ) {
 			return new WP_Error(
@@ -822,7 +822,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 *
-		 * @param BP_Activity_Activity $activity_comment The deleted activity comment.
+		 * @param BBoss_Activity_Activity $activity_comment The deleted activity comment.
 		 * @param WP_REST_Response     $response         The response data.
 		 * @param WP_REST_Request      $request          The request sent to the API.
 		 */
@@ -867,7 +867,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
-			} elseif ( bp_activity_user_can_delete( $activity_comment ) ) {
+			} elseif ( bboss_activity_user_can_delete( $activity_comment ) ) {
 				$retval = true;
 			}
 		}
@@ -1003,13 +1003,13 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
-	 * @return BP_Activity_Activity|string An activity object.
+	 * @return BBoss_Activity_Activity|string An activity object.
 	 * @since 0.1.0
 	 */
 	protected function get_activity_object( $request ) {
 		$activity_id      = is_numeric( $request ) ? $request : (int) $request['id'];
 		$display_comments = ( property_exists( $request, 'display_comments' ) ? $request['display_comments'] : true );
-		$activity         = bp_activity_get_specific(
+		$activity         = bboss_activity_get_specific(
 			array(
 				'activity_ids'     => array( $activity_id ),
 				'display_comments' => $display_comments,
@@ -1042,7 +1042,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		$comment_load_limit = false;
 
 		if ( ! empty( $request->get_param( 'apply_limit' ) ) ) {
-			$comment_load_limit = bb_get_activity_comment_loading();
+			$comment_load_limit = bboss_get_activity_comment_loading();
 		}
 
 		$comment_loaded_count = 0;
@@ -1083,14 +1083,14 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param WP_REST_Request|array $request  Full details about the request.
 	 *
-	 * @return BP_Activity_Activity|string An activity comment object.
+	 * @return BBoss_Activity_Activity|string An activity comment object.
 	 */
 	public function get_activity_comment_object( $request ) {
 		$activity_comment_id = ! empty( $request['comment_id'] ) ? (int) $request['comment_id'] : 0;
-		$activity_comment    = new BP_Activity_Activity( $activity_comment_id );
+		$activity_comment    = new BBoss_Activity_Activity( $activity_comment_id );
 
 		if ( ! empty( $activity_comment->id ) && ! empty( $request['display_comments'] ) ) {
-			$activity_comment->comments = BP_Activity_Activity::append_comments( array( $activity_comment ) );
+			$activity_comment->comments = BBoss_Activity_Activity::append_comments( array( $activity_comment ) );
 		}
 
 		return $activity_comment;
@@ -1110,12 +1110,12 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		} else {
 			$group_id = 0;
 			// Get the parent activity.
-			$parent_activity = new BP_Activity_Activity( $request['id'] );
-			if ( bp_is_active( 'groups' ) && isset( $parent_activity->component ) && buddypress()->groups->id === $parent_activity->component ) {
+			$parent_activity = new BBoss_Activity_Activity( $request['id'] );
+			if ( bboss_is_active( 'groups' ) && isset( $parent_activity->component ) && bboss()->groups->id === $parent_activity->component ) {
 				$group_id = isset( $parent_activity->group_id ) ? $parent_activity->group_id : 0;
 			}
-			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-				$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bboss_user_has_access_upload_media' ) ) {
+				$can_send_media = bboss_user_has_access_upload_media( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_media ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_media',
@@ -1127,8 +1127,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-				$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_documents'] ) && function_exists( 'bboss_user_has_access_upload_document' ) ) {
+				$can_send_document = bboss_user_has_access_upload_document( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_document ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_document',
@@ -1140,8 +1140,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-				$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( ! empty( $request['bp_videos'] ) && function_exists( 'bboss_user_has_access_upload_video' ) ) {
+				$can_send_video = bboss_user_has_access_upload_video( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_video ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_video',
@@ -1153,8 +1153,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			if ( empty( $request['edit_comment'] ) && ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-				$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, 0, 'profile' );
+			if ( empty( $request['edit_comment'] ) && ! empty( $request['media_gif'] ) && function_exists( 'bboss_user_has_access_upload_gif' ) ) {
+				$can_send_gif = bboss_user_has_access_upload_gif( $group_id, bboss_loggedin_user_id(), 0, 0, 'profile' );
 				if ( ! $can_send_gif ) {
 					$is_validate = new WP_Error(
 						'bp_rest_bp_activity_gif',
@@ -1182,7 +1182,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	protected function can_see( $request ) {
 
 		// The activity in the route must be readable, both to list its comments and to read one.
-		$activity = new BP_Activity_Activity( (int) $request['id'] );
+		$activity = new BBoss_Activity_Activity( (int) $request['id'] );
 		if ( ! empty( $activity->id ) && ! $this->activity_endpoint->user_can_read_activity( $activity ) ) {
 			return false;
 		}
@@ -1197,3 +1197,11 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		return ( empty( $activity_comment->id ) || $this->activity_endpoint->user_can_read_activity( $activity_comment ) );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Activity_Comment_Endpoint', false ) || interface_exists( 'BBoss_REST_Activity_Comment_Endpoint', false ) || trait_exists( 'BBoss_REST_Activity_Comment_Endpoint', false ) ) && ! class_exists( 'BP_REST_Activity_Comment_Endpoint', false ) && ! interface_exists( 'BP_REST_Activity_Comment_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Activity_Comment_Endpoint', 'BP_REST_Activity_Comment_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

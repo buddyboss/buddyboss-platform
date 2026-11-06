@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Account_Settings_Endpoint class
+ * BP REST: BBoss_REST_Account_Settings_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,7 +21,7 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'account-settings';
 	}
 
@@ -72,15 +72,15 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 		// Setup Navigation for non admin users.
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
-		bp_setup_nav();
+		bboss_setup_nav();
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		if ( ! has_action( 'bp_notification_settings' ) ) {
-			bp_core_remove_subnav_item( BP_SETTINGS_SLUG, 'notifications' );
+			bboss_core_remove_subnav_item( BBOSS_SETTINGS_SLUG, 'notifications' );
 		}
 
-		$user_nav = buddypress()->members->nav;
+		$user_nav = bboss()->members->nav;
 		if ( ! empty( $user_nav ) ) {
 			$navs = $user_nav->get_secondary(
 				array(
@@ -93,8 +93,8 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'user_nav', $user_nav );
 
 		// if it's nouveau then let it order the tabs.
-		if ( function_exists( 'bp_nouveau_set_nav_item_order' ) ) {
-			bp_nouveau_set_nav_item_order( $navs, bp_nouveau_get_appearance_settings( 'user_nav_order' ) );
+		if ( function_exists( 'bboss_nouveau_set_nav_item_order' ) ) {
+			bboss_nouveau_set_nav_item_order( $navs, bboss_nouveau_get_appearance_settings( 'user_nav_order' ) );
 		}
 
 		if ( ! empty( $navs ) ) {
@@ -340,3 +340,11 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Account_Settings_Endpoint', false ) || interface_exists( 'BBoss_REST_Account_Settings_Endpoint', false ) || trait_exists( 'BBoss_REST_Account_Settings_Endpoint', false ) ) && ! class_exists( 'BP_REST_Account_Settings_Endpoint', false ) && ! interface_exists( 'BP_REST_Account_Settings_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Account_Settings_Endpoint', 'BP_REST_Account_Settings_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

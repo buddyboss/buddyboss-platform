@@ -17,9 +17,9 @@ defined( 'ABSPATH' ) || exit;
  * @return false|null Returns false on failure. Otherwise redirects back to the
  *                   message box URL.
  */
-function bp_messages_action_mark_read() {
+function bboss_messages_action_mark_read() {
 
-	if ( ! bp_is_messages_component() || bp_is_current_action( 'notices' ) || ! bp_is_action_variable( 'read', 0 ) ) {
+	if ( ! bboss_is_messages_component() || bboss_is_current_action( 'notices' ) || ! bboss_is_action_variable( 'read', 0 ) ) {
 		return false;
 	}
 
@@ -33,19 +33,19 @@ function bp_messages_action_mark_read() {
 	}
 
 	// Check the nonce.
-	if ( ! bp_verify_nonce_request( 'bp_message_thread_mark_read_' . $id ) ) {
+	if ( ! bboss_verify_nonce_request( 'bp_message_thread_mark_read_' . $id ) ) {
 		return false;
 	}
 
 	// Check access to the message and mark as read.
-	if ( messages_check_thread_access( $id ) || bp_current_user_can( 'bp_moderate' ) ) {
-		messages_mark_thread_read( $id );
-		bp_core_add_message( __( 'Message marked as read.', 'buddyboss' ) );
+	if ( bboss_messages_check_thread_access( $id ) || bboss_current_user_can( 'bp_moderate' ) ) {
+		bboss_messages_mark_thread_read( $id );
+		bboss_core_add_message( __( 'Message marked as read.', 'buddyboss' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that message.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem marking that message.', 'buddyboss' ), 'error' );
 	}
 
 	// Redirect back to the message box.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() );
 }
 add_action( 'bp_actions', 'bp_messages_action_mark_read' );

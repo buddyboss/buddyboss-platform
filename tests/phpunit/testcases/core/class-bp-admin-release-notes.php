@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tests for the BP_Admin plugin-details and release-notes helpers.
+ * Tests for the BBoss_Admin plugin-details and release-notes helpers.
  *
  * These cover the pure helpers behind the Plugins-page "View details" modal:
  * version normalization, release-page URL construction, the markup pipeline
@@ -16,7 +16,7 @@
  * around every test, so those registrations do not leak.
  *
  * @group core
- * @group bp_admin
+ * @group BBoss_Admin
  * @group bb_release_notes
  */
 class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
@@ -24,7 +24,7 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	/**
 	 * Constructor-less instance used for the pure-helper tests.
 	 *
-	 * @var BP_Admin
+	 * @var BBoss_Admin
 	 */
 	protected $admin;
 
@@ -34,7 +34,7 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		$reflection  = new ReflectionClass( 'BP_Admin' );
+		$reflection  = new ReflectionClass( 'BBoss_Admin' );
 		$this->admin = $reflection->newInstanceWithoutConstructor();
 
 		// The permalink tests share these keys; do not rely on transaction
@@ -104,7 +104,7 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	 * @return mixed Whatever the method returns.
 	 */
 	protected function call( $method, $args = array() ) {
-		$reflection = new ReflectionMethod( 'BP_Admin', $method );
+		$reflection = new ReflectionMethod( 'BBoss_Admin', $method );
 		$reflection->setAccessible( true );
 
 		return $reflection->invokeArgs( $this->admin, $args );
@@ -723,13 +723,13 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	 * map key and that declaration must not drift apart.
 	 */
 	public function test_member_blogging_map_key_matches_plugin_slug() {
-		if ( ! function_exists( 'bb_member_blogging_plugin_slug' ) ) {
+		if ( ! function_exists( 'bboss_member_blogging_plugin_slug' ) ) {
 			$this->markTestSkipped( 'Member Blogging add-on helpers are not loaded.' );
 		}
 
 		$this->assertSame(
 			'member-blogging',
-			$this->call( 'bb_get_addon_release_term', array( bb_member_blogging_plugin_slug() ) )
+			$this->call( 'bb_get_addon_release_term', array( bboss_member_blogging_plugin_slug() ) )
 		);
 	}
 
@@ -866,7 +866,7 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 		 */
 		$admin = $this->admin;
 
-		$setup = new ReflectionMethod( 'BP_Admin', 'setup_actions' );
+		$setup = new ReflectionMethod( 'BBoss_Admin', 'setup_actions' );
 		$setup->setAccessible( true );
 		$setup->invoke( $admin );
 
@@ -943,11 +943,11 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	 */
 	public function test_contract_methods_are_public( $method ) {
 		$this->assertTrue(
-			method_exists( 'BP_Admin', $method ),
+			method_exists( 'BBoss_Admin', $method ),
 			sprintf( 'BP_Admin::%s() is part of the add-on API and has gone missing.', $method )
 		);
 
-		$reflection = new ReflectionMethod( 'BP_Admin', $method );
+		$reflection = new ReflectionMethod( 'BBoss_Admin', $method );
 
 		$this->assertTrue(
 			$reflection->isPublic(),
@@ -1003,7 +1003,7 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	 * passes nothing must keep getting its changelog.
 	 */
 	public function test_addon_changelog_section_gate_is_optional_and_defaults_to_fetching() {
-		$reflection = new ReflectionMethod( 'BP_Admin', 'bb_get_addon_changelog_section' );
+		$reflection = new ReflectionMethod( 'BBoss_Admin', 'bb_get_addon_changelog_section' );
 		$parameters = $reflection->getParameters();
 
 		$this->assertCount( 5, $parameters );

@@ -14,11 +14,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-function bp_xprofile_screen_settings() {
+function bboss_xprofile_screen_settings() {
 
 	// Redirect if no privacy settings page is accessible.
-	if ( bp_action_variables() || ! bp_is_active( 'xprofile' ) ) {
-		bp_do_404();
+	if ( bboss_action_variables() || ! bboss_is_active( 'xprofile' ) ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -29,7 +29,7 @@ function bp_xprofile_screen_settings() {
 	 *
 	 * @param string $template Path to the XProfile change avatar template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_settings_screen_xprofile', '/members/single/settings/profile' ) );
+	bboss_core_load_template( apply_filters( 'bp_settings_screen_xprofile', '/members/single/settings/profile' ) );
 }
 
 /**
@@ -37,10 +37,10 @@ function bp_xprofile_screen_settings() {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_xprofile_action_settings() {
+function bboss_xprofile_action_settings() {
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		return;
 	}
 
@@ -50,13 +50,13 @@ function bp_xprofile_action_settings() {
 	}
 
 	// Bail if not in settings.
-	if ( ! bp_is_user_settings_profile() ) {
+	if ( ! bboss_is_user_settings_profile() ) {
 		return;
 	}
 
 	// 404 if there are any additional action variables attached
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -91,14 +91,14 @@ function bp_xprofile_action_settings() {
 
 		// The visibility gate below reads allow_custom_visibility field meta per field.
 		// Prime the whole posted set in one query rather than one lookup per field.
-		bp_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+		bboss_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
 
 		// Save the visibility settings.
 		foreach ( $posted_field_ids as $field_id ) {
 
 			// Locked fields (enforced visibility or display-name format) never render a control;
 			// writing the 'public' fallback for them would replace the admin default once the lock is lifted.
-			if ( ! bb_xprofile_can_change_field_visibility( $field_id ) ) {
+			if ( ! bboss_xprofile_can_change_field_visibility( $field_id ) ) {
 				continue;
 			}
 
@@ -108,7 +108,7 @@ function bp_xprofile_action_settings() {
 				$visibility_level = $_POST[ 'field_' . $field_id . '_visibility' ];
 			}
 
-			xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			bboss_xprofile_set_field_visibility_level( $field_id, bboss_displayed_user_id(), $visibility_level );
 		}
 	}
 
@@ -122,6 +122,6 @@ function bp_xprofile_action_settings() {
 	do_action( 'bp_xprofile_settings_after_save' );
 
 	// Redirect to the root domain.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_settings_slug() . '/profile' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/profile' );
 }
 add_action( 'bp_actions', 'bp_xprofile_action_settings' );

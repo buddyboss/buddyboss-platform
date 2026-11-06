@@ -11,25 +11,25 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-bp_nouveau_before_activity_directory_content();
+bboss_nouveau_before_activity_directory_content();
 
 if ( is_user_logged_in() ) :
-	bp_get_template_part( 'activity/post-form' );
+	bboss_get_template_part( 'activity/post-form' );
 endif;
 
-bp_nouveau_template_notices();
+bboss_nouveau_template_notices();
 
-if ( bb_is_enabled_activity_topics() ) {
-	$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics() : array();
+if ( bboss_is_enabled_activity_topics() ) {
+	$topics = function_exists( 'bboss_activity_topics_manager_instance' ) ? bboss_activity_topics_manager_instance()->bb_get_activity_topics() : array();
 	if ( ! empty( $topics ) ) {
-		$current_slug = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topic_slug_from_url() : '';
+		$current_slug = function_exists( 'bboss_topics_manager_instance' ) ? bboss_topics_manager_instance()->bb_get_topic_slug_from_url() : '';
 		?>
 		<div class="activity-topic-selector">
 			<ul>
 				<li>
-					<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( bboss_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 				</li>
 				<?php
 				foreach ( $topics as $topic ) {
@@ -47,15 +47,15 @@ if ( bb_is_enabled_activity_topics() ) {
 		<?php
 	}
 }
-if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
+if ( ! bboss_nouveau_is_object_nav_in_sidebar() ) {
 	echo '<div class="flex activity-head-bar">';
-	bp_get_template_part( 'common/search-and-filters-bar' );
+	bboss_get_template_part( 'common/search-and-filters-bar' );
 	echo '</div>';
 }
 ?>
 <div class="screen-content">
 	<?php
-	bp_nouveau_activity_hook( 'before_directory', 'list' );
+	bboss_nouveau_activity_hook( 'before_directory', 'list' );
 	?>
 
 	<div id="activity-stream" class="activity" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
@@ -102,10 +102,10 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 			<?php
 			echo '</div>';
 		} else {
-			bp_get_template_part( 'activity/activity-loop' );
+			bboss_get_template_part( 'activity/activity-loop' );
 		}
 		?>
 	</div><!-- .activity -->
 
-	<?php bp_nouveau_after_activity_directory_content(); ?>
+	<?php bboss_nouveau_after_activity_directory_content(); ?>
 </div><!-- // .screen-content -->

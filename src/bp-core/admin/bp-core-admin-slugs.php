@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array
  */
-function bp_core_admin_get_directory_pages() {
-	$bp              = buddypress();
+function bboss_core_admin_get_directory_pages() {
+	$bp              = bboss();
 	$directory_pages = array();
 
 	// Loop through loaded components and collect directories.
@@ -33,27 +33,27 @@ function bp_core_admin_get_directory_pages() {
 		}
 	}
 
-	if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-		if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+	if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) ) {
+		if ( bboss_nouveau_get_appearance_settings( 'user_front_page' ) ) {
 			$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss' );
 		}
 	}
 
 	// Add new Forums option into the Pages.
-	if ( bp_is_active( 'forums' ) ) {
+	if ( bboss_is_active( 'forums' ) ) {
 
-		if ( bp_is_active( 'groups' ) ) {
-			$directory_pages = array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
+		if ( bboss_is_active( 'groups' ) ) {
+			$directory_pages = bboss_array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
 		} else {
-			$directory_pages = array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
+			$directory_pages = bboss_array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && ( bp_is_profile_document_support_enabled() || bp_is_forums_document_support_enabled() || bp_is_group_document_support_enabled() || bp_is_messages_document_support_enabled() ) ) {
+	if ( bboss_is_active( 'media' ) && ( bboss_is_profile_document_support_enabled() || bboss_is_forums_document_support_enabled() || bboss_is_group_document_support_enabled() || bboss_is_messages_document_support_enabled() ) ) {
 		$directory_pages['document'] = __( 'Documents', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_video_support_enabled' ) &&  ( bp_is_profile_video_support_enabled() || bp_is_forums_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_messages_video_support_enabled() ) ) {
+	if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_video_support_enabled' ) &&  ( bboss_is_profile_video_support_enabled() || bboss_is_forums_video_support_enabled() || bboss_is_group_video_support_enabled() || bboss_is_messages_video_support_enabled() ) ) {
 		$directory_pages['video'] = __( 'Videos', 'buddyboss' );
 	}
 
@@ -79,7 +79,7 @@ function bp_core_admin_get_directory_pages() {
  *
  * @return array
  */
-function array_insert_after( array $array, $key, array $new ) {
+function bboss_array_insert_after( array $array, $key, array $new ) {
 	$keys  = array_keys( $array );
 	$index = array_search( $key, $keys );
 	$pos   = false === $index ? count( $array ) : $index + 1;
@@ -95,7 +95,7 @@ function array_insert_after( array $array, $key, array $new ) {
  *
  * @return array
  */
-function bp_core_admin_get_static_pages() {
+function bboss_core_admin_get_static_pages() {
 	$static_pages = array(
 		'register' => __( 'Register Form', 'buddyboss' ),
 		'terms'    => __( 'Terms of Service', 'buddyboss' ),

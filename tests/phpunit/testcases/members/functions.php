@@ -11,7 +11,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	public function test_bp_core_delete_account() {
 		// Stash
 		$current_user = get_current_user_id();
-		$deletion_disabled = bp_disable_account_deletion();
+		$deletion_disabled = bboss_disable_account_deletion();
 
 		// Create an admin for testing
 		$admin_user = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -20,7 +20,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		// 1. Admin can delete user account
 		$this->set_current_user( $admin_user );
 		$user1 = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		bp_core_delete_account( $user1 );
+		bboss_core_delete_account( $user1 );
 		$maybe_user = new WP_User( $user1 );
 		$this->assertEquals( 0, $maybe_user->ID );
 		unset( $maybe_user );
@@ -29,7 +29,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		// 2. Admin cannot delete superadmin account
 		$user2 = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		$this->grant_super_admin( $user2 );
-		bp_core_delete_account( $user2 );
+		bboss_core_delete_account( $user2 );
 		$maybe_user = new WP_User( $user2 );
 		$this->assertNotEquals( 0, $maybe_user->ID );
 		unset( $maybe_user );
@@ -38,14 +38,14 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$user3 = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$user4 = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$this->set_current_user( $user3 );
-		bp_core_delete_account( $user4 );
+		bboss_core_delete_account( $user4 );
 		$maybe_user = new WP_User( $user4 );
 		$this->assertNotEquals( 0, $maybe_user->ID );
 		unset( $maybe_user );
 
 		// Cleanup
 		$this->set_current_user( $current_user );
-		bp_update_option( 'bp-disable-account-deletion', $deletion_disabled );
+		bboss_update_option( 'bp-disable-account-deletion', $deletion_disabled );
 	}
 
 	/**
@@ -57,10 +57,10 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 
 		// Set object cache first for user domain
-		$user_domain = bp_core_get_user_domain( $user_id );
+		$user_domain = bboss_core_get_user_domain( $user_id );
 
 		// Now change the members directory slug
-		$pages = bp_core_get_directory_pages();
+		$pages = bboss_core_get_directory_pages();
 		$members_page = get_post( $pages->members->id );
 		$members_page->post_name = 'new-members-slug';
 		wp_update_post( $members_page );
@@ -69,14 +69,14 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$this->go_to( trailingslashit( home_url( 'new-members-slug' ) ) );
 		$user = new WP_User( $user_id );
 
-		$this->assertSame( home_url( 'new-members-slug' ) . '/' . $user->user_nicename . '/', bp_core_get_user_domain( $user_id ) );
+		$this->assertSame( home_url( 'new-members-slug' ) . '/' . $user->user_nicename . '/', bboss_core_get_user_domain( $user_id ) );
 	}
 
 	/**
 	 * @group bp_core_get_user_displayname
 	 */
 	public function test_bp_core_get_user_displayname_empty_username() {
-		$this->assertFalse( bp_core_get_user_displayname( '' ) );
+		$this->assertFalse( bboss_core_get_user_displayname( '' ) );
 	}
 
 	/**
@@ -87,41 +87,41 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 
 		$user = new WP_User( $u );
 
-		$found = bp_core_get_user_displayname( $u );
+		$found = bboss_core_get_user_displayname( $u );
 		$this->assertNotEmpty( $found );
-		$this->assertSame( $found, bp_core_get_user_displayname( $user->user_login ) );
+		$this->assertSame( $found, bboss_core_get_user_displayname( $user->user_login ) );
 	}
 
 	/**
 	 * @group bp_core_get_user_displayname
 	 */
 	public function test_bp_core_get_user_displayname_bad_username() {
-		$this->assertFalse( bp_core_get_user_displayname( 'i_dont_exist' ) );
+		$this->assertFalse( bboss_core_get_user_displayname( 'i_dont_exist' ) );
 	}
 
 	/**
 	 * @group bp_core_get_user_displayname
 	 */
 	public function test_bp_core_get_user_displayname_xprofile_exists() {
-		$xprofile_is_active = bp_is_active( 'xprofile' );
-		buddypress()->active_components['xprofile'] = '1';
+		$xprofile_is_active = bboss_is_active( 'xprofile' );
+		bboss()->active_components['xprofile'] = '1';
 
 		$u = self::factory()->user->create();
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Foo' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Bar' );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $u, 'Baz' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u, 'Foo' );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $u, 'Bar' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $u, 'Baz' );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
-		$this->assertSame( 'Foo', bp_core_get_user_displayname( $u ) );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
+		$this->assertSame( 'Foo', bboss_core_get_user_displayname( $u ) );
 
-		bp_update_option( 'bp-display-name-format', 'first_last_name' );
-		$this->assertSame( 'Foo Bar', bp_core_get_user_displayname( $u ) );
+		bboss_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->assertSame( 'Foo Bar', bboss_core_get_user_displayname( $u ) );
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
-		$this->assertSame( 'Baz', bp_core_get_user_displayname( $u ) );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
+		$this->assertSame( 'Baz', bboss_core_get_user_displayname( $u ) );
 
 		if ( ! $xprofile_is_active ) {
-			unset( buddypress()->active_components['xprofile'] );
+			unset( bboss()->active_components['xprofile'] );
 		}
 	}
 
@@ -129,7 +129,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	 * @group bp_core_get_user_displaynames
 	 */
 	public function test_bp_core_get_user_displayname_arrays_all_bad_entries() {
-		$this->assertSame( array(), bp_core_get_user_displaynames( array( 0, 'foo', ) ) );
+		$this->assertSame( array(), bboss_core_get_user_displaynames( array( 0, 'foo', ) ) );
 	}
 
 	/**
@@ -138,16 +138,16 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	public function test_bp_core_get_user_displaynames_all_uncached() {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u1, 'Foo' );
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u2, 'Bar' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u1, 'Foo' );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $u2, 'Bar' );
 
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 		$expected = array(
 			$u1 => 'Foo',
 			$u2 => 'Bar',
 		);
 
-		$this->assertSame( $expected, bp_core_get_user_displaynames( array( $u1, $u2, ) ) );
+		$this->assertSame( $expected, bboss_core_get_user_displaynames( array( $u1, $u2, ) ) );
 	}
 
 	/**
@@ -158,15 +158,15 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create( array(
 			'display_name' => 'Bar',
 		) );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $u1, 'Foo' );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $u1, 'Foo' );
 
-		bp_update_option( 'bp-display-name-format', 'nickname' );
+		bboss_update_option( 'bp-display-name-format', 'nickname' );
 		$expected = array(
 			$u1 => 'Foo',
 			$u2 => 'Bar',
 		);
 
-		$this->assertSame( $expected, bp_core_get_user_displaynames( array( $u1, $u2, ) ) );
+		$this->assertSame( $expected, bboss_core_get_user_displaynames( array( $u1, $u2, ) ) );
 	}
 
 	/**
@@ -190,9 +190,9 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		);
 		clean_user_cache( $u );
 
-		bp_members_migrate_signups();
+		bboss_members_migrate_signups();
 
-		$found = BP_Signup::get();
+		$found = BBoss_Signup::get();
 
 		// Use email address as a sanity check
 		$found_email = isset( $found['signups'][0]->user_email ) ? $found['signups'][0]->user_email : '';
@@ -227,10 +227,10 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		);
 		clean_user_cache( $u );
 
-		bp_members_migrate_signups();
+		bboss_members_migrate_signups();
 
 		// No migrations should have taken place
-		$found = BP_Signup::get();
+		$found = BBoss_Signup::get();
 		$this->assertEmpty( $found['total'] );
 	}
 
@@ -252,10 +252,10 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		);
 		clean_user_cache( $u );
 
-		bp_members_migrate_signups();
+		bboss_members_migrate_signups();
 
 		// Use email address as a sanity check
-		$found = BP_Signup::get();
+		$found = BBoss_Signup::get();
 		$found_email = isset( $found['signups'][0]->user_email ) ? $found['signups'][0]->user_email : '';
 		$this->assertSame( $u_obj->user_email, $found_email );
 	}
@@ -283,7 +283,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 
 		// Create an existing entry in last_activity to test no dupes
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		$wpdb->query( $wpdb->prepare(
 			"INSERT INTO {$bp->members->table_name_last_activity}
 				(`user_id`, `component`, `type`, `action`, `content`, `primary_link`, `item_id`, `date_recorded` ) VALUES
@@ -291,7 +291,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 			$u2, $bp->members->id, 'last_activity', '', '', '', 0, $t1
 		) );
 
-		bp_last_activity_migrate();
+		bboss_last_activity_migrate();
 
 		$expected = array(
 			$u1 => $t1,
@@ -306,7 +306,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		);
 
 		foreach ( $found as $uid => $v ) {
-			$found[ $uid ] = bp_get_user_last_activity( $uid );
+			$found[ $uid ] = bboss_get_user_last_activity( $uid );
 		}
 
 		$this->assertSame( $expected, $found );
@@ -316,7 +316,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	 * @group bp_core_get_userid_from_nicename
 	 */
 	public function test_bp_core_get_userid_from_nicename_failure() {
-		$this->assertSame( NULL, bp_core_get_userid_from_nicename( 'non_existent_user' ) );
+		$this->assertSame( NULL, bboss_core_get_userid_from_nicename( 'non_existent_user' ) );
 	}
 
 	/**
@@ -333,11 +333,11 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$time = date_i18n( 'Y-m-d H:i:s', time() - 50 );
 
 		// Update last user activity
-		bp_update_user_last_activity( $user, $time );
+		bboss_update_user_last_activity( $user, $time );
 
 		// Setup parameters to assert to be the same
 		$expected = $time;
-		$found    = bp_get_user_meta( $user, 'last_activity', true );
+		$found    = bboss_get_user_meta( $user, 'last_activity', true );
 
 		$this->assertSame( $expected, $found );
 	}
@@ -361,21 +361,21 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 			return;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 		$displayed_user = $bp->displayed_user;
 
 		$u1 = self::factory()->user->create();
 		$bp->displayed_user->id = $u1;
 
 		// Spam the user
-		bp_core_process_spammer_status( $u1, 'spam' );
+		bboss_core_process_spammer_status( $u1, 'spam' );
 
-		$this->assertTrue( bp_is_user_spammer( $u1 ) );
+		$this->assertTrue( bboss_is_user_spammer( $u1 ) );
 
 		// Unspam the user
-		bp_core_process_spammer_status( $u1, 'ham' );
+		bboss_core_process_spammer_status( $u1, 'ham' );
 
-		$this->assertFalse( bp_is_user_spammer( $u1 ) );
+		$this->assertFalse( bboss_is_user_spammer( $u1 ) );
 
 		// Reset displayed user
 		$bp->displayed_user = $displayed_user;
@@ -389,7 +389,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 			return;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 		$displayed_user = $bp->displayed_user;
 
 		$u1 = self::factory()->user->create();
@@ -398,12 +398,12 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		// Bulk spam in network admin uses update_user_status
 		update_user_status( $u1, 'spam', '1' );
 
-		$this->assertTrue( bp_is_user_spammer( $u1 ) );
+		$this->assertTrue( bboss_is_user_spammer( $u1 ) );
 
 		// Unspam the user
-		bp_core_process_spammer_status( $u1, 'ham' );
+		bboss_core_process_spammer_status( $u1, 'ham' );
 
-		$this->assertFalse( bp_is_user_spammer( $u1 ) );
+		$this->assertFalse( bboss_is_user_spammer( $u1 ) );
 
 		// Reset displayed user
 		$bp->displayed_user = $displayed_user;
@@ -417,21 +417,21 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 			return;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 		$displayed_user = $bp->displayed_user;
 
 		$u1 = self::factory()->user->create();
 		$bp->displayed_user->id = $u1;
 
 		// Spam the user
-		bp_core_process_spammer_status( $u1, 'spam' );
+		bboss_core_process_spammer_status( $u1, 'spam' );
 
-		$this->assertTrue( bp_is_user_spammer( $u1 ) );
+		$this->assertTrue( bboss_is_user_spammer( $u1 ) );
 
 		// Bulk unspam in network admin uses update_user_status
 		update_user_status( $u1, 'spam', '0' );
 
-		$this->assertFalse( bp_is_user_spammer( $u1 ) );
+		$this->assertFalse( bboss_is_user_spammer( $u1 ) );
 
 		// Reset displayed user
 		$bp->displayed_user = $displayed_user;
@@ -444,7 +444,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		add_filter( 'make_spam_user', array( $this, 'notification_filter_callback' ) );
 
 		$u1 = self::factory()->user->create();
-		$n = bp_core_process_spammer_status( $u1, 'spam' );
+		$n = bboss_core_process_spammer_status( $u1, 'spam' );
 
 		remove_filter( 'make_spam_user', array( $this, 'notification_filter_callback' ) );
 
@@ -456,7 +456,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		add_filter( 'make_ham_user', array( $this, 'notification_filter_callback' ) );
 
 		$u1 = self::factory()->user->create();
-		$n = bp_core_process_spammer_status( $u1, 'ham' );
+		$n = bboss_core_process_spammer_status( $u1, 'ham' );
 
 		remove_filter( 'make_ham_user', array( $this, 'notification_filter_callback' ) );
 
@@ -468,7 +468,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		add_filter( 'bp_make_spam_user', array( $this, 'notification_filter_callback' ) );
 
 		$u1 = self::factory()->user->create();
-		$n = bp_core_process_spammer_status( $u1, 'spam' );
+		$n = bboss_core_process_spammer_status( $u1, 'spam' );
 
 		remove_filter( 'bp_make_spam_user', array( $this, 'notification_filter_callback' ) );
 
@@ -480,7 +480,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		add_filter( 'bp_make_ham_user', array( $this, 'notification_filter_callback' ) );
 
 		$u1 = self::factory()->user->create();
-		$n = bp_core_process_spammer_status( $u1, 'ham' );
+		$n = bboss_core_process_spammer_status( $u1, 'ham' );
 
 		remove_filter( 'bp_make_ham_user', array( $this, 'notification_filter_callback' ) );
 
@@ -497,11 +497,11 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	 * @ticket BP6208
 	 *
 	 * Note - it's not possible to test this when registration is not configured properly,
-	 * because `bp_has_custom_signup_page()` stores its value in a static variable that cannot
+	 * because `bboss_has_custom_signup_page()` stores its value in a static variable that cannot
 	 * be toggled.
 	 */
 	public function test_wp_registration_url_should_return_bp_register_page_when_register_page_is_configured_properly() {
-		$this->assertSame( bp_get_signup_page(), wp_registration_url() );
+		$this->assertSame( bboss_get_signup_page(), wp_registration_url() );
 	}
 
 	/**
@@ -546,7 +546,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$suppress = $wpdb->suppress_errors();
 
 		foreach ( $signups as $key => $data ) {
-			$u = bp_core_activate_signup( $key );
+			$u = bboss_core_activate_signup( $key );
 
 			$this->assertEquals( get_userdata( $u )->user_pass, $data['password'] );
 		}
@@ -562,19 +562,19 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	public function test_bp_core_get_illegal_names() {
 
 		// Making sure BP custom illegals are in the array.
-		$this->assertTrue( in_array( 'profile', bp_core_get_illegal_names(), true ) );
-		$this->assertTrue( in_array( 'forums', bp_core_get_illegal_names(), true ) );
+		$this->assertTrue( in_array( 'profile', bboss_core_get_illegal_names(), true ) );
+		$this->assertTrue( in_array( 'forums', bboss_core_get_illegal_names(), true ) );
 
 		add_filter( 'illegal_user_logins', array( $this, '_illegal_user_logins' ) );
 
 		// Testing fake custom illegal names.
-		$this->assertTrue( in_array( 'testuser', bp_core_get_illegal_names(), true ) );
-		$this->assertTrue( in_array( 'admins', bp_core_get_illegal_names(), true ) );
-		$this->assertFalse( in_array( 'buddypresss', bp_core_get_illegal_names(), true ) );
+		$this->assertTrue( in_array( 'testuser', bboss_core_get_illegal_names(), true ) );
+		$this->assertTrue( in_array( 'admins', bboss_core_get_illegal_names(), true ) );
+		$this->assertFalse( in_array( 'buddypresss', bboss_core_get_illegal_names(), true ) );
 
 		// Making sure BP custom illegals are in the array after including the custom ones.
-		$this->assertTrue( in_array( 'profile', bp_core_get_illegal_names(), true ) );
-		$this->assertTrue( in_array( 'forums', bp_core_get_illegal_names(), true ) );
+		$this->assertTrue( in_array( 'profile', bboss_core_get_illegal_names(), true ) );
+		$this->assertTrue( in_array( 'forums', bboss_core_get_illegal_names(), true ) );
 
 		remove_filter( 'illegal_user_logins', array( $this, '_illegal_user_logins' ) );
 	}
@@ -605,7 +605,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		) );
 
 		// Activate user.
-		$user_id = bp_core_activate_signup( $key );
+		$user_id = bboss_core_activate_signup( $key );
 
 		// Assert that user has a role.
 		$user = get_userdata( $user_id );

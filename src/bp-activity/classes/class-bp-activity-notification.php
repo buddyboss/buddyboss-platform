@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Activity_Notification class.
+ * Set up the BBoss_Activity_Notification class.
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Activity_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Activity_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Activity_Notification|Controller|object
+	 * @return null|BBoss_Activity_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -152,10 +152,10 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
 		if ( 'activity' === $component_name && 'bb_following_new' === $component_action_name ) {
-			$notification      = bp_notifications_get_notification( $notification_id );
+			$notification      = bboss_notifications_get_notification( $notification_id );
 			$user_id           = $secondary_item_id;
-			$user_fullname     = bp_core_get_user_displayname( $user_id );
-			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_core_get_user_domain( $user_id ) );
+			$user_fullname     = bboss_core_get_user_displayname( $user_id );
+			$notification_link = add_query_arg( 'rid', (int) $notification_id, bboss_core_get_user_domain( $user_id ) );
 
 			if ( 'web_push' === $screen ) {
 				$text = esc_html__( 'Started following you', 'buddyboss' );
@@ -173,7 +173,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $user_fullname,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,
@@ -201,15 +201,15 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function bb_render_comment_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification           = bp_notifications_get_notification( $notification_id );
+		$notification           = bboss_notifications_get_notification( $notification_id );
 		$user_id                = $secondary_item_id;
-		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$user_fullname          = bboss_core_get_user_displayname( $user_id );
 		$notification_type_html = '';
 
 		if ( ! empty( $notification ) && 'bb_activity_comment' === $notification->component_action ) {
 
-			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
-			$notification_link = bp_get_notifications_permalink();
+			$notification_type = bboss_notifications_get_meta( $notification_id, 'type', true );
+			$notification_link = bboss_get_notifications_permalink();
 
 			if ( $notification_type ) {
 				if ( 'activity_comment' === $notification_type ) {
@@ -219,8 +219,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				}
 			}
 
-			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = bp_create_excerpt(
+			$activity         = new BBoss_Activity_Activity( $item_id );
+			$activity_excerpt = bboss_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
@@ -232,10 +232,10 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				$activity_excerpt = '';
 			}
 
-			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
-				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
+			if ( empty( $activity_excerpt ) && function_exists( 'bboss_blogs_activity_comment_content_with_read_more' ) ) {
+				$activity_excerpt = bboss_blogs_activity_comment_content_with_read_more( '', $activity );
 
-				$activity_excerpt = bp_create_excerpt(
+				$activity_excerpt = bboss_create_excerpt(
 					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
@@ -254,7 +254,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
 			$activity_excerpt = str_replace( '""', '', $activity_excerpt );
 
-			$activity_metas = bb_activity_get_metadata( $activity->id );
+			$activity_metas = bboss_activity_get_metadata( $activity->id );
 			$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
 			$document_ids   = $activity_metas['bp_document_ids'][0] ?? '';
 			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
@@ -262,7 +262,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$amount         = 'single';
 
 			if ( 'web_push' === $screen ) {
-				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+				$notification_link = add_query_arg( 'rid', (int) $notification_id, bboss_activity_get_permalink( $item_id ) );
 				if ( ! empty( $notification_type_html ) ) {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
@@ -373,7 +373,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					);
 					$amount = 'multiple';
 				} else {
-					$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+					$notification_link = add_query_arg( 'rid', (int) $notification_id, bboss_activity_get_permalink( $item_id ) );
 
 					if ( ! empty( $notification_type_html ) ) {
 						if ( ! empty( $activity_excerpt ) ) {
@@ -526,7 +526,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $user_fullname,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,
@@ -570,7 +570,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = true;
 		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss' );
 
-		if ( function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active() ) {
+		if ( function_exists( 'bboss_is_activity_follow_active' ) && true === bboss_is_activity_follow_active() ) {
 			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
 			$notification_read_only    = false;
 		}
@@ -580,7 +580,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			__( 'New post by a member you\'re following', 'buddyboss' ),
 			esc_html__( 'A new post by someone a member is following', 'buddyboss' ),
 			'activity',
-			function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active(),
+			function_exists( 'bboss_is_activity_follow_active' ) && true === bboss_is_activity_follow_active(),
 			$notification_read_only,
 			$notification_tooltip_text
 		);
@@ -633,15 +633,15 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function bb_render_activity_following_post_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if ( ! empty( $notification ) && 'bb_activity_following_post' === $notification->component_action ) {
 
 			$user_id           = $secondary_item_id;
-			$user_fullname     = bp_core_get_user_displayname( $user_id );
-			$notification_link = bp_get_notifications_permalink();
-			$activity          = new BP_Activity_Activity( $item_id );
-			$activity_excerpt  = '"' . bp_create_excerpt(
+			$user_fullname     = bboss_core_get_user_displayname( $user_id );
+			$notification_link = bboss_get_notifications_permalink();
+			$activity          = new BBoss_Activity_Activity( $item_id );
+			$activity_excerpt  = '"' . bboss_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
@@ -657,13 +657,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
 			$activity_excerpt = str_replace( '""', '', $activity_excerpt );
 
-			$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
-			$poll_id      = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
+			$media_ids    = bboss_activity_get_meta( $activity->id, 'bp_media_ids', true );
+			$document_ids = bboss_activity_get_meta( $activity->id, 'bp_document_ids', true );
+			$video_ids    = bboss_activity_get_meta( $activity->id, 'bp_video_ids', true );
+			$gif_data     = bboss_activity_get_meta( $activity->id, '_gif_data', true );
+			$poll_id      = bboss_activity_get_meta( $activity->id, 'bb_poll_id' );
 			$poll         = '';
-			if ( ! empty( $poll_id ) && bb_is_feature_provided( 'polls' ) && function_exists( 'bb_load_polls' ) ) {
+			if ( ! empty( $poll_id ) && bboss_is_feature_provided( 'polls' ) && function_exists( 'bb_load_polls' ) ) {
 				$bb_polls = bb_load_polls();
 				$poll     = $bb_polls ? $bb_polls->bb_get_poll( $poll_id ) : '';
 			}
@@ -671,7 +671,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$amount   = 'single';
 
 			if ( 'web_push' === $screen ) {
-				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+				$notification_link = add_query_arg( 'rid', (int) $notification_id, bboss_activity_get_permalink( $item_id ) );
 				if ( ! empty( $activity_excerpt ) ) {
 					$text = sprintf(
 					/* translators: Activity content. */
@@ -720,7 +720,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					);
 					$amount = 'multiple';
 				} else {
-					$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+					$notification_link = add_query_arg( 'rid', (int) $notification_id, bboss_activity_get_permalink( $item_id ) );
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Activity content. */
@@ -802,7 +802,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $user_fullname,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,
@@ -846,7 +846,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		$notification_read_only    = true;
 		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss' );
 
-		if ( function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active() ) {
+		if ( function_exists( 'bboss_is_activity_follow_active' ) && true === bboss_is_activity_follow_active() ) {
 			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
 			$notification_read_only    = false;
 		}
@@ -856,7 +856,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			esc_html__( 'A member starts following you', 'buddyboss' ),
 			esc_html__( 'A member is followed by someone', 'buddyboss' ),
 			'activity',
-			function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active(),
+			function_exists( 'bboss_is_activity_follow_active' ) && true === bboss_is_activity_follow_active(),
 			$notification_read_only,
 			$notification_tooltip_text
 		);

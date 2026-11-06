@@ -23,18 +23,18 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $feature_id The feature being fetched.
  */
-function bb_invites_register_profile_type_fields( $feature_id ) {
+function bboss_invites_register_profile_type_fields( $feature_id ) {
 
 	if ( 'invites' !== $feature_id ) {
 		return;
 	}
 
 	// Only register when profile types are enabled and the email invites component is active.
-	if ( true !== bp_member_type_enable_disable() || ! bp_is_active( 'invites' ) ) {
+	if ( true !== bboss_member_type_enable_disable() || ! bboss_is_active( 'invites' ) ) {
 		return;
 	}
 
-	$member_types = bp_get_active_member_types();
+	$member_types = bboss_get_active_member_types();
 
 	if ( empty( $member_types ) ) {
 		return;
@@ -50,13 +50,13 @@ function bb_invites_register_profile_type_fields( $feature_id ) {
 	// text can be attached to the last field instead of the first.
 	$last_member_type_id = null;
 	foreach ( $member_types as $maybe_id ) {
-		if ( ! empty( bp_get_member_type_key( $maybe_id ) ) ) {
+		if ( ! empty( bboss_get_member_type_key( $maybe_id ) ) ) {
 			$last_member_type_id = $maybe_id;
 		}
 	}
 
 	foreach ( $member_types as $member_type_id ) {
-		$type_name = bp_get_member_type_key( $member_type_id );
+		$type_name = bboss_get_member_type_key( $member_type_id );
 
 		if ( empty( $type_name ) ) {
 			continue;
@@ -76,7 +76,7 @@ function bb_invites_register_profile_type_fields( $feature_id ) {
 			'type'              => 'toggle',
 			'description'       => $member_type_label,
 			'help_text'         => $is_last ? __( 'Only allow the selected profile types to send invites.', 'buddyboss' ) : '',
-			'default'           => absint( bp_get_option( 'bp-enable-send-invite-member-type-' . $type_name, 0 ) ),
+			'default'           => absint( bboss_get_option( 'bp-enable-send-invite-member-type-' . $type_name, 0 ) ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-disable-invite-member-type',
@@ -88,7 +88,7 @@ function bb_invites_register_profile_type_fields( $feature_id ) {
 			'order'             => $order,
 		);
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'invites',
 			'email_invite_settings',
 			'email_invite_general',

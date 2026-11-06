@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $page The slug name of the page whose settings sections you want to output.
  */
-function bp_core_compatibility_do_settings_sections( $page ) {
+function bboss_core_compatibility_do_settings_sections( $page ) {
 	global $wp_settings_sections, $wp_settings_fields;
 
 	if ( ! isset( $wp_settings_sections[ $page ] ) ) {
@@ -56,8 +56,8 @@ function bp_core_compatibility_do_settings_sections( $page ) {
  *
  * @since BuddyBoss 1.1.5
  */
-function bp_register_compatibility_integration() {
+function bboss_register_compatibility_integration() {
 	require_once dirname( __FILE__ ) . '/bp-compatibility-integration.php';
-	buddypress()->integrations['compatibility'] = new BP_Compatibility_Integration();
+	bboss()->integrations['compatibility'] = new BBoss_Compatibility_Integration();
 }
 add_action( 'bp_setup_integrations', 'bp_register_compatibility_integration' );

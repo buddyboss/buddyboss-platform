@@ -46,6 +46,6 @@ class Member extends BuddypressCommand {
 	 */
 	public static function update_user_last_activity_random( $user_id ) {
 		$time = gmdate( 'Y-m-d H:i:s', wp_rand( 0, time() ) );
-		bp_update_user_last_activity( $user_id, $time );
+		bboss_update_user_last_activity( $user_id, $time );
 	}
 }

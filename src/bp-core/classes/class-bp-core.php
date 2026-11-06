@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-class BP_Core extends BP_Component {
+class BBoss_Core extends BBoss_Component {
 
 	/**
 	 * Start the members component creation process.
@@ -27,7 +27,7 @@ class BP_Core extends BP_Component {
 		parent::start(
 			'core',
 			'BuddyBoss Core',
-			buddypress()->plugin_dir
+			bboss()->plugin_dir
 		);
 
 		$this->bootstrap();
@@ -61,7 +61,7 @@ class BP_Core extends BP_Component {
 	 * @since BuddyBoss 1.0.0
 	 */
 	private function load_components() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		/**
 		 * Filters the included and optional components.
@@ -100,7 +100,7 @@ class BP_Core extends BP_Component {
 		$bp->required_components = apply_filters( 'bp_required_components', array( 'members', 'xprofile' ) );
 
 		// Get a list of activated components.
-		if ( $active_components = bp_get_option( 'bp-active-components' ) ) {
+		if ( $active_components = bboss_get_option( 'bp-active-components' ) ) {
 
 			/**
 			 * Filters the list of active components.
@@ -121,7 +121,7 @@ class BP_Core extends BP_Component {
 			$bp->deactivated_components = apply_filters( 'bp_deactivated_components', array_values( array_diff( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), array_keys( $bp->active_components ) ) ) );
 
 			// Pre 1.5 Backwards compatibility.
-		} elseif ( $deactivated_components = bp_get_option( 'bp-deactivated-components' ) ) {
+		} elseif ( $deactivated_components = bboss_get_option( 'bp-deactivated-components' ) ) {
 
 			// Trim off namespace and filename.
 			foreach ( array_keys( (array) $deactivated_components ) as $component ) {
@@ -177,7 +177,7 @@ class BP_Core extends BP_Component {
 
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
-			if ( bp_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
+			if ( bboss_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
 				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
 			}
 		}
@@ -206,7 +206,7 @@ class BP_Core extends BP_Component {
 	 * Components whose `bp-{component}/` directory is absent (e.g. video and
 	 * document, which moved to the BuddyBoss Addons plugin) are removed from
 	 * the runtime active list AND the stored `bp-active-components` option,
-	 * so that bp_is_active() and code reading the option directly
+	 * so that bboss_is_active() and code reading the option directly
 	 * (performance must-use integrations, feature registry migration
 	 * fallback) reflect what is actually loadable. A provider plugin keeps a
 	 * component alive by returning true from the
@@ -222,7 +222,7 @@ class BP_Core extends BP_Component {
 	 * @return void
 	 */
 	public function bb_scrub_unavailable_active_components() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		/*
 		 * Self-heal first: components previously scrubbed as unavailable
@@ -248,20 +248,20 @@ class BP_Core extends BP_Component {
 		 * runtime list only, so per-site plugin activation cannot flip the shared
 		 * option back and forth.
 		 */
-		$can_persist = ! is_multisite() || bp_is_root_blog();
+		$can_persist = ! is_multisite() || bboss_is_root_blog();
 
-		$scrub_memory = bp_get_option( 'bb_scrubbed_unavailable_components', false );
+		$scrub_memory = bboss_get_option( 'bb_scrubbed_unavailable_components', false );
 		if ( false === $scrub_memory ) {
 			// Seed it so later reads come from autoloaded options instead of a query per request.
 			$scrub_memory = array();
 			if ( $can_persist ) {
-				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+				bboss_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
 			}
 		}
 
 		$scrub_memory = (array) $scrub_memory;
 		if ( $can_persist && ! empty( $scrub_memory ) ) {
-			$stored_components = (array) bp_get_option( 'bp-active-components', array() );
+			$stored_components = (array) bboss_get_option( 'bp-active-components', array() );
 			$restored          = false;
 
 			/*
@@ -277,7 +277,7 @@ class BP_Core extends BP_Component {
 			}
 
 			foreach ( $scrub_memory as $scrubbed_component => $stored_value ) {
-				if ( ! bb_is_component_directory_available( $scrubbed_component ) ) {
+				if ( ! bboss_is_component_directory_available( $scrubbed_component ) ) {
 					continue;
 				}
 
@@ -289,8 +289,8 @@ class BP_Core extends BP_Component {
 			}
 
 			if ( $restored ) {
-				bp_update_option( 'bp-active-components', $stored_components );
-				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+				bboss_update_option( 'bp-active-components', $stored_components );
+				bboss_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
 			}
 		}
 
@@ -313,7 +313,7 @@ class BP_Core extends BP_Component {
 				continue;
 			}
 
-			if ( ! bb_is_component_directory_available( $component ) ) {
+			if ( ! bboss_is_component_directory_available( $component ) ) {
 				$unavailable_components[] = $component;
 				unset( $bp->active_components[ $component ] );
 			}
@@ -341,7 +341,7 @@ class BP_Core extends BP_Component {
 
 		// Scrub only the unavailable keys from the stored option, leaving
 		// runtime-filtered values out of the database write.
-		$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
+		$stored_components   = (array) bboss_get_option( 'bp-active-components', array() );
 		$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
 		if ( $scrubbed_components !== $stored_components ) {
 			// See the Media note in the self-heal block above.
@@ -349,7 +349,7 @@ class BP_Core extends BP_Component {
 				$scrubbed_components['media'] = '1';
 			}
 
-			bp_update_option( 'bp-active-components', $scrubbed_components );
+			bboss_update_option( 'bp-active-components', $scrubbed_components );
 
 			// Remember WHY these were removed (code unavailable, not an admin
 			// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
@@ -360,7 +360,7 @@ class BP_Core extends BP_Component {
 					$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];
 				}
 			}
-			bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+			bboss_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
 		}
 	}
 
@@ -370,7 +370,7 @@ class BP_Core extends BP_Component {
 	 * @since BuddyBoss 1.0.0
 	 */
 	private function load_integrations() {
-		$bp = buddypress();
+		$bp = bboss();
 
 		/**
 		 * Filters the included and optional integrations.
@@ -433,9 +433,9 @@ class BP_Core extends BP_Component {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @see BP_Component::includes() for description of parameters.
+	 * @see BBoss_Component::includes() for description of parameters.
 	 *
-	 * @param array $includes See {@link BP_Component::includes()}.
+	 * @param array $includes See {@link BBoss_Component::includes()}.
 	 */
 	public function includes( $includes = array() ) {
 
@@ -458,34 +458,34 @@ class BP_Core extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_globals() for description of parameters.
+	 * @see BBoss_Component::setup_globals() for description of parameters.
 	 *
-	 * @param array $args See {@link BP_Component::setup_globals()}.
+	 * @param array $args See {@link BBoss_Component::setup_globals()}.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		/** Database *********************************************************
 		 */
 
 		// Get the base database prefix.
 		if ( empty( $bp->table_prefix ) ) {
-			$bp->table_prefix = bp_core_get_table_prefix();
+			$bp->table_prefix = bboss_core_get_table_prefix();
 		}
 
 		// The domain for the root of the site where the main blog resides.
 		if ( empty( $bp->root_domain ) ) {
-			$bp->root_domain = bp_core_get_root_domain();
+			$bp->root_domain = bboss_core_get_root_domain();
 		}
 
 		// Fetches all of the core BuddyPress settings in one fell swoop.
 		if ( empty( $bp->site_options ) ) {
-			$bp->site_options = bp_core_get_root_options();
+			$bp->site_options = bboss_core_get_root_options();
 		}
 
 		// The names of the core WordPress pages used to display BuddyPress content.
 		if ( empty( $bp->pages ) ) {
-			$bp->pages = bp_core_get_directory_pages();
+			$bp->pages = bboss_core_get_directory_pages();
 		}
 
 		/** Basic current user data ******************************************
@@ -536,8 +536,8 @@ class BP_Core extends BP_Component {
 		$bp->core->table_name_notifications = $bp->table_prefix . 'bp_notifications';
 
 		// Backward compatibility for plugins modifying the legacy bp_nav and bp_options_nav global properties.
-		$bp->bp_nav         = new BP_Core_BP_Nav_BackCompat();
-		$bp->bp_options_nav = new BP_Core_BP_Options_Nav_BackCompat();
+		$bp->bp_nav         = new BBoss_Core_BP_Nav_BackCompat();
+		$bp->bp_options_nav = new BBoss_Core_BP_Options_Nav_BackCompat();
 
 		/**
 		 * Used to determine if user has admin rights on current content. If the
@@ -547,10 +547,10 @@ class BP_Core extends BP_Component {
 		 * viewing a group 'is_item_admin' would be 'true' if they are a group
 		 * admin, and 'false' if they are not.
 		 */
-		bp_update_is_item_admin( bp_user_has_access(), 'core' );
+		bboss_update_is_item_admin( bboss_user_has_access(), 'core' );
 
 		// Is the logged in user is a mod for the current item?
-		bp_update_is_item_mod( false, 'core' );
+		bboss_update_is_item_mod( false, 'core' );
 
 		/**
 		 * Fires at the end of the setup of bp-core globals setting.
@@ -591,37 +591,37 @@ class BP_Core extends BP_Component {
 	public function register_post_types() {
 
 		// Emails
-		if ( bp_is_root_blog() && ! is_network_admin() ) {
+		if ( bboss_is_root_blog() && ! is_network_admin() ) {
 			register_post_type(
-				bp_get_email_post_type(),
+				bboss_get_email_post_type(),
 				apply_filters(
 					'bp_register_email_post_type',
 					array(
 						'description'        => __( 'BuddyBoss emails', 'buddyboss' ),
-						'labels'             => bp_get_email_post_type_labels(),
+						'labels'             => bboss_get_email_post_type_labels(),
 						'menu_icon'          => 'dashicons-email-alt',
 						'public'             => false,
-						'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+						'publicly_queryable' => bboss_current_user_can( 'bp_moderate' ),
 						'query_var'          => false,
 						'rewrite'            => false,
 						'show_in_admin_bar'  => false,
 						'show_in_menu'       => false,
-						'show_ui'            => bp_current_user_can( 'bp_moderate' ),
-						'supports'           => bp_get_email_post_type_supports(),
+						'show_ui'            => bboss_current_user_can( 'bp_moderate' ),
+						'supports'           => bboss_get_email_post_type_supports(),
 					)
 				)
 			);
 		}
 
-		if ( bp_is_active( 'groups' ) && true === bp_disable_group_type_creation() ) {
+		if ( bboss_is_active( 'groups' ) && true === bboss_disable_group_type_creation() ) {
 			// Register Group Types custom post type.
 			register_post_type(
-				bp_groups_get_group_type_post_type(),
+				bboss_groups_get_group_type_post_type(),
 				apply_filters(
 					'bp_register_group_type_post_type',
 					array(
 						'description'        => __( 'BuddyBoss group type', 'buddyboss' ),
-						'labels'             => bp_groups_get_group_type_post_type_labels(),
+						'labels'             => bboss_groups_get_group_type_post_type_labels(),
 						'public'             => false,
 						'publicly_queryable' => false,
 						'query_var'          => false,
@@ -630,8 +630,8 @@ class BP_Core extends BP_Component {
 						'show_in_menu'       => false,
 						'map_meta_cap'       => true,
 						'show_in_rest'       => true,
-						'show_ui'            => bp_current_user_can( 'bp_moderate' ),
-						'supports'           => bp_groups_get_group_type_post_type_supports(),
+						'show_ui'            => bboss_current_user_can( 'bp_moderate' ),
+						'supports'           => bboss_groups_get_group_type_post_type_supports(),
 					)
 				)
 			);
@@ -643,7 +643,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 2.8.80
 	 */
@@ -653,7 +653,7 @@ class BP_Core extends BP_Component {
 			 * As the core component is always loaded,
 			 * let's register the Components endpoint here.
 			 */
-			'BB_REST_Topics_Endpoint'
+			'BBoss_BB_REST_Topics_Endpoint'
 		);
 
 		parent::rest_api_init( $controllers );
@@ -664,7 +664,7 @@ class BP_Core extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

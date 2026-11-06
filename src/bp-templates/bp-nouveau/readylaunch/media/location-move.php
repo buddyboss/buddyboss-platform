@@ -5,7 +5,7 @@
  * This template handles the location/album selection for moving media.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,7 +13,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_album_id = bp_get_album_id();
+$bp_album_id = bboss_get_album_id();
 $bp_album_id = ! empty( $bp_album_id ) ? $bp_album_id : 0;
 ?>
 <div class="bb-rl-dropdown-wrap">

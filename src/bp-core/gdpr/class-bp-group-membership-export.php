@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Group_Membership_Export class
+ * Export API: BBoss_Group_Membership_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Group_Membership_Export
+ * Class BBoss_Group_Membership_Export
  */
-final class BP_Group_Membership_Export extends BP_Export {
+final class BBoss_Group_Membership_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,7 +23,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Group_Membership_Export();
+			$instance = new BBoss_Group_Membership_Export();
 			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss' ) );
 		}
 
@@ -53,13 +53,13 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		foreach ( $data_items['items'] as $item ) {
 
-			$group = groups_get_group( $item->group_id );
+			$group = bboss_groups_get_group( $item->group_id );
 
 			$group_id    = 'bp_group_membership';
 			$group_label = __( 'Group Membership', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$group_permalink = bp_get_group_permalink( $group );
+			$group_permalink = bboss_get_group_permalink( $group );
 
 			$membership_type = false;
 
@@ -82,7 +82,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 			$data = array(
 				array(
 					'name'  => __( 'Group Name', 'buddyboss' ),
-					'value' => bp_get_group_name( $group ),
+					'value' => bboss_get_group_name( $group ),
 				),
 				array(
 					'name'  => __( 'Sent Date (GMT)', 'buddyboss' ),
@@ -98,7 +98,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 				$data[] = array(
 					'name'  => __( 'Sent by', 'buddyboss' ),
 					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
-					'value' => bp_core_get_user_displayname( $item->inviter_id, $user->ID ),
+					'value' => bboss_core_get_user_displayname( $item->inviter_id, $user->ID ),
 				);
 			}
 
@@ -106,7 +106,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 				$data[] = array(
 					'name'  => __( 'Sent to', 'buddyboss' ),
 					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
-					'value' => bp_core_get_user_displayname( $item->user_id, $user->ID ),
+					'value' => bboss_core_get_user_displayname( $item->user_id, $user->ID ),
 				);
 			}
 

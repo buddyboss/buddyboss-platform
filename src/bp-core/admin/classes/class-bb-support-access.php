@@ -26,7 +26,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Support_Access.
+ * Class BBoss_Support_Access.
  *
  * Singleton that owns the entire support-access lifecycle: the front-end
  * token-login handler, the expiry cron, and the admin AJAX endpoints used by
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.1.0
  */
-class BB_Support_Access {
+class BBoss_Support_Access {
 
 	/**
 	 * Option key for the support-access state.
@@ -101,7 +101,7 @@ class BB_Support_Access {
 	const LOG_LIMIT = 10;
 
 	/**
-	 * AJAX nonce action. Matches BB_Admin_Settings_Ajax so the existing React
+	 * AJAX nonce action. Matches BBoss_Admin_Settings_Ajax so the existing React
 	 * nonce continues to authenticate these endpoints without any JS change.
 	 *
 	 * @since BuddyBoss 3.1.0
@@ -226,7 +226,7 @@ class BB_Support_Access {
 	 *
 	 * @since BuddyBoss 3.1.0
 	 *
-	 * @var BB_Support_Access|null
+	 * @var BBoss_Support_Access|null
 	 */
 	private static $instance = null;
 
@@ -235,7 +235,7 @@ class BB_Support_Access {
 	 *
 	 * @since BuddyBoss 3.1.0
 	 *
-	 * @return BB_Support_Access
+	 * @return BBoss_Support_Access
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -325,7 +325,7 @@ class BB_Support_Access {
 	}
 
 	/**
-	 * Exclude the support account from BP_User_Query result sets.
+	 * Exclude the support account from BBoss_User_Query result sets.
 	 *
 	 * Appends a `NOT IN` clause to the user-id query so the support
 	 * administrator is never disclosed through the member directory or the
@@ -336,7 +336,7 @@ class BB_Support_Access {
 	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array         $sql   Array of SQL clauses for the user query.
-	 * @param BP_User_Query $query Current BP_User_Query instance (by reference).
+	 * @param BBoss_User_Query $query Current BBoss_User_Query instance (by reference).
 	 *
 	 * @return array Filtered SQL clauses.
 	 */
@@ -426,7 +426,7 @@ class BB_Support_Access {
 	/**
 	 * Run a read-modify-write callback under an advisory lock.
 	 *
-	 * The single `bb_support_access` option is updated by several flows
+	 * The single `BBoss_Support_Access` option is updated by several flows
 	 * (login auditing, ticket appends, enable/disable). Without a lock, two
 	 * concurrent requests can read the same snapshot and the second write
 	 * clobbers the first — typically a lost audit-log row. WordPress options
@@ -450,7 +450,7 @@ class BB_Support_Access {
 		// Holding the root blog context for the whole critical section also means
 		// the save() inside $callback is already on the root blog, so its own
 		// switch is skipped. On single site current === root, so this is a no-op.
-		$root_blog_id = bp_get_root_blog_id();
+		$root_blog_id = bboss_get_root_blog_id();
 		$switched     = false;
 		if ( get_current_blog_id() !== $root_blog_id ) {
 			switch_to_blog( $root_blog_id );
@@ -524,7 +524,7 @@ class BB_Support_Access {
 		// so switch into the root blog context and call update_option() directly.
 		// When already on the root blog the switch is skipped — always the case on
 		// single site, and also when invoked inside with_lock().
-		$root_blog_id = bp_get_root_blog_id();
+		$root_blog_id = bboss_get_root_blog_id();
 		$switched     = false;
 		if ( get_current_blog_id() !== $root_blog_id ) {
 			switch_to_blog( $root_blog_id );
@@ -597,7 +597,7 @@ class BB_Support_Access {
 			'login_log'       => array(),
 		);
 
-		$data = bp_get_option( self::OPTION, array() );
+		$data = bboss_get_option( self::OPTION, array() );
 		if ( ! is_array( $data ) ) {
 			$data = array();
 		}
@@ -1341,7 +1341,7 @@ class BB_Support_Access {
 		$support_user_id = $this->with_lock(
 			function () {
 				$data = $this->get_data();
-				bp_delete_option( self::OPTION );
+				bboss_delete_option( self::OPTION );
 
 				return (int) $data['support_user_id'];
 			}
@@ -1868,7 +1868,7 @@ class BB_Support_Access {
 	 * @return void
 	 */
 	private function verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -2096,4 +2096,4 @@ class BB_Support_Access {
 // Constants are class constants (BB_Support_Access::OPTION, etc.) and are
 // intentionally immutable: there are no overridable define()s for these
 // security-sensitive values.
-BB_Support_Access::instance();
+BBoss_Support_Access::instance();

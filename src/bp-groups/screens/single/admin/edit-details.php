@@ -14,15 +14,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_group_admin_edit_details() {
+function bboss_groups_screen_group_admin_edit_details() {
 
-	if ( 'edit-details' != bp_get_group_current_admin_tab() ) {
+	if ( 'edit-details' != bboss_get_group_current_admin_tab() ) {
 		return false;
 	}
 
-	if ( bp_is_item_admin() ) {
+	if ( bboss_is_item_admin() ) {
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// If the edit form has been submitted, save the edited details.
 		if ( isset( $_POST['save'] ) ) {
@@ -35,8 +35,8 @@ function groups_screen_group_admin_edit_details() {
 
 			// Name and description are required and may not be empty.
 			if ( empty( $_POST['group-name'] ) ) {
-				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss' ), 'error' );
-			} elseif ( ! groups_edit_base_group_details(
+				bboss_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss' ), 'error' );
+			} elseif ( ! bboss_groups_edit_base_group_details(
 				array(
 					'group_id'       => $_POST['group-id'],
 					'name'           => $_POST['group-name'],
@@ -46,9 +46,9 @@ function groups_screen_group_admin_edit_details() {
 					'parent_id'      => isset( $_POST['parent-id'] ) ? (int) $_POST['parent-id'] : 0
 				)
 			) ) {
-				bp_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddyboss' ), 'error' );
+				bboss_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bp_core_add_message( __( 'Group details were successfully updated.', 'buddyboss' ) );
+				bboss_core_add_message( __( 'Group details were successfully updated.', 'buddyboss' ) );
 			}
 
 			/**
@@ -60,7 +60,7 @@ function groups_screen_group_admin_edit_details() {
 			 */
 			do_action( 'groups_group_details_edited', $bp->groups->current_group->id );
 
-			bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'admin/edit-details/' );
+			bboss_core_redirect( bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'admin/edit-details/' );
 		}
 
 		/**
@@ -79,7 +79,7 @@ function groups_screen_group_admin_edit_details() {
 		 *
 		 * @param string $value Path to a group's admin/edit-details template.
 		 */
-		bp_core_load_template( apply_filters( 'groups_template_group_admin', 'groups/single/home' ) );
+		bboss_core_load_template( apply_filters( 'groups_template_group_admin', 'groups/single/home' ) );
 	}
 }
 add_action( 'bp_screens', 'groups_screen_group_admin_edit_details' );

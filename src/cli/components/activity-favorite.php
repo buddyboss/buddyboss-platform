@@ -52,7 +52,7 @@ class Activity_Favorite extends BuddypressCommand {
 	 */
 	public function create( $args, $assoc_args ) {
 		$activity_id = $args[0];
-		$activity    = new \BP_Activity_Activity( $activity_id );
+		$activity    = new \BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
@@ -60,7 +60,7 @@ class Activity_Favorite extends BuddypressCommand {
 
 		$user = $this->get_user_id_from_identifier( $args[1] );
 
-		if ( bp_activity_add_user_favorite( $activity_id, $user->ID ) ) {
+		if ( bboss_activity_add_user_favorite( $activity_id, $user->ID ) ) {
 			WP_CLI::success( 'Activity item added as a favorite for the user.' );
 		} else {
 			WP_CLI::error( 'Could not add the activity item.' );
@@ -93,7 +93,7 @@ class Activity_Favorite extends BuddypressCommand {
 	 */
 	public function remove( $args, $assoc_args ) {
 		$activity_id = $args[0];
-		$activity    = new \BP_Activity_Activity( $activity_id );
+		$activity    = new \BBoss_Activity_Activity( $activity_id );
 
 		if ( empty( $activity->id ) ) {
 			WP_CLI::error( 'No activity found by that ID.' );
@@ -103,7 +103,7 @@ class Activity_Favorite extends BuddypressCommand {
 
 		WP_CLI::confirm( 'Are you sure you want to remove this activity item?', $assoc_args );
 
-		if ( bp_activity_remove_user_favorite( $activity_id, $user->ID ) ) {
+		if ( bboss_activity_remove_user_favorite( $activity_id, $user->ID ) ) {
 			WP_CLI::success( 'Activity item removed as a favorite for the user.' );
 		} else {
 			WP_CLI::error( 'Could not remove the activity item.' );
@@ -150,13 +150,13 @@ class Activity_Favorite extends BuddypressCommand {
 	 */
 	public function _list( $args, $assoc_args ) {
 		$user      = $this->get_user_id_from_identifier( $args[0] );
-		$favorites = bp_activity_get_user_favorites( $user->ID );
+		$favorites = bboss_activity_get_user_favorites( $user->ID );
 
 		if ( ! $favorites ) {
 			WP_CLI::error( 'No favorite found for this user.' );
 		}
 
-		$activities = bp_activity_get_specific(
+		$activities = bboss_activity_get_specific(
 			array(
 				'activity_ids' => $favorites,
 				'per_page'     => $assoc_args['count'],

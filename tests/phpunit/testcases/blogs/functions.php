@@ -9,7 +9,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_delete_blogmeta
 	 */
 	public function test_bp_blogs_delete_blogmeta_non_numeric_blog_id() {
-		$this->assertFalse( bp_blogs_delete_blogmeta( 'foo' ) );
+		$this->assertFalse( bboss_blogs_delete_blogmeta( 'foo' ) );
 	}
 
 	/**
@@ -18,11 +18,11 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @ticket BP5399
 	 */
 	public function test_bp_blogs_delete_blogmeta_illegal_characters() {
-		$this->assertNotEmpty( bp_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertNotEmpty( bboss_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 		$krazy_key = ' f!@#$%^o *(){}o?+';
-		$this->assertFalse( bp_blogs_delete_blogmeta( 1, $krazy_key ) );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertFalse( bboss_blogs_delete_blogmeta( 1, $krazy_key ) );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -31,10 +31,10 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @ticket BP5399
 	 */
 	public function test_bp_blogs_delete_blogmeta_trim_meta_value() {
-		$this->assertNotEmpty( bp_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
-		bp_blogs_delete_blogmeta( 1, 'foo', '   bar  ' );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertNotEmpty( bboss_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
+		bboss_blogs_delete_blogmeta( 1, 'foo', '   bar  ' );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -42,11 +42,11 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_delete_blogmeta
 	 */
 	public function test_bp_blogs_delete_blogmeta_no_meta_key() {
-		bp_blogs_update_blogmeta( 1, 'foo', 'bar' );
-		bp_blogs_update_blogmeta( 1, 'foo2', 'bar2' );
-		$this->assertNotEmpty( bp_blogs_get_blogmeta( 1 ) );
-		$this->assertTrue( bp_blogs_delete_blogmeta( 1 ) );
-		$this->assertSame( array(), bp_blogs_get_blogmeta( 1 ) );
+		bboss_blogs_update_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_update_blogmeta( 1, 'foo2', 'bar2' );
+		$this->assertNotEmpty( bboss_blogs_get_blogmeta( 1 ) );
+		$this->assertTrue( bboss_blogs_delete_blogmeta( 1 ) );
+		$this->assertSame( array(), bboss_blogs_get_blogmeta( 1 ) );
 	}
 
 	/**
@@ -54,12 +54,12 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_delete_blogmeta
 	 */
 	public function test_bp_blogs_delete_blogmeta_with_meta_value() {
-		bp_blogs_update_blogmeta( 1, 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
-		bp_blogs_delete_blogmeta( 1, 'foo', 'baz' );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
-		$this->assertTrue( bp_blogs_delete_blogmeta( 1, 'foo', 'bar' ) );
-		$this->assertSame( '', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		bboss_blogs_update_blogmeta( 1, 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
+		bboss_blogs_delete_blogmeta( 1, 'foo', 'baz' );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertTrue( bboss_blogs_delete_blogmeta( 1, 'foo', 'bar' ) );
+		$this->assertSame( '', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -69,15 +69,15 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	public function test_bp_blogs_delete_blogmeta_with_delete_all_but_no_meta_key() {
 		// With no meta key, don't delete for all items - just delete
 		// all for a single item
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( 1, 'foo1', 'bar1' );
-		bp_blogs_add_blogmeta( 2, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( 2, 'foo1', 'bar1' );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 1, 'foo1', 'bar1' );
+		bboss_blogs_add_blogmeta( 2, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 2, 'foo1', 'bar1' );
 
-		$this->assertTrue( bp_blogs_delete_blogmeta( 1, '', '', true ) );
-		$this->assertEmpty( bp_blogs_get_blogmeta( 1 ) );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 2, 'foo' ) );
-		$this->assertSame( 'bar1', bp_blogs_get_blogmeta( 2, 'foo1' ) );
+		$this->assertTrue( bboss_blogs_delete_blogmeta( 1, '', '', true ) );
+		$this->assertEmpty( bboss_blogs_get_blogmeta( 1 ) );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 2, 'foo' ) );
+		$this->assertSame( 'bar1', bboss_blogs_get_blogmeta( 2, 'foo1' ) );
 	}
 
 	/**
@@ -87,16 +87,16 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	public function test_bp_blogs_delete_blogmeta_with_delete_all() {
 		// With no meta key, don't delete for all items - just delete
 		// all for a single item
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( 1, 'foo1', 'bar1' );
-		bp_blogs_add_blogmeta( 2, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( 2, 'foo1', 'bar1' );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 1, 'foo1', 'bar1' );
+		bboss_blogs_add_blogmeta( 2, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 2, 'foo1', 'bar1' );
 
-		$this->assertTrue( bp_blogs_delete_blogmeta( 1, 'foo', '', true ) );
-		$this->assertSame( '', bp_blogs_get_blogmeta( 1, 'foo' ) );
-		$this->assertSame( '', bp_blogs_get_blogmeta( 2, 'foo' ) );
-		$this->assertSame( 'bar1', bp_blogs_get_blogmeta( 1, 'foo1' ) );
-		$this->assertSame( 'bar1', bp_blogs_get_blogmeta( 2, 'foo1' ) );
+		$this->assertTrue( bboss_blogs_delete_blogmeta( 1, 'foo', '', true ) );
+		$this->assertSame( '', bboss_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertSame( '', bboss_blogs_get_blogmeta( 2, 'foo' ) );
+		$this->assertSame( 'bar1', bboss_blogs_get_blogmeta( 1, 'foo1' ) );
+		$this->assertSame( 'bar1', bboss_blogs_get_blogmeta( 2, 'foo1' ) );
 	}
 
 	/**
@@ -104,8 +104,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_get_blogmeta
 	 */
 	public function test_bp_blogs_get_blogmeta_empty_blog_id() {
-		$this->assertFalse( bp_blogs_get_blogmeta( 0 ) );
-		$this->assertFalse( bp_blogs_get_blogmeta( '' ) );
+		$this->assertFalse( bboss_blogs_get_blogmeta( 0 ) );
+		$this->assertFalse( bboss_blogs_get_blogmeta( '' ) );
 	}
 
 	/**
@@ -114,9 +114,9 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @ticket BP5399
 	 */
 	public function test_bp_blogs_get_blogmeta_illegal_characters() {
-		bp_blogs_update_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_update_blogmeta( 1, 'foo', 'bar' );
 		$krazy_key = ' f!@#$%^o *(){}o?+';
-		$this->assertSame( '', bp_blogs_get_blogmeta( 1, $krazy_key ) );
+		$this->assertSame( '', bboss_blogs_get_blogmeta( 1, $krazy_key ) );
 	}
 
 	/**
@@ -124,8 +124,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_get_blogmeta
 	 */
 	public function test_bp_blogs_get_blogmeta_no_meta_key() {
-		bp_blogs_update_blogmeta( 1, 'foo', 'bar' );
-		bp_blogs_update_blogmeta( 1, 'foo2', 'bar2' );
+		bboss_blogs_update_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_update_blogmeta( 1, 'foo2', 'bar2' );
 
 		$expected = array(
 			'foo' => array(
@@ -136,7 +136,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 			),
 		);
 
-		$this->assertSame( $expected, bp_blogs_get_blogmeta( 1 ) );
+		$this->assertSame( $expected, bboss_blogs_get_blogmeta( 1 ) );
 	}
 
 	/**
@@ -144,7 +144,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_get_blogmeta
 	 */
 	public function test_bp_blogs_get_blogmeta_no_meta_key_empty() {
-		$this->assertSame( array(), bp_blogs_get_blogmeta( 1 ) );
+		$this->assertSame( array(), bboss_blogs_get_blogmeta( 1 ) );
 	}
 
 	/**
@@ -152,10 +152,10 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_get_blogmeta
 	 */
 	public function test_bp_blogs_get_blogmeta_single_true() {
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( 1, 'foo', 'baz' );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) ); // default is true
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo', true ) );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'baz' );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) ); // default is true
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo', true ) );
 	}
 
 	/**
@@ -163,16 +163,16 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_get_blogmeta
 	 */
 	public function test_bp_blogs_get_blogmeta_single_false() {
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
-		bp_blogs_add_blogmeta( 1, 'foo', 'baz' );
-		$this->assertSame( array( 'bar', 'baz' ), bp_blogs_get_blogmeta( 1, 'foo', false ) );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'baz' );
+		$this->assertSame( array( 'bar', 'baz' ), bboss_blogs_get_blogmeta( 1, 'foo', false ) );
 	}
 	/**
 	 * @group blogmeta
 	 * @group bp_blogs_update_blogmeta
 	 */
 	public function test_bp_blogs_update_blogmeta_non_numeric_blog_id() {
-		$this->assertFalse( bp_blogs_update_blogmeta( 'foo', 'foo', 'bar' ) );
+		$this->assertFalse( bboss_blogs_update_blogmeta( 'foo', 'foo', 'bar' ) );
 	}
 
 	/**
@@ -182,8 +182,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 */
 	public function test_bp_blogs_update_blogmeta_illegal_characters() {
 		$krazy_key = ' f!@#$%^o *(){}o?+';
-		bp_blogs_update_blogmeta( 1, $krazy_key, 'bar' );
-		$this->assertSame( '', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		bboss_blogs_update_blogmeta( 1, $krazy_key, 'bar' );
+		$this->assertSame( '', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -192,8 +192,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 */
 	public function test_bp_blogs_update_blogmeta_stripslashes() {
 		$slashed = 'This \"string\" is cool';
-		bp_blogs_update_blogmeta( 1, 'foo', $slashed );
-		$this->assertSame( 'This "string" is cool', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		bboss_blogs_update_blogmeta( 1, 'foo', $slashed );
+		$this->assertSame( 'This "string" is cool', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -201,8 +201,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_update_blogmeta
 	 */
 	public function test_bp_blogs_update_blogmeta_new() {
-		$this->assertNotEmpty( bp_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertNotEmpty( bboss_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -210,10 +210,10 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_update_blogmeta
 	 */
 	public function test_bp_blogs_update_blogmeta_existing() {
-		bp_blogs_update_blogmeta( 1, 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
-		$this->assertTrue( bp_blogs_update_blogmeta( 1, 'foo', 'baz' ) );
-		$this->assertSame( 'baz', bp_blogs_get_blogmeta( 1, 'foo' ) );
+		bboss_blogs_update_blogmeta( 1, 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertTrue( bboss_blogs_update_blogmeta( 1, 'foo', 'baz' ) );
+		$this->assertSame( 'baz', bboss_blogs_get_blogmeta( 1, 'foo' ) );
 	}
 
 	/**
@@ -221,9 +221,9 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_update_blogmeta
 	 */
 	public function test_bp_blogs_update_blogmeta_existing_no_change() {
-		bp_blogs_update_blogmeta( 1, 'foo', 'bar' );
-		$this->assertSame( 'bar', bp_blogs_get_blogmeta( 1, 'foo' ) );
-		$this->assertFalse( bp_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
+		bboss_blogs_update_blogmeta( 1, 'foo', 'bar' );
+		$this->assertSame( 'bar', bboss_blogs_get_blogmeta( 1, 'foo' ) );
+		$this->assertFalse( bboss_blogs_update_blogmeta( 1, 'foo', 'bar' ) );
 	}
 
 	/**
@@ -231,7 +231,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_update_blogmeta
 	 */
 	public function test_bp_blogs_update_meta_prev_value() {
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
 
 		// In earlier versions of WordPress, bp_activity_update_meta()
 		// returns true even on failure. However, we know that in these
@@ -239,10 +239,10 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		// assertion just to keep our tests passing
 		// See https://core.trac.wordpress.org/ticket/24933
 		if ( version_compare( $GLOBALS['wp_version'], '3.7', '>=' ) ) {
-			$this->assertFalse( bp_blogs_update_blogmeta( 1, 'foo', 'bar2', 'baz' ) );
+			$this->assertFalse( bboss_blogs_update_blogmeta( 1, 'foo', 'bar2', 'baz' ) );
 		}
 
-		$this->assertTrue( bp_blogs_update_blogmeta( 1, 'foo', 'bar2', 'bar' ) );
+		$this->assertTrue( bboss_blogs_update_blogmeta( 1, 'foo', 'bar2', 'bar' ) );
 	}
 
 	/**
@@ -250,7 +250,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_add_blogmeta
 	 */
 	public function test_bp_blogs_add_blogmeta_no_meta_key() {
-		$this->assertFalse( bp_blogs_add_blogmeta( 1, '', 'bar' ) );
+		$this->assertFalse( bboss_blogs_add_blogmeta( 1, '', 'bar' ) );
 	}
 
 	/**
@@ -258,7 +258,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_add_blogmeta
 	 */
 	public function test_bp_blogs_add_blogmeta_empty_object_id() {
-		$this->assertFalse( bp_blogs_add_blogmeta( 0, 'foo', 'bar' ) );
+		$this->assertFalse( bboss_blogs_add_blogmeta( 0, 'foo', 'bar' ) );
 	}
 
 	/**
@@ -266,8 +266,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_add_blogmeta
 	 */
 	public function test_bp_blogs_add_blogmeta_existing_unique() {
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
-		$this->assertFalse( bp_blogs_add_blogmeta( 1, 'foo', 'baz', true ) );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		$this->assertFalse( bboss_blogs_add_blogmeta( 1, 'foo', 'baz', true ) );
 	}
 
 	/**
@@ -275,8 +275,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	 * @group bp_blogs_add_blogmeta
 	 */
 	public function test_bp_blogs_add_blogmeta_existing_not_unique() {
-		bp_blogs_add_blogmeta( 1, 'foo', 'bar' );
-		$this->assertNotEmpty( bp_blogs_add_blogmeta( 1, 'foo', 'baz' ) );
+		bboss_blogs_add_blogmeta( 1, 'foo', 'bar' );
+		$this->assertNotEmpty( bboss_blogs_add_blogmeta( 1, 'foo', 'baz' ) );
 	}
 
 	/**
@@ -300,19 +300,19 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		);
 
 		// Mark the user as spam
-		bp_core_process_spammer_status( $u, 'spam' );
+		bboss_core_process_spammer_status( $u, 'spam' );
 
 		// get all blogs for user
-		$blogs = bp_blogs_get_blogs_for_user( $u, true );
+		$blogs = bboss_blogs_get_blogs_for_user( $u, true );
 		$blog_ids = wp_list_pluck( $blogs['blogs'], 'blog_id' );
 
 		$this->assertNotEquals( $expected, array_map( 'intval', $blog_ids ), 'User marked as spam should not have any blog registered' );
 
 		// Ham the user
-		bp_core_process_spammer_status( $u, 'ham' );
+		bboss_core_process_spammer_status( $u, 'ham' );
 
 		// get all blogs for user
-		$blogs = bp_blogs_get_blogs_for_user( $u, true );
+		$blogs = bboss_blogs_get_blogs_for_user( $u, true );
 		$blog_ids = wp_list_pluck( $blogs['blogs'], 'blog_id' );
 
 		$this->assertEquals( $expected, array_map( 'intval', $blog_ids ) );
@@ -568,7 +568,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'              => 'activity_comment',
 			'display_comments'  => 'stream',
 			'meta_query'        => array( array(
@@ -578,18 +578,18 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the blog comment
-		$a2 = bp_activity_get_activity_id( array(
-			'component'         => buddypress()->blogs->id,
+		$a2 = bboss_activity_get_activity_id( array(
+			'component'         => bboss()->blogs->id,
 			'type'              => 'new_blog_comment',
 			'secondary_item_id' => $c2,
 		) );
 
 		// see if blog comment activity meta matches the post items
-		$this->assertEquals( 'Second title', bp_activity_get_meta( $a1, 'post_title' ) );
-		$this->assertEquals( add_query_arg( 'p', $post_id, home_url( '/' ) ), bp_activity_get_meta( $a1, 'post_url' ) );
+		$this->assertEquals( 'Second title', bboss_activity_get_meta( $a1, 'post_title' ) );
+		$this->assertEquals( add_query_arg( 'p', $post_id, home_url( '/' ) ), bboss_activity_get_meta( $a1, 'post_url' ) );
 
-		$this->assertEquals( 'Second title', bp_activity_get_meta( $a2, 'post_title' ) );
-		$this->assertEquals( add_query_arg( 'p', $post_id, home_url( '/' ) ), bp_activity_get_meta( $a2, 'post_url' ) );
+		$this->assertEquals( 'Second title', bboss_activity_get_meta( $a2, 'post_title' ) );
+		$this->assertEquals( add_query_arg( 'p', $post_id, home_url( '/' ) ), bboss_activity_get_meta( $a2, 'post_url' ) );
 
 		// reset
 		$this->set_current_user( $old_user );
@@ -628,7 +628,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// save the corresponding activity comment ID
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'              => 'activity_comment',
 			'display_comments'  => 'stream',
 			'meta_query'        => array( array(
@@ -646,7 +646,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		wp_delete_comment( $c1, true );
 
 		// activity comment should no longer exist
-		$a = bp_activity_get( array(
+		$a = bboss_activity_get( array(
 			'in'               => $a1,
 			'display_comments' => 'stream',
 			'spam'             => 'all'
@@ -688,7 +688,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// An activity should exist
-		$a = bp_activity_get_activity_id( array(
+		$a = bboss_activity_get_activity_id( array(
 			'user_id' => $u,
 			'type'    => 'new_blog_comment'
 		) );
@@ -697,7 +697,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		wp_delete_comment( $c, true );
 
 		// The activity comment should no longer exist
-		$ac = bp_activity_get( array( 'in' => $a ) );
+		$ac = bboss_activity_get( array( 'in' => $a ) );
 		$this->assertTrue( empty( $ac['activities'] ) );
 	}
 
@@ -783,22 +783,22 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// grab the activity ID for the activity comment
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
 			),
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'activity comment should be unique',
 			'user_id'     => $u,
 			'activity_id' => $a1,
 		) );
 
-		$activities = bp_activity_get( array(
+		$activities = bboss_activity_get( array(
 			'type'             => 'activity_comment',
 			'display_comments' => 'stream',
 			'search_terms'     => 'activity comment should be unique',
@@ -843,8 +843,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// Now, delete the activity item for the blog post
-		bp_activity_delete( array(
-			'component'         => buddypress()->blogs->id,
+		bboss_activity_delete( array(
+			'component'         => bboss()->blogs->id,
 			'type'              => 'new_blog_post',
 			'item_id'           => get_current_blog_id(),
 			'secondary_item_id' => $post_id,
@@ -863,9 +863,9 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// Fetch the activity ID for the blog post to see if it exists
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_blog_post',
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'filter'    => array(
 				'item_id' => get_current_blog_id(),
 				'secondary_item_id' => $post_id
@@ -909,7 +909,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 
 		add_post_type_support( 'foo', 'buddypress-activity' );
 
-		bp_activity_set_post_type_tracking_args( 'foo', array(
+		bboss_activity_set_post_type_tracking_args( 'foo', array(
 			'comment_action_id' => 'new_foo_comment',
 		) );
 
@@ -920,7 +920,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 			'post_type'   => 'foo',
 		) );
 
-		$a1 = bp_activity_get_activity_id( array(
+		$a1 = bboss_activity_get_activity_id( array(
 			'type'      => 'new_foo',
 			'filter'    => array(
 				'item_id' => $b,
@@ -939,7 +939,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 			'user_id'              => $u,
 		) );
 
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'content'     => 'this should generate a new foo comment',
 			'user_id'     => $u,
 			'activity_id' => $a1,
@@ -954,12 +954,12 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 			) )
 		);
 
-		$a = bp_activity_get( $activity_args );
+		$a = bboss_activity_get( $activity_args );
 		$aids = wp_list_pluck( $a['activities'], 'id' );
 		$cids = wp_list_pluck( get_approved_comments( $p ), 'comment_ID' );
 
 		foreach ( $aids as $aid ) {
-			$this->assertTrue( in_array( bp_activity_get_meta( $aid, 'bp_blogs_foo_comment_id' ), $cids ), 'The comment ID should be in the activity meta' );
+			$this->assertTrue( in_array( bboss_activity_get_meta( $aid, 'bp_blogs_foo_comment_id' ), $cids ), 'The comment ID should be in the activity meta' );
 		}
 
 		foreach ( $cids as $cid ) {
@@ -1003,12 +1003,12 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		) );
 
 		// Record each site one at a time
-		bp_blogs_record_existing_blogs( array(
+		bboss_blogs_record_existing_blogs( array(
 			'limit' => 1
 		) );
 
 		// Assert!
-		$blogs = bp_blogs_get_blogs( array(
+		$blogs = bboss_blogs_get_blogs( array(
 			'user_id' => $u
 		) );
 		$this->assertSame( 3, (int) $blogs['total'] );
@@ -1038,7 +1038,7 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 			'user_id' => $u
 		) );
 
-		$activity = bp_activity_get( array(
+		$activity = bboss_activity_get( array(
 			'filter' => array(
 				'object'     => 'blogs',
 				'action'     => 'new_blog',
@@ -1052,12 +1052,12 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		// Removing the blog should delete the activity and the blog association.
 		wpmu_delete_blog( $b );
 
-		$deleted = bp_activity_get( array(
+		$deleted = bboss_activity_get( array(
 			'in' => array_keys( $new_blog ),
 		) );
 
 		$this->assertEmpty( $deleted['activities'] );
-		$this->assertEmpty( BP_Blogs_Blog::is_recorded( $b ) );
+		$this->assertEmpty( BBoss_Blogs_Blog::is_recorded( $b ) );
 
 		$_POST = $reset_post;
 		$this->set_current_user( $old_user );
@@ -1088,14 +1088,14 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 		add_user_to_blog( $b, $u2, 'contributor' );
 
-		$u2_blogs = BP_Blogs_Blog::get_blog_ids_for_user( $u2 );
+		$u2_blogs = BBoss_Blogs_Blog::get_blog_ids_for_user( $u2 );
 		$this->assertContains( $b, $u2_blogs, 'The user should be associated to the blog as he is a contributor' );
 
 		remove_user_from_blog( $u2, $b );
-		$u2_blogs = BP_Blogs_Blog::get_blog_ids_for_user( $u2 );
+		$u2_blogs = BBoss_Blogs_Blog::get_blog_ids_for_user( $u2 );
 		$this->assertNotContains( $b, $u2_blogs, 'The user should not be associated anymore to the blog' );
 
-		$activity = bp_activity_get( array(
+		$activity = bboss_activity_get( array(
 			'filter' => array(
 				'object'     => 'blogs',
 				'action'     => 'new_blog',
@@ -1111,8 +1111,8 @@ class BP_Tests_Blogs_Functions extends BP_UnitTestCase {
 	}
 
 	protected function activity_exists_for_post( $post_id ) {
-		$a = bp_activity_get( array(
-			'component' => buddypress()->blogs->id,
+		$a = bboss_activity_get( array(
+			'component' => bboss()->blogs->id,
 			'action' => 'new_blog_post',
 			'item_id' => get_current_blog_id(),
 			'secondary_item_id' => $post_id,

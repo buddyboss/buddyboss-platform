@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.3
  */
-class BP_Core_Recently_Active_Widget extends WP_Widget {
+class BBoss_Core_Recently_Active_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -76,7 +76,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			'max'             => false,
 			'populate_extras' => true,
 			'search_terms'    => false,
-			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
+			'exclude'         => ( function_exists( 'bboss_get_users_of_removed_member_types' ) && ! empty( bboss_get_users_of_removed_member_types() ) ) ? bboss_get_users_of_removed_member_types() : '',
 		);
 
 		// Back up global.
@@ -84,25 +84,25 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 
 		?>
 		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
-			<?php if ( bp_has_members( $members_args ) ) : ?>
+			<?php if ( bboss_has_members( $members_args ) ) : ?>
 
 				<div class="avatar-block">
 
 					<?php
-					while ( bp_members() ) :
-						bp_the_member();
+					while ( bboss_members() ) :
+						bboss_the_member();
 						?>
 
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_avatar(); ?></a>
-							<?php bb_user_presence_html( $members_template->member->id ); ?>
+							<a href="<?php bboss_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_get_member_name() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bboss_member_avatar(); ?></a>
+							<?php bboss_user_presence_html( $members_template->member->id ); ?>
 						</div>
 
 					<?php endwhile; ?>
 
 				</div>
 				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : esc_attr( 'bp-hide' ); ?>">
-					<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
+					<a href="<?php bboss_members_directory_permalink(); ?>" class="count-more">
 						<?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
 					</a>
 				</div>
@@ -181,7 +181,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
-		return bp_parse_args(
+		return bboss_parse_args(
 			$instance,
 			array(
 				'title'       => __( 'Recently Active Members', 'buddyboss' ),
@@ -216,7 +216,7 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 		'max'             => false,
 		'populate_extras' => true,
 		'search_terms'    => false,
-		'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
+		'exclude'         => ( function_exists( 'bboss_get_users_of_removed_member_types' ) && ! empty( bboss_get_users_of_removed_member_types() ) ) ? bboss_get_users_of_removed_member_types() : '',
 	);
 
 	// Back up global.
@@ -224,24 +224,24 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 
 	?>
 
-	<?php if ( bp_has_members( $members_args ) ) : ?>
+	<?php if ( bboss_has_members( $members_args ) ) : ?>
 
 		<div class="avatar-block">
 
 			<?php
-			while ( bp_members() ) :
-				bp_the_member();
+			while ( bboss_members() ) :
+				bboss_the_member();
 				?>
 
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" title="<?php echo esc_attr( bp_get_member_name() ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_avatar(); ?></a>
-					<?php bb_user_presence_html( $members_template->member->id ); ?>
+					<a href="<?php bboss_member_permalink(); ?>" title="<?php echo esc_attr( bboss_get_member_name() ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_get_member_name() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bboss_member_avatar(); ?></a>
+					<?php bboss_user_presence_html( $members_template->member->id ); ?>
 				</div>
 
 			<?php endwhile; ?>
 
 		</div>
-		<div class="more-block <?php echo ( $members_template->total_member_count > $number ) ? '' : esc_attr( 'bp-hide' ); ?>"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+		<div class="more-block <?php echo ( $members_template->total_member_count > $number ) ? '' : esc_attr( 'bp-hide' ); ?>"><a href="<?php bboss_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 	<?php else : ?>
 

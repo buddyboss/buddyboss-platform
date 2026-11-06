@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the BP_Forums_Notification class.
+ * Set up the BBoss_Forums_Notification class.
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Forums_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Forums_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Forums_Notification|Controller|object
+	 * @return null|BBoss_Forums_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -86,7 +86,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_reply() {
 		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
+		if ( function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active() ) {
 			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
 		}
 
@@ -95,7 +95,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			__( 'New reply in a discussion you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 			'forums',
-			function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active(),
+			function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active(),
 			true,
 			$notification_tooltip_text,
 		);
@@ -147,7 +147,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_forums_following_topic() {
 		$notification_tooltip_text = __( 'Requires forum subscriptions to enable', 'buddyboss' );
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
+		if ( function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active() ) {
 			$notification_tooltip_text = __( 'Required by forum subscriptions', 'buddyboss' );
 		}
 
@@ -156,7 +156,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			__( 'New discussion in a forum you\'re subscribed to', 'buddyboss' ),
 			esc_html__( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 			'forums',
-			function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active(),
+			function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active(),
 			true,
 			$notification_tooltip_text
 		);
@@ -219,9 +219,9 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_reply' === $component_action_name ) {
-			$notification = bp_notifications_get_notification( $notification_id );
-			$topic_id     = bbp_get_reply_topic_id( $item_id );
-			$topic_title  = bbp_get_topic_title( $topic_id );
+			$notification = bboss_notifications_get_notification( $notification_id );
+			$topic_id     = bboss_bbp_get_reply_topic_id( $item_id );
+			$topic_title  = bboss_bbp_get_topic_title( $topic_id );
 			$topic_link   = wp_nonce_url(
 				add_query_arg(
 					array(
@@ -229,12 +229,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'topic_id' => $topic_id,
 						'reply_id' => $item_id,
 					),
-					bbp_get_reply_url( $item_id )
+					bboss_bbp_get_reply_url( $item_id )
 				),
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			$except = '"' . bbp_get_reply_excerpt( $item_id, 50 ) . '"';
+			$except = '"' . bboss_bbp_get_reply_excerpt( $item_id, 50 ) . '"';
 			$except = str_replace( '&hellip;"', '&hellip;', $except );
 			$except = str_replace( '""', '', $except );
 
@@ -243,7 +243,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			$video_ids    = get_post_meta( $item_id, 'bp_video_ids', true );
 			$gif_data     = get_post_meta( $item_id, '_gif_data', true );
 
-			$title = bp_get_site_name();
+			$title = bboss_get_site_name();
 
 			if ( 'web_push' === $screen ) {
 				if ( ! empty( $notification->secondary_item_id ) ) {
@@ -251,7 +251,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$text = sprintf(
 						/* translators: 1. Member display name. 2. excerpt. */
 							__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
-							bp_core_get_user_displayname( $notification->secondary_item_id ),
+							bboss_core_get_user_displayname( $notification->secondary_item_id ),
 							$except
 						);
 					} elseif ( ! empty( $media_ids ) ) {
@@ -260,13 +260,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: some photos', 'buddyboss' ),
-								bp_core_get_user_displayname( $notification->secondary_item_id )
+								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a photo', 'buddyboss' ),
-								bp_core_get_user_displayname( $notification->secondary_item_id )
+								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
 					} elseif ( ! empty( $document_ids ) ) {
@@ -275,13 +275,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: some documents', 'buddyboss' ),
-								bp_core_get_user_displayname( $notification->secondary_item_id )
+								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a document', 'buddyboss' ),
-								bp_core_get_user_displayname( $notification->secondary_item_id )
+								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
 					} elseif ( ! empty( $video_ids ) ) {
@@ -290,26 +290,26 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: some videos', 'buddyboss' ),
-								bp_core_get_user_displayname( $notification->secondary_item_id )
+								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a video', 'buddyboss' ),
-								bp_core_get_user_displayname( $notification->secondary_item_id )
+								bboss_core_get_user_displayname( $notification->secondary_item_id )
 							);
 						}
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
 						/* translators: Member display name. */
 							esc_html__( '%s replied to a discussion: a gif', 'buddyboss' ),
-							bp_core_get_user_displayname( $notification->secondary_item_id )
+							bboss_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					} else {
 						$text = sprintf(
 						/* translators: Member display name. */
 							__( '%s replied to a discussion', 'buddyboss' ),
-							bp_core_get_user_displayname( $notification->secondary_item_id )
+							bboss_core_get_user_displayname( $notification->secondary_item_id )
 						);
 					}
 				} else {
@@ -320,11 +320,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					);
 				}
 
-				$forum_id  = bbp_get_topic_forum_id( $topic_id );
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
+				$forum_id  = bboss_bbp_get_topic_forum_id( $topic_id );
+				$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
-				if ( bp_is_active( 'groups' ) && ! empty( $group_ids ) ) {
-					$title = bp_get_group_name( groups_get_group( current( $group_ids ) ) );
+				if ( bboss_is_active( 'groups' ) && ! empty( $group_ids ) ) {
+					$title = bboss_get_group_name( bboss_groups_get_group( current( $group_ids ) ) );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
@@ -339,7 +339,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 							$text = sprintf(
 								/* translators: 1. Member display name. 2. excerpt. */
 								esc_html__( '%1$s replied to a discussion: %2$s', 'buddyboss' ),
-								bp_core_get_user_displayname( $secondary_item_id ),
+								bboss_core_get_user_displayname( $secondary_item_id ),
 								$except
 							);
 						} elseif ( $media_ids ) {
@@ -348,13 +348,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								$text = sprintf(
 								/* translators: Member display name. */
 									esc_html__( '%s replied to a discussion: some photos', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id )
+									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							} else {
 								$text = sprintf(
 								/* translators: Member display name. */
 									esc_html__( '%s replied to a discussion: a photo', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id )
+									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							}
 						} elseif ( $document_ids ) {
@@ -363,13 +363,13 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								$text = sprintf(
 								/* translators: Member display name. */
 									esc_html__( '%s replied to a discussion: some documents', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id )
+									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							} else {
 								$text = sprintf(
 								/* translators: Member display name. */
 									esc_html__( '%s replied to a discussion: a document', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id )
+									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							}
 						} elseif ( $video_ids ) {
@@ -378,26 +378,26 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 								$text = sprintf(
 								/* translators: Member display name. */
 									esc_html__( '%s replied to a discussion: some videos', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id )
+									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							} else {
 								$text = sprintf(
 								/* translators: Member display name. */
 									esc_html__( '%s replied to a discussion: a video', 'buddyboss' ),
-									bp_core_get_user_displayname( $secondary_item_id )
+									bboss_core_get_user_displayname( $secondary_item_id )
 								);
 							}
 						} elseif ( ! empty( $gif_data ) ) {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion: a gif', 'buddyboss' ),
-								bp_core_get_user_displayname( $secondary_item_id )
+								bboss_core_get_user_displayname( $secondary_item_id )
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Member display name. */
 								esc_html__( '%s replied to a discussion', 'buddyboss' ),
-								bp_core_get_user_displayname( $secondary_item_id )
+								bboss_core_get_user_displayname( $secondary_item_id )
 							);
 						}
 					} else {
@@ -414,15 +414,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'text'  => $text,
 				'link'  => $topic_link,
 				'title' => $title,
-				'image' => bb_notification_avatar_url( $notification ),
+				'image' => bboss_notification_avatar_url( $notification ),
 			);
 		}
 
 		if ( 'forums' === $component_name && 'bb_forums_subscribed_discussion' === $component_action_name ) {
-			$notification = bp_notifications_get_notification( $notification_id );
-			$topic_id     = bbp_get_topic_id( $item_id );
-			$topic_title  = '"' . bp_create_excerpt(
-				wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ),
+			$notification = bboss_notifications_get_notification( $notification_id );
+			$topic_id     = bboss_bbp_get_topic_id( $item_id );
+			$topic_title  = '"' . bboss_create_excerpt(
+				wp_strip_all_tags( bboss_bbp_get_topic_title( $topic_id ) ),
 				50,
 				array(
 					'ending' => __( '&hellip;', 'buddyboss' ),
@@ -437,19 +437,19 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'action'   => 'bbp_mark_read',
 						'topic_id' => $topic_id,
 					),
-					bbp_get_topic_permalink( $topic_id )
+					bboss_bbp_get_topic_permalink( $topic_id )
 				),
 				'bbp_mark_topic_' . $topic_id
 			);
 
-			$title = bp_get_site_name();
+			$title = bboss_get_site_name();
 
 			if ( 'web_push' === $screen ) {
 				if ( ! empty( $notification->secondary_item_id ) ) {
 					$text = sprintf(
 					/* translators: 1.Member display name 2. discussions title. */
 						__( '%1$s started a discussion: %2$s', 'buddyboss' ),
-						bp_core_get_user_displayname( $notification->secondary_item_id ),
+						bboss_core_get_user_displayname( $notification->secondary_item_id ),
 						$topic_title
 					);
 				} else {
@@ -460,11 +460,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					);
 				}
 
-				$forum_id  = bbp_get_topic_forum_id( $topic_id );
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
+				$forum_id  = bboss_bbp_get_topic_forum_id( $topic_id );
+				$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
-				if ( bp_is_active( 'groups' ) && ! empty( $group_ids ) ) {
-					$title = bp_get_group_name( groups_get_group( current( $group_ids ) ) );
+				if ( bboss_is_active( 'groups' ) && ! empty( $group_ids ) ) {
+					$title = bboss_get_group_name( bboss_groups_get_group( current( $group_ids ) ) );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
@@ -476,7 +476,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$text = sprintf(
 						/* translators: 1.Member display name 2. discussions title. */
 							esc_html__( '%1$s started a discussion: %2$s', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id ),
+							bboss_core_get_user_displayname( $secondary_item_id ),
 							$topic_title
 						);
 					} else {
@@ -493,7 +493,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'text'  => $text,
 				'link'  => $topic_link,
 				'title' => $title,
-				'image' => bb_notification_avatar_url( $notification ),
+				'image' => bboss_notification_avatar_url( $notification ),
 			);
 		}
 
@@ -516,7 +516,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function bb_validate_forums_topics_subscription_request( $args ) {
 
 		// Parse the arguments.
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'type'              => '',
@@ -601,7 +601,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function bb_render_forums_subscribed_discussion( $items ) {
 		static $cached_items = array();
 
-		$type_data = bb_register_subscriptions_types( 'forum' );
+		$type_data = bboss_register_subscriptions_types( 'forum' );
 
 		if ( ! empty( $items ) ) {
 
@@ -616,7 +616,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			foreach ( $items as $item_key => $item ) {
-				$subscription = bp_parse_args(
+				$subscription = bboss_parse_args(
 					$item,
 					array(
 						'id'                => 0,
@@ -639,14 +639,14 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					continue;
 				}
 
-				$default_forum_full_image  = bb_get_forum_default_image();
-				$default_forum_thumb_image = bb_get_forum_default_image( 'thumb' );
+				$default_forum_full_image  = bboss_get_forum_default_image();
+				$default_forum_thumb_image = bboss_get_forum_default_image( 'thumb' );
 
 				// Get the post to check the forum is exists or not?
 				$forum = get_post( $subscription['item_id'] );
 
 				$data = array();
-				if ( empty( $forum ) || is_wp_error( $forum ) || ( ! empty( $forum->post_status ) && in_array( $forum->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) ) {
+				if ( empty( $forum ) || is_wp_error( $forum ) || ( ! empty( $forum->post_status ) && in_array( $forum->post_status, array( bboss_bbp_get_spam_status_id(), bboss_bbp_get_trash_status_id(), bboss_bbp_get_pending_status_id() ), true ) ) ) {
 					$data['link']          = '';
 					$data['icon']['full']  = $default_forum_full_image;
 					$data['icon']['thumb'] = $default_forum_thumb_image;
@@ -656,18 +656,18 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						$type_data['label']['singular']
 					);
 				} else {
-					$data['title'] = bbp_get_forum_title( $subscription['item_id'] );
-					$data['link']  = bbp_get_forum_permalink( $subscription['item_id'] );
+					$data['title'] = bboss_bbp_get_forum_title( $subscription['item_id'] );
+					$data['link']  = bboss_bbp_get_forum_permalink( $subscription['item_id'] );
 
 					$data['icon']['full'] = (string) (
-						function_exists( 'bbp_get_forum_thumbnail_src' )
-						? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
+						function_exists( 'bboss_bbp_get_forum_thumbnail_src' )
+						? bboss_bbp_get_forum_thumbnail_src( $subscription['item_id'], 'full', 'full' )
 						: get_the_post_thumbnail_url( $subscription['item_id'], 'full' )
 					);
 
 					$data['icon']['thumb'] = (string) (
-						function_exists( 'bbp_get_forum_thumbnail_src' )
-						? bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
+						function_exists( 'bboss_bbp_get_forum_thumbnail_src' )
+						? bboss_bbp_get_forum_thumbnail_src( $subscription['item_id'], 'thumbnail', 'large' )
 						: get_the_post_thumbnail_url( $subscription['item_id'], 'thumbnail' )
 					);
 
@@ -680,12 +680,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					}
 
 					if ( ! empty( $subscription['secondary_item_id'] ) ) {
-						$data['parent_html'] = '<strong>' . bbp_get_forum_title( $subscription['secondary_item_id'] ) . '</strong>';
+						$data['parent_html'] = '<strong>' . bboss_bbp_get_forum_title( $subscription['secondary_item_id'] ) . '</strong>';
 					}
 				}
 
 				// Parse the data.
-				$data = bp_parse_args(
+				$data = bboss_parse_args(
 					$data,
 					array(
 						'title'            => '',
@@ -722,7 +722,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	public function bb_render_forums_subscribed_reply( $items ) {
 		static $cached_items = array();
 
-		$type_data = bb_register_subscriptions_types( 'topic' );
+		$type_data = bboss_register_subscriptions_types( 'topic' );
 
 		if ( ! empty( $items ) ) {
 
@@ -736,7 +736,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$switch = true;
 			}
 			foreach ( $items as $item_key => $item ) {
-				$subscription = bp_parse_args(
+				$subscription = bboss_parse_args(
 					$item,
 					array(
 						'id'                => 0,
@@ -758,12 +758,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					continue;
 				}
 
-				$default_user_full_image  = bb_attachments_get_default_profile_group_avatar_image(
+				$default_user_full_image  = bboss_attachments_get_default_profile_group_avatar_image(
 					array(
 						'object' => 'user',
 					)
 				);
-				$default_user_thumb_image = bb_attachments_get_default_profile_group_avatar_image(
+				$default_user_thumb_image = bboss_attachments_get_default_profile_group_avatar_image(
 					array(
 						'object' => 'user',
 						'size'   => 'thumbnail',
@@ -774,7 +774,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$topic = get_post( $subscription['item_id'] );
 
 				$data = array();
-				if ( empty( $topic ) || is_wp_error( $topic ) || ( ! empty( $topic->post_status ) && in_array( $topic->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) ) {
+				if ( empty( $topic ) || is_wp_error( $topic ) || ( ! empty( $topic->post_status ) && in_array( $topic->post_status, array( bboss_bbp_get_spam_status_id(), bboss_bbp_get_trash_status_id(), bboss_bbp_get_pending_status_id() ), true ) ) ) {
 					$data['link']             = '';
 					$data['icon']['full']     = $default_user_full_image;
 					$data['icon']['thumb']    = $default_user_thumb_image;
@@ -786,11 +786,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					);
 				} else {
 					$author_id                = $topic->post_author;
-					$data['title']            = bbp_get_topic_title( $subscription['item_id'] );
-					$data['link']             = bbp_get_topic_permalink( $subscription['item_id'] );
+					$data['title']            = bboss_bbp_get_topic_title( $subscription['item_id'] );
+					$data['link']             = bboss_bbp_get_topic_permalink( $subscription['item_id'] );
 					$data['description_html'] = '';
 
-					$data['icon']['full'] = (string) bp_core_fetch_avatar(
+					$data['icon']['full'] = (string) bboss_core_fetch_avatar(
 						array(
 							'item_id' => $author_id,
 							'html'    => false,
@@ -798,7 +798,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						)
 					);
 
-					$data['icon']['thumb'] = (string) bp_core_fetch_avatar(
+					$data['icon']['thumb'] = (string) bboss_core_fetch_avatar(
 						array(
 							'item_id' => $author_id,
 							'html'    => false,
@@ -814,18 +814,18 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					}
 
 					if ( ! empty( $author_id ) ) {
-						$data['description_html'] .= esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bp_core_get_user_displayname( $author_id ) . '</strong>';
+						$data['description_html'] .= esc_html__( 'Posted by', 'buddyboss' ) . ' <strong>' . bboss_core_get_user_displayname( $author_id ) . '</strong>';
 					}
 
 					// Get topic forum.
-					$forum_id = bbp_get_topic_forum_id( $subscription['item_id'] );
+					$forum_id = bboss_bbp_get_topic_forum_id( $subscription['item_id'] );
 					if ( ! empty( $forum_id ) ) {
-						$data['description_html'] .= ' ' . esc_html__( 'in', 'buddyboss' ) . ' <strong>' . bbp_get_forum_title( $forum_id ) . '</strong>';
+						$data['description_html'] .= ' ' . esc_html__( 'in', 'buddyboss' ) . ' <strong>' . bboss_bbp_get_forum_title( $forum_id ) . '</strong>';
 					}
 				}
 
 				// Parse the data.
-				$data = bp_parse_args(
+				$data = bboss_parse_args(
 					$data,
 					array(
 						'title'            => '',
@@ -864,7 +864,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function bb_send_forums_subscribed_discussion( $args ) {
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'type'              => '',
@@ -875,28 +875,28 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			)
 		);
 
-		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
+		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bboss_is_enabled_subscription( $r['type'] ) ) {
 			return;
 		}
 
 		// Derive the claim key from the pristine payload once: the author is
 		// removed from user_ids below, and the claim, its refreshes and its
 		// completion marker must all hash the same shape.
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $r );
 
 		// A queue row re-run by a concurrently dispatched worker must not send
 		// this chunk a second time.
-		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+		if ( ! bboss_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
 			return false;
 		}
 
 		$type_key = 'notification_forums_following_topic';
-		if ( ! bb_enabled_legacy_email_preference() ) {
-			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		if ( ! bboss_enabled_legacy_email_preference() ) {
+			$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 		}
 
 		$topic_id     = ! empty( $r['data']['topic_id'] ) ? $r['data']['topic_id'] : 0;
-		$author_id    = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_topic_author_id( $topic_id );
+		$author_id    = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bboss_bbp_get_topic_author_id( $topic_id );
 		$email_tokens = ! empty( $r['data']['email_tokens'] ) ? $r['data']['email_tokens'] : array();
 
 		if ( ! empty( $author_id ) ) {
@@ -908,26 +908,26 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		$group_id = 0;
-		if ( bp_is_active( 'groups' ) ) {
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
-			$group_id = bbp_get_forum_group_ids( $forum_id );
+		if ( bboss_is_active( 'groups' ) ) {
+			$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
+			$group_id = bboss_bbp_get_forum_group_ids( $forum_id );
 			$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
 			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
-			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
+			bboss_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$send_mail         = true;
 			$send_notification = true;
 
 			if (
-				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-				bb_moderation_allowed_specific_notification(
+				function_exists( 'bboss_moderation_allowed_specific_notification' ) &&
+				bboss_moderation_allowed_specific_notification(
 					array(
-						'type'              => bbp_get_component_name(),
+						'type'              => bboss_bbp_get_component_name(),
 						'group_id'          => $group_id,
 						'recipient_user_id' => $user_id,
-						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+						'sender_id'         => bboss_bbp_get_topic_author_id( $r['item_id'] ),
 					)
 				)
 			) {
@@ -936,22 +936,22 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
-				if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+				if ( true === bboss_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
 					$send_mail = false;
 				}
 			}
 
-			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+			if ( false === bboss_is_notification_enabled( $user_id, $type_key ) ) {
 				$send_mail = false;
 			}
 
 			$filter_args = array(
 				'type'              => $type_key,
-				'component_type'    => bbp_get_component_name(),
+				'component_type'    => bboss_bbp_get_component_name(),
 				'topic_id'          => $topic_id,
 				'group_id'          => $group_id,
 				'recipient_user_id' => $user_id,
-				'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+				'sender_id'         => bboss_bbp_get_topic_author_id( $r['item_id'] ),
 				'author_id'         => $author_id,
 			);
 
@@ -966,7 +966,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					'notification_type' => 'bbp-new-forum-topic',
 				);
 
-				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['unsubscribe']      = esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
 				// The poster's name was resolved once, before this fan-out, in the poster's own
@@ -975,23 +975,23 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				// them on screen. Re-resolve it for THIS recipient, as the group subscription
 				// fan-out in BP_Groups_Notification already does.
 				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
-					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+					$email_tokens['tokens']['poster.name'] = bboss_core_get_user_displayname( (int) $author_id, $user_id );
 				}
 
 				// Send notification email.
-				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
+				bboss_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
 			}
 
-			if ( ! bb_enabled_legacy_email_preference() && true === $send_notification && bp_is_active( 'notifications' ) ) {
+			if ( ! bboss_enabled_legacy_email_preference() && true === $send_notification && bboss_is_active( 'notifications' ) ) {
 				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
-				bp_notifications_add_notification(
+				bboss_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
 						'item_id'           => $topic_id,
 						'secondary_item_id' => $author_id,
-						'component_name'    => bbp_get_component_name(),
+						'component_name'    => bboss_bbp_get_component_name(),
 						'component_action'  => 'bb_forums_subscribed_discussion',
-						'date_notified'     => bp_core_current_time(),
+						'date_notified'     => bboss_core_current_time(),
 						'is_new'            => 1,
 					)
 				);
@@ -1001,7 +1001,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		// Every recipient is handled: mark the chunk done so a late duplicate
 		// queue row is refused, then release the claim.
-		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+		bboss_subscriptions_complete_notification_chunk( $r, $chunk_key );
 
 		// The chunk is fully processed; false removes the queue row. A truthy
 		// return would make BB_Background_Updater::task() re-run the row with
@@ -1023,7 +1023,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function bb_send_forums_subscribed_reply( $args ) {
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'type'              => '',
@@ -1034,28 +1034,28 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			)
 		);
 
-		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
+		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bboss_is_enabled_subscription( $r['type'] ) ) {
 			return;
 		}
 
 		// Derive the claim key from the pristine payload once: the author is
 		// removed from user_ids below, and the claim, its refreshes and its
 		// completion marker must all hash the same shape.
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $r );
 
 		// A queue row re-run by a concurrently dispatched worker must not send
 		// this chunk a second time.
-		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+		if ( ! bboss_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
 			return false;
 		}
 
 		$type_key = 'notification_forums_following_reply';
-		if ( ! bb_enabled_legacy_email_preference() ) {
-			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		if ( ! bboss_enabled_legacy_email_preference() ) {
+			$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 		}
 
 		$reply_id     = ! empty( $r['data']['reply_id'] ) ? $r['data']['reply_id'] : 0;
-		$author_id    = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bbp_get_reply_author_id( $reply_id );
+		$author_id    = ! empty( $r['data']['author_id'] ) ? $r['data']['author_id'] : bboss_bbp_get_reply_author_id( $reply_id );
 		$email_tokens = ! empty( $r['data']['email_tokens'] ) ? $r['data']['email_tokens'] : array();
 
 		if ( ! empty( $author_id ) ) {
@@ -1067,26 +1067,26 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		$group_id = 0;
-		if ( bp_is_active( 'groups' ) ) {
-			$forum_id = bbp_get_reply_forum_id( $reply_id );
-			$group_id = bbp_get_forum_group_ids( $forum_id );
+		if ( bboss_is_active( 'groups' ) ) {
+			$forum_id = bboss_bbp_get_reply_forum_id( $reply_id );
+			$group_id = bboss_bbp_get_forum_group_ids( $forum_id );
 			$group_id = ! empty( $group_id ) ? current( $group_id ) : 0;
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
 			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
-			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
+			bboss_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$send_mail         = true;
 			$send_notification = true;
 
 			if (
-				function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-				bb_moderation_allowed_specific_notification(
+				function_exists( 'bboss_moderation_allowed_specific_notification' ) &&
+				bboss_moderation_allowed_specific_notification(
 					array(
-						'type'              => bbp_get_component_name(),
+						'type'              => bboss_bbp_get_component_name(),
 						'group_id'          => $group_id,
 						'recipient_user_id' => $user_id,
-						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+						'sender_id'         => bboss_bbp_get_topic_author_id( $r['item_id'] ),
 					)
 				)
 			) {
@@ -1095,22 +1095,22 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			if ( ! empty( $r['usernames'] ) && isset( $r['usernames'][ $user_id ] ) ) {
-				if ( true === bb_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
+				if ( true === bboss_is_notification_enabled( $user_id, 'bb_new_mention' ) ) {
 					$send_mail = false;
 				}
 			}
 
-			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
+			if ( false === bboss_is_notification_enabled( $user_id, $type_key ) ) {
 				$send_mail = false;
 			}
 
 			$filter_args = array(
 				'type'              => $type_key,
-				'component_type'    => bbp_get_component_name(),
+				'component_type'    => bboss_bbp_get_component_name(),
 				'reply_id'          => $reply_id,
 				'group_id'          => $group_id,
 				'recipient_user_id' => $user_id,
-				'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+				'sender_id'         => bboss_bbp_get_topic_author_id( $r['item_id'] ),
 				'author_id'         => $author_id,
 			);
 
@@ -1125,7 +1125,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 					'notification_type' => 'bbp-new-forum-reply',
 				);
 
-				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+				$email_tokens['tokens']['unsubscribe']      = esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
 				// The poster's name was resolved once, before this fan-out, in the poster's own
@@ -1134,32 +1134,32 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				// them on screen. Re-resolve it for THIS recipient, as the group subscription
 				// fan-out in BP_Groups_Notification already does.
 				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
-					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+					$email_tokens['tokens']['poster.name'] = bboss_core_get_user_displayname( (int) $author_id, $user_id );
 				}
 
 				// Send notification email.
-				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
+				bboss_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
 			}
 
-			if ( ! bb_enabled_legacy_email_preference() && true === $send_notification && bp_is_active( 'notifications' ) ) {
+			if ( ! bboss_enabled_legacy_email_preference() && true === $send_notification && bboss_is_active( 'notifications' ) ) {
 				add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
-				$reply_to_id = bbp_get_reply_to( $reply_id );
+				$reply_to_id = bboss_bbp_get_reply_to( $reply_id );
 				if ( ! empty( $reply_to_id ) ) {
-					$reply_to_author_id = bbp_get_reply_author_id( $reply_to_id );
+					$reply_to_author_id = bboss_bbp_get_reply_author_id( $reply_to_id );
 
 					if ( $reply_to_author_id === $user_id ) {
 						continue;
 					}
 				}
 
-				bp_notifications_add_notification(
+				bboss_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
 						'item_id'           => $reply_id,
 						'secondary_item_id' => $author_id,
-						'component_name'    => bbp_get_component_name(),
+						'component_name'    => bboss_bbp_get_component_name(),
 						'component_action'  => 'bb_forums_subscribed_reply',
-						'date_notified'     => bp_core_current_time(),
+						'date_notified'     => bboss_core_current_time(),
 						'is_new'            => 1,
 					)
 				);
@@ -1169,7 +1169,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		// Every recipient is handled: mark the chunk done so a late duplicate
 		// queue row is refused, then release the claim.
-		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+		bboss_subscriptions_complete_notification_chunk( $r, $chunk_key );
 
 		// The chunk is fully processed; false removes the queue row. A truthy
 		// return would make BB_Background_Updater::task() re-run the row with

@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  */
-class BP_Activity_Theme_Compat {
+class BBoss_Activity_Theme_Compat {
 
 	/**
 	 * Set up the activity component theme compatibility.
@@ -36,13 +36,13 @@ class BP_Activity_Theme_Compat {
 	public function is_activity() {
 
 		// Bail if not looking at a group.
-		if ( ! bp_is_activity_component() ) {
+		if ( ! bboss_is_activity_component() ) {
 			return;
 		}
 
 		// Activity Directory.
-		if ( ! bp_displayed_user_id() && ! bp_current_action() ) {
-			bp_update_is_directory( true, 'activity' );
+		if ( ! bboss_displayed_user_id() && ! bboss_current_action() ) {
+			bboss_update_is_directory( true, 'activity' );
 
 			/** This action is documented in bp-activity/bp-activity-screens.php */
 			do_action( 'bp_activity_screen_index' );
@@ -52,7 +52,7 @@ class BP_Activity_Theme_Compat {
 			add_filter( 'bp_replace_the_content', array( $this, 'directory_content' ) );
 
 			// Single activity.
-		} elseif ( bp_is_single_activity() ) {
+		} elseif ( bboss_is_single_activity() ) {
 			add_filter( 'bp_get_buddypress_template', array( $this, 'single_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'single_dummy_post' ) );
 			add_filter( 'bp_replace_the_content', array( $this, 'single_dummy_content' ) );
@@ -68,7 +68,7 @@ class BP_Activity_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function directory_template_hierarchy( $templates ) {
@@ -100,11 +100,11 @@ class BP_Activity_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
-		$activity_page_id = bp_core_get_directory_page_id( 'activity' );
-		bp_theme_compat_reset_post(
+		$activity_page_id = bboss_core_get_directory_page_id( 'activity' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
-				'post_title'     => bp_get_directory_title( 'activity' ),
+				'post_title'     => bboss_get_directory_title( 'activity' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -122,7 +122,7 @@ class BP_Activity_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
-		return bp_buffer_template_part( 'activity/index', null, false );
+		return bboss_buffer_template_part( 'activity/index', null, false );
 	}
 
 	/** Single ****************************************************************/
@@ -134,7 +134,7 @@ class BP_Activity_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function single_template_hierarchy( $templates ) {
@@ -166,8 +166,8 @@ class BP_Activity_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
-		$activity_page_id = bp_core_get_directory_page_id( 'activity' );
-		bp_theme_compat_reset_post(
+		$activity_page_id = bboss_core_get_directory_page_id( 'activity' );
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $activity_page_id ) ? $activity_page_id : 0,
 				'post_title'     => __( 'News Feed', 'buddyboss' ),
@@ -188,6 +188,6 @@ class BP_Activity_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_content() {
-		return bp_buffer_template_part( 'activity/single/home', null, false );
+		return bboss_buffer_template_part( 'activity/single/home', null, false );
 	}
 }

@@ -12,33 +12,33 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
 		$this->field_group_id = self::factory()->xprofile_group->create();
 		$this->field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => $this->field_group_id ) );
-		$this->field = new BP_XProfile_Field( $this->field_id );
+		$this->field = new BBoss_XProfile_Field( $this->field_id );
 	}
 
 	public function tearDown() {
-		buddypress()->members->types = array();
+		bboss()->members->types = array();
 		parent::tearDown();
 	}
 
 	public function test_get_single_member_type() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEqualSets( array( 'foo' ), $this->field->get_member_types() );
 	}
 
 	public function test_get_multiple_member_types() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'bar' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'bar' );
 		$this->assertEqualSets( array( 'foo', 'bar' ), $this->field->get_member_types() );
 	}
 
 	public function test_invalid_member_types_should_not_be_returned() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'phony' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'phony' );
 		$this->assertEquals( array( 'foo' ), $this->field->get_member_types() );
 	}
 
@@ -47,38 +47,38 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 	}
 
 	public function test__none_meta_should_result_in_empty_array() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
 		$this->assertEquals( array(), $this->field->get_member_types() );
 	}
 
 	public function test__none_meta_should_override_other_values() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEquals( array(), $this->field->get_member_types() );
 	}
 
 	public function test_set_should_not_append_by_default() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEquals( array( 'bar' ), $this->field->set_member_types( array( 'bar' ) ) );
 	}
 
 	public function test_set_should_not_append_when_append_is_set_to_false() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEquals( array( 'bar' ), $this->field->set_member_types( array( 'bar', false ) ) );
 	}
 
 	public function test_set_should_append_when_append_is_set_to_true() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEqualSets( array( 'foo', 'bar' ), $this->field->set_member_types( array( 'bar' ), true ) );
 	}
 
 	public function test_set_empty_array_with_append_true_should_have_no_effect_on_saved_types() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEqualSets( array( 'foo' ), $this->field->set_member_types( array(), true ) );
 	}
 
 	public function test_set_empty_array_with_append_false_should_result_in_field_being_associated_with_no_member_types() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
 		$this->assertEqualSets( array(), $this->field->set_member_types( array() ) );
 	}
 
@@ -90,66 +90,66 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 		$types = array( 'null', 'foo', 'bar' );
 		$this->assertEqualSets( $types, $this->field->set_member_types( $types ) );
 
-		$types_db = bp_xprofile_get_meta( $this->field_id, 'field', 'member_type', false );
+		$types_db = bboss_xprofile_get_meta( $this->field_id, 'field', 'member_type', false );
 		$this->assertEqualSets( array(), $types_db );
 	}
 
 	public function test_get_fields_for_member_type_should_get_field_with_explicit_member_type() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
-		$found = BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 		$this->assertEqualSets( array( 1, $this->field_id ), array_keys( $found ) );
 	}
 
 	public function test_get_fields_for_member_type_should_ignore_field_that_applies_to_no_member_types() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
-		$found = BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 		$this->assertEqualSets( array( 1 ), array_keys( $found ) );
 	}
 
 	public function test_get_fields_for_member_type_should_ignore_field_that_applies_to_different_member_types() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'bar' );
-		$found = BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'bar' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 		$this->assertEqualSets( array( 1 ), array_keys( $found ) );
 	}
 
 	public function test_get_fields_for_member_type_should_include_fields_with_no_member_type_restrictions() {
 		// A field with no member_type metadata applies to all profile types.
-		$found = BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 		$this->assertEqualSets( array( 1, $this->field_id ), array_keys( $found ) );
 	}
 
 	public function test_passing_member_type_any_to_get_fields_for_member_type_should_return_unrestricted_fields() {
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $this->field_group_id ) );
 
-		$field_2 = new BP_XProfile_Field( $f2 );
+		$field_2 = new BBoss_XProfile_Field( $f2 );
 		$field_2->set_member_types( array( 'foo' ) );
 
-		$found = BP_XProfile_Field::get_fields_for_member_type( 'any' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( 'any' );
 		$this->assertEqualSets( array( 1, $this->field_id ), array_keys( $found ) );
 	}
 
 	public function test_passing_empty_member_type_to_get_fields_for_member_type_should_return_unrestricted_fields() {
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $this->field_group_id ) );
 
-		$field_2 = new BP_XProfile_Field( $f2 );
+		$field_2 = new BBoss_XProfile_Field( $f2 );
 		$field_2->set_member_types( array( 'foo' ) );
 
-		$found = BP_XProfile_Field::get_fields_for_member_type( '' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( '' );
 		$this->assertEqualSets( array( 1, $this->field_id ), array_keys( $found ) );
 	}
 
 	public function test_passing_member_type_none_to_get_fields_for_member_type_should_return_fields_unavailable_to_all_member_types() {
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
-		$found = BP_XProfile_Field::get_fields_for_member_type( '_none' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', '_none' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( '_none' );
 		$this->assertEqualSets( array( $this->field_id ), array_keys( $found ) );
 	}
 
 	public function test_get_fields_for_member_type_should_accept_an_array_of_member_types() {
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $this->field_group_id ) );
-		bp_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
-		bp_xprofile_add_meta( $f2, 'field', 'member_type', 'bar' );
+		bboss_xprofile_add_meta( $this->field_id, 'field', 'member_type', 'foo' );
+		bboss_xprofile_add_meta( $f2, 'field', 'member_type', 'bar' );
 
-		$found = BP_XProfile_Field::get_fields_for_member_type( array( 'foo', 'bar' ) );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( array( 'foo', 'bar' ) );
 		$this->assertEqualSets( array( 1, $this->field_id, $f2 ), array_keys( $found ) );
 	}
 
@@ -162,11 +162,11 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 		$this->field->set_member_types( array( 'foo' ) );
 
 		// Prime cache.
-		BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 
 		$num_queries = $wpdb->num_queries;
 
-		BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 
 		// get_fields_for_member_type() always does at least one query.
 		$num_queries++;
@@ -182,13 +182,13 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 		$this->field->set_member_types( array( 'foo' ) );
 
 		// Prime cache.
-		BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 
 		$num_queries = $wpdb->num_queries;
 
 		$this->field->set_member_types( array( 'none' ) );
 
-		$found = BP_XProfile_Field::get_fields_for_member_type( 'foo' );
+		$found = BBoss_XProfile_Field::get_fields_for_member_type( 'foo' );
 
 		$this->assertTrue( $num_queries + 2 <= $wpdb->num_queries );
 		$this->assertEqualSets( array( 1 ), array_keys( $found ) );
@@ -196,12 +196,12 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 
 	public function test_get_member_type_label_order() {
 		// Should be alphabetical, with the null option last.
-		bp_register_member_type( 'aaa', array(
+		bboss_register_member_type( 'aaa', array(
 			'labels' => array(
 				'name' => 'AAA',
 			),
 		) );
-		bp_register_member_type( 'zzz', array(
+		bboss_register_member_type( 'zzz', array(
 			'labels' => array(
 				'name' => 'ZZZ',
 			),

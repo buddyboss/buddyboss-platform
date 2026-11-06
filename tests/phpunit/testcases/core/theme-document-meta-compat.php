@@ -10,9 +10,9 @@
  * Older BuddyBoss Theme builds: document activity meta is hidden while Documents is not loaded.
  *
  * Theme builds before PROD-9995 build BP_Document objects from activity meta in the
- * Elementor Activity widget. bb_register_theme_document_meta_compat() hides those keys
- * on single-key get_metadata() reads (bp_activity_get_meta()) and on the array returned
- * by bb_activity_get_metadata(), cold or primed, without caching a stripped copy.
+ * Elementor Activity widget. bboss_register_theme_document_meta_compat() hides those keys
+ * on single-key get_metadata() reads (bboss_activity_get_meta()) and on the array returned
+ * by bboss_activity_get_metadata(), cold or primed, without caching a stripped copy.
  *
  * @package BuddyBoss
  * @group core
@@ -40,9 +40,9 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 		}
 
 		$this->activity_id = self::factory()->activity->create();
-		bp_activity_update_meta( $this->activity_id, 'bp_document_ids', '123' );
-		bp_activity_update_meta( $this->activity_id, 'bp_document_folder_activity', '45' );
-		bp_activity_update_meta( $this->activity_id, 'bb_unrelated_key', 'kept' );
+		bboss_activity_update_meta( $this->activity_id, 'bp_document_ids', '123' );
+		bboss_activity_update_meta( $this->activity_id, 'bp_document_folder_activity', '45' );
+		bboss_activity_update_meta( $this->activity_id, 'bb_unrelated_key', 'kept' );
 
 		// What bb_register_theme_document_meta_compat() adds for an older theme.
 		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
@@ -71,7 +71,7 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 	public function test_cold_read_hides_document_keys() {
 		wp_cache_delete( $this->activity_id, 'activity_meta' );
 
-		$meta = bb_activity_get_metadata( $this->activity_id );
+		$meta = bboss_activity_get_metadata( $this->activity_id );
 
 		$cached = wp_cache_get( $this->activity_id, 'activity_meta' );
 		$this->assertArrayHasKey( 'bp_document_ids', $cached );
@@ -88,13 +88,13 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 	 */
 	public function test_primed_cache_read_hides_document_keys() {
 		wp_cache_delete( $this->activity_id, 'activity_meta' );
-		bp_activity_update_meta_cache( array( $this->activity_id ) ); // What bp_has_activities() runs.
+		bboss_activity_update_meta_cache( array( $this->activity_id ) ); // What bp_has_activities() runs.
 
 		// The primed entry still holds the raw rows; only the read is filtered.
 		$cached = wp_cache_get( $this->activity_id, 'activity_meta' );
 		$this->assertArrayHasKey( 'bp_document_ids', $cached );
 
-		$meta = bb_activity_get_metadata( $this->activity_id );
+		$meta = bboss_activity_get_metadata( $this->activity_id );
 
 		$this->assertArrayNotHasKey( 'bp_document_ids', $meta );
 		$this->assertArrayNotHasKey( 'bp_document_folder_activity', $meta );
@@ -107,8 +107,8 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 	 * @since BuddyBoss 3.7.0
 	 */
 	public function test_single_key_read_is_empty() {
-		$this->assertSame( '', bp_activity_get_meta( $this->activity_id, 'bp_document_ids', true ) );
-		$this->assertSame( 'kept', bp_activity_get_meta( $this->activity_id, 'bb_unrelated_key', true ) );
+		$this->assertSame( '', bboss_activity_get_meta( $this->activity_id, 'bp_document_ids', true ) );
+		$this->assertSame( 'kept', bboss_activity_get_meta( $this->activity_id, 'bb_unrelated_key', true ) );
 	}
 
 	/**
@@ -119,6 +119,6 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 	public function test_stored_meta_is_untouched() {
 		remove_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10 );
 
-		$this->assertSame( '123', bp_activity_get_meta( $this->activity_id, 'bp_document_ids', true ) );
+		$this->assertSame( '123', bboss_activity_get_meta( $this->activity_id, 'bp_document_ids', true ) );
 	}
 }

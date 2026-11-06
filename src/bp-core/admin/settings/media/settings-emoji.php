@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_media_register_emoji_panel_fields() {
+function bboss_media_register_emoji_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Emoji Settings
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'media',
 		'emoji',
 		'emoji_settings',
@@ -34,14 +34,14 @@ function bb_media_register_emoji_panel_fields() {
 	);
 
 	// FIELD: Profiles — emoji support.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'media',
 		'emoji',
 		'emoji_settings',
 		array(
 			'name'              => 'bp_media_profiles_emoji_support',
 			'label'             => __( 'Profiles', 'buddyboss' ),
-			'description'       => bp_is_active( 'activity' )
+			'description'       => bboss_is_active( 'activity' )
 				? __( 'Allow members to use emoji in profiles and activity posts', 'buddyboss' )
 				: __( 'Allow members to use emoji in profiles', 'buddyboss' ),
 			'type'              => 'toggle',
@@ -52,12 +52,12 @@ function bb_media_register_emoji_panel_fields() {
 	);
 
 	// FIELD: Groups — emoji support.
-	if ( bp_is_active( 'groups' ) ) {
-		$group_description = bb_media_get_group_context_description(
+	if ( bboss_is_active( 'groups' ) ) {
+		$group_description = bboss_media_get_group_context_description(
 			__( 'Allow members to use emoji in', 'buddyboss' )
 		);
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'media',
 			'emoji',
 			'emoji_settings',
@@ -74,8 +74,8 @@ function bb_media_register_emoji_panel_fields() {
 	}
 
 	// FIELD: Messages — emoji support.
-	if ( bp_is_active( 'messages' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'messages' ) ) {
+		bboss_register_feature_field(
 			'media',
 			'emoji',
 			'emoji_settings',
@@ -92,8 +92,8 @@ function bb_media_register_emoji_panel_fields() {
 	}
 
 	// FIELD: Forums — emoji support.
-	if ( bp_is_active( 'forums' ) ) {
-		bb_register_feature_field(
+	if ( bboss_is_active( 'forums' ) ) {
+		bboss_register_feature_field(
 			'media',
 			'emoji',
 			'emoji_settings',

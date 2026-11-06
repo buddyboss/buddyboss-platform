@@ -29,11 +29,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array|string
  */
-function friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
+function bboss_friends_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'friendship_accepted':
-			$link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends' );
+			$link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/my-friends' );
 
 			// $action and $amount are used to generate dynamic filter names.
 			$action = 'accepted';
@@ -45,14 +45,14 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 				$amount = 'multiple';
 			} else {
 				/* translators: %s: member display name. */
-				$text   = sprintf( __( '%s accepted your request to connect', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				$text   = sprintf( __( '%s accepted your request to connect', 'buddyboss' ), bboss_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
 			break;
 
 		case 'friendship_request':
-			$link = bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/?new';
+			$link = bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/requests/?new';
 
 			$action = 'request';
 
@@ -63,7 +63,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 				$amount = 'multiple';
 			} else {
 				/* translators: %s: member display name. */
-				$text   = sprintf( __( '%s sent you an invitation to connect', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				$text   = sprintf( __( '%s sent you an invitation to connect', 'buddyboss' ), bboss_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
@@ -155,10 +155,10 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
  *
  * @since BuddyPress 1.2.0
  */
-function friends_clear_friend_notifications() {
+function bboss_friends_clear_friend_notifications() {
 	if ( isset( $_GET['new'] ) ) {
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'friendship_accepted' );
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'bb_connections_request_accepted' );
+		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->friends->id, 'friendship_accepted' );
+		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->friends->id, 'bb_connections_request_accepted' );
 	}
 }
 add_action( 'bp_activity_screen_my_activity', 'friends_clear_friend_notifications' );
@@ -168,10 +168,10 @@ add_action( 'bp_activity_screen_my_activity', 'friends_clear_friend_notification
  *
  * @since BuddyPress 1.9.0
  */
-function bp_friends_mark_friendship_request_notifications_by_type() {
+function bboss_friends_mark_friendship_request_notifications_by_type() {
 	if ( isset( $_GET['new'] ) ) {
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'friendship_request' );
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'bb_connections_new_request' );
+		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->friends->id, 'friendship_request' );
+		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->friends->id, 'bb_connections_new_request' );
 	}
 }
 add_action( 'friends_screen_requests', 'bp_friends_mark_friendship_request_notifications_by_type' );
@@ -181,9 +181,9 @@ add_action( 'friends_screen_requests', 'bp_friends_mark_friendship_request_notif
  *
  * @since BuddyPress 1.9.0
  */
-function bp_friends_mark_friendship_accepted_notifications_by_type() {
-	bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'friendship_accepted' );
-	bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'bb_connections_request_accepted' );
+function bboss_friends_mark_friendship_accepted_notifications_by_type() {
+	bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->friends->id, 'friendship_accepted' );
+	bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->friends->id, 'bb_connections_request_accepted' );
 }
 add_action( 'friends_screen_my_friends', 'bp_friends_mark_friendship_accepted_notifications_by_type' );
 
@@ -196,25 +196,25 @@ add_action( 'friends_screen_my_friends', 'bp_friends_mark_friendship_accepted_no
  * @param int $initiator_user_id The friendship initiator user ID.
  * @param int $friend_user_id    The friendship request receiver user ID.
  */
-function bp_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+function bboss_friends_friendship_requested_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
 	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $friend_user_id, $initiator_user_id ) ) {
 		return;
 	}
 
 	$action = 'friendship_request';
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$action = 'bb_connections_new_request';
 	}
 
-	bp_notifications_add_notification(
+	bboss_notifications_add_notification(
 		array(
 			'user_id'           => $friend_user_id,
 			'item_id'           => $initiator_user_id,
 			'secondary_item_id' => $friendship_id,
-			'component_name'    => buddypress()->friends->id,
+			'component_name'    => bboss()->friends->id,
 			'component_action'  => $action,
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 		)
 	);
@@ -229,9 +229,9 @@ add_action( 'friends_friendship_requested', 'bp_friends_friendship_requested_not
  * @param int    $friendship_id Friendship ID (not used).
  * @param object $friendship    Friendship object.
  */
-function bp_friends_mark_friendship_rejected_notifications_by_item_id( $friendship_id, $friendship ) {
-	bp_notifications_mark_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, buddypress()->friends->id, 'friendship_request' );
-	bp_notifications_mark_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, buddypress()->friends->id, 'bb_connections_new_request' );
+function bboss_friends_mark_friendship_rejected_notifications_by_item_id( $friendship_id, $friendship ) {
+	bboss_notifications_mark_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, bboss()->friends->id, 'friendship_request' );
+	bboss_notifications_mark_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, bboss()->friends->id, 'bb_connections_new_request' );
 }
 add_action( 'friends_friendship_rejected', 'bp_friends_mark_friendship_rejected_notifications_by_item_id', 10, 2 );
 
@@ -244,31 +244,31 @@ add_action( 'friends_friendship_rejected', 'bp_friends_mark_friendship_rejected_
  * @param int $initiator_user_id The friendship initiator user ID.
  * @param int $friend_user_id    The friendship request receiver user ID.
  */
-function bp_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
+function bboss_friends_add_friendship_accepted_notification( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
 	if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $initiator_user_id, $friend_user_id ) ) {
 		return;
 	}
 
 	// Remove the friend request notice.
-	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'friendship_request' );
-	bp_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, buddypress()->friends->id, 'bb_connections_new_request' );
+	bboss_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, bboss()->friends->id, 'friendship_request' );
+	bboss_notifications_mark_notifications_by_item_id( $friend_user_id, $initiator_user_id, bboss()->friends->id, 'bb_connections_new_request' );
 
 	$action = 'friendship_accepted';
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$action = 'bb_connections_request_accepted';
 	}
 
 	// Add a friend accepted notice for the initiating user.
-	bp_notifications_add_notification(
+	bboss_notifications_add_notification(
 		array(
 			'user_id'           => $initiator_user_id,
 			'item_id'           => $friend_user_id,
 			'secondary_item_id' => $friendship_id,
-			'component_name'    => buddypress()->friends->id,
+			'component_name'    => bboss()->friends->id,
 			'component_action'  => $action,
-			'date_notified'     => bp_core_current_time(),
+			'date_notified'     => bboss_core_current_time(),
 			'is_new'            => 1,
 		)
 	);
@@ -283,9 +283,9 @@ add_action( 'friends_friendship_accepted', 'bp_friends_add_friendship_accepted_n
  * @param int    $friendship_id Friendship ID (not used).
  * @param object $friendship    Friendship Object.
  */
-function bp_friends_mark_friendship_withdrawn_notifications_by_item_id( $friendship_id, $friendship ) {
-	bp_notifications_delete_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, buddypress()->friends->id, 'friendship_request' );
-	bp_notifications_delete_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, buddypress()->friends->id, 'bb_connections_new_request' );
+function bboss_friends_mark_friendship_withdrawn_notifications_by_item_id( $friendship_id, $friendship ) {
+	bboss_notifications_delete_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, bboss()->friends->id, 'friendship_request' );
+	bboss_notifications_delete_notifications_by_item_id( $friendship->friend_user_id, $friendship->initiator_user_id, bboss()->friends->id, 'bb_connections_new_request' );
 }
 add_action( 'friends_friendship_withdrawn', 'bp_friends_mark_friendship_withdrawn_notifications_by_item_id', 10, 2 );
 
@@ -296,9 +296,9 @@ add_action( 'friends_friendship_withdrawn', 'bp_friends_mark_friendship_withdraw
  *
  * @param int $user_id ID of the user whose notifications are removed.
  */
-function bp_friends_remove_notifications_data( $user_id = 0 ) {
-	bp_notifications_delete_notifications_from_user( $user_id, buddypress()->friends->id, 'friendship_request' );
-	bp_notifications_delete_notifications_from_user( $user_id, buddypress()->friends->id, 'bb_connections_new_request' );
+function bboss_friends_remove_notifications_data( $user_id = 0 ) {
+	bboss_notifications_delete_notifications_from_user( $user_id, bboss()->friends->id, 'friendship_request' );
+	bboss_notifications_delete_notifications_from_user( $user_id, bboss()->friends->id, 'bb_connections_new_request' );
 }
 add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1 );
 

@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_members_register_profile_search_panel_fields() {
+function bboss_members_register_profile_search_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Search
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'profile_search',
 		'profile_search',
@@ -35,7 +35,7 @@ function bb_members_register_profile_search_panel_fields() {
 	// FIELD: Profile Search (enable/disable).
 	// Note: No `invert_value` needed. The DB key `bp-enable-profile-search` stores 1 = enabled (positive).
 	// Legacy getter `bp_disable_advanced_profile_search()` inverts on read, but the DB value is positive.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'profile_search',
 		'profile_search',
@@ -45,7 +45,7 @@ function bb_members_register_profile_search_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Enable profile search', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, advanced profile search will be available in the members directory.', 'buddyboss' ),
-			'default'           => ! bp_disable_advanced_profile_search(),
+			'default'           => ! bboss_disable_advanced_profile_search(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)

@@ -14,15 +14,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$hide_sitewide           = 1 === (int) bp_get_moderation_hide_site_wide();
-$bp_moderation_item_id   = bp_get_moderation_item_id();
-$bp_moderation_item_type = bp_get_moderation_item_type();
+$hide_sitewide           = 1 === (int) bboss_get_moderation_hide_site_wide();
+$bp_moderation_item_id   = bboss_get_moderation_item_id();
+$bp_moderation_item_type = bboss_get_moderation_item_type();
 ?>
 <tr class="moderation-item-wrp">
 	<td class="moderation-block-member" data-title="<?php esc_html_e( 'Blocked Member', 'buddyboss' ); ?>">
 		<?php
-		$user_id = bp_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
-		echo esc_html( bp_core_get_user_displayname( $user_id ) );
+		$user_id = bboss_moderation_get_content_owner_id( $bp_moderation_item_id, $bp_moderation_item_type );
+		echo esc_html( bboss_core_get_user_displayname( $user_id ) );
 		if ( true === $hide_sitewide ) {
 			?>
 			<span class="description">
@@ -34,7 +34,7 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 	</td>
 	<td class="moderation-item-last-updated" data-title="<?php esc_html_e( 'Blocked', 'buddyboss' ); ?>">
 		<?php
-		echo esc_html( bp_get_moderation_last_updated() );
+		echo esc_html( bboss_get_moderation_last_updated() );
 		?>
 	</td>
 	<td class="moderation-item-actions">

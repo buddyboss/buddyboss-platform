@@ -11,16 +11,16 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
-$bp_current_action    = bp_current_action();
-bp_get_template_part( 'members/single/parts/item-subnav' );
+$is_send_ajax_request = bboss_is_send_ajax_request();
+$bp_current_action    = bboss_current_action();
+bboss_get_template_part( 'members/single/parts/item-subnav' );
 
-if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
+if ( 'my-friends' === $bp_current_action && bboss_enable_content_counts() ) {
 	?>
 		<div class="bb-item-count">
 			<?php
 			if ( ! $is_send_ajax_request ) {
-				$count = friends_get_total_friend_count();
+				$count = bboss_friends_get_total_friend_count();
 				if ( 'requests' === $bp_current_action ) {
 					printf(
 						wp_kses(
@@ -58,53 +58,53 @@ if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
 	<?php
 }
 
-bp_get_template_part( 'common/search-and-filters-bar' );
+bboss_get_template_part( 'common/search-and-filters-bar' );
 
 switch ( $bp_current_action ) :
 
 	// Home/My Connections
 	case 'my-friends':
-		bp_nouveau_member_hook( 'before', 'friends_content' );
+		bboss_nouveau_member_hook( 'before', 'friends_content' );
 		?>
 		<div class="members friends" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bp-ajax-loader">';
-				bp_nouveau_user_feedback( 'member-friends-loading' );
+				bboss_nouveau_user_feedback( 'member-friends-loading' );
 				echo '</div>';
 			} else {
-				bp_get_template_part( 'members/members-loop' );
+				bboss_get_template_part( 'members/members-loop' );
 			}
 			?>
 		</div><!-- .members.friends -->
 		<?php
-		bp_nouveau_member_hook( 'after', 'friends_content' );
+		bboss_nouveau_member_hook( 'after', 'friends_content' );
 		break;
 
 	case 'requests':
-		bp_get_template_part( 'members/single/friends/requests' );
+		bboss_get_template_part( 'members/single/friends/requests' );
 		break;
 
 	case 'mutual':
-		bp_nouveau_member_hook( 'before', 'friends_content' );
+		bboss_nouveau_member_hook( 'before', 'friends_content' );
 		?>
 		<div class="members mutual-friends" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bp-ajax-loader">';
-				bp_nouveau_user_feedback( 'member-mutual-friends-loading' );
+				bboss_nouveau_user_feedback( 'member-mutual-friends-loading' );
 				echo '</div>';
 			} else {
-				bp_get_template_part( 'members/members-loop' );
+				bboss_get_template_part( 'members/members-loop' );
 			}
 			?>
 		</div><!-- .members.mutual-friends -->
 		<?php
-		bp_nouveau_member_hook( 'after', 'friends_content' );
+		bboss_nouveau_member_hook( 'after', 'friends_content' );
 		break;
 
 	// Any other
 	default:
-		bp_get_template_part( 'members/single/plugins' );
+		bboss_get_template_part( 'members/single/plugins' );
 		break;
 endswitch;

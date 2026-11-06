@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.9.3
  */
-class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
+class BBoss_Members_Mentions_Notification extends BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Instance of this class.
@@ -30,7 +30,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 *
 	 * @since BuddyBoss 1.9.3
 	 *
-	 * @return null|BP_Members_Mentions_Notification|Controller|object
+	 * @return null|BBoss_Members_Mentions_Notification|Controller|object
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -59,8 +59,8 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function load() {
 		if (
-			bp_is_active( 'activity' ) ||
-			bp_is_active( 'forums' )
+			bboss_is_active( 'activity' ) ||
+			bboss_is_active( 'forums' )
 		) {
 			$this->register_notification_group(
 				'mentions',
@@ -84,7 +84,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			sprintf(
 				/* translators: %s: users mention name. */
 				__( 'A member mentions you using "@%s"', 'buddyboss' ),
-				bb_members_get_user_mentionname( get_current_user_id() )
+				bboss_members_get_user_mentionname( get_current_user_id() )
 			),
 			esc_html__( 'A member is mentioned by another member', 'buddyboss' ),
 			'mentions'
@@ -157,7 +157,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
 
-		$notification = bp_notifications_get_notification( $notification_id );
+		$notification = bboss_notifications_get_notification( $notification_id );
 
 		if (
 			! empty( $notification ) &&
@@ -166,13 +166,13 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 		) {
 			$comment                = get_comment( $notification->item_id );
 			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
-			$notification_link      = bp_get_notifications_permalink();
+			$notification_link      = bboss_get_notifications_permalink();
 			$commenter_name         = '';
 
 			if ( ! empty( $comment ) ) {
 				$comment_author    = get_user_by( 'email', $comment->comment_author_email );
 				$notification_link = get_comment_link( $comment );
-				$commenter_name    = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
+				$commenter_name    = ! empty( $comment_author ) ? bboss_core_get_user_displayname( $comment_author->ID ) : $comment->comment_author;
 			}
 
 			$notification_link = add_query_arg( 'cid', (int) $notification_id, $notification_link );
@@ -220,7 +220,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $commenter_name,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,
@@ -248,9 +248,9 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 	 * @return array|string
 	 */
 	public function bb_render_mention_notification( $content, $item_id, $secondary_item_id, $total_items, $format, $notification_id, $screen ) {
-		$notification           = bp_notifications_get_notification( $notification_id );
+		$notification           = bboss_notifications_get_notification( $notification_id );
 		$user_id                = $secondary_item_id;
-		$user_fullname          = bp_core_get_user_displayname( $user_id );
+		$user_fullname          = bboss_core_get_user_displayname( $user_id );
 		$notification_type_html = '';
 
 		if (
@@ -259,27 +259,27 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 			in_array( $notification->component_name, array( 'activity', 'forums', 'members' ), true )
 		) {
 
-			$notification_type = bp_notifications_get_meta( $notification_id, 'type', true );
-			$notification_link = trailingslashit( bp_core_get_user_domain( $user_id ) );
+			$notification_type = bboss_notifications_get_meta( $notification_id, 'type', true );
+			$notification_link = trailingslashit( bboss_core_get_user_domain( $user_id ) );
 
 			if ( $notification_type ) {
 				if ( 'post_comment' === $notification_type ) {
 					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
 
-					if ( bp_is_active( 'activity' ) ) {
-						$notification_link = bp_activity_get_permalink( $item_id );
+					if ( bboss_is_active( 'activity' ) ) {
+						$notification_link = bboss_activity_get_permalink( $item_id );
 						$notification_link = apply_filters( 'bp_activity_new_at_mention_permalink', $notification_link, $item_id, $secondary_item_id, $total_items );
 					}
 				} elseif ( 'activity_comment' === $notification_type || 'activity_post' === $notification_type ) {
 					$notification_type_html = esc_html__( 'post', 'buddyboss' );
-					if ( bp_is_active( 'activity' ) ) {
-						$notification_link = bp_activity_get_permalink( $item_id );
+					if ( bboss_is_active( 'activity' ) ) {
+						$notification_link = bboss_activity_get_permalink( $item_id );
 					}
 				} elseif ( 'forum_reply' === $notification_type || 'forum_topic' === $notification_type ) {
 					$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
 
-					if ( bp_is_active( 'forums' ) ) {
-						$notification_link = bbp_get_reply_url( $item_id );
+					if ( bboss_is_active( 'forums' ) ) {
+						$notification_link = bboss_bbp_get_reply_url( $item_id );
 					}
 				}
 			}
@@ -330,7 +330,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 					'link'  => $notification_link,
 					'text'  => $text,
 					'title' => $user_fullname,
-					'image' => bb_notification_avatar_url( $notification ),
+					'image' => bboss_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$notification_link,

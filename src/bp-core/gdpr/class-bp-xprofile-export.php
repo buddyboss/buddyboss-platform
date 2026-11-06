@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Xprofile_Export class
+ * Export API: BBoss_Xprofile_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,11 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Xprofile_Export
+ * Class BBoss_Xprofile_Export
  *
  * @since BuddyBoss 1.0.0
  */
-final class BP_Xprofile_Export extends BP_Export {
+final class BBoss_Xprofile_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -25,7 +25,7 @@ final class BP_Xprofile_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Xprofile_Export();
+			$instance = new BBoss_Xprofile_Export();
 			$instance->setup( 'bp_xprofile', __( 'User Profile Information', 'buddyboss' ) );
 		}
 
@@ -54,8 +54,8 @@ final class BP_Xprofile_Export extends BP_Export {
 		/**
 		 * Cover Photo & Avatar
 		 */
-		if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-			$avatar = bp_core_fetch_avatar(
+		if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+			$avatar = bboss_core_fetch_avatar(
 				array(
 					'item_id' => $user->ID,
 					'object'  => 'user',
@@ -65,8 +65,8 @@ final class BP_Xprofile_Export extends BP_Export {
 			);
 		}
 
-		if ( function_exists( 'bp_attachments_get_attachment' ) ) {
-			$cover_photo = bp_attachments_get_attachment(
+		if ( function_exists( 'bboss_attachments_get_attachment' ) ) {
+			$cover_photo = bboss_attachments_get_attachment(
 				'url',
 				array(
 					'item_id'    => $user->ID,
@@ -168,13 +168,13 @@ final class BP_Xprofile_Export extends BP_Export {
 		/**
 		 * Make use of buddypress default data remover.
 		 */
-		xprofile_remove_data( $user->ID );
+		bboss_xprofile_remove_data( $user->ID );
 
 		// delete avatar
-		bp_core_delete_avatar_on_user_delete( $user->ID );
+		bboss_core_delete_avatar_on_user_delete( $user->ID );
 
 		// delete cover photo
-		bp_attachments_delete_file(
+		bboss_attachments_delete_file(
 			array(
 				'item_id' => $user->ID,
 				'object'  => 'members',
@@ -204,7 +204,7 @@ final class BP_Xprofile_Export extends BP_Export {
 
 		$items = array();
 
-		$xprofile_groups = bp_xprofile_get_groups();
+		$xprofile_groups = bboss_xprofile_get_groups();
 
 		$field_table = $bp->profile->global_tables['table_name_fields'];
 
@@ -219,7 +219,7 @@ final class BP_Xprofile_Export extends BP_Export {
 
 			foreach ( $fields as $key => $field ) {
 				$field          = (array) $field;
-				$field['value'] = xprofile_get_field_data( $field['id'], $user->ID, 'comma' );
+				$field['value'] = bboss_xprofile_get_field_data( $field['id'], $user->ID, 'comma' );
 				$fields[ $key ] = $field;
 			}
 			$items[ $xgroup->name ] = $fields;

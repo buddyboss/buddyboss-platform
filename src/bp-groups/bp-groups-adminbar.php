@@ -21,17 +21,17 @@ defined( 'ABSPATH' ) || exit;
  * @return false|null False if not on a group page, or if user does not have
  *                    access to group admin options.
  */
-function bp_groups_group_admin_menu() {
+function bboss_groups_group_admin_menu() {
 	global $wp_admin_bar;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Only show if viewing a group.
-	if ( ! bp_is_group() || bp_is_group_create() ) {
+	if ( ! bboss_is_group() || bboss_is_group_create() ) {
 		return false;
 	}
 
 	// Only show this menu to group admins and super admins.
-	if ( ! bp_current_user_can( 'bp_moderate' ) && ! bp_group_is_admin() ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) && ! bboss_group_is_admin() ) {
 		return false;
 	}
 
@@ -43,7 +43,7 @@ function bp_groups_group_admin_menu() {
 		array(
 			'id'    => $bp->group_admin_menu_id,
 			'title' => __( 'Edit Group', 'buddyboss' ),
-			'href'  => bp_get_group_permalink( $bp->groups->current_group ) . 'admin/edit-details/',
+			'href'  => bboss_get_group_permalink( $bp->groups->current_group ) . 'admin/edit-details/',
 		)
 	);
 
@@ -73,14 +73,14 @@ function bp_groups_group_admin_menu() {
 				/* translators: %s: group manage tab name. */
 				$title = sprintf( __( '%s Group', 'buddyboss' ), $menu->name );
 
-				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
-					if ( bbp_is_group_forums_active() ) {
+				if ( bboss_is_active( 'forums' ) && function_exists( 'bboss_bbp_is_group_forums_active' ) ) {
+					if ( bboss_bbp_is_group_forums_active() ) {
 						$wp_admin_bar->add_menu(
 							array(
 								'parent' => $bp->group_admin_menu_id,
 								'id'     => get_option( '_bbp_forum_slug', 'forum' ),
 								'title'  => __( 'Edit Forum Settings', 'buddyboss' ),
-								'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) ),
+								'href'   => bboss_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) ),
 							)
 						);
 					}
@@ -92,7 +92,7 @@ function bp_groups_group_admin_menu() {
 					'parent' => $bp->group_admin_menu_id,
 					'id'     => $menu->slug,
 					'title'  => $title,
-					'href'   => bp_get_groups_action_link( 'admin/' . $menu->slug ),
+					'href'   => bboss_get_groups_action_link( 'admin/' . $menu->slug ),
 				)
 			);
 		}
@@ -105,8 +105,8 @@ add_action( 'admin_bar_menu', 'bp_groups_group_admin_menu', 99 );
  *
  * @since BuddyPress 1.6.0
  */
-function bp_groups_remove_edit_page_menu() {
-	if ( bp_is_group() ) {
+function bboss_groups_remove_edit_page_menu() {
+	if ( bboss_is_group() ) {
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_edit_menu', 80 );
 	}
 }

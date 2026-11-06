@@ -16,7 +16,7 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'BP_Video' ) || ! function_exists( 'bb_video_can_delete_stored_thumbnail' ) || empty( buddypress()->video->table_name ) ) {
+		if ( ! class_exists( 'BP_Video' ) || ! function_exists( 'bboss_video_can_delete_stored_thumbnail' ) || empty( bboss()->video->table_name ) ) {
 			$this->markTestSkipped( 'The video component is not loaded.' );
 		}
 	}
@@ -101,10 +101,10 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 		);
 		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $foreign2 );
 
-		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $foreign ) );
-		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $foreign2 ) );
-		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $page_id ) );
-		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $video->attachment_id ) );
+		$this->assertFalse( bboss_video_can_delete_stored_thumbnail( $video, $foreign ) );
+		$this->assertFalse( bboss_video_can_delete_stored_thumbnail( $video, $foreign2 ) );
+		$this->assertFalse( bboss_video_can_delete_stored_thumbnail( $video, $page_id ) );
+		$this->assertFalse( bboss_video_can_delete_stored_thumbnail( $video, $video->attachment_id ) );
 
 		BP_Video::delete( array( 'id' => $video->id ) );
 
@@ -149,8 +149,8 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 		);
 		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $poster );
 
-		$this->assertTrue( bb_video_can_delete_stored_thumbnail( $video, $custom ) );
-		$this->assertTrue( bb_video_can_delete_stored_thumbnail( $video, $poster ) );
+		$this->assertTrue( bboss_video_can_delete_stored_thumbnail( $video, $custom ) );
+		$this->assertTrue( bboss_video_can_delete_stored_thumbnail( $video, $poster ) );
 
 		BP_Video::delete( array( 'id' => $video->id ) );
 
@@ -179,11 +179,11 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 		);
 		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $unflagged );
 
-		$this->assertTrue( bb_video_can_delete_stored_thumbnail( $video, $custom ) );
-		$this->assertTrue( bb_video_is_valid_thumbnail_for_video( $video, $custom, false ) );
+		$this->assertTrue( bboss_video_can_delete_stored_thumbnail( $video, $custom ) );
+		$this->assertTrue( bboss_video_is_valid_thumbnail_for_video( $video, $custom, false ) );
 
 		// Not uploaded through the thumbnail uploader.
-		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $unflagged ) );
+		$this->assertFalse( bboss_video_can_delete_stored_thumbnail( $video, $unflagged ) );
 
 		BP_Video::delete( array( 'id' => $video->id ) );
 
@@ -207,10 +207,10 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 
 		self::set_current_user( $owner );
 
-		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $foreign ) );
-		$this->assertFalse( bb_video_is_valid_thumbnail_for_video( $video, $foreign, false ) );
+		$this->assertFalse( bboss_video_can_delete_stored_thumbnail( $video, $foreign ) );
+		$this->assertFalse( bboss_video_is_valid_thumbnail_for_video( $video, $foreign, false ) );
 
 		// Selecting it for display is unchanged.
-		$this->assertTrue( bb_video_is_valid_thumbnail_for_video( $video, $foreign ) );
+		$this->assertTrue( bboss_video_is_valid_thumbnail_for_video( $video, $foreign ) );
 	}
 }

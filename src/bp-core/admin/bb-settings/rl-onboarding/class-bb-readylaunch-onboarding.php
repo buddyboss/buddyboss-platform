@@ -19,13 +19,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.10.0
  */
-class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
+class BBoss_ReadyLaunch_Onboarding extends BBoss_Setup_Wizard_Manager {
 
 	/**
 	 * The single instance of the class.
 	 *
 	 * @since BuddyBoss 2.10.0
-	 * @var   BB_ReadyLaunch_Onboarding|null
+	 * @var   BBoss_ReadyLaunch_Onboarding|null
 	 */
 	private static $instance = null;
 
@@ -38,11 +38,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	private $config_built = false;
 
 	/**
-	 * Ensures only one instance of BB_ReadyLaunch_Onboarding is loaded or can be loaded.
+	 * Ensures only one instance of BBoss_ReadyLaunch_Onboarding is loaded or can be loaded.
 	 *
 	 * @since  BuddyBoss 2.10.0
 	 * @static
-	 * @return BB_ReadyLaunch_Onboarding Main instance.
+	 * @return BBoss_ReadyLaunch_Onboarding Main instance.
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -335,10 +335,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				),
 			),
 			'react_assets'          => array(
-				'logo'                  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/bb-logo.png',
-				'assetsBaseUrl'         => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/',
-				'buddybossThemePreview' => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/buddyboss-theme-preview.svg',
-				'currentThemePreview'   => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/current-theme-preview.svg',
+				'logo'                  => bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/bb-logo.png',
+				'assetsBaseUrl'         => bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/',
+				'buddybossThemePreview' => bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/buddyboss-theme-preview.svg',
+				'currentThemePreview'   => bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/current-theme-preview.svg',
 			),
 			'react_dependencies'    => array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ),
 			'custom_hooks'          => array(
@@ -452,7 +452,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		$this->wizard_name    = __( 'ReadyLaunch Onboarding', 'buddyboss' );
 		$this->wizard_version = '1.0.0';
 		$this->assets_dir     = __DIR__ . '/assets/';
-		$this->assets_url     = buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/';
+		$this->assets_url     = bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/';
 
 		// Initialise steps from configuration.
 		$this->steps = $this->get_config( 'steps', array() );
@@ -521,13 +521,13 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			'version'      => $this->wizard_version,
 		);
 
-		$min = bp_core_get_minified_asset_suffix();
+		$min = bboss_core_get_minified_asset_suffix();
 		$rtl = is_rtl() ? '-rtl' : '';
 
 		// Enqueue the React script.
 		wp_enqueue_script(
 			$this->get_config( 'react_script_handle' ),
-			buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
+			bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
 			$asset_data['dependencies'],
 			$asset_data['version'],
 			true
@@ -536,7 +536,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		// Enqueue the CSS.
 		wp_enqueue_style(
 			$this->get_config( 'react_style_handle' ),
-			buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+			bboss()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
 			array(),
 			$asset_data['version']
 		);
@@ -544,7 +544,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		// Enqueue the BB Icons CSS.
 		wp_enqueue_style(
 			'bb-icons-rl-css',
-			buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+			bboss()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
 			array(),
 			$asset_data['version']
 		);
@@ -579,8 +579,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			),
 			'readylaunch'  => array(
 				'current_theme'             => wp_get_theme()->get( 'Name' ),
-				'theme_settings'            => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
-				'themes'                    => esc_url( bp_get_admin_url( 'themes.php' ) ),
+				'theme_settings'            => esc_url( bboss_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
+				'themes'                    => esc_url( bboss_get_admin_url( 'themes.php' ) ),
 				'is_buddyboss_theme_active' => get_template() === 'buddyboss-theme',
 				'buddyboss_theme_installed' => wp_get_theme( 'buddyboss-theme' )->exists(),
 				'site_url'                  => home_url(),
@@ -607,7 +607,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	protected function get_wizard_assets() {
 		return array_merge(
 			array(
-				'logo'      => buddypress()->plugin_url . 'bp-core/images/bb-icon.svg',
+				'logo'      => bboss()->plugin_url . 'bp-core/images/bb-icon.svg',
 				'assetsUrl' => $this->assets_url,
 			),
 			$this->get_config( 'react_assets', array() )
@@ -643,8 +643,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		return array(
 			'wizardData' => $wizard_data,
 			'assets'     => array(
-				'js'  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
-				'css' => buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+				'js'  => bboss()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
+				'css' => bboss()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
 				'ver' => isset( $asset_data['version'] ) ? $asset_data['version'] : $this->wizard_version,
 			),
 		);
@@ -791,16 +791,16 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					case 'color':
 						// Delegate to shared Appearance sanitizer (appearance/admin/callbacks.php).
 						$default_color           = $field_config['default'] ?? '#e57e3a';
-						$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_color' )
-							? bb_appearance_sanitize_color( $field_value, $default_color )
+						$sanitized[ $field_key ] = function_exists( 'bboss_appearance_sanitize_color' )
+							? bboss_appearance_sanitize_color( $field_value, $default_color )
 							: ( sanitize_hex_color( $field_value ) ? sanitize_hex_color( $field_value ) : $default_color );
 						break;
 
 					case 'media':
 						// Delegate object/integer handling to shared Appearance sanitizer;
 						// retain onboarding-specific `<field>_url` companion handling inline.
-						if ( function_exists( 'bb_appearance_sanitize_media' ) ) {
-							$sanitized[ $field_key ] = bb_appearance_sanitize_media( $field_value );
+						if ( function_exists( 'bboss_appearance_sanitize_media' ) ) {
+							$sanitized[ $field_key ] = bboss_appearance_sanitize_media( $field_value );
 							if ( is_numeric( $field_value ) && isset( $step_data[ $field_key . '_url' ] ) ) {
 								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
 							}
@@ -853,16 +853,16 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							// Delegate to shared Appearance sanitizers (appearance/admin/callbacks.php).
 							switch ( $field_key ) {
 								case 'bb_rl_side_menu':
-									$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_side_menu' )
-										? bb_appearance_sanitize_side_menu( $sanitized_items )
+									$sanitized[ $field_key ] = function_exists( 'bboss_appearance_sanitize_side_menu' )
+										? bboss_appearance_sanitize_side_menu( $sanitized_items )
 										: $sanitized_items;
 									break;
 
 								case 'bb_rl_activity_sidebars':
 								case 'bb_rl_member_profile_sidebars':
 								case 'bb_rl_groups_sidebars':
-									$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_sidebar_map' )
-										? bb_appearance_sanitize_sidebar_map( $sanitized_items )
+									$sanitized[ $field_key ] = function_exists( 'bboss_appearance_sanitize_sidebar_map' )
+										? bboss_appearance_sanitize_sidebar_map( $sanitized_items )
 										: $sanitized_items;
 									break;
 
@@ -888,8 +888,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$pages_settings = $settings['pages'];
 
 			if ( isset( $pages_settings['bb_rl_enabled_pages'] ) ) {
-				$sanitized['bb_rl_enabled_pages'] = function_exists( 'bb_appearance_sanitize_enabled_pages' )
-					? bb_appearance_sanitize_enabled_pages( $pages_settings['bb_rl_enabled_pages'] )
+				$sanitized['bb_rl_enabled_pages'] = function_exists( 'bboss_appearance_sanitize_enabled_pages' )
+					? bboss_appearance_sanitize_enabled_pages( $pages_settings['bb_rl_enabled_pages'] )
 					: array(
 						'registration' => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'registration', $pages_settings['bb_rl_enabled_pages'], true ),
 						'courses'      => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'courses', $pages_settings['bb_rl_enabled_pages'], true ),
@@ -986,8 +986,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		// guard is defensive — if a customer somehow rolls Platform back below
 		// the version that ships the Appearance feature while the onboarding
 		// bundle is still cached in their browser, we'd rather no-op than fatal.
-		if ( function_exists( 'bb_appearance_apply_configuration' ) ) {
-			bb_appearance_apply_configuration( $final_settings );
+		if ( function_exists( 'bboss_appearance_apply_configuration' ) ) {
+			bboss_appearance_apply_configuration( $final_settings );
 		}
 
 		// Apply remaining step settings dynamically — onboarding-specific path
@@ -1062,7 +1062,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		}
 
 		// Save as BuddyPress option with bb_rl_ prefix.
-		bp_update_option( 'bb_rl_' . $option_name, $option_value );
+		bboss_update_option( 'bb_rl_' . $option_name, $option_value );
 	}
 
 	/**
@@ -1127,7 +1127,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			),
 		);
 
-		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
+		if ( bboss_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
 			$retval['courses'] = array(
 				'label'   => __( 'Courses', 'buddyboss' ),
 				'icon'    => 'bb-icons-rl-file-text',
@@ -1179,7 +1179,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		$current_order = 3;
 
-		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
+		if ( bboss_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
 			$items[] = array(
 				'id'      => 'courses',
 				'label'   => __( 'Courses', 'buddyboss' ),
@@ -1277,8 +1277,8 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$this->save_step_progress( 7, $step_data );
 
 			// Send ReadyLaunch specific analytics through BB_Telemetry if available.
-			if ( class_exists( 'BB_Telemetry' ) ) {
-				$telemetry_instance = BB_Telemetry::instance();
+			if ( class_exists( 'BBoss_Telemetry' ) ) {
+				$telemetry_instance = BBoss_Telemetry::instance();
 				if ( $telemetry_instance ) {
 					// Add ReadyLaunch completion data to telemetry.
 					add_filter(

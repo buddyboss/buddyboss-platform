@@ -9,7 +9,7 @@
  * layer but stripped by the LiteSpeed cache when a response is replayed from
  * cache — so direct cross-origin fetches from the admin React app are blocked by
  * the browser. This is the same constraint the Knowledge Base proxy solved (see
- * BB_REST_Help_Content_Endpoint); the Integrations marketplace reuses the same
+ * BBoss_REST_Help_Content_Endpoint); the Integrations marketplace reuses the same
  * proven shape with its own cache namespace, filters, and error codes so the two
  * features stay independently flushable.
  *
@@ -37,13 +37,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_REST_Integrations_Endpoint
+ * Class BBoss_REST_Integrations_Endpoint
  *
  * Read-only proxy for buddyboss.com Integrations directory endpoints.
  *
  * @since BuddyBoss 3.1.0
  */
-class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Integrations_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Default upstream base URL.
@@ -168,8 +168,8 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * @since BuddyBoss 3.1.0
 	 */
 	public function __construct() {
-		if ( function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' ) ) {
-			$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		if ( function_exists( 'bboss_rest_namespace' ) && function_exists( 'bboss_rest_version' ) ) {
+			$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		} else {
 			$this->namespace = 'buddyboss/v1';
 		}
@@ -492,7 +492,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 			// Cap the body so a pathological/compromised upstream can't balloon the
 			// cached transient (re-checked on the returned body below).
 			'limit_response_size' => self::MAX_RESPONSE_BYTES,
-			'user-agent'          => 'BuddyBoss-Platform-Integrations-Proxy/' . ( defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
+			'user-agent'          => 'BuddyBoss-Platform-Integrations-Proxy/' . ( defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
 			'headers'             => array(
 				'Accept' => 'application/json',
 			),

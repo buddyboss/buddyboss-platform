@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-function bp_notifications_screen_unread() {
+function bboss_notifications_screen_unread() {
 
 	/**
 	 * Fires right before the loading of the notifications unread screen template file.
@@ -30,7 +30,7 @@ function bp_notifications_screen_unread() {
 	 *
 	 * @param string $template Path to the notifications unread template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_notifications_template_unread', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bp_notifications_template_unread', 'members/single/home' ) );
 }
 
 /**
@@ -40,10 +40,10 @@ function bp_notifications_screen_unread() {
  *
  * @return bool
  */
-function bp_notifications_action_mark_read() {
+function bboss_notifications_action_mark_read() {
 
 	// Bail if not the unread screen.
-	if ( ! bp_is_notifications_component() || ! bp_is_current_action( 'unread' ) ) {
+	if ( ! bboss_is_notifications_component() || ! bboss_is_current_action( 'unread' ) ) {
 		return false;
 	}
 
@@ -58,13 +58,13 @@ function bp_notifications_action_mark_read() {
 	}
 
 	// Check the nonce and mark the notification.
-	if ( bp_verify_nonce_request( 'bp_notification_mark_read_' . $id ) && bp_notifications_mark_notification( $id, false ) ) {
-		bp_core_add_message( __( 'Notification successfully marked read.', 'buddyboss' ) );
+	if ( bboss_verify_nonce_request( 'bp_notification_mark_read_' . $id ) && bboss_notifications_mark_notification( $id, false ) ) {
+		bboss_core_add_message( __( 'Notification successfully marked read.', 'buddyboss' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss' ), 'error' );
 	}
 
 	// Redirect.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_notifications_slug() . '/unread/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/unread/' );
 }
 add_action( 'bp_actions', 'bp_notifications_action_mark_read' );

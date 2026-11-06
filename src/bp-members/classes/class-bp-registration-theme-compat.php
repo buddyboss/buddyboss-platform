@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  */
-class BP_Registration_Theme_Compat {
+class BBoss_Registration_Theme_Compat {
 
 	/**
 	 * Setup the groups component theme compatibility.
@@ -38,12 +38,12 @@ class BP_Registration_Theme_Compat {
 	public function is_registration() {
 
 		// Bail if not looking at the registration or activation page.
-		if ( ! bp_is_register_page() && ! bp_is_activation_page() ) {
+		if ( ! bboss_is_register_page() && ! bboss_is_activation_page() ) {
 			return;
 		}
 
 		// Not a directory.
-		bp_update_is_directory( false, 'register' );
+		bboss_update_is_directory( false, 'register' );
 
 		// Setup actions.
 		add_filter( 'bp_get_buddypress_template', array( $this, 'template_hierarchy' ) );
@@ -61,11 +61,11 @@ class BP_Registration_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.8.0
 	 *
-	 * @param string $templates The templates from bp_get_theme_compat_templates().
+	 * @param string $templates The templates from bboss_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
 	 */
 	public function template_hierarchy( $templates ) {
-		$component = sanitize_file_name( bp_current_component() );
+		$component = sanitize_file_name( bboss_current_component() );
 
 		/**
 		 * Filters the template hierarchy for theme compat and registration/activation pages.
@@ -98,25 +98,25 @@ class BP_Registration_Theme_Compat {
 	 */
 	public function dummy_post() {
 		// Registration page.
-		if ( bp_is_register_page() ) {
-			$actual_page_id = bp_core_get_directory_page_id( 'register' );
+		if ( bboss_is_register_page() ) {
+			$actual_page_id = bboss_core_get_directory_page_id( 'register' );
 			$title = __( 'Create an Account', 'buddyboss' );
 
-			if ( 'completed-confirmation' == bp_get_current_signup_step() ) {
+			if ( 'completed-confirmation' == bboss_get_current_signup_step() ) {
 				$title = __( 'We\'re almost there!', 'buddyboss' );
 			}
 
 			// Activation page.
 		} else {
-			$actual_page_id = bp_core_get_directory_page_id( 'activate' );
+			$actual_page_id = bboss_core_get_directory_page_id( 'activate' );
 			$title = __( 'Activate Your Account', 'buddyboss' );
 
-			if ( bp_account_was_activated() ) {
+			if ( bboss_account_was_activated() ) {
 				$title = __( 'Account Activated', 'buddyboss' );
 			}
 		}
 
-		bp_theme_compat_reset_post(
+		bboss_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $actual_page_id ) ? $actual_page_id : 0,
 				'post_title'     => $title,
@@ -137,10 +137,10 @@ class BP_Registration_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function dummy_content() {
-		if ( bp_is_register_page() ) {
-			return bp_buffer_template_part( 'members/register', null, false );
+		if ( bboss_is_register_page() ) {
+			return bboss_buffer_template_part( 'members/register', null, false );
 		} else {
-			return bp_buffer_template_part( 'members/activate', null, false );
+			return bboss_buffer_template_part( 'members/activate', null, false );
 		}
 	}
 }

@@ -5,7 +5,7 @@
  * The template for AJAX search results for posts.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,7 +13,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
+$result = bboss_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_post">
 	<a href="<?php echo esc_url( get_permalink() ); ?>">

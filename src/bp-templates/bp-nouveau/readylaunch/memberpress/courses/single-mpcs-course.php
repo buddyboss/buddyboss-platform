@@ -38,7 +38,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 		<div class="bb-rl-course-banner flex">
 			<div class="bb-rl-course-overview">
 				<?php
-				$course_category_names = bb_rl_mpcs_get_course_category_names( $post->ID );
+				$course_category_names = bboss_rl_mpcs_get_course_category_names( $post->ID );
 				if ( ! empty( $course_category_names ) ) {
 					?>
 					<div class="bb-rl-course-category">
@@ -77,7 +77,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					</div>
 					<div class="bb-rl-course-meta-value">
 						<?php
-						$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
+						$course_update_date = BBoss_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
 						echo esc_html( $course_update_date );
 						?>
 					</div>
@@ -154,7 +154,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
 						</a>
 					<?php } else { ?>
-						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+						<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
 					<?php } ?>
 				</div>
 			</div>
@@ -167,7 +167,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div id="mpcs-main" class="bb-rl-course-content-module">
 					<?php
 					setup_postdata( $post->ID );
-					echo wp_kses_post( BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
+					echo wp_kses_post( BBoss_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_render_course_tab_menu() );
 					the_content();
 					?>
 				</div>

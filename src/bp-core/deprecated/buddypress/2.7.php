@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string The default database character-set, if set.
  */
-function bp_core_set_charset() {
+function bboss_core_set_charset() {
 	global $wpdb;
 
 	_deprecated_function( __FUNCTION__, '2.7', 'wpdb::get_charset_collate()' );

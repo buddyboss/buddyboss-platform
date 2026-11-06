@@ -24,14 +24,14 @@ defined( 'ABSPATH' ) || exit;
  * @param int|string|array|bool $message_ids Accepts a single message_id, or a
  *                                           comma-separated list or array of message ids.
  */
-function bp_messages_update_meta_cache( $message_ids = false ) {
-	bp_update_meta_cache(
+function bboss_messages_update_meta_cache( $message_ids = false ) {
+	bboss_update_meta_cache(
 		array(
 			'object_ids'       => $message_ids,
-			'object_type'      => buddypress()->messages->id,
+			'object_type'      => bboss()->messages->id,
 			'cache_group'      => 'message_meta',
 			'object_column'    => 'message_id',
-			'meta_table'       => buddypress()->messages->table_name_meta,
+			'meta_table'       => bboss()->messages->table_name_meta,
 			'cache_key_prefix' => 'bp_messages_meta',
 		)
 	);
@@ -51,12 +51,12 @@ add_action( 'messages_screen_inbox', 'bp_core_clear_cache' );
  *
  * @since BuddyPress 2.0.0
  *
- * @param BP_Messages_Message $message Message being saved.
+ * @param BBoss_Messages_Message $message Message being saved.
  */
-function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message ) {
+function bboss_messages_clear_cache_on_message_save( BBoss_Messages_Message $message ) {
 	// Delete thread cache.
 	wp_cache_delete( "{$message->thread_id}99999999", 'bp_messages_threads' );
-	bp_messages_delete_thread_paginated_messages_cache( $message->thread_id );
+	bboss_messages_delete_thread_paginated_messages_cache( $message->thread_id );
 
 	// Delete unread count for each recipient.
 	foreach ( (array) $message->recipients as $recipient ) {
@@ -79,11 +79,11 @@ add_action( 'messages_message_sent', 'bp_messages_clear_cache_on_message_save', 
  *                              Otherwise, an array of thread IDs.
  * @param int       $user_id    ID of the user that the threads were deleted for.
  */
-function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
+function bboss_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 	// Delete thread and thread recipient cache.
 	foreach ( (array) $thread_ids as $thread_id ) {
 		wp_cache_delete( "{$thread_id}99999999", 'bp_messages_threads' );
-		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+		bboss_messages_delete_thread_paginated_messages_cache( $thread_id );
 		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
 		wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
 	}
@@ -100,9 +100,9 @@ add_action( 'messages_delete_thread', 'bp_messages_clear_cache_on_message_delete
  *
  * @since BuddyPress 2.0.0
  *
- * @param BP_Messages_Notice $notice Notice that was saved.
+ * @param BBoss_Messages_Notice $notice Notice that was saved.
  */
-function bp_notices_clear_cache( $notice ) {
+function bboss_notices_clear_cache( $notice ) {
 	wp_cache_delete( 'active_notice', 'bp_messages' );
 }
 add_action( 'messages_notice_after_save', 'bp_notices_clear_cache' );
@@ -113,22 +113,22 @@ add_action( 'messages_notice_before_delete', 'bp_notices_clear_cache' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
-	BP_Messages_Thread::$noCache = true;
+function bboss_messages_delete_thread_paginated_messages_cache( $thread_id ) {
+	BBoss_Messages_Thread::$noCache = true;
 	$thread_id                   = $thread_id;
 	$before                      = null;
 	$perpage                     = apply_filters( 'bp_messages_default_per_page', 10 );
 
 	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
 		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
-		$messages = BP_Messages_Thread::get_messages( $thread_id, $before, $perpage );
+		$messages = BBoss_Messages_Thread::get_messages( $thread_id, $before, $perpage );
 
 		if ( end( $messages ) ) {
 			$before = end( $messages )->date_sent;
 		}
 	}
 
-	BP_Messages_Thread::$noCache = false;
+	BBoss_Messages_Thread::$noCache = false;
 }
 
 /**
@@ -136,8 +136,8 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
  *
  * @since BuddyBoss 1.9.0
  */
-function bb_core_clear_message_cache() {
-	bp_core_reset_incrementor( 'bp_messages' );
+function bboss_core_clear_message_cache() {
+	bboss_core_reset_incrementor( 'bp_messages' );
 }
 
 add_action( 'messages_message_after_save', 'bb_core_clear_message_cache' );
@@ -157,7 +157,7 @@ add_action( 'messages_thread_mark_as_unread', 'bb_core_clear_message_cache' );
  *
  * @return void
  */
-function bb_clear_cache_while_group_messsage_settings_updated( $old_value, $value ) {
+function bboss_clear_cache_while_group_messsage_settings_updated( $old_value, $value ) {
 
 	if ( $old_value !== $value ) {
 		global $wp_object_cache;
@@ -165,7 +165,7 @@ function bb_clear_cache_while_group_messsage_settings_updated( $old_value, $valu
 			unset( $wp_object_cache->cache['bp_messages_unread_count'] );
 		}
 
-		bp_core_reset_incrementor( 'bp_messages' );
+		bboss_core_reset_incrementor( 'bp_messages' );
 	}
 }
 
@@ -181,10 +181,10 @@ add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_gro
  *
  * @return void
  */
-function bp_messages_clear_message_unread_cache_on_thread_archived( $thread_id, $user_id ) {
+function bboss_messages_clear_message_unread_cache_on_thread_archived( $thread_id, $user_id ) {
 	wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 	wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
-	bp_core_reset_incrementor( 'bp_messages' );
+	bboss_core_reset_incrementor( 'bp_messages' );
 }
 add_action( 'bb_messages_thread_archived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
 add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
@@ -196,8 +196,8 @@ add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_c
  *
  * @return void
  */
-function bb_messages_reset_disabled_group_thread_ids_on_change() {
-	bb_messages_reset_disabled_group_thread_ids_cache();
+function bboss_messages_reset_disabled_group_thread_ids_on_change() {
+	bboss_messages_reset_disabled_group_thread_ids_cache();
 }
 
 add_action( 'add_option_bp-disable-group-messages', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
@@ -229,7 +229,7 @@ add_action( 'groups_delete_group', 'bb_messages_reset_disabled_group_thread_ids_
  *
  * @return void
  */
-function bb_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, $message_id, $meta_key, $meta_value ) {
+function bboss_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, $message_id, $meta_key, $meta_value ) {
 	global $wpdb;
 
 	static $message_threads = array();
@@ -245,7 +245,7 @@ function bb_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, 
 		return;
 	}
 
-	$thread_ids = bb_messages_get_cached_disabled_group_thread_ids();
+	$thread_ids = bboss_messages_get_cached_disabled_group_thread_ids();
 
 	// Nothing cached, nothing to reset.
 	if ( false === $thread_ids ) {
@@ -253,7 +253,7 @@ function bb_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, 
 	}
 
 	if ( 'deleted_message_meta' === current_action() ) {
-		bb_messages_reset_disabled_group_thread_ids_cache();
+		bboss_messages_reset_disabled_group_thread_ids_cache();
 
 		return;
 	}
@@ -262,7 +262,7 @@ function bb_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, 
 		$passes = ! empty( $meta_value );
 
 		// The thread ID alone cannot list a thread: members-only group messages also have one.
-		if ( $passes && 'all' !== bp_messages_get_meta( $message_id, 'group_message_users', true ) ) {
+		if ( $passes && 'all' !== bboss_messages_get_meta( $message_id, 'group_message_users', true ) ) {
 			return;
 		}
 	} else {
@@ -276,11 +276,11 @@ function bb_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, 
 
 	$message_id = (int) $message_id;
 	if ( ! isset( $message_threads[ $message_id ] ) ) {
-		$message_threads[ $message_id ] = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT thread_id FROM ' . buddypress()->messages->table_name_messages . ' WHERE id = %d', $message_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$message_threads[ $message_id ] = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT thread_id FROM ' . bboss()->messages->table_name_messages . ' WHERE id = %d', $message_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	if ( in_array( $message_threads[ $message_id ], array_map( 'intval', $thread_ids ), true ) !== $passes ) {
-		bb_messages_reset_disabled_group_thread_ids_cache();
+		bboss_messages_reset_disabled_group_thread_ids_cache();
 	}
 }
 

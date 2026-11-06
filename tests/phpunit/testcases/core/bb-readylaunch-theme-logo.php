@@ -21,17 +21,17 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! function_exists( 'bb_load_readylaunch' ) || ! bb_load_readylaunch() ) {
+		if ( ! function_exists( 'bboss_load_readylaunch' ) || ! bboss_load_readylaunch() ) {
 			$this->markTestSkipped( 'ReadyLaunch class is not loaded.' );
 		}
 
-		$this->rl_dir = buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/';
+		$this->rl_dir = bboss()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/';
 	}
 
 	public function tearDown(): void {
-		bp_delete_option( 'bb_rl_light_logo' );
-		bp_delete_option( 'bb_rl_dark_logo' );
-		bp_delete_option( 'bb_rl_theme_mode' );
+		bboss_delete_option( 'bb_rl_light_logo' );
+		bboss_delete_option( 'bb_rl_dark_logo' );
+		bboss_delete_option( 'bb_rl_theme_mode' );
 
 		parent::tearDown();
 	}
@@ -54,7 +54,7 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 
 	public function test_url_is_resolved_from_attachment() {
 		$id = $this->make_attachment();
-		bp_update_option(
+		bboss_update_option(
 			'bb_rl_light_logo',
 			array(
 				'id'    => $id,
@@ -64,7 +64,7 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 			)
 		);
 
-		$logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
+		$logo = bboss_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 
 		$this->assertSame( wp_get_attachment_url( $id ), $logo['url'] );
 		$this->assertSame( 'Logo', $logo['title'] );
@@ -73,7 +73,7 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 
 	public function test_deleted_attachment_returns_empty() {
 		$id = $this->make_attachment();
-		bp_update_option(
+		bboss_update_option(
 			'bb_rl_dark_logo',
 			array(
 				'id'    => $id,
@@ -84,25 +84,25 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 		);
 		wp_delete_attachment( $id, true );
 
-		$this->assertSame( array(), bb_load_readylaunch()->bb_rl_get_theme_logo( 'dark' ) );
+		$this->assertSame( array(), bboss_load_readylaunch()->bb_rl_get_theme_logo( 'dark' ) );
 
 		// The stored option is left untouched.
-		$stored = bp_get_option( 'bb_rl_dark_logo' );
+		$stored = bboss_get_option( 'bb_rl_dark_logo' );
 		$this->assertSame( 'https://cdn.example.test/gone.png', $stored['url'] );
 	}
 
 	public function test_legacy_integer_id_is_resolved() {
 		$id = $this->make_attachment();
-		bp_update_option( 'bb_rl_light_logo', $id );
+		bboss_update_option( 'bb_rl_light_logo', $id );
 
-		$logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
+		$logo = bboss_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 
 		$this->assertSame( wp_get_attachment_url( $id ), $logo['url'] );
 		$this->assertSame( '', $logo['title'] );
 	}
 
 	public function test_url_without_id_is_kept() {
-		bp_update_option(
+		bboss_update_option(
 			'bb_rl_light_logo',
 			array(
 				'url'   => home_url( '/logo.png' ),
@@ -110,20 +110,20 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 			)
 		);
 
-		$logo = bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
+		$logo = bboss_load_readylaunch()->bb_rl_get_theme_logo( 'light' );
 
 		$this->assertSame( home_url( '/logo.png' ), $logo['url'] );
 		$this->assertSame( '', $logo['alt'] );
 	}
 
 	public function test_no_logo_returns_empty() {
-		$this->assertSame( array(), bb_load_readylaunch()->bb_rl_get_theme_logo( 'light' ) );
+		$this->assertSame( array(), bboss_load_readylaunch()->bb_rl_get_theme_logo( 'light' ) );
 	}
 
 	public function test_header_falls_back_to_site_title_for_deleted_logo() {
 		$id = $this->make_attachment();
-		bp_update_option( 'bb_rl_theme_mode', 'choice' );
-		bp_update_option(
+		bboss_update_option( 'bb_rl_theme_mode', 'choice' );
+		bboss_update_option(
 			'bb_rl_light_logo',
 			array(
 				'id'    => $id,
@@ -142,7 +142,7 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 
 	public function test_register_header_falls_back_to_site_title_for_deleted_logo() {
 		$id = $this->make_attachment();
-		bp_update_option(
+		bboss_update_option(
 			'bb_rl_light_logo',
 			array(
 				'id'    => $id,
@@ -161,7 +161,7 @@ class BB_Tests_Readylaunch_Theme_Logo extends BP_UnitTestCase {
 
 	public function test_register_header_uses_attachment_url() {
 		$id = $this->make_attachment();
-		bp_update_option(
+		bboss_update_option(
 			'bb_rl_light_logo',
 			array(
 				'id'    => $id,

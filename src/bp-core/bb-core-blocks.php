@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool True if the current installation supports BB Blocks.
  *              False otherwise.
  */
-function bb_support_blocks() {
+function bboss_support_blocks() {
 
 	/**
 	 * Filter here, returning `false`, to completely disable BuddyBoss blocks.
@@ -27,7 +27,7 @@ function bb_support_blocks() {
 	 *
 	 * @param bool $value True if the BP REST API is available. False otherwise.
 	 */
-	return apply_filters( 'bb_support_blocks', bp_rest_api_is_available() );
+	return apply_filters( 'bb_support_blocks', bboss_rest_api_is_available() );
 }
 
 /**
@@ -35,7 +35,7 @@ function bb_support_blocks() {
  *
  * @since BuddyBoss 2.9.00
  */
-function bb_enqueue_block_editor_assets() {
+function bboss_enqueue_block_editor_assets() {
 
 	/**
 	 * Fires when it's time to enqueue BuddyBoss Block assets.
@@ -55,7 +55,7 @@ add_action( 'enqueue_block_editor_assets', 'bb_enqueue_block_editor_assets', 9 )
  *
  * @return array The editor settings, including BB blocks, specific ones.
  */
-function bb_blocks_editor_settings( $editor_settings = array() ) {
+function bboss_blocks_editor_settings( $editor_settings = array() ) {
 
 	/**
 	 * Filter here to include your BB Blocks specific settings.
@@ -81,9 +81,9 @@ add_filter( 'block_editor_settings_all', 'bb_blocks_editor_settings' );
  *
  * @param array $args The registration arguments for the block type.
  *
- * @return BB_Block|bool The BuddyBoss block type object.
+ * @return BBoss_Block|bool The BuddyBoss block type object.
  */
-function bb_register_block( $args = array() ) {
+function bboss_register_block( $args = array() ) {
 	if ( isset( $args['metadata'] ) && is_string( $args['metadata'] ) && file_exists( $args['metadata'] ) ) {
 		$callback = array();
 
@@ -94,7 +94,7 @@ function bb_register_block( $args = array() ) {
 		return register_block_type_from_metadata( $args['metadata'], $callback );
 	}
 
-	return new BB_Block( $args );
+	return new BBoss_Block( $args );
 }
 
 /**
@@ -106,9 +106,9 @@ function bb_register_block( $args = array() ) {
  *
  * @return array The list of widget classnames for the Block.
  */
-function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
-	$components         = bb_core_get_active_components( array(), 'objects' );
-	$components['core'] = buddypress()->core;
+function bboss_blocks_get_widget_block_classnames( $block_name = '' ) {
+	$components         = bboss_core_get_active_components( array(), 'objects' );
+	$components['core'] = bboss()->core;
 	$classnames         = array();
 
 	foreach ( $components as $component ) {
@@ -135,8 +135,8 @@ function bb_blocks_get_widget_block_classnames( $block_name = '' ) {
  *
  * @return string The classname to be used in the block widget's container HTML.
  */
-function bb_widget_block_dynamic_classname( $classname, $block_name ) {
-	$bb_classnames = bb_blocks_get_widget_block_classnames( $block_name );
+function bboss_widget_block_dynamic_classname( $classname, $block_name ) {
+	$bb_classnames = bboss_blocks_get_widget_block_classnames( $block_name );
 
 	if ( $bb_classnames ) {
 		$bb_classnames = array_map( 'sanitize_html_class', $bb_classnames );
@@ -156,8 +156,8 @@ add_filter( 'widget_block_dynamic_classname', 'bb_widget_block_dynamic_classname
  *
  * @return string HTML output.
  */
-function bb_block_render_readylaunch_header_block( $attributes = array() ) {
-	$block_args = bp_parse_args(
+function bboss_block_render_readylaunch_header_block( $attributes = array() ) {
+	$block_args = bboss_parse_args(
 		$attributes,
 		array(
 			'showSearch'        => false,
@@ -173,7 +173,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 		$align_class = 'align' . $attributes['align'];
 	}
 
-	$readylaunch_instance = bb_load_readylaunch();
+	$readylaunch_instance = bboss_load_readylaunch();
 	$bb_rl_theme_mode     = $readylaunch_instance->bb_rl_get_theme_mode();
 	$dark_mode_class      = '';
 	if ( 'choice' === $bb_rl_theme_mode ) {
@@ -185,10 +185,10 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 		$dark_mode_class = 'bb-rl-dark-mode';
 	}
 
-	if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
+	if ( $block_args['showSearch'] && bboss_is_active( 'search' ) ) {
 		wp_enqueue_style( 'bp-select2' );
-		if ( function_exists( 'bb_rl_search_enqueue_scripts' ) ) {
-			bb_rl_search_enqueue_scripts();
+		if ( function_exists( 'bboss_rl_search_enqueue_scripts' ) ) {
+			bboss_rl_search_enqueue_scripts();
 		}
 	}
 
@@ -200,9 +200,9 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	ob_start();
 
 	// Get the ReadyLaunch colours.
-	if ( function_exists( 'bp_get_option' ) ) {
-		$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
-		$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
+	if ( function_exists( 'bboss_get_option' ) ) {
+		$color_light = bboss_get_option( 'bb_rl_color_light', '#4946fe' );
+		$color_dark  = bboss_get_option( 'bb_rl_color_dark', '#9747FF' );
 
 
 		/*
@@ -219,7 +219,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 			esc_attr( $color_light ),
 			esc_attr( $color_dark )
 		);
-		wp_register_style( 'bb-readylaunch-header-block-colors', false, array(), bp_get_version() );
+		wp_register_style( 'bb-readylaunch-header-block-colors', false, array(), bboss_get_version() );
 		wp_enqueue_style( 'bb-readylaunch-header-block-colors' );
 		wp_add_inline_style( 'bb-readylaunch-header-block-colors', $inline_css );
 	}
@@ -228,7 +228,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 		<div class="bb-rl-container bb-rl-header-container">
 			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
-			bp_get_template_part( 'header/site-logo' );
+			bboss_get_template_part( 'header/site-logo' );
 			wp_nav_menu(
 				array(
 					'menu'     => $readylaunch_instance->bb_rl_get_header_menu_location(),
@@ -241,31 +241,31 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 			<div id="bb-rl-header-aside" class="bb-rl-header-aside">
 				<div class="bb-rl-header-aside-inner">
 					<?php
-					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
-						bp_get_template_part( 'common/search/search-model' );
+					if ( $block_args['showSearch'] && bboss_is_active( 'search' ) ) {
+						bboss_get_template_part( 'common/search/search-model' );
 					}
 
 					if ( is_user_logged_in() ) {
-						if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) {
-							bp_get_template_part( 'header/messages-dropdown' );
+						if ( $block_args['showMessages'] && bboss_is_active( 'messages' ) ) {
+							bboss_get_template_part( 'header/messages-dropdown' );
 						}
-						if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) {
-							bp_get_template_part( 'header/notification-dropdown' );
+						if ( $block_args['showNotifications'] && bboss_is_active( 'notifications' ) ) {
+							bboss_get_template_part( 'header/notification-dropdown' );
 						}
 						if ( $block_args['showProfileMenu'] ) {
 							?>
 							<div class="user-wrap user-wrap-container">
 								<?php
 								$current_user = wp_get_current_user();
-								$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
-								$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+								$user_link    = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
+								$display_name = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
 								?>
 
 								<a class="bb-rl-user-link" href="<?php echo esc_url( $user_link ); ?>">
 									<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 								</a>
 								<div class="bb-rl-profile-dropdown">
-									<?php bp_get_template_part( 'header/profile-dropdown' ); ?>
+									<?php bboss_get_template_part( 'header/profile-dropdown' ); ?>
 								</div>
 							</div>
 							<?php
@@ -286,7 +286,7 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 			<?php if ( $block_args['showSearch'] || is_user_logged_in() ) { ?>
 				<div class="bb-readylaunch-mobile-menu__wrap">
 					<?php
-					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
+					if ( $block_args['showSearch'] && bboss_is_active( 'search' ) ) {
 						?>
 						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
 							<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
@@ -315,20 +315,20 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 					if (
 						is_user_logged_in() &&
 						(
-							( $block_args['showMessages'] && bp_is_active( 'messages' ) ) ||
-							( $block_args['showNotifications'] && bp_is_active( 'notifications' ) )
+							( $block_args['showMessages'] && bboss_is_active( 'messages' ) ) ||
+							( $block_args['showNotifications'] && bboss_is_active( 'notifications' ) )
 						)
 					) {
 						?>
 						<div class="bb-readylaunch-mobile-menu_items">
 							<ul>
-								<?php if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) { ?>
+								<?php if ( $block_args['showMessages'] && bboss_is_active( 'messages' ) ) { ?>
 									<li>
 										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 											<i class="bb-icons-rl-chat-teardrop-text"></i>
 											<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
 											<?php
-											$unread_message_count = messages_get_unread_count();
+											$unread_message_count = bboss_messages_get_unread_count();
 											if ( $unread_message_count > 0 ) :
 												?>
 												<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
@@ -338,14 +338,14 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 									<?php
 								}
 
-								if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) {
+								if ( $block_args['showNotifications'] && bboss_is_active( 'notifications' ) ) {
 									?>
 									<li>
 										<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 											<i class="bb-icons-rl-bell-simple"></i>
 											<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
 											<?php
-											$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+											$notifications             = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 											$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 											if ( $unread_notification_count > 0 ) {
 												?>

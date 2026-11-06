@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array The same array with the specific groups scripts.
  */
-function bp_nouveau_xprofile_register_scripts( $scripts = array() ) {
+function bboss_nouveau_xprofile_register_scripts( $scripts = array() ) {
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
 	}
@@ -37,8 +37,8 @@ function bp_nouveau_xprofile_register_scripts( $scripts = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_xprofile_enqueue_scripts() {
-	if ( ! bp_is_user_profile_edit() && ! bp_is_register_page() ) {
+function bboss_nouveau_xprofile_enqueue_scripts() {
+	if ( ! bboss_is_user_profile_edit() && ! bboss_is_register_page() ) {
 		return;
 	}
 	wp_enqueue_script( 'bp-nouveau-xprofile' );

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Folder extends BP_Moderation_Abstract {
+class BBoss_Moderation_Folder extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 	public static $moderation_type = 'document_folder';
 
 	/**
-	 * BP_Moderation_Folder constructor.
+	 * BBoss_Moderation_Folder constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -97,7 +97,7 @@ class BP_Moderation_Folder extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-		$where['moderation_where'] .= '( f.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		$where['moderation_where'] .= '( f.user_id NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) )';
 
 		return $where;
 	}

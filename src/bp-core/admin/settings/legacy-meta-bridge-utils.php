@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-defined( 'BB_LEGACY_BRIDGE_MAX_HTML' ) || define( 'BB_LEGACY_BRIDGE_MAX_HTML', 1024 * 1024 ); // 1 MB.
+defined( 'BBOSS_LEGACY_BRIDGE_MAX_HTML' ) || define( 'BBOSS_LEGACY_BRIDGE_MAX_HTML', 1024 * 1024 ); // 1 MB.
 
 /**
  * Run a callable while wp_die() / die() / exit() inside it throws an
@@ -47,7 +47,7 @@ defined( 'BB_LEGACY_BRIDGE_MAX_HTML' ) || define( 'BB_LEGACY_BRIDGE_MAX_HTML', 1
  * @param callable $callback Callable to run.
  * @return mixed Return value of $callback.
  */
-function bb_legacy_with_wp_die_safety( callable $callback ) {
+function bboss_legacy_with_wp_die_safety( callable $callback ) {
 	$throwing_handler = function ( $message = '' ) {
 		// Sanitize before interpolating into the exception message — wp_die()
 		// may be called with HTML, and the exception trace can be logged.
@@ -92,11 +92,11 @@ function bb_legacy_with_wp_die_safety( callable $callback ) {
  * @param string $html HTML to parse.
  * @return DOMXPath|null XPath instance, or null if parsing failed.
  */
-function bb_legacy_get_xpath( $html ) {
+function bboss_legacy_get_xpath( $html ) {
 	if ( '' === (string) $html ) {
 		return null;
 	}
-	if ( strlen( $html ) > BB_LEGACY_BRIDGE_MAX_HTML ) {
+	if ( strlen( $html ) > BBOSS_LEGACY_BRIDGE_MAX_HTML ) {
 		return null;
 	}
 
@@ -148,7 +148,7 @@ function bb_legacy_get_xpath( $html ) {
  * @param string $value Untrusted value.
  * @return string Safe-to-interpolate identifier.
  */
-function bb_legacy_xpath_safe( $value ) {
+function bboss_legacy_xpath_safe( $value ) {
 	return preg_replace( '/[^A-Za-z0-9_\-:.]/', '', (string) $value );
 }
 
@@ -156,7 +156,7 @@ function bb_legacy_xpath_safe( $value ) {
  * Sanitize an HTML input `name` for safe interpolation into an XPath
  * single-quoted literal, PRESERVING the `[` and `]` of grouped inputs.
  *
- * `bb_legacy_xpath_safe()` strips brackets, which is correct for ids/values
+ * `bboss_legacy_xpath_safe()` strips brackets, which is correct for ids/values
  * but breaks name matching for grouped inputs like `wpf-settings[allow_tags][]`
  * (it would collapse to `wpf-settingsallow_tags` and match nothing). Brackets
  * are not metacharacters inside an XPath string literal, so keeping them is
@@ -168,7 +168,7 @@ function bb_legacy_xpath_safe( $value ) {
  * @param string $value Raw input name.
  * @return string Bracket-preserving, XPath-literal-safe name.
  */
-function bb_legacy_xpath_safe_name( $value ) {
+function bboss_legacy_xpath_safe_name( $value ) {
 	return preg_replace( '/[^A-Za-z0-9_\-:.\[\]]/', '', (string) $value );
 }
 
@@ -177,15 +177,15 @@ function bb_legacy_xpath_safe_name( $value ) {
  *
  * Returns one descriptor per detected input. Radios are deduplicated by
  * name (one entry represents the whole radio group; option enumeration
- * happens in `bb_legacy_extract_radio_options()`).
+ * happens in `bboss_legacy_extract_radio_options()`).
  *
  * @since BuddyBoss 3.0.0
  *
  * @param string $html Captured metabox HTML.
  * @return array List of input descriptors: [ 'name', 'type', 'label', 'description' ].
  */
-function bb_legacy_parse_box_inputs( $html ) {
-	$xpath = bb_legacy_get_xpath( $html );
+function bboss_legacy_parse_box_inputs( $html ) {
+	$xpath = bboss_legacy_get_xpath( $html );
 	if ( ! $xpath ) {
 		return array();
 	}
@@ -205,7 +205,7 @@ function bb_legacy_parse_box_inputs( $html ) {
 			continue;
 		}
 
-		$type = bb_legacy_detect_input_type( $node );
+		$type = bboss_legacy_detect_input_type( $node );
 		if ( in_array( $type, array( 'submit', 'button' ), true ) ) {
 			continue;
 		}
@@ -234,9 +234,9 @@ function bb_legacy_parse_box_inputs( $html ) {
 		$inputs[] = array(
 			'name'        => $name,
 			'type'        => $type,
-			'label'       => bb_legacy_find_label( $node, $xpath ),
-			'description' => bb_legacy_find_description( $node, $xpath ),
-			'conditional' => bb_legacy_detect_conditional( $node, $xpath ),
+			'label'       => bboss_legacy_find_label( $node, $xpath ),
+			'description' => bboss_legacy_find_description( $node, $xpath ),
+			'conditional' => bboss_legacy_detect_conditional( $node, $xpath ),
 			// Raw class attribute — lets bridges recognise plugin-specific
 			// widgets (e.g. WP Fusion's `select4-select-page` AJAX page picker)
 			// and map them to a richer Settings 2.0 field type.
@@ -277,7 +277,7 @@ function bb_legacy_parse_box_inputs( $html ) {
  *                          siblings when picking the trigger value.
  * @return array|null { field: string, value: mixed } when conditional, else null.
  */
-function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
+function bboss_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
 	$hidden_ancestor = null;
 	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 	$current = $node->parentNode;
@@ -288,7 +288,7 @@ function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
 
 	while ( $current && $max_levels-- > 0 ) {
 		if ( $current instanceof DOMElement ) {
-			if ( bb_legacy_is_hidden_node( $current ) ) {
+			if ( bboss_legacy_is_hidden_node( $current ) ) {
 				$hidden_ancestor = $current;
 				break;
 			}
@@ -301,7 +301,7 @@ function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
 		return null;
 	}
 
-	$trigger = bb_legacy_find_trigger( $hidden_ancestor );
+	$trigger = bboss_legacy_find_trigger( $hidden_ancestor );
 	if ( ! $trigger ) {
 		return null;
 	}
@@ -317,7 +317,7 @@ function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
 		return null;
 	}
 
-	$value = bb_legacy_pick_conditional_value( $trigger, $xpath );
+	$value = bboss_legacy_pick_conditional_value( $trigger, $xpath );
 	if ( null === $value ) {
 		return null;
 	}
@@ -338,7 +338,7 @@ function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
  * @param DOMElement $node Element to test.
  * @return bool True when the element is rendered hidden by default.
  */
-function bb_legacy_is_hidden_node( DOMElement $node ) {
+function bboss_legacy_is_hidden_node( DOMElement $node ) {
 	$class = strtolower( $node->getAttribute( 'class' ) );
 	$style = strtolower( $node->getAttribute( 'style' ) );
 
@@ -375,7 +375,7 @@ function bb_legacy_is_hidden_node( DOMElement $node ) {
  * @param DOMElement $wrapper Hidden ancestor wrapper.
  * @return array|null { kind: 'select'|'checkbox'|'radio', node: DOMElement }, or null.
  */
-function bb_legacy_find_trigger( DOMElement $wrapper ) {
+function bboss_legacy_find_trigger( DOMElement $wrapper ) {
 	$current = $wrapper;
 	// Bounded ancestor walk for the trigger search. 8 covers the realistic
 	// case where the trigger is a sibling of an ancestor 1-3 levels above
@@ -387,7 +387,7 @@ function bb_legacy_find_trigger( DOMElement $wrapper ) {
 		$sibling = $current->previousSibling;
 		while ( $sibling ) {
 			if ( $sibling instanceof DOMElement ) {
-				$direct = bb_legacy_match_trigger_node( $sibling );
+				$direct = bboss_legacy_match_trigger_node( $sibling );
 				if ( $direct ) {
 					return $direct;
 				}
@@ -397,7 +397,7 @@ function bb_legacy_find_trigger( DOMElement $wrapper ) {
 				$best   = null;
 				$inputs = $sibling->getElementsByTagName( 'input' );
 				foreach ( $inputs as $cand ) {
-					$match = bb_legacy_match_trigger_node( $cand );
+					$match = bboss_legacy_match_trigger_node( $cand );
 					if ( $match ) {
 						$best = $match;
 					}
@@ -434,7 +434,7 @@ function bb_legacy_find_trigger( DOMElement $wrapper ) {
  * @param DOMElement $node Candidate.
  * @return array|null { kind, node } when the node is a select/checkbox/radio, else null.
  */
-function bb_legacy_match_trigger_node( DOMElement $node ) {
+function bboss_legacy_match_trigger_node( DOMElement $node ) {
 	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 	$tag = strtolower( $node->tagName );
 	if ( 'select' === $tag ) {
@@ -461,11 +461,11 @@ function bb_legacy_match_trigger_node( DOMElement $node ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param array    $trigger { kind, node } returned by bb_legacy_find_trigger().
+ * @param array    $trigger { kind, node } returned by bboss_legacy_find_trigger().
  * @param DOMXPath $xpath   Document xpath (used to gather radio siblings).
  * @return mixed|null Conditional value, or null when no usable value exists.
  */
-function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
+function bboss_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
 	$kind          = isset( $trigger['kind'] ) ? $trigger['kind'] : '';
 	$node          = isset( $trigger['node'] ) ? $trigger['node'] : null;
 	$default_words = array( 'default', 'hide', 'show', 'none', 'no', '0', '' );
@@ -500,7 +500,7 @@ function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
 		if ( '' === $name ) {
 			return null;
 		}
-		$safe_name    = bb_legacy_xpath_safe_name( $name );
+		$safe_name    = bboss_legacy_xpath_safe_name( $name );
 		$first_active = null;
 		if ( '' !== $safe_name ) {
 			foreach ( $xpath->query( "//input[@name='{$safe_name}' and @type='radio']" ) as $radio ) {
@@ -525,9 +525,9 @@ function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
  * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node DOM node.
- * @return string Field type for BB_Admin_Meta_Field_Registry.
+ * @return string Field type for BBoss_Admin_Meta_Field_Registry.
  */
-function bb_legacy_detect_input_type( DOMElement $node ) {
+function bboss_legacy_detect_input_type( DOMElement $node ) {
 	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 	$tag = strtolower( $node->tagName );
 
@@ -576,7 +576,7 @@ function bb_legacy_detect_input_type( DOMElement $node ) {
  * @param DOMElement $label Label element.
  * @return string Cleaned label text.
  */
-function bb_legacy_label_text_without_tip( DOMElement $label ) {
+function bboss_legacy_label_text_without_tip( DOMElement $label ) {
 	$clone = $label->cloneNode( true );
 	if ( $clone instanceof DOMElement ) {
 		// Remove tooltip/help spans by class marker. Iterate a static list of
@@ -612,7 +612,7 @@ function bb_legacy_label_text_without_tip( DOMElement $label ) {
  * @param DOMXPath   $xpath XPath instance.
  * @return string Label text or empty.
  */
-function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
+function bboss_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
 	// For radio inputs, a wrapping <label> is the per-OPTION label
 	// ("Automatic", "Manual", "Custom") — not the GROUP/field label
 	// ("Visibility Mode"). Skip the explicit <label for="id"> and
@@ -624,7 +624,7 @@ function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
 	$is_radio = ( 'input' === strtolower( $node->tagName ) && 'radio' === strtolower( $node->getAttribute( 'type' ) ) );
 
 	if ( ! $is_radio ) {
-		$id = bb_legacy_xpath_safe( $node->getAttribute( 'id' ) );
+		$id = bboss_legacy_xpath_safe( $node->getAttribute( 'id' ) );
 		if ( $id ) {
 			$labels = $xpath->query( "//label[@for='{$id}']" );
 			if ( $labels->length ) {
@@ -649,7 +649,7 @@ function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
 			if ( $sibling instanceof DOMElement ) {
 				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 				if ( 'label' === strtolower( $sibling->tagName ) ) {
-					$text = bb_legacy_label_text_without_tip( $sibling );
+					$text = bboss_legacy_label_text_without_tip( $sibling );
 					if ( '' !== $text ) {
 						return $text;
 					}
@@ -750,7 +750,7 @@ function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
  * @param DOMXPath   $xpath XPath instance.
  * @return string Description text or empty.
  */
-function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
+function bboss_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
 	$queries = array(
 		"following-sibling::p[contains(concat(' ', normalize-space(@class), ' '), ' description ')]",
 		"following-sibling::span[contains(concat(' ', normalize-space(@class), ' '), ' description ')]",
@@ -760,7 +760,7 @@ function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
 	foreach ( $queries as $query ) {
 		$results = $xpath->query( $query, $node );
 		foreach ( $results as $candidate ) {
-			if ( $candidate instanceof DOMElement && ! bb_legacy_node_has_hidden_ancestor( $candidate, $node ) ) {
+			if ( $candidate instanceof DOMElement && ! bboss_legacy_node_has_hidden_ancestor( $candidate, $node ) ) {
 				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 				return trim( $candidate->textContent );
 			}
@@ -782,18 +782,18 @@ function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
  * @param DOMElement $input     Input node we're describing.
  * @return bool True when the candidate is gated behind a hidden wrapper.
  */
-function bb_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElement $input ) {
+function bboss_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElement $input ) {
 	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 	$current    = $candidate->parentNode;
 	$max_levels = 12;
 
 	while ( $current && $max_levels-- > 0 ) {
 		if ( $current instanceof DOMElement ) {
-			if ( bb_legacy_is_hidden_node( $current ) ) {
+			if ( bboss_legacy_is_hidden_node( $current ) ) {
 				// Hidden ancestor that also contains the input itself is fine
 				// — the input lives inside the hidden region too. Otherwise
 				// the candidate is owned by a separate (conditional) field.
-				if ( ! bb_legacy_is_descendant_of( $input, $current ) ) {
+				if ( ! bboss_legacy_is_descendant_of( $input, $current ) ) {
 					return true;
 				}
 			}
@@ -815,7 +815,7 @@ function bb_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElement $
  * @param DOMNode $ancestor Suspected ancestor.
  * @return bool True when $node is a descendant of $ancestor.
  */
-function bb_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
+function bboss_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
 	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 	$current = $node->parentNode;
 	while ( $current ) {
@@ -842,8 +842,8 @@ function bb_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
  * @param string $html Captured HTML.
  * @return array Map of name => value.
  */
-function bb_legacy_extract_hidden_inputs( $html ) {
-	$xpath = bb_legacy_get_xpath( $html );
+function bboss_legacy_extract_hidden_inputs( $html ) {
+	$xpath = bboss_legacy_get_xpath( $html );
 	if ( ! $xpath ) {
 		return array();
 	}
@@ -895,13 +895,13 @@ function bb_legacy_extract_hidden_inputs( $html ) {
  * @param string $type Field type.
  * @return string Current value.
  */
-function bb_legacy_extract_input_value( $html, $name, $type ) {
-	$xpath = bb_legacy_get_xpath( $html );
+function bboss_legacy_extract_input_value( $html, $name, $type ) {
+	$xpath = bboss_legacy_get_xpath( $html );
 	if ( ! $xpath ) {
 		return '';
 	}
 	// Bracket-preserving: grouped names (settings[key][]) must match literally.
-	$safe_name = bb_legacy_xpath_safe_name( $name );
+	$safe_name = bboss_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return '';
 	}
@@ -948,12 +948,12 @@ function bb_legacy_extract_input_value( $html, $name, $type ) {
  * @param string $name Select name attribute (may be array notation).
  * @return string[] Selected option values.
  */
-function bb_legacy_extract_multiselect_values( $html, $name ) {
-	$xpath = bb_legacy_get_xpath( $html );
+function bboss_legacy_extract_multiselect_values( $html, $name ) {
+	$xpath = bboss_legacy_get_xpath( $html );
 	if ( ! $xpath ) {
 		return array();
 	}
-	$safe_name = bb_legacy_xpath_safe_name( $name );
+	$safe_name = bboss_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return array();
 	}
@@ -979,7 +979,7 @@ function bb_legacy_extract_multiselect_values( $html, $name ) {
  * are safely stored in post meta. Reading the meta directly makes a saved
  * selection always visible, independent of the plugin's render state.
  *
- * Resolves the name through `bb_legacy_parse_array_name()` so grouped names
+ * Resolves the name through `bboss_legacy_parse_array_name()` so grouped names
  * like `wpf-settings[allow_tags][]` map to
  * `get_post_meta( $id, 'wpf-settings', true )['allow_tags']`. Only the named
  * leaf is read; nothing is written.
@@ -990,13 +990,13 @@ function bb_legacy_extract_multiselect_values( $html, $name ) {
  * @param string $name    Input name attribute (may use array notation).
  * @return string[] Saved values as a flat list, or an empty array when absent.
  */
-function bb_legacy_read_multiselect_meta( $post_id, $name ) {
+function bboss_legacy_read_multiselect_meta( $post_id, $name ) {
 	$post_id = (int) $post_id;
 	if ( $post_id <= 0 ) {
 		return array();
 	}
 
-	$parsed = bb_legacy_parse_array_name( $name );
+	$parsed = bboss_legacy_parse_array_name( $name );
 	if ( null === $parsed || '' === $parsed['base'] ) {
 		return array();
 	}
@@ -1040,12 +1040,12 @@ function bb_legacy_read_multiselect_meta( $post_id, $name ) {
  *
  * @since BuddyBoss 3.1.0
  *
- * @param string $type   Field type (from bb_legacy_detect_input_type()).
- * @param array  $parsed Parsed name (bb_legacy_parse_array_name()).
+ * @param string $type   Field type (from bboss_legacy_detect_input_type()).
+ * @param array  $parsed Parsed name (bboss_legacy_parse_array_name()).
  * @param mixed  $value  Raw value from the registry save payload.
  * @return mixed Normalized value.
  */
-function bb_legacy_normalize_save_value( $type, $parsed, $value ) {
+function bboss_legacy_normalize_save_value( $type, $parsed, $value ) {
 	if ( 'toggle_list' !== $type ) {
 		return $value;
 	}
@@ -1079,13 +1079,13 @@ function bb_legacy_normalize_save_value( $type, $parsed, $value ) {
  * @param string $name Select name.
  * @return array List of [ 'label', 'value' ] entries.
  */
-function bb_legacy_extract_select_options( $html, $name ) {
-	$xpath = bb_legacy_get_xpath( $html );
+function bboss_legacy_extract_select_options( $html, $name ) {
+	$xpath = bboss_legacy_get_xpath( $html );
 	if ( ! $xpath ) {
 		return array();
 	}
 	// Bracket-preserving: grouped names (settings[key]) must match literally.
-	$safe_name = bb_legacy_xpath_safe_name( $name );
+	$safe_name = bboss_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return array();
 	}
@@ -1115,13 +1115,13 @@ function bb_legacy_extract_select_options( $html, $name ) {
  * @param string $name Radio group name.
  * @return array List of [ 'label', 'value' ] entries.
  */
-function bb_legacy_extract_radio_options( $html, $name ) {
-	$xpath = bb_legacy_get_xpath( $html );
+function bboss_legacy_extract_radio_options( $html, $name ) {
+	$xpath = bboss_legacy_get_xpath( $html );
 	if ( ! $xpath ) {
 		return array();
 	}
 	// Bracket-preserving: grouped radio names (settings[key]) must match literally.
-	$safe_name = bb_legacy_xpath_safe_name( $name );
+	$safe_name = bboss_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return array();
 	}
@@ -1132,7 +1132,7 @@ function bb_legacy_extract_radio_options( $html, $name ) {
 		$label = '';
 
 		// 1. Explicit association: <label for="<radio-id>">.
-		$id = bb_legacy_xpath_safe( $radio->getAttribute( 'id' ) );
+		$id = bboss_legacy_xpath_safe( $radio->getAttribute( 'id' ) );
 		if ( $id ) {
 			$lbl = $xpath->query( "//label[@for='{$id}']" );
 			if ( $lbl->length ) {
@@ -1173,7 +1173,7 @@ function bb_legacy_extract_radio_options( $html, $name ) {
 /**
  * Resolve the appropriate sanitize_callback string for a parsed input
  * type. Used by every component bridge when registering bridge fields
- * with `BB_Admin_Meta_Field_Registry`.
+ * with `BBoss_Admin_Meta_Field_Registry`.
  *
  * Without an explicit callback the registry falls back to
  * `sanitize_text_field()` which strips ALL HTML — silently dropping
@@ -1182,10 +1182,10 @@ function bb_legacy_extract_radio_options( $html, $name ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param string $type Field type produced by `bb_legacy_detect_input_type()`.
+ * @param string $type Field type produced by `bboss_legacy_detect_input_type()`.
  * @return string|callable Sanitize callback.
  */
-function bb_legacy_resolve_sanitize_callback( $type ) {
+function bboss_legacy_resolve_sanitize_callback( $type ) {
 	switch ( $type ) {
 		case 'richtext':
 		case 'textarea':
@@ -1216,7 +1216,7 @@ function bb_legacy_resolve_sanitize_callback( $type ) {
  *
  * Generic post-type version of the per-component `bb_legacy_*_capture_box_html`
  * helpers. Per-request memoized by `(box_id, post_id)`. Wraps the callback in
- * `bb_legacy_with_wp_die_safety()` so a buggy metabox can't kill the AJAX.
+ * `bboss_legacy_with_wp_die_safety()` so a buggy metabox can't kill the AJAX.
  * Swaps `$_GET[ $request_param ]` to the post ID so legacy callbacks that
  * read `$_GET['post']` see the right post during capture.
  *
@@ -1234,7 +1234,7 @@ function bb_legacy_resolve_sanitize_callback( $type ) {
  *                                          labels. Default ''.
  * @return string Captured HTML, or '' on error / oversize / empty.
  */
-function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', $fallback_post_type = '' ) {
+function bboss_legacy_capture_post_box_html( $box, $post, $request_param = 'post', $fallback_post_type = '' ) {
 	if ( empty( $box['callback'] ) || empty( $box['id'] ) ) {
 		return '';
 	}
@@ -1311,7 +1311,7 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', 
 
 	$result = '';
 	try {
-		$result = bb_legacy_with_wp_die_safety(
+		$result = bboss_legacy_with_wp_die_safety(
 			function () use ( $box, $post ) {
 				ob_start();
 				try {
@@ -1339,7 +1339,7 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', 
 		}
 	}
 
-	if ( strlen( $result ) > BB_LEGACY_BRIDGE_MAX_HTML ) {
+	if ( strlen( $result ) > BBOSS_LEGACY_BRIDGE_MAX_HTML ) {
 		$result = '';
 	}
 
@@ -1371,7 +1371,7 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', 
  * @param string $name Raw HTML name attribute.
  * @return array|null { base: string, segments: string[], is_array: bool }, or null when malformed.
  */
-function bb_legacy_parse_array_name( $name ) {
+function bboss_legacy_parse_array_name( $name ) {
 	$name = (string) $name;
 	if ( '' === $name ) {
 		return null;
@@ -1438,8 +1438,8 @@ function bb_legacy_parse_array_name( $name ) {
  * @param string $name Raw input name.
  * @return string Flattened, separator-joined slug (pre-sanitize_key()).
  */
-function bb_legacy_flatten_input_name( $name ) {
-	$parsed = bb_legacy_parse_array_name( $name );
+function bboss_legacy_flatten_input_name( $name ) {
+	$parsed = bboss_legacy_parse_array_name( $name );
 	if ( null === $parsed ) {
 		return (string) $name;
 	}
@@ -1467,11 +1467,11 @@ function bb_legacy_flatten_input_name( $name ) {
  *
  * @since BuddyBoss 3.1.0
  *
- * @param array $parsed Output of bb_legacy_parse_array_name().
+ * @param array $parsed Output of bboss_legacy_parse_array_name().
  * @param mixed $value  Sanitized value to assign at the leaf.
  * @return void
  */
-function bb_legacy_inject_post_value( $parsed, $value ) {
+function bboss_legacy_inject_post_value( $parsed, $value ) {
 	if ( empty( $parsed['base'] ) ) {
 		return;
 	}
@@ -1548,7 +1548,7 @@ function bb_legacy_inject_post_value( $parsed, $value ) {
  * Allowlist-by-denylist for $_POST keys the CPT bridge is permitted to
  * write on behalf of third-party metaboxes.
  *
- * Mirrors `bb_legacy_is_safe_post_key()` (groups bridge) but allows the
+ * Mirrors `bboss_legacy_is_safe_post_key()` (groups bridge) but allows the
  * leading-underscore prefix so hidden post-meta names from established
  * admin plugins (e.g., `_yoast_*`, `_acf_*`, `_mepr_*`) can be bridged.
  * Grouped array-notation names (`settings[key]`, `settings[key][]`) are now
@@ -1565,7 +1565,7 @@ function bb_legacy_inject_post_value( $parsed, $value ) {
  *                               so the same helper works for any CPT.
  * @return bool True if the key is safe to write to $_POST.
  */
-function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
+function bboss_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
 	$name = (string) $name;
 	if ( '' === $name ) {
 		return false;
@@ -1576,7 +1576,7 @@ function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
 	// the structure; reject only when the bracket syntax is malformed. The
 	// denylist checks below run against the BASE key so a metabox still can't
 	// smuggle `role[]` or `wp_foo[bar]` past the reserved-name guards.
-	$parsed = bb_legacy_parse_array_name( $name );
+	$parsed = bboss_legacy_parse_array_name( $name );
 	if ( null === $parsed ) {
 		return false;
 	}
@@ -1669,7 +1669,7 @@ function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
  * }
  * @return void
  */
-function bb_legacy_register_cpt_meta_bridge( $args ) {
+function bboss_legacy_register_cpt_meta_bridge( $args ) {
 	$args = wp_parse_args(
 		$args,
 		array(
@@ -1782,7 +1782,7 @@ function bb_legacy_register_cpt_meta_bridge( $args ) {
 
 			$in_bridge = true;
 			try {
-				bb_legacy_run_cpt_bridge( $registry, $component, $args );
+				bboss_legacy_run_cpt_bridge( $registry, $component, $args );
 			} finally {
 				$in_bridge = false;
 			}
@@ -1808,7 +1808,7 @@ function bb_legacy_register_cpt_meta_bridge( $args ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-			bb_legacy_replay_cpt_hidden_inputs( $args, $item );
+			bboss_legacy_replay_cpt_hidden_inputs( $args, $item );
 		},
 		10,
 		3
@@ -1836,7 +1836,7 @@ function bb_legacy_register_cpt_meta_bridge( $args ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-			bb_legacy_persist_cpt_post_meta( $args, $item );
+			bboss_legacy_persist_cpt_post_meta( $args, $item );
 		},
 		10,
 		3
@@ -1854,7 +1854,7 @@ function bb_legacy_register_cpt_meta_bridge( $args ) {
  * @param object|null $item Item being saved (post object or null on create).
  * @return void
  */
-function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
+function bboss_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 	// Self-bootstrap meta box registration if it hasn't fired yet — at save
 	// time the admin meta-boxes hook normally hasn't run.
 	if ( 0 === did_action( $args['meta_box_action'] ) ) {
@@ -1922,7 +1922,7 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 					if ( in_array( $box_id, $skip_box_ids, true ) ) {
 						continue;
 					}
-					$html = bb_legacy_capture_post_box_html( $box, is_object( $item ) ? $item : null, $args['request_param'], $args['post_type'] );
+					$html = bboss_legacy_capture_post_box_html( $box, is_object( $item ) ? $item : null, $args['request_param'], $args['post_type'] );
 					if ( ! $html ) {
 						continue;
 					}
@@ -1956,7 +1956,7 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 							)
 						)
 					);
-					foreach ( bb_legacy_extract_hidden_inputs( $html ) as $name => $value ) {
+					foreach ( bboss_legacy_extract_hidden_inputs( $html ) as $name => $value ) {
 						// Block sensitive WP user-management keys, reserved
 						// Platform/BP/WP prefixes, and canonical post
 						// properties — a malicious metabox could otherwise
@@ -1964,7 +1964,7 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 						// value="administrator">` or
 						// `<input type="hidden" name="post_password" ...>`
 						// into $_POST.
-						if ( ! bb_legacy_is_safe_cpt_post_key( $name, $replay_canonical ) ) {
+						if ( ! bboss_legacy_is_safe_cpt_post_key( $name, $replay_canonical ) ) {
 							continue;
 						}
 						// Don't clobber a value React already populated.
@@ -1998,7 +1998,7 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
  * @param object|null $item Saved post object.
  * @return void
  */
-function bb_legacy_persist_cpt_post_meta( $args, $item ) {
+function bboss_legacy_persist_cpt_post_meta( $args, $item ) {
 	if ( ! is_object( $item ) || empty( $item->ID ) ) {
 		return;
 	}
@@ -2038,11 +2038,11 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
 					if ( in_array( $box_id, $skip_box_ids, true ) ) {
 						continue;
 					}
-					$html = bb_legacy_capture_post_box_html( $box, $item, $args['request_param'], $args['post_type'] );
+					$html = bboss_legacy_capture_post_box_html( $box, $item, $args['request_param'], $args['post_type'] );
 					if ( ! $html ) {
 						continue;
 					}
-					$inputs = bb_legacy_parse_box_inputs( $html );
+					$inputs = bboss_legacy_parse_box_inputs( $html );
 					foreach ( $inputs as $input ) {
 						if ( in_array( $input['type'], array( 'file', 'hidden', 'submit', 'button' ), true ) ) {
 							continue;
@@ -2056,10 +2056,10 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
 						// writing sensitive WP user keys (`role`, `user_pass`)
 						// or reserved Platform/BP/WP prefixes if they happen
 						// to be present in $_POST from elsewhere.
-						if ( ! bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys ) ) {
+						if ( ! bboss_legacy_is_safe_cpt_post_key( $name, $canonical_keys ) ) {
 							continue;
 						}
-						$parsed = bb_legacy_parse_array_name( $name );
+						$parsed = bboss_legacy_parse_array_name( $name );
 						if ( null === $parsed ) {
 							continue;
 						}
@@ -2083,7 +2083,7 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
 						// raw read here is intentional so the sanitizer runs once.
 						// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 						$value = wp_unslash( $_POST[ $name ] );
-						$cb    = bb_legacy_resolve_sanitize_callback( $input['type'] );
+						$cb    = bboss_legacy_resolve_sanitize_callback( $input['type'] );
 						if ( is_callable( $cb ) ) {
 							$value = call_user_func( $cb, $value );
 						}
@@ -2102,12 +2102,12 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
  * @param array                        $args      Resolved factory args.
  * @return void
  */
-function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
+function bboss_legacy_run_cpt_bridge( $registry, $component, $args ) {
 	global $wp_meta_boxes;
 
 	// Self-bootstrap. The React save AJAX doesn't fire metabox-registration
@@ -2242,7 +2242,7 @@ function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
 				if ( in_array( $box_id, $skip_box_ids, true ) ) {
 					continue;
 				}
-				bb_legacy_run_cpt_bridge_box( $registry, $component, $box, $order, $existing_ids, $args );
+				bboss_legacy_run_cpt_bridge_box( $registry, $component, $box, $order, $existing_ids, $args );
 			}
 		}
 	}
@@ -2253,7 +2253,7 @@ function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry     Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry     Registry instance.
  * @param string                       $component    Component identifier.
  * @param array                        $box          Metabox descriptor.
  * @param int                          $order        Current order counter
@@ -2262,8 +2262,8 @@ function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
  * @param array                        $args         Resolved factory args.
  * @return void
  */
-function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $existing_ids, $args ) {
-	$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+function bboss_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $existing_ids, $args ) {
+	$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	// Bump this sentinel any time the parser shape changes (new fields on the
 	// $inputs array) so cached entries don't return stale data without keys.
 	$parser_rev = 'v12-multiselect-meta-read';
@@ -2274,13 +2274,13 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		// Pass the bridge's post type as the probe fallback so a box shared
 		// across post types (WP Fusion's `wpf-meta`) renders with THIS type's
 		// labels (e.g. "view this forum", not "view this post").
-		$html = bb_legacy_capture_post_box_html( $box, null, $args['request_param'], $args['post_type'] );
+		$html = bboss_legacy_capture_post_box_html( $box, null, $args['request_param'], $args['post_type'] );
 		if ( ! $html ) {
 			set_transient( $cache_key, array(), 5 * MINUTE_IN_SECONDS );
 			return;
 		}
 
-		$inputs = bb_legacy_parse_box_inputs( $html );
+		$inputs = bboss_legacy_parse_box_inputs( $html );
 		set_transient( $cache_key, $inputs, HOUR_IN_SECONDS );
 	}
 
@@ -2335,7 +2335,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		// the leading-underscore convention for hidden post meta (Yoast,
 		// ACF, MemberPress, etc.). Also blocks shadowing of canonical
 		// post-form keys.
-		if ( ! bb_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
+		if ( ! bboss_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
 			continue;
 		}
 
@@ -2343,14 +2343,14 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		// grouped names like `settings[allow_tags]` and `settings[allow_tags][]`
 		// would otherwise both collapse to the same id. Flatten brackets to
 		// underscores first so each leaf keeps a distinct, stable id.
-		$field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $input['name'] ) );
+		$field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bboss_legacy_flatten_input_name( $input['name'] ) );
 		if ( isset( $existing_ids[ $field_id ] ) ) {
 			continue;
 		}
 
 		$raw_label       = $input['label'] ? $input['label'] : $box['title'];
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
-		$sanitize_cb     = bb_legacy_resolve_sanitize_callback( $input['type'] );
+		$sanitize_cb     = bboss_legacy_resolve_sanitize_callback( $input['type'] );
 
 		// Per-field override supplied by a plugin compat module (keyed by the
 		// raw $_POST name). Lets a module add conditional gating, a placeholder,
@@ -2372,7 +2372,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		// control can't hijack the field type.
 		$ajax_select_resolver = null;
 		if ( in_array( $input['type'], array( 'select', 'toggle_list' ), true ) && isset( $input['class'] ) ) {
-			$ajax_select_resolver = bb_legacy_match_ajax_select_resolver( (string) $input['class'] );
+			$ajax_select_resolver = bboss_legacy_match_ajax_select_resolver( (string) $input['class'] );
 		}
 		$is_ajax_single = ( null !== $ajax_select_resolver && 'select' === $input['type'] );
 		$is_ajax_multi  = ( null !== $ajax_select_resolver && 'toggle_list' === $input['type'] );
@@ -2419,15 +2419,15 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// fall back to scraping the captured HTML only if meta is empty.
 				if ( $is_ajax_multi ) {
 					$post_id = is_object( $post ) && isset( $post->ID ) ? (int) $post->ID : (int) $post;
-					$saved   = bb_legacy_read_multiselect_meta( $post_id, $input['name'] );
+					$saved   = bboss_legacy_read_multiselect_meta( $post_id, $input['name'] );
 					if ( ! empty( $saved ) ) {
 						return array_values( $saved );
 					}
-					$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
-					return $html ? array_values( bb_legacy_extract_multiselect_values( $html, $input['name'] ) ) : array();
+					$html = bboss_legacy_capture_post_box_html( $box, $post, $request_param );
+					return $html ? array_values( bboss_legacy_extract_multiselect_values( $html, $input['name'] ) ) : array();
 				}
 
-				$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
+				$html = bboss_legacy_capture_post_box_html( $box, $post, $request_param );
 				if ( ! $html ) {
 					return ( 'checkbox' === $input['type'] ) ? '0' : '';
 				}
@@ -2436,14 +2436,14 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// the rendered <option selected> list and shape them so the React
 				// checkboxes reflect state.
 				if ( 'toggle_list' === $input['type'] ) {
-					$selected = bb_legacy_extract_multiselect_values( $html, $input['name'] );
+					$selected = bboss_legacy_extract_multiselect_values( $html, $input['name'] );
 					$out      = array();
 					foreach ( $selected as $val ) {
 						$out[ $val ] = 1;
 					}
 					return $out;
 				}
-				return bb_legacy_extract_input_value( $html, $input['name'], $input['type'] );
+				return bboss_legacy_extract_input_value( $html, $input['name'], $input['type'] );
 			},
 			'save_value'        => function ( $post, $value ) use ( $input, $canonical_keys ) {
 				if ( ! is_string( $input['name'] ) || '' === $input['name'] ) {
@@ -2454,10 +2454,10 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// bb_legacy_is_safe_cpt_post_key(), but the closure may run
 				// long after registration, after which the metabox HTML
 				// (and thus $input['name']) was determined.
-				if ( ! bb_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
+				if ( ! bboss_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
 					return;
 				}
-				$parsed = bb_legacy_parse_array_name( $input['name'] );
+				$parsed = bboss_legacy_parse_array_name( $input['name'] );
 				if ( null === $parsed ) {
 					return;
 				}
@@ -2468,7 +2468,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// a flat indexed array of the CHECKED values (`['tag_a']`).
 				// Without this conversion WP Fusion's sanitizer receives
 				// `['tag_a' => 1]`, array_filters the 1/0, and stores garbage.
-				$value = bb_legacy_normalize_save_value( $input['type'], $parsed, $value );
+				$value = bboss_legacy_normalize_save_value( $input['type'], $parsed, $value );
 				// Scalar keys: keep the original don't-clobber contract — if
 				// React already populated this exact key, leave it alone.
 				// Grouped keys (settings[...]) merge into the nested structure
@@ -2481,7 +2481,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 						return;
 					}
 				}
-				bb_legacy_inject_post_value( $parsed, $value );
+				bboss_legacy_inject_post_value( $parsed, $value );
 			},
 		);
 
@@ -2499,10 +2499,10 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// to dispatch to; the renderer folds it into every async request.
 				$extra = array( 'resolver' => $resolver_key );
 
-				$html  = bb_legacy_capture_post_box_html( $box, $post, $request_param );
-				$saved = $html ? bb_legacy_extract_input_value( $html, $input['name'], 'select' ) : '';
+				$html  = bboss_legacy_capture_post_box_html( $box, $post, $request_param );
+				$saved = $html ? bboss_legacy_extract_input_value( $html, $input['name'], 'select' ) : '';
 				if ( '' !== $saved && '0' !== (string) $saved ) {
-					$extra['initial_label'] = (string) bb_legacy_resolve_ajax_select_label( $ajax_select_resolver, $saved );
+					$extra['initial_label'] = (string) bboss_legacy_resolve_ajax_select_label( $ajax_select_resolver, $saved );
 				}
 
 				return $extra;
@@ -2544,15 +2544,15 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// out-of-sync source list), falling back to HTML scraping only
 				// when meta is empty — mirrors the get_value strategy above.
 				$post_id = is_object( $post ) && isset( $post->ID ) ? (int) $post->ID : (int) $post;
-				$saved   = bb_legacy_read_multiselect_meta( $post_id, $input['name'] );
+				$saved   = bboss_legacy_read_multiselect_meta( $post_id, $input['name'] );
 				if ( empty( $saved ) ) {
-					$html  = bb_legacy_capture_post_box_html( $box, $post, $request_param );
-					$saved = $html ? bb_legacy_extract_multiselect_values( $html, $input['name'] ) : array();
+					$html  = bboss_legacy_capture_post_box_html( $box, $post, $request_param );
+					$saved = $html ? bboss_legacy_extract_multiselect_values( $html, $input['name'] ) : array();
 				}
 				foreach ( $saved as $val ) {
 					$extra['selected_items'][] = array(
 						'value' => (string) $val,
-						'label' => (string) bb_legacy_resolve_ajax_select_label( $ajax_select_resolver, $val ),
+						'label' => (string) bboss_legacy_resolve_ajax_select_label( $ajax_select_resolver, $val ),
 					);
 				}
 
@@ -2560,13 +2560,13 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			};
 		} elseif ( 'select' === $input['type'] || 'toggle_list' === $input['type'] ) {
 			$args_field['get_options'] = function ( $post ) use ( $box, $input, $request_param ) {
-				$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
-				return bb_legacy_extract_select_options( $html, $input['name'] );
+				$html = bboss_legacy_capture_post_box_html( $box, $post, $request_param );
+				return bboss_legacy_extract_select_options( $html, $input['name'] );
 			};
 		} elseif ( 'radio' === $input['type'] ) {
 			$args_field['get_options'] = function ( $post ) use ( $box, $input, $request_param ) {
-				$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
-				return bb_legacy_extract_radio_options( $html, $input['name'] );
+				$html = bboss_legacy_capture_post_box_html( $box, $post, $request_param );
+				return bboss_legacy_extract_radio_options( $html, $input['name'] );
 			};
 		}
 
@@ -2595,7 +2595,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			// for the field id above, so each resolves to its sibling registered field.
 			$trigger_ids = array();
 			foreach ( $conditional['fields'] as $raw_trigger ) {
-				$trigger_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( (string) $raw_trigger ) );
+				$trigger_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bboss_legacy_flatten_input_name( (string) $raw_trigger ) );
 				if ( '' !== $trigger_id && $trigger_id !== $field_id ) {
 					$trigger_ids[] = $trigger_id;
 				}
@@ -2610,7 +2610,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		} elseif ( is_array( $conditional ) && ! empty( $conditional['field'] ) ) {
 			// Flatten brackets the same way as the field id above so a grouped
 			// trigger name resolves to the matching sibling field id.
-			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $conditional['field'] ) );
+			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bboss_legacy_flatten_input_name( $conditional['field'] ) );
 			if ( '' !== $trigger_field_id && $trigger_field_id !== $field_id ) {
 				$args_field['conditional'] = array(
 					'field' => $trigger_field_id,
@@ -2666,7 +2666,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
  *
  * @return array Map of resolver id => resolver definition.
  */
-function bb_legacy_get_ajax_select_resolvers() {
+function bboss_legacy_get_ajax_select_resolvers() {
 	/**
 	 * Filter the AJAX-select resolver registry.
 	 *
@@ -2685,12 +2685,12 @@ function bb_legacy_get_ajax_select_resolvers() {
  * @param string $class_attr Widget class attribute.
  * @return array|null Resolver definition with its `key` added, or null.
  */
-function bb_legacy_match_ajax_select_resolver( $class_attr ) {
+function bboss_legacy_match_ajax_select_resolver( $class_attr ) {
 	$class_attr = strtolower( (string) $class_attr );
 	if ( '' === $class_attr ) {
 		return null;
 	}
-	foreach ( bb_legacy_get_ajax_select_resolvers() as $key => $resolver ) {
+	foreach ( bboss_legacy_get_ajax_select_resolvers() as $key => $resolver ) {
 		if ( empty( $resolver['match'] ) || ! is_callable( $resolver['search'] ) ) {
 			continue;
 		}
@@ -2711,7 +2711,7 @@ function bb_legacy_match_ajax_select_resolver( $class_attr ) {
  * @param string $value    Saved value.
  * @return string Display label (falls back to the value).
  */
-function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
+function bboss_legacy_resolve_ajax_select_label( $resolver, $value ) {
 	if ( ! empty( $resolver['resolve_label'] ) && is_callable( $resolver['resolve_label'] ) ) {
 		$label = (string) call_user_func( $resolver['resolve_label'], $value );
 		if ( '' !== $label ) {
@@ -2743,7 +2743,7 @@ function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
  *
  * @return void
  */
-function bb_legacy_ajax_select_search() {
+function bboss_legacy_ajax_select_search() {
 	// AjaxMultiSelectField uses `q` (GET); AsyncSelectField uses `term` (POST).
 	// The presence of `q` in $_GET distinguishes the bare-`matches` response
 	// contract from the wrapped success envelope. Binding to $_GET / $_POST
@@ -2759,7 +2759,7 @@ function bb_legacy_ajax_select_search() {
 		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss' ) ), 403 );
 	};
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		$fail();
 		return;
 	}
@@ -2781,7 +2781,7 @@ function bb_legacy_ajax_select_search() {
 		return;
 	}
 
-	$resolvers = bb_legacy_get_ajax_select_resolvers();
+	$resolvers = bboss_legacy_get_ajax_select_resolvers();
 	if ( '' === $resolver_key || empty( $resolvers[ $resolver_key ] ) || ! is_callable( $resolvers[ $resolver_key ]['search'] ) ) {
 		$fail();
 		return;
@@ -2798,7 +2798,7 @@ function bb_legacy_ajax_select_search() {
 				'results'  => array(
 					array(
 						'value' => (string) $selected_id,
-						'label' => bb_legacy_resolve_ajax_select_label( $resolver, $selected_id ),
+						'label' => bboss_legacy_resolve_ajax_select_label( $resolver, $selected_id ),
 					),
 				),
 				'has_more' => false,
@@ -2858,7 +2858,7 @@ add_action( 'wp_ajax_bb_legacy_ajax_select_search', 'bb_legacy_ajax_select_searc
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_legacy_cpt_clear_bridge_cache() {
+function bboss_legacy_cpt_clear_bridge_cache() {
 	if ( wp_using_ext_object_cache() ) {
 		// Object-cache path: walking $wp_meta_boxes per CPT isn't reliable
 		// from a generic invalidator. Skip explicit deletion here — entries
@@ -2895,14 +2895,14 @@ add_action( 'switch_theme', 'bb_legacy_cpt_clear_bridge_cache' );
  *   - Sensitive WP user-management keys (role, user_login, password, etc.)
  *   - Array-notation keys (`name="foo[]"`) — sanitize_key() can't represent
  *     these losslessly and they corrupt $_POST when reassembled
- *   - Canonical BP_Groups_Group property names
+ *   - Canonical BBoss_Groups_Group property names
  *
  * @since BuddyBoss 3.0.0
  *
  * @param string $name HTML input name attribute.
  * @return bool True if the key is safe to write to $_POST.
  */
-function bb_legacy_is_safe_post_key( $name ) {
+function bboss_legacy_is_safe_post_key( $name ) {
 	$name = (string) $name;
 	if ( '' === $name ) {
 		return false;
@@ -2950,7 +2950,7 @@ function bb_legacy_is_safe_post_key( $name ) {
 	// Block any key that maps to a canonical BP_Groups_Group property or to a
 	// well-known Platform group-save POST key. Derived dynamically so future
 	// Platform additions don't require updating this file.
-	if ( in_array( strtolower( $name ), bb_legacy_canonical_group_keys(), true ) ) {
+	if ( in_array( strtolower( $name ), bboss_legacy_canonical_group_keys(), true ) ) {
 		return false;
 	}
 
@@ -2965,7 +2965,7 @@ function bb_legacy_is_safe_post_key( $name ) {
  * Lives in shared utils alongside bb_legacy_is_safe_post_key (its only
  * caller) so the two stay loadable independently of the groups bridge.
  *
- * Most keys are auto-discovered from BP_Groups_Group's public properties via
+ * Most keys are auto-discovered from BBoss_Groups_Group's public properties via
  * Reflection; a small set of additional keys (forum_id, etc.) used by
  * Platform's save handler but not stored as group properties is listed
  * explicitly. Plugin authors can extend the list via the
@@ -2975,7 +2975,7 @@ function bb_legacy_is_safe_post_key( $name ) {
  *
  * @return string[] Lowercase canonical key names.
  */
-function bb_legacy_canonical_group_keys() {
+function bboss_legacy_canonical_group_keys() {
 	static $keys = null;
 	if ( null !== $keys ) {
 		return $keys;
@@ -2983,9 +2983,9 @@ function bb_legacy_canonical_group_keys() {
 
 	$keys = array();
 
-	if ( class_exists( 'BP_Groups_Group' ) ) {
+	if ( class_exists( 'BBoss_Groups_Group' ) ) {
 		try {
-			$reflection = new ReflectionClass( 'BP_Groups_Group' );
+			$reflection = new ReflectionClass( 'BBoss_Groups_Group' );
 			foreach ( $reflection->getProperties( ReflectionProperty::IS_PUBLIC ) as $prop ) {
 				$keys[] = strtolower( $prop->getName() );
 			}

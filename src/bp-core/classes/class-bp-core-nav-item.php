@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-class BP_Core_Nav_Item extends ArrayObject {
+class BBoss_Core_Nav_Item extends ArrayObject {
 	public function __construct( $data ) {
 		parent::__construct( $data, ArrayObject::ARRAY_AS_PROPS );
 	}

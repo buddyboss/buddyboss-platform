@@ -22,8 +22,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function groups_action_leave_group() {
-	if ( ! bp_is_single_item() || ! bp_is_groups_component() || ! bp_is_current_action( 'leave-group' ) ) {
+function bboss_groups_action_leave_group() {
+	if ( ! bboss_is_single_item() || ! bboss_is_groups_component() || ! bboss_is_current_action( 'leave-group' ) ) {
 		return false;
 	}
 
@@ -33,32 +33,32 @@ function groups_action_leave_group() {
 	}
 
 	// User wants to leave any group.
-	if ( groups_is_user_member( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
-		$bp = buddypress();
+	if ( bboss_groups_is_user_member( bboss_loggedin_user_id(), bboss_get_current_group_id() ) ) {
+		$bp = bboss();
 
 		// Stop sole admins from abandoning their group.
-		$group_admins = groups_get_group_admins( bp_get_current_group_id() );
+		$group_admins = bboss_groups_get_group_admins( bboss_get_current_group_id() );
 
-		if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == bp_loggedin_user_id() ) {
-			bp_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss' ), 'error' );
-		} elseif ( ! groups_leave_group( $bp->groups->current_group->id ) ) {
-			bp_core_add_message( __( 'There was an error leaving the group.', 'buddyboss' ), 'error' );
+		if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == bboss_loggedin_user_id() ) {
+			bboss_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss' ), 'error' );
+		} elseif ( ! bboss_groups_leave_group( $bp->groups->current_group->id ) ) {
+			bboss_core_add_message( __( 'There was an error leaving the group.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'You left the group.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'You left the group.', 'buddyboss' ) );
 		}
 
-		$group    = groups_get_current_group();
-		$redirect = bp_get_group_permalink( $group );
+		$group    = bboss_groups_get_current_group();
+		$redirect = bboss_get_group_permalink( $group );
 
 		if ( ! $group->is_visible ) {
-			$redirect = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
+			$redirect = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() );
 		}
 
-		bp_core_redirect( $redirect );
+		bboss_core_redirect( $redirect );
 	}
 
 	/** This filter is documented in bp-groups/bp-groups-actions.php */
-	bp_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
 }
 add_action( 'bp_actions', 'groups_action_leave_group' );
 
@@ -68,9 +68,9 @@ add_action( 'bp_actions', 'groups_action_leave_group' );
  * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  */
-function groups_action_clean_up_invites_requests( $user_id, $group_id ) {
+function bboss_groups_action_clean_up_invites_requests( $user_id, $group_id ) {
 
-	$invites_class = new BP_Groups_Invitation_Manager();
+	$invites_class = new BBoss_Groups_Invitation_Manager();
 	// Remove invitations/requests where the deleted user is the receiver.
 	$invites_class->delete( array(
 		'user_id' => $user_id,
@@ -79,16 +79,16 @@ function groups_action_clean_up_invites_requests( $user_id, $group_id ) {
 	) );
 	/**
 	 * Remove invitations where the deleted user is the sender.
-	 * We'll use groups_uninvite_user() so that notifications will be cleaned up.
+	 * We'll use bboss_groups_uninvite_user() so that notifications will be cleaned up.
 	 */
-	$pending_invites = groups_get_invites( array(
+	$pending_invites = bboss_groups_get_invites( array(
 		'inviter_id' => $user_id,
 		'item_id'    => $group_id,
 	) );
 
 	if ( $pending_invites ) {
 		foreach ( $pending_invites as $invite ) {
-			groups_uninvite_user( $invite->user_id, $group_id, $user_id );
+			bboss_groups_uninvite_user( $invite->user_id, $group_id, $user_id );
 		}
 	}
 }

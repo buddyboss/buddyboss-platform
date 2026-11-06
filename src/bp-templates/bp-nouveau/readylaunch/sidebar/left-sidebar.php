@@ -6,7 +6,7 @@
  * It displays navigation menus, groups, courses, and custom links based on user permissions and context.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,8 +17,8 @@ use memberpress\courses\helpers;
 defined( 'ABSPATH' ) || exit;
 
 if (
-	bp_is_active( 'groups' ) &&
-	bp_is_group_create()
+	bboss_is_active( 'groups' ) &&
+	bboss_is_group_create()
 ) {
 	return;
 }
@@ -33,15 +33,15 @@ if ( class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 
 // Check if this is a MemberPress inner page.
 $is_memberpress_inner = (
-	bb_is_readylaunch_enabled() &&
+	bboss_is_readylaunch_enabled() &&
 	is_single() &&
 	class_exists( 'memberpress\courses\helpers\Courses' ) &&
 	! helpers\Courses::is_a_course( $post ) &&
 	( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() ) &&
-	! ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) &&
-	! ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() ) &&
-	! ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) &&
-	! ( function_exists( 'is_bbpress' ) && is_bbpress() )
+	! ( function_exists( 'bboss_bbp_is_single_forum' ) && bboss_bbp_is_single_forum() ) &&
+	! ( function_exists( 'bboss_bbp_is_single_topic' ) && bboss_bbp_is_single_topic() ) &&
+	! ( function_exists( 'bboss_bbp_is_single_reply' ) && bboss_bbp_is_single_reply() ) &&
+	! ( function_exists( 'bboss_is_bbpress' ) && bboss_is_bbpress() )
 );
 $panel_classes = 'bb-rl-left-panel widget-area';
 if ( $is_memberpress_inner ) {
@@ -55,18 +55,18 @@ if ( $is_memberpress_inner ) {
 		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Full sidebar markup rendered by MemberPress Courses template (contains nav/form controls); wp_kses_post would strip them.
 	}
 
-	if ( BB_Readylaunch::bb_is_group_admin() ) {
-		bp_get_template_part( 'groups/single/parts/admin-subnav' );
-	} elseif ( bp_is_user_settings() && bp_core_can_edit_settings() ) {
-		bp_get_template_part( 'members/single/parts/item-subnav' );
-	} elseif ( bp_is_user_change_avatar() || bp_is_user_profile_edit() ) {
-		bp_get_template_part( 'members/single/parts/edit-subnav' );
+	if ( BBoss_Readylaunch::bb_is_group_admin() ) {
+		bboss_get_template_part( 'groups/single/parts/admin-subnav' );
+	} elseif ( bboss_is_user_settings() && bboss_core_can_edit_settings() ) {
+		bboss_get_template_part( 'members/single/parts/item-subnav' );
+	} elseif ( bboss_is_user_change_avatar() || bboss_is_user_profile_edit() ) {
+		bboss_get_template_part( 'members/single/parts/edit-subnav' );
 	} elseif ( $bb_rl_ld_helper && $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() ) {
-		bp_get_template_part( 'learndash/ld30/single/parts/ld-subnav' );
-	} elseif ( BB_Readylaunch::bb_is_network_search() ) {
-		bp_search_buffer_template_part( 'search-nav' );
+		bboss_get_template_part( 'learndash/ld30/single/parts/ld-subnav' );
+	} elseif ( BBoss_Readylaunch::bb_is_network_search() ) {
+		bboss_search_buffer_template_part( 'search-nav' );
 	} else {
-		$sidebar_order = bb_load_readylaunch()->bb_rl_get_sidebar_order();
+		$sidebar_order = bboss_load_readylaunch()->bb_rl_get_sidebar_order();
 		if ( ! empty( $sidebar_order ) ) {
 			$current_url = home_url( add_query_arg( array(), $wp->request ) );
 			?>
@@ -112,11 +112,11 @@ if ( $is_memberpress_inner ) {
 			</div>
 			<?php
 		}
-		$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section( true );
+		$active_left_sidebar_section = bboss_load_readylaunch()->bb_is_active_any_left_sidebar_section( true );
 		if ( ! empty( $active_left_sidebar_section['groups']['items'] ) ) {
 			?>
 			<div class="bb-rl-left-panel-widget">
-				<?php bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['groups'] ); ?>
+				<?php bboss_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['groups'] ); ?>
 			</div>
 			<?php
 		}
@@ -124,11 +124,11 @@ if ( $is_memberpress_inner ) {
 		if ( ! empty( $active_left_sidebar_section['courses']['items'] ) ) {
 			?>
 			<div class="bb-rl-left-panel-widget">
-				<?php bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['courses'] ); ?>
+				<?php bboss_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['courses'] ); ?>
 			</div>
 			<?php
 		}
-		$custom_links = bp_get_option( 'bb_rl_custom_links', array() );
+		$custom_links = bboss_get_option( 'bb_rl_custom_links', array() );
 		if ( ! empty( $custom_links ) ) {
 			?>
 			<div class="bb-rl-left-panel-widget">

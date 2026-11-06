@@ -14,7 +14,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'type'    => 'activity_update',
 		) );
 
-		$result = BP_Activity_Activity::check_exists_by_content( $content );
+		$result = BBoss_Activity_Activity::check_exists_by_content( $content );
 		$this->assertEquals( $activity, $result );
 	}
 
@@ -31,9 +31,9 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'type'    => 'activity_comment',
 		) );
 
-		BP_Activity_Activity::delete_activity_item_comments( $parent_activity );
+		BBoss_Activity_Activity::delete_activity_item_comments( $parent_activity );
 
-		$result = BP_Activity_Activity::get( array( 'in' => wp_list_pluck( $comments, 'id' ), ) );
+		$result = BBoss_Activity_Activity::get( array( 'in' => wp_list_pluck( $comments, 'id' ), ) );
 		$this->assertEmpty( $result['activities'] );
 	}
 
@@ -47,10 +47,10 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'type' => 'activity_update',
 		) );
 
-		bp_activity_update_meta( $activity, 'Paul', 'is cool' );
-		BP_Activity_Activity::delete_activity_meta_entries( $activity );
+		bboss_activity_update_meta( $activity, 'Paul', 'is cool' );
+		BBoss_Activity_Activity::delete_activity_meta_entries( $activity );
 
-		$meta = bp_activity_get_meta( $activity, 'Paul' );
+		$meta = bboss_activity_get_meta( $activity, 'Paul' );
 		$this->assertSame( '', $meta );
 	}
 
@@ -64,7 +64,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'type' => 'activity_update',
 		) );
 
-		$result = BP_Activity_Activity::get( array(
+		$result = BBoss_Activity_Activity::get( array(
 			'fields' => 'ids',
 		) );
 		$this->assertEqualSets( $a, $result['activities'] );
@@ -78,9 +78,9 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'type' => 'activity_update',
 		) );
 
-		BP_Activity_Activity::hide_all_for_user( get_current_user_id() );
+		BBoss_Activity_Activity::hide_all_for_user( get_current_user_id() );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'in'          => $activity,
 			'show_hidden' => true,
 		) );
@@ -94,9 +94,9 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 	public function test_get_with_meta_query() {
 		$a1 = self::factory()->activity->create();
 		$a2 = self::factory()->activity->create();
-		bp_activity_update_meta( $a1, 'foo', 'bar' );
+		bboss_activity_update_meta( $a1, 'foo', 'bar' );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'meta_query' => array(
 				array(
 					'key' => 'foo',
@@ -122,11 +122,11 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$a3 = self::factory()->activity->create( array(
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 120 ),
 		) );
-		bp_activity_update_meta( $a1, 'foo', 'bar' );
-		bp_activity_update_meta( $a2, 'foo', 'bar' );
-		bp_activity_update_meta( $a1, 'baz', 'barry' );
+		bboss_activity_update_meta( $a1, 'foo', 'bar' );
+		bboss_activity_update_meta( $a2, 'foo', 'bar' );
+		bboss_activity_update_meta( $a1, 'baz', 'barry' );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'meta_query' => array(
 				'relation' => 'OR',
 				array(
@@ -165,7 +165,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		) );
 
 		// 'date_query' before test
-		$query = BP_Activity_Activity::get( array(
+		$query = BBoss_Activity_Activity::get( array(
 			'date_query' => array( array(
 				'before' => array(
 					'year'  => 2004,
@@ -196,7 +196,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		) );
 
 		// 'date_query' range test
-		$query = BP_Activity_Activity::get( array(
+		$query = BBoss_Activity_Activity::get( array(
 			'date_query' => array( array(
 				'after'  => 'January 2nd, 2001',
 				'before' => array(
@@ -229,7 +229,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		) );
 
 		// 'date_query' after and relative test
-		$query = BP_Activity_Activity::get( array(
+		$query = BBoss_Activity_Activity::get( array(
 			'date_query' => array( array(
 				'after' => '1 day ago'
 			) )
@@ -248,7 +248,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'content' => 'No he isn\'t',
 		) );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'search_terms' => 'cool',
 		) );
 		$ids = wp_list_pluck( $activity['activities'], 'id' );
@@ -272,14 +272,14 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'content' => 'Life Drools',
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
 		) );
-		$a3 = bp_activity_new_comment( array(
+		$a3 = bboss_activity_new_comment( array(
 			'user_id' => $u,
 			'activity_id' => $a1,
 			'content' => 'Candy is good',
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 50 ),
 		) );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'display_comments' => 'threaded',
 		) );
 
@@ -312,18 +312,18 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		) );
 
 		// bp_activity_new_comment() doesn't allow date_recorded
-		$a3 = bp_activity_add( array(
-			'action'            => sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_get_loggedin_user_link() ) ,
+		$a3 = bboss_activity_add( array(
+			'action'            => sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bboss_get_loggedin_user_link() ) ,
 			'content'           => 'Candy is good',
-			'component'         => buddypress()->activity->id,
+			'component'         => bboss()->activity->id,
 			'type'              => 'activity_comment',
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'item_id'           => $a1,
 			'secondary_item_id' => $a1,
 			'recorded_time'     => date( 'Y-m-d H:i:s', $now - 50 ),
 		) );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'display_comments' => 'stream',
 		) );
 		$ids = wp_list_pluck( $activity['activities'], 'id' );
@@ -343,13 +343,13 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'content' => 'Life Drools',
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
 		) );
-		$a3 = bp_activity_new_comment( array(
+		$a3 = bboss_activity_new_comment( array(
 			'activity_id' => $a1,
 			'content' => 'Candy is good',
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 50 ),
 		) );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'display_comments' => false,
 		) );
 		$ids = wp_list_pluck( $activity['activities'], 'id' );
@@ -374,7 +374,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 10 ),
 		) );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'filter' => array(
 				'offset' => $a2,
 			),
@@ -401,7 +401,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 10 ),
 		) );
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'filter' => array(
 				'since' => date( 'Y-m-d H:i:s', $now - 70 ),
 			),
@@ -418,7 +418,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$a1 = self::factory()->activity->create();
 		$a2 = self::factory()->activity->create();
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'count_total' => 'count_query',
 		) );
 
@@ -433,7 +433,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$a1 = self::factory()->activity->create();
 		$a2 = self::factory()->activity->create();
 
-		$activity = BP_Activity_Activity::get( array(
+		$activity = BBoss_Activity_Activity::get( array(
 			'count_total' => false,
 		) );
 
@@ -448,7 +448,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$a1 = self::factory()->activity->create();
 		$a2 = self::factory()->activity->create();
 
-		$activity = BP_Activity_Activity::get();
+		$activity = BBoss_Activity_Activity::get();
 
 		$this->assertSame( null, $activity['total'] );
 	}
@@ -464,7 +464,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'item_id' => 1888,
 		) );
 
-		$activity = BP_Activity_Activity::get_id( false, false, false, 523, false, false, false, false );
+		$activity = BBoss_Activity_Activity::get_id( false, false, false, 523, false, false, false, false );
 		$this->assertEquals( $a1, $activity );
 	}
 
@@ -479,7 +479,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'secondary_content' => 1888,
 		) );
 
-		$activity = BP_Activity_Activity::get_id( false, false, false, false, 523, false, false, false );
+		$activity = BBoss_Activity_Activity::get_id( false, false, false, false, 523, false, false, false );
 		$this->assertEquals( $a1, $activity );
 	}
 
@@ -494,7 +494,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'item_id' => 1888,
 		) );
 
-		$activity = BP_Activity_Activity::delete( array(
+		$activity = BBoss_Activity_Activity::delete( array(
 			'item_id' => 523,
 		) );
 		$this->assertEquals( array( $a1 ), $activity );
@@ -511,7 +511,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'secondary_item_id' => 1888,
 		) );
 
-		$activity = BP_Activity_Activity::delete( array(
+		$activity = BBoss_Activity_Activity::delete( array(
 			'secondary_item_id' => 523,
 		) );
 		$this->assertEquals( array( $a1 ), $activity );
@@ -534,13 +534,13 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
 			'user_id' => $u1,
 		) );
-		$a2 = bp_activity_new_comment( array(
+		$a2 = bboss_activity_new_comment( array(
 			'activity_id' => $a1,
 			'content' => 'Candy is good',
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 50 ),
 			'user_id' => $u1,
 		) );
-		$a3 = bp_activity_new_comment( array(
+		$a3 = bboss_activity_new_comment( array(
 			'activity_id' => $a1,
 			'content' => 'Bread is good',
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 25 ),
@@ -549,7 +549,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 
 		$keys = array( 'id', 'item_id', 'secondary_item_id', 'user_id', 'primary_link', 'component', 'type', 'action', 'content', 'date_recorded', 'hide_sitewide', 'mptt_left', 'mptt_right', 'is_spam' );
 
-		$a2_obj = new BP_Activity_Activity( $a2 );
+		$a2_obj = new BBoss_Activity_Activity( $a2 );
 
 		$e2 = new stdClass;
 
@@ -563,11 +563,11 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$e2->user_nicename = $e2_user->user_nicename;
 		$e2->user_login = $e2_user->user_login;
 		$e2->display_name = $e2_user->display_name;
-		$e2->user_fullname = bp_core_get_user_displayname( $e2->user_id );
+		$e2->user_fullname = bboss_core_get_user_displayname( $e2->user_id );
 		$e2->children = array();
 		$e2->depth = 1;
 
-		$a3_obj = new BP_Activity_Activity( $a3 );
+		$a3_obj = new BBoss_Activity_Activity( $a3 );
 
 		$e3 = new stdClass;
 
@@ -581,7 +581,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$e3->user_nicename = $e3_user->user_nicename;
 		$e3->user_login = $e3_user->user_login;
 		$e3->display_name = $e3_user->display_name;
-		$e3->user_fullname = bp_core_get_user_displayname( $e3->user_id );
+		$e3->user_fullname = bboss_core_get_user_displayname( $e3->user_id );
 		$e3->children = array();
 		$e3->depth = 1;
 
@@ -590,8 +590,8 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			$a3 => $e3,
 		);
 
-		$a1_obj = new BP_Activity_Activity( $a1 );
-		$comments = BP_Activity_Activity::get_activity_comments( $a1, $a1_obj->mptt_left, $a1_obj->mptt_right, 'ham_only', $a1 );
+		$a1_obj = new BBoss_Activity_Activity( $a1 );
+		$comments = BBoss_Activity_Activity::get_activity_comments( $a1, $a1_obj->mptt_left, $a1_obj->mptt_right, 'ham_only', $a1 );
 
 		$this->assertEquals( $expected, $comments );
 	}
@@ -611,7 +611,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'recorded_time' => date( 'Y-m-d H:i:s', $now - 300 ),
 		) );
 
-		$this->assertSame( date( 'Y-m-d H:i:s', $now - 100 ), BP_Activity_Activity::get_last_updated() );
+		$this->assertSame( date( 'Y-m-d H:i:s', $now - 100 ), BBoss_Activity_Activity::get_last_updated() );
 	}
 
 	/**
@@ -631,10 +631,10 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'action' => 'friendship_accepted',
 		) );
 
-		$found = BP_Activity_Activity::get_recorded_components( false );
+		$found = BBoss_Activity_Activity::get_recorded_components( false );
 		sort( $found );
 
-		$this->assertSame( array( 'friends', 'groups', 'members' ), BP_Activity_Activity::get_recorded_components( false ) );
+		$this->assertSame( array( 'friends', 'groups', 'members' ), BBoss_Activity_Activity::get_recorded_components( false ) );
 	}
 
 	/**
@@ -654,10 +654,10 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'action' => 'friendship_accepted',
 		) );
 
-		$found = BP_Activity_Activity::get_recorded_components( true );
+		$found = BBoss_Activity_Activity::get_recorded_components( true );
 		sort( $found );
 
-		$this->assertSame( array( 'friends', 'groups' ), BP_Activity_Activity::get_recorded_components() );
+		$this->assertSame( array( 'friends', 'groups' ), BBoss_Activity_Activity::get_recorded_components() );
 	}
 
 	/**
@@ -681,10 +681,10 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'action' => 'foo',
 		) );
 
-		$found = BP_Activity_Activity::get_recorded_components( true );
+		$found = BBoss_Activity_Activity::get_recorded_components( true );
 		sort( $found );
 
-		$this->assertSame( array( 'friends', 'groups', 'members' ), BP_Activity_Activity::get_recorded_components() );
+		$this->assertSame( array( 'friends', 'groups', 'members' ), BBoss_Activity_Activity::get_recorded_components() );
 	}
 
 	/**
@@ -708,16 +708,16 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'action' => 'last_activity',
 		) );
 
-		$found = BP_Activity_Activity::get_recorded_components( true );
+		$found = BBoss_Activity_Activity::get_recorded_components( true );
 		sort( $found );
 
-		$this->assertSame( array( 'friends', 'groups', ), BP_Activity_Activity::get_recorded_components() );
+		$this->assertSame( array( 'friends', 'groups', ), BBoss_Activity_Activity::get_recorded_components() );
 	}
 	/**
 	 * @group activity_action
 	 */
 	public function test_instantiated_action_with_dynamic_callback() {
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'bar',
 			'Foo Bar',
@@ -731,7 +731,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'action' => 'baz',
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( 'Woo Hoo!', $a_obj->action );
 	}
@@ -749,7 +749,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'action' => 'baz',
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( 'baz', $a_obj->action );
 	}
@@ -766,7 +766,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 			'type' => 'bar2',
 		) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( '', $a_obj->action );
 	}
@@ -776,9 +776,9 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 	 */
 	public function test_nonexistent_activity_should_have_id_0_after_population() {
 		$a = self::factory()->activity->create();
-		bp_activity_delete_by_activity_id( $a );
+		bboss_activity_delete_by_activity_id( $a );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 		$this->assertSame( 0, $a_obj->id );
 	}
 

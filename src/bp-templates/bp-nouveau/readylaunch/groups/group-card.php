@@ -6,7 +6,7 @@
  * and group information including avatar, title, meta, and action buttons.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.8.20
  * @version 1.0.0
  */

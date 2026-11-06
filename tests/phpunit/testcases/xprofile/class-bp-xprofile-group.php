@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group BP_XProfile_Group
+ * @group BBoss_XProfile_Group
  * @group xprofile
  */
 class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
@@ -11,7 +11,7 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 	 */
 	public function test_save_should_not_return_false_when_no_fields_have_been_altered() {
 		$g = self::factory()->xprofile_group->create();
-		$group = new BP_XProfile_Group( $g );
+		$group = new BBoss_XProfile_Group( $g );
 
 		$saved = $group->save();
 
@@ -24,14 +24,14 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 	public function test_delete() {
 		$g = self::factory()->xprofile_group->create();
 
-		$groups    = bp_xprofile_get_groups();
+		$groups    = bboss_xprofile_get_groups();
 		$group_ids = wp_list_pluck( $groups, 'id' );
 		$this->assertContains( $g, $group_ids );
 
-		$group = new BP_XProfile_Group( $g );
+		$group = new BBoss_XProfile_Group( $g );
 		$this->assertTrue( $group->delete() );
 
-		$groups    = bp_xprofile_get_groups();
+		$groups    = bboss_xprofile_get_groups();
 		$group_ids = wp_list_pluck( $groups, 'id' );
 		$this->assertNotContains( $g, $group_ids );
 	}
@@ -46,7 +46,7 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 			'field_group_id' => $g,
 		) );
 
-		$f_obj = new BP_XProfile_Field( $f );
+		$f_obj = new BBoss_XProfile_Field( $f );
 
 		$fields = array(
 			0 => new stdClass,
@@ -63,10 +63,10 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$fields[0]->data->id = 123;
 
 		// custom visibility enabled, but no fallback
-		bp_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
-		bp_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'enabled' );
+		bboss_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'enabled' );
 
-		$found = BP_XProfile_Group::fetch_visibility_level( $u, $fields );
+		$found = BBoss_XProfile_Group::fetch_visibility_level( $u, $fields );
 
 		$expected = $fields;
 		$expected[0]->visibility_level = 'adminsonly';
@@ -74,11 +74,11 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$this->assertSame( $expected, $found );
 
 		// custom visibility enabled, with user-provided value
-		bp_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
-		bp_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'enabled' );
-		xprofile_set_field_visibility_level( $f, $u, 'public' );
+		bboss_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'enabled' );
+		bboss_xprofile_set_field_visibility_level( $f, $u, 'public' );
 
-		$found = BP_XProfile_Group::fetch_visibility_level( $u, $fields );
+		$found = BBoss_XProfile_Group::fetch_visibility_level( $u, $fields );
 
 		$expected = $fields;
 		$expected[0]->visibility_level = 'public';
@@ -86,11 +86,11 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$this->assertSame( $expected, $found );
 
 		// custom visibility disabled
-		bp_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
-		bp_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'disabled' );
-		xprofile_set_field_visibility_level( $f, $u, 'public' );
+		bboss_xprofile_update_meta( $f, 'field', 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_meta( $f, 'field', 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_set_field_visibility_level( $f, $u, 'public' );
 
-		$found = BP_XProfile_Group::fetch_visibility_level( $u, $fields );
+		$found = BBoss_XProfile_Group::fetch_visibility_level( $u, $fields );
 
 		$expected = $fields;
 		$expected[0]->visibility_level = 'adminsonly';
@@ -106,11 +106,11 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$g2 = self::factory()->xprofile_group->create();
 		$g3 = self::factory()->xprofile_group->create();
 
-		$all = BP_XProfile_Group::get();
+		$all = BBoss_XProfile_Group::get();
 		$all_results = array_map( 'absint', wp_list_pluck( $all, 'id' ) );
 
 		$e1 = array( $g1, $g2 );
-		$groups1 = BP_XProfile_Group::get( array(
+		$groups1 = BBoss_XProfile_Group::get( array(
 			'exclude_groups' => implode( ',', $e1 ),
 		) );
 
@@ -120,7 +120,7 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$this->assertSame( $e1, array_merge( $found1, array() ) );
 
 		$e2 = array( $g2, $g3 );
-		$groups2 = BP_XProfile_Group::get( array(
+		$groups2 = BBoss_XProfile_Group::get( array(
 			'exclude_groups' => $e2,
 		) );
 
@@ -137,12 +137,12 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 	public function test_member_type_restrictions_should_be_ignored_when_user_id_is_null_and_member_type_is_not_explicitly_provided() {
 		$g = self::factory()->xprofile_group->create();
 		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$field->set_member_types( array( 'foo' ) );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'user_id' => false,
 			'fetch_fields' => true,
 		) );
@@ -164,12 +164,12 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 	public function test_member_type_restrictions_should_be_ignored_when_user_id_is_0_and_member_type_is_false() {
 		$g = self::factory()->xprofile_group->create();
 		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
+		bboss_register_member_type( 'foo' );
 
-		$field = new BP_XProfile_Field( $f );
+		$field = new BBoss_XProfile_Field( $f );
 		$field->set_member_types( array( 'foo' ) );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'user_id' => 0,
 			'member_type' => false,
 			'fetch_fields' => true,
@@ -195,28 +195,28 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f3 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f4 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
 		// Field 1 is visible only to 'foo' users.
-		$field1 = new BP_XProfile_Field( $f1 );
+		$field1 = new BBoss_XProfile_Field( $f1 );
 		$field1->set_member_types( array( 'foo' ) );
 
 		// Field 2 is visible only to 'bar' users.
-		$field2 = new BP_XProfile_Field( $f2 );
+		$field2 = new BBoss_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'bar' ) );
 
 		// Field 3 is visible to all users (no profile type set).
 
 		// Field 4 is visible to no one.
-		$field4 = new BP_XProfile_Field( $f4 );
+		$field4 = new BBoss_XProfile_Field( $f4 );
 		$field4->set_member_types( array() );
 
 		// User is in 'foo', so should have f1 and f3 only.
 		$u = self::factory()->user->create();
-		bp_set_member_type( $u, 'foo' );
+		bboss_set_member_type( $u, 'foo' );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'user_id' => $u,
 			'fetch_fields' => true,
 		) );
@@ -243,15 +243,15 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$f1 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f3 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
 		// Field 1 is visible only to 'foo' users.
-		$field1 = new BP_XProfile_Field( $f1 );
+		$field1 = new BBoss_XProfile_Field( $f1 );
 		$field1->set_member_types( array( 'foo' ) );
 
 		// Field 2 is visible only to 'null' users.
-		$field2 = new BP_XProfile_Field( $f2 );
+		$field2 = new BBoss_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'null' ) );
 
 		// Field 3 is visible to all users (no profile type set).
@@ -259,7 +259,7 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		// User has no profile types, so should see f2 and f3 .
 		$u = self::factory()->user->create();
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'user_id' => $u,
 			'fetch_fields' => true,
 		) );
@@ -284,18 +284,18 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$g = self::factory()->xprofile_group->create();
 		$f1 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
-		$field1 = new BP_XProfile_Field( $f1 );
+		$field1 = new BBoss_XProfile_Field( $f1 );
 		$field1->set_member_types( array( 'foo' ) );
-		$field2 = new BP_XProfile_Field( $f2 );
+		$field2 = new BBoss_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'bar' ) );
 
 		$u = self::factory()->user->create();
-		bp_set_member_type( $u, 'foo' );
+		bboss_set_member_type( $u, 'foo' );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'user_id' => $u,
 			'member_type' => 'bar',
 			'fetch_fields' => true,
@@ -319,15 +319,15 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$g = self::factory()->xprofile_group->create();
 		$f1 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
-		$field1 = new BP_XProfile_Field( $f1 );
+		$field1 = new BBoss_XProfile_Field( $f1 );
 		$field1->set_member_types( array( 'foo' ) );
-		$field2 = new BP_XProfile_Field( $f2 );
+		$field2 = new BBoss_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'bar' ) );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'member_type' => 'bar',
 			'fetch_fields' => true,
 		) );
@@ -351,15 +351,15 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$g = self::factory()->xprofile_group->create();
 		$f1 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
-		$field1 = new BP_XProfile_Field( $f1 );
+		$field1 = new BBoss_XProfile_Field( $f1 );
 		$field1->set_member_types( array( 'foo' ) );
-		$field2 = new BP_XProfile_Field( $f2 );
+		$field2 = new BBoss_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'bar' ) );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'member_type' => array( 'bar' ),
 			'fetch_fields' => true,
 		) );
@@ -383,13 +383,13 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$g = self::factory()->xprofile_group->create();
 		$f1 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
 		$f2 = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
-		bp_register_member_type( 'foo' );
-		bp_register_member_type( 'bar' );
+		bboss_register_member_type( 'foo' );
+		bboss_register_member_type( 'bar' );
 
-		$field1 = new BP_XProfile_Field( $f1 );
+		$field1 = new BBoss_XProfile_Field( $f1 );
 		$field1->set_member_types( array( 'foo' ) );
 
-		$found_groups = BP_XProfile_Group::get( array(
+		$found_groups = BBoss_XProfile_Group::get( array(
 			'member_type' => array( 'null' ),
 			'fetch_fields' => true,
 		) );
@@ -413,12 +413,12 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 			'name' => "Test ' Name"
 		) );
 
-		$e1 = new BP_XProfile_Group( $g1 );
+		$e1 = new BBoss_XProfile_Group( $g1 );
 		$e1->save();
 
 		wp_cache_delete( $g1, 'bp_xprofile_groups' );
 
-		$e2 = new BP_XProfile_Group( $g1 );
+		$e2 = new BBoss_XProfile_Group( $g1 );
 
 		$this->assertSame( $e1->name, $e2->name );
 	}
@@ -437,7 +437,7 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		) );
 
 		// Get the field
-		$e1 = new BP_XProfile_Group( $g1 );
+		$e1 = new BBoss_XProfile_Group( $g1 );
 
 		$this->assertSame( "Test ' Name", $e1->name );
 	}

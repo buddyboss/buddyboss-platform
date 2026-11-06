@@ -42,8 +42,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-const BB_LEARNDASH_ADDON_IPN_TYPE = 'bb-addon-promo-learndash';
-const BB_LEARNDASH_ADDON_IPN_ID   = 'install';
+const BBOSS_LEARNDASH_ADDON_IPN_TYPE = 'bb-addon-promo-learndash';
+const BBOSS_LEARNDASH_ADDON_IPN_ID   = 'install';
 
 /**
  * Detect whether the buddyboss-learndash addon plugin is installed and
@@ -56,7 +56,7 @@ const BB_LEARNDASH_ADDON_IPN_ID   = 'install';
  *
  * @return bool
  */
-function bb_learndash_addon_is_active() {
+function bboss_learndash_addon_is_active() {
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
@@ -86,7 +86,7 @@ function bb_learndash_addon_is_active() {
  *
  * @return bool
  */
-function bb_learndash_addon_site_uses_learndash() {
+function bboss_learndash_addon_site_uses_learndash() {
 	// SFWD_LMS gates the check: an enabled flag in the option without LD
 	// LMS active means the user toggled the integration on once and then
 	// deactivated LD — the addon isn't relevant in that state.
@@ -94,7 +94,7 @@ function bb_learndash_addon_site_uses_learndash() {
 		return false;
 	}
 
-	$options = bp_get_option( 'bp_ld_sync_settings', array() );
+	$options = bboss_get_option( 'bp_ld_sync_settings', array() );
 	if ( ! is_array( $options ) ) {
 		return false;
 	}
@@ -115,7 +115,7 @@ function bb_learndash_addon_site_uses_learndash() {
  *
  * @return bool
  */
-function bb_learndash_addon_has_active_license() {
+function bboss_learndash_addon_has_active_license() {
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
 		return false;
 	}
@@ -143,7 +143,7 @@ function bb_learndash_addon_has_active_license() {
  *
  * @return bool
  */
-function bb_learndash_addon_license_is_lite() {
+function bboss_learndash_addon_license_is_lite() {
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
 		return false;
 	}
@@ -168,7 +168,7 @@ function bb_learndash_addon_license_is_lite() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_learndash_addon_sync_ipn() {
+function bboss_learndash_addon_sync_ipn() {
 	// @bbwt-com-start drm
 	// Bail if the notifications wrapper isn't loaded — happens during very
 	// early Platform boot or on partial installs where the DRM/Mothership
@@ -187,8 +187,8 @@ function bb_learndash_addon_sync_ipn() {
 
 	// Suppress when the addon is already installed/active. Always dismiss
 	// here too so a stale notice from a previous state is cleaned up.
-	if ( bb_learndash_addon_is_active() ) {
-		$notifications->dismiss_events( BB_LEARNDASH_ADDON_IPN_TYPE );
+	if ( bboss_learndash_addon_is_active() ) {
+		$notifications->dismiss_events( BBOSS_LEARNDASH_ADDON_IPN_TYPE );
 		return;
 	}
 
@@ -196,13 +196,13 @@ function bb_learndash_addon_sync_ipn() {
 	// (so we don't pitch the addon to unlicensed installs) AND the active
 	// plan is NOT bb-platform-lite (LD addon is not part of the Lite tier).
 	if (
-		! bb_learndash_addon_site_uses_learndash() ||
-		! bb_learndash_addon_has_active_license() ||
-		bb_learndash_addon_license_is_lite()
+		! bboss_learndash_addon_site_uses_learndash() ||
+		! bboss_learndash_addon_has_active_license() ||
+		bboss_learndash_addon_license_is_lite()
 	) {
 		// If conditions are no longer met (e.g. license was deactivated
 		// or downgraded to Lite after the notice was published), clean it up.
-		$notifications->dismiss_events( BB_LEARNDASH_ADDON_IPN_TYPE );
+		$notifications->dismiss_events( BBOSS_LEARNDASH_ADDON_IPN_TYPE );
 		return;
 	}
 
@@ -213,8 +213,8 @@ function bb_learndash_addon_sync_ipn() {
 
 	$notifications->add(
 		array(
-			'id'      => BB_LEARNDASH_ADDON_IPN_ID,
-			'type'    => BB_LEARNDASH_ADDON_IPN_TYPE,
+			'id'      => BBOSS_LEARNDASH_ADDON_IPN_ID,
+			'type'    => BBOSS_LEARNDASH_ADDON_IPN_TYPE,
 			'title'   => __( 'Are you using LearnDash? Install our Add-on', 'buddyboss' ),
 			'content' => sprintf(
 				'<p>%1$s</p><p>%2$s</p>',

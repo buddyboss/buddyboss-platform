@@ -41,7 +41,7 @@ add_filter( 'bbms_bbplfm_show_register_banner', '__return_false', 999 );
  *
  * @return bool True when at least one product plugin exists on disk.
  */
-function bb_admin_register_banner_products_installed() {
+function bboss_admin_register_banner_products_installed() {
 
 	/**
 	 * Filter the plugin basenames that count as "Membership products installed".
@@ -88,7 +88,7 @@ function bb_admin_register_banner_products_installed() {
  *
  * @return string One of 'pitch', 'notice', 'none'.
  */
-function bb_admin_register_banner_mode() {
+function bboss_admin_register_banner_mode() {
 	$mode = 'none';
 
 	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
@@ -111,7 +111,7 @@ function bb_admin_register_banner_mode() {
 		// A key exists but is not activated (pasted and never activated, or
 		// the activation lapsed) — never re-pitch registration to a key holder.
 		$mode = 'notice';
-	} elseif ( bb_admin_register_banner_products_installed() ) {
+	} elseif ( bboss_admin_register_banner_products_installed() ) {
 		// No key, but the site already owns Membership/Courses — nudge to
 		// activate instead of pitching an owned product.
 		$mode = 'notice';
@@ -142,20 +142,20 @@ function bb_admin_register_banner_mode() {
  *
  * @return void
  */
-function bb_admin_register_banner_enqueue() {
-	$mode = bb_admin_register_banner_mode();
+function bboss_admin_register_banner_enqueue() {
+	$mode = bboss_admin_register_banner_mode();
 
 	if ( 'none' === $mode ) {
 		return;
 	}
 
-	$min = bp_core_get_minified_asset_suffix();
+	$min = bboss_core_get_minified_asset_suffix();
 
 	wp_register_style(
 		'bb-register-banner',
-		buddypress()->plugin_url . "bp-core/admin/css/register-banner{$min}.css",
+		bboss()->plugin_url . "bp-core/admin/css/register-banner{$min}.css",
 		array(),
-		bp_get_version()
+		bboss_get_version()
 	);
 
 	// 'replace' swaps "{$suffix}.css" → "-rtl{$suffix}.css" on RTL sites,
@@ -172,9 +172,9 @@ function bb_admin_register_banner_enqueue() {
 	// (matching the legacy Membership banner), so the JS loads for both.
 	wp_enqueue_script(
 		'bb-register-banner',
-		buddypress()->plugin_url . "bp-core/admin/js/register-banner{$min}.js",
+		bboss()->plugin_url . "bp-core/admin/js/register-banner{$min}.js",
 		array(),
-		bp_get_version(),
+		bboss_get_version(),
 		true
 	);
 
@@ -210,14 +210,14 @@ add_action( 'admin_enqueue_scripts', 'bb_admin_register_banner_enqueue' );
  *
  * @return void
  */
-function bb_admin_render_register_banner() {
-	$mode = bb_admin_register_banner_mode();
+function bboss_admin_render_register_banner() {
+	$mode = bboss_admin_register_banner_mode();
 
 	if ( 'none' === $mode ) {
 		return;
 	}
 
-	$template = buddypress()->plugin_dir . 'bp-core/admin/templates/register-banner.php';
+	$template = bboss()->plugin_dir . 'bp-core/admin/templates/register-banner.php';
 	if ( ! file_exists( $template ) ) {
 		return;
 	}
@@ -237,7 +237,7 @@ function bb_admin_render_register_banner() {
  *
  * @return void
  */
-function bb_admin_register_banner_ajax_mark_registered() {
+function bboss_admin_register_banner_ajax_mark_registered() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error( array( 'message' => __( 'You are not allowed to do this.', 'buddyboss' ) ), 403 );
 	}

@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 <div class="bp-cover-image-status"></div>
 <div class="bp-cover-image-manage"></div>
 
-<?php bp_attachments_get_template_part( 'uploader' ); ?>
+<?php bboss_attachments_get_template_part( 'uploader' ); ?>
 
 <script id="tmpl-bp-cover-image-delete" type="text/html">
 	<# if ( 'user' === data.object ) { #>

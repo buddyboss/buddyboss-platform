@@ -13,14 +13,14 @@ class BP_Tests_Members_Activity extends BP_UnitTestCase {
 	public function test_bp_members_format_activity_action_new_member() {
 		$u = self::factory()->user->create();
 		$a = self::factory()->activity->create( array(
-			'component' => buddypress()->members->id,
+			'component' => bboss()->members->id,
 			'type' => 'new_member',
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( '%s became a registered member', 'buddyboss' ), bp_core_get_userlink( $u ) );
+		$expected = sprintf( __( '%s became a registered member', 'buddyboss' ), bboss_core_get_userlink( $u ) );
 
-		$a_obj = new BP_Activity_Activity( $a );
+		$a_obj = new BBoss_Activity_Activity( $a );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
@@ -30,7 +30,7 @@ class BP_Tests_Members_Activity extends BP_UnitTestCase {
 	 */
 	public function test_bp_migrate_new_member_activity_component() {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
@@ -54,7 +54,7 @@ class BP_Tests_Members_Activity extends BP_UnitTestCase {
 			'user_id' => $u3,
 		) );
 
-		bp_migrate_new_member_activity_component();
+		bboss_migrate_new_member_activity_component();
 
 		$expected = array(
 			$u1 => $au1,

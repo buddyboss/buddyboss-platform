@@ -11,29 +11,29 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_activity_user_link = bp_get_activity_user_link();
-$bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
+$bp_activity_user_link = bboss_get_activity_user_link();
+$bp_activity_url       = bboss_activity_get_permalink( bboss_get_activity_id() );
 ?>
 
 <li class="bp-search-item bp-search-item_activity_comment">
 	<div class="list-wrap">
 		<div class="activity-avatar item-avatar">
-			<a href="<?php echo esc_url( $bp_activity_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
-				<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
+			<a href="<?php echo esc_url( $bp_activity_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bboss_get_activity_user_id() ); ?>">
+				<?php bboss_activity_avatar( array( 'type' => 'full' ) ); ?>
 			</a>
 		</div>
 
 		<div class="item activity-content">
 			<div class="activity-header">
-				<a href="<?php echo esc_url( $bp_activity_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
+				<a href="<?php echo esc_url( $bp_activity_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bboss_get_activity_user_id() ); ?>"><?php echo wp_kses_post( bboss_core_get_user_displayname( bboss_get_activity_user_id() ) ); ?></a>
 				<a href="<?php echo esc_url( $bp_activity_url ); ?>"><?php esc_html_e( 'replied to a post', 'buddyboss' ); ?></a>
 			</div>
-			<?php if ( bp_nouveau_activity_has_content() ) : ?>
+			<?php if ( bboss_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
 					<?php
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- activity content is kses-filtered on save; wp_kses_post() here turns a tag cut by the excerpt into visible text.
-					echo bp_create_excerpt(
-						bp_get_activity_content_body(),
+					echo bboss_create_excerpt(
+						bboss_get_activity_content_body(),
 						100,
 						array(
 							'ending' => '&hellip;'
@@ -45,11 +45,11 @@ $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 			<div class="item-meta">
 				<a href="<?php echo esc_url( $bp_activity_url ); ?>">
 					<?php
-					$activity_comment_date_recorded = bp_get_activity_date_recorded();
+					$activity_comment_date_recorded = bboss_get_activity_date_recorded();
 					printf(
 						'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-						esc_html( bp_core_get_iso8601_date( $activity_comment_date_recorded ) ),
-						esc_html( bp_core_time_since( $activity_comment_date_recorded ) )
+						esc_html( bboss_core_get_iso8601_date( $activity_comment_date_recorded ) ),
+						esc_html( bboss_core_time_since( $activity_comment_date_recorded ) )
 					);
 					?>
 				</a>

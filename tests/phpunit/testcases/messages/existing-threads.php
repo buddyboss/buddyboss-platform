@@ -4,7 +4,7 @@
  * Existing-thread lookup and group-thread listing for very large conversations (PROD-9747).
  *
  * @group messages
- * @group BP_Messages_Thread
+ * @group BBoss_Messages_Thread
  */
 class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
@@ -17,11 +17,11 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 	public function set_up() {
 		parent::set_up();
-		$this->group_messages_option = bp_get_option( 'bp-disable-group-messages' );
+		$this->group_messages_option = bboss_get_option( 'bp-disable-group-messages' );
 	}
 
 	public function tear_down() {
-		bp_update_option( 'bp-disable-group-messages', $this->group_messages_option );
+		bboss_update_option( 'bp-disable-group-messages', $this->group_messages_option );
 		parent::tear_down();
 	}
 
@@ -53,12 +53,12 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	 * @param int $group_id   Group ID.
 	 */
 	protected function flag_group_message( $message_id, $thread_id, $group_id ) {
-		bp_messages_update_meta( $message_id, 'group_id', $group_id );
-		bp_messages_update_meta( $message_id, 'group_message_thread_id', $thread_id );
-		bp_messages_update_meta( $message_id, 'group_message_users', 'all' );
-		bp_messages_update_meta( $message_id, 'group_message_type', 'open' );
-		bp_messages_update_meta( $message_id, 'group_message_thread_type', 'new' );
-		bp_messages_update_meta( $message_id, 'message_from', 'group' );
+		bboss_messages_update_meta( $message_id, 'group_id', $group_id );
+		bboss_messages_update_meta( $message_id, 'group_message_thread_id', $thread_id );
+		bboss_messages_update_meta( $message_id, 'group_message_users', 'all' );
+		bboss_messages_update_meta( $message_id, 'group_message_type', 'open' );
+		bboss_messages_update_meta( $message_id, 'group_message_thread_type', 'new' );
+		bboss_messages_update_meta( $message_id, 'message_from', 'group' );
 	}
 
 	/**
@@ -101,9 +101,9 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$thread_id = $this->create_thread( $u1, array( $u2 ) );
 
-		$this->assertSame( $thread_id, (int) BP_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
+		$this->assertSame( $thread_id, (int) BBoss_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
 
-		$threads = BP_Messages_Message::get_existing_threads( array( $u2 ), $u1, true );
+		$threads = BBoss_Messages_Message::get_existing_threads( array( $u2 ), $u1, true );
 		$this->assertSame( array( $thread_id ), array_map( 'intval', wp_list_pluck( $threads, 'thread_id' ) ) );
 	}
 
@@ -115,12 +115,12 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->create_thread( $u1, array( $u2, $u3 ) );
 
 		// Subset of the group thread's recipients.
-		$this->assertNull( BP_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
-		$this->assertNull( BP_Messages_Message::get_existing_threads( array( $u2 ), $u1, true ) );
+		$this->assertNull( BBoss_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
+		$this->assertNull( BBoss_Messages_Message::get_existing_threads( array( $u2 ), $u1, true ) );
 
 		// Superset of the group thread's recipients.
 		$u4 = self::factory()->user->create();
-		$this->assertNull( BP_Messages_Message::get_existing_thread( array( $u2, $u3, $u4 ), $u1 ) );
+		$this->assertNull( BBoss_Messages_Message::get_existing_thread( array( $u2, $u3, $u4 ), $u1 ) );
 	}
 
 	public function test_existing_thread_matches_multi_recipient_thread() {
@@ -131,7 +131,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$thread_id = $this->create_thread( $u1, array( $u2, $u3 ) );
 
 		// Order of the requested recipients must not matter.
-		$this->assertSame( $thread_id, (int) BP_Messages_Message::get_existing_thread( array( $u3, $u2 ), $u1 ) );
+		$this->assertSame( $thread_id, (int) BBoss_Messages_Message::get_existing_thread( array( $u3, $u2 ), $u1 ) );
 	}
 
 	/**
@@ -150,9 +150,9 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->create_thread( $sender, array_merge( array( $partner ), $others ) );
 		$one_to_one = $this->create_thread( $sender, array( $partner ) );
 
-		$this->assertSame( $one_to_one, (int) BP_Messages_Message::get_existing_thread( array( $partner ), $sender ) );
+		$this->assertSame( $one_to_one, (int) BBoss_Messages_Message::get_existing_thread( array( $partner ), $sender ) );
 
-		$threads = BP_Messages_Message::get_existing_threads( array( $partner ), $sender, true );
+		$threads = BBoss_Messages_Message::get_existing_threads( array( $partner ), $sender, true );
 		$this->assertSame( array( $one_to_one ), array_map( 'intval', wp_list_pluck( $threads, 'thread_id' ) ) );
 	}
 
@@ -217,7 +217,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'capture_lookup_where' ), 999, 2 );
 		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'capture_lookup_from' ), 999, 2 );
 
-		$threads = BP_Messages_Message::get_existing_threads( array( $partner ), $sender, true );
+		$threads = BBoss_Messages_Message::get_existing_threads( array( $partner ), $sender, true );
 
 		remove_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'capture_lookup_where' ), 999 );
 		remove_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'capture_lookup_from' ), 999 );
@@ -242,7 +242,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	 * @group moderation
 	 */
 	public function test_existing_thread_counts_suspended_recipient() {
-		if ( ! bp_is_active( 'moderation' ) ) {
+		if ( ! bboss_is_active( 'moderation' ) ) {
 			$this->markTestSkipped( 'Moderation component is not active.' );
 		}
 
@@ -252,13 +252,13 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$thread_id = $this->create_thread( $u1, array( $u2, $u3 ) );
 
-		BP_Suspend_Member::suspend_user( $u3 );
+		BBoss_Suspend_Member::suspend_user( $u3 );
 
 		// A suspended member is still a recipient: only the full set matches.
-		$this->assertNull( BP_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
-		$this->assertSame( $thread_id, (int) BP_Messages_Message::get_existing_thread( array( $u2, $u3 ), $u1 ) );
+		$this->assertNull( BBoss_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
+		$this->assertSame( $thread_id, (int) BBoss_Messages_Message::get_existing_thread( array( $u2, $u3 ), $u1 ) );
 
-		BP_Suspend_Member::unsuspend_user( $u3 );
+		BBoss_Suspend_Member::unsuspend_user( $u3 );
 	}
 
 	/**
@@ -273,13 +273,13 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		// Three members, so the private message below cannot land in the group thread.
 		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$private_thread = $this->create_thread( $u1, array( $u2 ) );
 
 		$this->set_current_user( $u2 );
 		wp_cache_flush();
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array(
 				'user_id' => $u2,
 				'fields'  => 'ids',
@@ -290,7 +290,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		// As in release: only the group message itself is left out, so the replied thread stays listed; the web open gate blocks it.
 		$this->assertContains( $group_thread, $listed, 'Group thread with replies stays listed, as in release.' );
 		$this->assertContains( $private_thread, $listed, 'Other threads stay listed.' );
-		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ), 'Opening the group thread on the web is blocked.' );
+		$this->assertSame( 0, bboss_messages_validate_groups_thread( $group_thread ), 'Opening the group thread on the web is blocked.' );
 	}
 
 	/**
@@ -300,7 +300,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$u1       = self::factory()->user->create();
 		$u2       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
-		groups_join_group( $group_id, $u2 );
+		bboss_groups_join_group( $group_id, $u2 );
 
 		$group_message = self::factory()->message->create_and_get(
 			array(
@@ -312,11 +312,11 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$group_thread  = (int) $group_message->thread_id;
 		$this->flag_group_message( $group_message->id, $group_thread, $group_id );
 
-		bp_update_option( 'bp-disable-group-messages', 1 );
+		bboss_update_option( 'bp-disable-group-messages', 1 );
 		$this->set_current_user( $u2 );
 		wp_cache_flush();
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array(
 				'user_id' => $u2,
 				'fields'  => 'ids',
@@ -336,25 +336,25 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
 
-		bp_update_option( 'bp-disable-group-messages', 1 );
+		bboss_update_option( 'bp-disable-group-messages', 1 );
 		$this->set_current_user( $u2 );
 		wp_cache_flush();
 
-		$active_components = buddypress()->active_components;
-		unset( buddypress()->active_components['groups'] );
+		$active_components = bboss()->active_components;
+		unset( bboss()->active_components['groups'] );
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array(
 				'user_id' => $u2,
 				'fields'  => 'ids',
 			)
 		);
 
-		buddypress()->active_components = $active_components;
+		bboss()->active_components = $active_components;
 
 		// As in release: only the group message itself is left out, the replied thread stays listed and opens (TC-18).
 		$this->assertContains( $group_thread, array_map( 'intval', (array) $threads['threads'] ) );
-		$this->assertSame( $group_thread, bb_messages_validate_groups_thread( $group_thread ) );
+		$this->assertSame( $group_thread, bboss_messages_validate_groups_thread( $group_thread ) );
 	}
 
 	/**
@@ -386,7 +386,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 			)
 		);
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		wp_cache_flush();
 
 		$deleted  = array();
@@ -395,7 +395,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		};
 		add_action( 'bp_messages_thread_before_mark_delete', $callback, 10, 2 );
 
-		BP_Messages_Message::delete_user_message( $u2 );
+		BBoss_Messages_Message::delete_user_message( $u2 );
 
 		remove_action( 'bp_messages_thread_before_mark_delete', $callback, 10 );
 
@@ -414,8 +414,8 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->set_current_user( $sender );
 		wp_cache_flush();
 
-		$thread   = new BP_Messages_Thread( $thread_id );
-		$per_page = bb_messages_recipients_per_page();
+		$thread   = new BBoss_Messages_Thread( $thread_id );
+		$per_page = bboss_messages_recipients_per_page();
 		$full     = array_keys( $thread->get_recipients() );
 
 		$this->assertCount( $per_page, $thread->recipients );
@@ -434,7 +434,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->create_thread( $sender, array_merge( array( $recipient ), $others ) );
 		$this->set_current_user( $sender );
 
-		$first = messages_new_message(
+		$first = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -442,7 +442,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 				'content'    => 'First message',
 			)
 		);
-		$second = messages_new_message(
+		$second = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -453,7 +453,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$this->assertIsInt( $first );
 		$this->assertSame( $first, $second );
-		$this->assertSame( 2, (int) BP_Messages_Thread::get_messages_count( $first ) );
+		$this->assertSame( 2, (int) BBoss_Messages_Thread::get_messages_count( $first ) );
 	}
 
 	/**
@@ -467,7 +467,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->set_current_user( $recipient );
 		wp_cache_flush();
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array(
 				'user_id' => $recipient,
 				'fields'  => 'ids',
@@ -475,7 +475,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		);
 
 		$this->assertContains( $thread_id, array_map( 'intval', (array) $threads['threads'] ) );
-		$this->assertSame( 1, (int) messages_get_unread_count( $recipient ) );
+		$this->assertSame( 1, (int) bboss_messages_get_unread_count( $recipient ) );
 	}
 
 	/**
@@ -488,12 +488,12 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$u2       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$this->create_group_thread_with_reply( $u1, array( $u2, self::factory()->user->create() ), $group_id );
 		$this->create_thread( $u1, array( $u2 ) );
 		wp_cache_flush();
 
-		$this->assertSame( 1, (int) messages_get_unread_count( $u2 ), 'Only the private thread counts as unread.' );
+		$this->assertSame( 1, (int) bboss_messages_get_unread_count( $u2 ), 'Only the private thread counts as unread.' );
 
 		// Changing the setting in tear_down() unsets the unread-count group straight from the object cache.
 		wp_cache_flush();
@@ -508,13 +508,13 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$u1       = self::factory()->user->create();
 		$u2       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
-		groups_join_group( $group_id, $u2 );
+		bboss_groups_join_group( $group_id, $u2 );
 
 		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
 		$this->set_current_user( $u2 );
 
 		$listed = function () use ( $u2 ) {
-			$threads = BP_Messages_Thread::get_current_threads_for_user(
+			$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 				array(
 					'user_id' => $u2,
 					'fields'  => 'ids',
@@ -524,17 +524,17 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 			return empty( $threads['threads'] ) ? array() : array_map( 'intval', $threads['threads'] );
 		};
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$this->assertContains( $group_thread, $listed() );
-		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ) );
+		$this->assertSame( 0, bboss_messages_validate_groups_thread( $group_thread ) );
 
-		bp_update_option( 'bp-disable-group-messages', 1 );
+		bboss_update_option( 'bp-disable-group-messages', 1 );
 		$this->assertContains( $group_thread, $listed() );
-		$this->assertSame( $group_thread, bb_messages_validate_groups_thread( $group_thread ) );
+		$this->assertSame( $group_thread, bboss_messages_validate_groups_thread( $group_thread ) );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$this->assertContains( $group_thread, $listed() );
-		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ) );
+		$this->assertSame( 0, bboss_messages_validate_groups_thread( $group_thread ) );
 	}
 
 	/**
@@ -546,7 +546,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	 * @return array
 	 */
 	protected function list_thread_ids( $user_id, $args = array() ) {
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array_merge(
 				array(
 					'user_id' => $user_id,
@@ -572,7 +572,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$private_thread = $this->create_thread( $u1, array( $u2 ) );
 		$this->set_current_user( $u2 );
 
@@ -582,8 +582,8 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$this->assertContains( $group_thread, $this->list_thread_ids( $u2 ), 'Callers that do not opt in keep the group thread (release).' );
 
-		$this->assertTrue( bb_messages_is_disabled_group_thread( $group_thread ) );
-		$this->assertFalse( bb_messages_is_disabled_group_thread( $private_thread ) );
+		$this->assertTrue( bboss_messages_is_disabled_group_thread( $group_thread ) );
+		$this->assertFalse( bboss_messages_is_disabled_group_thread( $private_thread ) );
 	}
 
 	/**
@@ -601,15 +601,15 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->set_current_user( $u2 );
 		$args = array( 'exclude_disabled_group_threads' => true );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$this->assertNotContains( $group_thread, $this->list_thread_ids( $u2, $args ) );
 
-		bp_update_option( 'bp-disable-group-messages', 1 );
+		bboss_update_option( 'bp-disable-group-messages', 1 );
 		$this->assertContains( $group_thread, $this->list_thread_ids( $u2, $args ), 'Group Messages enabled: listed as before.' );
-		$this->assertFalse( bb_messages_is_disabled_group_thread( $group_thread ) );
-		$this->assertSame( array(), bb_messages_get_disabled_group_thread_ids() );
+		$this->assertFalse( bboss_messages_is_disabled_group_thread( $group_thread ) );
+		$this->assertSame( array(), bboss_messages_get_disabled_group_thread_ids() );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$this->assertNotContains( $group_thread, $this->list_thread_ids( $u2, $args ) );
 	}
 
@@ -627,19 +627,19 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
 		$this->set_current_user( $u2 );
 
-		bp_update_option( 'bp-disable-group-messages', 1 );
-		$this->assertStringNotContainsString( 'exclude_disabled_group_threads', (string) bp_ajax_querystring( 'messages' ) );
+		bboss_update_option( 'bp-disable-group-messages', 1 );
+		$this->assertStringNotContainsString( 'exclude_disabled_group_threads', (string) bboss_ajax_querystring( 'messages' ) );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
-		$this->assertStringContainsString( 'exclude_disabled_group_threads=1', (string) bp_ajax_querystring( 'messages' ) );
-		$this->assertStringNotContainsString( 'exclude_disabled_group_threads', (string) bp_ajax_querystring( 'members' ) );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
+		$this->assertStringContainsString( 'exclude_disabled_group_threads=1', (string) bboss_ajax_querystring( 'messages' ) );
+		$this->assertStringNotContainsString( 'exclude_disabled_group_threads', (string) bboss_ajax_querystring( 'members' ) );
 
 		global $messages_template;
-		bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . $u2 );
+		bboss_has_message_threads( bboss_ajax_querystring( 'messages' ) . '&user_id=' . $u2 );
 		$this->assertNotContains( $group_thread, array_map( 'intval', wp_list_pluck( (array) $messages_template->threads, 'thread_id' ) ) );
 
 		// Attachment access checks and other array callers keep release behaviour.
-		bp_has_message_threads( array( 'user_id' => $u2 ) );
+		bboss_has_message_threads( array( 'user_id' => $u2 ) );
 		$this->assertContains( $group_thread, array_map( 'intval', wp_list_pluck( (array) $messages_template->threads, 'thread_id' ) ) );
 
 		// The loop cached an unread count; release's setting-change hook cannot unset it from the test cache (tear_down).
@@ -656,8 +656,8 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$thread_id = $this->create_thread( $u1, array( $u2 ) );
 
-		$this->assertNotEmpty( messages_check_thread_access( $thread_id, $u2 ) );
-		$this->assertEmpty( messages_check_thread_access( $thread_id, $u3 ) );
+		$this->assertNotEmpty( bboss_messages_check_thread_access( $thread_id, $u2 ) );
+		$this->assertEmpty( bboss_messages_check_thread_access( $thread_id, $u3 ) );
 	}
 
 	/**
@@ -671,11 +671,11 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$u2       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
+		bboss_update_option( 'bp-disable-group-messages', 0 );
 		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
 
 		// The lookup used by the compose redirect finds the group thread, as in release.
-		$this->assertSame( $group_thread, (int) BP_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
+		$this->assertSame( $group_thread, (int) BBoss_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
 
 		// Sending skips an open group thread (group_message_thread_type = new) and starts a private thread.
 		$this->assertNotSame( $group_thread, $this->create_thread( $u1, array( $u2 ) ) );

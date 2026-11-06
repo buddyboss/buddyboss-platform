@@ -11,7 +11,7 @@
  *
  * @since BuddyPress 2.0.0
  */
-class BP_Signup {
+class BBoss_Signup {
 
 	/**
 	 * ID of the signup which the object relates to.
@@ -102,7 +102,7 @@ class BP_Signup {
 	public function populate() {
 		global $wpdb;
 
-		$signups_table = buddypress()->members->table_name_signups;
+		$signups_table = bboss()->members->table_name_signups;
 		$signup        = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$signups_table} WHERE signup_id = %d AND active = 0", $this->id ) );
 
 		$this->avatar         = get_avatar( $signup->user_email, 32 );
@@ -133,7 +133,7 @@ class BP_Signup {
 	 *     @type string      $activation_key Activation key to search for.
 	 *     @type string      $user_login     Specific user login to return.
 	 *     @type string      $fields         Which fields to return. Specify 'ids' to fetch a list of signups IDs.
-	 *                                       Default: 'all' (return BP_Signup objects).
+	 *                                       Default: 'all' (return BBoss_Signup objects).
 	 * }
 	 * @return array {
 	 *     @type array $signups Located signups. (IDs only if `fields` is set to `ids`.)
@@ -143,7 +143,7 @@ class BP_Signup {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'offset'         => 0,
@@ -174,7 +174,7 @@ class BP_Signup {
 		$r['orderby'] = preg_replace( '/[^%a-z0-9_-]/', '', sanitize_title( $r['orderby'] ) );
 
 		$sql            = array();
-		$signups_table  = buddypress()->members->table_name_signups;
+		$signups_table  = bboss()->members->table_name_signups;
 		$sql['select']  = "SELECT * FROM {$signups_table}";
 		$sql['where']   = array();
 
@@ -187,7 +187,7 @@ class BP_Signup {
 
 			// Search terms.
 			if ( ! empty( $r['usersearch'] ) ) {
-				$search_terms_like = '%' . bp_esc_like( $r['usersearch'] ) . '%';
+				$search_terms_like = '%' . bboss_esc_like( $r['usersearch'] ) . '%';
 				$sql['where'][]    = $wpdb->prepare( '( user_login LIKE %s OR user_email LIKE %s OR meta LIKE %s )', $search_terms_like, $search_terms_like, $search_terms_like );
 			}
 
@@ -202,7 +202,7 @@ class BP_Signup {
 			}
 
 			$sql['orderby'] = "ORDER BY {$r['orderby']}";
-			$sql['order']   = bp_esc_sql_order( $r['order'] );
+			$sql['order']   = bboss_esc_sql_order( $r['order'] );
 			$sql['limit']   = $wpdb->prepare( 'LIMIT %d, %d', $r['offset'], $r['number'] );
 		} else {
 			$in        = implode( ',', wp_parse_id_list( $r['include'] ) );
@@ -321,7 +321,7 @@ class BP_Signup {
 	public static function add( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'domain'         => '',
@@ -339,7 +339,7 @@ class BP_Signup {
 		$r['meta'] = maybe_serialize( $r['meta'] );
 
 		$inserted = $wpdb->insert(
-			buddypress()->members->table_name_signups,
+			bboss()->members->table_name_signups,
 			$r,
 			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
@@ -405,7 +405,7 @@ class BP_Signup {
 		delete_user_option( $user_id, 'user_level' );
 
 		// Set any profile data.
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 			if ( ! empty( $usermeta['profile_field_ids'] ) ) {
 				$profile_field_ids = explode( ',', $usermeta['profile_field_ids'] );
 
@@ -415,7 +415,7 @@ class BP_Signup {
 					}
 
 					$current_field = $usermeta[ "field_{$field_id}" ];
-					xprofile_set_field_data( $field_id, $user_id, $current_field );
+					bboss_xprofile_set_field_data( $field_id, $user_id, $current_field );
 
 					/*
 					 * Save the visibility level.
@@ -435,16 +435,16 @@ class BP_Signup {
 					 * resolves correctly in both, including the logged-out request.
 					 */
 					$visibility_meta_key = "field_{$field_id}_visibility";
-					$vfield              = xprofile_get_field( $field_id, null, false );
+					$vfield              = bboss_xprofile_get_field( $field_id, null, false );
 					$default             = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
-					$can_change          = bb_xprofile_can_change_field_visibility( $field_id );
+					$can_change          = bboss_xprofile_can_change_field_visibility( $field_id );
 
 					if ( $can_change && isset( $usermeta[ $visibility_meta_key ] ) ) {
 						$visibility_level = $usermeta[ $visibility_meta_key ];
 					} else {
 						$visibility_level = $default;
 					}
-					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+					bboss_xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 				}
 			}
 		}
@@ -509,7 +509,7 @@ class BP_Signup {
 
 		$activated = $wpdb->update(
 			// Signups table.
-			buddypress()->members->table_name_signups,
+			bboss()->members->table_name_signups,
 			array(
 				'active'    => 1,
 				'activated' => current_time( 'mysql', true ),
@@ -548,7 +548,7 @@ class BP_Signup {
 	public static function count_signups() {
 		global $wpdb;
 
-		$signups_table = buddypress()->members->table_name_signups;
+		$signups_table = bboss()->members->table_name_signups;
 		$count_signups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) AS total FROM {$signups_table} WHERE active = %d", 0 ) );
 
 		/**
@@ -579,7 +579,7 @@ class BP_Signup {
 	public static function update( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'signup_id' => 0,
@@ -594,7 +594,7 @@ class BP_Signup {
 
 		$wpdb->update(
 			// Signups table.
-			buddypress()->members->table_name_signups,
+			bboss()->members->table_name_signups,
 			// Data to update.
 			array(
 				'meta' => serialize( $r['meta'] ),
@@ -683,7 +683,7 @@ class BP_Signup {
 
 					// Send the validation email.
 				} else {
-					bp_core_signup_send_validation_email( false, $signup->user_email, $signup->activation_key, $signup->user_login );
+					bboss_core_signup_send_validation_email( false, $signup->user_email, $signup->activation_key, $signup->user_login );
 				}
 			}
 
@@ -752,7 +752,7 @@ class BP_Signup {
 
 		foreach ( $signups as $signup ) {
 
-			$user = bp_core_activate_signup( $signup->activation_key );
+			$user = bboss_core_activate_signup( $signup->activation_key );
 
 			if ( ! empty( $user->errors ) ) {
 
@@ -838,7 +838,7 @@ class BP_Signup {
 		foreach ( $signups as $signup ) {
 			$user_id = username_exists( $signup->user_login );
 
-			if ( ! empty( $user_id ) && $signup->activation_key === bp_get_user_meta( $user_id, 'activation_key', true ) ) {
+			if ( ! empty( $user_id ) && $signup->activation_key === bboss_get_user_meta( $user_id, 'activation_key', true ) ) {
 
 				if ( 2 != self::check_user_status( $user_id ) ) {
 
@@ -850,14 +850,14 @@ class BP_Signup {
 
 					// We have a user id, account is not active, let's delete it.
 				} else {
-					bp_core_delete_account( $user_id );
+					bboss_core_delete_account( $user_id );
 				}
 			}
 
 			if ( empty( $result['errors'][ $signup->signup_id ] ) ) {
 				$wpdb->delete(
 					// Signups table.
-					buddypress()->members->table_name_signups,
+					bboss()->members->table_name_signups,
 					// Where.
 					array( 'signup_id' => $signup->signup_id ),
 					// WHERE sanitization format.

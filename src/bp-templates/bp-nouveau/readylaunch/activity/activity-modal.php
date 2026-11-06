@@ -6,7 +6,7 @@
  * for viewing and commenting on activity items.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="bb-rl-ac-form-container">
 						<div class="bb-rl-ac-reply-content">
 							<div class="bb-rl-ac-reply-avatar">
-								<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
+								<?php bboss_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
 							</div>
 							<div class="ac-textarea">
 								<div contenteditable="true" id="ac-input-00000" class="ac-input bp-suggestions medium-editor-element" name="ac_input_00000" data-placeholder="Write a comment..." spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true"><p>Write a comment...</p></div>
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 						<div class="bb-rl-ac-reply-footer">
 							<div class="bb-rl-ac-reply-toolbar">
 								<?php
-								if ( bp_is_active( 'media' ) ) {
+								if ( bboss_is_active( 'media' ) ) {
 									?>
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
 										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="536">
@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 										</a>
 									</div>
 
-									<?php if ( bp_is_active( 'video' ) ) : ?>
+									<?php if ( bboss_is_active( 'video' ) ) : ?>
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
 										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-video-camera"></i>
@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 									</div>
 									<?php endif; ?>
 
-									<?php if ( bp_is_active( 'document' ) ) : ?>
+									<?php if ( bboss_is_active( 'document' ) ) : ?>
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
 										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-paperclip-horizontal"></i>

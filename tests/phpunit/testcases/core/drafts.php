@@ -40,7 +40,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	protected $race_done = false;
 
 	/**
-	 * Which bb_draft_max_size() call the competing write actually landed on.
+	 * Which bboss_draft_max_size() call the competing write actually landed on.
 	 *
 	 * @var int
 	 */
@@ -52,23 +52,23 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	protected $race_reentrant = false;
 
 	public function test_draft_meta_key_matching_accepts_only_buddyboss_shapes() {
-		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_user' ) );
-		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_user_5' ) );
-		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_group_12' ) );
-		$this->assertTrue( bb_draft_is_draft_meta_key( 'bb_user_topic_reply_draft' ) );
+		$this->assertTrue( bboss_draft_is_draft_meta_key( 'draft_user' ) );
+		$this->assertTrue( bboss_draft_is_draft_meta_key( 'draft_user_5' ) );
+		$this->assertTrue( bboss_draft_is_draft_meta_key( 'draft_group_12' ) );
+		$this->assertTrue( bboss_draft_is_draft_meta_key( 'bb_user_topic_reply_draft' ) );
 
 		// Third-party keys sharing the prefix must never match (PROD-9621 R2-M2).
-		$this->assertFalse( bb_draft_is_draft_meta_key( 'draft_custom_thing' ) );
-		$this->assertFalse( bb_draft_is_draft_meta_key( 'draft_group_extra' ) );
-		$this->assertFalse( bb_draft_is_draft_meta_key( 'draft_userdata' ) );
-		$this->assertFalse( bb_draft_is_draft_meta_key( 'draft_group_' ) );
-		$this->assertFalse( bb_draft_is_draft_meta_key( 'draft_group_12abc' ) );
-		$this->assertFalse( bb_draft_is_draft_meta_key( 'session_tokens' ) );
+		$this->assertFalse( bboss_draft_is_draft_meta_key( 'draft_custom_thing' ) );
+		$this->assertFalse( bboss_draft_is_draft_meta_key( 'draft_group_extra' ) );
+		$this->assertFalse( bboss_draft_is_draft_meta_key( 'draft_userdata' ) );
+		$this->assertFalse( bboss_draft_is_draft_meta_key( 'draft_group_' ) );
+		$this->assertFalse( bboss_draft_is_draft_meta_key( 'draft_group_12abc' ) );
+		$this->assertFalse( bboss_draft_is_draft_meta_key( 'session_tokens' ) );
 	}
 
 	public function test_strip_data_urls_removes_multi_megabyte_payload_and_keeps_text() {
 		$content  = 'Text before <img src="data:image/png;base64,' . str_repeat( 'A', 1600000 ) . '"> and after.';
-		$stripped = bb_draft_strip_data_urls( $content );
+		$stripped = bboss_draft_strip_data_urls( $content );
 
 		$this->assertStringContainsString( 'Text before', $stripped );
 		$this->assertStringContainsString( 'and after.', $stripped );
@@ -78,10 +78,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	public function test_strip_data_urls_leaves_normal_content_untouched() {
 		$plain = 'No images here at all';
-		$this->assertSame( $plain, bb_draft_strip_data_urls( $plain ) );
+		$this->assertSame( $plain, bboss_draft_strip_data_urls( $plain ) );
 
 		$normal_img = 'Look: <img src="https://example.com/pic.png" alt="x"> done';
-		$this->assertSame( $normal_img, bb_draft_strip_data_urls( $normal_img ) );
+		$this->assertSame( $normal_img, bboss_draft_strip_data_urls( $normal_img ) );
 	}
 
 	public function test_strip_data_urls_spares_normal_images_when_a_data_url_is_present() {
@@ -89,7 +89,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// run - a data-free fixture early-returns and proves nothing.
 		$mixed = 'A <img src="data:image/png;base64,QUJD"> B <img src="https://example.com/pic.png" alt="keep"> C <img class="emojioneemoji" src="https://cdn/emoji.png" data-emoji-char="x"> D data: mentioned in text.';
 
-		$stripped = bb_draft_strip_data_urls( $mixed );
+		$stripped = bboss_draft_strip_data_urls( $mixed );
 
 		$this->assertStringNotContainsString( 'base64', $stripped );
 		$this->assertStringContainsString( 'https://example.com/pic.png', $stripped, 'A normal linked image must survive the strip.' );
@@ -104,15 +104,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$attachment_id = self::factory()->attachment->create( array( 'post_author' => $owner ) );
 		$post_id       = self::factory()->post->create( array( 'post_author' => $owner ) );
 
-		$this->assertTrue( bb_user_can_manage_draft_attachment( $attachment_id, false, $owner ) );
+		$this->assertTrue( bboss_user_can_manage_draft_attachment( $attachment_id, false, $owner ) );
 
 		// Another member's attachment must be untouchable (PROD-9621 RF-1).
-		$this->assertFalse( bb_user_can_manage_draft_attachment( $attachment_id, false, $stranger ) );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( $attachment_id, false, $stranger ) );
 
 		// Non-attachment posts and invalid IDs never qualify.
-		$this->assertFalse( bb_user_can_manage_draft_attachment( $post_id, false, $owner ) );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( 0, false, $owner ) );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( 999999999, false, $owner ) );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( $post_id, false, $owner ) );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( 0, false, $owner ) );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( 999999999, false, $owner ) );
 	}
 
 	public function test_activity_data_key_validation() {
@@ -120,20 +120,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create();
 
 		// Own-feed draft.
-		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_user', 'user', 0, $u1 ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( 'draft_user', 'user', 0, $u1 ) );
 
 		// Composing on ANOTHER member's profile is a legitimate flow; the key
 		// lives under the saving user's own meta (PROD-9621 RF-6).
-		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_user_' . $u2, 'user', 0, $u1 ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( 'draft_user_' . $u2, 'user', 0, $u1 ) );
 
 		// Nonexistent member suffix, forged shapes, arbitrary keys: rejected.
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_user_999999999', 'user', 0, $u1 ) );
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'session_tokens', 'user', 0, $u1 ) );
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_userx', 'user', 0, $u1 ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_user_999999999', 'user', 0, $u1 ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'session_tokens', 'user', 0, $u1 ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_userx', 'user', 0, $u1 ) );
 	}
 
 	public function test_activity_data_key_validation_for_groups() {
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bboss_is_active( 'groups' ) ) {
 			$this->markTestSkipped( 'Groups component is not active.' );
 		}
 
@@ -144,19 +144,19 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Draft saves run as the logged-in member, like the publish path.
 		wp_set_current_user( $member );
 
-		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id, $member ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id, $member ) );
 
 		// Non-members, mismatched item ids, and unknown groups: rejected.
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id, $non_member ) );
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id + 1, $member ) );
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_999999999', 'group', 999999999, $member ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id, $non_member ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id + 1, $member ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_group_999999999', 'group', 999999999, $member ) );
 	}
 
 	/**
 	 * A group draft follows the group's "who can post" setting, as publishing does.
 	 */
 	public function test_activity_group_draft_follows_group_posting_setting() {
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bboss_is_active( 'groups' ) ) {
 			$this->markTestSkipped( 'Groups component is not active.' );
 		}
 
@@ -165,56 +165,56 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$group_id = self::factory()->group->create( array( 'creator_id' => $admin ) );
 		$key      = 'draft_group_' . $group_id;
 
-		groups_join_group( $group_id, $member );
-		groups_update_groupmeta( $group_id, 'activity_feed_status', 'admins' );
+		bboss_groups_join_group( $group_id, $member );
+		bboss_groups_update_groupmeta( $group_id, 'activity_feed_status', 'admins' );
 
 		wp_set_current_user( $member );
-		$this->assertFalse( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $member ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( $key, 'group', $group_id, $member ) );
 
 		// The member still manages (fetches, discards) a draft they already hold.
-		$this->assertTrue( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $member, 'manage' ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( $key, 'group', $group_id, $member, 'manage' ) );
 
 		wp_set_current_user( $admin );
-		$this->assertTrue( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $admin ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( $key, 'group', $group_id, $admin ) );
 
-		groups_update_groupmeta( $group_id, 'activity_feed_status', 'members' );
+		bboss_groups_update_groupmeta( $group_id, 'activity_feed_status', 'members' );
 
 		wp_set_current_user( $member );
-		$this->assertTrue( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $member ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( $key, 'group', $group_id, $member ) );
 	}
 
 	public function test_topic_reply_data_key_validation() {
-		if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
+		if ( ! function_exists( 'bboss_bbp_get_forum_post_type' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$topic_id = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_id ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$topic_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum_id ) );
 		// A legitimate reply BELONGS to the topic named in its key (L9): the
 		// validator now rejects a reply from a different topic, so the fixture
 		// must set that membership for the valid-shape assertion below.
-		$reply_id = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type(), 'post_parent' => $topic_id ) );
+		$reply_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_reply_post_type(), 'post_parent' => $topic_id ) );
 		update_post_meta( $reply_id, '_bbp_topic_id', $topic_id );
 
 		// The five shapes the forum composer builds.
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_topic' ) );
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply' ) );
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id ) );
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id ) );
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id . '_' . $reply_id ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_topic' ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_reply' ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_id ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_id . '_' . $reply_id ) );
 
 		// Wrong post types and unknown IDs: rejected.
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $forum_id ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id . '_' . $forum_id ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_999999999' ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'topic_' . $topic_id ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $forum_id ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_id . '_' . $forum_id ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_discussion_999999999' ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'topic_' . $topic_id ) );
 	}
 
 	public function test_budget_eviction_removes_oldest_and_spares_third_party_meta() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_1',
 			array(
@@ -223,7 +223,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				'_draft_saved_at' => 100,
 			)
 		);
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_2',
 			array(
@@ -234,11 +234,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Third-party meta sharing the prefix must survive every sweep.
-		bp_update_user_meta( $user_id, 'draft_custom_thing', str_repeat( 'z', 200 ) );
+		bboss_update_user_meta( $user_id, 'draft_custom_thing', str_repeat( 'z', 200 ) );
 
 		// Compute the fixture sizes independently and set the cap so that
 		// exactly ONE eviction (the oldest draft) makes the new save fit.
-		$size_newest = strlen( maybe_serialize( bp_get_user_meta( $user_id, 'draft_group_2', true ) ) );
+		$size_newest = strlen( maybe_serialize( bboss_get_user_meta( $user_id, 'draft_group_2', true ) ) );
 		$new_size    = 400;
 		$total_cap   = $size_newest + $new_size;
 
@@ -249,7 +249,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			}
 		);
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', $new_size );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', $new_size );
 
 		$this->assertTrue( $result['allowed'] );
 		$this->assertSame( array( 'draft_group_1' ), $result['evicted'], 'Only the OLDEST draft may be evicted.' );
@@ -272,7 +272,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => 100,
 		);
 
-		bp_update_user_meta( $user_id, 'draft_group_1', $oldest );
+		bboss_update_user_meta( $user_id, 'draft_group_1', $oldest );
 
 		$total_cap = 400;
 		add_filter(
@@ -282,7 +282,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			}
 		);
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
 
 		$this->assertTrue( $result['allowed'] );
 		$this->assertSame( array( 'draft_group_1' ), $result['evicted'] );
@@ -294,7 +294,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_beacon_save_refuses_instead_of_evicting() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_1',
 			array(
@@ -311,7 +311,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			}
 		);
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 400, 'beacon' );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 400, 'beacon' );
 
 		$this->assertFalse( $result['allowed'], 'A page-unload save cannot receive a hand-back, so it must not evict.' );
 		$this->assertSame( 'drafts_over_cap', $result['reason'] );
@@ -319,14 +319,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'The older draft must survive a refused beacon save.' );
 
 		// A beacon save that fits is stored normally.
-		$fits = bb_draft_enforce_user_budget( $user_id, 'draft_user', 10, 'beacon' );
+		$fits = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 10, 'beacon' );
 		$this->assertTrue( $fits['allowed'] );
 	}
 
 	public function test_meta_budget_refuses_save_for_heavy_meta_user() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta( $user_id, 'unrelated_heavy_meta', str_repeat( 'x', 2000 ) );
+		bboss_update_user_meta( $user_id, 'unrelated_heavy_meta', str_repeat( 'x', 2000 ) );
 
 		add_filter(
 			'bb_draft_user_meta_budget',
@@ -335,7 +335,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			}
 		);
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
 
 		$this->assertFalse( $result['allowed'], 'Save must be refused when total user meta would exceed the platform budget.' );
 		$this->assertSame( array(), $result['evicted'], 'A refusal must not evict anything.' );
@@ -353,7 +353,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			}
 		);
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
 
 		$this->assertTrue( $result['allowed'] );
 	}
@@ -364,7 +364,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		update_post_meta( $attachment_id, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -376,7 +376,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'draft_user' ) );
 
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ) );
 		$this->assertEmpty( get_post_meta( $attachment_id, 'bb_media_draft', true ), 'Disposal must release the bb_media_draft stamp.' );
@@ -385,7 +385,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_dispose_inner_forum_draft_rewrites_row_and_deletes_when_empty() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -394,26 +394,26 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$this->assertTrue( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_topic' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_topic' ) );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertIsArray( $row );
 		$this->assertArrayNotHasKey( 'draft_topic', $row );
 		$this->assertArrayHasKey( 'draft_reply_5', $row, 'The sibling inner draft must survive.' );
 
 		// Removing the last inner draft deletes the row instead of storing array() (RF-7).
-		$this->assertTrue( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_reply_5' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_reply_5' ) );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ) );
 	}
 
 	/**
-	 * bb_draft_dispose() must write the row BEFORE it releases attachment stamps.
+	 * bboss_draft_dispose() must write the row BEFORE it releases attachment stamps.
 	 *
 	 * The activity and forum save handlers, the forum inner-key disposer and
 	 * the healer all read what the release needs before the write and release
 	 * after it, and the activity handler states that rule outright: releasing
 	 * first would expose the attachments of a draft that still exists if
-	 * anything below failed. bb_draft_dispose() did the opposite in both of its
+	 * anything below failed. bboss_draft_dispose() did the opposite in both of its
 	 * branches. Every removal path routes through it - the member's discard,
 	 * the per-user budget eviction inside an ordinary autosave (possibly several
 	 * times per request) and the expiry sweep - and a 50-attachment draft spends
@@ -434,7 +434,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $first, 'bb_media_draft', 1 );
 		update_post_meta( $second, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -457,7 +457,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$activity_attachment = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
 		update_post_meta( $activity_attachment, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -472,16 +472,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Run bb_draft_dispose() while recording the order of the draft-row write
+	 * Run bboss_draft_dispose() while recording the order of the draft-row write
 	 * and the attachment-stamp releases.
 	 *
 	 * @param string $meta_key Draft usermeta key the disposal writes.
-	 * @param array  $args     Arguments for bb_draft_dispose().
+	 * @param array  $args     Arguments for bboss_draft_dispose().
 	 * @return string[] Sequence of 'row' and 'release' events.
 	 */
 	protected function record_dispose_order( $meta_key, $args ) {
 		$order    = array();
-		$row_key  = bp_get_user_meta_key( $meta_key );
+		$row_key  = bboss_get_user_meta_key( $meta_key );
 		$on_row   = function ( $meta_ids, $object_id, $written_key ) use ( &$order, $row_key ) {
 			if ( $written_key === $row_key ) {
 				$order[] = 'row';
@@ -497,7 +497,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_action( 'deleted_user_meta', $on_row, 10, 3 );
 		add_action( 'deleted_post_meta', $on_stamp, 10, 3 );
 
-		$this->assertTrue( call_user_func_array( 'bb_draft_dispose', $args ), 'Premise: the disposal must report success.' );
+		$this->assertTrue( call_user_func_array( 'bboss_draft_dispose', $args ), 'Premise: the disposal must report success.' );
 
 		remove_action( 'updated_user_meta', $on_row, 10 );
 		remove_action( 'deleted_user_meta', $on_row, 10 );
@@ -525,9 +525,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_dispose_rejects_non_draft_keys() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta( $user_id, 'draft_custom_thing', array( 'data' => array() ) );
+		bboss_update_user_meta( $user_id, 'draft_custom_thing', array( 'data' => array() ) );
 
-		$this->assertFalse( bb_draft_dispose( $user_id, 'draft_custom_thing' ) );
+		$this->assertFalse( bboss_draft_dispose( $user_id, 'draft_custom_thing' ) );
 		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_custom_thing' ) );
 	}
 
@@ -536,23 +536,23 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// A slim delete carries no data member: group ID unavailable, and the
 		// member may have left the group - shape-only validation must accept.
-		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_group_12345', 'group', 0, $user_id, 'manage' ) );
-		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_user', 'user', 0, $user_id, 'manage' ) );
-		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_user_999999', 'user', 0, $user_id, 'manage' ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( 'draft_group_12345', 'group', 0, $user_id, 'manage' ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( 'draft_user', 'user', 0, $user_id, 'manage' ) );
+		$this->assertTrue( bboss_draft_validate_activity_data_key( 'draft_user_999999', 'user', 0, $user_id, 'manage' ) );
 
 		// Forged shapes stay rejected even in manage context.
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'session_tokens', 'user', 0, $user_id, 'manage' ) );
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_x', 'group', 0, $user_id, 'manage' ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'session_tokens', 'user', 0, $user_id, 'manage' ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_group_x', 'group', 0, $user_id, 'manage' ) );
 
 		// Negative control: the SAVE context still enforces membership.
-		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_12345', 'group', 12345, $user_id, 'save' ) );
+		$this->assertFalse( bboss_draft_validate_activity_data_key( 'draft_group_12345', 'group', 12345, $user_id, 'save' ) );
 	}
 
 	public function test_heal_context_bypasses_the_meta_budget_refusal() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta( $user_id, 'unrelated_heavy_meta', str_repeat( 'x', 5000 ) );
-		bp_update_user_meta(
+		bboss_update_user_meta( $user_id, 'unrelated_heavy_meta', str_repeat( 'x', 5000 ) );
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_1',
 			array(
@@ -561,7 +561,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				'_draft_saved_at' => 100,
 			)
 		);
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_2',
 			array(
@@ -585,13 +585,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// The save context refuses this user outright (negative control)...
-		$save = bb_draft_enforce_user_budget( $user_id, 'draft_user', 100, 'save' );
+		$save = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 100, 'save' );
 		$this->assertFalse( $save['allowed'] );
 		$this->assertSame( array(), $save['evicted'] );
 
 		// ...which is exactly why the HEAL context must not: it exists for
 		// users over the refusal threshold. Oldest draft evicted, budget met.
-		$heal = bb_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
+		$heal = bboss_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
 		$this->assertTrue( $heal['allowed'] );
 		$this->assertSame( array( 'draft_group_1' ), $heal['evicted'] );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ) );
@@ -601,7 +601,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_forum_row_heals_at_inner_granularity_not_wholesale() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -623,9 +623,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			}
 		);
 
-		bb_draft_heal_forum_row( $user_id );
+		bboss_draft_heal_forum_row( $user_id );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertIsArray( $row, 'The row must survive healing - never disposed wholesale.' );
 		$this->assertArrayNotHasKey( 'draft_topic', $row, 'The oversized inner draft is disposed.' );
 		$this->assertArrayHasKey( 'draft_reply_5', $row, 'The legal sibling inner draft survives.' );
@@ -652,12 +652,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// A window consisting entirely of filtered third-party rows must not
 		// end the scan: the raw cursor advances and has_more stays true.
-		$first = bb_draft_get_rows_batch( 0, 5, false );
+		$first = bboss_draft_get_rows_batch( 0, 5, false );
 		$this->assertSame( array(), $first['rows'] );
 		$this->assertTrue( $first['has_more'] );
 		$this->assertGreaterThan( 0, $first['last_id'] );
 
-		$second = bb_draft_get_rows_batch( $first['last_id'], 5, false );
+		$second = bboss_draft_get_rows_batch( $first['last_id'], 5, false );
 		$found  = wp_list_pluck( $second['rows'], 'meta_key' );
 		$this->assertContains( 'draft_user', $found, 'The real draft past the filtered window must still be reached.' );
 	}
@@ -668,20 +668,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A corrupt (non-array) row - e.g. a serialized value truncated
 		// mid-write - is exactly the oversized shape healing must remove.
 		add_user_meta( $user_id, 'draft_user', 'corrupt-not-an-array' );
-		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'draft_user' ) );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ) );
 
 		// A legacy-empty array() row (old forum publish paths) is removable too.
 		add_user_meta( $user_id, 'bb_user_topic_reply_draft', array() );
-		$this->assertTrue( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft' ) );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ) );
 
 		// A missing row still reports failure - nothing was removed.
-		$this->assertFalse( bb_draft_dispose( $user_id, 'draft_user' ) );
+		$this->assertFalse( bboss_draft_dispose( $user_id, 'draft_user' ) );
 
 		// An inner-key request on a corrupt row has nothing addressable.
 		add_user_meta( $user_id, 'bb_user_topic_reply_draft', 'corrupt' );
-		$this->assertFalse( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_topic' ) );
+		$this->assertFalse( bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_topic' ) );
 	}
 
 	public function test_cleanup_collects_legacy_empty_forum_row_and_spares_fresh_drafts() {
@@ -701,7 +701,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 
 		$this->assertTrue( $result['complete'] );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ), 'A legacy-empty aggregate row is collected immediately.' );
@@ -732,7 +732,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Simulate a budget-interrupted previous slice that stopped after u1's row.
 		update_site_option( 'bb_draft_cleanup_cursor', $u1_row_id );
 
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 
 		$this->assertTrue( $result['complete'] );
 		$this->assertTrue( metadata_exists( 'user', $u1, 'draft_user' ), 'Rows before the persisted cursor were handled by the interrupted slice - not re-scanned.' );
@@ -776,7 +776,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// multi-MB shape the one-shot must be able to remove.
 		add_user_meta( $corrupt, 'draft_user', str_repeat( 'x', 200000 ) );
 
-		$result = bb_drafts_oneshot_batch( 0 );
+		$result = bboss_drafts_oneshot_batch( 0 );
 
 		$this->assertTrue( $result['complete'] );
 		$this->assertSame( 1, (int) get_site_option( 'bb_draft_oneshot_done' ) );
@@ -784,8 +784,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertFalse( metadata_exists( 'user', $corrupt, 'draft_user' ), 'A corrupt oversized row is disposed.' );
 
-		$heavy_sizes = bb_draft_get_user_meta_sizes( $heavy );
-		$this->assertLessThanOrEqual( bb_draft_user_total_max_size(), array_sum( $heavy_sizes['drafts'] ), 'The aggregate-oversized user is healed at upgrade, not on their next save.' );
+		$heavy_sizes = bboss_draft_get_user_meta_sizes( $heavy );
+		$this->assertLessThanOrEqual( bboss_draft_user_total_max_size(), array_sum( $heavy_sizes['drafts'] ), 'The aggregate-oversized user is healed at upgrade, not on their next save.' );
 		$this->assertFalse( metadata_exists( 'user', $heavy, 'draft_group_1' ), 'The OLDEST draft is the one evicted.' );
 		$this->assertTrue( metadata_exists( 'user', $heavy, 'draft_group_6' ), 'Newer drafts survive - healing is not wholesale deletion.' );
 
@@ -800,15 +800,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * the next cleanup run would delete every draft on the site.
 	 */
 	public function test_retention_days_treats_zero_as_disabled() {
-		$this->assertSame( 30, bb_draft_retention_days(), 'Default retention window.' );
+		$this->assertSame( 30, bboss_draft_retention_days(), 'Default retention window.' );
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
-		$this->assertSame( 0, bb_draft_retention_days() );
-		$this->assertSame( 0, bb_draft_retention_seconds() );
+		$this->assertSame( 0, bboss_draft_retention_days() );
+		$this->assertSame( 0, bboss_draft_retention_seconds() );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_negative' ) );
-		$this->assertSame( 0, bb_draft_retention_days(), 'A negative window is disabled, never a negative cutoff.' );
+		$this->assertSame( 0, bboss_draft_retention_days(), 'A negative window is disabled, never a negative cutoff.' );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_negative' ) );
 	}
 
@@ -838,7 +838,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
-		$disabled = bb_drafts_delete_expired( 0 );
+		$disabled = bboss_drafts_delete_expired( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
 
 		$this->assertSame( 0, $disabled['deleted'] );
@@ -846,7 +846,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Negative control: the SAME fixture must be collected once expiry is on,
 		// otherwise the assertion above would pass for the wrong reason.
-		$enabled = bb_drafts_delete_expired( 0 );
+		$enabled = bboss_drafts_delete_expired( 0 );
 
 		$this->assertSame( 1, $enabled['deleted'] );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ) );
@@ -874,7 +874,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => time(),
 		);
 
-		bb_draft_unstamp_attachments( $entry, $user_id );
+		bboss_draft_unstamp_attachments( $entry, $user_id );
 
 		$this->assertSame( '', (string) get_post_meta( $attachment_id, 'bb_media_draft', true ), 'The stamp must be released so the orphan cron can reclaim the file.' );
 
@@ -883,7 +883,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$other_attachment = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
 		update_post_meta( $other_attachment, 'bb_media_draft', 1 );
 
-		bb_draft_unstamp_attachments( array( 'bbp_media' => wp_json_encode( array( array( 'id' => $other_attachment ) ) ) ), $user_id );
+		bboss_draft_unstamp_attachments( array( 'bbp_media' => wp_json_encode( array( array( 'id' => $other_attachment ) ) ) ), $user_id );
 
 		$this->assertSame( '1', (string) get_post_meta( $other_attachment, 'bb_media_draft', true ), 'Attachment lists are only read from the entry data key.' );
 	}
@@ -891,13 +891,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * The composer's has_draft probe must resolve the key the writers used.
 	 *
-	 * Writers store through bp_update_user_meta(), which passes the key through
-	 * bp_get_user_meta_key(). A probe on the raw literal reports "no draft" on
+	 * Writers store through bboss_update_user_meta(), which passes the key through
+	 * bboss_get_user_meta_key(). A probe on the raw literal reports "no draft" on
 	 * any install that filters that key, so the lazy fetch never fires and the
 	 * member is never offered their stored draft.
 	 */
 	public function test_has_draft_probe_resolves_the_filtered_meta_key() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
@@ -908,7 +908,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
 		// Stored exactly the way every draft writer stores it.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -921,7 +921,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Exercise the REAL localize function, not a restatement of the probe.
-		$params = bb_nouveau_forum_localize_scripts( array() );
+		$params = bboss_nouveau_forum_localize_scripts( array() );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 		$this->set_current_user( $old_user );
@@ -938,7 +938,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * not named; a held hand-back is flagged so any page still fetches it.
 	 */
 	public function test_forum_params_name_the_keys_with_a_restorable_draft() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
@@ -946,7 +946,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$old_user = get_current_user_id();
 		$this->set_current_user( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -963,13 +963,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$params = bb_nouveau_forum_localize_scripts( array() );
+		$params = bboss_nouveau_forum_localize_scripts( array() );
 
 		$this->assertTrue( $params['forums']['has_draft'] );
 		$this->assertSame( array( 'draft_reply_11_0' ), $params['forums']['draft_keys'], 'Only the key with something to restore is named.' );
 		$this->assertFalse( $params['forums']['has_evicted_hold'] );
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'bb_user_topic_reply_draft:draft_reply_13_0' => array(
@@ -979,7 +979,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$params = bb_nouveau_forum_localize_scripts( array() );
+		$params = bboss_nouveau_forum_localize_scripts( array() );
 		$this->set_current_user( $old_user );
 
 		$this->assertTrue( $params['forums']['has_evicted_hold'], 'A held forum hand-back is flagged so any forum page fetches it.' );
@@ -997,13 +997,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->set_current_user( $user_id );
 
 		// Activity: a stored draft_user with real content.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array( 'data_key' => 'draft_user', '_draft_saved_at' => time(), 'data' => array( 'content' => 'PRIVATE activity draft body' ) )
 		);
 
-		$activity = bp_nouveau_activity_localize_scripts( array() );
+		$activity = bboss_nouveau_activity_localize_scripts( array() );
 
 		$this->assertTrue( $activity['activity']['params']['has_draft'], 'Premise: activity has_draft is true.' );
 		$this->assertSame(
@@ -1015,14 +1015,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertStringNotContainsString( 'PRIVATE activity draft body', (string) $json, 'The draft body must not leak into the localized activity params.' );
 
 		// Forums: a stored aggregate row with real content.
-		if ( bp_is_active( 'forums' ) ) {
-			bp_update_user_meta(
+		if ( bboss_is_active( 'forums' ) ) {
+			bboss_update_user_meta(
 				$user_id,
 				'bb_user_topic_reply_draft',
 				array( 'draft_reply' => array( 'data_key' => 'draft_reply', '_draft_saved_at' => time(), 'data' => array( 'bbp_reply_content' => 'PRIVATE forum draft body' ) ) )
 			);
 
-			$forums = bb_nouveau_forum_localize_scripts( array() );
+			$forums = bboss_nouveau_forum_localize_scripts( array() );
 
 			$this->assertTrue( $forums['forums']['has_draft'], 'Premise: forum has_draft is true.' );
 			$this->assertEmpty(
@@ -1041,7 +1041,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * A restored draft re-sends its stored attachment list verbatim, so the
 	 * kept attachments appear in BOTH the replaced and the replacing entry.
 	 * Unstamping the whole replaced entry leaves them unprotected with
-	 * bp_media_saved = 0, and bp_media_delete_orphaned_attachments() then
+	 * bp_media_saved = 0, and bboss_media_delete_orphaned_attachments() then
 	 * hard-deletes a file the stored draft still references (PROD-9621 N1).
 	 */
 	public function test_replacing_a_draft_keeps_stamps_on_attachments_it_still_holds() {
@@ -1074,7 +1074,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			),
 		);
 
-		$released = bb_draft_release_replaced_attachments( $previous, $current, $user_id );
+		$released = bboss_draft_release_replaced_attachments( $previous, $current, $user_id );
 
 		$this->assertSame( array( $dropped ), $released, 'Only the attachment the new entry dropped may be released.' );
 		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'A kept attachment must stay protected, or the orphan cron deletes a file the draft still references.' );
@@ -1096,7 +1096,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// The slim delete payload the client sends: data omitted entirely.
-		$released = bb_draft_release_replaced_attachments( $previous, array( 'data_key' => 'draft_reply' ), $user_id );
+		$released = bboss_draft_release_replaced_attachments( $previous, array( 'data_key' => 'draft_reply' ), $user_id );
 
 		$this->assertSame( array( $attachment_id ), $released );
 		$this->assertSame( '', (string) get_post_meta( $attachment_id, 'bb_media_draft', true ) );
@@ -1117,7 +1117,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'data'     => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $foreign ) ) ) ),
 		);
 
-		$released = bb_draft_release_replaced_attachments( $previous, array(), $user_id );
+		$released = bboss_draft_release_replaced_attachments( $previous, array(), $user_id );
 
 		$this->assertSame( array(), $released );
 		$this->assertSame( '1', (string) get_post_meta( $foreign, 'bb_media_draft', true ) );
@@ -1126,7 +1126,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * A filtered user-meta key must still be recognised as a draft key.
 	 *
-	 * Writers store through bp_update_user_meta(), so on any install that
+	 * Writers store through bboss_update_user_meta(), so on any install that
 	 * filters bp_get_user_meta_key the stored key is not the literal one. The
 	 * caps, the expiry cron and the healing pass all read raw keys back out of
 	 * the table, so they need the inverse of that filter (PROD-9621 N2).
@@ -1134,22 +1134,22 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_logical_meta_key_inverts_the_user_meta_key_filter() {
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
-		$this->assertSame( 'draft_user', bb_draft_logical_meta_key( 'bbtest_draft_user' ) );
-		$this->assertSame( 'draft_group_12', bb_draft_logical_meta_key( 'bbtest_draft_group_12' ) );
-		$this->assertSame( 'bb_user_topic_reply_draft', bb_draft_logical_meta_key( 'bbtest_bb_user_topic_reply_draft' ) );
+		$this->assertSame( 'draft_user', bboss_draft_logical_meta_key( 'bbtest_draft_user' ) );
+		$this->assertSame( 'draft_group_12', bboss_draft_logical_meta_key( 'bbtest_draft_group_12' ) );
+		$this->assertSame( 'bb_user_topic_reply_draft', bboss_draft_logical_meta_key( 'bbtest_bb_user_topic_reply_draft' ) );
 
 		// An unprefixed row is NOT ours on this install - acting on it would
 		// re-filter the key onto a different, live row.
-		$this->assertSame( '', bb_draft_logical_meta_key( 'draft_user' ) );
+		$this->assertSame( '', bboss_draft_logical_meta_key( 'draft_user' ) );
 		// Third-party keys still never match, prefixed or not.
-		$this->assertSame( '', bb_draft_logical_meta_key( 'bbtest_draft_userdata' ) );
-		$this->assertSame( '', bb_draft_logical_meta_key( 'bbtest_draft_group_extra' ) );
+		$this->assertSame( '', bboss_draft_logical_meta_key( 'bbtest_draft_userdata' ) );
+		$this->assertSame( '', bboss_draft_logical_meta_key( 'bbtest_draft_group_extra' ) );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
 		// Unfiltered install: identity.
-		$this->assertSame( 'draft_user', bb_draft_logical_meta_key( 'draft_user' ) );
-		$this->assertSame( '', bb_draft_logical_meta_key( 'bbtest_draft_user' ) );
+		$this->assertSame( 'draft_user', bboss_draft_logical_meta_key( 'draft_user' ) );
+		$this->assertSame( '', bboss_draft_logical_meta_key( 'bbtest_draft_user' ) );
 	}
 
 	/**
@@ -1163,7 +1163,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -1173,11 +1173,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		bb_draft_flush_user_meta_sizes( $user_id );
-		$sizes = bb_draft_get_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
+		$sizes = bboss_draft_get_user_meta_sizes( $user_id );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		$this->assertArrayHasKey( 'draft_user', $sizes['drafts'], 'Sizes must be keyed by the logical key the writers asked for.' );
 		$this->assertGreaterThan( 500, $sizes['drafts']['draft_user'] );
@@ -1186,7 +1186,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * The expiry sweep must collect a filtered row and leave a stray raw one.
 	 *
-	 * Matching raw literals made the sweep hand bb_draft_dispose() an
+	 * Matching raw literals made the sweep hand bboss_draft_dispose() an
 	 * unfiltered key, which re-filtered onto the member's LIVE draft and
 	 * deleted that instead - while the row actually found survived
 	 * (PROD-9621 N2).
@@ -1203,7 +1203,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
 		// The member's real draft, expired, stored the way every writer stores.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_77',
 			array(
@@ -1214,7 +1214,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// And a fresh one that must survive the sweep untouched.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -1225,10 +1225,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		delete_site_option( 'bb_draft_cleanup_cursor' );
-		bb_drafts_delete_expired( 0 );
+		bboss_drafts_delete_expired( 0 );
 
-		$expired = bp_get_user_meta( $user_id, 'draft_group_77', true );
-		$fresh   = bp_get_user_meta( $user_id, 'draft_user', true );
+		$expired = bboss_get_user_meta( $user_id, 'draft_group_77', true );
+		$fresh   = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
@@ -1245,7 +1245,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_non_invertible_key_filter_disables_the_sweep() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -1257,8 +1257,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_hash_user_meta_key' ) );
 
-		$wrap  = bb_draft_meta_key_wrap();
-		$batch = bb_draft_get_rows_batch( 0, 200, false );
+		$wrap  = bboss_draft_meta_key_wrap();
+		$batch = bboss_draft_get_rows_batch( 0, 200, false );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_hash_user_meta_key' ) );
 
@@ -1270,7 +1270,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	/**
 	 * M1: a filter scoped to the draft keys leaves the internal probe key
-	 * unchanged, so bb_draft_meta_key_wrap()'s identity short-circuit used to
+	 * unchanged, so bboss_draft_meta_key_wrap()'s identity short-circuit used to
 	 * report invertible=true while every real stored key was actually wrapped -
 	 * silently disabling the cap, eviction, expiry and healing. The wrap must
 	 * VERIFY against the real canonical keys even in the identity case, and
@@ -1283,7 +1283,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_draft_scoped_user_meta_key' ) );
 
 		// Stored through the writer, so it lands under the WRAPPED key.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -1293,8 +1293,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$wrap  = bb_draft_meta_key_wrap();
-		$batch = bb_draft_get_rows_batch( 0, 200, false );
+		$wrap  = bboss_draft_meta_key_wrap();
+		$batch = bboss_draft_get_rows_batch( 0, 200, false );
 
 		// The wrap follows the real draft key, so it is derivable and correct -
 		// NOT the silent identity that used to make everything inert (M1).
@@ -1309,7 +1309,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// End-to-end: the expiry sweep actually removes the expired draft.
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_draft_scoped_user_meta_key' ) );
@@ -1363,7 +1363,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	public function count_agg_row_write( $meta_id, $object_id, $meta_key ) {
-		if ( bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
+		if ( bboss_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
 			$this->agg_row_writes++;
 		}
 	}
@@ -1379,7 +1379,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$old     = time() - ( 40 * DAY_IN_SECONDS );
 		$now     = time();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -1394,12 +1394,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_action( 'updated_user_meta', array( $this, 'count_agg_row_write' ), 10, 3 );
 		add_action( 'added_user_meta', array( $this, 'count_agg_row_write' ), 10, 3 );
 
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 
 		remove_action( 'updated_user_meta', array( $this, 'count_agg_row_write' ), 10 );
 		remove_action( 'added_user_meta', array( $this, 'count_agg_row_write' ), 10 );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame( 3, $result['deleted'], 'The three expired inner drafts must be removed.' );
 		$this->assertIsArray( $stored );
@@ -1422,7 +1422,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// More than one scan window (200) so the sweep loops at least twice.
 		for ( $i = 1; $i <= 250; $i++ ) {
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				self::factory()->user->create(),
 				'draft_group_' . $i,
 				array( 'data_key' => 'draft_group_' . $i, '_draft_saved_at' => time(), 'data' => array( 'content' => 'x' ) )
@@ -1432,7 +1432,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->cleanup_lock_sets = 0;
 		add_filter( 'pre_set_site_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
 
-		bb_drafts_delete_expired( 0 );
+		bboss_drafts_delete_expired( 0 );
 
 		remove_filter( 'pre_set_site_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
 
@@ -1477,13 +1477,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$evicted = $this->make_stamped_unsaved_attachment( $user_id, 40 );
 		$plain   = $this->make_stamped_unsaved_attachment( $user_id, 40 );
 
-		bb_draft_mark_evicted_attachments(
+		bboss_draft_mark_evicted_attachments(
 			array( array( 'data' => array( 'media' => array( array( 'id' => $evicted ) ) ) ) ),
 			$user_id
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '1', (string) get_post_meta( $evicted, 'bb_media_draft', true ), 'A file of a just-evicted (handed-back) draft keeps its stamp.' );
@@ -1492,7 +1492,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Once the eviction itself is past retention, the stamp goes too.
 		update_post_meta( $evicted, 'bb_draft_evicted_at', time() - 3 * DAY_IN_SECONDS );
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '', (string) get_post_meta( $evicted, 'bb_media_draft', true ) );
@@ -1507,7 +1507,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$text    = '<p>My unpublished words.</p>';
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_5',
 			array(
@@ -1517,9 +1517,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$this->assertTrue( bb_draft_salvage_oversized_draft( $user_id, 'draft_group_5' ), 'The row is salvaged, not left for disposal.' );
+		$this->assertTrue( bboss_draft_salvage_oversized_draft( $user_id, 'draft_group_5' ), 'The row is salvaged, not left for disposal.' );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_group_5', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_group_5', true );
 		$this->assertStringContainsString( 'My unpublished words.', $stored['data']['content'] );
 		$this->assertStringNotContainsString( 'base64', $stored['data']['content'] );
 	}
@@ -1529,15 +1529,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * names nothing, so the check is not an existence oracle (V24).
 	 */
 	public function test_key_context_refuses_trashed_and_pending_posts() {
-		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$open    = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum ) );
-		$trashed = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum, 'post_status' => 'trash' ) );
-		$pending = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum, 'post_status' => 'pending' ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$open    = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum ) );
+		$trashed = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum, 'post_status' => 'trash' ) );
+		$pending = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum, 'post_status' => 'pending' ) );
 
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $open ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $trashed ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $pending ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_999999999' ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $open ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $trashed ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $pending ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_reply_999999999' ) );
 	}
 
 	/**
@@ -1549,7 +1549,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_8',
 			array(
@@ -1561,7 +1561,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Simulate the member re-saving between the batch read and the dispose:
 		// just before the cron's fresh read of this row runs.
-		$stored_key = bp_get_user_meta_key( 'draft_group_8' );
+		$stored_key = bboss_get_user_meta_key( 'draft_group_8' );
 		$resaved    = false;
 		$resave     = function ( $query ) use ( $user_id, $stored_key, &$resaved ) {
 			global $wpdb;
@@ -1589,13 +1589,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'query', $resave );
 
 		delete_site_option( 'bb_draft_cleanup_cursor' );
-		bb_drafts_delete_expired( 0 );
+		bboss_drafts_delete_expired( 0 );
 
 		remove_filter( 'query', $resave );
 
 		$this->assertTrue( $resaved, 'Premise: the re-save ran inside the window.' );
 		wp_cache_delete( $user_id, 'user_meta' );
-		$stored = bp_get_user_meta( $user_id, 'draft_group_8', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_group_8', true );
 		$this->assertIsArray( $stored, 'A draft re-saved after the batch read must not be deleted.' );
 		$this->assertSame( 'fresh', $stored['data']['content'] );
 	}
@@ -1612,7 +1612,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$in_draft = $this->make_stamped_unsaved_attachment( $user_id ); // referenced by a stored draft
 
 		// A stored forum draft that references $in_draft.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -1625,7 +1625,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( 1, $result['released'], 'Exactly the unreferenced stamped attachment must be released.' );
@@ -1650,7 +1650,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$orphan  = $this->make_stamped_unsaved_attachment( $user_id );
 
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', '__return_zero' );
 
 		$this->assertSame( 0, $result['released'] );
@@ -1679,7 +1679,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				'data'            => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $ref ) ) ) ),
 			);
 		}
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $referenced_entries );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $referenced_entries );
 
 		// The orphan is created AFTER the referenced ones, so it has a higher ID
 		// and would sort last - exactly where a no-order LIMIT window drops it.
@@ -1688,7 +1688,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 		// Tiny page size forces the cursor to iterate, exercising the resume.
 		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
@@ -1719,7 +1719,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->cleanup_lock_sets = 0;
 		add_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
@@ -1741,7 +1741,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_reference_scan_reports_incompletion_when_over_budget() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -1749,7 +1749,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$result = bb_drafts_collect_referenced_attachment_ids( 1, time() - 100 );
+		$result = bboss_drafts_collect_referenced_attachment_ids( 1, time() - 100 );
 
 		$this->assertFalse(
 			$result,
@@ -1773,7 +1773,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$orphan   = $this->make_stamped_unsaved_attachment( $user_id );
 		$in_draft = $this->make_stamped_unsaved_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -1782,7 +1782,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		$result = bb_drafts_release_orphaned_draft_stamps( 1 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 1 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame(
@@ -1810,7 +1810,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// more than one window. No orphan attachments, so the release loop runs
 		// zero windows and only the scan phase can refresh the lock beyond entry.
 		for ( $i = 0; $i < 3; $i++ ) {
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				self::factory()->user->create(),
 				'draft_user',
 				array( 'data_key' => 'draft_user', '_draft_saved_at' => time(), 'data' => array( 'content' => 'x' ) )
@@ -1822,7 +1822,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->cleanup_lock_sets = 0;
 		add_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'return_two' ) );
@@ -1863,7 +1863,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * D2: bb_drafts_schedule_cleanup() must schedule the per-site stamp-release
+	 * D2: bboss_drafts_schedule_cleanup() must schedule the per-site stamp-release
 	 * event unconditionally (before the root-blog guard), so every blog's cron
 	 * carries it. The root-only expiry event stays behind the guard.
 	 */
@@ -1871,7 +1871,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
 		wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
 
-		bb_drafts_schedule_cleanup();
+		bboss_drafts_schedule_cleanup();
 
 		$this->assertNotFalse(
 			wp_next_scheduled( 'bb_draft_stamp_release_hook' ),
@@ -1889,7 +1889,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * The re-arm used to queue a single event on the DAILY hook and guard on
 	 * wp_next_scheduled() of that same hook. WP-Cron re-schedules a recurring
 	 * event's next occurrence before it fires the callback, and
-	 * bb_drafts_schedule_cleanup() re-creates the daily event on every bp_init,
+	 * bboss_drafts_schedule_cleanup() re-creates the daily event on every bp_init,
 	 * so that guard was truthy at every point the re-arm could run and no retry
 	 * was ever queued. Every abstention still cost the full 24 hours, and on a
 	 * network with a stable daily lock collision the losing blog's stamped
@@ -1902,10 +1902,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_transient( 'bb_draft_stamp_sweep_retries' );
 
 		// Production state: the daily recurring event is present.
-		bb_drafts_schedule_cleanup();
+		bboss_drafts_schedule_cleanup();
 		$this->assertNotFalse( wp_next_scheduled( 'bb_draft_stamp_release_hook' ), 'Premise: the daily event must be scheduled, as it always is in production.' );
 
-		bb_draft_reschedule_stamp_sweep();
+		bboss_draft_reschedule_stamp_sweep();
 
 		$retry = wp_next_scheduled( 'bb_draft_stamp_release_retry' );
 
@@ -1917,7 +1917,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Repeated abstentions inside one window queue exactly one retry.
-		bb_draft_reschedule_stamp_sweep();
+		bboss_draft_reschedule_stamp_sweep();
 
 		$this->assertSame( $retry, wp_next_scheduled( 'bb_draft_stamp_release_retry' ), 'A second abstention in the same window must not queue a second retry.' );
 		$this->assertSame( 1, $this->count_scheduled_events( 'bb_draft_stamp_release_retry' ), 'Exactly one retry event may be queued at a time.' );
@@ -1938,7 +1938,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_transient( 'bb_draft_stamp_sweep_retries' );
 
 		for ( $attempt = 1; $attempt <= 4; $attempt++ ) {
-			bb_draft_reschedule_stamp_sweep();
+			bboss_draft_reschedule_stamp_sweep();
 
 			$this->assertNotFalse( wp_next_scheduled( 'bb_draft_stamp_release_retry' ), "Retry {$attempt} of the day must be queued." );
 
@@ -1946,7 +1946,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			wp_clear_scheduled_hook( 'bb_draft_stamp_release_retry' );
 		}
 
-		bb_draft_reschedule_stamp_sweep();
+		bboss_draft_reschedule_stamp_sweep();
 
 		$this->assertFalse( wp_next_scheduled( 'bb_draft_stamp_release_retry' ), 'A fifth abstention in one day must wait for the daily slot instead of retrying again.' );
 
@@ -1965,7 +1965,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// The allowance is spent.
 		set_transient( 'bb_draft_stamp_sweep_retries', 4, DAY_IN_SECONDS );
 
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		$this->assertFalse( $result['abstained'], 'Premise: an uncontended run on an empty site must judge its (zero) candidates, not abstain.' );
 		$this->assertFalse( get_transient( 'bb_draft_stamp_sweep_retries' ), 'A run that judged its candidates must reset the retry allowance.' );
@@ -2016,7 +2016,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$orphan   = $this->make_stamped_unsaved_attachment( $user_id );
 		$in_draft = $this->make_stamped_unsaved_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -2033,7 +2033,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
 
 		// First sweep: cold cache, so the scan runs and seeds the cache.
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		$this->assertSame( 1, $this->reference_scans, 'The first sweep must run the reference scan.' );
 		$this->assertIsArray(
 			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
@@ -2041,7 +2041,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Second sweep with nothing changed: cache hit, so NO re-scan.
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		$this->assertSame( 1, $this->reference_scans, 'A second sweep with an unchanged draft set must reuse the cache, not re-scan.' );
 
 		// When the cache is dropped (which the AJAX handlers do after a draft
@@ -2050,7 +2050,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// asserts the re-scan behaviour; the invalidation itself is tested there.
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		$this->assertSame( 2, $this->reference_scans, 'A dropped cache must force the next sweep to re-scan instead of reusing a stale set.' );
 
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
@@ -2059,7 +2059,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	/**
 	 * Test hook: bump the referenced-cache token, exactly as a reference-adding
-	 * save does through bb_draft_invalidate_referenced_cache(), and return the
+	 * save does through bboss_draft_invalidate_referenced_cache(), and return the
 	 * batch size unchanged. Attaching it to the scan or release batch-size filter
 	 * simulates a concurrent invalidation landing at that phase of the sweep.
 	 *
@@ -2067,14 +2067,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * @return int The same batch size.
 	 */
 	public function bump_referenced_token_return( $batch_size ) {
-		bb_draft_invalidate_referenced_cache();
+		bboss_draft_invalidate_referenced_cache();
 		return $batch_size;
 	}
 
 	/**
 	 * L4 TOCTOU (scan-window leg): a reference added while the sweep's unbudgeted
 	 * scan is running must not be lost to a stale cache. Every reference-adding
-	 * save bumps a token via bb_draft_invalidate_referenced_cache(); the sweep
+	 * save bumps a token via bboss_draft_invalidate_referenced_cache(); the sweep
 	 * captures it before the scan and, if it moves before the set is committed,
 	 * abstains - caching nothing and releasing nothing - instead of pinning a set
 	 * that may be missing the new reference for the full TTL, which is what let
@@ -2097,7 +2097,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'bump_referenced_token_return' ) );
 
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'bump_referenced_token_return' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
@@ -2138,7 +2138,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'bump_referenced_token_return' ) );
 
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'bump_referenced_token_return' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
@@ -2163,19 +2163,19 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		$user_id = self::factory()->user->create();
-		bp_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'content' => 'expired' ) ) );
+		bboss_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'content' => 'expired' ) ) );
 
 		// Expiry must back off while the one-shot holds its lock, and touch nothing.
 		set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
-		$blocked_expiry = bb_drafts_delete_expired( 0 );
+		$blocked_expiry = bboss_drafts_delete_expired( 0 );
 		delete_site_transient( 'bb_draft_oneshot_lock' );
 
 		$this->assertTrue( ! empty( $blocked_expiry['locked'] ), 'Expiry must back off while the one-shot lock is held.' );
-		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'A backed-off expiry sweep must not dispose anything.' );
+		$this->assertNotEmpty( bboss_get_user_meta( $user_id, 'draft_user', true ), 'A backed-off expiry sweep must not dispose anything.' );
 
 		// One-shot must back off while the expiry holds its lock.
 		set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
-		$blocked_oneshot = bb_drafts_oneshot_batch( 0 );
+		$blocked_oneshot = bboss_drafts_oneshot_batch( 0 );
 		delete_site_transient( 'bb_draft_cleanup_lock' );
 
 		$this->assertTrue( ! empty( $blocked_oneshot['locked'] ), 'One-shot must back off while the expiry lock is held.' );
@@ -2198,7 +2198,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 		delete_site_transient( 'bb_draft_oneshot_lock' );
 
 		$this->assertTrue( ! empty( $result['locked'] ), 'The collision must report locked.' );
@@ -2225,11 +2225,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 
 		// One evictable candidate.
-		bp_update_user_meta( $user_id, 'draft_group_1', array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'content' => str_repeat( 'a', 300 ) ) ) );
+		bboss_update_user_meta( $user_id, 'draft_group_1', array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'content' => str_repeat( 'a', 300 ) ) ) );
 
 		// Cap below the NEW draft's own size, so no amount of eviction fits it.
 		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_fifty' ) );
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
 		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_fifty' ) );
 
 		$this->assertFalse(
@@ -2248,7 +2248,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'H1: a refusal that can never fit must delete nothing - evicted must be empty.'
 		);
 		$this->assertNotEmpty(
-			bp_get_user_meta( $user_id, 'draft_group_1', true ),
+			bboss_get_user_meta( $user_id, 'draft_group_1', true ),
 			'H1: the evictable draft must survive a refusal that could never have fit.'
 		);
 	}
@@ -2257,7 +2257,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * H2: on multisite the root-only expiry sweep must NOT release a draft's
 	 * attachment stamp - the ID resolves against the current blog and could
 	 * strip protection from a same-numbered attachment on the wrong blog. It
-	 * passes $defer_attachment_release, and bb_draft_dispose() must then remove
+	 * passes $defer_attachment_release, and bboss_draft_dispose() must then remove
 	 * the row but leave the stamp for the per-site sweep to reap. The default
 	 * (single-site / in-blog discard) still unstamps immediately.
 	 */
@@ -2265,16 +2265,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$att     = $this->make_stamped_unsaved_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'media' => array( array( 'id' => $att ) ) ) )
 		);
 
 		// Deferred: the row goes, the stamp stays (the per-site sweep reaps it).
-		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user', '', true ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'draft_user', '', true ) );
 		$this->assertEmpty(
-			bp_get_user_meta( $user_id, 'draft_user', true ),
+			bboss_get_user_meta( $user_id, 'draft_user', true ),
 			'The draft row must still be removed when attachment release is deferred.'
 		);
 		$this->assertSame(
@@ -2286,12 +2286,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Control: the default path unstamps immediately.
 		$user2 = self::factory()->user->create();
 		$att2  = $this->make_stamped_unsaved_attachment( $user2 );
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user2,
 			'draft_user',
 			array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'media' => array( array( 'id' => $att2 ) ) ) )
 		);
-		$this->assertTrue( bb_draft_dispose( $user2, 'draft_user' ) );
+		$this->assertTrue( bboss_draft_dispose( $user2, 'draft_user' ) );
 		$this->assertSame(
 			'',
 			(string) get_post_meta( $att2, 'bb_media_draft', true ),
@@ -2318,22 +2318,22 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// A corrupt (non-array) row: counted toward the total, never an eviction
 		// candidate, and far larger than the cap on its own.
-		bp_update_user_meta( $user_id, 'draft_user', str_repeat( 'x', 1000000 ) );
+		bboss_update_user_meta( $user_id, 'draft_user', str_repeat( 'x', 1000000 ) );
 		// A real, evictable draft.
-		bp_update_user_meta( $user_id, 'draft_group_1', array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'content' => str_repeat( 'a', 300 ) ) ) );
+		bboss_update_user_meta( $user_id, 'draft_group_1', array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'content' => str_repeat( 'a', 300 ) ) ) );
 
 		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
 
 		// 'save': can never fit (corrupt bulk alone exceeds the cap) - refuse,
 		// delete nothing (H1).
-		$save = bb_draft_enforce_user_budget( $user_id, 'draft_user_new', 0, 'save' );
+		$save = bboss_draft_enforce_user_budget( $user_id, 'draft_user_new', 0, 'save' );
 		$this->assertFalse( $save['allowed'] );
 		$this->assertSame( array(), $save['evicted'] );
-		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_group_1', true ), 'save must not delete the evictable draft when it can never fit.' );
+		$this->assertNotEmpty( bboss_get_user_meta( $user_id, 'draft_group_1', true ), 'save must not delete the evictable draft when it can never fit.' );
 
 		// 'heal': partial reclamation - evict what it can, even though it cannot
 		// fully reach the cap (F4).
-		$heal = bb_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
+		$heal = bboss_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
 
 		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
 
@@ -2343,7 +2343,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'F4: heal must reclaim the evictable draft even when the cap can never be fully reached.'
 		);
 		$this->assertEmpty(
-			bp_get_user_meta( $user_id, 'draft_group_1', true ),
+			bboss_get_user_meta( $user_id, 'draft_group_1', true ),
 			'F4: the healed draft must actually be removed.'
 		);
 	}
@@ -2367,15 +2367,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// One evictable draft that references the stamped attachment, plus a
 		// corrupt bulk that keeps the user over budget so heal evicts it.
-		bp_update_user_meta( $user_id, 'draft_user', str_repeat( 'x', 1000000 ) );
-		bp_update_user_meta(
+		bboss_update_user_meta( $user_id, 'draft_user', str_repeat( 'x', 1000000 ) );
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_1',
 			array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'media' => array( array( 'id' => $att ) ) ) )
 		);
 
 		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
-		$heal = bb_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
+		$heal = bboss_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
 		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
 
 		$this->assertContains( 'draft_group_1', $heal['evicted'], 'Premise: heal evicted the draft that held the attachment.' );
@@ -2409,19 +2409,19 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		$result = bb_drafts_oneshot_batch( 0 );
+		$result = bboss_drafts_oneshot_batch( 0 );
 
 		$this->assertTrue( $result['complete'] );
 
 		for ( $i = 1; $i <= 4; $i++ ) {
-			$draft = bp_get_user_meta( $user_id, 'draft_group_' . $i, true );
+			$draft = bboss_get_user_meta( $user_id, 'draft_group_' . $i, true );
 
 			$this->assertIsArray( $draft, 'Draft ' . $i . ' survives: stripping the image was enough.' );
 			$this->assertStringStartsWith( 'Text ' . $i . ' C:\\temp\\notes ', $draft['data']['content'], 'The member\'s text is kept, backslashes included.' );
 			$this->assertStringNotContainsString( 'base64', $draft['data']['content'], 'The pasted image is stripped.' );
 		}
 
-		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'Nothing was evicted, so nothing is held.' );
+		$this->assertEmpty( bboss_draft_get_evicted_hold( $user_id ), 'Nothing was evicted, so nothing is held.' );
 	}
 
 	/**
@@ -2452,17 +2452,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		$result = bb_drafts_oneshot_batch( 0 );
+		$result = bboss_drafts_oneshot_batch( 0 );
 
 		$this->assertTrue( $result['complete'] );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'Premise: the oldest draft was evicted.' );
 
-		$hold = bb_draft_get_evicted_hold( $user_id );
+		$hold = bboss_draft_get_evicted_hold( $user_id );
 
 		$this->assertArrayHasKey( 'draft_group_1', $hold, 'The evicted draft is held for a hand-back.' );
 		$this->assertSame( str_repeat( 'x', 60000 ), $hold['draft_group_1']['entry']['data']['content'], 'The held copy is the whole draft.' );
 		$this->assertNotEmpty( get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The member is flagged, so the composer asks for the hand-back.' );
-		$this->assertNotFalse( bb_draft_get_held_entry( $user_id, 'draft_group_1' ), 'Opening that composer finds the held draft.' );
+		$this->assertNotFalse( bboss_draft_get_held_entry( $user_id, 'draft_group_1' ), 'Opening that composer finds the held draft.' );
 
 		if ( ! is_multisite() ) {
 			$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The held draft\'s file keeps its stamp.' );
@@ -2489,11 +2489,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 
-		bb_draft_heal_forum_row( $user_id );
+		bboss_draft_heal_forum_row( $user_id );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		for ( $i = 1; $i <= 4; $i++ ) {
 			$this->assertArrayHasKey( 'topic_' . $i, $stored, 'Inner draft ' . $i . ' survives: stripping was enough.' );
@@ -2516,12 +2516,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$row['reply_1']['data']['bbp_media'] = wp_json_encode( array( array( 'id' => $att ) ) );
 
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 
-		bb_draft_heal_forum_row( $user_id );
+		bboss_draft_heal_forum_row( $user_id );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
-		$hold   = bb_draft_get_evicted_hold( $user_id );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$hold   = bboss_draft_get_evicted_hold( $user_id );
 
 		$this->assertArrayNotHasKey( 'reply_1', $stored, 'Premise: the oldest inner draft was trimmed.' );
 		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_1', $hold, 'The trimmed inner draft is held for a hand-back.' );
@@ -2532,7 +2532,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The sweep keeps the held draft\'s file.' );
@@ -2547,7 +2547,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$held    = $this->make_stamped_unsaved_attachment( $user_id, 40 );
 		$plain   = $this->make_stamped_unsaved_attachment( $user_id, 40 );
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'draft_group_9' => array(
@@ -2558,7 +2558,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '', (string) get_post_meta( $held, 'bb_draft_evicted_at', true ), 'Premise: the file carries no evicted marker.' );
@@ -2566,16 +2566,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( '', (string) get_post_meta( $plain, 'bb_media_draft', true ), 'Control: an old unreferenced stamp is still released.' );
 
 		// Once the hold expires, the file is no longer protected by it.
-		$hold                         = bb_draft_get_evicted_hold( $user_id );
+		$hold                         = bboss_draft_get_evicted_hold( $user_id );
 		$hold['draft_group_9']['at'] = time() - 8 * DAY_IN_SECONDS;
-		bb_draft_set_evicted_hold( $user_id, $hold );
+		bboss_draft_set_evicted_hold( $user_id, $hold );
 
 		// A shrinking hold leaves the cached reference set a safe superset, so
 		// only a fresh scan sees the expiry.
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '', (string) get_post_meta( $held, 'bb_media_draft', true ), 'An expired hold no longer keeps the file.' );
@@ -2590,14 +2590,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Warm the cached reference set with nothing held.
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertIsArray( get_site_transient( 'bb_draft_referenced_stamp_ids' ), 'Premise: the sweep cached its reference set.' );
 
 		$held = $this->make_stamped_unsaved_attachment( $user_id, 40 );
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'draft_group_8' => array(
@@ -2608,7 +2608,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '1', (string) get_post_meta( $held, 'bb_media_draft', true ), 'The held draft\'s file keeps its stamp after a cached sweep.' );
@@ -2636,16 +2636,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => 99,
 		);
 
-		bb_draft_hold_evicted( $user_id, $entries );
+		bboss_draft_hold_evicted( $user_id, $entries );
 
-		$hold = bb_draft_get_evicted_hold( $user_id );
+		$hold = bboss_draft_get_evicted_hold( $user_id );
 
-		$this->assertLessThanOrEqual( bb_draft_user_total_max_size(), strlen( maybe_serialize( $hold ) ), 'The hold stays within the per-user draft budget.' );
+		$this->assertLessThanOrEqual( bboss_draft_user_total_max_size(), strlen( maybe_serialize( $hold ) ), 'The hold stays within the per-user draft budget.' );
 		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_10', $hold, 'The newest draft is kept.' );
 		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:reply_1', $hold, 'The oldest draft does not fit the hold.' );
 		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:empty', $hold, 'An entry with nothing to restore is not held.' );
 
-		$overflow = bb_draft_get_evicted_overflow( $user_id );
+		$overflow = bboss_draft_get_evicted_overflow( $user_id );
 
 		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_1', $overflow, 'The oldest draft waits in the overflow instead of being dropped (F-03).' );
 		$this->assertSame( 10, count( $hold ) + count( $overflow ), 'Every draft with content is held somewhere.' );
@@ -2668,14 +2668,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		bb_draft_hold_evicted( $user_id, $entries );
+		bboss_draft_hold_evicted( $user_id, $entries );
 
 		$handed_back = array();
-		$owed        = bb_draft_pending_evicted( $user_id );
+		$owed        = bboss_draft_pending_evicted( $user_id );
 
 		for ( $round = 0; $round < 10 && ! empty( $owed ); $round++ ) {
 			$handed_back = array_merge( $handed_back, array_keys( $owed ) );
-			$owed        = bb_draft_pending_evicted( $user_id, array_keys( $owed ) );
+			$owed        = bboss_draft_pending_evicted( $user_id, array_keys( $owed ) );
 		}
 
 		sort( $handed_back );
@@ -2685,7 +2685,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( $expected, $handed_back, 'Every held draft is handed back in turn.' );
 		$this->assertEmpty( $owed );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The flag clears once both options are empty.' );
-		$this->assertEmpty( bb_draft_get_evicted_overflow( $user_id, true ) );
+		$this->assertEmpty( bboss_draft_get_evicted_overflow( $user_id, true ) );
 	}
 
 	/**
@@ -2697,33 +2697,33 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$big     = array(
 			'data_key'        => 'draft_group_5',
-			'data'            => array( 'content' => str_repeat( 'q', bb_draft_user_total_max_size() + 1000 ) ),
+			'data'            => array( 'content' => str_repeat( 'q', bboss_draft_user_total_max_size() + 1000 ) ),
 			'_draft_saved_at' => time(),
 		);
 
-		bb_draft_hold_evicted( $user_id, array( 'draft_group_5' => $big ) );
+		bboss_draft_hold_evicted( $user_id, array( 'draft_group_5' => $big ) );
 
-		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'A draft larger than the hold does not sit in it.' );
-		$this->assertSame( array( 'draft_group_5' ), bb_draft_get_evicted_overflow_keys( $user_id ), 'Its key is listed.' );
+		$this->assertEmpty( bboss_draft_get_evicted_hold( $user_id ), 'A draft larger than the hold does not sit in it.' );
+		$this->assertSame( array( 'draft_group_5' ), bboss_draft_get_evicted_overflow_keys( $user_id ), 'Its key is listed.' );
 
 		$reads = 0;
 		$count = function ( $value ) use ( &$reads ) {
 			++$reads;
 			return $value;
 		};
-		$name  = bb_draft_evicted_overflow_option( $user_id );
+		$name  = bboss_draft_evicted_overflow_option( $user_id );
 		$hook  = is_multisite() ? 'site_option_' . $name : 'option_' . $name;
 		add_filter( $hook, $count );
 
-		$this->assertFalse( bb_draft_get_held_entry( $user_id, 'draft_user' ), 'Another key is not held.' );
-		bb_draft_pending_evicted( $user_id );
+		$this->assertFalse( bboss_draft_get_held_entry( $user_id, 'draft_user' ), 'Another key is not held.' );
+		bboss_draft_pending_evicted( $user_id );
 		$this->assertSame( 0, $reads, 'An ordinary page view does not read the overflow.' );
 
-		$found = bb_draft_get_held_entry( $user_id, 'draft_group_5' );
+		$found = bboss_draft_get_held_entry( $user_id, 'draft_group_5' );
 		$this->assertSame( $big['data'], $found['data'], 'Its own composer finds it.' );
 		$this->assertNotEmpty( $found['_draft_rev'], 'Held with a revision, so a save built on it can be told apart.' );
 
-		$moved = bb_draft_promote_evicted(
+		$moved = bboss_draft_promote_evicted(
 			$user_id,
 			function ( $key ) {
 				return 'draft_group_5' === $key;
@@ -2733,9 +2733,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertArrayHasKey( 'draft_group_5', $moved, 'The fetch hands it back.' );
 
-		bb_draft_pending_evicted( $user_id, array( 'draft_group_5' ) );
+		bboss_draft_pending_evicted( $user_id, array( 'draft_group_5' ) );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'Acknowledged, nothing is left.' );
-		$this->assertSame( array(), bb_draft_get_evicted_overflow_keys( $user_id ) );
+		$this->assertSame( array(), bboss_draft_get_evicted_overflow_keys( $user_id ) );
 	}
 
 	/**
@@ -2743,9 +2743,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 */
 	public function test_prune_expires_overflow_entries() {
 		$user_id = self::factory()->user->create();
-		$old     = time() - bb_draft_evicted_hold_seconds() - 10;
+		$old     = time() - bboss_draft_evicted_hold_seconds() - 10;
 
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -2761,10 +2761,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		bb_drafts_prune_evicted_holds();
+		bboss_drafts_prune_evicted_holds();
 
-		$this->assertArrayHasKey( 'draft_user', bb_draft_get_evicted_hold( $user_id ) );
-		$this->assertEmpty( bb_draft_get_evicted_overflow( $user_id, true ), 'The expired overflow entry is pruned.' );
+		$this->assertArrayHasKey( 'draft_user', bboss_draft_get_evicted_hold( $user_id ) );
+		$this->assertEmpty( bboss_draft_get_evicted_overflow( $user_id, true ), 'The expired overflow entry is pruned.' );
 		$this->assertSame( '1', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ) );
 	}
 
@@ -2774,7 +2774,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_deleting_a_member_deletes_their_held_drafts() {
 		$user_id = self::factory()->user->create();
 
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -2798,8 +2798,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			wp_delete_user( $user_id );
 		}
 
-		$name     = bb_draft_evicted_hold_option( $user_id );
-		$overflow = bb_draft_evicted_overflow_option( $user_id );
+		$name     = bboss_draft_evicted_hold_option( $user_id );
+		$overflow = bboss_draft_evicted_overflow_option( $user_id );
 
 		$this->assertFalse( is_multisite() ? get_site_option( $name ) : get_option( $name ), 'The hold is deleted with the member.' );
 		$this->assertFalse( is_multisite() ? get_site_option( $overflow ) : get_option( $overflow ), 'So is the overflow.' );
@@ -2823,15 +2823,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'data'     => array( 'media' => array( array( 'id' => $attachment ) ) ),
 		);
 
-		bb_draft_hold_evicted( $user_id, array( $key => $entry ) );
-		bb_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
+		bboss_draft_hold_evicted( $user_id, array( $key => $entry ) );
+		bboss_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
 
 		$this->assertSame( '', (string) get_post_meta( $attachment, 'bb_draft_evicted_at', true ), 'No postmeta is written from the root-only heal (H2).' );
 
-		bb_draft_pending_evicted( $user_id, array( $key ) );
-		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'Premise: the ack dropped the hold.' );
+		bboss_draft_pending_evicted( $user_id, array( $key ) );
+		$this->assertEmpty( bboss_draft_get_evicted_hold( $user_id ), 'Premise: the ack dropped the hold.' );
 
-		$this->assertContains( (int) $attachment, bb_drafts_collect_held_attachment_ids(), 'The ledger still references the file.' );
+		$this->assertContains( (int) $attachment, bboss_drafts_collect_held_attachment_ids(), 'The ledger still references the file.' );
 
 		// End to end: an old, stamped, unsaved upload of the held draft survives
 		// the real stamp sweep, so the orphan cron cannot delete it.
@@ -2849,29 +2849,29 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_option( 'bb_draft_stamp_sweep_cursor' );
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '1', (string) get_post_meta( $attachment, 'bb_media_draft', true ), 'The sweep keeps the stamp while the ledger window runs.' );
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		$ledger                      = get_site_option( bb_draft_eviction_file_ledger_option() );
+		$ledger                      = get_site_option( bboss_draft_eviction_file_ledger_option() );
 		$ledger[ (int) $attachment ] = time() - 2 * DAY_IN_SECONDS;
-		update_site_option( bb_draft_eviction_file_ledger_option(), $ledger );
+		update_site_option( bboss_draft_eviction_file_ledger_option(), $ledger );
 
-		$this->assertNotContains( (int) $attachment, bb_drafts_collect_held_attachment_ids(), 'Past the retention window it is no longer referenced.' );
+		$this->assertNotContains( (int) $attachment, bboss_drafts_collect_held_attachment_ids(), 'Past the retention window it is no longer referenced.' );
 
-		bb_drafts_prune_evicted_holds();
+		bboss_drafts_prune_evicted_holds();
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
-		$this->assertFalse( get_site_option( bb_draft_eviction_file_ledger_option() ), 'The prune empties the ledger.' );
+		$this->assertFalse( get_site_option( bboss_draft_eviction_file_ledger_option() ), 'The prune empties the ledger.' );
 
 		// Past the window and with nothing else referencing it, the sweep
 		// releases the stamp as it would for any orphaned draft upload.
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 		delete_option( 'bb_draft_stamp_sweep_cursor' );
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame( '', (string) get_post_meta( $attachment, 'bb_media_draft', true ), 'Control: without the ledger the stamp is released.' );
@@ -2896,7 +2896,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The activity composer's discard now delegates to bb_draft_dispose().
+	 * The activity composer's discard now delegates to bboss_draft_dispose().
 	 *
 	 * The discard path used to hand-roll unstamp + delete and skipped the size
 	 * memo flush, so it could drift from the maintenance routes it is supposed
@@ -2912,7 +2912,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $media_id, 'bb_media_draft', 1 );
 		update_post_meta( $feature_id, 'bb_activity_post_feature_image_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -2926,16 +2926,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$before = bb_draft_get_user_meta_sizes( $user_id );
+		$before = bboss_draft_get_user_meta_sizes( $user_id );
 		$this->assertArrayHasKey( 'draft_user', $before['drafts'], 'Fixture must be measurable, or the test proves nothing.' );
 
-		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'draft_user' ) );
 
-		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'The row must be gone.' );
+		$this->assertSame( '', (string) bboss_get_user_meta( $user_id, 'draft_user', true ), 'The row must be gone.' );
 		$this->assertSame( '', (string) get_post_meta( $media_id, 'bb_media_draft', true ), 'Media stamp must be released.' );
 		$this->assertSame( '', (string) get_post_meta( $feature_id, 'bb_activity_post_feature_image_draft', true ), 'Feature image stamp must be released.' );
 
-		$after = bb_draft_get_user_meta_sizes( $user_id );
+		$after = bboss_draft_get_user_meta_sizes( $user_id );
 		$this->assertArrayNotHasKey( 'draft_user', $after['drafts'], 'The memoized sizes must be invalidated.' );
 	}
 
@@ -2943,40 +2943,40 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * The draft key must resolve to the object and forum it addresses.
 	 */
 	public function test_topic_reply_key_context_resolves_object_and_forum() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
-		$forum_id = $this->factory->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = $this->factory->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$topic_id = $this->factory->post->create(
 			array(
-				'post_type'   => bbp_get_topic_post_type(),
+				'post_type'   => bboss_bbp_get_topic_post_type(),
 				'post_parent' => $forum_id,
 			)
 		);
 		update_post_meta( $topic_id, '_bbp_forum_id', $forum_id );
 
-		$bare_topic = bb_draft_topic_reply_key_context( 'draft_topic' );
+		$bare_topic = bboss_draft_topic_reply_key_context( 'draft_topic' );
 		$this->assertSame( 'topic', $bare_topic['object'] );
 		$this->assertSame( 0, $bare_topic['forum_id'], 'A bare shape carries no forum, so no forum gate applies.' );
 
-		$discussion = bb_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id );
+		$discussion = bboss_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id );
 		$this->assertSame( 'topic', $discussion['object'] );
 		$this->assertSame( $forum_id, $discussion['forum_id'] );
 
-		$reply = bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id );
+		$reply = bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_id );
 		$this->assertSame( 'reply', $reply['object'] );
 		$this->assertSame( $topic_id, $reply['topic_id'] );
 		$this->assertSame( $forum_id, $reply['forum_id'], 'A reply draft belongs to whichever forum owns its topic.' );
 
 		// Shapes that address nothing real stay rejected.
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_999999' ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_nonsense' ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ), 'A topic ID in a forum slot is not a forum.' );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_discussion_999999' ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_nonsense' ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ), 'A topic ID in a forum slot is not a forum.' );
 
 		// The bool wrapper keeps its contract.
-		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id ) );
-		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_nonsense' ) );
+		$this->assertNotFalse( bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_id ) );
+		$this->assertFalse( bboss_draft_topic_reply_key_context( 'draft_nonsense' ) );
 	}
 
 	/**
@@ -2987,7 +2987,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * (PROD-9621 N4).
 	 */
 	public function test_topic_draft_save_requires_the_topic_publish_right() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
@@ -2995,15 +2995,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$old_user = get_current_user_id();
 		$this->set_current_user( $user_id );
 
-		$topic_context = bb_draft_topic_reply_key_context( 'draft_topic' );
-		$reply_context = bb_draft_topic_reply_key_context( 'draft_reply' );
+		$topic_context = bboss_draft_topic_reply_key_context( 'draft_topic' );
+		$reply_context = bboss_draft_topic_reply_key_context( 'draft_reply' );
 
 		// Reply-only member: replies allowed, topics refused.
 		add_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
 		add_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
 
-		$topic_allowed = bb_draft_user_can_save_topic_reply_draft( $topic_context, $user_id );
-		$reply_allowed = bb_draft_user_can_save_topic_reply_draft( $reply_context, $user_id );
+		$topic_allowed = bboss_draft_user_can_save_topic_reply_draft( $topic_context, $user_id );
+		$reply_allowed = bboss_draft_user_can_save_topic_reply_draft( $reply_context, $user_id );
 
 		remove_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
 		remove_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
@@ -3021,7 +3021,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * (PROD-9621 N4).
 	 */
 	public function test_forum_draft_save_requires_view_access_to_that_forum() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
@@ -3029,15 +3029,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$old_user = get_current_user_id();
 		$this->set_current_user( $user_id );
 
-		$forum_id = $this->factory->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$context  = bb_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id );
+		$forum_id = $this->factory->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$context  = bboss_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id );
 
 		add_filter( 'bbp_current_user_can_publish_topics', '__return_true' );
 
-		$with_access = bb_draft_user_can_save_topic_reply_draft( $context, $user_id );
+		$with_access = bboss_draft_user_can_save_topic_reply_draft( $context, $user_id );
 
 		add_filter( 'bbp_user_can_view_forum', '__return_false' );
-		$without_access = bb_draft_user_can_save_topic_reply_draft( $context, $user_id );
+		$without_access = bboss_draft_user_can_save_topic_reply_draft( $context, $user_id );
 		remove_filter( 'bbp_user_can_view_forum', '__return_false' );
 
 		remove_filter( 'bbp_current_user_can_publish_topics', '__return_true' );
@@ -3058,15 +3058,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Isolate: this test runs a pass over the whole usermeta table.
 		$this->isolate_draft_maintenance();
 
-		if ( ! function_exists( 'bp_version_updater' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
+		if ( ! function_exists( 'bboss_version_updater' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
 
-		$this->assertGreaterThan( 23631, (int) buddypress()->db_version, 'db_version must be above the 3.7.0 value so the upgrade routine runs.' );
+		$this->assertGreaterThan( 23631, (int) bboss()->db_version, 'db_version must be above the 3.7.0 value so the upgrade routine runs.' );
 
-		$bp           = buddypress();
+		$bp           = bboss();
 		$raw_original = $bp->db_version_raw;
-		$db_original  = bp_get_option( '_bp_db_version' );
+		$db_original  = bboss_get_option( '_bp_db_version' );
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_site_option( 'bb_draft_oneshot_done' );
@@ -3076,9 +3076,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A 3.7.0 site: raw and stored versions are both 23631, so only the
 		// steps gated above 23631 run.
 		$bp->db_version_raw = 23631;
-		bp_update_option( '_bp_db_version', 23631 );
+		bboss_update_option( '_bp_db_version', 23631 );
 
-		bp_version_updater();
+		bboss_version_updater();
 
 		$epoch     = get_site_option( 'bb_draft_cleanup_epoch' );
 		$guard     = get_site_option( 'bb_drafts_cleanup_on_upgrade' );
@@ -3088,7 +3088,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		$bp->db_version_raw = $raw_original;
-		bp_update_option( '_bp_db_version', $db_original );
+		bboss_update_option( '_bp_db_version', $db_original );
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_site_option( 'bb_draft_oneshot_done' );
 		delete_site_option( 'bb_draft_oneshot_state' );
@@ -3111,8 +3111,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Isolate: this test runs a pass over the whole usermeta table.
 		$this->isolate_draft_maintenance();
 
-		if ( ! function_exists( 'bb_drafts_cleanup_on_upgrade' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
+		if ( ! function_exists( 'bboss_drafts_cleanup_on_upgrade' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
@@ -3123,7 +3123,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A slice that already ran inside this window must not be repeated.
 		update_site_option( 'bb_drafts_cleanup_on_upgrade', time() );
 
-		bb_drafts_cleanup_on_upgrade();
+		bboss_drafts_cleanup_on_upgrade();
 
 		$this->assertFalse( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'The guard must block a second synchronous slice in the same window.' );
 		$this->assertNotEmpty( get_site_option( 'bb_draft_cleanup_epoch' ), 'The epoch is still recorded even when the slice is skipped.' );
@@ -3144,7 +3144,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$was_using_ext_cache = wp_using_ext_object_cache( true );
 
-		bb_drafts_cleanup_on_upgrade();
+		bboss_drafts_cleanup_on_upgrade();
 
 		$durable_scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $durable_scheduled ) {
@@ -3161,7 +3161,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// And it must still BLOCK: a guard that survives the flush but is no
 		// longer consulted costs the same 10-second synchronous slice on every
 		// admin request in the upgrade window.
-		bb_drafts_cleanup_on_upgrade();
+		bboss_drafts_cleanup_on_upgrade();
 
 		$this->assertFalse(
 			(bool) wp_next_scheduled( 'bb_draft_oneshot' ),
@@ -3180,7 +3180,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		update_site_option( 'bb_drafts_cleanup_on_upgrade', time() - ( 2 * HOUR_IN_SECONDS ) );
 
-		bb_drafts_cleanup_on_upgrade();
+		bboss_drafts_cleanup_on_upgrade();
 
 		// The synchronous upgrade slice now hands the stage-2 aggregate to a
 		// cron continuation rather than running it in the admin request
@@ -3191,7 +3191,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$guard_iterations = 0;
 		do {
 			$guard_iterations++;
-			$guard_result = bb_drafts_oneshot_batch( 0 );
+			$guard_result = bboss_drafts_oneshot_batch( 0 );
 		} while ( empty( $guard_result['complete'] ) && $guard_iterations < 20 );
 
 		$this->assertTrue( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'The pass must complete once its continuation drains.' );
@@ -3209,7 +3209,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * Two overlapping sweeps must not share the cursor.
 	 *
 	 * The recurring event and the self-scheduled continuation both run
-	 * bb_drafts_delete_expired() against one bb_draft_cleanup_cursor option.
+	 * bboss_drafts_delete_expired() against one bb_draft_cleanup_cursor option.
 	 * Without a lock the slower run can write its cursor back after the faster
 	 * one finished and deleted it, and the next slice then skips every row
 	 * below that stale position (PROD-9621 N10).
@@ -3220,7 +3220,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -3238,13 +3238,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// the sweep - if it did, the lock would be per-site and the multisite
 		// race the network scope exists to prevent would be back.
 		set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
-		$not_blocked = bb_drafts_delete_expired( 0 );
+		$not_blocked = bboss_drafts_delete_expired( 0 );
 		$this->assertTrue( empty( $not_blocked['locked'] ), 'A per-site lock must not block the network-scoped sweep.' );
 		delete_transient( 'bb_draft_cleanup_lock' );
 
 		// Re-stamp the draft the unblocked run above just collected, so the
 		// held-lock assertions below start from a populated row again.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -3257,20 +3257,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
 
-		$blocked = bb_drafts_delete_expired( 0 );
+		$blocked = bboss_drafts_delete_expired( 0 );
 
 		$this->assertTrue( ! empty( $blocked['locked'] ), 'A sweep finding the lock held must report it.' );
 		$this->assertSame( 0, $blocked['deleted'] );
 		$this->assertFalse( $blocked['complete'], 'The work is not done, so the run must not claim completion.' );
-		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'A locked-out run must not touch anything.' );
+		$this->assertNotEmpty( bboss_get_user_meta( $user_id, 'draft_user', true ), 'A locked-out run must not touch anything.' );
 
 		delete_site_transient( 'bb_draft_cleanup_lock' );
 
-		$ran = bb_drafts_delete_expired( 0 );
+		$ran = bboss_drafts_delete_expired( 0 );
 
 		$this->assertTrue( empty( $ran['locked'] ) );
 		$this->assertTrue( $ran['complete'] );
-		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'Once the lock is free the expired draft is collected.' );
+		$this->assertSame( '', (string) bboss_get_user_meta( $user_id, 'draft_user', true ), 'Once the lock is free the expired draft is collected.' );
 		$this->assertFalse( get_site_transient( 'bb_draft_cleanup_lock' ), 'The lock must be released when the sweep returns.' );
 	}
 
@@ -3284,7 +3284,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_site_transient( 'bb_draft_cleanup_lock' );
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
 
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 
 		remove_filter( 'bb_draft_retention_days', '__return_zero' );
 
@@ -3308,7 +3308,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		for ( $i = 0; $i < 5; $i++ ) {
 			$user_id = self::factory()->user->create();
 			$users[] = $user_id;
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				$user_id,
 				'draft_user',
 				array(
@@ -3321,7 +3321,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// A budget that fits roughly two rows must return fewer than all five
 		// and report that more remain.
-		$batch = bb_draft_get_rows_batch( 0, 200, true, 45000 );
+		$batch = bboss_draft_get_rows_batch( 0, 200, true, 45000 );
 
 		$this->assertLessThan( 5, count( $batch['rows'] ), 'The window must be trimmed to the byte budget.' );
 		$this->assertNotEmpty( $batch['rows'] );
@@ -3335,12 +3335,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// A single row wider than the entire budget must still be returned, or
 		// the cursor can never advance past it.
-		$batch_tiny = bb_draft_get_rows_batch( 0, 200, true, 1 );
+		$batch_tiny = bboss_draft_get_rows_batch( 0, 200, true, 1 );
 		$this->assertCount( 1, $batch_tiny['rows'], 'One row is always kept so the scan makes progress.' );
 		$this->assertTrue( $batch_tiny['has_more'] );
 
 		// Metadata-only mode is unaffected by the byte budget.
-		$batch_ids = bb_draft_get_rows_batch( 0, 200, false );
+		$batch_ids = bboss_draft_get_rows_batch( 0, 200, false );
 		$this->assertCount( 5, $batch_ids['rows'] );
 		$this->assertArrayNotHasKey( 'meta_value', $batch_ids['rows'][0] );
 
@@ -3348,7 +3348,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$seen   = array();
 		$cursor = 0;
 		for ( $guard = 0; $guard < 20; $guard++ ) {
-			$b = bb_draft_get_rows_batch( $cursor, 200, true, 1 );
+			$b = bboss_draft_get_rows_batch( $cursor, 200, true, 1 );
 			if ( empty( $b['rows'] ) ) {
 				break;
 			}
@@ -3366,7 +3366,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Trimming the forum row must have no storage side effects of its own.
 	 *
-	 * bb_forums_trim_draft_row() used to unstamp each evicted entry's
+	 * bboss_forums_trim_draft_row() used to unstamp each evicted entry's
 	 * attachments and fire bb_draft_evicted immediately, while writing no
 	 * usermeta. A budget refusal three lines later abandons the write - so the
 	 * "evicted" drafts were still stored, their attachments were unprotected
@@ -3402,7 +3402,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// A budget small enough to force the old entry out.
-		$trimmed = bb_forums_trim_draft_row( $row, 'draft_reply_new', $user_id, 1200 );
+		$trimmed = bboss_forums_trim_draft_row( $row, 'draft_reply_new', $user_id, 1200 );
 
 		remove_action( 'bb_draft_evicted', $spy, 10 );
 
@@ -3418,8 +3418,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * The upgrade slice must queue its continuation before it runs.
 	 *
-	 * _bp_db_version is bumped by bp_version_bump() inside bp_is_update(),
-	 * before the updater body executes, so bp_setup_updater() never re-enters
+	 * _bp_db_version is bumped by bboss_version_bump() inside bboss_is_update(),
+	 * before the updater body executes, so bboss_setup_updater() never re-enters
 	 * it. A fatal or timeout inside the synchronous healing slice would
 	 * therefore skip both the continuation and every migration that follows it
 	 * in the same routine, with no retry (PROD-9621 H1).
@@ -3428,8 +3428,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Isolate: this test runs a pass over the whole usermeta table.
 		$this->isolate_draft_maintenance();
 
-		if ( ! function_exists( 'bb_drafts_cleanup_on_upgrade' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
+		if ( ! function_exists( 'bboss_drafts_cleanup_on_upgrade' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
 
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
@@ -3452,7 +3452,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		};
 		add_filter( 'bb_draft_max_size', $spy );
 
-		bb_drafts_cleanup_on_upgrade();
+		bboss_drafts_cleanup_on_upgrade();
 
 		remove_filter( 'bb_draft_max_size', $spy );
 
@@ -3468,7 +3468,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$queue_iterations = 0;
 		do {
 			$queue_iterations++;
-			$queue_result = bb_drafts_oneshot_batch( 0 );
+			$queue_result = bboss_drafts_oneshot_batch( 0 );
 		} while ( empty( $queue_result['complete'] ) && $queue_iterations < 20 );
 
 		$this->assertTrue( (bool) get_site_option( 'bb_draft_oneshot_done' ) );
@@ -3481,7 +3481,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Healing one forum row must be a single write, not one per inner draft.
 	 *
-	 * Routing every inner drop through bb_draft_dispose() meant a full-row read
+	 * Routing every inner drop through bboss_draft_dispose() meant a full-row read
 	 * plus a full-row write each time, and the trim loop re-serialized the
 	 * whole row on every iteration - O(n.B) on rows that are megabytes wide by
 	 * definition, inside a synchronous upgrade request (PROD-9621 H2).
@@ -3494,18 +3494,18 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		for ( $i = 0; $i < 6; $i++ ) {
 			$row[ 'draft_reply_' . $i ] = array(
 				'data_key'        => 'draft_reply_' . $i,
-				'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ) ),
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bboss_draft_max_size() + 100 ) ),
 				'_draft_saved_at' => 100 + $i,
 			);
 		}
 
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
 
 		// Only writes to the forum row count; holding the dropped drafts also
 		// sets the member's one-byte hold flag.
 		$writes = 0;
 		$count  = function ( $meta_id, $object_id, $meta_key ) use ( &$writes ) {
-			if ( bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
+			if ( bboss_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
 				++$writes;
 			}
 		};
@@ -3513,7 +3513,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_action( 'added_user_meta', $count, 10, 3 );
 		add_action( 'deleted_user_meta', $count, 10, 3 );
 
-		$disposed = bb_draft_heal_forum_row( $user_id );
+		$disposed = bboss_draft_heal_forum_row( $user_id );
 
 		remove_action( 'updated_user_meta', $count );
 		remove_action( 'added_user_meta', $count );
@@ -3521,7 +3521,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertSame( 6, $disposed, 'Every oversized inner draft must be dropped.' );
 		$this->assertSame( 1, $writes, 'The whole heal must be one write; one per dropped draft is what made this quadratic.' );
-		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true ), 'An emptied row is deleted, not stored as array().' );
+		$this->assertSame( '', (string) bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true ), 'An emptied row is deleted, not stored as array().' );
 	}
 
 	/**
@@ -3539,7 +3539,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $dropped, 'bb_media_draft', 1 );
 		update_post_meta( $kept, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -3547,7 +3547,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				'draft_reply_big'   => array(
 					'data_key'        => 'draft_reply_big',
 					'data'            => array(
-						'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ),
+						'bbp_reply_content' => str_repeat( 'x', bboss_draft_max_size() + 100 ),
 						'bbp_media'         => wp_json_encode( array( array( 'id' => $dropped ) ) ),
 					),
 					'_draft_saved_at' => 100,
@@ -3564,30 +3564,30 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		bb_draft_heal_forum_row( $user_id );
+		bboss_draft_heal_forum_row( $user_id );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertArrayHasKey( 'draft_reply_small', $row, 'A legal inner draft must survive the heal.' );
 		$this->assertArrayNotHasKey( 'draft_reply_big', $row );
 
-		$held = bb_draft_pending_evicted( $user_id );
+		$held = bboss_draft_pending_evicted( $user_id );
 
 		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:draft_reply_big', $held, 'The oversized draft is held for the member.' );
-		$this->assertSame( str_repeat( 'x', bb_draft_max_size() + 100 ), $held['bb_user_topic_reply_draft:draft_reply_big']['data']['bbp_reply_content'], 'Its text is held in full.' );
+		$this->assertSame( str_repeat( 'x', bboss_draft_max_size() + 100 ), $held['bb_user_topic_reply_draft:draft_reply_big']['data']['bbp_reply_content'], 'Its text is held in full.' );
 		$this->assertSame( '1', (string) get_post_meta( $dropped, 'bb_media_draft', true ), 'The held draft keeps its attachment protected.' );
 		$this->assertNotEmpty( get_post_meta( $dropped, 'bb_draft_evicted_at', true ), 'Its file is marked like a live eviction.' );
 		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'The surviving draft keeps its attachment protected.' );
 	}
 
 	/**
-	 * L8 fan-out coverage: bb_draft_heal_forum_row() does the same cross-row merge
-	 * as bb_draft_dispose(); its own attachment test only exercised same-row
+	 * L8 fan-out coverage: bboss_draft_heal_forum_row() does the same cross-row merge
+	 * as bboss_draft_dispose(); its own attachment test only exercised same-row
 	 * retain. Healing away a forum inner draft must not release a stamp a DIFFERENT
 	 * stored row still references.
 	 *
-	 * Mutation check: drop the bb_draft_collect_other_row_referenced_ids() seed in
-	 * bb_draft_heal_forum_row() and this goes red.
+	 * Mutation check: drop the bboss_draft_collect_other_row_referenced_ids() seed in
+	 * bboss_draft_heal_forum_row() and this goes red.
 	 */
 	public function test_forum_row_heal_keeps_a_stamp_another_row_references() {
 		$user_id = self::factory()->user->create();
@@ -3596,8 +3596,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Referenced by an ACTIVITY/group row AND by an OVERSIZED forum inner
 		// draft that the heal will drop.
-		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bp_update_user_meta(
+		bboss_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -3605,15 +3605,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 					'data_key'        => 'draft_reply_big',
 					'_draft_saved_at' => 100,
 					'data'            => array(
-						'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ),
+						'bbp_reply_content' => str_repeat( 'x', bboss_draft_max_size() + 100 ),
 						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ) ) ),
 					),
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
-		bb_draft_heal_forum_row( $user_id );
+		bboss_draft_heal_forum_row( $user_id );
 
 		$this->assertSame(
 			'1',
@@ -3638,7 +3638,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			),
 		);
 
-		$stripped = bb_forums_strip_draft_data_urls( $entry );
+		$stripped = bboss_forums_strip_draft_data_urls( $entry );
 
 		$this->assertStringNotContainsString( 'base64', $stripped['data']['bbp_reply_content'], 'The payload must be gone before the cap is measured.' );
 		$this->assertStringContainsString( 'keep', $stripped['data']['bbp_reply_content'] );
@@ -3649,8 +3649,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertStringContainsString( '<b>this</b>', $stripped['data']['bbp_reply_content'] );
 
 		// Non-content members and non-arrays pass through untouched.
-		$this->assertSame( array( 'data_key' => 'x' ), bb_forums_strip_draft_data_urls( array( 'data_key' => 'x' ) ) );
-		$this->assertSame( 'not an array', bb_forums_strip_draft_data_urls( 'not an array' ) );
+		$this->assertSame( array( 'data_key' => 'x' ), bboss_forums_strip_draft_data_urls( array( 'data_key' => 'x' ) ) );
+		$this->assertSame( 'not an array', bboss_forums_strip_draft_data_urls( 'not an array' ) );
 	}
 
 	/**
@@ -3662,7 +3662,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * tag survives.
 	 */
 	public function test_forum_draft_sanitizes_topic_title() {
-		$out = bb_forums_sanitize_draft_entry(
+		$out = bboss_forums_sanitize_draft_entry(
 			array(
 				'data' => array(
 					'bbp_topic_content' => 'body',
@@ -3688,12 +3688,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 
 		// Fill the user's draft budget so the next save must evict.
-		$per_draft = bb_draft_max_size();
-		$total     = bb_draft_user_total_max_size();
+		$per_draft = bboss_draft_max_size();
+		$total     = bboss_draft_user_total_max_size();
 		$fillers   = (int) ceil( $total / $per_draft ) + 1;
 
 		for ( $i = 1; $i <= $fillers; $i++ ) {
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				$user_id,
 				'draft_group_' . $i,
 				array(
@@ -3710,8 +3710,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		};
 		add_action( 'bb_draft_evicted', $spy, 10, 3 );
 
-		bb_draft_flush_user_meta_sizes( $user_id );
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', $per_draft - 200 );
+		bboss_draft_flush_user_meta_sizes( $user_id );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', $per_draft - 200 );
 
 		remove_action( 'bb_draft_evicted', $spy, 10 );
 
@@ -3729,7 +3729,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * A legacy empty inner key must not take the member's whole row with it.
 	 *
-	 * bb_draft_dispose() treats an empty $inner_key as the whole-row sentinel.
+	 * bboss_draft_dispose() treats an empty $inner_key as the whole-row sentinel.
 	 * A stored row carrying an empty-string key - which release could produce,
 	 * since it validated nothing - would therefore be deleted entirely by any
 	 * loop that walked its keys and passed each one through (PROD-9621 M5).
@@ -3740,7 +3740,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -3767,9 +3767,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		delete_site_option( 'bb_draft_cleanup_cursor' );
 		delete_site_transient( 'bb_draft_cleanup_lock' );
-		bb_drafts_delete_expired( 0 );
+		bboss_drafts_delete_expired( 0 );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $row, 'The row must survive - an empty inner key must not trigger the whole-row delete.' );
 		$this->assertArrayHasKey( 'draft_reply_new', $row, 'The fresh draft must still be there.' );
@@ -3793,7 +3793,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$value_bytes = strlen( 'i:1;' );
 			$this->assertSame(
 				$with - $without - $value_bytes,
-				bb_draft_serialized_key_bytes( $key ),
+				bboss_draft_serialized_key_bytes( $key ),
 				"Key accounting must be exact for '{$key}'."
 			);
 		}
@@ -3801,7 +3801,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// End to end: a row of many small entries must not be over-trimmed.
 		$user_id = self::factory()->user->create();
 		$row     = array();
-		$cap     = bb_draft_user_total_max_size();
+		$cap     = bboss_draft_user_total_max_size();
 
 		// ~1000 tiny entries: the regime where ignoring key bytes drifts most.
 		for ( $i = 0; $i < 1000; $i++ ) {
@@ -3812,10 +3812,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
-		bb_draft_heal_forum_row( $user_id );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		bboss_draft_heal_forum_row( $user_id );
 
-		$healed = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$healed = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $healed );
 		$this->assertLessThanOrEqual( $cap, strlen( maybe_serialize( $healed ) ), 'The healed row must fit the budget.' );
@@ -3846,8 +3846,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Clear every draft row and maintenance option before a GLOBAL pass.
 	 *
-	 * bb_drafts_delete_expired(), bb_drafts_oneshot_batch() and
-	 * bb_drafts_cleanup_on_upgrade() all walk the WHOLE usermeta table. A test
+	 * bboss_drafts_delete_expired(), bboss_drafts_oneshot_batch() and
+	 * bboss_drafts_cleanup_on_upgrade() all walk the WHOLE usermeta table. A test
 	 * that invokes one therefore acts on fixtures belonging to other tests,
 	 * and what it finds depends on ordering, on ids, and - because the sweep is
 	 * time-budgeted - on wall clock. That made this file flaky roughly one run
@@ -3874,7 +3874,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		foreach ( $cases as $input ) {
-			$stripped = bb_draft_strip_data_urls( $input );
+			$stripped = bboss_draft_strip_data_urls( $input );
 
 			$this->assertStringNotContainsString( 'data:', $stripped, 'Every data: URI form must be stripped, not just base64.' );
 			$this->assertLessThan( strlen( $input ), strlen( $stripped ) );
@@ -3883,10 +3883,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Content with no data URI, and a legitimate remote image, must be
 		// byte-identical - the widened rule must not eat ordinary markup.
 		$plain = 'plain text, nothing to strip';
-		$this->assertSame( $plain, bb_draft_strip_data_urls( $plain ) );
+		$this->assertSame( $plain, bboss_draft_strip_data_urls( $plain ) );
 
 		$real = 'see <img src="https://example.com/a.png" alt="x"> ok';
-		$this->assertSame( $real, bb_draft_strip_data_urls( $real ) );
+		$this->assertSame( $real, bboss_draft_strip_data_urls( $real ) );
 
 		// And it must stay linear on a multi-megabyte payload rather than
 		// hitting a PCRE backtrack limit, which is why both rules are negated
@@ -3898,7 +3898,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// limit makes preg_replace() return null, which this function converts
 		// into "keep the original", so the payload would silently survive.
 		$big = 'x <img src="data:image/svg+xml,' . str_repeat( 'A', 2 * MB_IN_BYTES ) . '"> y';
-		$out = bb_draft_strip_data_urls( $big );
+		$out = bboss_draft_strip_data_urls( $big );
 
 		$this->assertIsString( $out, 'A PCRE failure would return null and silently keep the payload.' );
 		$this->assertLessThan( 200, strlen( $out ), 'The payload must be gone, which only happens if the match did not bail.' );
@@ -3916,13 +3916,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// (a) MIME-less data: as a real unquoted attribute value -> stripped.
 		$this->assertStringNotContainsString(
 			'data:',
-			bb_draft_strip_data_urls( '<img src=data:,plaintextpayload>' ),
+			bboss_draft_strip_data_urls( '<img src=data:,plaintextpayload>' ),
 			'A MIME-less unquoted data: URI must be stripped, not stored at full size.'
 		);
 		// Unquoted typed data: attribute -> stripped too.
 		$this->assertStringNotContainsString(
 			'data:',
-			bb_draft_strip_data_urls( '<img src=data:image/svg+xml,xxxx>' ),
+			bboss_draft_strip_data_urls( '<img src=data:image/svg+xml,xxxx>' ),
 			'A typed unquoted data: URI must still be stripped.'
 		);
 
@@ -3931,20 +3931,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$query_link = '<a href="https://example.com/s?q=data:text/plain,hello&z=3">L</a>';
 		$this->assertSame(
 			$query_link,
-			bb_draft_strip_data_urls( $query_link ),
+			bboss_draft_strip_data_urls( $query_link ),
 			'A ?q=data:... query string must not be truncated.'
 		);
 		$untyped_query = '<a href="https://example.com/s?q=data:1,2">L</a>';
 		$this->assertSame(
 			$untyped_query,
-			bb_draft_strip_data_urls( $untyped_query ),
+			bboss_draft_strip_data_urls( $untyped_query ),
 			'An untyped ?q=data:1,2 query string must not be truncated.'
 		);
 
 		// A legitimate unquoted attribute with no data: URI stays byte-identical.
 		$this->assertSame(
 			'<div data-role=banner>ok</div>',
-			bb_draft_strip_data_urls( '<div data-role=banner>ok</div>' )
+			bboss_draft_strip_data_urls( '<div data-role=banner>ok</div>' )
 		);
 	}
 
@@ -3952,7 +3952,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * Release A change #1, activity composer, end to end: a pasted base64 image
 	 * must be stripped by the SAVE HANDLER, not just by the helper.
 	 *
-	 * Every other strip test calls bb_draft_strip_data_urls() directly, so the
+	 * Every other strip test calls bboss_draft_strip_data_urls() directly, so the
 	 * wire from the activity handler to it had no assertion: deleting the call
 	 * left the whole suite green. The member-visible regression that hides is
 	 * not "large drafts are stored" (the 100 KB cap still refuses them) but
@@ -3974,32 +3974,32 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->drive_activity_draft_save(
 			'draft_user',
 			array(
-				'content' => '<p>before the screenshot</p><img src="data:image/png;base64,' . str_repeat( 'A', 2 * (int) bb_draft_max_size() ) . '"><p>after the screenshot</p>',
+				'content' => '<p>before the screenshot</p><img src="data:image/png;base64,' . str_repeat( 'A', 2 * (int) bboss_draft_max_size() ) . '"><p>after the screenshot</p>',
 			)
 		);
 
 		remove_action( 'bb_draft_cap_rejected', $on_reject, 10 );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertSame( array(), $rejections, 'A pasted image is stripped before the cap is measured, so nothing may be refused.' );
 		$this->assertIsArray( $stored, 'The draft must have been stored - the pasted image alone put the raw payload over the per-draft cap.' );
 		$this->assertStringContainsString( 'before the screenshot', $stored['data']['content'], 'The prose around the image must survive.' );
 		$this->assertStringContainsString( 'after the screenshot', $stored['data']['content'], 'The prose around the image must survive.' );
 		$this->assertStringNotContainsString( 'base64', $stored['data']['content'], 'No base64 image data may reach usermeta - that is the row that broke the object cache.' );
-		$this->assertLessThan( bb_draft_max_size(), strlen( maybe_serialize( $stored ) ), 'The stored row must be under the per-draft cap once the image is gone.' );
+		$this->assertLessThan( bboss_draft_max_size(), strlen( maybe_serialize( $stored ) ), 'The stored row must be under the per-draft cap once the image is gone.' );
 	}
 
 	/**
 	 * Release A change #1, forum composer, end to end - the forum twin of the
 	 * activity handler test above. The existing forum strip test calls
-	 * bb_forums_strip_draft_data_urls() directly; this drives the save handler.
+	 * bboss_forums_strip_draft_data_urls() directly; this drives the save handler.
 	 */
 	public function test_forum_draft_save_strips_pasted_base64_images_before_the_cap() {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$key      = 'draft_discussion_' . $forum_id;
 
 		$rejections = array();
@@ -4011,13 +4011,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->drive_forum_draft_save(
 			$key,
 			array(
-				'bbp_topic_content' => '<p>before the screenshot</p><img src="data:image/png;base64,' . str_repeat( 'A', 2 * (int) bb_draft_max_size() ) . '"><p>after the screenshot</p>',
+				'bbp_topic_content' => '<p>before the screenshot</p><img src="data:image/png;base64,' . str_repeat( 'A', 2 * (int) bboss_draft_max_size() ) . '"><p>after the screenshot</p>',
 			)
 		);
 
 		remove_action( 'bb_draft_cap_rejected', $on_reject, 10 );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame( array(), $rejections, 'A pasted image is stripped before the cap is measured, so nothing may be refused.' );
 		$this->assertIsArray( $stored, 'The draft row must have been stored.' );
@@ -4025,7 +4025,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertStringContainsString( 'before the screenshot', $stored[ $key ]['data']['bbp_topic_content'], 'The prose around the image must survive.' );
 		$this->assertStringContainsString( 'after the screenshot', $stored[ $key ]['data']['bbp_topic_content'], 'The prose around the image must survive.' );
 		$this->assertStringNotContainsString( 'base64', $stored[ $key ]['data']['bbp_topic_content'], 'No base64 image data may reach usermeta.' );
-		$this->assertLessThan( bb_draft_max_size(), strlen( maybe_serialize( $stored[ $key ] ) ), 'The stored entry must be under the per-draft cap once the image is gone.' );
+		$this->assertLessThan( bboss_draft_max_size(), strlen( maybe_serialize( $stored[ $key ] ) ), 'The stored entry must be under the per-draft cap once the image is gone.' );
 	}
 
 	/**
@@ -4090,7 +4090,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			delete_user_meta( (int) $row->user_id, $row->meta_key );
 			clean_user_cache( (int) $row->user_id );
 			wp_cache_delete( (int) $row->user_id, 'user_meta' );
-			bb_draft_flush_user_meta_sizes( (int) $row->user_id );
+			bboss_draft_flush_user_meta_sizes( (int) $row->user_id );
 		}
 
 		delete_site_option( 'bb_draft_cleanup_cursor' );
@@ -4139,7 +4139,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$concurrent_key = 'draft_reply_33';
 
 		// Initial stored row: the key being published plus one existing sibling.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			$meta_key,
 			array(
@@ -4149,11 +4149,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Prime the object cache with that shape.
-		bp_get_user_meta( $user_id, $meta_key, true );
+		bboss_get_user_meta( $user_id, $meta_key, true );
 
 		// A concurrent request adds a THIRD draft, straight to storage, WITHOUT
 		// busting the object cache - the exact stale-cache window the fix closes.
-		$stored_key = bp_get_user_meta_key( $meta_key );
+		$stored_key = bboss_get_user_meta_key( $meta_key );
 		$new_row    = array(
 			$published_key  => array( 'data_key' => $published_key, 'data' => array( 'bbp_topic_content' => 'publishing this' ) ),
 			$sibling_key    => array( 'data_key' => $sibling_key, 'data' => array( 'bbp_topic_content' => 'existing sibling' ) ),
@@ -4167,10 +4167,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Publish removes only $published_key.
-		bb_forums_delete_published_draft_key( $user_id, $published_key );
+		bboss_forums_delete_published_draft_key( $user_id, $published_key );
 
 		wp_cache_delete( $user_id, 'user_meta' );
-		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+		$stored = bboss_get_user_meta( $user_id, $meta_key, true );
 
 		$this->assertIsArray( $stored, 'The row must still exist.' );
 		$this->assertArrayNotHasKey( $published_key, $stored, 'The published draft must be removed.' );
@@ -4197,7 +4197,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$published_key = 'draft_discussion_11';
 		$sibling_key   = 'draft_discussion_22';
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			$meta_key,
 			array(
@@ -4210,15 +4210,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Prime the memo for this user (this is what a preceding autosave in the
 		// same request would have done).
-		$before = bb_draft_get_user_meta_sizes( $user_id );
+		$before = bboss_draft_get_user_meta_sizes( $user_id );
 
 		// Publish removes the large key.
-		bb_forums_delete_published_draft_key( $user_id, $published_key );
+		bboss_forums_delete_published_draft_key( $user_id, $published_key );
 
 		// Read again WITHOUT flushing by hand: a correct publish path already
 		// flushed, so this re-measures the now-smaller row. A publish that
 		// skipped the flush returns the stale primed total.
-		$after = bb_draft_get_user_meta_sizes( $user_id );
+		$after = bboss_draft_get_user_meta_sizes( $user_id );
 
 		$this->assertLessThan(
 			$before['total'],
@@ -4244,7 +4244,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * @return string Possibly wrapped key.
 	 */
 	public function filter_draft_scoped_user_meta_key( $key ) {
-		if ( bb_draft_is_draft_meta_key( $key ) ) {
+		if ( bboss_draft_is_draft_meta_key( $key ) ) {
 			return 'bbdraft_' . $key;
 		}
 
@@ -4252,7 +4252,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Every bb_draft_dispose() write path must invalidate the memoized sizes.
+	 * Every bboss_draft_dispose() write path must invalidate the memoized sizes.
 	 *
 	 * The sizes are memoized per request, so a dispose that skips the flush
 	 * leaves any later reader in the same request measuring pre-write bytes -
@@ -4263,7 +4263,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_dispose_invalidates_memoized_sizes_on_every_write_path() {
 		// Path 3 - whole activity row.
 		$u1 = self::factory()->user->create();
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$u1,
 			'draft_user',
 			array(
@@ -4273,17 +4273,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$before = bb_draft_get_user_meta_sizes( $u1 );
+		$before = bboss_draft_get_user_meta_sizes( $u1 );
 		$this->assertArrayHasKey( 'draft_user', $before['drafts'], 'Fixture must be measurable, or the test proves nothing.' );
 
-		bb_draft_dispose( $u1, 'draft_user' );
+		bboss_draft_dispose( $u1, 'draft_user' );
 
-		$after = bb_draft_get_user_meta_sizes( $u1 );
+		$after = bboss_draft_get_user_meta_sizes( $u1 );
 		$this->assertArrayNotHasKey( 'draft_user', $after['drafts'], 'Whole-row dispose must invalidate the memo.' );
 
 		// Path 2 - one inner forum draft out of two, row survives.
 		$u2 = self::factory()->user->create();
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$u2,
 			'bb_user_topic_reply_draft',
 			array(
@@ -4300,24 +4300,24 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$before2 = bb_draft_get_user_meta_sizes( $u2 );
+		$before2 = bboss_draft_get_user_meta_sizes( $u2 );
 		$bytes2  = $before2['drafts']['bb_user_topic_reply_draft'];
 
-		bb_draft_dispose( $u2, 'bb_user_topic_reply_draft', 'draft_reply' );
+		bboss_draft_dispose( $u2, 'bb_user_topic_reply_draft', 'draft_reply' );
 
-		$after2 = bb_draft_get_user_meta_sizes( $u2 );
+		$after2 = bboss_draft_get_user_meta_sizes( $u2 );
 		$this->assertLessThan( $bytes2, $after2['drafts']['bb_user_topic_reply_draft'], 'Inner-draft dispose must invalidate the memo so the row measures smaller.' );
 
 		// Path 1 - legacy-empty array() row removed wholesale.
 		$u3 = self::factory()->user->create();
 		add_user_meta( $u3, 'bb_user_topic_reply_draft', array() );
 
-		$before3 = bb_draft_get_user_meta_sizes( $u3 );
+		$before3 = bboss_draft_get_user_meta_sizes( $u3 );
 		$this->assertArrayHasKey( 'bb_user_topic_reply_draft', $before3['drafts'] );
 
-		bb_draft_dispose( $u3, 'bb_user_topic_reply_draft' );
+		bboss_draft_dispose( $u3, 'bb_user_topic_reply_draft' );
 
-		$after3 = bb_draft_get_user_meta_sizes( $u3 );
+		$after3 = bboss_draft_get_user_meta_sizes( $u3 );
 		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft', $after3['drafts'], 'Legacy-empty row dispose must invalidate the memo.' );
 	}
 
@@ -4330,7 +4330,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * and capped, but never re-ran the view/publish gate the primary path
 	 * enforces - so the stale sibling kept taking writes.
 	 *
-	 * bbp_user_can_view_forum() is forced through its own filter rather than
+	 * bboss_bbp_user_can_view_forum() is forced through its own filter rather than
 	 * built out of bbPress capability state: the assertion is that the merge loop
 	 * HONOURS the gate, and forcing the gate's answer keeps the test independent
 	 * of how visibility happens to be configured.
@@ -4339,13 +4339,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$readable_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$unreadable_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$readable_forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$unreadable_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$readable_key   = 'draft_discussion_' . $readable_forum;
 		$unreadable_key = 'draft_discussion_' . $unreadable_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -4399,7 +4399,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			// Expected: the handler finished and tried to exit.
 			unset( $e );
@@ -4411,7 +4411,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $stored, 'The aggregate row must still exist.' );
 		$this->assertSame(
@@ -4435,7 +4435,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * load-bearing, not merely redundant with the view-forum check.
 	 *
 	 * The existing merge test denies a sibling only via bbp_user_can_view_forum,
-	 * and bb_draft_user_can_save_topic_reply_draft() calls that same view check
+	 * and bboss_draft_user_can_save_topic_reply_draft() calls that same view check
 	 * internally, so removing EITHER gate alone left the test green. Here the
 	 * sibling is a TOPIC in a viewable forum with topic-publishing DENIED, while
 	 * the primary is a REPLY with reply-publishing allowed - so only the
@@ -4446,15 +4446,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$topic_id = self::factory()->post->create(
-			array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_id )
+			array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum_id )
 		);
 
 		$primary_key = 'draft_reply_' . $topic_id;    // a reply - publishing allowed
 		$sibling_key = 'draft_discussion_' . $forum_id; // a topic - publishing DENIED
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -4486,7 +4486,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		ob_start();
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -4497,7 +4497,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
 		remove_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'SIBLING ORIGINAL',
@@ -4567,7 +4567,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * the conversion itself is covered by browser QA, not by a unit test.
 	 */
 	public function test_kses_strips_emoji_char_attribute_but_keeps_alt() {
-		$filtered = bp_activity_filter_kses(
+		$filtered = bboss_activity_filter_kses(
 			'hi <img class="emojioneemoji" src="https://example.com/e.png" data-emoji-char="X" alt="X"> there'
 		);
 
@@ -4591,7 +4591,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Perform a second tab's write from INSIDE the handler's write window.
 	 *
-	 * The bb_draft_max_size() cap is consulted again after the aggregate row has been
+	 * The bboss_draft_max_size() cap is consulted again after the aggregate row has been
 	 * read into a PHP variable, which makes it the honest injection point: the
 	 * competing request commits while this one is still holding its copy, which
 	 * is exactly what a second browser tab does.
@@ -4617,7 +4617,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// The competing request is a separate PHP process with its own read.
 		wp_cache_delete( $this->race_user_id, 'user_meta' );
-		$row = bp_get_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', true );
 
 		if ( 'discard' === $this->race_mode ) {
 			unset( $row[ $this->race_key ] );
@@ -4626,8 +4626,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$row[ $this->race_key ]['_draft_saved_at']           = time();
 		}
 
-		bp_update_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', $row );
-		bb_draft_flush_user_meta_sizes( $this->race_user_id );
+		bboss_update_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', $row );
+		bboss_draft_flush_user_meta_sizes( $this->race_user_id );
 
 		$this->race_reentrant = false;
 
@@ -4650,13 +4650,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->race_done     = false;
 		$this->race_fired_at = 0;
 
-		$other_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$current_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$other_forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$current_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$other_key   = 'draft_discussion_' . $other_forum;
 		$current_key = 'draft_discussion_' . $current_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -4711,7 +4711,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			// Expected: the handler finished and tried to exit.
 			unset( $e );
@@ -4725,7 +4725,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		wp_cache_delete( $this->race_user_id, 'user_meta' );
 
-		return bp_get_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', true );
+		return bboss_get_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', true );
 	}
 
 	/**
@@ -4785,9 +4785,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * A cap DECISION must act in the same key space the measurement reports.
 	 *
-	 * The bb_draft_get_user_meta_sizes() memo reports LOGICAL keys and
-	 * bb_draft_enforce_user_budget() feeds those straight to
-	 * bb_draft_dispose(), which re-applies bp_get_user_meta_key(). The two
+	 * The bboss_draft_get_user_meta_sizes() memo reports LOGICAL keys and
+	 * bboss_draft_enforce_user_budget() feeds those straight to
+	 * bboss_draft_dispose(), which re-applies bboss_get_user_meta_key(). The two
 	 * halves therefore have to agree: if the measurement reverted to raw
 	 * literals no cap could ever fire on a filtered install, and if dispose
 	 * stopped re-filtering it would delete a raw lookalike while the member's
@@ -4805,7 +4805,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
 
 		// Oldest - the eviction candidate.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_11',
 			array(
@@ -4816,7 +4816,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Newest - must survive.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_group_22',
 			array(
@@ -4826,22 +4826,22 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
-		$sizes = bb_draft_get_user_meta_sizes( $user_id );
+		$sizes = bboss_draft_get_user_meta_sizes( $user_id );
 
 		// Premise: both filtered rows are measured, and the raw lookalike is not.
 		$this->assertArrayHasKey( 'draft_group_11', $sizes['drafts'] );
 		$this->assertArrayHasKey( 'draft_group_22', $sizes['drafts'] );
 
 		// A third draft pushes the member past bb_draft_user_total_max_size().
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 90 * KB_IN_BYTES );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 90 * KB_IN_BYTES );
 
-		$evicted_row  = bp_get_user_meta( $user_id, 'draft_group_11', true );
-		$survivor_row = bp_get_user_meta( $user_id, 'draft_group_22', true );
+		$evicted_row  = bboss_get_user_meta( $user_id, 'draft_group_11', true );
+		$survivor_row = bboss_get_user_meta( $user_id, 'draft_group_22', true );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		$stray = get_user_meta( $user_id, 'draft_group_11', true );
 
@@ -4883,7 +4883,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		foreach ( $untouched as $label => $input ) {
 			$this->assertSame(
 				$input,
-				bb_draft_strip_data_urls( $input ),
+				bboss_draft_strip_data_urls( $input ),
 				sprintf( 'A data: URI outside an attribute is prose, not a payload - "%s" must come back byte-identical.', $label )
 			);
 		}
@@ -4898,7 +4898,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		foreach ( $stripped as $label => $input ) {
-			$out = bb_draft_strip_data_urls( $input );
+			$out = bboss_draft_strip_data_urls( $input );
 
 			$this->assertStringNotContainsString( 'data:', $out, sprintf( 'The %s attribute payload must be stripped.', $label ) );
 			$this->assertStringNotContainsString( 'R0lGOD', $out, sprintf( 'The %s attribute payload must be stripped.', $label ) );
@@ -4907,7 +4907,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A quoted payload containing `>` (every inline SVG) must run to the
 		// closing quote, not stop at the first angle bracket and leave a tail.
 		$svg = '<img src="data:image/svg+xml,<svg><rect/></svg>" alt="x">';
-		$this->assertStringNotContainsString( 'rect', bb_draft_strip_data_urls( $svg ), 'The payload must run to the attribute delimiter, not to the first `>`.' );
+		$this->assertStringNotContainsString( 'rect', bboss_draft_strip_data_urls( $svg ), 'The payload must run to the attribute delimiter, not to the first `>`.' );
 	}
 
 	/**
@@ -4947,7 +4947,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -4975,8 +4975,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_old = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$forum_new = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_old = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$forum_new = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$old_key   = 'draft_discussion_' . $forum_old;
 		$new_key   = 'draft_discussion_' . $forum_new;
 		$att       = $this->make_draft_attachment( $user_id );
@@ -4991,7 +4991,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			),
 			'_draft_saved_at' => 100,
 		);
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( array( $old_key => $old_entry ) ) );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( array( $old_key => $old_entry ) ) );
 
 		$new_data = array( 'bbp_topic_content' => str_repeat( 'n', 60 * KB_IN_BYTES ) );
 
@@ -5000,7 +5000,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Beacon first: nothing may be trimmed, and the save is refused.
 		$beacon = $this->drive_forum_draft_save_response( $new_key, $new_data, true );
-		$row    = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row    = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertFalse( $beacon['success'], 'A beacon save that needs a trim must be refused.' );
 		$this->assertArrayHasKey( $old_key, $row, 'A refused beacon save must not trim the older draft.' );
@@ -5008,7 +5008,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// The same save over a normal request trims and hands back.
 		$saved = $this->drive_forum_draft_save_response( $new_key, $new_data );
-		$row   = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row   = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertTrue( $saved['success'], 'Premise: the normal save is accepted.' );
 		$this->assertContains( 'bb_user_topic_reply_draft:' . $old_key, $saved['data']['evicted_draft_keys'] );
@@ -5026,7 +5026,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * A draft refused by a size cap must still protect the member's uploads.
 	 *
-	 * `bb_media_draft` is what stops `bp_media_delete_orphaned_attachments()`
+	 * `bb_media_draft` is what stops `bboss_media_delete_orphaned_attachments()`
 	 * hard-deleting a freshly uploaded file six hours later. Applying it only
 	 * after every cap accepted meant a member who wrote a long post and then
 	 * attached a photo had that photo deleted out from under them: the autosave
@@ -5043,7 +5043,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$key   = 'draft_discussion_' . $forum;
 
 		$mine     = $this->make_draft_attachment( $user_id );
@@ -5139,7 +5139,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			// Expected: the handler finished and tried to exit.
 			unset( $e );
@@ -5159,7 +5159,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * entry under-credits each eviction, the running total stays above the
 	 * truth, and the oldest-first loop keeps going - destroying drafts it did
 	 * not need to. This is the same undercount `f643e4d0c8` fixed in
-	 * `bb_forums_trim_draft_row()`; the budget is that loop's sibling and was
+	 * `bboss_forums_trim_draft_row()`; the budget is that loop's sibling and was
 	 * left behind (PROD-9621).
 	 *
 	 * The shortfall is dialled through `$new_size` so it lands in the window
@@ -5186,24 +5186,24 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		$entry_bytes = strlen( maybe_serialize( $row[ $keys[0] ] ) );
-		$key_bytes   = bb_draft_serialized_key_bytes( $keys[0] );
+		$key_bytes   = bboss_draft_serialized_key_bytes( $keys[0] );
 
 		$this->assertGreaterThan( 0, $key_bytes, 'Premise: an element key costs bytes, or there is nothing to account for.' );
 
-		$sizes     = bb_draft_get_user_meta_sizes( $user_id );
+		$sizes     = bboss_draft_get_user_meta_sizes( $user_id );
 		$row_bytes = (int) $sizes['drafts']['bb_user_topic_reply_draft'];
-		$total_cap = bb_draft_user_total_max_size();
+		$total_cap = bboss_draft_user_total_max_size();
 
 		// Land the shortfall strictly between "two entries" and "two entries
 		// plus their two keys", so the key term alone decides the outcome.
 		$shortfall = ( 2 * $entry_bytes ) + $key_bytes;
 		$new_size  = $total_cap - $row_bytes + $shortfall;
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', $new_size );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', $new_size );
 
 		$this->assertTrue( $result['allowed'], 'Premise: the save is under the total meta budget.' );
 		$this->assertCount(
@@ -5213,7 +5213,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// And the survivors must be the NEWEST two, not an arbitrary pair.
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertArrayNotHasKey( $keys[0], $stored, 'Oldest first.' );
 		$this->assertArrayNotHasKey( $keys[1], $stored, 'Oldest first.' );
 		$this->assertArrayHasKey( $keys[2], $stored, 'The newer drafts must survive.' );
@@ -5227,7 +5227,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * ever see the PRIMARY draft entry. The sibling merge replaces a stored
 	 * entry's whole `data` with client JSON and ran none of them, so a file
 	 * referenced solely by a sibling reached storage unstamped and
-	 * bp_media_delete_orphaned_attachments() hard-deleted it while the member
+	 * bboss_media_delete_orphaned_attachments() hard-deleted it while the member
 	 * was still drafting with it.
 	 *
 	 * Reachable on the shipped BuddyBoss theme: one shared reply modal serves
@@ -5242,8 +5242,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
@@ -5251,7 +5251,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$mine     = $this->make_draft_attachment( $user_id );
 		$somebody = $this->make_draft_attachment( self::factory()->user->create() );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5281,7 +5281,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// Premise: the sibling really was merged. Without this the test would
 		// also pass for a handler that silently dropped every sibling.
@@ -5313,7 +5313,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * to stamp, and stored the client list verbatim, so a crafted all_data
 	 * payload put another member's attachment id - or a fabricated one - into
 	 * this member's row. The stored row is what the global reference scan
-	 * reads, and bb_draft_collect_attachment_ids() applies no ownership filter,
+	 * reads, and bboss_draft_collect_attachment_ids() applies no ownership filter,
 	 * so the foreign id pinned that member's stamp against the orphan-stamp
 	 * sweep for as long as the poisoned draft lived (the L6 pin, reopened
 	 * through this shape's own sibling write path), and fed the
@@ -5325,8 +5325,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
@@ -5337,7 +5337,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertNull( get_post( $fabricated ), 'Premise: the fabricated id must not exist.' );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5365,7 +5365,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// Premise: the sibling really was merged.
 		$this->assertSame( 'sibling updated', $stored[ $sibling_key ]['data']['bbp_topic_content'], 'The sibling merge must have happened, or this test proves nothing about it.' );
@@ -5383,7 +5383,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// another member's stamp against the orphan-stamp sweep.
 		$this->assertSame(
 			array( $mine ),
-			array_map( 'intval', bb_draft_collect_attachment_ids( $stored[ $sibling_key ] ) ),
+			array_map( 'intval', bboss_draft_collect_attachment_ids( $stored[ $sibling_key ] ) ),
 			'The reference scan reads the stored row unfiltered, so a foreign id stored here would pin another member attachment for ever.'
 		);
 
@@ -5396,7 +5396,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * Cap the per-type attachment count on the sibling-merge path.
 	 *
 	 * The primary draft entry refuses a save whose media/document/video list
-	 * exceeds bb_draft_max_attachments_per_type(). The sibling-merge path gated
+	 * exceeds bboss_draft_max_attachments_per_type(). The sibling-merge path gated
 	 * only on the merged entry's total serialized byte size, and a minimal
 	 * {"id":N} reference is ~15-20 bytes, so a single sibling could carry
 	 * thousands of IDs under the byte cap and force one uncached get_post() per
@@ -5411,15 +5411,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Small cap keeps the payload tiny; the production default is 50.
 		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'return_three' ) );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$over_forum    = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$under_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$over_forum    = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$under_forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$over_key    = 'draft_discussion_' . $over_forum;
 		$under_key   = 'draft_discussion_' . $under_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5449,7 +5449,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'return_three' ) );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'over original',
@@ -5492,8 +5492,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
@@ -5507,7 +5507,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_max_size', array( $this, 'return_800' ) );
 		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_800' ) );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5530,7 +5530,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_800' ) );
 		remove_filter( 'bb_draft_max_size', array( $this, 'return_800' ) );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// Premise: the sibling really was evicted by the trim, or the test proves
 		// nothing about the eviction path.
@@ -5562,13 +5562,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5592,7 +5592,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'sibling UPDATED',
@@ -5620,8 +5620,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
@@ -5629,7 +5629,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$dropped = $this->make_stamped_unsaved_attachment( $user_id ); // sibling-only, removed this request
 		$kept    = $this->make_stamped_unsaved_attachment( $user_id ); // referenced by the primary, must survive
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5648,7 +5648,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Premise: the sibling really was merged (else the test proves nothing).
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertSame( 's updated', $stored[ $sibling_key ]['data']['bbp_topic_content'], 'The sibling merge must have happened.' );
 
 		$this->assertSame(
@@ -5671,15 +5671,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * sibling reached no storage AND was never stamped, and the orphan cron
 	 * hard-deleted it while the member was still drafting with it.
 	 *
-	 * Mutation check: remove the bb_draft_protect_payload_attachments() call added
+	 * Mutation check: remove the bboss_draft_protect_payload_attachments() call added
 	 * to the sibling merge and this goes red - the fresh attachment is unstamped.
 	 */
 	public function test_over_cap_sibling_still_protects_its_fresh_attachment() {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
@@ -5687,7 +5687,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A fresh upload the member just added to the sibling - owned, not stamped.
 		$fresh = $this->make_draft_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5703,13 +5703,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			array( 'bbp_topic_content' => 'p updated' ),
 			array(
 				$sibling_key => array(
-					'bbp_topic_content' => str_repeat( 'x', bb_draft_max_size() + 100 ),
+					'bbp_topic_content' => str_repeat( 'x', bboss_draft_max_size() + 100 ),
 					'bbp_media'         => wp_json_encode( array( array( 'id' => $fresh ) ) ),
 				),
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// Premise: the over-cap sibling update really was rejected (small copy kept).
 		$this->assertSame(
@@ -5744,9 +5744,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// draft_user (about to be discarded with delete_media) and draft_group_5
 		// both reference $shared; the latter must survive.
-		bp_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data_key' => 'draft_group_5', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_update_user_meta( $user_id, 'draft_group_5', array( 'data_key' => 'draft_group_5', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		$this->drive_activity_draft_raw(
 			array(
@@ -5767,7 +5767,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Replacing one inner draft must not unstamp a sibling's attachment.
 	 *
-	 * `bb_draft_release_replaced_attachments()` computed "still held" from the
+	 * `bboss_draft_release_replaced_attachments()` computed "still held" from the
 	 * entry that REPLACED this one and nothing else. The aggregated forum row
 	 * keeps every inner topic/reply draft together, and the shared reply modal
 	 * carries its content across reply targets, so one attachment is routinely
@@ -5785,8 +5785,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
@@ -5798,7 +5798,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $shared, 'bb_media_draft', 1 );
 		update_post_meta( $only_here, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5847,7 +5847,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Disposing one inner draft must not unstamp a sibling's attachment.
 	 *
-	 * `bb_draft_dispose()` is the shared removal path - the member's own
+	 * `bboss_draft_dispose()` is the shared removal path - the member's own
 	 * "Discard Draft", budget eviction and the expiry sweep all reach it - and
 	 * when it drops a single inner key it released that entry's attachments
 	 * outright. The rest of the aggregated row survives, and the shared reply
@@ -5857,7 +5857,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 *
 	 * Browser-verified: discarding one reply draft dropped all three
 	 * `bb_media_draft` stamps while the other reply draft still referenced all
-	 * three files. `bb_draft_heal_forum_row()` and the forum handler's eviction
+	 * three files. `bboss_draft_heal_forum_row()` and the forum handler's eviction
 	 * branch already got this exclusion right; these were the outliers
 	 * (PROD-9621).
 	 *
@@ -5878,7 +5878,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $shared, 'bb_media_draft', 1 );
 		update_post_meta( $only_here, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -5902,12 +5902,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		$this->assertTrue(
-			bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', $doomed_key ),
+			bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', $doomed_key ),
 			'Premise: the dispose must actually have removed the inner draft.'
 		);
 
 		// Premise: the sibling really did survive the removal.
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertArrayHasKey( $sibling_key, $stored, 'The sibling inner draft must survive.' );
 		$this->assertArrayNotHasKey( $doomed_key, $stored, 'The disposed inner draft must be gone.' );
 
@@ -5966,7 +5966,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			// Expected: the handler finished and tried to exit.
 			unset( $e );
@@ -6017,24 +6017,24 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => time() - 3600,
 		);
 
-		bp_update_user_meta( $user_id, 'draft_user', $entry );
+		bboss_update_user_meta( $user_id, 'draft_user', $entry );
 
 		// Premise: the row really is over the cap, and shedding really is
 		// enough to bring it under. Without both, the test proves nothing.
 		$shed = $entry;
 		unset( $shed['data']['video'][0]['js_preview'] );
-		$this->assertGreaterThan( bb_draft_max_size(), strlen( maybe_serialize( $entry ) ), 'Premise: the seeded row must exceed the cap.' );
-		$this->assertLessThanOrEqual( bb_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: shedding the poster must be enough to fit.' );
+		$this->assertGreaterThan( bboss_draft_max_size(), strlen( maybe_serialize( $entry ) ), 'Premise: the seeded row must exceed the cap.' );
+		$this->assertLessThanOrEqual( bboss_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: shedding the poster must be enough to fit.' );
 
 		delete_site_option( 'bb_draft_oneshot_state' );
-		bb_drafts_oneshot_batch( 0 );
+		bboss_drafts_oneshot_batch( 0 );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertIsArray( $stored, 'The salvageable draft must survive the healing pass, not be deleted.' );
 		$this->assertSame( $text, $stored['data']['content'], "The member's unpublished text must be intact." );
 		$this->assertArrayNotHasKey( 'js_preview', $stored['data']['video'][0], 'The poster frame must have been shed.' );
-		$this->assertLessThanOrEqual( bb_draft_max_size(), strlen( maybe_serialize( $stored ) ), 'The stored row must now be within the cap.' );
+		$this->assertLessThanOrEqual( bboss_draft_max_size(), strlen( maybe_serialize( $stored ) ), 'The stored row must now be within the cap.' );
 	}
 
 	/**
@@ -6063,23 +6063,23 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => time() - 3600,
 		);
 
-		bp_update_user_meta( $user_id, 'draft_user', $entry );
+		bboss_update_user_meta( $user_id, 'draft_user', $entry );
 
 		$shed = $entry;
 		unset( $shed['data']['video'][0]['js_preview'] );
-		$this->assertGreaterThan( bb_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: this row must still exceed the cap after shedding.' );
+		$this->assertGreaterThan( bboss_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: this row must still exceed the cap after shedding.' );
 
 		delete_site_option( 'bb_draft_oneshot_state' );
-		bb_drafts_oneshot_batch( 0 );
+		bboss_drafts_oneshot_batch( 0 );
 
 		$this->assertEmpty(
-			bp_get_user_meta( $user_id, 'draft_user', true ),
+			bboss_get_user_meta( $user_id, 'draft_user', true ),
 			'A row that is genuinely too large must still be disposed - the healing guarantee must not weaken.'
 		);
 
 		// It leaves usermeta but is held, without the poster frame, so the
 		// member gets the text back (PROD-9621 F-08).
-		$held = bb_draft_pending_evicted( $user_id );
+		$held = bboss_draft_pending_evicted( $user_id );
 
 		$this->assertArrayHasKey( 'draft_user', $held, 'The draft is held for the member.' );
 		$this->assertSame( $entry['data']['content'], $held['draft_user']['data']['content'], 'Its text is held in full.' );
@@ -6099,7 +6099,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		update_post_meta( $attachment, 'bb_media_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -6114,7 +6114,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		delete_site_option( 'bb_draft_oneshot_state' );
-		bb_drafts_oneshot_batch( 0 );
+		bboss_drafts_oneshot_batch( 0 );
 
 		$this->assertSame( '1', (string) get_post_meta( $attachment, 'bb_media_draft', true ), 'The file keeps its stamp.' );
 		$this->assertNotEmpty( get_post_meta( $attachment, 'bb_draft_evicted_at', true ), 'And is marked like a live eviction.' );
@@ -6134,7 +6134,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$text    = 'FORUM DRAFT TEXT worth keeping.';
 		$key     = 'draft_reply_7001';
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -6156,9 +6156,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$acted = bb_draft_heal_forum_row( $user_id );
+		$acted = bboss_draft_heal_forum_row( $user_id );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $stored, 'The aggregate row must survive.' );
 		$this->assertArrayHasKey( $key, $stored, 'The salvageable inner draft must not be dropped.' );
@@ -6181,7 +6181,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * good, and the cleanup crons could never reclaim it - a slow leak of
 	 * files nothing references and nothing can delete.
 	 *
-	 * bb_draft_release_replaced_attachments() existed for exactly this and had
+	 * bboss_draft_release_replaced_attachments() existed for exactly this and had
 	 * one of its two call sites: the forum handler got it, the activity handler
 	 * did not (PROD-9621).
 	 *
@@ -6201,7 +6201,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$key = 'draft_user_' . $user_id;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			$key,
 			array(
@@ -6227,7 +6227,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Premise: the save actually stored the new entry.
-		$stored = bp_get_user_meta( $user_id, $key, true );
+		$stored = bboss_get_user_meta( $user_id, $key, true );
 		$this->assertSame( 'updated', $stored['data']['content'], 'Premise: the replacement must have been stored.' );
 
 		$this->assertSame(
@@ -6276,7 +6276,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_nouveau_ajax_post_draft_activity();
+			bboss_nouveau_ajax_post_draft_activity();
 		} catch ( Exception $e ) {
 			// Expected: the handler finished and tried to exit.
 			unset( $e );
@@ -6291,7 +6291,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * Q12 premise: what the payload predicate counts as content.
 	 *
-	 * `bb_draft_topic_reply_entry_has_payload()` is the single predicate the
+	 * `bboss_draft_topic_reply_entry_has_payload()` is the single predicate the
 	 * save guard, the fetch endpoint and the has_draft localize all resolve
 	 * through, and the JS packs mirror it in bbDraftDataHasPayload(). If it
 	 * drifts, a real draft stops being offered - so the line it draws is
@@ -6329,7 +6329,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		foreach ( $has_payload as $label => $data ) {
 			$this->assertTrue(
-				bb_draft_topic_reply_entry_has_payload( array( 'data' => array_merge( $scaffolding, $data ) ) ),
+				bboss_draft_topic_reply_entry_has_payload( array( 'data' => array_merge( $scaffolding, $data ) ) ),
 				sprintf( 'A draft carrying %s must be treated as restorable content.', $label )
 			);
 		}
@@ -6352,17 +6352,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		foreach ( $no_payload as $label => $data ) {
 			$this->assertFalse(
-				bb_draft_topic_reply_entry_has_payload( array( 'data' => array_merge( $scaffolding, $data ) ) ),
+				bboss_draft_topic_reply_entry_has_payload( array( 'data' => array_merge( $scaffolding, $data ) ) ),
 				sprintf( 'A draft carrying only %s has nothing to restore and must not count as a draft.', $label )
 			);
 		}
 
 		// Malformed shapes must answer false rather than warn or fatal - this
 		// predicate runs on stored rows written by older builds.
-		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array() ) );
-		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array( 'data' => '' ) ) );
-		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array( 'data' => 'not-an-array' ) ) );
-		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array( 'data' => array( 'bbp_reply_content' => array( 'nested' ) ) ) ) );
+		$this->assertFalse( bboss_draft_topic_reply_entry_has_payload( array() ) );
+		$this->assertFalse( bboss_draft_topic_reply_entry_has_payload( array( 'data' => '' ) ) );
+		$this->assertFalse( bboss_draft_topic_reply_entry_has_payload( array( 'data' => 'not-an-array' ) ) );
+		$this->assertFalse( bboss_draft_topic_reply_entry_has_payload( array( 'data' => array( 'bbp_reply_content' => array( 'nested' ) ) ) ) );
 	}
 
 	/**
@@ -6390,10 +6390,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$data_key = 'draft_discussion_' . $forum_id;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -6419,7 +6419,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			array()
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $stored, 'The aggregate row must still exist.' );
 		$this->assertSame(
@@ -6435,7 +6435,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			array()
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'THE MEMBER WROTE MORE',
@@ -6461,15 +6461,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$empty_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$live_forum    = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$empty_forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$live_forum    = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$empty_key   = 'draft_discussion_' . $empty_forum;
 		$live_key    = 'draft_discussion_' . $live_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -6506,7 +6506,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'SIBLING THE MEMBER STILL WANTS',
@@ -6544,13 +6544,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$empty_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$real_forum  = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$empty_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$real_forum  = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$empty_key = 'draft_discussion_' . $empty_forum;
 		$real_key  = 'draft_discussion_' . $real_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -6591,7 +6591,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Drive bb_get_topic_reply_drafts() and return its decoded JSON response.
+	 * Drive bboss_get_topic_reply_drafts() and return its decoded JSON response.
 	 *
 	 * @return array Decoded response.
 	 */
@@ -6610,7 +6610,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_get_topic_reply_drafts();
+			bboss_get_topic_reply_drafts();
 		} catch ( Exception $e ) {
 			// Expected: the handler finished and tried to exit.
 			unset( $e );
@@ -6637,7 +6637,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 *
 	 * Measured before the fix: `résumé.pdf` stored as `ru00e9sumu00e9.pdf`
 	 * and `Bob"s file.pdf` as `Bob"s file.pdf`, `json_decode()` returning a
-	 * syntax error, and `bb_draft_collect_attachment_ids()` recovering ZERO
+	 * syntax error, and `bboss_draft_collect_attachment_ids()` recovering ZERO
 	 * ids from the stored entry.
 	 *
 	 * That last number is why this is data loss rather than cosmetic: every
@@ -6654,7 +6654,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$data_key = 'draft_discussion_' . $forum_id;
 
 		$attachment_id = $this->make_draft_attachment( $user_id );
@@ -6680,7 +6680,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			array()
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $stored, 'The draft must have been stored.' );
 		$this->assertArrayHasKey( $data_key, $stored );
@@ -6699,7 +6699,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// The property the retention logic depends on.
 		$this->assertSame(
 			array( (int) $attachment_id ),
-			bb_draft_collect_attachment_ids( $stored[ $data_key ] ),
+			bboss_draft_collect_attachment_ids( $stored[ $data_key ] ),
 			'The attachment id must be recoverable from the stored draft, or the orphan cron reaps a file the draft still references.'
 		);
 
@@ -6732,15 +6732,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
 
 		$attachment_id = $this->make_draft_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -6775,7 +6775,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// Premise: the sibling merge really happened.
 		$this->assertSame(
@@ -6791,7 +6791,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertSame(
 			array( (int) $attachment_id ),
-			bb_draft_collect_attachment_ids( $stored[ $sibling_key ] ),
+			bboss_draft_collect_attachment_ids( $stored[ $sibling_key ] ),
 			'The sibling attachment id must be recoverable from the stored draft.'
 		);
 	}
@@ -6808,13 +6808,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $primary_forum;
 		$sibling_key = 'draft_discussion_' . $sibling_forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -6854,7 +6854,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'sibling updated',
@@ -6875,14 +6875,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * R1/Q15: the row trim must not re-serialize the whole row per eviction.
 	 *
-	 * `bb_forums_trim_draft_row()` asked "does it fit yet?" with
+	 * `bboss_forums_trim_draft_row()` asked "does it fit yet?" with
 	 * `strlen( maybe_serialize( $row ) )` on every loop iteration, so an
 	 * over-budget row with N eviction candidates serialized O(N) copies of a
 	 * row that is by definition near the cap. Measured on a 200-entry / 10 MB
 	 * row: 182 whole-row `serialize()` calls moving 953.8 MB, on the live
 	 * autosave endpoint.
 	 *
-	 * The sibling `bb_draft_enforce_user_budget()` has always precomputed
+	 * The sibling `bboss_draft_enforce_user_budget()` has always precomputed
 	 * per-entry `bytes` and subtracted; this is that pattern.
 	 *
 	 * Asserted here as a BEHAVIOURAL invariant rather than a timing: the
@@ -6909,7 +6909,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$protect_key = 'draft_reply_40';
 		$max_bytes   = 12000;
 
-		$result = bb_forums_trim_draft_row( $row, $protect_key, $user_id, $max_bytes );
+		$result = bboss_forums_trim_draft_row( $row, $protect_key, $user_id, $max_bytes );
 
 		// The protected entry always survives.
 		$this->assertArrayHasKey( $protect_key, $result['row'], 'The just-saved draft must never be evicted.' );
@@ -6997,7 +6997,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -7019,7 +7019,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$data_key = 'draft_discussion_' . $forum_id;
 
 		$attachment_id = $this->make_draft_attachment( $user_id );
@@ -7040,7 +7040,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $stored, 'The draft must have been stored.' );
 		$this->assertArrayHasKey( $data_key, $stored );
@@ -7053,7 +7053,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 		$this->assertSame(
 			array( (int) $attachment_id ),
-			bb_draft_collect_attachment_ids( $stored[ $data_key ] ),
+			bboss_draft_collect_attachment_ids( $stored[ $data_key ] ),
 			'In-page XHR shape: the attachment id must be recoverable from the stored draft.'
 		);
 		$this->assertSame( 'résumé.pdf', $decoded[0]['name'], 'A non-ASCII filename must survive the round trip.' );
@@ -7063,8 +7063,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * R2/Q16: a read-modify-write of the row must not strip its escapes.
 	 *
-	 * `bb_draft_heal_forum_row()` reads the aggregate row with
-	 * `bp_get_user_meta()` - so UNSLASHED - modifies one inner draft and
+	 * `bboss_draft_heal_forum_row()` reads the aggregate row with
+	 * `bboss_get_user_meta()` - so UNSLASHED - modifies one inner draft and
 	 * writes the whole row back. `update_metadata()` unslashes the value once
 	 * more before storing, so writing it back untouched stripped a backslash
 	 * layer from every string in the row, including the `\uXXXX` escapes in the
@@ -7096,7 +7096,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Stored the correct way: slashed, so the meta API's single unslash
 		// lands the intended bytes.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -7105,7 +7105,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 					'draft_reply_1' => array(
 						'data_key'        => 'draft_reply_1',
 						'object'          => 'reply',
-						'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 1024 ) ),
+						'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bboss_draft_max_size() + 1024 ) ),
 						'_draft_saved_at' => time() - 120,
 					),
 					// The innocent bystander.
@@ -7123,7 +7123,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Premise: it really did land intact, or this test proves nothing.
-		$before = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$before = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			$sibling_list,
@@ -7131,11 +7131,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'Premise: the fixture must be stored byte-identical before the heal runs.'
 		);
 
-		$acted = bb_draft_heal_forum_row( $user_id );
+		$acted = bboss_draft_heal_forum_row( $user_id );
 
 		$this->assertGreaterThan( 0, $acted, 'The heal must have acted, or the row was never rewritten.' );
 
-		$after = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$after = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertArrayHasKey( 'draft_reply_2', $after, 'The small sibling must survive the heal.' );
 
@@ -7147,7 +7147,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertSame(
 			array( (int) $attachment_id ),
-			bb_draft_collect_attachment_ids( $after['draft_reply_2'] ),
+			bboss_draft_collect_attachment_ids( $after['draft_reply_2'] ),
 			'The sibling attachment id must still be recoverable after the heal.'
 		);
 	}
@@ -7155,7 +7155,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * S1: disposing one inner draft must not corrupt the member's others.
 	 *
-	 * `bb_draft_dispose()` reads the aggregate row with `bp_get_user_meta()` -
+	 * `bboss_draft_dispose()` reads the aggregate row with `bboss_get_user_meta()` -
 	 * so UNSLASHED - removes one inner key and writes the row back.
 	 * `update_metadata()` unslashes the value once more before storing, so the
 	 * surviving siblings lost a backslash layer: `résumé.pdf` came back as
@@ -7186,7 +7186,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 		$survivor_text = 'path C:\\temp\\notes';
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -7211,14 +7211,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Premise: the fixture landed byte-identical.
-		$before = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$before = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame( $survivor_list, $before['draft_reply_2']['data']['bbp_document'], 'Premise: fixture stored verbatim.' );
 		$this->assertSame( $survivor_text, $before['draft_reply_2']['data']['bbp_reply_content'], 'Premise: fixture stored verbatim.' );
 
-		$this->assertTrue( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_reply_1' ) );
+		$this->assertTrue( bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_reply_1' ) );
 
-		$after = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$after = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// Premise: it really did dispose the target.
 		$this->assertArrayNotHasKey( 'draft_reply_1', $after, 'The disposed inner draft must be gone.' );
@@ -7236,7 +7236,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 		$this->assertSame(
 			array( (int) $attachment_id ),
-			bb_draft_collect_attachment_ids( $after['draft_reply_2'] ),
+			bboss_draft_collect_attachment_ids( $after['draft_reply_2'] ),
 			'The sibling attachment id must still be recoverable after an unrelated dispose.'
 		);
 	}
@@ -7244,7 +7244,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * S2: the salvage pass must not alter the text it exists to preserve.
 	 *
-	 * `bb_draft_salvage_oversized_draft()` was added by Q6 precisely to stop
+	 * `bboss_draft_salvage_oversized_draft()` was added by Q6 precisely to stop
 	 * the healing path destroying member text: it sheds the video poster frame
 	 * so an oversized row fits instead of being deleted. But it reads the row
 	 * unslashed and writes it back without re-slashing, so the meta API's
@@ -7264,9 +7264,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A poster frame big enough that the row is over the per-draft cap and
 		// shedding it brings the row back under - which is what makes salvage
 		// act rather than bail.
-		$poster = 'data:image/png;base64,' . str_repeat( 'A', bb_draft_max_size() );
+		$poster = 'data:image/png;base64,' . str_repeat( 'A', bboss_draft_max_size() );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			wp_slash(
@@ -7287,16 +7287,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$before = bp_get_user_meta( $user_id, 'draft_user', true );
+		$before = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertSame( $typed, $before['data']['content'], 'Premise: fixture stored verbatim.' );
 
 		$this->assertTrue(
-			bb_draft_salvage_oversized_draft( $user_id, 'draft_user' ),
+			bboss_draft_salvage_oversized_draft( $user_id, 'draft_user' ),
 			'Premise: salvage must have acted, or this test proves nothing.'
 		);
 
-		$after = bp_get_user_meta( $user_id, 'draft_user', true );
+		$after = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		// Premise: the poster really was shed.
 		$this->assertTrue(
@@ -7327,7 +7327,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// A small plain-text draft: under the per-draft cap, and NOTHING to shed
 		// (no video poster frame) - the exact shape the old code disposed.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -7339,20 +7339,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		$this->assertLessThanOrEqual(
-			bb_draft_max_size(),
-			strlen( maybe_serialize( bp_get_user_meta( $user_id, 'draft_user', true ) ) ),
+			bboss_draft_max_size(),
+			strlen( maybe_serialize( bboss_get_user_meta( $user_id, 'draft_user', true ) ) ),
 			'Premise: the fixture row is under the per-draft cap.'
 		);
 
 		// "Handled - do not dispose." The caller runs `elseif salvage() {} elseif
 		// dispose() {}`, so a true return short-circuits the unconditional delete.
 		$this->assertTrue(
-			bb_draft_salvage_oversized_draft( $user_id, 'draft_user' ),
+			bboss_draft_salvage_oversized_draft( $user_id, 'draft_user' ),
 			'A row already under the cap must be reported handled so the heal loop never disposes it.'
 		);
 
 		$this->assertNotEmpty(
-			bp_get_user_meta( $user_id, 'draft_user', true ),
+			bboss_get_user_meta( $user_id, 'draft_user', true ),
 			'The valid, under-cap draft must still exist - salvage must not have destroyed it.'
 		);
 	}
@@ -7377,7 +7377,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->drive_activity_draft_save( 'draft_user', array( 'content' => $typed ) );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertIsArray( $stored, 'The activity draft must have been stored.' );
 		$this->assertSame(
@@ -7392,11 +7392,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 *
 	 * The bound was a hard 50 applied with array_slice() to the array that is
 	 * subsequently STORED, and on the activity path it ran before
-	 * bb_draft_protect_payload_attachments(). So on a site whose media "Upload
+	 * bboss_draft_protect_payload_attachments(). So on a site whose media "Upload
 	 * Limit" is above 50 - the field accepts up to 100 - entries past 50 were
 	 * dropped from the draft the member would restore AND never stamped, and
 	 * unstamped with no bb_media_draft is exactly what
-	 * bp_media_delete_orphaned_attachments() hard-deletes six hours later.
+	 * bboss_media_delete_orphaned_attachments() hard-deletes six hours later.
 	 *
 	 * The bound now follows the configured limit and the handlers refuse an
 	 * over-bound list instead of storing a subset. This asserts the case that
@@ -7428,7 +7428,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_60' ) );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertIsArray( $stored, 'The draft must have been stored.' );
 		$this->assertCount(
@@ -7480,13 +7480,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * their independently-configurable limit was raised above the 50 floor while
 	 * Photos was left lower.
 	 *
-	 * Mutation check: revert the helper to read bp_media_allowed_upload_media_per_batch()
+	 * Mutation check: revert the helper to read bboss_media_allowed_upload_media_per_batch()
 	 * for all types and this goes red - document/video fall back to the 50 floor.
 	 */
 	public function test_max_attachments_is_resolved_per_type() {
 		if (
 			! function_exists( 'bp_video_allowed_upload_video_per_batch' ) ||
-			! function_exists( 'bp_media_allowed_upload_document_per_batch' )
+			! function_exists( 'bboss_media_allowed_upload_document_per_batch' )
 		) {
 			$this->markTestSkipped( 'Media/Video components inactive.' );
 		}
@@ -7496,9 +7496,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_option( 'bp_document_allowed_per_batch', 70 );
 		update_option( 'bp_video_allowed_per_batch', 80 );
 
-		$this->assertSame( 50, bb_draft_max_attachments_per_type( 'media' ), 'Photos at 10 floors at 50.' );
-		$this->assertSame( 70, bb_draft_max_attachments_per_type( 'document' ), 'Documents must read their OWN upload limit, not the Photos one.' );
-		$this->assertSame( 80, bb_draft_max_attachments_per_type( 'video' ), 'Videos must read their OWN upload limit, not the Photos one.' );
+		$this->assertSame( 50, bboss_draft_max_attachments_per_type( 'media' ), 'Photos at 10 floors at 50.' );
+		$this->assertSame( 70, bboss_draft_max_attachments_per_type( 'document' ), 'Documents must read their OWN upload limit, not the Photos one.' );
+		$this->assertSame( 80, bboss_draft_max_attachments_per_type( 'video' ), 'Videos must read their OWN upload limit, not the Photos one.' );
 
 		delete_option( 'bp_media_allowed_per_batch' );
 		delete_option( 'bp_document_allowed_per_batch' );
@@ -7523,7 +7523,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'cap_two_for_video' ), 10, 2 );
-		$stamped = bb_draft_protect_payload_attachments( array( 'video' => $video_ids ), $user_id );
+		$stamped = bboss_draft_protect_payload_attachments( array( 'video' => $video_ids ), $user_id );
 		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'cap_two_for_video' ), 10 );
 
 		$this->assertCount(
@@ -7535,7 +7535,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	/**
 	 * L6: the activity handler must strip the OTHER (forum) shape's attachment
-	 * keys before storing. bb_draft_collect_attachment_ids() reads BOTH shapes,
+	 * keys before storing. bboss_draft_collect_attachment_ids() reads BOTH shapes,
 	 * so a foreign bbp_* key would be counted by the global reference scan and
 	 * pin whatever attachment id it names against the orphan-stamp sweep - a
 	 * member could keep another member's stamped attachment undeletable forever.
@@ -7555,7 +7555,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertIsArray( $stored, 'The draft must have been stored.' );
 		$this->assertArrayNotHasKey(
@@ -7576,7 +7576,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum    = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$forum    = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
 		$data_key = 'draft_discussion_' . $forum;
 
 		$this->drive_forum_draft_save(
@@ -7587,7 +7587,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertIsArray( $row, 'The row must have been stored.' );
 		$this->assertArrayHasKey( $data_key, $row, 'The forum draft entry must be present.' );
@@ -7600,7 +7600,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	/**
 	 * L7: disposing one draft row (a discard, a budget eviction, or an expiry
-	 * sweep - all route through bb_draft_dispose()) must NOT release an
+	 * sweep - all route through bboss_draft_dispose()) must NOT release an
 	 * attachment stamp a DIFFERENT stored row still references. The immediate
 	 * dispose path only ever excluded same-row siblings, so an attachment held by
 	 * two rows lost its bb_media_draft protection the moment one row went, and the
@@ -7619,12 +7619,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$shared = $this->make_stamped_unsaved_attachment( $user_id );
 
 		// Two DIFFERENT draft rows both legitimately reference the same attachment.
-		bp_update_user_meta( $user_id, 'draft_user', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_update_user_meta( $user_id, 'draft_user', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		// Dispose ONE row.
-		bb_draft_dispose( $user_id, 'draft_group_5' );
+		bboss_draft_dispose( $user_id, 'draft_group_5' );
 
 		$this->assertSame(
 			'1',
@@ -7634,8 +7634,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Disposing the LAST row that references it now releases the stamp - the
 		// retain must not become a permanent leak.
-		bb_draft_flush_user_meta_sizes( $user_id );
-		bb_draft_dispose( $user_id, 'draft_user' );
+		bboss_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_dispose( $user_id, 'draft_user' );
 
 		$this->assertSame(
 			'',
@@ -7646,14 +7646,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	/**
 	 * L8: the L7 cross-row retain must hold on the OTHER release paths too, not
-	 * just bb_draft_dispose(). bb_draft_dispose_forum_inner_keys() is the expiry
+	 * just bboss_draft_dispose(). bboss_draft_dispose_forum_inner_keys() is the expiry
 	 * cron's batch path - an unattended, cron-driven release - and it built its
 	 * surviving set from the aggregated forum row only, so aging out a forum inner
 	 * draft would strip the stamp of an attachment a live activity/group draft
 	 * still holds.
 	 *
-	 * Mutation check: drop the bb_draft_collect_other_row_referenced_ids() seed in
-	 * bb_draft_dispose_forum_inner_keys() and this goes red.
+	 * Mutation check: drop the bboss_draft_collect_other_row_referenced_ids() seed in
+	 * bboss_draft_dispose_forum_inner_keys() and this goes red.
 	 */
 	public function test_forum_inner_dispose_keeps_a_stamp_another_row_references() {
 		$user_id = self::factory()->user->create();
@@ -7661,8 +7661,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$shared = $this->make_stamped_unsaved_attachment( $user_id );
 
 		// Referenced by an ACTIVITY/group row AND by an inner forum draft.
-		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bp_update_user_meta(
+		bboss_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -7672,10 +7672,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		// The expiry cron's batch-expire path.
-		bb_draft_dispose_forum_inner_keys( $user_id, array( 'draft_discussion_9' ) );
+		bboss_draft_dispose_forum_inner_keys( $user_id, array( 'draft_discussion_9' ) );
 
 		$this->assertSame(
 			'1',
@@ -7706,7 +7706,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 
 		$this->assertIsArray( $stored, 'The draft must have been stored.' );
 		$this->assertStringNotContainsString( '<script>', (string) $stored['data']['post_title'], 'post_title must be plain-text sanitized (M17).' );
@@ -7714,7 +7714,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * L8: bb_draft_release_replaced_attachments() must honour the cross-row
+	 * L8: bboss_draft_release_replaced_attachments() must honour the cross-row
 	 * retain-id set the forum and activity handlers pass it, so replacing an
 	 * entry never strips a stamp another row still holds. This locks the primitive
 	 * those handler paths depend on.
@@ -7727,7 +7727,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$shared = $this->make_stamped_unsaved_attachment( $user_id );
 
-		$released = bb_draft_release_replaced_attachments(
+		$released = bboss_draft_release_replaced_attachments(
 			array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ), // previous held it
 			array( 'data' => array() ), // current holds nothing
 			$user_id,
@@ -7751,52 +7751,52 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * reply's real forum was never checked, and "reply exists" vs "does not"
 	 * reopened the L1 existence/post-type oracle for the reply shape.
 	 *
-	 * Mutation check: drop the bbp_get_reply_topic_id() === topic check and the
+	 * Mutation check: drop the bboss_bbp_get_reply_topic_id() === topic check and the
 	 * cross-topic pairing resolves instead of being rejected.
 	 */
 	public function test_reply_key_rejects_a_reply_from_a_different_topic() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
-		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$topic_a = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_a ) );
-		$reply_a = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type(), 'post_parent' => $topic_a ) );
+		$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$topic_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum_a ) );
+		$reply_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_reply_post_type(), 'post_parent' => $topic_a ) );
 		update_post_meta( $reply_a, '_bbp_topic_id', $topic_a );
 		update_post_meta( $reply_a, '_bbp_forum_id', $forum_a );
 
-		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$topic_b = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_b ) );
-		$reply_b = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type(), 'post_parent' => $topic_b ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$topic_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_topic_post_type(), 'post_parent' => $forum_b ) );
+		$reply_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_reply_post_type(), 'post_parent' => $topic_b ) );
 		update_post_meta( $reply_b, '_bbp_topic_id', $topic_b );
 		update_post_meta( $reply_b, '_bbp_forum_id', $forum_b );
 
 		// The reply that DOES belong to topic A resolves.
-		$own = bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_a . '_' . $reply_a );
+		$own = bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_a . '_' . $reply_a );
 		$this->assertIsArray( $own, 'A reply that belongs to the named topic must resolve.' );
 		$this->assertSame( $reply_a, $own['reply_id'] );
 
 		// A reply from a DIFFERENT topic/forum must be rejected identically to a
 		// non-existent one - no oracle.
 		$this->assertFalse(
-			bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_a . '_' . $reply_b ),
+			bboss_draft_topic_reply_key_context( 'draft_reply_' . $topic_a . '_' . $reply_b ),
 			'A reply from a different topic must be rejected, not resolved (L9 oracle).'
 		);
 	}
 
 	/**
-	 * L10: bb_draft_oneshot_schedule()/_unschedule() queue and clear the healing
+	 * L10: bboss_draft_oneshot_schedule()/_unschedule() queue and clear the healing
 	 * continuation. The root-blog pinning is multisite-only (documented, not
 	 * exercisable in this single-site suite); this locks the core mechanism.
 	 */
 	public function test_oneshot_schedule_helper_queues_and_clears_the_event() {
-		bb_draft_oneshot_unschedule();
+		bboss_draft_oneshot_unschedule();
 		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'Precondition: nothing scheduled.' );
 
-		bb_draft_oneshot_schedule( 60 );
+		bboss_draft_oneshot_schedule( 60 );
 		$this->assertNotFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'The helper must queue the one-shot event.' );
 
-		bb_draft_oneshot_unschedule();
+		bboss_draft_oneshot_unschedule();
 		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'Unschedule must clear the event.' );
 	}
 
@@ -7810,7 +7810,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Drive bb_post_topic_reply_draft() as a DISCARD (post_action delete).
+	 * Drive bboss_post_topic_reply_draft() as a DISCARD (post_action delete).
 	 *
 	 * @param string $data_key Draft key to discard.
 	 * @return void
@@ -7841,7 +7841,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -7867,13 +7867,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
 		$att   = $this->make_draft_attachment( $user_id );
 		update_post_meta( $att, 'bb_media_draft', 1 );
 
 		$key = 'draft_discussion_' . $forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -7893,7 +7893,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->drive_forum_draft_discard( $key );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertTrue(
 			empty( $row ) || ! isset( $row[ $key ] ),
@@ -7911,7 +7911,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * losing view access to the forum it targets - removed from a private group,
 	 * or the forum turned private after the draft was written.
 	 *
-	 * Discard authorization used to run through the same bbp_user_can_view_forum()
+	 * Discard authorization used to run through the same bboss_bbp_user_can_view_forum()
 	 * gate as a save: once the member could no longer see the forum, that gate
 	 * failed, the primary was marked rejected, the dispose block was skipped, and
 	 * the draft (with its stamped attachment) was stranded in usermeta until the
@@ -7924,20 +7924,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * and this goes red - the draft survives and its stamp is never released.
 	 */
 	public function test_discarding_own_forum_draft_survives_view_access_loss() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
 		$att   = $this->make_draft_attachment( $user_id );
 		update_post_meta( $att, 'bb_media_draft', 1 );
 
 		$key = 'draft_discussion_' . $forum;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -7964,7 +7964,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
 		$this->unreadable_forum_id = 0;
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertTrue(
 			empty( $row ) || ! isset( $row[ $key ] ),
@@ -7990,20 +7990,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * exists.
 	 */
 	public function test_discard_of_unowned_key_stays_behind_the_view_gate() {
-		if ( ! bp_is_active( 'forums' ) ) {
+		if ( ! bboss_is_active( 'forums' ) ) {
 			$this->markTestSkipped( 'Forums component inactive.' );
 		}
 
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$owned_forum  = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
-		$unread_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$owned_forum  = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$unread_forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
 
 		$owned_key   = 'draft_discussion_' . $owned_forum;
 		$crafted_key = 'draft_discussion_' . $unread_forum; // The member holds NO draft here.
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -8031,7 +8031,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'A discard for an unreadable forum the member does not hold must return the indistinguishable auth error, not success - the oracle stays closed.'
 		);
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertTrue(
 			isset( $row[ $owned_key ] ),
 			'A crafted discard for a key the member does not hold must not disturb their genuine draft in another forum.'
@@ -8039,7 +8039,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Drive bb_post_topic_reply_draft() as a DISCARD and return the decoded
+	 * Drive bboss_post_topic_reply_draft() as a DISCARD and return the decoded
 	 * JSON response, so a test can assert the response the client would see
 	 * (success vs the indistinguishable auth error).
 	 *
@@ -8071,7 +8071,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -8094,8 +8094,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
-		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
 		$shared  = $this->make_draft_attachment( $user_id );
 		update_post_meta( $shared, 'bb_media_draft', 1 );
 
@@ -8103,7 +8103,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$sibling_key = 'draft_discussion_' . $forum_b;
 		$media_json  = wp_json_encode( array( array( 'id' => $shared ) ) );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -8116,7 +8116,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->drive_forum_draft_discard( $discard_key );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertArrayNotHasKey( $discard_key, $row, 'The discarded draft must be removed.' );
 		$this->assertArrayHasKey( $sibling_key, $row, 'The sibling draft must survive.' );
@@ -8151,7 +8151,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_nouveau_ajax_post_draft_activity();
+			bboss_nouveau_ajax_post_draft_activity();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -8242,11 +8242,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		$heavy = self::factory()->user->create();
-		$cap   = bb_draft_user_total_max_size();
+		$cap   = bboss_draft_user_total_max_size();
 		$count = (int) ceil( ( $cap + 80000 ) / 40000 );
 
 		for ( $i = 1; $i <= $count; $i++ ) {
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				$heavy,
 				'draft_group_' . $i,
 				array(
@@ -8257,16 +8257,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		$before = array_sum( bb_draft_get_user_meta_sizes( $heavy )['drafts'] );
+		$before = array_sum( bboss_draft_get_user_meta_sizes( $heavy )['drafts'] );
 		$this->assertGreaterThan( $cap, $before, 'Fixture must start the user over the aggregate cap.' );
 
 		$iterations = 0;
 		do {
 			$iterations++;
-			$result = bb_drafts_oneshot_batch( 10 );
+			$result = bboss_drafts_oneshot_batch( 10 );
 		} while ( empty( $result['complete'] ) && $iterations < 50 );
 
-		$after = array_sum( bb_draft_get_user_meta_sizes( $heavy )['drafts'] );
+		$after = array_sum( bboss_draft_get_user_meta_sizes( $heavy )['drafts'] );
 
 		$this->assertTrue( ! empty( $result['complete'] ), 'The one-shot must converge, not loop forever deferring the aggregate.' );
 		$this->assertLessThanOrEqual( $cap, $after, 'Stage 2 must trim the aggregate-oversized user under the cap.' );
@@ -8287,11 +8287,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->isolate_draft_maintenance();
 
 		$heavy = self::factory()->user->create();
-		$cap   = bb_draft_user_total_max_size();
+		$cap   = bboss_draft_user_total_max_size();
 		$count = (int) ceil( ( $cap + 80000 ) / 40000 );
 
 		for ( $i = 1; $i <= $count; $i++ ) {
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				$heavy,
 				'draft_group_' . $i,
 				array(
@@ -8302,8 +8302,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		$result = bb_drafts_oneshot_batch( 0 );
-		$after  = array_sum( bb_draft_get_user_meta_sizes( $heavy )['drafts'] );
+		$result = bboss_drafts_oneshot_batch( 0 );
+		$after  = array_sum( bboss_draft_get_user_meta_sizes( $heavy )['drafts'] );
 
 		$this->assertTrue( ! empty( $result['complete'] ), 'The unbudgeted drain must complete in one call.' );
 		$this->assertLessThanOrEqual( $cap, $after, 'Stage 2 must run inline for the unbudgeted drain.' );
@@ -8320,7 +8320,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
 
-		$result = bb_drafts_oneshot_batch( 10 );
+		$result = bboss_drafts_oneshot_batch( 10 );
 
 		$this->assertNotEmpty( $result['locked'], 'A run finding the lock held must report locked.' );
 		$this->assertEmpty( $result['complete'], 'A locked run has not completed the pass.' );
@@ -8368,7 +8368,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		ob_start();
 
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
@@ -8399,13 +8399,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $forum_a;
 		$sibling_key = 'draft_discussion_' . $forum_b;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -8420,7 +8420,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$over_cap = str_repeat( 'A', bb_draft_max_size() + 5000 );
+		$over_cap = str_repeat( 'A', bboss_draft_max_size() + 5000 );
 
 		$response = $this->drive_forum_draft_capture_response(
 			$primary_key,
@@ -8431,7 +8431,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		// The sibling's genuine update survived the primary's rejection.
 		$this->assertSame(
@@ -8464,13 +8464,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $forum_a;
 		$sibling_key = 'draft_discussion_' . $forum_b;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -8505,7 +8505,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'SIBLING NEW TEXT',
@@ -8589,8 +8589,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$user_id = self::factory()->user->create();
 			$this->set_current_user( $user_id );
 
-			$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-			$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+			$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+			$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 			$primary_key = 'draft_discussion_' . $forum_a;
 			$sibling_key = 'draft_discussion_' . $forum_b;
@@ -8609,7 +8609,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 			$sibling_text = 'sibling text with path C:\\temp\\notes';
 
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				$user_id,
 				'bb_user_topic_reply_draft',
 				wp_slash(
@@ -8633,7 +8633,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				$this->drive_forum_draft_save_as_nested_array( $primary_key, array( 'bbp_topic_content' => 'autosave of a different draft' ) );
 			}
 
-			$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+			$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 			// Negative control: the autosave itself must have been written, or
 			// this test also passes for a handler that rejects everything.
@@ -8672,7 +8672,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$user_id = self::factory()->user->create();
 			$this->set_current_user( $user_id );
 
-			$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+			$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 			$data_key = 'draft_discussion_' . $forum_id;
 
 			if ( 'beacon' === $transport ) {
@@ -8681,7 +8681,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				$this->drive_forum_draft_save_as_nested_array( $data_key, array( 'bbp_topic_content' => $typed ) );
 			}
 
-			$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+			$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 			$this->assertArrayHasKey( $data_key, $stored, "[$transport] The draft must be stored." );
 
@@ -8715,13 +8715,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$primary_key = 'draft_discussion_' . $forum_a;
 		$sibling_key = 'draft_discussion_' . $forum_b;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -8753,7 +8753,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'PRIMARY STORED TEXT',
@@ -8802,7 +8802,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$full_size = strlen( maybe_serialize( $row ) );
 
 			for ( $max_bytes = (int) ( $full_size * 0.2 ); $max_bytes < $full_size; $max_bytes += 7 ) {
-				$result = bb_forums_trim_draft_row( $row, 0, 1, $max_bytes );
+				$result = bboss_forums_trim_draft_row( $row, 0, 1, $max_bytes );
 				$size   = strlen( maybe_serialize( $result['row'] ) );
 
 				// Invariant, asserted on EVERY case: the returned row fits, or
@@ -8830,7 +8830,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$data_key = 'draft_discussion_' . $forum_id;
 
 		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
@@ -8855,7 +8855,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
 
 		// Refused, not truncated: nothing may have been stored.
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertTrue(
 			empty( $stored[ $data_key ] ),
 			'An over-bound list must refuse the save, never store a truncated draft.'
@@ -8896,7 +8896,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 		$this->assertEmpty( $stored, 'An over-bound list must refuse the save, never store a truncated draft.' );
 
 		$this->assertSame( '1', (string) get_post_meta( $ids[0], 'bb_media_draft', true ), 'The first upload must be orphan-protected despite the refusal.' );
@@ -8920,7 +8920,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 
 		for ( $i = 1; $i <= 201; $i++ ) {
-			bp_update_user_meta(
+			bboss_update_user_meta(
 				$user_id,
 				'draft_group_' . $i,
 				array(
@@ -8948,7 +8948,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_action( 'add_site_option', array( $this, 'record_oneshot_state_added' ), 10, 2 );
 		add_action( 'update_site_option', array( $this, 'record_oneshot_state_site_updated' ), 10, 2 );
 
-		$result = bb_drafts_oneshot_batch( 0 );
+		$result = bboss_drafts_oneshot_batch( 0 );
 
 		remove_action( 'added_option', array( $this, 'record_oneshot_state_added' ), 10 );
 		remove_action( 'updated_option', array( $this, 'record_oneshot_state_updated' ), 10 );
@@ -9029,12 +9029,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// way it does on a real site.
 		$was_using_ext_cache = wp_using_ext_object_cache( true );
 
-		bb_draft_invalidate_referenced_cache();
+		bboss_draft_invalidate_referenced_cache();
 
 		// Read through the SAME accessor production uses. A test that hard-coded
 		// the storage call would keep passing if the token moved somewhere
 		// non-durable - the precise regression this test exists to catch.
-		$recorded = bb_draft_get_referenced_cache_token();
+		$recorded = bboss_draft_get_referenced_cache_token();
 
 		$this->assertNotEmpty(
 			$recorded,
@@ -9045,15 +9045,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertSame(
 			$recorded,
-			bb_draft_get_referenced_cache_token(),
+			bboss_draft_get_referenced_cache_token(),
 			'The token MUST survive an object-cache flush. If it does not, a sweep that captured an absent token reads absent again, compares equal, and releases a stamp a live draft still holds.'
 		);
 
-		bb_draft_invalidate_referenced_cache();
+		bboss_draft_invalidate_referenced_cache();
 
 		$this->assertNotSame(
 			$recorded,
-			bb_draft_get_referenced_cache_token(),
+			bboss_draft_get_referenced_cache_token(),
 			'Every invalidation must change the token, or a sweep can commit a set built across a change.'
 		);
 
@@ -9064,14 +9064,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * M-3 (activity half): replacing a draft must not release an attachment a
 	 * DIFFERENT meta row still references.
 	 *
-	 * The bb_draft_release_replaced_attachments() primitive takes the cross-row
+	 * The bboss_draft_release_replaced_attachments() primitive takes the cross-row
 	 * retain set as its fifth argument, and the only existing coverage calls that
 	 * primitive directly with a hand-supplied array - its own docblock says so. Nothing
 	 * locked the handler's obligation to COMPUTE and PASS it, so replacing the
 	 * computed set with array() at this call site left the whole suite green
 	 * while member files became reapable: the release strips bb_media_draft from
 	 * an attachment another row still holds, and
-	 * bp_media_delete_orphaned_attachments() hard-deletes it within 6h.
+	 * bboss_media_delete_orphaned_attachments() hard-deletes it within 6h.
 	 *
 	 * $only_here is the negative control. Without it this test would also pass
 	 * for a build that stopped releasing anything at all, which leaks orphan
@@ -9081,7 +9081,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$shared    = $this->make_draft_attachment( $user_id );
 		$only_here = $this->make_draft_attachment( $user_id );
@@ -9091,7 +9091,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $only_here, 'bb_media_draft', 1 );
 
 		// Row being replaced: an activity draft holding both attachments.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -9106,7 +9106,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// A DIFFERENT meta row - the forum aggregate - still references $shared.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -9121,7 +9121,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		// Replace the activity draft with text only: it now holds neither file.
 		$this->drive_activity_draft_save( 'draft_user', array( 'content' => 'now text only' ) );
@@ -9151,7 +9151,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$data_key = 'draft_discussion_' . $forum_id;
 
 		$shared    = $this->make_draft_attachment( $user_id );
@@ -9163,7 +9163,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Row being replaced: the forum aggregate, holding both attachments in
 		// its single inner entry - so no SAME-row sibling can retain them and
 		// only the cross-row set can save $shared.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -9183,7 +9183,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// A DIFFERENT meta row - an activity draft - still references $shared.
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -9191,7 +9191,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				'data'     => array( 'media' => array( array( 'id' => $shared ) ) ),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		// Replace the forum entry with text only: it now holds neither file.
 		$this->drive_forum_draft_save( $data_key, array( 'bbp_topic_content' => 'now text only' ) );
@@ -9212,7 +9212,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * H-5: resolving many sibling draft keys must not be one query per key.
 	 *
-	 * The forum sibling merge calls bb_draft_topic_reply_key_context() per key,
+	 * The forum sibling merge calls bboss_draft_topic_reply_key_context() per key,
 	 * and that resolves each key through get_post() plus, for the reply shape,
 	 * two post-meta reads. The aggregate row is capped by BYTES, not by entry
 	 * count, so a member holding many small drafts turned a single autosave -
@@ -9224,13 +9224,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * per-key resolution issues no queries at all.
 	 */
 	public function test_sibling_key_resolution_is_batched_not_per_key() {
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$topic_ids = array();
 		for ( $i = 0; $i < 6; $i++ ) {
 			$topic_ids[] = self::factory()->post->create(
 				array(
-					'post_type'   => bbp_get_topic_post_type(),
+					'post_type'   => bboss_bbp_get_topic_post_type(),
 					'post_parent' => $forum_id,
 				)
 			);
@@ -9248,7 +9248,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		$before_prime = get_num_queries();
-		bb_draft_prime_topic_reply_key_posts( $data_keys );
+		bboss_draft_prime_topic_reply_key_posts( $data_keys );
 		$prime_queries = get_num_queries() - $before_prime;
 
 		$this->assertLessThanOrEqual(
@@ -9263,7 +9263,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		foreach ( $data_keys as $data_key ) {
 			$this->assertNotFalse(
-				bb_draft_topic_reply_key_context( $data_key ),
+				bboss_draft_topic_reply_key_context( $data_key ),
 				'Priming must not change resolution results - every key here is valid.'
 			);
 		}
@@ -9295,8 +9295,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$uncovered = 4343;
 
 		set_site_transient( 'bb_draft_referenced_stamp_ids', array( $covered => true ) );
-		bb_draft_invalidate_referenced_cache( array( $covered ) );
-		$token_after_covered = bb_draft_get_referenced_cache_token();
+		bboss_draft_invalidate_referenced_cache( array( $covered ) );
+		$token_after_covered = bboss_draft_get_referenced_cache_token();
 
 		$this->assertSame(
 			'',
@@ -9312,10 +9312,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A genuinely NEW reference must still invalidate - this is the half the
 		// sweep's correctness depends on, and the F7 trap if it is ever gated on
 		// stamp transitions instead of on what the draft keeps.
-		bb_draft_invalidate_referenced_cache( array( $covered, $uncovered ) );
+		bboss_draft_invalidate_referenced_cache( array( $covered, $uncovered ) );
 
 		$this->assertNotEmpty(
-			bb_draft_get_referenced_cache_token(),
+			bboss_draft_get_referenced_cache_token(),
 			'An attachment the cached set does not hold MUST move the token, or a mid-scan sweep can commit a non-superset.'
 		);
 		$this->assertFalse(
@@ -9326,7 +9326,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A caller that cannot enumerate the kept set must still get the
 		// unconditional invalidation.
 		set_site_transient( 'bb_draft_referenced_stamp_ids', array( $covered => true ) );
-		bb_draft_invalidate_referenced_cache();
+		bboss_draft_invalidate_referenced_cache();
 
 		$this->assertFalse(
 			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
@@ -9339,10 +9339,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 		delete_site_option( 'bb_draft_referenced_stamp_ids_token' );
 		delete_site_transient( 'bb_draft_referenced_stamp_ids_token' );
-		bb_draft_invalidate_referenced_cache( array( $covered ) );
+		bboss_draft_invalidate_referenced_cache( array( $covered ) );
 
 		$this->assertNotEmpty(
-			bb_draft_get_referenced_cache_token(),
+			bboss_draft_get_referenced_cache_token(),
 			'On a cache miss the superset cannot be proven, so the invalidation must not be skipped.'
 		);
 	}
@@ -9393,7 +9393,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $in_use, 'bb_activity_post_feature_image_saved', '0' );
 		update_post_meta( $in_use, 'bb_activity_post_feature_image_draft', 1 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -9403,10 +9403,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertSame(
@@ -9443,7 +9443,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		wp_cache_delete( 'bb_draft_stamp_sweep_lock', 'transient' );
 
 		$this->assertTrue(
-			bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ),
+			bboss_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ),
 			'The first caller must acquire the lock.'
 		);
 
@@ -9458,7 +9458,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		wp_cache_add( 'bb_draft_stamp_sweep_lock', 1, 'transient', 5 * MINUTE_IN_SECONDS );
 
 		add_filter( 'transient_bb_draft_stamp_sweep_lock', '__return_false' );
-		$acquired_during_race = bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS );
+		$acquired_during_race = bboss_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS );
 		remove_filter( 'transient_bb_draft_stamp_sweep_lock', '__return_false' );
 
 		$this->assertFalse(
@@ -9472,7 +9472,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 		$this->assertTrue(
-			bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ),
+			bboss_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ),
 			'After release the lock must be acquirable again.'
 		);
 
@@ -9509,7 +9509,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$first  = $this->make_draft_attachment( $user_id );
 		$second = $this->make_draft_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'draft_user',
 			array(
@@ -9522,9 +9522,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		$this->assertFalse(
 			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
@@ -9536,7 +9536,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Control: within the bound the set is still cached, so the decline is the
 		// exception and not the new normal.
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
-		bb_drafts_release_orphaned_draft_stamps( 0 );
+		bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		$this->assertIsArray(
 			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
@@ -9573,15 +9573,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_a = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$undecided_key = 'draft_discussion_' . $forum_a;
 		$edited_key    = 'draft_discussion_' . $forum_b;
 
 		$stranded = $this->make_draft_attachment( $user_id );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -9598,7 +9598,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		// The state a concurrent discard leaves behind: the row still references
 		// the file, but its stamp is gone.
@@ -9619,7 +9619,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'An attachment referenced by an undecided key must be re-stamped by the write - otherwise a live draft points at a file the orphan cron will delete.'
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertArrayHasKey(
 			$undecided_key,
@@ -9662,7 +9662,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// failure arrives: get_results() yields null and last_error is set.
 		add_filter( 'query', array( $this, 'break_draft_scan_query' ) );
 
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'query', array( $this, 'break_draft_scan_query' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
@@ -9692,7 +9692,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 *
 	 * Distinguishing a failed query from an exhausted table is the fix; applying
 	 * that same treatment to the non-invertible-`bp_get_user_meta_key` decline
-	 * would be a NEW bug. `bb_drafts_delete_expired()` reschedules itself a minute
+	 * would be a NEW bug. `bboss_drafts_delete_expired()` reschedules itself a minute
 	 * out whenever it reports incomplete, and a filter is either invertible or it
 	 * is not - so reporting the decline as "incomplete" would reschedule the pass
 	 * every minute, for ever, to do nothing at all.
@@ -9711,7 +9711,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// draft it belongs to, so the scan declines rather than guessing.
 		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_non_invertible_meta_key' ), 99 );
 
-		$batch = bb_draft_get_rows_batch( 0, 10, false );
+		$batch = bboss_draft_get_rows_batch( 0, 10, false );
 
 		$this->assertTrue(
 			! empty( $batch['declined'] ),
@@ -9722,7 +9722,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'A permanent decline must NOT be reported as a transient failure - that is what turns it into a retry loop.'
 		);
 
-		$result = bb_drafts_delete_expired( 0 );
+		$result = bboss_drafts_delete_expired( 0 );
 
 		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_non_invertible_meta_key' ), 99 );
 
@@ -9796,18 +9796,18 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Simulate the sweep having opened its recording window and started
 		// scanning: the cache is cold, exactly as it is on a real rebuild.
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
-		bb_draft_reference_scan_begin();
+		bboss_draft_reference_scan_begin();
 
 		$this->assertTrue(
-			bb_draft_reference_scan_is_active(),
+			bboss_draft_reference_scan_is_active(),
 			'The scan window must be open, or nothing records and the union cannot work.'
 		);
 
 		// A member saves a draft mid-scan, keeping an attachment whose draft row
 		// the scan's cursor has already passed.
-		bb_draft_invalidate_referenced_cache( array( $concurrent ) );
+		bboss_draft_invalidate_referenced_cache( array( $concurrent ) );
 
-		$pending = bb_draft_peek_pending_reference_ids();
+		$pending = bboss_draft_peek_pending_reference_ids();
 
 		$this->assertContains(
 			$concurrent,
@@ -9820,20 +9820,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// Closing the window hands the ledger over and stops recording.
-		$closed = bb_draft_reference_scan_end();
+		$closed = bboss_draft_reference_scan_end();
 
 		$this->assertContains( $concurrent, $closed['ids'], 'Closing the window must return what it recorded.' );
 		$this->assertFalse(
-			bb_draft_reference_scan_is_active(),
+			bboss_draft_reference_scan_is_active(),
 			'The window must be closed afterwards, or the ledger grows for ever.'
 		);
 
 		// Outside a scan window nothing is recorded - the next scan reads the
 		// drafts straight from the database, so there is nothing to carry.
-		bb_draft_invalidate_referenced_cache( array( 112233 ) );
+		bboss_draft_invalidate_referenced_cache( array( 112233 ) );
 
 		$this->assertEmpty(
-			bb_draft_peek_pending_reference_ids()['ids'],
+			bboss_draft_peek_pending_reference_ids()['ids'],
 			'Outside a scan window the ledger must stay empty, or it grows unbounded on every save.'
 		);
 	}
@@ -9847,13 +9847,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * command can retry rather than treat it as "nothing left to do".
 	 */
 	public function test_pending_reference_ledger_overflow_is_reported_not_swallowed() {
-		bb_draft_reference_scan_begin();
+		bboss_draft_reference_scan_begin();
 
 		// One id past the cap.
-		$ids = range( 1, BB_DRAFT_PENDING_REFERENCE_CAP + 1 );
-		bb_draft_record_pending_reference_ids( $ids );
+		$ids = range( 1, BBOSS_DRAFT_PENDING_REFERENCE_CAP + 1 );
+		bboss_draft_record_pending_reference_ids( $ids );
 
-		$pending = bb_draft_peek_pending_reference_ids();
+		$pending = bboss_draft_peek_pending_reference_ids();
 
 		$this->assertTrue(
 			$pending['overflow'],
@@ -9862,14 +9862,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Once overflowed it must stay overflowed for the window - it cannot
 		// become provable again by recording more.
-		bb_draft_record_pending_reference_ids( array( 999999 ) );
+		bboss_draft_record_pending_reference_ids( array( 999999 ) );
 
 		$this->assertTrue(
-			bb_draft_peek_pending_reference_ids()['overflow'],
+			bboss_draft_peek_pending_reference_ids()['overflow'],
 			'Overflow must latch for the window.'
 		);
 
-		bb_draft_reference_scan_end();
+		bboss_draft_reference_scan_end();
 	}
 
 	/**
@@ -9890,10 +9890,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$data_key = 'draft_discussion_' . $forum_id;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -9903,7 +9903,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		foreach ( array( '5', 'true', '"a string"' ) as $scalar_json ) {
 			$_POST    = array();
@@ -9934,7 +9934,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 			ob_start();
 			try {
-				bb_post_topic_reply_draft();
+				bboss_post_topic_reply_draft();
 			} catch ( Throwable $e ) {
 				// Only the handler's own exit is expected; see the H-1 test for why
 				// this catches Throwable rather than Error.
@@ -9956,7 +9956,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Negative control: the primary draft still saved, so the narrowing did not
 		// simply abort the request before it did any work.
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'updated body',
@@ -9982,17 +9982,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_id = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$topic_id = self::factory()->post->create(
 			array(
-				'post_type'   => bbp_get_topic_post_type(),
+				'post_type'   => bboss_bbp_get_topic_post_type(),
 				'post_parent' => $forum_id,
 			)
 		);
 
 		$existing_key = 'draft_reply_' . $topic_id;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -10027,7 +10027,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		ob_start();
 		try {
-			bb_post_topic_reply_draft();
+			bboss_post_topic_reply_draft();
 		} catch ( Throwable $e ) {
 			// The handler's own exit is the one throw expected here;
 			// filter_draft_die_handler() raises it to make wp_send_json_*()
@@ -10055,7 +10055,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'A non-scalar data_key must not raise a PHP Error - it must be coerced at the boundary and rejected as an unusable key shape.'
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertSame(
 			'reply original',
@@ -10227,7 +10227,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * a file the member already uploaded survives the 6-hour orphan cron. The
 	 * composer uploads first and autosaves after, so by the time the cap refuses
 	 * the file is already on disk with `bp_media_saved = 0` - and unstamped is
-	 * exactly what bp_media_delete_orphaned_attachments() hard-deletes.
+	 * exactly what bboss_media_delete_orphaned_attachments() hard-deletes.
 	 *
 	 * The forum leg of this is
 	 * {@see test_size_capped_save_still_protects_uploaded_attachments()}. This is
@@ -10235,9 +10235,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * no coverage at all: moving its protection pass behind the size check left
 	 * the whole suite green.
 	 *
-	 * Mutation check: skip bb_draft_protect_payload_attachments() in
+	 * Mutation check: skip bboss_draft_protect_payload_attachments() in
 	 * bp-templates/bp-nouveau/includes/activity/ajax.php when the payload is
-	 * already over bb_draft_max_size(), and this goes red.
+	 * already over bboss_draft_max_size(), and this goes red.
 	 */
 	public function test_size_capped_activity_save_still_protects_uploaded_attachments() {
 		$user_id = self::factory()->user->create();
@@ -10267,7 +10267,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Premise: the cap really did refuse. Without this the test would pass
 		// for a build that simply accepted the oversized draft.
 		$this->assertSame( 'per_draft', $rejected, 'The oversized activity draft must still be refused - the fix must not weaken the cap.' );
-		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'Premise: a refused save stores no draft, so nothing else can release these stamps.' );
+		$this->assertSame( '', (string) bboss_get_user_meta( $user_id, 'draft_user', true ), 'Premise: a refused save stores no draft, so nothing else can release these stamps.' );
 
 		$this->assertSame(
 			'1',
@@ -10286,11 +10286,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * M9 / L7: disposing ONE inner forum draft must not release a stamp a
 	 * DIFFERENT usermeta row still references.
 	 *
-	 * bb_draft_dispose() has three release branches and only two were covered:
+	 * bboss_draft_dispose() has three release branches and only two were covered:
 	 * the whole-row branch ({@see test_dispose_keeps_a_stamp_a_different_row_still_references()})
-	 * and the batch path bb_draft_dispose_forum_inner_keys()
+	 * and the batch path bboss_draft_dispose_forum_inner_keys()
 	 * ({@see test_forum_inner_dispose_keeps_a_stamp_another_row_references()}).
-	 * The INNER-KEY branch of bb_draft_dispose() is the one the member's own
+	 * The INNER-KEY branch of bboss_draft_dispose() is the one the member's own
 	 * discard, the per-user budget eviction and the healer all route through, and
 	 * its cross-row retain set could be dropped with the suite staying green.
 	 *
@@ -10299,8 +10299,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * ordinary use, not a crafted payload.
 	 *
 	 * Mutation check: pass array() instead of
-	 * bb_draft_collect_other_referenced_ids() to bb_draft_unstamp_attachments()
-	 * in the inner-key branch of bb_draft_dispose(), and this goes red.
+	 * bboss_draft_collect_other_referenced_ids() to bboss_draft_unstamp_attachments()
+	 * in the inner-key branch of bboss_draft_dispose(), and this goes red.
 	 */
 	public function test_disposing_one_inner_forum_draft_keeps_a_stamp_another_row_references() {
 		$user_id = self::factory()->user->create();
@@ -10310,8 +10310,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Referenced by a GROUP activity row AND by one inner forum draft. The
 		// surviving forum sibling deliberately holds NO attachment, so the
 		// same-row retain set cannot be what protects it.
-		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bp_update_user_meta(
+		bboss_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
@@ -10325,14 +10325,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		$this->assertTrue(
-			bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_discussion_9' ),
+			bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_discussion_9' ),
 			'Premise: the inner draft must actually have been disposed.'
 		);
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertArrayNotHasKey( 'draft_discussion_9', $stored, 'Premise: the disposed inner draft must be gone from the row.' );
 		$this->assertArrayHasKey( 'draft_discussion_7', $stored, 'Premise: the sibling inner draft must survive.' );
 
@@ -10344,7 +10344,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// And it is a retain, not a blanket leak: once the last row that
 		// references it goes, the stamp is released as before.
-		bb_draft_dispose( $user_id, 'draft_group_5' );
+		bboss_draft_dispose( $user_id, 'draft_group_5' );
 
 		$this->assertSame(
 			'',
@@ -10375,7 +10375,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 */
 	public function record_reference_during_sweep( $batch_size ) {
 		if ( $this->mid_sweep_reference_id ) {
-			bb_draft_invalidate_referenced_cache( array( $this->mid_sweep_reference_id ) );
+			bboss_draft_invalidate_referenced_cache( array( $this->mid_sweep_reference_id ) );
 		}
 
 		return $batch_size;
@@ -10399,7 +10399,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * that is the half of the behaviour the sibling fold cannot stand in for.
 	 *
 	 * Mutation check: drop the `foreach ( $pending['ids'] ... )` fold before the
-	 * set_site_transient() in bb_drafts_release_orphaned_draft_stamps(), and this
+	 * set_site_transient() in bboss_drafts_release_orphaned_draft_stamps(), and this
 	 * goes red.
 	 */
 	public function test_reference_added_during_the_scan_is_folded_into_the_cached_set() {
@@ -10416,7 +10416,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'record_reference_during_sweep' ) );
 
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'record_reference_during_sweep' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
@@ -10476,7 +10476,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
 		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'record_reference_during_sweep' ) );
 
-		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		$result = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'record_reference_during_sweep' ) );
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
@@ -10508,15 +10508,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * and - since the token no longer moves afterwards - cache that set for the
 	 * full TTL.
 	 *
-	 * Mutation check: move the bb_draft_invalidate_referenced_cache() call in
-	 * bp-forums/core/actions.php above the bp_update_user_meta() row write, and
+	 * Mutation check: move the bboss_draft_invalidate_referenced_cache() call in
+	 * bp-forums/core/actions.php above the bboss_update_user_meta() row write, and
 	 * this goes red.
 	 */
 	public function test_forum_draft_save_bumps_the_referenced_token_after_the_row_write() {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$mine  = $this->make_draft_attachment( $user_id );
 
 		// Cold cache, so the helper cannot short-circuit on a set that already
@@ -10537,7 +10537,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// Premise: the save was accepted and the attachment really is referenced
 		// by the STORED row.
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertArrayHasKey( 'draft_discussion_' . $forum, $stored, 'Premise: the draft row must have been written.' );
 		$this->assertSame( '1', (string) get_post_meta( $mine, 'bb_media_draft', true ), 'Premise: the kept attachment must be stamped.' );
 
@@ -10556,9 +10556,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * comments that they match each other's order, so both are pinned rather than
 	 * leaving one to drift.
 	 *
-	 * Mutation check: move the bb_draft_invalidate_referenced_cache() call in
+	 * Mutation check: move the bboss_draft_invalidate_referenced_cache() call in
 	 * bp-templates/bp-nouveau/includes/activity/ajax.php above the
-	 * bp_update_user_meta() row write, and this goes red.
+	 * bboss_update_user_meta() row write, and this goes red.
 	 */
 	public function test_activity_draft_save_bumps_the_referenced_token_after_the_row_write() {
 		$user_id = self::factory()->user->create();
@@ -10580,7 +10580,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->stop_recording_draft_write_order();
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 		$this->assertSame( 'an activity draft holding one upload', $stored['data']['content'], 'Premise: the draft row must have been written.' );
 		$this->assertSame( '1', (string) get_post_meta( $mine, 'bb_media_draft', true ), 'Premise: the kept attachment must be stamped.' );
 
@@ -10602,7 +10602,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => 100,
 		);
 
-		bp_update_user_meta( $user_id, 'draft_group_1', $oldest );
+		bboss_update_user_meta( $user_id, 'draft_group_1', $oldest );
 
 		$cap = function () {
 			return 400;
@@ -10610,12 +10610,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$held_when_removed = null;
 		$die_after_delete  = function ( $meta_ids, $object_id, $meta_key ) use ( $user_id, &$held_when_removed ) {
-			if ( (int) $object_id !== $user_id || bp_get_user_meta_key( 'draft_group_1' ) !== $meta_key ) {
+			if ( (int) $object_id !== $user_id || bboss_get_user_meta_key( 'draft_group_1' ) !== $meta_key ) {
 				return;
 			}
 
 			// The hold and its overflow: this test's small budget also caps the hold.
-			$held_when_removed = array_key_exists( 'draft_group_1', array_merge( bb_draft_get_evicted_overflow( $user_id, true ), bb_draft_get_evicted_hold( $user_id ) ) );
+			$held_when_removed = array_key_exists( 'draft_group_1', array_merge( bboss_draft_get_evicted_overflow( $user_id, true ), bboss_draft_get_evicted_hold( $user_id ) ) );
 
 			// The request dies between removing the row and anything after it.
 			throw new RuntimeException( 'request killed after the row was removed' );
@@ -10627,7 +10627,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$died = false;
 
 		try {
-			bb_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
+			bboss_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
 		} catch ( RuntimeException $e ) {
 			$died = true;
 		}
@@ -10639,7 +10639,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'Premise: the draft row is gone.' );
 		$this->assertTrue( $held_when_removed, 'The draft is already held when its row is removed.' );
 
-		$held = bb_draft_get_held_entry( $user_id, 'draft_group_1' );
+		$held = bboss_draft_get_held_entry( $user_id, 'draft_group_1' );
 
 		$this->assertIsArray( $held, 'The next request still finds the draft to hand back.' );
 		$this->assertSame( $oldest['data'], $held['data'], 'The held copy is the whole draft.' );
@@ -10659,7 +10659,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => 100,
 		);
 
-		bp_update_user_meta( $user_id, 'draft_group_1', $entry );
+		bboss_update_user_meta( $user_id, 'draft_group_1', $entry );
 
 		$cap = function () {
 			return 400;
@@ -10668,24 +10668,24 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// A parallel request evicts the same draft between this request's hold
 		// write and its removal: it removes the row and holds the draft itself.
 		$parallel_eviction = function ( $meta_id, $object_id, $meta_key ) use ( $user_id, $entry ) {
-			if ( (int) $object_id === $user_id && 'bb_draft_has_evicted_hold' === $meta_key && metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_group_1' ) ) ) {
-				bp_delete_user_meta( $user_id, 'draft_group_1' );
-				bb_draft_hold_evicted( $user_id, array( 'draft_group_1' => $entry ) );
+			if ( (int) $object_id === $user_id && 'bb_draft_has_evicted_hold' === $meta_key && metadata_exists( 'user', $user_id, bboss_get_user_meta_key( 'draft_group_1' ) ) ) {
+				bboss_delete_user_meta( $user_id, 'draft_group_1' );
+				bboss_draft_hold_evicted( $user_id, array( 'draft_group_1' => $entry ) );
 			}
 		};
 
 		add_filter( 'bb_draft_user_total_max_size', $cap );
 		add_action( 'added_user_meta', $parallel_eviction, 10, 3 );
 
-		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
+		$result = bboss_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
 
 		remove_action( 'added_user_meta', $parallel_eviction, 10 );
 		remove_filter( 'bb_draft_user_total_max_size', $cap );
 
 		$this->assertSame( array(), $result['evicted'], 'Premise: this request removed nothing itself.' );
-		$this->assertSame( '', bp_get_user_meta( $user_id, 'draft_group_1', true ), 'Premise: the row is gone.' );
+		$this->assertSame( '', bboss_get_user_meta( $user_id, 'draft_group_1', true ), 'Premise: the row is gone.' );
 
-		$held = bb_draft_get_held_entry( $user_id, 'draft_group_1' );
+		$held = bboss_draft_get_held_entry( $user_id, 'draft_group_1' );
 
 		$this->assertIsArray( $held, 'The draft is still held, so it is not lost.' );
 		$this->assertSame( $entry['data'], $held['data'], 'The held copy is the whole draft.' );
@@ -10707,15 +10707,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 
 		$held_when_written = null;
 		$die_after_write   = function ( $meta_id, $object_id, $meta_key ) use ( $user_id, &$held_when_written ) {
-			if ( (int) $object_id !== $user_id || bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) !== $meta_key ) {
+			if ( (int) $object_id !== $user_id || bboss_get_user_meta_key( 'bb_user_topic_reply_draft' ) !== $meta_key ) {
 				return;
 			}
 
-			$held_when_written = array_key_exists( 'bb_user_topic_reply_draft:reply_1', bb_draft_get_evicted_hold( $user_id ) );
+			$held_when_written = array_key_exists( 'bb_user_topic_reply_draft:reply_1', bboss_draft_get_evicted_hold( $user_id ) );
 
 			throw new RuntimeException( 'request killed after the row was written' );
 		};
@@ -10725,20 +10725,20 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$died = false;
 
 		try {
-			bb_draft_heal_forum_row( $user_id );
+			bboss_draft_heal_forum_row( $user_id );
 		} catch ( RuntimeException $e ) {
 			$died = true;
 		}
 
 		remove_action( 'updated_user_meta', $die_after_write, 10 );
 
-		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$stored = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$this->assertTrue( $died, 'Premise: the request died right after the row write.' );
 		$this->assertArrayNotHasKey( 'reply_1', $stored, 'Premise: the written row no longer holds the oldest reply.' );
 		$this->assertTrue( $held_when_written, 'The trimmed reply is already held when the row is written without it.' );
 
-		$held = bb_draft_get_held_entry( $user_id, 'bb_user_topic_reply_draft:reply_1' );
+		$held = bboss_draft_get_held_entry( $user_id, 'bb_user_topic_reply_draft:reply_1' );
 
 		$this->assertIsArray( $held, 'The next request still finds the reply to hand back.' );
 		$this->assertSame( $row['reply_1']['data'], $held['data'], 'The held copy is the whole reply.' );
@@ -10756,15 +10756,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'_draft_saved_at' => 100,
 		);
 
-		bp_update_user_meta( $user_id, 'draft_group_7', $draft );
+		bboss_update_user_meta( $user_id, 'draft_group_7', $draft );
 
 		$held_when_removed = null;
 		$die_after_delete  = function ( $meta_ids, $object_id, $meta_key ) use ( $user_id, &$held_when_removed ) {
-			if ( (int) $object_id !== $user_id || bp_get_user_meta_key( 'draft_group_7' ) !== $meta_key ) {
+			if ( (int) $object_id !== $user_id || bboss_get_user_meta_key( 'draft_group_7' ) !== $meta_key ) {
 				return;
 			}
 
-			$held_when_removed = array_key_exists( 'draft_group_7', array_merge( bb_draft_get_evicted_overflow( $user_id, true ), bb_draft_get_evicted_hold( $user_id ) ) );
+			$held_when_removed = array_key_exists( 'draft_group_7', array_merge( bboss_draft_get_evicted_overflow( $user_id, true ), bboss_draft_get_evicted_hold( $user_id ) ) );
 
 			throw new RuntimeException( 'request killed after the row was removed' );
 		};
@@ -10774,7 +10774,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$died = false;
 
 		try {
-			bb_draft_hold_oversized_draft( $user_id, 'draft_group_7' );
+			bboss_draft_hold_oversized_draft( $user_id, 'draft_group_7' );
 		} catch ( RuntimeException $e ) {
 			$died = true;
 		}
@@ -10785,7 +10785,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_7' ), 'Premise: the draft row is gone.' );
 		$this->assertTrue( $held_when_removed, 'The draft is already held when its row is removed.' );
 
-		$held = bb_draft_get_held_entry( $user_id, 'draft_group_7' );
+		$held = bboss_draft_get_held_entry( $user_id, 'draft_group_7' );
 
 		$this->assertIsArray( $held, 'The next visit still finds the draft to hand back.' );
 		$this->assertSame( $draft['data'], $held['data'], 'The held copy is the whole draft.' );
@@ -10805,12 +10805,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$keys = array();
 
 		foreach ( array( 'a', 'b', 'c' ) as $name ) {
-			$keys[ $name ] = 'draft_discussion_' . self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+			$keys[ $name ] = 'draft_discussion_' . self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		}
 
 		$media = wp_json_encode( array( array( 'id' => $attachment_id ) ) );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -10853,7 +10853,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$wpdb->update( $wpdb->posts, array( 'post_date_gmt' => $old, 'post_date' => $old ), array( 'ID' => $attachment_id ) );
 		clean_post_cache( $attachment_id );
 
-		bp_media_delete_orphaned_attachments();
+		bboss_media_delete_orphaned_attachments();
 		clean_post_cache( $attachment_id );
 
 		return null === get_post( $attachment_id );
@@ -10868,8 +10868,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * set no longer sees A, so before the fix the stamp was released and the
 	 * orphan cron hard-deleted the file the handed-back draft A still used.
 	 *
-	 * Mutation check: remove the bb_draft_attachment_is_eviction_protected()
-	 * skip from bb_draft_release_replaced_attachments() and this goes red.
+	 * Mutation check: remove the bboss_draft_attachment_is_eviction_protected()
+	 * skip from bboss_draft_release_replaced_attachments() and this goes red.
 	 */
 	public function test_discard_keeps_file_an_evicted_sibling_still_uses() {
 		$user_id = self::factory()->user->create();
@@ -10890,7 +10890,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->drive_forum_draft_discard( $key_b );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertArrayNotHasKey( $key_b, (array) $row, 'Premise: draft B was discarded.' );
 
 		$this->assertSame(
@@ -10913,8 +10913,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$only = $this->make_draft_attachment( $user_id );
 		update_post_meta( $only, 'bb_media_draft', 1 );
 
-		$key = 'draft_discussion_' . self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		bp_update_user_meta(
+		$key = 'draft_discussion_' . self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			wp_slash(
@@ -10942,8 +10942,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * The activity discard's delete_media branch must not hard-delete a file
 	 * an evicted draft, handed back to the browser, still references.
 	 *
-	 * Mutation check: remove the bb_draft_attachment_is_eviction_protected()
-	 * condition from the delete_media loop in bb_nouveau_ajax_post_draft_activity()
+	 * Mutation check: remove the bboss_draft_attachment_is_eviction_protected()
+	 * condition from the delete_media loop in bboss_nouveau_ajax_post_draft_activity()
 	 * and this goes red - the file is permanently deleted.
 	 */
 	public function test_activity_discard_delete_media_spares_an_evicted_drafts_file() {
@@ -10955,8 +10955,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Another draft using the file was evicted and handed back moments ago.
 		update_post_meta( $shared, 'bb_draft_evicted_at', time() );
 
-		bp_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		$this->drive_activity_draft_raw(
 			array(
@@ -10967,7 +10967,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$this->assertEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'Premise: the draft was discarded.' );
+		$this->assertEmpty( bboss_get_user_meta( $user_id, 'draft_user', true ), 'Premise: the draft was discarded.' );
 		$this->assertInstanceOf( 'WP_Post', get_post( $shared ), 'delete_media must not hard-delete a file an evicted draft still uses.' );
 		$this->assertSame( '1', (string) get_post_meta( $shared, 'bb_media_draft', true ), 'The file keeps its draft stamp.' );
 	}
@@ -10981,19 +10981,19 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id       = self::factory()->user->create();
 		$attachment_id = $this->make_draft_attachment( $user_id );
 
-		$this->assertFalse( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'No marker, no protection.' );
+		$this->assertFalse( bboss_draft_attachment_is_eviction_protected( $attachment_id ), 'No marker, no protection.' );
 
 		update_post_meta( $attachment_id, 'bb_draft_evicted_at', time() - DAY_IN_SECONDS );
-		$this->assertTrue( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'Inside the retention window.' );
+		$this->assertTrue( bboss_draft_attachment_is_eviction_protected( $attachment_id ), 'Inside the retention window.' );
 
-		update_post_meta( $attachment_id, 'bb_draft_evicted_at', time() - bb_draft_retention_seconds() - HOUR_IN_SECONDS );
-		$this->assertFalse( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'Past the retention window.' );
+		update_post_meta( $attachment_id, 'bb_draft_evicted_at', time() - bboss_draft_retention_seconds() - HOUR_IN_SECONDS );
+		$this->assertFalse( bboss_draft_attachment_is_eviction_protected( $attachment_id ), 'Past the retention window.' );
 
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
-		$this->assertTrue( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'Expiry off keeps it for ever.' );
+		$this->assertTrue( bboss_draft_attachment_is_eviction_protected( $attachment_id ), 'Expiry off keeps it for ever.' );
 		remove_filter( 'bb_draft_retention_days', '__return_zero' );
 
-		$this->assertFalse( bb_draft_attachment_is_eviction_protected( 0 ), 'An empty ID is never protected.' );
+		$this->assertFalse( bboss_draft_attachment_is_eviction_protected( 0 ), 'An empty ID is never protected.' );
 	}
 
 	/**
@@ -11008,13 +11008,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id       = self::factory()->user->create();
 		$attachment_id = $this->make_draft_attachment( $user_id );
 
-		update_site_option( bb_draft_eviction_file_ledger_option(), array( $attachment_id => time() ) );
-		$this->assertTrue( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'A fresh ledger entry protects the file.' );
+		update_site_option( bboss_draft_eviction_file_ledger_option(), array( $attachment_id => time() ) );
+		$this->assertTrue( bboss_draft_attachment_is_eviction_protected( $attachment_id ), 'A fresh ledger entry protects the file.' );
 
-		update_site_option( bb_draft_eviction_file_ledger_option(), array( $attachment_id => time() - bb_draft_retention_seconds() - HOUR_IN_SECONDS ) );
-		$this->assertFalse( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'An expired ledger entry does not.' );
+		update_site_option( bboss_draft_eviction_file_ledger_option(), array( $attachment_id => time() - bboss_draft_retention_seconds() - HOUR_IN_SECONDS ) );
+		$this->assertFalse( bboss_draft_attachment_is_eviction_protected( $attachment_id ), 'An expired ledger entry does not.' );
 
-		delete_site_option( bb_draft_eviction_file_ledger_option() );
+		delete_site_option( bboss_draft_eviction_file_ledger_option() );
 	}
 
 	/**
@@ -11022,7 +11022,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * so a file it protects stays protected for ever, as the sweep promises.
 	 *
 	 * Mutation check: drop the `1 > $retention_seconds` keep in
-	 * bb_draft_get_evicted_attachment_ledger_ids() and the prune empties the
+	 * bboss_draft_get_evicted_attachment_ledger_ids() and the prune empties the
 	 * ledger, so this goes red.
 	 */
 	public function test_prune_keeps_the_ledger_when_expiry_is_off() {
@@ -11033,15 +11033,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id       = self::factory()->user->create();
 		$attachment_id = $this->make_draft_attachment( $user_id );
 
-		update_site_option( bb_draft_eviction_file_ledger_option(), array( $attachment_id => time() - 400 * DAY_IN_SECONDS ) );
+		update_site_option( bboss_draft_eviction_file_ledger_option(), array( $attachment_id => time() - 400 * DAY_IN_SECONDS ) );
 
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
-		bb_drafts_prune_evicted_holds();
-		$protected = bb_draft_attachment_is_eviction_protected( $attachment_id );
+		bboss_drafts_prune_evicted_holds();
+		$protected = bboss_draft_attachment_is_eviction_protected( $attachment_id );
 		remove_filter( 'bb_draft_retention_days', '__return_zero' );
 
-		$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
-		delete_site_option( bb_draft_eviction_file_ledger_option() );
+		$ledger = get_site_option( bboss_draft_eviction_file_ledger_option(), array() );
+		delete_site_option( bboss_draft_eviction_file_ledger_option() );
 
 		$this->assertArrayHasKey( $attachment_id, (array) $ledger, 'The prune keeps the ledger entry when expiry is off.' );
 		$this->assertTrue( $protected, 'The file stays protected.' );
@@ -11086,7 +11086,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		add_filter( 'query', array( $this, 'break_draft_aggregate_query' ) );
-		$failed = bb_drafts_oneshot_batch( 0 );
+		$failed = bboss_drafts_oneshot_batch( 0 );
 		remove_filter( 'query', array( $this, 'break_draft_aggregate_query' ) );
 
 		$state = get_site_option( 'bb_draft_oneshot_state' );
@@ -11096,11 +11096,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( is_array( $state ) && is_array( $state['heavy_users'] ), 'No member list is recorded from a failed query.' );
 		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'Premise: nothing was evicted yet.' );
 
-		$retried = bb_drafts_oneshot_batch( 0 );
+		$retried = bboss_drafts_oneshot_batch( 0 );
 
 		$this->assertTrue( $retried['complete'], 'The retry finishes the heal.' );
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'The retry reaches stage 2 and evicts the oldest draft.' );
-		$this->assertArrayHasKey( 'draft_group_1', bb_draft_get_evicted_hold( $user_id ), 'The evicted draft is held for the hand-back.' );
+		$this->assertArrayHasKey( 'draft_group_1', bboss_draft_get_evicted_hold( $user_id ), 'The evicted draft is held for the hand-back.' );
 	}
 
 	/**
@@ -11113,10 +11113,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_user_meta_budget', '__return_zero' );
 		add_filter( 'bb_draft_evicted_hold_seconds', '__return_zero' );
 
-		$this->assertSame( 100 * KB_IN_BYTES, bb_draft_max_size() );
-		$this->assertSame( 300 * KB_IN_BYTES, bb_draft_user_total_max_size() );
-		$this->assertSame( 800 * KB_IN_BYTES, bb_draft_user_meta_budget() );
-		$this->assertSame( HOUR_IN_SECONDS, bb_draft_evicted_hold_seconds() );
+		$this->assertSame( 100 * KB_IN_BYTES, bboss_draft_max_size() );
+		$this->assertSame( 300 * KB_IN_BYTES, bboss_draft_user_total_max_size() );
+		$this->assertSame( 800 * KB_IN_BYTES, bboss_draft_user_meta_budget() );
+		$this->assertSame( HOUR_IN_SECONDS, bboss_draft_evicted_hold_seconds() );
 
 		remove_filter( 'bb_draft_max_size', '__return_zero' );
 		remove_filter( 'bb_draft_user_total_max_size', '__return_zero' );
@@ -11128,7 +11128,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		};
 
 		add_filter( 'bb_draft_max_size', $custom );
-		$this->assertSame( 50 * KB_IN_BYTES, bb_draft_max_size(), 'A positive value is still honoured.' );
+		$this->assertSame( 50 * KB_IN_BYTES, bboss_draft_max_size(), 'A positive value is still honoured.' );
 		remove_filter( 'bb_draft_max_size', $custom );
 	}
 
@@ -11138,7 +11138,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 */
 	public function test_strip_removes_line_wrapped_base64_payloads() {
 		$wrapped = '<p>Keep me</p><img src="data:image/png;base64,AAAA' . "\n" . 'BBBB' . "\r\n" . 'CCCC==" alt="x"><p>and me</p>';
-		$out     = bb_draft_strip_data_urls( $wrapped );
+		$out     = bboss_draft_strip_data_urls( $wrapped );
 
 		$this->assertStringContainsString( 'Keep me', $out );
 		$this->assertStringContainsString( 'and me', $out );
@@ -11146,13 +11146,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertStringNotContainsString( 'CCCC', $out );
 
 		$large = '<img src="data:image/png;base64,' . str_repeat( "QUFB\n", 400000 ) . '">';
-		$out   = bb_draft_strip_data_urls( $large );
+		$out   = bboss_draft_strip_data_urls( $large );
 
 		$this->assertSame( PREG_NO_ERROR, preg_last_error(), 'No PCRE limit is hit on a 2MB payload.' );
 		$this->assertLessThan( 100, strlen( $out ), 'The 2MB payload is removed.' );
 
 		$prose = 'Writing about data: URIs; base64, is an encoding.';
-		$this->assertSame( $prose, bb_draft_strip_data_urls( $prose ), 'Prose that mentions data: is left alone.' );
+		$this->assertSame( $prose, bboss_draft_strip_data_urls( $prose ), 'Prose that mentions data: is left alone.' );
 	}
 
 	/**
@@ -11164,7 +11164,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$user_id = self::factory()->user->create();
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -11176,13 +11176,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		wp_cache_delete( 'notoptions', 'options' );
 
-		bb_drafts_prune_evicted_holds();
+		bboss_drafts_prune_evicted_holds();
 
 		$notoptions = wp_cache_get( 'notoptions', 'options' );
-		$overflow   = bb_draft_evicted_overflow_option( $user_id );
+		$overflow   = bboss_draft_evicted_overflow_option( $user_id );
 
 		$this->assertFalse( is_array( $notoptions ) && isset( $notoptions[ $overflow ] ), 'No overflow miss is cached for this member.' );
-		$this->assertArrayHasKey( 'draft_user', bb_draft_get_evicted_hold( $user_id ), 'A hold within its time is kept.' );
+		$this->assertArrayHasKey( 'draft_user', bboss_draft_get_evicted_hold( $user_id ), 'A hold within its time is kept.' );
 	}
 
 	/**
@@ -11195,7 +11195,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$expired = array(
 			'draft_user' => array(
 				'entry' => array( 'data' => array( 'content' => 'old' ) ),
-				'at'    => time() - bb_draft_evicted_hold_seconds() - 60,
+				'at'    => time() - bboss_draft_evicted_hold_seconds() - 60,
 			),
 		);
 
@@ -11205,9 +11205,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			update_option( 'bb_draft_evicted_' . ( $first + $i ), $expired, false );
 		}
 
-		bb_drafts_prune_evicted_holds();
+		bboss_drafts_prune_evicted_holds();
 
-		$this->assertSame( array(), bb_draft_get_evicted_hold( $first + 519 ), 'An expired hold beyond the first 500 rows is pruned.' );
+		$this->assertSame( array(), bboss_draft_get_evicted_hold( $first + 519 ), 'An expired hold beyond the first 500 rows is pruned.' );
 		$this->assertFalse( get_site_option( 'bb_draft_prune_cursor' ), 'The scan reached the end, so the cursor is cleared.' );
 	}
 
@@ -11222,13 +11222,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		update_user_meta( $user_id, 'draft_user', $read );
-		$this->assertTrue( bb_draft_row_unchanged( $user_id, 'draft_user', $read ) );
+		$this->assertTrue( bboss_draft_row_unchanged( $user_id, 'draft_user', $read ) );
 
 		$newer         = $read;
 		$newer['data'] = array( 'content' => 'saved meanwhile' );
 		update_user_meta( $user_id, 'draft_user', $newer );
 
-		$this->assertFalse( bb_draft_row_unchanged( $user_id, 'draft_user', $read ), 'A newer save is detected.' );
+		$this->assertFalse( bboss_draft_row_unchanged( $user_id, 'draft_user', $read ), 'A newer save is detected.' );
 	}
 
 	/**
@@ -11247,7 +11247,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			array( 'meta_value' => maybe_serialize( $newer ) ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			array(
 				'user_id'  => $user_id,
-				'meta_key' => bp_get_user_meta_key( $meta_key ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_key' => bboss_get_user_meta_key( $meta_key ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			)
 		);
 	}
@@ -11265,9 +11265,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	private function prime_heal_race( $user_id, $meta_key, $payload ) {
 		$big = 'image' === $payload
 			? '<p>older</p><img src="data:image/png;base64,' . str_repeat( 'A', 200 * KB_IN_BYTES ) . '">'
-			: str_repeat( 'x', bb_draft_max_size() + 100 );
+			: str_repeat( 'x', bboss_draft_max_size() + 100 );
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			$meta_key,
 			array(
@@ -11278,7 +11278,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		// The heal's read: the oversized row is now the cached copy.
-		bp_get_user_meta( $user_id, $meta_key, true );
+		bboss_get_user_meta( $user_id, $meta_key, true );
 
 		$newer = array(
 			'data_key'        => $meta_key,
@@ -11297,9 +11297,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$newer   = $this->prime_heal_race( $user_id, 'draft_group_5', 'image' );
 
-		bb_draft_salvage_oversized_draft( $user_id, 'draft_group_5' );
+		bboss_draft_salvage_oversized_draft( $user_id, 'draft_group_5' );
 
-		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'draft_group_5' ) );
+		$this->assertSame( $newer, bboss_draft_fresh_value( $user_id, 'draft_group_5' ) );
 	}
 
 	/**
@@ -11309,8 +11309,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$newer   = $this->prime_heal_race( $user_id, 'draft_group_5', 'text' );
 
-		$this->assertFalse( bb_draft_hold_oversized_draft( $user_id, 'draft_group_5' ) );
-		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'draft_group_5' ) );
+		$this->assertFalse( bboss_draft_hold_oversized_draft( $user_id, 'draft_group_5' ) );
+		$this->assertSame( $newer, bboss_draft_fresh_value( $user_id, 'draft_group_5' ) );
 	}
 
 	/**
@@ -11320,8 +11320,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$newer   = $this->prime_heal_race( $user_id, 'draft_group_5', 'image' );
 
-		$this->assertSame( 0, bb_draft_shed_user_drafts( $user_id ) );
-		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'draft_group_5' ) );
+		$this->assertSame( 0, bboss_draft_shed_user_drafts( $user_id ) );
+		$this->assertSame( $newer, bboss_draft_fresh_value( $user_id, 'draft_group_5' ) );
 	}
 
 	/**
@@ -11330,18 +11330,18 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_forum_heal_leaves_a_live_save_alone() {
 		$user_id = self::factory()->user->create();
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			'bb_user_topic_reply_draft',
 			array(
 				'draft_reply_1' => array(
 					'data_key'        => 'draft_reply_1',
-					'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ) ),
+					'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bboss_draft_max_size() + 100 ) ),
 					'_draft_saved_at' => 100,
 				),
 			)
 		);
-		bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 		$newer = array(
 			'draft_reply_1' => array(
@@ -11352,8 +11352,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 		$this->store_live_save_behind_cache( $user_id, 'bb_user_topic_reply_draft', $newer );
 
-		$this->assertSame( 0, bb_draft_heal_forum_row( $user_id ) );
-		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'bb_user_topic_reply_draft' ) );
+		$this->assertSame( 0, bboss_draft_heal_forum_row( $user_id ) );
+		$this->assertSame( $newer, bboss_draft_fresh_value( $user_id, 'bb_user_topic_reply_draft' ) );
 	}
 
 	/**
@@ -11375,7 +11375,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function test_promote_evicted_writes_under_the_hold_lock() {
 		$user_id = self::factory()->user->create();
 
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$user_id,
 			array(),
 			array(
@@ -11389,7 +11389,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		$hold_name = bb_draft_evicted_hold_option( $user_id );
+		$hold_name = bboss_draft_evicted_hold_option( $user_id );
 		$unlocked  = 0;
 		$check     = function ( $option ) use ( &$unlocked, $hold_name, $user_id ) {
 			if ( 0 === strpos( (string) $option, $hold_name ) && ! $this->hold_lock_is_held( $user_id ) ) {
@@ -11402,7 +11402,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			add_action( $hook, $check );
 		}
 
-		$moved = bb_draft_promote_evicted(
+		$moved = bboss_draft_promote_evicted(
 			$user_id,
 			function ( $key ) {
 				return 'draft_group_9' === $key;
@@ -11414,7 +11414,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		$this->assertArrayHasKey( 'draft_group_9', $moved );
-		$this->assertArrayHasKey( 'draft_group_9', bb_draft_get_evicted_hold( $user_id ), 'The waiting draft moved into the hold.' );
+		$this->assertArrayHasKey( 'draft_group_9', bboss_draft_get_evicted_hold( $user_id ), 'The waiting draft moved into the hold.' );
 		$this->assertSame( 0, $unlocked, 'The hold was written without the member lock.' );
 		$this->assertFalse( $this->hold_lock_is_held( $user_id ), 'The lock is released.' );
 	}
@@ -11427,7 +11427,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$expired = self::factory()->user->create();
 		$current = self::factory()->user->create();
 
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$expired,
 			array(
 				'draft_group_1' => array(
@@ -11439,7 +11439,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 				),
 			)
 		);
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$current,
 			array(
 				'draft_group_2' => array(
@@ -11464,15 +11464,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			add_action( $hook, $check );
 		}
 
-		bb_drafts_prune_evicted_holds();
+		bboss_drafts_prune_evicted_holds();
 
 		foreach ( $hooks as $hook ) {
 			remove_action( $hook, $check );
 		}
 
 		$this->assertSame( array( array( $expired, true ) ), $writes, 'Only the expired hold is written, and under its lock.' );
-		$this->assertSame( array(), bb_draft_get_evicted_hold( $expired ) );
-		$this->assertArrayHasKey( 'draft_group_2', bb_draft_get_evicted_hold( $current ) );
+		$this->assertSame( array(), bboss_draft_get_evicted_hold( $expired ) );
+		$this->assertArrayHasKey( 'draft_group_2', bboss_draft_get_evicted_hold( $current ) );
 	}
 
 	/**
@@ -11480,10 +11480,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * with the plugin.
 	 */
 	public function test_deactivation_clears_recurring_draft_events() {
-		bb_drafts_schedule_cleanup();
+		bboss_drafts_schedule_cleanup();
 		$this->assertNotFalse( wp_next_scheduled( 'bb_draft_cleanup_hook' ), 'Premise: the cleanup is scheduled.' );
 
-		bb_drafts_unschedule_cleanup();
+		bboss_drafts_unschedule_cleanup();
 
 		$this->assertFalse( wp_next_scheduled( 'bb_draft_cleanup_hook' ) );
 		$this->assertFalse( wp_next_scheduled( 'bb_draft_stamp_release_hook' ) );
@@ -11510,19 +11510,19 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'bb_draft_key'  => 'draft_user',
 			'bb_draft_base' => 'none',
 		);
-		$this->assertSame( '', bb_draft_activity_publish_key( 'draft_group_5', $user_id ), 'A draft the composer never showed is kept.' );
+		$this->assertSame( '', bboss_draft_activity_publish_key( 'draft_group_5', $user_id ), 'A draft the composer never showed is kept.' );
 
 		$_POST['bb_draft_base'] = 'revAAAAAAAA';
-		$this->assertSame( 'draft_user', bb_draft_activity_publish_key( 'draft_group_5', $user_id ), 'The composer\'s own key is cleared, not the posted group\'s.' );
+		$this->assertSame( 'draft_user', bboss_draft_activity_publish_key( 'draft_group_5', $user_id ), 'The composer\'s own key is cleared, not the posted group\'s.' );
 
 		$_POST['bb_draft_key'] = '';
-		$this->assertSame( '', bb_draft_activity_publish_key( 'draft_user', $user_id ), 'An edit clears no draft.' );
+		$this->assertSame( '', bboss_draft_activity_publish_key( 'draft_user', $user_id ), 'An edit clears no draft.' );
 
 		$_POST['bb_draft_key'] = 'wp_capabilities';
-		$this->assertSame( '', bb_draft_activity_publish_key( 'draft_user', $user_id ), 'A key that is not a draft key is never cleared.' );
+		$this->assertSame( '', bboss_draft_activity_publish_key( 'draft_user', $user_id ), 'A key that is not a draft key is never cleared.' );
 
 		$_POST = array();
-		$this->assertSame( 'draft_group_5', bb_draft_activity_publish_key( 'draft_group_5', $user_id ), 'An older script sending no key keeps the old behaviour.' );
+		$this->assertSame( 'draft_group_5', bboss_draft_activity_publish_key( 'draft_group_5', $user_id ), 'An older script sending no key keeps the old behaviour.' );
 	}
 }
 

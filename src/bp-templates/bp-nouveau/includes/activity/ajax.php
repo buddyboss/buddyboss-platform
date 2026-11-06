@@ -15,109 +15,109 @@ add_action(
 		$ajax_actions = array(
 			array(
 				'activity_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => true,
 				),
 			),
 			array(
 				'get_single_activity_content' => array(
-					'function' => 'bp_nouveau_ajax_get_single_activity_content',
+					'function' => 'bboss_nouveau_ajax_get_single_activity_content',
 					'nopriv'   => true,
 				),
 			),
 			array(
 				'activity_mark_fav' => array(
-					'function' => 'bp_nouveau_ajax_mark_activity_favorite',
+					'function' => 'bboss_nouveau_ajax_mark_activity_favorite',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'activity_mark_unfav' => array(
-					'function' => 'bp_nouveau_ajax_unmark_activity_favorite',
+					'function' => 'bboss_nouveau_ajax_unmark_activity_favorite',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'activity_clear_new_mentions' => array(
-					'function' => 'bp_nouveau_ajax_clear_new_mentions',
+					'function' => 'bboss_nouveau_ajax_clear_new_mentions',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'delete_activity' => array(
-					'function' => 'bp_nouveau_ajax_delete_activity',
+					'function' => 'bboss_nouveau_ajax_delete_activity',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'new_activity_comment' => array(
-					'function' => 'bp_nouveau_ajax_new_activity_comment',
+					'function' => 'bboss_nouveau_ajax_new_activity_comment',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'bp_nouveau_get_activity_objects' => array(
-					'function' => 'bp_nouveau_ajax_get_activity_objects',
+					'function' => 'bboss_nouveau_ajax_get_activity_objects',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'post_update' => array(
-					'function' => 'bp_nouveau_ajax_post_update',
+					'function' => 'bboss_nouveau_ajax_post_update',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'bp_spam_activity' => array(
-					'function' => 'bp_nouveau_ajax_spam_activity',
+					'function' => 'bboss_nouveau_ajax_spam_activity',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'activity_update_privacy' => array(
-					'function' => 'bp_nouveau_ajax_activity_update_privacy',
+					'function' => 'bboss_nouveau_ajax_activity_update_privacy',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'post_draft_activity' => array(
-					'function' => 'bb_nouveau_ajax_post_draft_activity',
+					'function' => 'bboss_nouveau_ajax_post_draft_activity',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'bb_get_draft_activity' => array(
-					'function' => 'bb_nouveau_ajax_get_draft_activity',
+					'function' => 'bboss_nouveau_ajax_get_draft_activity',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'activity_update_close_comments' => array(
-					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
+					'function' => 'bboss_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'activity_loadmore_comments' => array(
-					'function' => 'bb_nouveau_ajax_activity_load_more_comments',
+					'function' => 'bboss_nouveau_ajax_activity_load_more_comments',
 					'nopriv'   => true,
 				),
 			),
 			array(
 				'activity_sync_from_modal' => array(
-					'function' => 'bb_nouveau_ajax_activity_sync_from_modal',
+					'function' => 'bboss_nouveau_ajax_activity_sync_from_modal',
 					'nopriv'   => true,
 				),
 			),
 			array(
 				'toggle_activity_notification_status' => array(
-					'function' => 'bb_nouveau_ajax_toggle_activity_notification_status',
+					'function' => 'bboss_nouveau_ajax_toggle_activity_notification_status',
 					'nopriv'   => false,
 				),
 			),
 			array(
 				'delete_scheduled_activity' => array(
-					'function' => 'bb_nouveau_ajax_delete_scheduled_activity',
+					'function' => 'bboss_nouveau_ajax_delete_scheduled_activity',
 					'nopriv'   => false,
 				),
 			),
@@ -143,11 +143,11 @@ add_action(
  *
  * @return string JSON reply
  */
-function bp_nouveau_ajax_mark_activity_favorite() {
+function bboss_nouveau_ajax_mark_activity_favorite() {
 
 	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' );
 
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $error_message );
 	}
 
@@ -158,20 +158,20 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
 	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$user_id   = bp_loggedin_user_id();
+	$user_id   = bboss_loggedin_user_id();
 
-	if ( ! bb_all_enabled_reactions( $item_type ) ) {
+	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
 		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
 	}
 
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
-		$reaction = bb_load_reaction();
+		$reaction = bboss_load_reaction();
 		$reaction_id = $reaction ? $reaction->bb_reactions_reaction_id() : 0;
 	}
 
-	$reacted = bp_activity_add_user_favorite(
+	$reacted = bboss_activity_add_user_favorite(
 		$item_id,
 		$user_id,
 		array(
@@ -187,19 +187,19 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	$response = array(
-		'reaction_button' => function_exists( 'bb_get_activity_post_reaction_button_html' ) ? bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ) : '',
-		'reaction_count'  => function_exists( 'bb_get_activity_post_user_reactions_html' ) ? bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
+		'reaction_button' => function_exists( 'bboss_get_activity_post_reaction_button_html' ) ? bboss_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ) : '',
+		'reaction_count'  => function_exists( 'bboss_get_activity_post_user_reactions_html' ) ? bboss_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
 	);
 
-	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
+	$fav_count = (int) bboss_get_total_favorite_count_for_user( $user_id );
 
 	if ( 1 === $fav_count ) {
 		$response['directory_tab'] = sprintf(
 			'<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
 				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
 			</li>',
-			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
-			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+			esc_url( bboss_loggedin_user_domain() . bboss_get_activity_slug() . '/favorites/' ),
+			bboss_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
 		);
 	}
 
@@ -213,11 +213,11 @@ function bp_nouveau_ajax_mark_activity_favorite() {
  *
  * @return string JSON reply
  */
-function bp_nouveau_ajax_unmark_activity_favorite() {
+function bboss_nouveau_ajax_unmark_activity_favorite() {
 
 	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' );
 
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $error_message );
 	}
 
@@ -232,13 +232,13 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
 	$item_type = sanitize_text_field( $_POST['item_type'] );
-	$user_id   = bp_loggedin_user_id();
+	$user_id   = bboss_loggedin_user_id();
 
-	if ( ! bb_all_enabled_reactions( $item_type ) ) {
+	if ( ! bboss_all_enabled_reactions( $item_type ) ) {
 		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
 	}
 
-	$un_reacted = bp_activity_remove_user_favorite(
+	$un_reacted = bboss_activity_remove_user_favorite(
 		$item_id,
 		$user_id,
 		array(
@@ -252,12 +252,12 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	$response = array(
-		'reaction_button' => function_exists( 'bb_get_activity_post_reaction_button_html' ) ? bb_get_activity_post_reaction_button_html( $item_id, $item_type ) : '',
-		'reaction_count'  => function_exists( 'bb_get_activity_post_user_reactions_html' ) ? bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
+		'reaction_button' => function_exists( 'bboss_get_activity_post_reaction_button_html' ) ? bboss_get_activity_post_reaction_button_html( $item_id, $item_type ) : '',
+		'reaction_count'  => function_exists( 'bboss_get_activity_post_user_reactions_html' ) ? bboss_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
 	);
 
-	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
-	if ( 0 === $fav_count && ! bp_is_single_activity() ) {
+	$fav_count = (int) bboss_get_total_favorite_count_for_user( $user_id );
+	if ( 0 === $fav_count && ! bboss_is_single_activity() ) {
 		$response['no_favorite'] = sprintf(
 			'<aside class="bp-feedback bp-messages info">
 				<span class="bp-icon" aria-hidden="true"></span>
@@ -277,8 +277,8 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
  *
  * @return string JSON reply.
  */
-function bp_nouveau_ajax_clear_new_mentions() {
-	if ( ! bp_is_post_request() ) {
+function bboss_nouveau_ajax_clear_new_mentions() {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error();
 	}
 
@@ -287,7 +287,7 @@ function bp_nouveau_ajax_clear_new_mentions() {
 		wp_send_json_error();
 	}
 
-	bp_activity_clear_new_mentions( bp_loggedin_user_id() );
+	bboss_activity_clear_new_mentions( bboss_loggedin_user_id() );
 	wp_send_json_success();
 }
 
@@ -298,7 +298,7 @@ function bp_nouveau_ajax_clear_new_mentions() {
  *
  * @return string JSON reply.
  */
-function bp_nouveau_ajax_delete_activity() {
+function bboss_nouveau_ajax_delete_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
@@ -307,7 +307,7 @@ function bp_nouveau_ajax_delete_activity() {
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -324,10 +324,10 @@ function bp_nouveau_ajax_delete_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
 
 	// Check access.
-	if ( ! bp_activity_user_can_delete( $activity ) ) {
+	if ( ! bboss_activity_user_can_delete( $activity ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -341,30 +341,30 @@ function bp_nouveau_ajax_delete_activity() {
 	$activity_album_group  = 0;
 	$deleted_media_ids     = array();
 	$deleted_video_ids     = array();
-	if ( empty( $_POST['is_comment'] ) && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
-		$attached_media_meta = bp_is_active( 'media' ) ? bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
-		$attached_video_meta = bp_is_active( 'video' ) ? bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
+	if ( empty( $_POST['is_comment'] ) && function_exists( 'bboss_nouveau_media_get_album_empty_state' ) ) {
+		$attached_media_meta = bboss_is_active( 'media' ) ? bboss_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
+		$attached_video_meta = bboss_is_active( 'video' ) ? bboss_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
 
 		// Batch uploads attach each item to its own child activity, which carries
 		// only the bp_media_activity/bp_video_activity marker - never the plural
 		// ids meta - so the marker must also open the capture path.
 		$is_media_activity = '' !== (string) $attached_media_meta
-			|| ( bp_is_active( 'media' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
+			|| ( bboss_is_active( 'media' ) && '1' === (string) bboss_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
 		$is_video_activity = '' !== (string) $attached_video_meta
-			|| ( bp_is_active( 'video' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
+			|| ( bboss_is_active( 'video' ) && '1' === (string) bboss_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
 
 		// The row lookups below serve two consumers: the album context (only used
 		// by the two single-album screens) and the fallback ids for marker-only
 		// child activities. Skip them when neither applies - i.e. the common feed
 		// delete, whose ids already came from the plural meta.
-		$in_single_album_view = bp_is_single_album() || bp_is_single_video_album();
+		$in_single_album_view = bboss_is_single_album() || bboss_is_single_video_album();
 
-		if ( $is_media_activity && class_exists( 'BP_Media' ) ) {
+		if ( $is_media_activity && class_exists( 'BBoss_Media' ) ) {
 			if ( '' !== (string) $attached_media_meta ) {
 				$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
 			}
 			if ( $in_single_album_view || empty( $deleted_media_ids ) ) {
-				$activity_media = BP_Media::get(
+				$activity_media = BBoss_Media::get(
 					array(
 						'activity_id' => $activity->id,
 						'per_page'    => 1,
@@ -417,13 +417,13 @@ function bp_nouveau_ajax_delete_activity() {
 
 	// Deleting an activity comment.
 	if ( ! empty( $_POST['is_comment'] ) ) {
-		if ( ! bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
+		if ( ! bboss_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 			wp_send_json_error( $response );
 		}
 
 		// Deleting an activity.
 	} else {
-		if ( ! bp_activity_delete(
+		if ( ! bboss_activity_delete(
 			array(
 				'id'      => $activity->id,
 				'user_id' => $activity->user_id,
@@ -441,8 +441,8 @@ function bp_nouveau_ajax_delete_activity() {
 
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
-		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
-		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	}
 
 	$activity_html      = '';
@@ -450,14 +450,14 @@ function bp_nouveau_ajax_delete_activity() {
 	if ( isset( $activity->secondary_item_id ) && ! empty( $activity->secondary_item_id ) ) {
 		$parent_activity_id = $activity->secondary_item_id;
 		ob_start();
-		if ( bp_has_activities(
+		if ( bboss_has_activities(
 			array(
 				'include' => $parent_activity_id,
 			)
 		) ) {
-			while ( bp_activities() ) {
-				bp_the_activity();
-				bp_get_template_part( 'activity/entry' );
+			while ( bboss_activities() ) {
+				bboss_the_activity();
+				bboss_get_template_part( 'activity/entry' );
 			}
 		}
 		$activity_html = ob_get_contents();
@@ -479,7 +479,7 @@ function bp_nouveau_ajax_delete_activity() {
 		$response['deleted_video_ids'] = $deleted_video_ids;
 	}
 
-	if ( ! empty( $activity_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
+	if ( ! empty( $activity_album_id ) && function_exists( 'bboss_media_get_album_counts' ) ) {
 		// Counts and empty-state markup are only consumed by the two single-album
 		// screens, so skip their queries/render when the delete came from anywhere
 		// else (feed, directories) - under admin-ajax these route checks resolve
@@ -487,9 +487,9 @@ function bp_nouveau_ajax_delete_activity() {
 		// bp_is_single_video_album() is also true on the media album screen
 		// (bp_is_video_component() returns true for the media component), so the
 		// video-album branch must additionally rule out the media album route.
-		$in_video_album = bp_is_single_video_album() && ! bp_is_single_album();
-		if ( $in_video_album || bp_is_single_album() ) {
-			$album_counts                  = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
+		$in_video_album = bboss_is_single_video_album() && ! bboss_is_single_album();
+		if ( $in_video_album || bboss_is_single_album() ) {
+			$album_counts                  = bboss_media_get_album_counts( $activity_album_id, $activity_album_group );
 			$response['album_id']          = $activity_album_id;
 			$response['album_total_count'] = (int) $album_counts['album_total_count'];
 			$response['album_media_count'] = (int) $album_counts['album_media_count'];
@@ -504,7 +504,7 @@ function bp_nouveau_ajax_delete_activity() {
 					$response['album_empty_html'] = bb_nouveau_video_get_album_empty_state();
 				}
 			} elseif ( 0 === (int) $album_counts['album_total_count'] ) {
-				$response['album_empty_html'] = bb_nouveau_media_get_album_empty_state();
+				$response['album_empty_html'] = bboss_nouveau_media_get_album_empty_state();
 			}
 		}
 	}
@@ -521,7 +521,7 @@ function bp_nouveau_ajax_delete_activity() {
  *
  * @return string JSON reply.
  */
-function bp_nouveau_ajax_get_single_activity_content() {
+function bboss_nouveau_ajax_get_single_activity_content() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
@@ -530,7 +530,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -551,11 +551,11 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	// Check scheduled status.
 	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status() ) {
+	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bboss_get_activity_scheduled_status() ) {
 		$args['status'] = $post_status;
 	}
 
-	$activity_array = bp_activity_get_specific( $args );
+	$activity_array = bboss_activity_get_specific( $args );
 
 	if ( empty( $activity_array['activities'][0] ) ) {
 		wp_send_json_error( $response );
@@ -564,7 +564,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	$activity = $activity_array['activities'][0];
 
 	// Guests can call this, so only return content the user can read, in its group and thread.
-	if ( ! bb_activity_user_can_view( (int) $activity->id ) ) {
+	if ( ! bboss_activity_user_can_view( (int) $activity->id ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -580,7 +580,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	// Activity content retrieved through AJAX should run through normal filters, but not be truncated.
 	remove_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
-	if ( bp_is_active( 'media' ) ) {
+	if ( bboss_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
 		// Video and Document ship in the BuddyBoss Add-ons plugin; only re-add when loaded.
 		if ( function_exists( 'bp_video_activity_append_video' ) ) {
@@ -606,13 +606,13 @@ function bp_nouveau_ajax_get_single_activity_content() {
  *
  * @since BuddyPress 3.0.0
  *
- * @global BP_Activity_Template $activities_template
+ * @global BBoss_Activity_Template $activities_template
  *
  * @return string JSON reply.
  */
-function bp_nouveau_ajax_new_activity_comment() {
+function bboss_nouveau_ajax_new_activity_comment() {
 	global $activities_template;
-	$bp = buddypress();
+	$bp = bboss();
 
 	$response = array(
 		'feedback' => sprintf(
@@ -622,7 +622,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -660,7 +660,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		$edit_comment_id       = sanitize_text_field( wp_unslash( $_POST['comment_id'] ) );
 	}
 
-	$comment_id = bp_activity_new_comment(
+	$comment_id = bboss_activity_new_comment(
 		array(
 			'id'          => $edit_comment_id,
 			'activity_id' => $_POST['form_id'],
@@ -684,10 +684,10 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( $comment_id );
+	$activity = new BBoss_Activity_Activity( $comment_id );
 
 	// Load the new activity item into the $activities_template global.
-	bp_has_activities(
+	bboss_has_activities(
 		array(
 			'display_comments' => 'stream',
 			'hide_spam'        => false,
@@ -710,7 +710,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
 		while ( $parent_id && $parent_id !== (int) $activities_template->activities[0]->item_id ) {
 			$depth++;
-			$p_obj     = new BP_Activity_Activity( $parent_id );
+			$p_obj     = new BBoss_Activity_Activity( $parent_id );
 			$parent_id = (int) $p_obj->secondary_item_id;
 		}
 		$activities_template->activity->current_comment->depth = $depth;
@@ -718,9 +718,9 @@ function bp_nouveau_ajax_new_activity_comment() {
 		// Set activity related properties to be used in the loop.
 		if ( ! isset( $activities_template->activity->component ) ) {
 			if ( ! isset( $p_obj ) ) {
-				$a_obj = new BP_Activity_Activity( $activities_template->activities[0]->item_id );
+				$a_obj = new BBoss_Activity_Activity( $activities_template->activities[0]->item_id );
 			} else {
-				$a_obj = new BP_Activity_Activity( $p_obj->item_id );
+				$a_obj = new BBoss_Activity_Activity( $p_obj->item_id );
 			}
 
 			$activities_template->activity->component         = $a_obj->component;
@@ -732,7 +732,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	ob_start();
 
 	$comment_template_args = array();
-	if ( ! empty( $_POST['edit_comment'] ) && ! bp_is_single_activity() ) {
+	if ( ! empty( $_POST['edit_comment'] ) && ! bboss_is_single_activity() ) {
 		$comment_template_args = array(
 			'show_replies'   => false,
 			'limit_comments' => true,
@@ -741,7 +741,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 
 	// Get activity comment template part.
 	add_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
-	bp_get_template_part( 'activity/comment', null, $comment_template_args );
+	bboss_get_template_part( 'activity/comment', null, $comment_template_args );
 	remove_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
 
 	$response = array(
@@ -764,7 +764,7 @@ function bp_nouveau_ajax_new_activity_comment() {
  *
  * @return string JSON reply
  */
-function bp_nouveau_ajax_get_activity_objects() {
+function bboss_nouveau_ajax_get_activity_objects() {
 	$response = array();
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
@@ -774,7 +774,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 	if ( 'group' === $_POST['type'] ) {
 		$exclude_groups                     = array();
 		$exclude_groups_args                = array();
-		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
+		$exclude_groups_args['user_id']     = bboss_loggedin_user_id();
 		$exclude_groups_args['show_hidden'] = true;
 		$exclude_groups_args['fields']      = 'ids';
 		$exclude_groups_args['per_page']    = - 1;
@@ -782,19 +782,19 @@ function bp_nouveau_ajax_get_activity_objects() {
 			$exclude_groups_args['search_terms'] = $_POST['search'];
 		}
 
-		$exclude_groups_query = groups_get_groups( $exclude_groups_args );
+		$exclude_groups_query = bboss_groups_get_groups( $exclude_groups_args );
 
 		if ( ! empty( $exclude_groups_query['groups'] ) ) {
 			foreach ( $exclude_groups_query['groups'] as $exclude_group ) {
-				if ( false === groups_is_user_allowed_posting( bp_loggedin_user_id(), $exclude_group ) ) {
+				if ( false === groups_is_user_allowed_posting( bboss_loggedin_user_id(), $exclude_group ) ) {
 					$exclude_groups[] = $exclude_group;
 				}
 			}
 		}
 		$args                = array();
-		$args['user_id']     = bp_loggedin_user_id();
+		$args['user_id']     = bboss_loggedin_user_id();
 		$args['show_hidden'] = true;
-		$args['per_page']    = bb_activity_post_form_groups_per_page();
+		$args['per_page']    = bboss_activity_post_form_groups_per_page();
 		$args['orderby']     = 'name';
 		$args['order']       = 'ASC';
 		if ( isset( $_POST['page'] ) ) {
@@ -807,9 +807,9 @@ function bp_nouveau_ajax_get_activity_objects() {
 			$args['exclude'] = $exclude_groups;
 		}
 
-		$groups = groups_get_groups( $args );
+		$groups = bboss_groups_get_groups( $args );
 
-		wp_send_json_success( array_map( 'bp_nouveau_prepare_group_for_js', $groups['groups'] ) );
+		wp_send_json_success( array_map( 'bboss_nouveau_prepare_group_for_js', $groups['groups'] ) );
 	} else {
 
 		/**
@@ -837,8 +837,8 @@ function bp_nouveau_ajax_get_activity_objects() {
  *
  * @return string JSON reply.
  */
-function bp_nouveau_ajax_post_update() {
-	$bp = buddypress();
+function bboss_nouveau_ajax_post_update() {
+	$bp = bboss();
 
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_update'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_update'] ) ), 'post_update' ) ) {
 		wp_send_json_error();
@@ -846,13 +846,13 @@ function bp_nouveau_ajax_post_update() {
 
 	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
 	// A chosen topic is checked even when a topic is not required. Nothing is checked or saved while topics are off.
-	$topics_enabled = bb_is_enabled_activity_topics();
+	$topics_enabled = bboss_is_enabled_activity_topics();
 	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
-	if ( $topics_enabled && bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
+	if ( $topics_enabled && bboss_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
 		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
 	}
 	if ( ! empty( $topic_id ) ) {
-		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
+		$existing_topic_id = bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 		if (
 			empty( $existing_topic_id ) ||
 			(int) $existing_topic_id !== (int) $topic_id
@@ -860,9 +860,9 @@ function bp_nouveau_ajax_post_update() {
 			// Resolve the object the same way the posting code below does, so the topic is checked for the feed it is saved to.
 			$object  = ! empty( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
-			if ( empty( $object ) && bp_is_group() ) {
+			if ( empty( $object ) && bboss_is_group() ) {
 				$object  = 'group';
-				$item_id = bp_get_current_group_id();
+				$item_id = bboss_get_current_group_id();
 			}
 
 			$args = array(
@@ -874,21 +874,21 @@ function bp_nouveau_ajax_post_update() {
 				$args['item_type'] = 'groups';
 				$args['item_id']   = $item_id;
 			}
-			$topic_exists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics( $args ) : false;
+			$topic_exists = function_exists( 'bboss_topics_manager_instance' ) ? bboss_topics_manager_instance()->bb_get_topics( $args ) : false;
 			if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'The topic does not exist.', 'buddyboss' ) ) );
 			} elseif (
 				'user' === $object &&
-				function_exists( 'bb_activity_topics_manager_instance' ) &&
-				! bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id )
+				function_exists( 'bboss_activity_topics_manager_instance' ) &&
+				! bboss_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id )
 			) {
 				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
 			} elseif (
 				'group' === $object &&
-				bp_is_active( 'groups' ) &&
+				bboss_is_active( 'groups' ) &&
 				! empty( $item_id ) &&
 				function_exists( 'bb_can_user_post_to_group_activity_topic' ) &&
-				! bb_can_user_post_to_group_activity_topic( bp_loggedin_user_id(), $item_id, $topic_id )
+				! bb_can_user_post_to_group_activity_topic( bboss_loggedin_user_id(), $item_id, $topic_id )
 			) {
 				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
 			}
@@ -900,18 +900,18 @@ function bp_nouveau_ajax_post_update() {
 		! empty( $post_feature_image ) &&
 		function_exists( 'bb_pro_activity_post_feature_image_instance' )
 	) {
-		$existing_feature_image_id = bp_activity_get_meta( $activity_id, '_bb_activity_post_feature_image', true );
+		$existing_feature_image_id = bboss_activity_get_meta( $activity_id, '_bb_activity_post_feature_image', true );
 		if (
 			empty( $existing_feature_image_id ) ||
 			(int) $existing_feature_image_id !== (int) $post_feature_image
 		) {
 			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
 				$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
-				$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
+				$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bboss_get_current_group_id' ) ? bboss_get_current_group_id() : 0 );
 
 				$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
 					array(
-						'user_id'  => bp_loggedin_user_id(),
+						'user_id'  => bboss_loggedin_user_id(),
 						'group_id' => $item_id,
 						'object'   => $object,
 					)
@@ -949,7 +949,7 @@ function bp_nouveau_ajax_post_update() {
 	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
 		$post_title = '';
 	}
-	$validation = bb_validate_activity_post_title( $post_title );
+	$validation = bboss_validate_activity_post_title( $post_title );
 	if ( ! $validation['valid'] ) {
 		wp_send_json_error(
 			array(
@@ -962,15 +962,15 @@ function bp_nouveau_ajax_post_update() {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
 		$toolbar_option = false;
-		if ( bp_is_active( 'media' ) && ! empty( $_POST['document'] ) ) {
+		if ( bboss_is_active( 'media' ) && ! empty( $_POST['document'] ) ) {
 			$toolbar_option = true;
-		} elseif ( bp_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
+		} elseif ( bboss_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
 			$toolbar_option = true;
-		} elseif ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
+		} elseif ( bboss_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
 			$toolbar_option = true;
-		} elseif ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
+		} elseif ( bboss_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
 			$toolbar_option = true;
-		} elseif ( bp_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
+		} elseif ( bboss_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
 			$toolbar_option = true;
 		} elseif ( ! empty( sanitize_text_field( wp_unslash( (int) $_POST['poll_id'] ) ) ) ) {
 			$toolbar_option = true;
@@ -991,7 +991,7 @@ function bp_nouveau_ajax_post_update() {
 	$is_private  = false;
 
 	// Check if the activity comments closed.
-	if ( ! empty( $activity_id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
+	if ( ! empty( $activity_id ) && bboss_is_close_activity_comments_enabled() && bboss_is_activity_comments_closed( $activity_id ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss' )
@@ -1009,18 +1009,18 @@ function bp_nouveau_ajax_post_update() {
 		$object = sanitize_key( $_POST['object'] );
 
 		// If the object is not set and we're in a group, set the item id and the object.
-	} elseif ( bp_is_group() ) {
-		$item_id = bp_get_current_group_id();
+	} elseif ( bboss_is_group() ) {
+		$item_id = bboss_get_current_group_id();
 		$object  = 'group';
-		$status  = groups_get_current_group()->status;
+		$status  = bboss_groups_get_current_group()->status;
 	}
 
 	$draft_activity_meta_key = 'draft_' . $object;
 
-	$activity_metas = bb_activity_get_metadata( $activity_id );
+	$activity_metas = bboss_activity_get_metadata( $activity_id );
 
 	if (
-		bp_is_active( 'media' ) &&
+		bboss_is_active( 'media' ) &&
 		! empty( $_POST['media'] )
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
@@ -1031,7 +1031,7 @@ function bp_nouveau_ajax_post_update() {
 		$posted_media   = wp_parse_id_list( $posted_media );
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
-		if ( ! bb_media_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
+		if ( ! bboss_media_user_can_upload( bboss_loggedin_user_id(), $group_id ) && ! $is_same_media ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
@@ -1043,7 +1043,7 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	if (
-		bp_is_active( 'document' ) &&
+		bboss_is_active( 'document' ) &&
 		! empty( $_POST['document'] )
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
@@ -1054,7 +1054,7 @@ function bp_nouveau_ajax_post_update() {
 		$posted_document   = wp_parse_id_list( $posted_document );
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
 
-		if ( ! bb_document_user_can_upload( bp_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
+		if ( ! bb_document_user_can_upload( bboss_loggedin_user_id(), $group_id ) && ! $is_same_document ) {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
@@ -1071,16 +1071,16 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
-	$activity_status      = bb_get_activity_published_status();
+	$activity_status      = bboss_get_activity_published_status();
 	$schedule_date_time   = '';
 	$is_scheduled         = false;
-	$activity_action_type = bb_filter_input_string( INPUT_POST, 'activity_action_type' );
+	$activity_action_type = bboss_filter_input_string( INPUT_POST, 'activity_action_type' );
 	if ( ! empty( $activity_action_type ) && 'scheduled' === $activity_action_type ) {
-		$activity_status = bb_get_activity_scheduled_status();
+		$activity_status = bboss_get_activity_scheduled_status();
 
-		$activity_schedule_date_raw = bb_filter_input_string( INPUT_POST, 'activity_schedule_date_raw' );
-		$activity_schedule_time     = bb_filter_input_string( INPUT_POST, 'activity_schedule_time' );
-		$activity_schedule_meridiem = bb_filter_input_string( INPUT_POST, 'activity_schedule_meridiem' );
+		$activity_schedule_date_raw = bboss_filter_input_string( INPUT_POST, 'activity_schedule_date_raw' );
+		$activity_schedule_time     = bboss_filter_input_string( INPUT_POST, 'activity_schedule_time' );
+		$activity_schedule_meridiem = bboss_filter_input_string( INPUT_POST, 'activity_schedule_meridiem' );
 		if ( ! empty( $activity_schedule_date_raw ) && ! empty( $activity_schedule_time ) && ! empty( $activity_schedule_meridiem ) ) {
 			$is_scheduled = true;
 
@@ -1127,7 +1127,7 @@ function bp_nouveau_ajax_post_update() {
 			} elseif ( ! empty( $activity_id ) ) {
 
 				// Check if the scheduled time is changed.
-				$obj_activity = new BP_Activity_Activity( $activity_id );
+				$obj_activity = new BBoss_Activity_Activity( $activity_id );
 				if ( strtotime( $obj_activity->date_recorded ) !== $scheduled_timestamp && $scheduled_timestamp < $next_hour_timestamp ) {
 					wp_send_json_error(
 						array(
@@ -1139,7 +1139,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	if ( $is_scheduled && ! bb_is_enabled_activity_schedule_posts() ) {
+	if ( $is_scheduled && ! bboss_is_enabled_activity_schedule_posts() ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Schedule activity settings disabled.', 'buddyboss' ),
@@ -1147,9 +1147,9 @@ function bp_nouveau_ajax_post_update() {
 		);
 	}
 
-	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
+	if ( 'user' === $object && bboss_is_active( 'activity' ) ) {
 
-		if ( ! bb_user_can_create_activity() ) {
+		if ( ! bboss_user_can_create_activity() ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss' ),
@@ -1172,11 +1172,11 @@ function bp_nouveau_ajax_post_update() {
 
 		$content = $_POST['content'];
 
-		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
-			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
+		if ( ! empty( $_POST['user_id'] ) && bboss_get_displayed_user() && $_POST['user_id'] != bboss_get_displayed_user()->id ) {
+			$content = sprintf( '@%s %s', bboss_get_displayed_user_mentionname(), $content );
 
 			// Draft activity meta key.
-			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
+			$draft_activity_meta_key .= '_' . bboss_get_displayed_user()->id;
 		}
 
 		// A cleared title is already an empty string here (see the post_title_cleared handling above), and
@@ -1195,10 +1195,10 @@ function bp_nouveau_ajax_post_update() {
 			$post_array['recorded_time'] = $schedule_date_time;
 			$post_array['status']        = $activity_status;
 		}
-		$activity_id = bp_activity_post_update( $post_array );
+		$activity_id = bboss_activity_post_update( $post_array );
 
 	} elseif ( 'group' === $object ) {
-		if ( $item_id && bp_is_active( 'groups' ) ) {
+		if ( $item_id && bboss_is_active( 'groups' ) ) {
 
 			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components.
 
@@ -1238,13 +1238,13 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			// This function is setting the current group!
-			$activity_id = groups_post_update( $post_array );
+			$activity_id = bboss_groups_post_update( $post_array );
 
 			if ( empty( $status ) ) {
 				if ( ! empty( $bp->groups->current_group->status ) ) {
 					$status = $bp->groups->current_group->status;
 				} else {
-					$group  = groups_get_group( array( 'group_id' => $group_id ) );
+					$group  = bboss_groups_get_group( array( 'group_id' => $group_id ) );
 					$status = $group->status;
 				}
 
@@ -1276,10 +1276,10 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	// Delete draft activity - only the composer's own draft, and only a version it showed.
-	$draft_activity_meta_key = bb_draft_activity_publish_key( $draft_activity_meta_key, bp_loggedin_user_id() );
+	$draft_activity_meta_key = bboss_draft_activity_publish_key( $draft_activity_meta_key, bboss_loggedin_user_id() );
 
 	if ( '' !== $draft_activity_meta_key ) {
-		delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
+		delete_user_meta( bboss_loggedin_user_id(), $draft_activity_meta_key );
 	}
 
 	$activity_args = array(
@@ -1296,15 +1296,15 @@ function bp_nouveau_ajax_post_update() {
 	 * into the stream stays consistent and doesn't render a comment thread whose reply
 	 * form is absent in this context, which would leave the "Comment"/"Reply" buttons dead.
 	 */
-	if ( bb_is_readylaunch_enabled() && ! bp_is_single_activity() ) {
+	if ( bboss_is_readylaunch_enabled() && ! bboss_is_single_activity() ) {
 		$activity_args['display_comments'] = false;
 	}
 
 	ob_start();
-	if ( bp_has_activities( $activity_args ) ) {
-		while ( bp_activities() ) {
-			bp_the_activity();
-			bp_get_template_part( 'activity/entry' );
+	if ( bboss_has_activities( $activity_args ) ) {
+		while ( bboss_activities() ) {
+			bboss_the_activity();
+			bboss_get_template_part( 'activity/entry' );
 		}
 	}
 	$activity = ob_get_contents();
@@ -1313,7 +1313,7 @@ function bp_nouveau_ajax_post_update() {
 	wp_send_json_success(
 		array(
 			'id'               => $activity_id,
-			'message'          => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'message'          => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bboss_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
 			'activity'         => $activity,
 
 			/**
@@ -1324,8 +1324,8 @@ function bp_nouveau_ajax_post_update() {
 			 * @param bool $is_private Privacy status for the update.
 			 */
 			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
-			'is_directory'     => bp_is_activity_directory(),
-			'is_user_activity' => bp_is_user_activity(),
+			'is_directory'     => bboss_is_activity_directory(),
+			'is_user_activity' => bboss_is_user_activity(),
 			'draft_kept'       => '' === $draft_activity_meta_key,
 		)
 	);
@@ -1349,7 +1349,7 @@ function bp_nouveau_ajax_post_update() {
  * @since BuddyBoss 3.7.1 Added the size caps, the key validation and
  *                              the `evicted_draft_keys` response field.
  */
-function bb_nouveau_ajax_post_draft_activity() {
+function bboss_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
 		wp_send_json_error();
 	}
@@ -1396,7 +1396,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			);
 		}
 
-		$draft_user_id = bp_loggedin_user_id();
+		$draft_user_id = bboss_loggedin_user_id();
 
 		// The client's data_key decides which usermeta row is written; accept it
 		// only when it matches the server-derived shape for its object and, for
@@ -1414,7 +1414,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		$submitted_object   = is_scalar( $draft_activity['object'] ) ? (string) $draft_activity['object'] : '';
 		$submitted_item_id  = ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) && isset( $draft_activity['data']['item_id'] ) ) ? $draft_activity['data']['item_id'] : 0;
 
-		if ( ! bb_draft_validate_activity_data_key( $submitted_data_key, $submitted_object, $submitted_item_id, $draft_user_id, $draft_context ) ) {
+		if ( ! bboss_draft_validate_activity_data_key( $submitted_data_key, $submitted_object, $submitted_item_id, $draft_user_id, $draft_context ) ) {
 			// Reached by a member who lost posting rights mid-session, so it
 			// carries the same approved save-failed text as the composers.
 			wp_send_json_error(
@@ -1430,7 +1430,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// The caps judge the draft's text; they must not decide whether a file
 			// the member already uploaded survives the orphan cron
 			// ({@see bb_draft_protect_payload_attachments()}, BLOCKER-1).
-			bb_draft_protect_payload_attachments(
+			bboss_draft_protect_payload_attachments(
 				array(
 					'media'    => $draft_activity['data']['media'] ?? array(),
 					'document' => $draft_activity['data']['document'] ?? array(),
@@ -1444,9 +1444,9 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// save from another device, a second tab behind the first. The
 			// uploads above stay protected; the stored draft is returned so the
 			// browser can keep it (bb_draft_base_matches()).
-			$stored_draft_entry = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+			$stored_draft_entry = bboss_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
-			if ( ! bb_draft_base_matches( $stored_draft_entry, bb_draft_request_base() ) ) {
+			if ( ! bboss_draft_base_matches( $stored_draft_entry, bboss_draft_request_base() ) ) {
 				/**
 				 * Fires when a draft save is refused because a newer version is stored.
 				 *
@@ -1459,10 +1459,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 				wp_send_json_error(
 					array(
-						'message'        => bb_draft_conflict_message(),
+						'message'        => bboss_draft_conflict_message(),
 						'conflict'       => true,
 						'draft_activity' => $stored_draft_entry,
-						'evicted_drafts' => bb_draft_handback( $draft_user_id ),
+						'evicted_drafts' => bboss_draft_handback( $draft_user_id ),
 					)
 				);
 			}
@@ -1470,16 +1470,16 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// A held draft of this key that this browser has not received yet
 			// would be dropped unseen by this save. Hand it back instead: the
 			// browser merges it with the member's text and saves again.
-			if ( bb_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
+			if ( bboss_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
 				wp_send_json_error(
 					array(
-						'message'        => bb_draft_conflict_message(),
+						'message'        => bboss_draft_conflict_message(),
 						'conflict'       => true,
 						'held'           => true,
-						'evicted_drafts' => bb_draft_handback_for_key( $draft_user_id, $draft_activity['data_key'] ),
+						'evicted_drafts' => bboss_draft_handback_for_key( $draft_user_id, $draft_activity['data_key'] ),
 					)
 				);
 			}
@@ -1501,7 +1501,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				if (
 					isset( $draft_activity['data'][ $bounded_type ] ) &&
 					is_array( $draft_activity['data'][ $bounded_type ] ) &&
-					bb_draft_max_attachments_per_type( $bounded_type ) < count( $draft_activity['data'][ $bounded_type ] )
+					bboss_draft_max_attachments_per_type( $bounded_type ) < count( $draft_activity['data'][ $bounded_type ] )
 				) {
 					wp_send_json_error(
 						array(
@@ -1522,7 +1522,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( ! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ) {
 				$feature_image_id = (int) $draft_activity['data']['bb_activity_post_feature_image']['id'];
 
-				if ( bb_user_can_manage_draft_attachment( $feature_image_id, false, $draft_user_id ) ) {
+				if ( bboss_user_can_manage_draft_attachment( $feature_image_id, false, $draft_user_id ) ) {
 					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
 				} elseif ( ! function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
 					// Core-only: no Pro per-object check will run, so a foreign
@@ -1540,7 +1540,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
 					// Attachment IDs arrive as client JSON - only the owner may stamp them.
-					if ( empty( $new_media_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $draft_user_id ) ) {
+					if ( empty( $new_media_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $draft_user_id ) ) {
 						unset( $draft_activity['data']['media'][ $media_key ] );
 						continue;
 					}
@@ -1564,7 +1564,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
 				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
 					// Attachment IDs arrive as client JSON - only the owner may stamp them.
-					if ( empty( $new_document_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $draft_user_id ) ) {
+					if ( empty( $new_document_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $draft_user_id ) ) {
 						unset( $draft_activity['data']['document'][ $document_key ] );
 						continue;
 					}
@@ -1588,7 +1588,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
 				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
 					// Attachment IDs arrive as client JSON - only the owner may stamp them.
-					if ( empty( $new_video_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $draft_user_id ) ) {
+					if ( empty( $new_video_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $draft_user_id ) ) {
 						unset( $draft_activity['data']['video'][ $video_key ] );
 						continue;
 					}
@@ -1650,7 +1650,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 					// moderator passes for someone else's PUBLISHED image, so a
 					// draft would otherwise store - and later publish with - a
 					// file that is not theirs. Drop it from the draft (V23).
-					if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $draft_user_id ) ) {
+					if ( bboss_user_can_manage_draft_attachment( $attachment_id, false, $draft_user_id ) ) {
 						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
 						$stamp_feature_image_id = (int) $attachment_id;
 					} else {
@@ -1694,21 +1694,21 @@ function bb_nouveau_ajax_post_draft_activity() {
 					// before returning keeps this function's all-slashed invariant
 					// (and update_metadata()'s own wp_unslash()) exactly as it was.
 					$draft_activity['data'][ $draft_content_key ] = wp_slash(
-						bb_draft_strip_data_urls( wp_unslash( $draft_activity['data'][ $draft_content_key ] ) )
+						bboss_draft_strip_data_urls( wp_unslash( $draft_activity['data'][ $draft_content_key ] ) )
 					);
 				}
 			}
 
 			// Document preview text is never restored; it must not count
 			// toward the cap or be stored.
-			$draft_activity = bb_draft_strip_document_render_fields( $draft_activity );
+			$draft_activity = bboss_draft_strip_document_render_fields( $draft_activity );
 
 			// Measured unslashed: this handler keeps the payload slashed, but
 			// update_metadata() stores it unslashed, and the forum handler
 			// measures that same stored width (V21).
 			$raw_draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
 
-			if ( $raw_draft_size > bb_draft_max_size() ) {
+			if ( $raw_draft_size > bboss_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $raw_draft_size, 'per_draft' );
 
@@ -1722,7 +1722,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			foreach ( $draft_content_keys as $draft_content_key ) {
 				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
 					// Same allowed tags as the publish path (bp_activity_content_before_save).
-					$draft_activity['data'][ $draft_content_key ] = bp_activity_filter_kses( $draft_activity['data'][ $draft_content_key ] );
+					$draft_activity['data'][ $draft_content_key ] = bboss_activity_filter_kses( $draft_activity['data'][ $draft_content_key ] );
 				}
 			}
 
@@ -1751,14 +1751,14 @@ function bb_nouveau_ajax_post_draft_activity() {
 			}
 
 			$draft_activity['_draft_saved_at'] = time();
-			$draft_activity['_draft_rev']      = bb_draft_sanitize_rev( $draft_activity['_draft_rev'] ?? '' );
+			$draft_activity['_draft_rev']      = bboss_draft_sanitize_rev( $draft_activity['_draft_rev'] ?? '' );
 
 			// Browser-side bookkeeping is never stored with the draft.
 			unset( $draft_activity['bb_draft_pending_sync'], $draft_activity['_draft_base'] );
 
 			$draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
 
-			if ( $draft_size > bb_draft_max_size() ) {
+			if ( $draft_size > bboss_draft_max_size() ) {
 
 				/**
 				 * Fires when a draft save is rejected by a size cap.
@@ -1787,7 +1787,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				);
 			}
 
-			$draft_budget = bb_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size, bb_draft_is_beacon_request() ? 'beacon' : 'save' );
+			$draft_budget = bboss_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size, bboss_draft_is_beacon_request() ? 'beacon' : 'save' );
 
 			if ( empty( $draft_budget['allowed'] ) ) {
 				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
@@ -1814,7 +1814,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 						// from its localStorage/UI rather than list drafts that are
 						// gone (H1).
 						'evicted_draft_keys' => $draft_budget['evicted'],
-						'evicted_drafts'     => bb_draft_handback( $draft_user_id, $draft_budget['entries'] ),
+						'evicted_drafts'     => bboss_draft_handback( $draft_user_id, $draft_budget['entries'] ),
 					)
 				);
 			}
@@ -1847,8 +1847,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				);
 			}
 
-			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
-			bb_draft_flush_user_meta_sizes( $draft_user_id );
+			bboss_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
+			bboss_draft_flush_user_meta_sizes( $draft_user_id );
 
 			// These deferred stamps add references the orphan-stamp sweep's
 			// cached referenced-set must not miss (H3): bb_draft_protect_payload_
@@ -1880,7 +1880,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Pro reaper change depends on exactly that coverage - a stale note
 			// denying it is how a correct fix gets reverted in a later round.
 			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
-				bb_draft_invalidate_referenced_cache( bb_draft_collect_attachment_ids( $draft_activity ) );
+				bboss_draft_invalidate_referenced_cache( bboss_draft_collect_attachment_ids( $draft_activity ) );
 			}
 
 			// The replaced draft's attachment stamps are deliberately NOT released.
@@ -1893,21 +1893,21 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Dispose strictly from the STORED draft - the client payload's
 			// attachment lists are never used for deletion, so a crafted request
 			// cannot delete attachments the draft never referenced.
-			$stored_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+			$stored_draft = bboss_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
 			// A discard only removes the version the composer showed. A composer
 			// that never loaded the stored draft (a failed fetch, a stale tab)
 			// must not delete it, or its attachments, on the member's behalf.
-			if ( ! bb_draft_base_matches( $stored_draft, bb_draft_request_base() ) ) {
+			if ( ! bboss_draft_base_matches( $stored_draft, bboss_draft_request_base() ) ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
 				wp_send_json_error(
 					array(
-						'message'        => bb_draft_conflict_message(),
+						'message'        => bboss_draft_conflict_message(),
 						'conflict'       => true,
 						'draft_activity' => $stored_draft,
-						'evicted_drafts' => bb_draft_handback( $draft_user_id ),
+						'evicted_drafts' => bboss_draft_handback( $draft_user_id ),
 					)
 				);
 			}
@@ -1920,7 +1920,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// PERMANENT wp_delete_attachment(). Matches the cross-row retain every
 				// stamp-release path applies (L7/L11). The same goes for a file an
 				// evicted draft, handed back to the browser, still uses.
-				$discard_retained_ids = bb_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] );
+				$discard_retained_ids = bboss_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] );
 
 				// Delete media when discard the activity.
 				if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] ) {
@@ -1932,8 +1932,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 							if (
 								! empty( $stored_attachment['id'] ) &&
 								! in_array( (int) $stored_attachment['id'], $discard_retained_ids, true ) &&
-								! bb_draft_attachment_is_eviction_protected( $stored_attachment['id'] ) &&
-								bb_user_can_manage_draft_attachment( $stored_attachment['id'], true, $draft_user_id )
+								! bboss_draft_attachment_is_eviction_protected( $stored_attachment['id'] ) &&
+								bboss_user_can_manage_draft_attachment( $stored_attachment['id'], true, $draft_user_id )
 							) {
 								wp_delete_attachment( (int) $stored_attachment['id'], true );
 							}
@@ -1945,10 +1945,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 				if (
 					! empty( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
 					! in_array( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], $discard_retained_ids, true ) &&
-					! bb_draft_attachment_is_eviction_protected( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
+					! bboss_draft_attachment_is_eviction_protected( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
 					isset( $draft_activity['allow_delete_post_feature_image'] ) &&
 					true === (bool) $draft_activity['allow_delete_post_feature_image'] &&
-					bb_user_can_manage_draft_attachment( $stored_draft['data']['bb_activity_post_feature_image']['id'], true, $draft_user_id )
+					bboss_user_can_manage_draft_attachment( $stored_draft['data']['bb_activity_post_feature_image']['id'], true, $draft_user_id )
 				) {
 					wp_delete_attachment( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], true );
 				}
@@ -1960,7 +1960,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// and invalidates the memoized meta sizes. Hand-rolling those three
 			// steps here is what let this path drift from the maintenance ones
 			//.
-			bb_draft_dispose( $draft_user_id, $draft_activity['data_key'] );
+			bboss_draft_dispose( $draft_user_id, $draft_activity['data_key'] );
 
 			$draft_activity['data'] = false;
 		}
@@ -1970,7 +1970,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		array(
 			'draft_activity'     => $draft_activity,
 			'evicted_draft_keys' => $evicted_draft_keys,
-			'evicted_drafts'     => bb_draft_handback( $draft_user_id ?? bp_loggedin_user_id(), $evicted_drafts ),
+			'evicted_drafts'     => bboss_draft_handback( $draft_user_id ?? bboss_loggedin_user_id(), $evicted_drafts ),
 		)
 	);
 }
@@ -1987,28 +1987,28 @@ function bb_nouveau_ajax_post_draft_activity() {
  *
  * @since BuddyBoss 3.7.1
  */
-function bb_nouveau_ajax_get_draft_activity() {
+function bboss_nouveau_ajax_get_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
 		wp_send_json_error();
 	}
 
-	$user_id  = bp_loggedin_user_id();
+	$user_id  = bboss_loggedin_user_id();
 	$data_key = isset( $_POST['data_key'] ) ? sanitize_text_field( wp_unslash( $_POST['data_key'] ) ) : '';
 	$object   = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 	$item_id  = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
 
-	if ( ! bb_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id, 'manage' ) ) {
+	if ( ! bboss_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id, 'manage' ) ) {
 		wp_send_json_error();
 	}
 
-	$draft_activity = bp_get_user_meta( $user_id, $data_key, true );
-	$owed           = bb_draft_handback( $user_id );
+	$draft_activity = bboss_get_user_meta( $user_id, $data_key, true );
+	$owed           = bboss_draft_handback( $user_id );
 
 	// A held draft of this key may still wait in the overflow (F-03).
 	if ( ! isset( $owed[ $data_key ] ) ) {
 		$owed = array_merge(
 			$owed,
-			bb_draft_promote_evicted(
+			bboss_draft_promote_evicted(
 				$user_id,
 				function ( $key ) use ( $data_key ) {
 					return $key === $data_key;
@@ -2026,10 +2026,10 @@ function bb_nouveau_ajax_get_draft_activity() {
 		// be restored, but its presence makes every page view fetch it again.
 		// Read again first, bypassing the cache: a save to this key from another
 		// tab may have just replaced it with a real draft.
-		$fresh_draft = bb_draft_fresh_value( $user_id, $data_key );
+		$fresh_draft = bboss_draft_fresh_value( $user_id, $data_key );
 
 		if ( null !== $fresh_draft && ( ! is_array( $fresh_draft ) || empty( $fresh_draft ) ) ) {
-			bb_draft_dispose( $user_id, $data_key );
+			bboss_draft_dispose( $user_id, $data_key );
 		}
 	}
 
@@ -2049,8 +2049,8 @@ function bb_nouveau_ajax_get_draft_activity() {
  *
  * @return string JSON reply.
  */
-function bp_nouveau_ajax_spam_activity() {
-	$bp = buddypress();
+function bboss_nouveau_ajax_spam_activity() {
+	$bp = bboss();
 
 	$response = array(
 		'feedback' => sprintf(
@@ -2060,11 +2060,11 @@ function bp_nouveau_ajax_spam_activity() {
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! is_user_logged_in() || ! bp_is_active( 'activity' ) || empty( $bp->activity->akismet ) ) {
+	if ( ! is_user_logged_in() || ! bboss_is_active( 'activity' ) || empty( $bp->activity->akismet ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2073,11 +2073,11 @@ function bp_nouveau_ajax_spam_activity() {
 	}
 
 	// Is the current user allowed to spam items?
-	if ( ! bp_activity_user_can_mark_spam() ) {
+	if ( ! bboss_activity_user_can_mark_spam() ) {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
 
 	if ( empty( $activity->component ) ) {
 		wp_send_json_error( $response );
@@ -2092,7 +2092,7 @@ function bp_nouveau_ajax_spam_activity() {
 	do_action( 'bp_activity_before_action_spam_activity', $activity->id, $activity );
 
 	// Mark as spam.
-	bp_activity_mark_as_spam( $activity );
+	bboss_activity_mark_as_spam( $activity );
 	$activity->title_required = false;
 	$activity->save();
 
@@ -2104,8 +2104,8 @@ function bp_nouveau_ajax_spam_activity() {
 
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
-		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
-		bp_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddyboss' ) );
+		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
+		bboss_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddyboss' ) );
 	}
 
 	// Send the json reply.
@@ -2119,8 +2119,8 @@ function bp_nouveau_ajax_spam_activity() {
  *
  * @return string JSON reply
  */
-function bp_nouveau_ajax_activity_update_privacy() {
-	if ( ! bp_is_post_request() ) {
+function bboss_nouveau_ajax_activity_update_privacy() {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error();
 	}
 
@@ -2141,22 +2141,22 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_error();
 	}
 
-	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
 
-	if ( bp_activity_user_can_delete( $activity ) ) {
+	if ( bboss_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 		$activity->privacy        = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
 		$activity->title_required = false;
 		$activity->save();
 
-		if ( function_exists( 'bp_activity_update_meta' ) ) {	
+		if ( function_exists( 'bboss_activity_update_meta' ) ) {	
 			// Add meta to ensure that this activity has been edited.
-			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			bboss_activity_update_meta( $activity->id, '_is_edited', bboss_core_current_time() );
 		}
 
 		$data_response = array();
-		if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
-			$edited_text = bp_nouveau_activity_is_edited( $activity->id, false );
+		if ( function_exists( 'bboss_nouveau_activity_is_edited' ) ) {
+			$edited_text = bboss_nouveau_activity_is_edited( $activity->id, false );
 			if ( $edited_text ) {
 				$data_response = array( 'edited_text' => $edited_text );
 			}
@@ -2179,12 +2179,12 @@ function bp_nouveau_ajax_activity_update_privacy() {
  *
  * @return void
  */
-function bb_nouveau_ajax_activity_update_close_comments() {
+function bboss_nouveau_ajax_activity_update_close_comments() {
 	$response = array(
 		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
-	if ( ! bb_is_close_activity_comments_enabled() ) {
+	if ( ! bboss_is_close_activity_comments_enabled() ) {
 		wp_send_json_error(
 			array(
 				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss' ),
@@ -2193,7 +2193,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	}
 
 	if (
-		! bp_is_post_request() ||
+		! bboss_is_post_request() ||
 		! is_user_logged_in() ||
 		empty( $_POST['nonce'] ) ||
 		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' )
@@ -2212,11 +2212,11 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	$args = array(
 		'action'      => $_POST['close_comments_action'],
 		'activity_id' => (int) $_POST['id'],
-		'user_id'     => bp_loggedin_user_id(),
+		'user_id'     => bboss_loggedin_user_id(),
 		'retval'      => 'string',
 	);
 
-	$retval = bb_activity_close_unclose_comments( $args );
+	$retval = bboss_activity_close_unclose_comments( $args );
 	if ( ! empty( $retval ) ) {
 
 		if ( 'unclosed_comments' === $retval ) {
@@ -2254,8 +2254,8 @@ function bb_nouveau_ajax_activity_update_close_comments() {
  *
  * @return void
  */
-function bb_nouveau_ajax_activity_load_more_comments() {
-	if ( ! bp_is_post_request() ) {
+function bboss_nouveau_ajax_activity_load_more_comments() {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -2292,7 +2292,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
 
-	$privacy_check = bb_validate_activity_privacy(
+	$privacy_check = bboss_validate_activity_privacy(
 		array(
 			'activity_id'     => $activity_id,
 			'validate_action' => 'view_activity',
@@ -2309,7 +2309,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 
 	$activities_template = new stdClass();
-	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
+	$parent_commment     = new BBoss_Activity_Activity( $parent_comment_id );
 	if ( empty( $parent_commment ) ) {
 		wp_send_json_error(
 			array(
@@ -2321,8 +2321,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	// Guests can call this, so the activity and the comment whose replies are loaded must
 	// both be readable, in their group and thread.
 	if (
-		! bb_activity_user_can_view( $activity_id ) ||
-		! bb_activity_user_can_view( $parent_commment )
+		! bboss_activity_user_can_view( $activity_id ) ||
+		! bboss_activity_user_can_view( $parent_commment )
 	) {
 		wp_send_json_error(
 			array(
@@ -2330,12 +2330,12 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 			)
 		);
 	}
-	$comments = BP_Activity_Activity::append_comments(
+	$comments = BBoss_Activity_Activity::append_comments(
 		array( $parent_commment ),
 		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
 		true,
 		array(
-			'limit'                  => bb_get_activity_comment_loading(),
+			'limit'                  => bboss_get_activity_comment_loading(),
 			'offset'                 => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
 			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
 			'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
@@ -2357,7 +2357,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 
 	$args = array(
 		'limit_comments'         => true,
-		'comment_load_limit'     => bb_get_activity_comment_loading(),
+		'comment_load_limit'     => bboss_get_activity_comment_loading(),
 		'parent_comment_id'      => $parent_comment_id,
 		'main_activity_id'       => $activity_id,
 		'is_ajax_load_more'      => true,
@@ -2368,7 +2368,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	// Check if parent is the main activity.
 	if ( isset( $activities_template->activity ) ) {
 		// No current comment.
-		bp_activity_recurse_comments( $activities_template->activity, $args );
+		bboss_activity_recurse_comments( $activities_template->activity, $args );
 	} else {
 		wp_send_json_error(
 			array(
@@ -2392,8 +2392,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
  *
  * @return void
  */
-function bb_nouveau_ajax_activity_sync_from_modal() {
-	if ( ! bp_is_post_request() ) {
+function bboss_nouveau_ajax_activity_sync_from_modal() {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -2421,7 +2421,7 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 
 	// Guests can call this, so check the activity and its root post before rendering it (PROD-10649).
-	if ( ! bb_activity_user_can_view( $activity_id ) ) {
+	if ( ! bboss_activity_user_can_view( $activity_id ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -2443,10 +2443,10 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	$args = apply_filters( 'bb_ajax_activity_sync_from_modal_args', $args );
 
 	ob_start();
-	if ( bp_has_activities( $args ) ) {
-		while ( bp_activities() ) {
-			bp_the_activity();
-			bp_get_template_part( 'activity/entry' );
+	if ( bboss_has_activities( $args ) ) {
+		while ( bboss_activities() ) {
+			bboss_the_activity();
+			bboss_get_template_part( 'activity/entry' );
 		}
 	}
 
@@ -2464,12 +2464,12 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
  *
  * @return void
  */
-function bb_nouveau_ajax_toggle_activity_notification_status() {
+function bboss_nouveau_ajax_toggle_activity_notification_status() {
 	$response = array(
 		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
 	);
 
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2493,10 +2493,10 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	$args = array(
 		'action'      => $_POST['notification_toggle_action'],
 		'activity_id' => (int) $_POST['id'],
-		'user_id'     => bp_loggedin_user_id(),
+		'user_id'     => bboss_loggedin_user_id(),
 	);
 
-	$retval = bb_toggle_activity_notification_status( $args );
+	$retval = bboss_toggle_activity_notification_status( $args );
 
 	if ( 'unmute' === $retval ) {
 		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
@@ -2520,7 +2520,7 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
  *
  * @return void JSON reply.
  */
-function bb_nouveau_ajax_delete_scheduled_activity() {
+function bboss_nouveau_ajax_delete_scheduled_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
@@ -2529,11 +2529,11 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 	);
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = bboss_filter_input_string( INPUT_POST, '_wpnonce' );
 
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'scheduled_post_nonce' ) ) {
@@ -2548,25 +2548,25 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+	$activity = new BBoss_Activity_Activity( (int) $_POST['id'] );
 
 	// Check access.
-	if ( ! bp_activity_user_can_delete( $activity ) ) {
+	if ( ! bboss_activity_user_can_delete( $activity ) ) {
 		wp_send_json_error( $response );
 	}
 
 	if (
 		(
 			// Check for non admin member to delete scheduled post which they scheduled when they have permission to moderate.
-			! bp_current_user_can( 'bp_moderate' ) && 'groups' !== $activity->component
+			! bboss_current_user_can( 'bp_moderate' ) && 'groups' !== $activity->component
 		) ||
 		(
 			// If Groups allow to schedule post then check user can delete schedule post or not;
-			'groups' === $activity->component && bp_is_active( 'groups' ) && bb_is_enabled_activity_schedule_posts_filter()
+			'groups' === $activity->component && bboss_is_active( 'groups' ) && bb_is_enabled_activity_schedule_posts_filter()
 		)
 	) {
-		$is_admin = groups_is_user_admin( $activity->user_id, $activity->item_id );
-		$is_mod   = groups_is_user_mod( $activity->user_id, $activity->item_id );
+		$is_admin = bboss_groups_is_user_admin( $activity->user_id, $activity->item_id );
+		$is_mod   = bboss_groups_is_user_mod( $activity->user_id, $activity->item_id );
 		if ( ! $is_admin && ! $is_mod ) {
 			wp_send_json_error(
 				array(
@@ -2579,7 +2579,7 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
 
 	if (
-		! bp_activity_delete(
+		! bboss_activity_delete(
 			array(
 				'id'      => $activity->id,
 				'user_id' => $activity->user_id,
@@ -2596,8 +2596,8 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
-		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
-		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+		$response['redirect'] = bboss_core_get_user_domain( $activity->user_id );
+		bboss_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	}
 
 	wp_send_json_success( $response );

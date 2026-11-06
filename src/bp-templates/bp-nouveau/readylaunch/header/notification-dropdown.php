@@ -5,7 +5,7 @@
  * This template handles the notification dropdown display in the header for ReadyLaunch.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,8 +13,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$menu_link                 = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
-$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+$menu_link                 = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
+$notifications             = bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() );
 $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 ?>
 <div id="header-notifications-dropdown-elem" class="notification-wrap menu-item-has-children">

@@ -3,7 +3,7 @@
  * BuddyBoss - Groups Loop
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,60 +13,60 @@ defined( 'ABSPATH' ) || exit;
 
 add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 
-bp_nouveau_before_loop();
+bboss_nouveau_before_loop();
 
-if ( bp_get_current_group_directory_type() ) {
+if ( bboss_get_current_group_directory_type() ) {
 	?>
 	<div class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
+		<p class="current-group-type"><?php bboss_current_group_directory_type_message(); ?></p>
 	</div>
 	<?php
 }
 
-$cover_class        = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
-$meta_privacy       = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
-$meta_group_type    = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
-$group_members      = ! bb_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
-$join_button        = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
-$group_alignment    = bb_platform_group_grid_style( 'left' );
-$group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_get_group_cover_image_height() : 'small';
+$cover_class        = ! bboss_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
+$meta_privacy       = ! bboss_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
+$meta_group_type    = ! bboss_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
+$group_members      = ! bboss_platform_group_element_enable( 'members' ) ? 'group-members-hidden' : '';
+$join_button        = ! bboss_platform_group_element_enable( 'join-buttons' ) ? 'group-join-button-hidden' : '';
+$group_alignment    = bboss_platform_group_grid_style( 'left' );
+$group_cover_height = function_exists( 'bboss_get_group_cover_image_height' ) ? bboss_get_group_cover_image_height() : 'small';
 
-if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
+if ( bboss_has_groups( bboss_ajax_querystring( 'groups' ) ) ) {
 	?>
 
 	<ul id="groups-list" class="
 	<?php
-	bp_nouveau_loop_classes();
+	bboss_nouveau_loop_classes();
 	echo esc_attr( ' ' . $cover_class . ' ' . $group_alignment );
 	?>
 	groups-dir-list">
 		<?php
-		while ( bp_groups() ) :
-			bp_the_group();
+		while ( bboss_groups() ) :
+			bboss_the_group();
 
-			$bp_group_id = bp_get_group_id();
+			$bp_group_id = bboss_get_group_id();
 			?>
 
-			<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $bp_group_id ); ?>" data-bp-item-component="groups">
+			<li <?php bboss_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $bp_group_id ); ?>" data-bp-item-component="groups">
 				<div class="list-wrap bb-rl-group-block">
 					<?php
-					if ( ! bp_disable_group_cover_image_uploads() && bb_platform_group_element_enable( 'cover-images' ) ) {
-						$group_cover_image_url = bp_attachments_get_attachment(
+					if ( ! bboss_disable_group_cover_image_uploads() && bboss_platform_group_element_enable( 'cover-images' ) ) {
+						$group_cover_image_url = bboss_attachments_get_attachment(
 							'url',
 							array(
 								'object_dir' => 'groups',
 								'item_id'    => $bp_group_id,
 							)
 						);
-						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
+						$has_default_cover     = function_exists( 'bboss_attachment_get_cover_image_class' ) ? bboss_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
 
 						if ( empty( $group_cover_image_url ) ) {
-							$group_cover_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
+							$group_cover_image_url = esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 						}
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
-							<a href="<?php bp_group_permalink(); ?>" aria-label="<?php esc_attr_e( 'View group', 'buddyboss' ); ?>">
+							<a href="<?php bboss_group_permalink(); ?>" aria-label="<?php esc_attr_e( 'View group', 'buddyboss' ); ?>">
 								<?php if ( ! empty( $group_cover_image_url ) ) { ?>
 									<img src="<?php echo esc_url( $group_cover_image_url ); ?>" alt="<?php esc_attr_e( 'Group cover image', 'buddyboss' ); ?>">
 								<?php } ?>
@@ -75,9 +75,9 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 						<?php
 					}
 
-					if ( ! bp_disable_group_avatar_uploads() && bb_platform_group_element_enable( 'avatars' ) ) {
+					if ( ! bboss_disable_group_avatar_uploads() && bboss_platform_group_element_enable( 'avatars' ) ) {
 						?>
-						<div class="item-avatar"><a href="<?php bp_group_permalink(); ?>" class="group-avatar-wrap"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a></div>
+						<div class="item-avatar"><a href="<?php bboss_group_permalink(); ?>" class="group-avatar-wrap"><?php bboss_group_avatar( bboss_nouveau_avatar_args() ); ?></a></div>
 						<?php
 					}
 					?>
@@ -85,26 +85,26 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 
 						<div class="group-item-wrap">
 							<div class="item-block">
-								<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
-								<div class="item-meta-wrap <?php echo esc_attr( bb_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type ) ? 'has-meta' : 'meta-hidden' ); ?> ">
+								<h2 class="list-title groups-title"><?php bboss_group_link(); ?></h2>
+								<div class="item-meta-wrap <?php echo esc_attr( bboss_platform_group_element_enable( 'last-activity' ) || empty( $meta_privacy ) || empty( $meta_group_type ) ? 'has-meta' : 'meta-hidden' ); ?> ">
 
-									<?php if ( bp_nouveau_group_has_meta() ) { ?>
+									<?php if ( bboss_nouveau_group_has_meta() ) { ?>
 
 										<p class="item-meta group-details <?php echo esc_attr( $meta_privacy . ' ' . $meta_group_type ); ?>">
 											<?php
-											$meta = bp_nouveau_get_group_meta();
+											$meta = bboss_nouveau_get_group_meta();
 											echo wp_kses_post( $meta['status'] );
 											?>
 										</p>
 										<?php
 									}
 
-									if ( bb_platform_group_element_enable( 'last-activity' ) ) {
+									if ( bboss_platform_group_element_enable( 'last-activity' ) ) {
 										echo '<p class="last-activity item-meta">' .
 										sprintf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
 											esc_attr__( 'Active %s', 'buddyboss' ),
-											wp_kses_post( bp_get_group_last_active() )
+											wp_kses_post( bboss_get_group_last_active() )
 										) .
 										'</p>';
 									}
@@ -113,21 +113,21 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 								</div>
 							</div>
 
-							<?php if ( bb_platform_group_element_enable( 'group-descriptions' ) ) { ?>
-								<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
+							<?php if ( bboss_platform_group_element_enable( 'group-descriptions' ) ) { ?>
+								<div class="item-desc group-item-desc only-list-view"><?php bboss_group_description_excerpt( false, 150 ); ?></div>
 							<?php } ?>
 						</div>
 
-						<?php bp_nouveau_groups_loop_item(); ?>
+						<?php bboss_nouveau_groups_loop_item(); ?>
 
 						<div class="group-footer-wrap <?php echo esc_attr( $group_members . ' ' . $join_button ); ?>">
 							<div class="group-members-wrap flex">
 								<?php
-									bb_groups_members();
+									bboss_groups_members();
 								?>
 							</div>
-							<?php if ( bb_platform_group_element_enable( 'join-buttons' ) ) { ?>
-								<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
+							<?php if ( bboss_platform_group_element_enable( 'join-buttons' ) ) { ?>
+								<div class="groups-loop-buttons footer-button-wrap"><?php bboss_nouveau_groups_loop_buttons(); ?></div>
 							<?php } ?>
 						</div>
 
@@ -190,11 +190,11 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 	</div> <!-- .bb-cancel-request-group-popup -->
 
 	<?php
-	bp_nouveau_pagination( 'bottom' );
+	bboss_nouveau_pagination( 'bottom' );
 } else {
-	bp_nouveau_user_feedback( 'groups-loop-none' );
+	bboss_nouveau_user_feedback( 'groups-loop-none' );
 }
 
-bp_nouveau_after_loop();
+bboss_nouveau_after_loop();
 
 remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );

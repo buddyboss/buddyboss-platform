@@ -3,7 +3,7 @@
 /**
  * @group members
  * @group signups
- * @group BP_Signup
+ * @group BBoss_Signup
  */
 class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	protected $signup_allowed;
@@ -14,8 +14,8 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			$this->signup_allowed = get_site_option( 'registration' );
 			update_site_option( 'registration', 'all' );
 		} else {
-			bp_get_option( 'users_can_register' );
-			bp_update_option( 'users_can_register', 1 );
+			bboss_get_option( 'users_can_register' );
+			bboss_update_option( 'users_can_register', 1 );
 		}
 
 		parent::setUp();
@@ -25,7 +25,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		if ( is_multisite() ) {
 			update_site_option( 'registration', $this->signup_allowed );
 		} else {
-			bp_update_option( 'users_can_register', $this->signup_allowed );
+			bboss_update_option( 'users_can_register', $this->signup_allowed );
 		}
 
 		parent::tearDown();
@@ -35,7 +35,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	 * @group add
 	 */
 	public function test_add() {
-		$time = bp_core_current_time();
+		$time = bboss_core_current_time();
 		$args = array(
 			'domain' => 'foo',
 			'path' => 'bar',
@@ -50,10 +50,10 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			),
 		);
 
-		$signup = BP_Signup::add( $args );
+		$signup = BBoss_Signup::add( $args );
 		$this->assertNotEmpty( $signup );
 
-		$s = new BP_Signup( $signup );
+		$s = new BBoss_Signup( $signup );
 
 		// spot check
 		$this->assertSame( $signup, $s->id );
@@ -66,14 +66,14 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	 */
 	public function test_add_no_visibility_level_set_should_use_default_visiblity_level() {
 		// Update field_1's default visiblity to 'adminsonly'
-		bp_xprofile_update_field_meta( 1, 'default_visibility', 'adminsonly' );
+		bboss_xprofile_update_field_meta( 1, 'default_visibility', 'adminsonly' );
 
 		// Add new signup without a custom field visibility set for field_1.
-		$signup = BP_Signup::add( array(
+		$signup = BBoss_Signup::add( array(
 			'title' => 'Foo bar',
 			'user_login' => 'user1',
 			'user_email' => 'user1@example.com',
-			'registered' => bp_core_current_time(),
+			'registered' => bboss_core_current_time(),
 			'activation_key' => '12345',
 			'meta' => array(
 				'field_1' => 'Foo Bar',
@@ -90,10 +90,10 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		) );
 
 		// Activate the signup.
-		$activate = BP_Signup::activate( (array) $signup );
+		$activate = BBoss_Signup::activate( (array) $signup );
 
 		// Assert that field 1's visibility for the signup is still 'adminsonly'
-		$vis = xprofile_get_field_visibility_level( 1, $activate['activated'][0] );
+		$vis = bboss_xprofile_get_field_visibility_level( 1, $activate['activated'][0] );
 		$this->assertSame( 'adminsonly', $vis );
 	}
 
@@ -105,13 +105,13 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	 */
 	public function test_activate_enforced_field_ignores_crafted_visibility() {
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
 
 		$user_id = $this->activate_signup_with_visibility( $field_id, 'public' );
 
 		// The default is written; the crafted 'public' must not be.
-		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		$this->assertSame( 'loggedin', isset( $levels[ $field_id ] ) ? $levels[ $field_id ] : null );
 		$this->assertNotSame( 'public', isset( $levels[ $field_id ] ) ? $levels[ $field_id ] : null );
 	}
@@ -120,51 +120,51 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	 * The nickname field is always locked by the display-name rules, so a crafted
 	 * visibility in the registration payload must be ignored at activation - even
 	 * though it is not flagged "Enforce field visibility". This is the case the
-	 * previous bp_core_hide_display_name_field() check missed (it never locks nickname).
+	 * previous bboss_core_hide_display_name_field() check missed (it never locks nickname).
 	 *
 	 * @group signup_visibility
 	 */
 	public function test_activate_nickname_field_ignores_crafted_visibility() {
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
 
-		$nick_backup = bp_get_option( 'bp-xprofile-nickname-field-id' );
-		bp_update_option( 'bp-xprofile-nickname-field-id', $field_id );
+		$nick_backup = bboss_get_option( 'bp-xprofile-nickname-field-id' );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $field_id );
 
 		$user_id = $this->activate_signup_with_visibility( $field_id, 'public' );
 
 		// allow_custom_visibility is 'allowed', so the getter returns the stored value;
 		// after the fix that must be the default, not the crafted 'public'.
-		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+		$this->assertSame( 'loggedin', bboss_xprofile_get_field_visibility_level( $field_id, $user_id ) );
 
-		bp_update_option( 'bp-xprofile-nickname-field-id', $nick_backup );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $nick_backup );
 	}
 
 	/**
 	 * With Display Name Format = First Name, the first-name field is locked, so a
 	 * crafted visibility must be ignored at activation. The previous
-	 * bp_core_hide_display_name_field() check only locked first-name for the
+	 * bboss_core_hide_display_name_field() check only locked first-name for the
 	 * nickname format, so this case slipped through.
 	 *
 	 * @group signup_visibility
 	 */
 	public function test_activate_firstname_field_ignores_crafted_visibility_for_first_name_format() {
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
 
-		$first_backup = bp_get_option( 'bp-xprofile-firstname-field-id' );
-		$fmt_backup   = bp_get_option( 'bp-display-name-format' );
-		bp_update_option( 'bp-xprofile-firstname-field-id', $field_id );
-		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$first_backup = bboss_get_option( 'bp-xprofile-firstname-field-id' );
+		$fmt_backup   = bboss_get_option( 'bp-display-name-format' );
+		bboss_update_option( 'bp-xprofile-firstname-field-id', $field_id );
+		bboss_update_option( 'bp-display-name-format', 'first_name' );
 
 		$user_id = $this->activate_signup_with_visibility( $field_id, 'public' );
 
-		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+		$this->assertSame( 'loggedin', bboss_xprofile_get_field_visibility_level( $field_id, $user_id ) );
 
-		bp_update_option( 'bp-xprofile-firstname-field-id', $first_backup );
-		bp_update_option( 'bp-display-name-format', $fmt_backup );
+		bboss_update_option( 'bp-xprofile-firstname-field-id', $first_backup );
+		bboss_update_option( 'bp-display-name-format', $fmt_backup );
 	}
 
 	/**
@@ -176,19 +176,19 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	 */
 	public function test_activate_allowed_field_honors_member_visibility() {
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
 
 		$user_id = $this->activate_signup_with_visibility( $field_id, 'adminsonly' );
 
-		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+		$this->assertSame( 'adminsonly', bboss_xprofile_get_field_visibility_level( $field_id, $user_id ) );
 	}
 
 	/**
-	 * BP_Signup::add_backcompat() carries its own copy of the visibility block and runs at
-	 * REGISTRATION time on a default single-site install (bp_core_signup_user() calls it
+	 * BBoss_Signup::add_backcompat() carries its own copy of the visibility block and runs at
+	 * REGISTRATION time on a default single-site install (bboss_core_signup_user() calls it
 	 * unless BP_SIGNUPS_SKIP_USER_CREATION is set). The activation tests above go through
-	 * bp_core_activate_signup(), so this copy needs its own coverage.
+	 * bboss_core_activate_signup(), so this copy needs its own coverage.
 	 *
 	 * @group signup_visibility
 	 */
@@ -198,12 +198,12 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		}
 
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
 
 		$user_id = $this->signup_backcompat_with_visibility( $field_id, 'public' );
 
-		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		$this->assertSame( 'loggedin', isset( $levels[ $field_id ] ) ? $levels[ $field_id ] : null );
 		$this->assertNotSame( 'public', isset( $levels[ $field_id ] ) ? $levels[ $field_id ] : null );
 	}
@@ -220,19 +220,19 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		}
 
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
 
-		$nick_backup = bp_get_option( 'bp-xprofile-nickname-field-id' );
-		bp_update_option( 'bp-xprofile-nickname-field-id', $field_id );
+		$nick_backup = bboss_get_option( 'bp-xprofile-nickname-field-id' );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $field_id );
 
 		$user_id = $this->signup_backcompat_with_visibility( $field_id, 'public' );
 
 		// allow_custom_visibility is 'allowed', so the getter returns the stored value -
 		// it must be the admin default, not the crafted 'public'.
-		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+		$this->assertSame( 'loggedin', bboss_xprofile_get_field_visibility_level( $field_id, $user_id ) );
 
-		bp_update_option( 'bp-xprofile-nickname-field-id', $nick_backup );
+		bboss_update_option( 'bp-xprofile-nickname-field-id', $nick_backup );
 	}
 
 	/**
@@ -246,16 +246,16 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		}
 
 		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
-		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
-		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+		bboss_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bboss_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
 
 		$user_id = $this->signup_backcompat_with_visibility( $field_id, 'adminsonly' );
 
-		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+		$this->assertSame( 'adminsonly', bboss_xprofile_get_field_visibility_level( $field_id, $user_id ) );
 	}
 
 	/**
-	 * Register through BP_Signup::add_backcompat() with a chosen visibility for one field
+	 * Register through BBoss_Signup::add_backcompat() with a chosen visibility for one field
 	 * and return the created user ID.
 	 *
 	 * @param int    $field_id   Profile field ID.
@@ -267,7 +267,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		static $i = 0;
 		++$i;
 
-		$user_id = BP_Signup::add_backcompat(
+		$user_id = BBoss_Signup::add_backcompat(
 			'bcvis_user_' . $i,
 			'password',
 			'bcvis_user_' . $i . '@example.com',
@@ -299,12 +299,12 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		$field_key            = 'field_' . $field_id;
 		$field_visibility_key = $field_key . '_visibility';
 
-		$signup = BP_Signup::add(
+		$signup = BBoss_Signup::add(
 			array(
 				'title'          => 'Foo bar',
 				'user_login'     => 'vis_user_' . $i,
 				'user_email'     => 'vis_user_' . $i . '@example.com',
-				'registered'     => bp_core_current_time(),
+				'registered'     => bboss_core_current_time(),
 				'activation_key' => wp_generate_password( 32, false ),
 				'meta'           => array(
 					$field_key            => 'Foo Bar',
@@ -315,7 +315,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			)
 		);
 
-		$activate = BP_Signup::activate( (array) $signup );
+		$activate = BBoss_Signup::activate( (array) $signup );
 
 		return $activate['activated'][0];
 	}
@@ -328,7 +328,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		$s2 = self::factory()->signup->create();
 		$s3 = self::factory()->signup->create();
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'offset' => 1,
 			'fields' => 'ids',
 		) );
@@ -344,7 +344,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		$s2 = self::factory()->signup->create();
 		$s3 = self::factory()->signup->create();
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'number' => 2,
 			'fields' => 'ids',
 		) );
@@ -362,7 +362,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		$s2 = self::factory()->signup->create();
 		$s3 = self::factory()->signup->create();
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'usersearch' => 'ghi',
 			'fields' => 'ids',
 		) );
@@ -384,7 +384,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			'user_email' => 'zzzzz@example.com',
 		) );
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'orderby' => 'email',
 			'number' => 3,
 			'fields' => 'ids',
@@ -408,7 +408,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			'user_email' => 'zzzzz@example.com',
 		) );
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'orderby' => 'email',
 			'number' => 3,
 			'order' => 'ASC',
@@ -426,7 +426,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		$s2 = self::factory()->signup->create();
 		$s3 = self::factory()->signup->create();
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'include' => array( $s1, $s3 ),
 			'fields' => 'ids',
 		) );
@@ -448,7 +448,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			'activation_key' => 'baz',
 		) );
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'activation_key' => 'bar',
 			'fields' => 'ids',
 		) );
@@ -470,7 +470,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			'user_login' => 'jjjjfoo',
 		) );
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'user_login' => 'zzzzfoo',
 			'fields' => 'ids',
 		) );
@@ -502,7 +502,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 			'activation_key' => 'activationkeythree',
 		) );
 
-		$results = BP_Signup::activate( $signups );
+		$results = BBoss_Signup::activate( $signups );
 		$this->assertNotEmpty( $results['activated'] );
 
 		$users = array();
@@ -522,7 +522,7 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 		$s2 = self::factory()->signup->create();
 		$s3 = self::factory()->signup->create();
 
-		$ss = BP_Signup::get( array(
+		$ss = BBoss_Signup::get( array(
 			'number' => 3,
 			'fields' => 'ids',
 		) );

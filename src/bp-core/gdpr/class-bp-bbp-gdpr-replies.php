@@ -1,6 +1,6 @@
 <?php
 /**
- * BP_Bbp_Gdpr_Replies base class
+ * BBoss_Bbp_Gdpr_Replies base class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,14 +10,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Bbp_Gdpr_Replies
+ * Class BBoss_Bbp_Gdpr_Replies
  */
-class BP_Bbp_Gdpr_Replies {
+class BBoss_Bbp_Gdpr_Replies {
 
 	public $post_type = 'reply';
 
 	/**
-	 * BP_Bbp_Gdpr_Replies constructor.
+	 * BBoss_Bbp_Gdpr_Replies constructor.
 	 */
 	public function __construct() {
 

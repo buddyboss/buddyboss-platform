@@ -11,11 +11,11 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! function_exists( 'bp_performance_loaded' ) ) {
+if ( ! function_exists( 'bboss_performance_loaded' ) ) {
 	/**
 	 * Load Performance instance.
 	 */
-	function bp_performance_loaded() {
+	function bboss_performance_loaded() {
 		if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 			require_once __DIR__ . '/classes/class-performance.php';
 			\BuddyBoss\Performance\Performance::instance();
@@ -40,8 +40,8 @@ if ( ! function_exists( 'bp_performance_loaded' ) ) {
  *
  * @return WP_REST_Response $data
  */
-if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
-	function rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
+if ( ! function_exists( 'bboss_rest_post_dispatch_cache_callback' ) ) {
+	function bboss_rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
 		if ( 0 === (int) $user_id ) {
 
 			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
@@ -87,7 +87,7 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
 					empty( $apps_settings ) // buddyboss-app disabled.
 				)
 			) {
-				return bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
+				return bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
 			}
 		}
 
@@ -109,8 +109,8 @@ if ( ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
  *
  * @return WP_REST_Response $data
  */
-if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
-	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
+if ( ! function_exists( 'bboss_restricate_rest_api_mu_cache' ) ) {
+	function bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
 		// Add mandatory endpoint here for app which you want to exclude from restriction.
 		// ex: /buddyboss-app/auth/v1/jwt/token.
 		$default_exclude_endpoint   = array(
@@ -132,7 +132,7 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
 		}
 		$current_endpoint = trailingslashit( $get_site_url ) . 'wp-json' . $current_endpoint;
 
-		if ( ! bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) ) {
+		if ( ! bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) ) {
 			$data = false;
 		}
 
@@ -151,8 +151,8 @@ if ( ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
  *
  * @return bool true Return true if allow endpoint otherwise return false.
  */
-if ( ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
-	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
+if ( ! function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) ) {
+	function bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
 		$exploded_endpoint = (array) explode( 'wp-json', $current_endpoint );
 		if ( '' !== $exclude_endpoints ) {
 			$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
@@ -183,3 +183,38 @@ if ( ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
 		}
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( function_exists( 'bboss_is_allowed_endpoint_mu_cache' ) && ! function_exists( 'bb_is_allowed_endpoint_mu_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_allowed_endpoint_mu_cache()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_is_allowed_endpoint_mu_cache() instead.
+	 */
+	function bb_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url ) {
+		return bboss_is_allowed_endpoint_mu_cache( $current_endpoint, $exclude_endpoints, $get_site_url );
+	}
+}
+if ( function_exists( 'bboss_restricate_rest_api_mu_cache' ) && ! function_exists( 'bb_restricate_rest_api_mu_cache' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_restricate_rest_api_mu_cache()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_restricate_rest_api_mu_cache() instead.
+	 */
+	function bb_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints ) {
+		return bboss_restricate_rest_api_mu_cache( $data, $current_endpoint, $exclude_endpoints );
+	}
+}
+if ( function_exists( 'bboss_rest_post_dispatch_cache_callback' ) && ! function_exists( 'rest_post_dispatch_cache_callback' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_post_dispatch_cache_callback()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_post_dispatch_cache_callback() instead.
+	 */
+	function rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint ) {
+		return bboss_rest_post_dispatch_cache_callback( $data, $user_id, $current_endpoint );
+	}
+}
+// @bbwt-com-end compat-layer

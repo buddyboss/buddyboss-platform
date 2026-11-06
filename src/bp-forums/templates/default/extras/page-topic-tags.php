@@ -34,7 +34,7 @@ get_header(); ?>
 
 				<div id="bbpress-forums">
 
-					<?php bbp_breadcrumb(); ?>
+					<?php bboss_bbp_breadcrumb(); ?>
 
 					<div id="bbp-topic-hot-tags">
 
@@ -44,7 +44,7 @@ get_header(); ?>
 								'smallest' => 9,
 								'largest'  => 38,
 								'number'   => 80,
-								'taxonomy' => bbp_get_topic_tag_tax_id(),
+								'taxonomy' => bboss_bbp_get_topic_tag_tax_id(),
 							)
 						);
 						?>

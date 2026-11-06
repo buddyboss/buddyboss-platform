@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[AllowDynamicProperties]
-class BP_XProfile_Group {
+class BBoss_XProfile_Group {
 
 	/**
 	 * Field group ID.
@@ -145,11 +145,11 @@ class BP_XProfile_Group {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_XProfile_Group $this Current instance of the group being saved. Passed by reference.
+		 * @param BBoss_XProfile_Group $this Current instance of the group being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'xprofile_group_before_save', array( &$this ) );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Update or insert.
 		if ( ! empty( $this->id ) ) {
@@ -190,7 +190,7 @@ class BP_XProfile_Group {
 		if (
 			'on' === $repeater_enabled &&
 			'on' !== self::get_group_meta( $this->id, 'is_repeater_enabled' ) &&
-			bb_xprofile_group_has_bio_field( $this->id )
+			bboss_xprofile_group_has_bio_field( $this->id )
 		) {
 			$repeater_enabled = 'off';
 
@@ -200,8 +200,8 @@ class BP_XProfile_Group {
 			 * is a fatal on PHP 8 — `is_admin()` alone is not enough, because it is
 			 * also true during admin-ajax before the admin object exists.
 			 */
-			if ( is_admin() && ! wp_doing_ajax() && function_exists( 'bp_core_add_admin_notice' ) && isset( buddypress()->admin ) ) {
-				bp_core_add_admin_notice(
+			if ( is_admin() && ! wp_doing_ajax() && function_exists( 'bboss_core_add_admin_notice' ) && isset( bboss()->admin ) ) {
+				bboss_core_add_admin_notice(
 					__( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set was not enabled. Remove the Bio field first.', 'buddyboss' ),
 					'error'
 				);
@@ -215,7 +215,7 @@ class BP_XProfile_Group {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_XProfile_Group $this Current instance of the group being saved. Passed by reference.
+		 * @param BBoss_XProfile_Group $this Current instance of the group being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'xprofile_group_after_save', array( &$this ) );
 
@@ -265,11 +265,11 @@ class BP_XProfile_Group {
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
+		 * @param BBoss_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
 		 */
 		do_action_ref_array( 'xprofile_group_before_delete', array( &$this ) );
 
-		$bp      = buddypress();
+		$bp      = bboss();
 		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_groups} WHERE id = %d", $this->id ) );
 
 		// Delete field group.
@@ -290,13 +290,13 @@ class BP_XProfile_Group {
 		}
 
 		// Remove the group's fields.
-		if ( BP_XProfile_Field::delete_for_group( $this->id ) ) {
+		if ( BBoss_XProfile_Field::delete_for_group( $this->id ) ) {
 
 			// Remove profile data for the groups fields.
 			if ( ! empty( $this->fields ) ) {
 				for ( $i = 0, $count = count( $this->fields ); $i < $count; ++$i ) {
-					BP_XProfile_ProfileData::delete_for_field( $this->fields[ $i ]->id );
-					BB_XProfile_Visibility::delete_for_field( $this->fields[ $i ]->id );
+					BBoss_XProfile_ProfileData::delete_for_field( $this->fields[ $i ]->id );
+					BBoss_XProfile_Visibility::delete_for_field( $this->fields[ $i ]->id );
 				}
 			}
 		}
@@ -306,7 +306,7 @@ class BP_XProfile_Group {
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
+		 * @param BBoss_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
 		 */
 		do_action_ref_array( 'xprofile_group_after_delete', array( &$this ) );
 
@@ -319,7 +319,7 @@ class BP_XProfile_Group {
 	/** Static Methods ********************************************************/
 
 	/**
-	 * Populates the BP_XProfile_Group object with profile field groups, fields,
+	 * Populates the BBoss_XProfile_Group object with profile field groups, fields,
 	 * and field data.
 	 *
 	 * @since BuddyPress 1.2.0
@@ -358,11 +358,11 @@ class BP_XProfile_Group {
 		global $wpdb;
 
 		// Parse arguments.
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'profile_group_id'               => false,
-				'user_id'                        => bp_displayed_user_id(),
+				'user_id'                        => bboss_displayed_user_id(),
 				'member_type'                    => false,
 				'hide_empty_groups'              => false,
 				'hide_empty_fields'              => false,
@@ -396,7 +396,7 @@ class BP_XProfile_Group {
 			$where_sql = '';
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Include or exclude empty groups.
 		$cache_key = 'bp_xprofile_group_ids_' . md5( maybe_serialize( $r ) . '_' . maybe_serialize( $where_sql ) );
@@ -446,19 +446,19 @@ class BP_XProfile_Group {
 		foreach ( $group_ids as $group_id ) {
 			$is_repeater_enabled = 'on' == self::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 			if ( $is_repeater_enabled ) {
-				$clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $group_id );
+				$clone_field_ids_all = bboss_get_repeater_clone_field_ids_all( $group_id );
 
 				if ( $r['repeater_show_main_fields_only'] ) {
 					// exclude clones
 					$exclude_fields_cs = array_merge( $exclude_fields_cs, $clone_field_ids_all );
 				} else {
 					// exclude template fields
-					$template_field_ids = bp_get_repeater_template_field_ids( $group_id );
+					$template_field_ids = bboss_get_repeater_template_field_ids( $group_id );
 					$exclude_fields_cs  = array_merge( $exclude_fields_cs, $template_field_ids );
 
 					// include only the subset of clones the current user has data in
-					$user_field_set_count     = bp_get_profile_field_set_count( $group_id, $r['user_id'] );
-					$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $group_id, $user_field_set_count );
+					$user_field_set_count     = bboss_get_profile_field_set_count( $group_id, $r['user_id'] );
+					$clone_field_ids_has_data = bboss_get_repeater_clone_field_ids_subset( $group_id, $user_field_set_count );
 					$clones_to_exclude        = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
 
 					$exclude_fields_cs = array_merge( $exclude_fields_cs, $clones_to_exclude );
@@ -468,7 +468,7 @@ class BP_XProfile_Group {
 
 		// Visibility - Handled here so as not to be overridden by sloppy use of the
 		// exclude_fields parameter. See bp_xprofile_get_hidden_fields_for_user().
-		$hidden_user_fields = bp_xprofile_get_hidden_fields_for_user( $r['user_id'] );
+		$hidden_user_fields = bboss_xprofile_get_hidden_fields_for_user( $r['user_id'] );
 		$exclude_fields_cs  = array_merge( $exclude_fields_cs, $hidden_user_fields );
 		$exclude_fields_cs  = implode( ',', wp_parse_id_list( $exclude_fields_cs ) );
 
@@ -483,17 +483,17 @@ class BP_XProfile_Group {
 		$include_field_ids = array();
 
 		// Member-type restrictions.
-		if ( bp_get_member_types() ) {
+		if ( bboss_get_member_types() ) {
 			if ( $r['user_id'] || false !== $r['member_type'] ) {
 				$member_types = $r['member_type'];
 				if ( $r['user_id'] ) {
-					$member_types = bp_get_member_type( $r['user_id'], false );
+					$member_types = bboss_get_member_type( $r['user_id'], false );
 					if ( empty( $member_types ) ) {
 						$member_types = array( 'null' );
 					}
 				}
 
-				$member_types_fields = BP_XProfile_Field::get_fields_for_member_type( $member_types );
+				$member_types_fields = BBoss_XProfile_Field::get_fields_for_member_type( $member_types );
 				$include_field_ids  += array_keys( $member_types_fields );
 			}
 		}
@@ -531,9 +531,9 @@ class BP_XProfile_Group {
 
 		// Start Remove the social network fields from dashboard page.
 		$social_networks_key = 0;
-		if ( bp_is_user_profile() && ! bp_is_user_profile_edit() && ! bp_is_register_page() ) {
+		if ( bboss_is_user_profile() && ! bboss_is_user_profile_edit() && ! bboss_is_register_page() ) {
 			foreach ( $field_ids as $profile_fields ) {
-				$field_obj = xprofile_get_field( $profile_fields, null, false );
+				$field_obj = bboss_xprofile_get_field( $profile_fields, null, false );
 				if ( 'socialnetworks' === $field_obj->type ) {
 					$social_networks_key = (int) $profile_fields;
 				}
@@ -550,7 +550,7 @@ class BP_XProfile_Group {
 		// End Remove the social network fields from dashboard page.
 
 		// Prime the field cache.
-		$uncached_field_ids = bp_get_non_cached_ids( $field_ids, 'bp_xprofile_fields' );
+		$uncached_field_ids = bboss_get_non_cached_ids( $field_ids, 'bp_xprofile_fields' );
 		if ( ! empty( $uncached_field_ids ) ) {
 			$_uncached_field_ids = implode( ',', array_map( 'intval', $uncached_field_ids ) );
 			$uncached_fields     = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id IN ({$_uncached_field_ids})" );
@@ -563,7 +563,7 @@ class BP_XProfile_Group {
 		// Pull field objects from the cache.
 		$fields = array();
 		foreach ( $field_ids as $field_id ) {
-			$fields[] = xprofile_get_field( $field_id, null, false );
+			$fields[] = bboss_xprofile_get_field( $field_id, null, false );
 		}
 
 		// Store field IDs for meta cache priming.
@@ -574,7 +574,7 @@ class BP_XProfile_Group {
 
 			// Get field data for user ID.
 			if ( ! empty( $field_ids ) && ! empty( $r['user_id'] ) ) {
-				$field_data = BP_XProfile_ProfileData::get_data_for_user( $r['user_id'], $field_ids );
+				$field_data = BBoss_XProfile_ProfileData::get_data_for_user( $r['user_id'], $field_ids );
 			}
 
 			// Remove data-less fields, if necessary.
@@ -584,7 +584,7 @@ class BP_XProfile_Group {
 				foreach ( (array) $field_data as $data ) {
 
 					// Empty fields may contain a serialized empty array.
-					$maybe_value = bb_xprofile_safe_unserialize( $data->value ); // Object injection guard.
+					$maybe_value = bboss_xprofile_safe_unserialize( $data->value ); // Object injection guard.
 
 					// Valid field values of 0 or '0' get caught by empty(), so we have an extra check for these. See #BP5731.
 					if ( ( ! empty( $maybe_value ) || '0' == $maybe_value ) && false !== $key = array_search( $data->field_id, $field_ids ) ) {
@@ -630,7 +630,7 @@ class BP_XProfile_Group {
 
 		// Prime the meta cache, if necessary.
 		if ( ! empty( $r['update_meta_cache'] ) ) {
-			bp_xprofile_update_meta_cache( $object_ids );
+			bboss_xprofile_update_meta_cache( $object_ids );
 		}
 
 		// Maybe fetch visibility levels.
@@ -707,7 +707,7 @@ class BP_XProfile_Group {
 			$uncached_gids_sql = implode( ',', wp_parse_id_list( $uncached_gids ) );
 
 			// Get table name to query.
-			$table_name = buddypress()->profile->table_name_groups;
+			$table_name = bboss()->profile->table_name_groups;
 
 			// Fetch data, preserving order.
 			$queried_gdata = $wpdb->get_results( "SELECT * FROM {$table_name} WHERE id IN ({$uncached_gids_sql}) ORDER BY FIELD( id, {$uncached_gids_sql} )" );
@@ -746,11 +746,11 @@ class BP_XProfile_Group {
 	}
 
 	public static function get_group_meta( $group_id, $meta_key = '', $single = true ) {
-		return bp_xprofile_get_meta( $group_id, 'group', $meta_key, $single );
+		return bboss_xprofile_get_meta( $group_id, 'group', $meta_key, $single );
 	}
 
 	public static function update_group_meta( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return bp_xprofile_update_meta( $group_id, 'group', $meta_key, $meta_value, $prev_value );
+		return bboss_xprofile_update_meta( $group_id, 'group', $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -796,7 +796,7 @@ class BP_XProfile_Group {
 		wp_cache_delete( 'all', 'bp_xprofile_groups' );
 		wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_groups} SET group_order = %d WHERE id = %d", $position, $field_group_id ) );
 
@@ -820,12 +820,12 @@ class BP_XProfile_Group {
 	public static function fetch_visibility_level( $user_id = 0, $fields = array() ) {
 
 		// Get the user's visibility level preferences.
-		$visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$visibility_levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 		foreach ( (array) $fields as $key => $field ) {
 
 			// Does the admin allow this field to be customized?
-			$visibility   = bp_xprofile_get_meta( $field->id, 'field', 'allow_custom_visibility' );
+			$visibility   = bboss_xprofile_get_meta( $field->id, 'field', 'allow_custom_visibility' );
 			$allow_custom = (bool) ( 'disabled' !== $visibility );
 
 			// Look to see if the user has set the visibility for this field.
@@ -834,7 +834,7 @@ class BP_XProfile_Group {
 
 				// If no admin-set default is saved, fall back on a global default.
 			} else {
-				$fallback_visibility = bp_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
+				$fallback_visibility = bboss_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
 
 				/**
 				 * Filters the XProfile default visibility level for a field.
@@ -870,7 +870,7 @@ class BP_XProfile_Group {
 		$default_visibility_levels = wp_cache_get( 'default_visibility_levels', 'bp_xprofile' );
 
 		if ( false === $default_visibility_levels ) {
-			$bp = buddypress();
+			$bp = bboss();
 
 			// @todo need to check like  why we are not getting the $bp->profile->table_name_meta into the plugins page.
 			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_meta ) ) {
@@ -933,7 +933,7 @@ class BP_XProfile_Group {
 		global $message;
 
 		// Users Admin URL
-		$users_url = bp_get_admin_url( 'admin.php' );
+		$users_url = bboss_get_admin_url( 'admin.php' );
 
 		// URL to cancel to
 		$cancel_url = add_query_arg(
@@ -971,10 +971,10 @@ class BP_XProfile_Group {
 
 		<div class="wrap">
 			<?php
-			$users_tab = count( bp_core_get_users_admin_tabs() );
+			$users_tab = count( bboss_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
+				<h2 class="nav-tab-wrapper"><?php bboss_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
 																			<?php
 			}
 			?>
@@ -1018,7 +1018,7 @@ class BP_XProfile_Group {
 							 *
 							 * @since BuddyPress 2.6.0
 							 *
-							 * @param BP_XProfile_Group $this Current XProfile group.
+							 * @param BBoss_XProfile_Group $this Current XProfile group.
 							 */
 							do_action( 'xprofile_group_admin_after_description', $this );
 							?>
@@ -1034,7 +1034,7 @@ class BP_XProfile_Group {
 							 *
 							 * @since BuddyPress 2.1.0
 							 *
-							 * @param BP_XProfile_Group $this Current XProfile group.
+							 * @param BBoss_XProfile_Group $this Current XProfile group.
 							 */
 							do_action( 'xprofile_group_before_submitbox', $this );
 							?>
@@ -1055,7 +1055,7 @@ class BP_XProfile_Group {
 											 *
 											 * @since BuddyPress 2.1.0
 											 *
-											 * @param BP_XProfile_Group $this Current XProfile group.
+											 * @param BBoss_XProfile_Group $this Current XProfile group.
 											 */
 											do_action( 'xprofile_group_submitbox_start', $this );
 											?>
@@ -1080,7 +1080,7 @@ class BP_XProfile_Group {
 							 *
 							 * @since BuddyPress 2.1.0
 							 *
-							 * @param BP_XProfile_Group $this Current XProfile group.
+							 * @param BBoss_XProfile_Group $this Current XProfile group.
 							 */
 							do_action( 'xprofile_group_after_submitbox', $this );
 							?>

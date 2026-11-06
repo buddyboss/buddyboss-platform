@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.5
  *
- * @param BP_Media $media Media object.
+ * @param BBoss_Media $media Media object.
  */
-function bp_media_clear_cache_for_media( $media ) {
+function bboss_media_clear_cache_for_media( $media ) {
 	wp_cache_delete( $media->id, 'bp_media' );
 	wp_cache_delete( 'bp_attachment_media_id_' . $media->attachment_id, 'bp_media' );
 	wp_cache_delete( 'bb_media_activity_' . $media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
@@ -48,7 +48,7 @@ add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
  *
  * @param array $deleted_ids IDs of deleted media items.
  */
-function bp_media_clear_cache_for_deleted_media( $deleted_ids ) {
+function bboss_media_clear_cache_for_deleted_media( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media' );
 		wp_cache_delete( 'bb_media_activity_' . $deleted_id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
@@ -66,8 +66,8 @@ add_action( 'bp_media_deleted_medias', 'bp_media_clear_cache_for_deleted_media' 
  *
  * @return bool True on success, false on failure.
  */
-function bp_media_reset_cache_incrementor() {
-	return bp_core_reset_incrementor( 'bp_media' );
+function bboss_media_reset_cache_incrementor() {
+	return bboss_core_reset_incrementor( 'bp_media' );
 }
 add_action( 'bp_media_delete', 'bp_media_reset_cache_incrementor' );
 add_action( 'bp_media_add', 'bp_media_reset_cache_incrementor' );
@@ -80,7 +80,7 @@ add_action( 'bp_video_add', 'bp_media_reset_cache_incrementor' );
  *
  * @param object $media Media object item.
  */
-function bp_media_clear_media_user_object_cache( $media ) {
+function bboss_media_clear_media_user_object_cache( $media ) {
 	$user_id       = ! empty( $media->user_id ) ? $media->user_id : false;
 	$attachment_id = ! empty( $media->attachment_id ) ? $media->attachment_id : false;
 	$activity_id   = ! empty( $media->activity_id ) ? $media->activity_id : false;
@@ -109,7 +109,7 @@ add_action( 'bp_media_add', 'bp_media_clear_media_user_object_cache', 10 );
  *
  * @param array $medias DB results of media items.
  */
-function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
+function bboss_media_clear_media_user_object_cache_on_delete( $medias ) {
 	if ( ! empty( $medias ) ) {
 		foreach ( (array) $medias as $deleted_media ) {
 			$user_id       = ! empty( $deleted_media->user_id ) ? $deleted_media->user_id : false;
@@ -152,7 +152,7 @@ add_action( 'bp_media_before_delete', 'bp_media_clear_media_user_object_cache_on
  *
  * @param int $user_id ID of the user deleted.
  */
-function bp_media_remove_all_user_object_cache_data( $user_id ) {
+function bboss_media_remove_all_user_object_cache_data( $user_id ) {
 	wp_cache_delete( 'bp_total_media_for_user_' . $user_id, 'bp' );
 	wp_cache_delete( 'bp_total_group_media_for_user_' . $user_id, 'bp' );
 	wp_cache_delete( 'bp_total_media_count_' . $user_id, 'bp_media' );
@@ -167,7 +167,7 @@ add_action( 'bp_media_remove_all_user_data', 'bp_media_remove_all_user_object_ca
  *
  * @param object $media Media object item.
  */
-function bp_media_clear_media_group_object_cache( $media ) {
+function bboss_media_clear_media_group_object_cache( $media ) {
 	$group_id = ! empty( $media->group_id ) ? $media->group_id : false;
 
 	if ( $group_id ) {
@@ -186,7 +186,7 @@ add_action( 'bp_media_add', 'bp_media_clear_media_group_object_cache', 10 );
  *
  * @param array $medias DB results of media items.
  */
-function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
+function bboss_media_clear_media_group_object_cache_on_delete( $medias ) {
 	if ( ! empty( $medias[0] ) ) {
 		foreach ( (array) $medias[0] as $deleted_media ) {
 			$group_id = ! empty( $deleted_media->group_id ) ? $deleted_media->group_id : false;
@@ -204,9 +204,9 @@ add_action( 'bp_media_before_delete', 'bp_media_clear_media_group_object_cache_o
  *
  * @since BuddyBoss 1.1.5
  *
- * @param BP_Media_Album $album Album object.
+ * @param BBoss_Media_Album $album Album object.
  */
-function bp_media_clear_cache_for_album( $album ) {
+function bboss_media_clear_cache_for_album( $album ) {
 	wp_cache_delete( $album->id, 'bp_media_album' );
 }
 add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
@@ -218,7 +218,7 @@ add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
  *
  * @param array $deleted_ids IDs of deleted album items.
  */
-function bp_media_clear_cache_for_deleted_album( $deleted_ids ) {
+function bboss_media_clear_cache_for_deleted_album( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media_album' );
 	}
@@ -235,8 +235,8 @@ add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album'
  *
  * @return bool True on success, false on failure.
  */
-function bp_media_album_reset_cache_incrementor() {
-	return bp_core_reset_incrementor( 'bp_media_album' );
+function bboss_media_album_reset_cache_incrementor() {
+	return bboss_core_reset_incrementor( 'bp_media_album' );
 }
 add_action( 'bp_album_delete', 'bp_media_album_reset_cache_incrementor' );
 add_action( 'bp_album_add', 'bp_media_album_reset_cache_incrementor' );
@@ -248,7 +248,7 @@ add_action( 'bp_album_add', 'bp_media_album_reset_cache_incrementor' );
  *
  * @param object $album Album object item.
  */
-function bp_media_clear_album_group_object_cache( $album ) {
+function bboss_media_clear_album_group_object_cache( $album ) {
 	$group_id = ! empty( $album->group_id ) ? $album->group_id : false;
 
 	if ( $group_id ) {
@@ -266,7 +266,7 @@ add_action( 'bp_album_add', 'bp_media_clear_album_group_object_cache', 10 );
  *
  * @param array $albums DB results of album items.
  */
-function bp_media_clear_album_group_object_cache_on_delete( $albums ) {
+function bboss_media_clear_album_group_object_cache_on_delete( $albums ) {
 	if ( ! empty( $albums[0] ) ) {
 		foreach ( (array) $albums[0] as $deleted_album ) {
 			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : false;

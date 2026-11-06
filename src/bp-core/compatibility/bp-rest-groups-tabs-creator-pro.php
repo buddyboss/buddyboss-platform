@@ -16,7 +16,7 @@ add_filter( 'bp_rest_group_tabs', 'bp_rest_group_tabs_creator_pro', 10, 1 );
 /**
  * Group tab create function.
  */
-if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
+if ( ! function_exists( 'bboss_rest_group_tabs_creator_pro' ) ) {
 
 	/**
 	 * Get BuddyPress Groups Tabs Creator Pro tasb getting.
@@ -27,7 +27,7 @@ if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
-	function bp_rest_group_tabs_creator_pro( $navigation ) {
+	function bboss_rest_group_tabs_creator_pro( $navigation ) {
 		if ( function_exists( 'bpgtc_get_active_group_tab_entries' ) ) {
 			$active_tabs = bpgtc_get_active_group_tab_entries();
 			$tabs        = array();
@@ -40,7 +40,7 @@ if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
 						continue;
 					}
 
-					$current_group = bp_is_group() ? groups_get_current_group() : null;
+					$current_group = bboss_is_group() ? bboss_groups_get_current_group() : null;
 
 					// do not add tab if does not apply to this group.
 					if ( ! bpgtc_is_tab_available( $active_tab, $current_group ) ) {
@@ -50,7 +50,7 @@ if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
 					if ( ! empty( $active_tab->link ) ) {
 						$link = trailingslashit( bpgtc_parse_group_tab_url( $active_tab->link ) );
 					} else {
-						$group_link = bp_get_group_permalink( $current_group );
+						$group_link = bboss_get_group_permalink( $current_group );
 						$link       = trailingslashit( $group_link . $active_tab->slug );
 					}
 
@@ -69,7 +69,7 @@ if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
 				}
 
 				$navigation = array_merge( $navigation, $tabs );
-				$navigation = array_msort( $navigation, array( 'position' => 'SORT_ASC' ) );
+				$navigation = bboss_array_msort( $navigation, array( 'position' => 'SORT_ASC' ) );
 			}
 		}
 
@@ -80,7 +80,7 @@ if ( ! function_exists( 'bp_rest_group_tabs_creator_pro' ) ) {
 /**
  * Array msort function.
  */
-if ( ! function_exists( 'array_msort' ) ) {
+if ( ! function_exists( 'bboss_array_msort' ) ) {
 	/**
 	 * Sort data based on order.
 	 *
@@ -91,7 +91,7 @@ if ( ! function_exists( 'array_msort' ) ) {
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
-	function array_msort( $array, $cols ) {
+	function bboss_array_msort( $array, $cols ) {
 
 		$array = json_decode( json_encode( $array ), true );
 

@@ -17,24 +17,24 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since bbPress (r3349)
  *
- * @uses bbp_parse_args()
- * @uses bbp_get_reply_post_type()
+ * @uses bboss_bbp_parse_args()
+ * @uses bboss_bbp_get_reply_post_type()
  * @uses wp_insert_post()
  * @uses update_post_meta()
  *
  * @param array $reply_data Forum post data
  * @param arrap $reply_meta Forum meta data
  */
-function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
+function bboss_bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
 
 	// Forum
-	$reply_data = bbp_parse_args(
+	$reply_data = bboss_bbp_parse_args(
 		$reply_data,
 		array(
 			'post_parent'    => 0, // topic ID
-			'post_status'    => bbp_get_public_status_id(),
-			'post_type'      => bbp_get_reply_post_type(),
-			'post_author'    => bbp_get_current_user_id(),
+			'post_status'    => bboss_bbp_get_public_status_id(),
+			'post_type'      => bboss_bbp_get_reply_post_type(),
+			'post_author'    => bboss_bbp_get_current_user_id(),
 			'post_password'  => '',
 			'post_content'   => '',
 			'post_title'     => '',
@@ -53,10 +53,10 @@ function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
 	}
 
 	// Forum meta
-	$reply_meta = bbp_parse_args(
+	$reply_meta = bboss_bbp_parse_args(
 		$reply_meta,
 		array(
-			'author_ip' => bbp_current_author_ip(),
+			'author_ip' => bboss_bbp_current_author_ip(),
 			'forum_id'  => 0,
 			'topic_id'  => 0,
 		),
@@ -69,9 +69,9 @@ function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
 	}
 
 	// Update the topic
-	$topic_id = bbp_get_reply_topic_id( $reply_id );
+	$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 	if ( ! empty( $topic_id ) ) {
-		bbp_update_topic( $topic_id );
+		bboss_bbp_update_topic( $topic_id );
 	}
 
 	// Return new reply ID
@@ -86,33 +86,33 @@ function bbp_insert_reply( $reply_data = array(), $reply_meta = array() ) {
  * @since bbPress (r2574)
  *
  * @param string $action The requested action to compare this function to
- * @uses bbp_add_error() To add an error message
- * @uses bbp_verify_nonce_request() To verify the nonce and check the request
- * @uses bbp_is_anonymous() To check if an anonymous post is being made
+ * @uses bboss_bbp_add_error() To add an error message
+ * @uses bboss_bbp_verify_nonce_request() To verify the nonce and check the request
+ * @uses bboss_bbp_is_anonymous() To check if an anonymous post is being made
  * @uses current_user_can() To check if the current user can publish replies
- * @uses bbp_get_current_user_id() To get the current user id
- * @uses bbp_filter_anonymous_post_data() To filter anonymous data
- * @uses bbp_set_current_anonymous_user_data() To set the anonymous user
+ * @uses bboss_bbp_get_current_user_id() To get the current user id
+ * @uses bboss_bbp_filter_anonymous_post_data() To filter anonymous data
+ * @uses bboss_bbp_set_current_anonymous_user_data() To set the anonymous user
  *                                                cookies
  * @uses is_wp_error() To check if the value retrieved is a {@link WP_Error}
  * @uses remove_filter() To remove kses filters if needed
  * @uses esc_attr() For sanitization
- * @uses bbp_check_for_flood() To check for flooding
- * @uses bbp_check_for_duplicate() To check for duplicates
+ * @uses bboss_bbp_check_for_flood() To check for flooding
+ * @uses bboss_bbp_check_for_duplicate() To check for duplicates
  * @uses apply_filters() Calls 'bbp_new_reply_pre_title' with the title
  * @uses apply_filters() Calls 'bbp_new_reply_pre_content' with the content
- * @uses bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
  * @uses wp_set_post_terms() To set the topic tags
  * @uses wp_insert_post() To insert the reply
  * @uses do_action() Calls 'bbp_new_reply' with the reply id, topic id, forum
  *                    id, anonymous data, reply author, edit (false), and
  *                    the reply to id
- * @uses bbp_get_reply_url() To get the paginated url to the reply
- * @uses bbp_redirect() To redirect to the reply url
+ * @uses bboss_bbp_get_reply_url() To get the paginated url to the reply
+ * @uses bboss_bbp_redirect() To redirect to the reply url
  * @uses bbPress::errors::get_error_message() To get the {@link WP_Error} error
  *                                              message
  */
-function bbp_new_reply_handler( $action = '' ) {
+function bboss_bbp_new_reply_handler( $action = '' ) {
 
 	// Bail if action is not bbp-new-reply.
 	if ( 'bbp-new-reply' !== $action ) {
@@ -120,8 +120,8 @@ function bbp_new_reply_handler( $action = '' ) {
 	}
 
 	// Nonce check.
-	if ( ! bbp_verify_nonce_request( 'bbp-new-reply' ) ) {
-		bbp_add_error( 'bbp_new_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+	if ( ! bboss_bbp_verify_nonce_request( 'bbp-new-reply' ) ) {
+		bboss_bbp_add_error( 'bbp_new_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 		return;
 	}
 
@@ -132,14 +132,14 @@ function bbp_new_reply_handler( $action = '' ) {
 	/** Reply Author */
 
 	// User is anonymous.
-	if ( bbp_is_anonymous() ) {
+	if ( bboss_bbp_is_anonymous() ) {
 
 		// Filter anonymous data.
-		$anonymous_data = bbp_filter_anonymous_post_data();
+		$anonymous_data = bboss_bbp_filter_anonymous_post_data();
 
 		// Anonymous data checks out, so set cookies, etc...
 		if ( ! empty( $anonymous_data ) && is_array( $anonymous_data ) ) {
-			bbp_set_current_anonymous_user_data( $anonymous_data );
+			bboss_bbp_set_current_anonymous_user_data( $anonymous_data );
 		}
 
 		// User is logged in.
@@ -147,11 +147,11 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		// User cannot create replies.
 		if ( ! current_user_can( 'publish_replies' ) ) {
-			bbp_add_error( 'bbp_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to reply.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to reply.', 'buddyboss' ) );
 		}
 
 		// Reply author is current user.
-		$reply_author = bbp_get_current_user_id();
+		$reply_author = bboss_bbp_get_current_user_id();
 
 	}
 
@@ -159,11 +159,11 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	// Topic id was not passed.
 	if ( empty( $_POST['bbp_topic_id'] ) ) {
-		bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID is missing.', 'buddyboss' ) );
 
 		// Topic id is not a number.
 	} elseif ( ! is_numeric( $_POST['bbp_topic_id'] ) ) {
-		bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID must be a number.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID must be a number.', 'buddyboss' ) );
 
 		// Topic id might be valid.
 	} else {
@@ -173,11 +173,11 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		// Topic id is a negative number.
 		if ( 0 > $posted_topic_id ) {
-			bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID cannot be a negative number.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion ID cannot be a negative number.', 'buddyboss' ) );
 
 			// Topic does not exist.
-		} elseif ( ! bbp_get_topic( $posted_topic_id ) ) {
-			bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion does not exist.', 'buddyboss' ) );
+		} elseif ( ! bboss_bbp_get_topic( $posted_topic_id ) ) {
+			bboss_bbp_add_error( 'bbp_reply_topic_id', __( '<strong>ERROR</strong>: Discussion does not exist.', 'buddyboss' ) );
 
 			// Use the POST'ed topic id.
 		} else {
@@ -189,18 +189,18 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	// Try to use the forum id of the topic.
 	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) {
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 		// Error check the POST'ed forum id.
 	} elseif ( isset( $_POST['bbp_forum_id'] ) ) {
 
 		// Empty Forum id was passed.
 		if ( empty( $_POST['bbp_forum_id'] ) ) {
-			bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss' ) );
 
 			// Forum id is not a number.
 		} elseif ( ! is_numeric( $_POST['bbp_forum_id'] ) ) {
-			bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_reply_forum_id', __( '<strong>ERROR</strong>: Forum ID must be a number.', 'buddyboss' ) );
 
 			// Forum id might be valid.
 		} else {
@@ -210,15 +210,15 @@ function bbp_new_reply_handler( $action = '' ) {
 
 			// Forum id is empty.
 			if ( 0 === $posted_forum_id ) {
-				bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID is missing.', 'buddyboss' ) );
 
 				// Forum id is a negative number.
 			} elseif ( 0 > $posted_forum_id ) {
-				bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss' ) );
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum ID cannot be a negative number.', 'buddyboss' ) );
 
 				// Forum does not exist.
-			} elseif ( ! bbp_get_forum( $posted_forum_id ) ) {
-				bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss' ) );
+			} elseif ( ! bboss_bbp_get_forum( $posted_forum_id ) ) {
+				bboss_bbp_add_error( 'bbp_topic_forum_id', __( '<strong>ERROR</strong>: Forum does not exist.', 'buddyboss' ) );
 
 				// Use the POST'ed forum id.
 			} else {
@@ -231,30 +231,30 @@ function bbp_new_reply_handler( $action = '' ) {
 	if ( ! empty( $forum_id ) ) {
 
 		// Forum is a category.
-		if ( bbp_is_forum_category( $forum_id ) ) {
-			bbp_add_error( 'bbp_new_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss' ) );
+		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+			bboss_bbp_add_error( 'bbp_new_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss' ) );
 
 			// Forum is not a category.
 		} else {
 
 			// Forum is closed and user cannot access.
-			if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
-				bbp_add_error( 'bbp_new_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss' ) );
+			if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
+				bboss_bbp_add_error( 'bbp_new_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss' ) );
 			}
 
 			// Forum is private and user cannot access.
-			if ( bbp_is_forum_private( $forum_id ) ) {
+			if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
-					bbp_add_error( 'bbp_new_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_new_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
 
 				// Forum is hidden and user cannot access.
-			} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
+			} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 
 				add_filter( 'bbp_map_meta_caps', 'bb_map_group_forum_reply_meta_caps', 10, 4 );
 
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
-					bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_new_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
 
 				remove_filter( 'bbp_map_meta_caps', 'bb_map_group_forum_reply_meta_caps', 10, 4 );
@@ -297,98 +297,98 @@ function bbp_new_reply_handler( $action = '' ) {
 		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
 		 && empty( $_POST['bbp_document'] )
-		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
+		 && ( false === bboss_bbp_use_autoembed() || ( false !== bboss_bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
-		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 
 	if ( empty( $forum_id ) ) {
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 	}
 
 	if ( ! empty( $_POST['bbp_media'] ) ) {
-		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		$can_send_media = bboss_user_has_access_upload_media( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_media ) {
-			bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_topic_media', __( '<strong>ERROR</strong>: You don\'t have access to send the media.', 'buddyboss' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_document'] ) ) {
-		$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		$can_send_document = bboss_user_has_access_upload_document( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_document ) {
-			bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_topic_document', __( '<strong>ERROR</strong>: You don\'t have access to send the document.', 'buddyboss' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_video'] ) ) {
-		$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		$can_send_video = bboss_user_has_access_upload_video( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_video ) {
-			bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_topic_video', __( '<strong>ERROR</strong>: You don\'t have access to send the video.', 'buddyboss' ) );
 		}
 	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
-		$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), $forum_id, 0, 'forum' );
+		$can_send_gif = bboss_user_has_access_upload_gif( 0, bboss_loggedin_user_id(), $forum_id, 0, 'forum' );
 		if ( ! $can_send_gif ) {
-			bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_topic_gif', __( '<strong>ERROR</strong>: You don\'t have access to send the gif.', 'buddyboss' ) );
 		}
 	}
 
 	/** Reply Flooding */
 
-	if ( ! bbp_check_for_flood( $anonymous_data, $reply_author ) ) {
-		bbp_add_error( 'bbp_reply_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss' ) );
+	if ( ! bboss_bbp_check_for_flood( $anonymous_data, $reply_author ) ) {
+		bboss_bbp_add_error( 'bbp_reply_flood', __( '<strong>ERROR</strong>: Slow down; you move too fast.', 'buddyboss' ) );
 	}
 
 	/** Reply Duplicate */
 
-	if ( ! bbp_check_for_duplicate(
+	if ( ! bboss_bbp_check_for_duplicate(
 		array(
-			'post_type'      => bbp_get_reply_post_type(),
+			'post_type'      => bboss_bbp_get_reply_post_type(),
 			'post_author'    => $reply_author,
 			'post_content'   => $reply_content,
 			'post_parent'    => $topic_id,
 			'anonymous_data' => $anonymous_data,
 		)
 	) ) {
-		bbp_add_error( 'bbp_reply_duplicate', __( '<strong>ERROR</strong>: Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_reply_duplicate', __( '<strong>ERROR</strong>: Duplicate reply detected; it looks as though you\'ve already said that!', 'buddyboss' ) );
 	}
 
 	/** Reply Blacklist */
 
-	if ( ! bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
-		bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be created at this time.', 'buddyboss' ) );
+	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+		bboss_bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be created at this time.', 'buddyboss' ) );
 	}
 
 	/** Reply Status */
 
 	// Maybe put into moderation.
-	if ( ! bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
-		$reply_status = bbp_get_pending_status_id();
+	if ( ! bboss_bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+		$reply_status = bboss_bbp_get_pending_status_id();
 
 		// Default.
 	} else {
-		$reply_status = bbp_get_public_status_id();
+		$reply_status = bboss_bbp_get_public_status_id();
 	}
 
 	/** Reply To */
 
 	// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
 	if ( isset( $_REQUEST['bbp_reply_to'] ) ) {
-		$reply_to = bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
+		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
 	}
 
 	/** Topic Closed */
 
 	// If topic is closed, moderators can still reply.
-	if ( bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
-		bbp_add_error( 'bbp_reply_topic_closed', __( '<strong>ERROR</strong>: Discussion is closed.', 'buddyboss' ) );
+	if ( bboss_bbp_is_topic_closed( $topic_id ) && ! current_user_can( 'moderate' ) ) {
+		bboss_bbp_add_error( 'bbp_reply_topic_closed', __( '<strong>ERROR</strong>: Discussion is closed.', 'buddyboss' ) );
 	}
 
 	/** Topic Tags */
 
 	// Either replace terms.
-	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
+	if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// ...or remove them.
@@ -397,7 +397,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		// Existing terms.
 	} else {
-		$terms = bbp_get_topic_tag_names( $topic_id );
+		$terms = bboss_bbp_get_topic_tag_names( $topic_id );
 	}
 
 	/** Additional Actions (Before Save) */
@@ -405,7 +405,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	do_action( 'bbp_new_reply_pre_extras', $topic_id, $forum_id );
 
 	// Bail if errors.
-	if ( bbp_has_errors() ) {
+	if ( bboss_bbp_has_errors() ) {
 		return;
 	}
 
@@ -421,9 +421,9 @@ function bbp_new_reply_handler( $action = '' ) {
 			'post_content'   => $reply_content,
 			'post_status'    => $reply_status,
 			'post_parent'    => $topic_id,
-			'post_type'      => bbp_get_reply_post_type(),
+			'post_type'      => bboss_bbp_get_reply_post_type(),
 			'comment_status' => 'closed',
-			'menu_order'     => bbp_get_topic_reply_count( $topic_id, true ) + 1,
+			'menu_order'     => bboss_bbp_get_topic_reply_count( $topic_id, true ) + 1,
 		)
 	);
 
@@ -446,24 +446,24 @@ function bbp_new_reply_handler( $action = '' ) {
 		} else {
 			$terms = (array) $terms;
 		}
-		$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
+		$terms = bboss_add_topic_tags( $terms, $topic_id, bboss_bbp_get_topic_tag_tax_id(), bboss_bbp_get_topic_tag_names( $topic_id ) );
 
 		// Term error.
 		if ( is_wp_error( $terms ) ) {
-			bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss' ) );
 		}
 
 		/** Trash Check */
 
 		// If this reply starts as trash, add it to pre_trashed_replies
 		// for the topic, so it is properly restored.
-		if ( bbp_is_topic_trash( $topic_id ) || ( $reply_data['post_status'] === bbp_get_trash_status_id() ) ) {
+		if ( bboss_bbp_is_topic_trash( $topic_id ) || ( $reply_data['post_status'] === bboss_bbp_get_trash_status_id() ) ) {
 
 			// Trash the reply.
 			wp_trash_post( $reply_id );
 
 			// Only add to pre-trashed array if topic is trashed.
-			if ( bbp_is_topic_trash( $topic_id ) ) {
+			if ( bboss_bbp_is_topic_trash( $topic_id ) ) {
 
 				// Get pre_trashed_replies for topic.
 				$pre_trashed_replies = (array) get_post_meta( $topic_id, '_bbp_pre_trashed_replies', true );
@@ -478,11 +478,11 @@ function bbp_new_reply_handler( $action = '' ) {
 			/** Spam Check */
 
 			// If reply or topic are spam, officially spam this reply.
-		} elseif ( bbp_is_topic_spam( $topic_id ) || ( $reply_data['post_status'] === bbp_get_spam_status_id() ) ) {
-			add_post_meta( $reply_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
+		} elseif ( bboss_bbp_is_topic_spam( $topic_id ) || ( $reply_data['post_status'] === bboss_bbp_get_spam_status_id() ) ) {
+			add_post_meta( $reply_id, '_bbp_spam_meta_status', bboss_bbp_get_public_status_id() );
 
 			// Only add to pre-spammed array if topic is spam.
-			if ( bbp_is_topic_spam( $topic_id ) ) {
+			if ( bboss_bbp_is_topic_spam( $topic_id ) ) {
 
 				// Get pre_spammed_replies for topic
 				$pre_spammed_replies = (array) get_post_meta( $topic_id, '_bbp_pre_spammed_replies', true );
@@ -501,7 +501,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		if ( ! empty( $topic_id ) && 0 === $reply_to ) {
 			// Update total parent
-			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
+			bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, bboss_bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
 		}
 
 		// Delete draft data from the database - through the shared removal path
@@ -513,7 +513,7 @@ function bbp_new_reply_handler( $action = '' ) {
 				$draft_data_key .= '_' . $reply_to;
 			}
 
-			bb_forums_delete_published_draft_key( bp_loggedin_user_id(), $draft_data_key );
+			bboss_forums_delete_published_draft_key( bboss_loggedin_user_id(), $draft_data_key );
 		}
 
 		/** Additional Actions (After Save) */
@@ -523,10 +523,10 @@ function bbp_new_reply_handler( $action = '' ) {
 		/** Redirect */
 
 		// Redirect to.
-		$redirect_to = bbp_get_redirect_to();
+		$redirect_to = bboss_bbp_get_redirect_to();
 
 		// Get the reply URL.
-		$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
+		$reply_url = bboss_bbp_get_reply_url( $reply_id, $redirect_to );
 
 		// Allow to be filtered.
 		$reply_url = apply_filters( 'bbp_new_reply_redirect_to', $reply_url, $redirect_to, $reply_id );
@@ -534,18 +534,18 @@ function bbp_new_reply_handler( $action = '' ) {
 		/** Successful Save */
 
 		// Redirect back to new reply.
-		bbp_redirect( $reply_url );
+		bboss_bbp_redirect( $reply_url );
 
 		/** Errors */
 
 		// WP_Error.
 	} elseif ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) {
 		/* translators: %s: error message. */
-		bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $reply_id->get_error_message() ) );
+		bboss_bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $reply_id->get_error_message() ) );
 
 		// Generic error.
 	} else {
-		bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss' ) );
 	}
 
 }
@@ -554,12 +554,12 @@ function bbp_new_reply_handler( $action = '' ) {
  * Handles the front end edit reply submission
  *
  * @param string $action The requested action to compare this function to
- * @uses bbp_add_error() To add an error message
- * @uses bbp_get_reply() To get the reply
- * @uses bbp_verify_nonce_request() To verify the nonce and check the request
- * @uses bbp_is_reply_anonymous() To check if the reply was by an anonymous user
+ * @uses bboss_bbp_add_error() To add an error message
+ * @uses bboss_bbp_get_reply() To get the reply
+ * @uses bboss_bbp_verify_nonce_request() To verify the nonce and check the request
+ * @uses bboss_bbp_is_reply_anonymous() To check if the reply was by an anonymous user
  * @uses current_user_can() To check if the current user can edit that reply
- * @uses bbp_filter_anonymous_post_data() To filter anonymous data
+ * @uses bboss_bbp_filter_anonymous_post_data() To filter anonymous data
  * @uses is_wp_error() To check if the value retrieved is a {@link WP_Error}
  * @uses remove_filter() To remove kses filters if needed
  * @uses esc_attr() For sanitization
@@ -568,22 +568,22 @@ function bbp_new_reply_handler( $action = '' ) {
  * @uses apply_filters() Calls 'bbp_edit_reply_pre_content' with the content
  *                        reply id
  * @uses wp_set_post_terms() To set the topic tags
- * @uses bbp_has_errors() To get the {@link WP_Error} errors
+ * @uses bboss_bbp_has_errors() To get the {@link WP_Error} errors
  * @uses wp_save_post_revision() To save a reply revision
- * @uses bbp_update_reply_revision_log() To update the reply revision log
+ * @uses bboss_bbp_update_reply_revision_log() To update the reply revision log
  * @uses wp_update_post() To update the reply
- * @uses bbp_get_reply_topic_id() To get the reply topic id
- * @uses bbp_get_topic_forum_id() To get the topic forum id
- * @uses bbp_get_reply_to() To get the reply to id
+ * @uses bboss_bbp_get_reply_topic_id() To get the reply topic id
+ * @uses bboss_bbp_get_topic_forum_id() To get the topic forum id
+ * @uses bboss_bbp_get_reply_to() To get the reply to id
  * @uses do_action() Calls 'bbp_edit_reply' with the reply id, topic id, forum
  *                    id, anonymous data, reply author, bool true (for edit),
  *                    and the reply to id
- * @uses bbp_get_reply_url() To get the paginated url to the reply
- * @uses bbp_redirect() To redirect to the reply url
+ * @uses bboss_bbp_get_reply_url() To get the paginated url to the reply
+ * @uses bboss_bbp_redirect() To redirect to the reply url
  * @uses bbPress::errors::get_error_message() To get the {@link WP_Error} error
  *                                             message
  */
-function bbp_edit_reply_handler( $action = '' ) {
+function bboss_bbp_edit_reply_handler( $action = '' ) {
 
 	// Bail if action is not bbp-edit-reply.
 	if ( 'bbp-edit-reply' !== $action ) {
@@ -599,46 +599,46 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Reply id was not passed.
 	if ( empty( $_POST['bbp_reply_id'] ) ) {
-		bbp_add_error( 'bbp_edit_reply_id', __( '<strong>ERROR</strong>: Reply ID not found.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_id', __( '<strong>ERROR</strong>: Reply ID not found.', 'buddyboss' ) );
 		return;
 
 		// Reply id was passed.
 	} elseif ( is_numeric( $_POST['bbp_reply_id'] ) ) {
 		$reply_id = (int) $_POST['bbp_reply_id'];
-		$reply    = bbp_get_reply( $reply_id );
+		$reply    = bboss_bbp_get_reply( $reply_id );
 	}
 
 	// Nonce check.
-	if ( ! bbp_verify_nonce_request( 'bbp-edit-reply_' . $reply_id ) ) {
-		bbp_add_error( 'bbp_edit_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+	if ( ! bboss_bbp_verify_nonce_request( 'bbp-edit-reply_' . $reply_id ) ) {
+		bboss_bbp_add_error( 'bbp_edit_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 		return;
 	}
 
 	// Reply does not exist.
 	if ( empty( $reply ) ) {
-		bbp_add_error( 'bbp_edit_reply_not_found', __( '<strong>ERROR</strong>: The reply you want to edit was not found.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_not_found', __( '<strong>ERROR</strong>: The reply you want to edit was not found.', 'buddyboss' ) );
 		return;
 
 		// Reply exists.
 	} else {
 
 		// Check users ability to create new reply.
-		if ( ! bbp_is_reply_anonymous( $reply_id ) ) {
+		if ( ! bboss_bbp_is_reply_anonymous( $reply_id ) ) {
 
 			// User cannot edit this reply.
 			if ( ! current_user_can( 'edit_reply', $reply_id ) ) {
-				bbp_add_error( 'bbp_edit_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that reply.', 'buddyboss' ) );
+				bboss_bbp_add_error( 'bbp_edit_reply_permissions', __( '<strong>ERROR</strong>: You do not have permission to edit that reply.', 'buddyboss' ) );
 				return;
 			}
 
 			// Set reply author.
-			$reply_author = bbp_get_reply_author_id( $reply_id );
+			$reply_author = bboss_bbp_get_reply_author_id( $reply_id );
 
 			// It is an anonymous post.
 		} else {
 
 			// Filter anonymous data.
-			$anonymous_data = bbp_filter_anonymous_post_data();
+			$anonymous_data = bboss_bbp_filter_anonymous_post_data();
 		}
 	}
 
@@ -651,37 +651,37 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	/** Reply Topic */
 
-	$topic_id = bbp_get_reply_topic_id( $reply_id );
+	$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 
 	/** Topic Forum */
 
-	$forum_id = bbp_get_topic_forum_id( $topic_id );
+	$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 	// Forum exists.
-	if ( ! empty( $forum_id ) && ( $forum_id !== bbp_get_reply_forum_id( $reply_id ) ) ) {
+	if ( ! empty( $forum_id ) && ( $forum_id !== bboss_bbp_get_reply_forum_id( $reply_id ) ) ) {
 
 		// Forum is a category.
-		if ( bbp_is_forum_category( $forum_id ) ) {
-			bbp_add_error( 'bbp_edit_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss' ) );
+		if ( bboss_bbp_is_forum_category( $forum_id ) ) {
+			bboss_bbp_add_error( 'bbp_edit_reply_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No replies can be created in this forum.', 'buddyboss' ) );
 
 			// Forum is not a category.
 		} else {
 
 			// Forum is closed and user cannot access.
-			if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
-				bbp_add_error( 'bbp_edit_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss' ) );
+			if ( bboss_bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
+				bboss_bbp_add_error( 'bbp_edit_reply_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new replies.', 'buddyboss' ) );
 			}
 
 			// Forum is private and user cannot access.
-			if ( bbp_is_forum_private( $forum_id ) ) {
+			if ( bboss_bbp_is_forum_private( $forum_id ) ) {
 				if ( ! current_user_can( 'read_private_forums' ) ) {
-					bbp_add_error( 'bbp_edit_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_edit_reply_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
 
 				// Forum is hidden and user cannot access.
-			} elseif ( bbp_is_forum_hidden( $forum_id ) ) {
+			} elseif ( bboss_bbp_is_forum_hidden( $forum_id ) ) {
 				if ( ! current_user_can( 'read_hidden_forums' ) ) {
-					bbp_add_error( 'bbp_edit_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_edit_reply_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new replies in it.', 'buddyboss' ) );
 				}
 			}
 		}
@@ -714,30 +714,30 @@ function bbp_edit_reply_handler( $action = '' ) {
 		&& empty( $_POST['bbp_video'] )
 		&& empty( $_POST['bbp_media_gif'] )
 		&& empty( $_POST['bbp_document'] )
-		&& ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
+		&& ( false === bboss_bbp_use_autoembed() || ( false !== bboss_bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
-		bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_edit_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 
 	/** Reply Blacklist */
 
-	if ( ! bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
-		bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss' ) );
+	if ( ! bboss_bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+		bboss_bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss' ) );
 	}
 
 	// Reply past edit lock checking.
-	if ( ! current_user_can( 'edit_others_replies' ) && bbp_past_edit_lock( $reply->post_date_gmt ) ) {
-		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
+	if ( ! current_user_can( 'edit_others_replies' ) && bboss_bbp_past_edit_lock( $reply->post_date_gmt ) ) {
+		bboss_bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
 	}
 
 	/** Reply Status */
 
 	// Maybe put into moderation.
-	if ( ! bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
+	if ( ! bboss_bbp_check_for_moderation( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 
 		// Set post status to pending if public.
-		if ( bbp_get_public_status_id() === $reply->post_status ) {
-			$reply_status = bbp_get_pending_status_id();
+		if ( bboss_bbp_get_public_status_id() === $reply->post_status ) {
+			$reply_status = bboss_bbp_get_pending_status_id();
 		}
 
 		// Use existing post_status.
@@ -749,13 +749,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Handle Reply To of the reply; $_REQUEST for non-JS submissions.
 	if ( isset( $_REQUEST['bbp_reply_to'] ) ) {
-		$reply_to = bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
+		$reply_to = bboss_bbp_validate_reply_to( $_REQUEST['bbp_reply_to'] );
 	}
 
 	/** Topic Tags */
 
 	// Either replace terms.
-	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
+	if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// ...or remove them.
@@ -764,7 +764,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 		// Existing terms.
 	} else {
-		$terms = bbp_get_topic_tag_names( $topic_id );
+		$terms = bboss_bbp_get_topic_tag_names( $topic_id );
 	}
 
 	/** Additional Actions (Before Save) */
@@ -772,7 +772,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	do_action( 'bbp_edit_reply_pre_extras', $reply_id );
 
 	// Bail if errors.
-	if ( bbp_has_errors() ) {
+	if ( bboss_bbp_has_errors() ) {
 		return;
 	}
 
@@ -789,14 +789,14 @@ function bbp_edit_reply_handler( $action = '' ) {
 			'post_status'  => $reply_status,
 			'post_parent'  => $topic_id,
 			'post_author'  => $reply_author,
-			'post_type'    => bbp_get_reply_post_type(),
+			'post_type'    => bboss_bbp_get_reply_post_type(),
 		)
 	);
 
 	// Toggle revisions to avoid duplicates.
-	if ( post_type_supports( bbp_get_reply_post_type(), 'revisions' ) ) {
+	if ( post_type_supports( bboss_bbp_get_reply_post_type(), 'revisions' ) ) {
 		$revisions_removed = true;
-		remove_post_type_support( bbp_get_reply_post_type(), 'revisions' );
+		remove_post_type_support( bboss_bbp_get_reply_post_type(), 'revisions' );
 	}
 
 	// Insert topic.
@@ -805,7 +805,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Toggle revisions back on.
 	if ( true === $revisions_removed ) {
 		$revisions_removed = false;
-		add_post_type_support( bbp_get_reply_post_type(), 'revisions' );
+		add_post_type_support( bboss_bbp_get_reply_post_type(), 'revisions' );
 	}
 
 	/** Topic Tags */
@@ -819,11 +819,11 @@ function bbp_edit_reply_handler( $action = '' ) {
 	} else {
 		$terms = (array) $terms;
 	}
-	$terms = bb_add_topic_tags( $terms, $topic_id, bbp_get_topic_tag_tax_id(), bbp_get_topic_tag_names( $topic_id ) );
+	$terms = bboss_add_topic_tags( $terms, $topic_id, bboss_bbp_get_topic_tag_tax_id(), bboss_bbp_get_topic_tag_names( $topic_id ) );
 
 	// Term error.
 	if ( is_wp_error( $terms ) ) {
-		bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_reply_tags', __( '<strong>ERROR</strong>: There was a problem adding the tags to the topic.', 'buddyboss' ) );
 	}
 
 	/** Revisions */
@@ -837,11 +837,11 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( ! empty( $_POST['bbp_log_reply_edit'] ) && ( '1' === $_POST['bbp_log_reply_edit'] ) ) {
 		$revision_id = wp_save_post_revision( $reply_id );
 		if ( ! empty( $revision_id ) ) {
-			bbp_update_reply_revision_log(
+			bboss_bbp_update_reply_revision_log(
 				array(
 					'reply_id'    => $reply_id,
 					'revision_id' => $revision_id,
-					'author_id'   => bbp_get_current_user_id(),
+					'author_id'   => bboss_bbp_get_current_user_id(),
 					'reason'      => $reply_edit_reason,
 				)
 			);
@@ -862,10 +862,10 @@ function bbp_edit_reply_handler( $action = '' ) {
 		/** Redirect */
 
 		// Redirect to.
-		$redirect_to = bbp_get_redirect_to();
+		$redirect_to = bboss_bbp_get_redirect_to();
 
 		// Get the reply URL.
-		$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
+		$reply_url = bboss_bbp_get_reply_url( $reply_id, $redirect_to );
 
 		// Allow to be filtered.
 		$reply_url = apply_filters( 'bbp_edit_reply_redirect_to', $reply_url, $redirect_to );
@@ -873,13 +873,13 @@ function bbp_edit_reply_handler( $action = '' ) {
 		/** Successful Edit */
 
 		// Redirect back to new reply.
-		bbp_redirect( $reply_url );
+		bboss_bbp_redirect( $reply_url );
 
 		/** Errors */
 
 	} else {
 		$append_error = ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) ? $reply_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss' ), $append_error ) );
+		bboss_bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss' ), $append_error ) );
 	}
 }
 
@@ -894,32 +894,32 @@ function bbp_edit_reply_handler( $action = '' ) {
  * @param bool       $is_edit        Optional. Is the post being edited? Defaults to false.
  * @param int        $reply_to       Optional. Reply to id.
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_get_topic_id() To get the topic id
- * @uses bbp_get_forum_id() To get the forum id
- * @uses bbp_get_current_user_id() To get the current user id
- * @uses bbp_get_reply_topic_id() To get the reply topic id
- * @uses bbp_get_topic_forum_id() To get the topic forum id
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_get_topic_id() To get the topic id
+ * @uses bboss_bbp_get_forum_id() To get the forum id
+ * @uses bboss_bbp_get_current_user_id() To get the current user id
+ * @uses bboss_bbp_get_reply_topic_id() To get the reply topic id
+ * @uses bboss_bbp_get_topic_forum_id() To get the topic forum id
  * @uses update_post_meta() To update the reply metas
  * @uses set_transient() To update the flood check transient for the ip
- * @uses bbp_update_user_last_posted() To update the users last posted time
- * @uses bb_is_enabled_subscription() To check if the subscriptions feature is
+ * @uses bboss_bbp_update_user_last_posted() To update the users last posted time
+ * @uses bboss_is_enabled_subscription() To check if the subscriptions feature is
  *                                      activated or not
- * @uses bbp_is_user_subscribed() To check if the user is subscribed
- * @uses bbp_remove_user_subscription() To remove the user's subscription
- * @uses bbp_add_user_subscription() To add the user's subscription
- * @uses bbp_update_reply_forum_id() To update the reply forum id
- * @uses bbp_update_reply_topic_id() To update the reply topic id
- * @uses bbp_update_reply_to() To update the reply to id
- * @uses bbp_update_reply_walker() To update the reply's ancestors' counts
+ * @uses bboss_bbp_is_user_subscribed() To check if the user is subscribed
+ * @uses bboss_bbp_remove_user_subscription() To remove the user's subscription
+ * @uses bboss_bbp_add_user_subscription() To add the user's subscription
+ * @uses bboss_bbp_update_reply_forum_id() To update the reply forum id
+ * @uses bboss_bbp_update_reply_topic_id() To update the reply topic id
+ * @uses bboss_bbp_update_reply_to() To update the reply to id
+ * @uses bboss_bbp_update_reply_walker() To update the reply's ancestors' counts
  */
-function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
+function bboss_bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymous_data = false, $author_id = 0, $is_edit = false, $reply_to = 0 ) {
 
 	// Validate the ID's passed from 'bbp_new_reply' action.
-	$reply_id = bbp_get_reply_id( $reply_id );
-	$topic_id = bbp_get_topic_id( $topic_id );
-	$forum_id = bbp_get_forum_id( $forum_id );
-	$reply_to = bbp_validate_reply_to( $reply_to );
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
+	$reply_to = bboss_bbp_validate_reply_to( $reply_to );
 
 	// Bail if there is no reply.
 	if ( empty( $reply_id ) ) {
@@ -928,17 +928,17 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 
 	// Check author_id.
 	if ( empty( $author_id ) ) {
-		$author_id = bbp_get_current_user_id();
+		$author_id = bboss_bbp_get_current_user_id();
 	}
 
 	// Check topic_id.
 	if ( empty( $topic_id ) ) {
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 	}
 
 	// Check forum_id.
 	if ( ! empty( $topic_id ) && empty( $forum_id ) ) {
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 	}
 
 	// If anonymous post, store name, email, website and ip in post_meta.
@@ -947,7 +947,7 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 	if ( ! empty( $anonymous_data ) && is_array( $anonymous_data ) ) {
 
 		// Parse arguments against default values.
-		$r = bbp_parse_args(
+		$r = bboss_bbp_parse_args(
 			$anonymous_data,
 			array(
 				'bbp_anonymous_name'    => '',
@@ -964,11 +964,11 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 
 		// Set transient for throttle check (only on new, not edit).
 		if ( empty( $is_edit ) ) {
-			set_transient( '_bbp_' . bbp_current_author_ip() . '_last_posted', time() );
+			set_transient( '_bbp_' . bboss_bbp_current_author_ip() . '_last_posted', time() );
 		}
 	} else {
 		if ( empty( $is_edit ) && ! current_user_can( 'throttle' ) ) {
-			bbp_update_user_last_posted( $author_id );
+			bboss_bbp_update_user_last_posted( $author_id );
 		}
 	}
 
@@ -979,41 +979,41 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 	}
 
 	$subscribe_type = 'topic';
-	if ( bbp_get_forum_post_type() === $post_type ) {
+	if ( bboss_bbp_get_forum_post_type() === $post_type ) {
 		$subscribe_type = 'forum';
 	}
 
 	// Handle Subscription Checkbox.
-	if ( bb_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ! empty( $topic_id ) ) {
-		$subscribed = bbp_is_user_subscribed( $author_id, $topic_id );
+	if ( bboss_is_enabled_subscription( $subscribe_type ) && ! empty( $author_id ) && ! empty( $topic_id ) ) {
+		$subscribed = bboss_bbp_is_user_subscribed( $author_id, $topic_id );
 		$subscheck  = ( ! empty( $_POST['bbp_topic_subscription'] ) && ( 'bbp_subscribe' === $_POST['bbp_topic_subscription'] ) ) ? true : false;
 
 		// Subscribed and unsubscribing.
 		if ( true === $subscribed && false === $subscheck ) {
-			bbp_remove_user_subscription( $author_id, $topic_id );
+			bboss_bbp_remove_user_subscription( $author_id, $topic_id );
 
 			// Subscribing.
 		} elseif ( false === $subscribed && true === $subscheck ) {
-			bbp_add_user_subscription( $author_id, $topic_id );
+			bboss_bbp_add_user_subscription( $author_id, $topic_id );
 		}
 	}
 
 	// Reply meta relating to reply position in tree.
-	bbp_update_reply_forum_id( $reply_id, $forum_id );
-	bbp_update_reply_topic_id( $reply_id, $topic_id );
-	bbp_update_reply_to( $reply_id, $reply_to );
+	bboss_bbp_update_reply_forum_id( $reply_id, $forum_id );
+	bboss_bbp_update_reply_topic_id( $reply_id, $topic_id );
+	bboss_bbp_update_reply_to( $reply_id, $reply_to );
 
 	// Update associated topic values if this is a new reply.
 	if ( empty( $is_edit ) ) {
 
 		// Update poster IP if not editing.
-		update_post_meta( $reply_id, '_bbp_author_ip', bbp_current_author_ip(), false );
+		update_post_meta( $reply_id, '_bbp_author_ip', bboss_bbp_current_author_ip(), false );
 
 		// Last active time.
 		$last_active_time = current_time( 'mysql' );
 
 		// Walk up ancestors and do the dirty work.
-		bbp_update_reply_walker( $reply_id, $last_active_time, $forum_id, $topic_id, false );
+		bboss_bbp_update_reply_walker( $reply_id, $last_active_time, $forum_id, $topic_id, false );
 	}
 }
 
@@ -1029,45 +1029,45 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
  * @param bool   $refresh          If set to true, unsets all the previous parameters..
  *                                 Defaults to true.
  *
- * @uses  bbp_get_reply_id() To get the reply id.
- * @uses  bbp_get_reply_topic_id() To get the reply topic id.
- * @uses  bbp_get_reply_forum_id() To get the reply forum id.
+ * @uses  bboss_bbp_get_reply_id() To get the reply id.
+ * @uses  bboss_bbp_get_reply_topic_id() To get the reply topic id.
+ * @uses  bboss_bbp_get_reply_forum_id() To get the reply forum id.
  * @uses  get_post_ancestors() To get the ancestors of the reply.
- * @uses  bbp_is_reply() To check if the ancestor is a reply.
- * @uses  bbp_is_topic() To check if the ancestor is a topic.
- * @uses  bbp_update_topic_last_reply_id() To update the topic last reply id.
- * @uses  bbp_update_topic_last_active_id() To update the topic last active id.
- * @uses  bbp_get_topic_last_active_id() To get the topic last active id.
+ * @uses  bboss_bbp_is_reply() To check if the ancestor is a reply.
+ * @uses  bboss_bbp_is_topic() To check if the ancestor is a topic.
+ * @uses  bboss_bbp_update_topic_last_reply_id() To update the topic last reply id.
+ * @uses  bboss_bbp_update_topic_last_active_id() To update the topic last active id.
+ * @uses  bboss_bbp_get_topic_last_active_id() To get the topic last active id.
  * @uses  get_post_field() To get the post date of the last active id.
- * @uses  bbp_update_topic_last_active_time() To update the last active topic meta.
- * @uses  bbp_update_topic_voice_count() To update the topic voice count.
- * @uses  bbp_update_topic_reply_count() To update the topic reply count.
- * @uses  bbp_update_topic_reply_count_hidden() To update the topic hidden reply
+ * @uses  bboss_bbp_update_topic_last_active_time() To update the last active topic meta.
+ * @uses  bboss_bbp_update_topic_voice_count() To update the topic voice count.
+ * @uses  bboss_bbp_update_topic_reply_count() To update the topic reply count.
+ * @uses  bboss_bbp_update_topic_reply_count_hidden() To update the topic hidden reply
  *                                              count.
- * @uses  bbp_is_forum() To check if the ancestor is a forum.
- * @uses  bbp_update_forum_last_topic_id() To update the last topic id forum meta.
- * @uses  bbp_update_forum_last_reply_id() To update the last reply id forum meta.
- * @uses  bbp_update_forum_last_active_id() To update the forum last active id.
- * @uses  bbp_get_forum_last_active_id() To get the forum last active id.
- * @uses  bbp_update_forum_last_active_time() To update the forum last active time.
- * @uses  bbp_update_forum_reply_count() To update the forum reply count.
+ * @uses  bboss_bbp_is_forum() To check if the ancestor is a forum.
+ * @uses  bboss_bbp_update_forum_last_topic_id() To update the last topic id forum meta.
+ * @uses  bboss_bbp_update_forum_last_reply_id() To update the last reply id forum meta.
+ * @uses  bboss_bbp_update_forum_last_active_id() To update the forum last active id.
+ * @uses  bboss_bbp_get_forum_last_active_id() To get the forum last active id.
+ * @uses  bboss_bbp_update_forum_last_active_time() To update the forum last active time.
+ * @uses  bboss_bbp_update_forum_reply_count() To update the forum reply count.
  */
-function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id = 0, $topic_id = 0, $refresh = true ) {
+function bboss_bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id = 0, $topic_id = 0, $refresh = true ) {
 
 	// Verify the reply ID.
-	$reply_id = bbp_get_reply_id( $reply_id );
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
 	// Reply was passed.
 	if ( ! empty( $reply_id ) ) {
 
 		// Get the topic ID if none was passed.
 		if ( empty( $topic_id ) ) {
-			$topic_id = bbp_get_reply_topic_id( $reply_id );
+			$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 		}
 
 		// Get the forum ID if none was passed.
 		if ( empty( $forum_id ) ) {
-			$forum_id = bbp_get_reply_forum_id( $reply_id );
+			$forum_id = bboss_bbp_get_reply_forum_id( $reply_id );
 		}
 	}
 
@@ -1087,55 +1087,55 @@ function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id =
 		foreach ( $ancestors as $ancestor ) {
 
 			// Reply meta relating to most recent reply.
-			if ( bbp_is_reply( $ancestor ) ) {
+			if ( bboss_bbp_is_reply( $ancestor ) ) {
 				// @todo - hierarchical replies
 
 				// Topic meta relating to most recent reply.
-			} elseif ( bbp_is_topic( $ancestor ) ) {
+			} elseif ( bboss_bbp_is_topic( $ancestor ) ) {
 
 				// Last reply and active ID's.
-				bbp_update_topic_last_reply_id( $ancestor, $reply_id );
-				bbp_update_topic_last_active_id( $ancestor, $active_id );
+				bboss_bbp_update_topic_last_reply_id( $ancestor, $reply_id );
+				bboss_bbp_update_topic_last_active_id( $ancestor, $active_id );
 
 				// Get the last active time if none was passed.
 				$topic_last_active_time = $last_active_time;
 				if ( empty( $last_active_time ) ) {
-					$topic_last_active_time = get_post_field( 'post_date', bbp_get_topic_last_active_id( $ancestor ) );
+					$topic_last_active_time = get_post_field( 'post_date', bboss_bbp_get_topic_last_active_id( $ancestor ) );
 				}
 
 				// Only update if reply is published.
-				if ( bbp_is_reply_published( $reply_id ) ) {
-					bbp_update_topic_last_active_time( $ancestor, $topic_last_active_time );
+				if ( bboss_bbp_is_reply_published( $reply_id ) ) {
+					bboss_bbp_update_topic_last_active_time( $ancestor, $topic_last_active_time );
 				}
 
 				// Counts.
-				bbp_update_topic_voice_count( $ancestor );
-				bbp_update_topic_reply_count( $ancestor );
-				bbp_update_topic_reply_count_hidden( $ancestor );
+				bboss_bbp_update_topic_voice_count( $ancestor );
+				bboss_bbp_update_topic_reply_count( $ancestor );
+				bboss_bbp_update_topic_reply_count_hidden( $ancestor );
 
 				// Forum meta relating to most recent topic.
-			} elseif ( bbp_is_forum( $ancestor ) ) {
+			} elseif ( bboss_bbp_is_forum( $ancestor ) ) {
 
 				// Last topic and reply ID's.
-				bbp_update_forum_last_topic_id( $ancestor, $topic_id );
-				bbp_update_forum_last_reply_id( $ancestor, $reply_id );
+				bboss_bbp_update_forum_last_topic_id( $ancestor, $topic_id );
+				bboss_bbp_update_forum_last_reply_id( $ancestor, $reply_id );
 
 				// Last Active.
-				bbp_update_forum_last_active_id( $ancestor, $active_id );
+				bboss_bbp_update_forum_last_active_id( $ancestor, $active_id );
 
 				// Get the last active time if none was passed.
 				$forum_last_active_time = $last_active_time;
 				if ( empty( $last_active_time ) ) {
-					$forum_last_active_time = get_post_field( 'post_date', bbp_get_forum_last_active_id( $ancestor ) );
+					$forum_last_active_time = get_post_field( 'post_date', bboss_bbp_get_forum_last_active_id( $ancestor ) );
 				}
 
 				// Only update if reply is published.
-				if ( bbp_is_reply_published( $reply_id ) ) {
-					bbp_update_forum_last_active_time( $ancestor, $forum_last_active_time );
+				if ( bboss_bbp_is_reply_published( $reply_id ) ) {
+					bboss_bbp_update_forum_last_active_time( $ancestor, $forum_last_active_time );
 				}
 
 				// Counts.
-				bbp_update_forum_reply_count( $ancestor );
+				bboss_bbp_update_forum_reply_count( $ancestor );
 			}
 		}
 	}
@@ -1151,8 +1151,8 @@ function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id =
  * @param int $reply_id Optional. Reply id to update.
  * @param int $forum_id Optional. Forum id.
  *
- * @uses  bbp_get_reply_id() To get the reply id.
- * @uses  bbp_get_forum_id() To get the forum id.
+ * @uses  bboss_bbp_get_reply_id() To get the reply id.
+ * @uses  bboss_bbp_get_forum_id() To get the forum id.
  * @uses  get_post_ancestors() To get the reply's forum.
  * @uses  get_post_field() To get the post type of the post.
  * @uses  update_post_meta() To update the reply forum id meta.
@@ -1161,11 +1161,11 @@ function bbp_update_reply_walker( $reply_id, $last_active_time = '', $forum_id =
  *
  * @return bool Reply's forum id.
  */
-function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
+function bboss_bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
 
 	// Validation.
-	$reply_id = bbp_get_reply_id( $reply_id );
-	$forum_id = bbp_get_forum_id( $forum_id );
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
+	$forum_id = bboss_bbp_get_forum_id( $forum_id );
 
 	// If no forum_id was passed, walk up ancestors and look for forum type.
 	if ( empty( $forum_id ) ) {
@@ -1178,7 +1178,7 @@ function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
 			foreach ( $ancestors as $ancestor ) {
 
 				// Get first parent that is a forum.
-				if ( get_post_field( 'post_type', $ancestor ) === bbp_get_forum_post_type() ) {
+				if ( get_post_field( 'post_type', $ancestor ) === bboss_bbp_get_forum_post_type() ) {
 					$forum_id = $ancestor;
 
 					// Found a forum, so exit the loop and continue.
@@ -1189,7 +1189,7 @@ function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
 	}
 
 	// Update the forum ID.
-	bbp_update_forum_id( $reply_id, $forum_id );
+	bboss_bbp_update_forum_id( $reply_id, $forum_id );
 
 	return apply_filters( 'bbp_update_reply_forum_id', (int) $forum_id, $reply_id );
 }
@@ -1202,8 +1202,8 @@ function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
  * @param int $reply_id Optional. Reply id to update.
  * @param int $topic_id Optional. Topic id.
  *
- * @uses  bbp_get_reply_id() To get the reply id.
- * @uses  bbp_get_topic_id() To get the topic id.
+ * @uses  bboss_bbp_get_reply_id() To get the reply id.
+ * @uses  bboss_bbp_get_topic_id() To get the topic id.
  * @uses  get_post_ancestors() To get the reply's topic.
  * @uses  get_post_field() To get the post type of the post.
  * @uses  update_post_meta() To update the reply topic id meta.
@@ -1212,11 +1212,11 @@ function bbp_update_reply_forum_id( $reply_id = 0, $forum_id = 0 ) {
  *
  * @return bool Reply's topic id.
  */
-function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
+function bboss_bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
 
 	// Validation.
-	$reply_id = bbp_get_reply_id( $reply_id );
-	$topic_id = bbp_get_topic_id( $topic_id );
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
 
 	// If no topic_id was passed, walk up ancestors and look for topic type.
 	if ( empty( $topic_id ) ) {
@@ -1229,7 +1229,7 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
 			foreach ( $ancestors as $ancestor ) {
 
 				// Get first parent that is a forum.
-				if ( get_post_field( 'post_type', $ancestor ) === bbp_get_topic_post_type() ) {
+				if ( get_post_field( 'post_type', $ancestor ) === bboss_bbp_get_topic_post_type() ) {
 					$topic_id = $ancestor;
 
 					// Found a forum, so exit the loop and continue.
@@ -1240,7 +1240,7 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
 	}
 
 	// Update the topic ID.
-	bbp_update_topic_id( $reply_id, $topic_id );
+	bboss_bbp_update_topic_id( $reply_id, $topic_id );
 
 	return apply_filters( 'bbp_update_reply_topic_id', (int) $topic_id, $reply_id );
 }
@@ -1253,17 +1253,17 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
  * @param int $reply_id Reply id to update.
  * @param int $reply_to Optional. Reply to id.
  *
- * @uses  bbp_get_reply_id() To get the reply id.
+ * @uses  bboss_bbp_get_reply_id() To get the reply id.
  * @uses  update_post_meta() To update the reply to meta.
  * @uses  apply_filters() Calls 'bbp_update_reply_to' with the reply id and
  *                        and reply to id.
  * @return bool Reply's parent reply id.
  */
-function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
+function bboss_bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
 
 	// Validation.
-	$reply_id = bbp_get_reply_id( $reply_id );
-	$reply_to = bbp_validate_reply_to( $reply_to, $reply_id );
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
+	$reply_to = bboss_bbp_validate_reply_to( $reply_to, $reply_id );
 
 	// Update or delete the `reply_to` postmeta.
 	if ( ! empty( $reply_id ) ) {
@@ -1291,16 +1291,16 @@ function bbp_update_reply_to( $reply_id = 0, $reply_to = 0 ) {
  *  - author_id: Author id
  *  - reason: Reason for editing
  *  - revision_id: Revision id
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_format_revision_reason() To format the reason
- * @uses bbp_get_reply_raw_revision_log() To get the raw reply revision log
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_format_revision_reason() To format the reason
+ * @uses bboss_bbp_get_reply_raw_revision_log() To get the raw reply revision log
  * @uses update_post_meta() To update the reply revision log meta
  * @return mixed False on failure, true on success
  */
-function bbp_update_reply_revision_log( $args = '' ) {
+function bboss_bbp_update_reply_revision_log( $args = '' ) {
 
 	// Parse arguments against default values.
-	$r = bbp_parse_args(
+	$r = bboss_bbp_parse_args(
 		$args,
 		array(
 			'reason'      => '',
@@ -1312,13 +1312,13 @@ function bbp_update_reply_revision_log( $args = '' ) {
 	);
 
 	// Populate the variables.
-	$r['reason']      = bbp_format_revision_reason( $r['reason'] );
-	$r['reply_id']    = bbp_get_reply_id( $r['reply_id'] );
-	$r['author_id']   = bbp_get_user_id( $r['author_id'], false, true );
+	$r['reason']      = bboss_bbp_format_revision_reason( $r['reason'] );
+	$r['reply_id']    = bboss_bbp_get_reply_id( $r['reply_id'] );
+	$r['author_id']   = bboss_bbp_get_user_id( $r['author_id'], false, true );
 	$r['revision_id'] = (int) $r['revision_id'];
 
 	// Get the logs and append the new one to those.
-	$revision_log                      = bbp_get_reply_raw_revision_log( $r['reply_id'] );
+	$revision_log                      = bboss_bbp_get_reply_raw_revision_log( $r['reply_id'] );
 	$revision_log[ $r['revision_id'] ] = array(
 		'author' => $r['author_id'],
 		'reason' => $r['reason'],
@@ -1339,30 +1339,30 @@ function bbp_update_reply_revision_log( $args = '' ) {
  *
  * @param string $action The requested action to compare this function to.
  *
- * @uses bbp_add_error() To add an error message
- * @uses bbp_get_reply() To get the reply
- * @uses bbp_get_topic() To get the topics
- * @uses bbp_verify_nonce_request() To verify the nonce and check the request
+ * @uses bboss_bbp_add_error() To add an error message
+ * @uses bboss_bbp_get_reply() To get the reply
+ * @uses bboss_bbp_get_topic() To get the topics
+ * @uses bboss_bbp_verify_nonce_request() To verify the nonce and check the request
  * @uses current_user_can() To check if the current user can edit the reply and topics
- * @uses bbp_get_topic_post_type() To get the topic post type
+ * @uses bboss_bbp_get_topic_post_type() To get the topic post type
  * @uses is_wp_error() To check if the value retrieved is a {@link WP_Error}
  * @uses do_action() Calls 'bbp_pre_move_reply' with the from reply id, source
  *                    and destination topic ids
- * @uses bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
  * @uses wp_update_post() To update the replies
- * @uses bbp_update_reply_topic_id() To update the reply topic id
- * @uses bbp_get_topic_forum_id() To get the topic forum id
- * @uses bbp_update_reply_forum_id() To update the reply forum id
+ * @uses bboss_bbp_update_reply_topic_id() To update the reply topic id
+ * @uses bboss_bbp_get_topic_forum_id() To get the topic forum id
+ * @uses bboss_bbp_update_reply_forum_id() To update the reply forum id
  * @uses do_action() Calls 'bbp_split_topic_reply' with the reply id and
  *                    destination topic id
- * @uses bbp_update_topic_last_reply_id() To update the topic last reply id
- * @uses bbp_update_topic_last_active_time() To update the topic last active meta
+ * @uses bboss_bbp_update_topic_last_reply_id() To update the topic last reply id
+ * @uses bboss_bbp_update_topic_last_active_time() To update the topic last active meta
  * @uses do_action() Calls 'bbp_post_split_topic' with the destination and
  *                    source topic ids and source topic's forum id
- * @uses bbp_get_topic_permalink() To get the topic permalink
- * @uses bbp_redirect() To redirect to the topic link
+ * @uses bboss_bbp_get_topic_permalink() To get the topic permalink
+ * @uses bboss_bbp_redirect() To redirect to the topic link
  */
-function bbp_move_reply_handler( $action = '' ) {
+function bboss_bbp_move_reply_handler( $action = '' ) {
 
 	// Bail if action is not 'bbp-move-reply'.
 	if ( 'bbp-move-reply' !== $action ) {
@@ -1377,37 +1377,37 @@ function bbp_move_reply_handler( $action = '' ) {
 	/** Move Reply */
 
 	if ( empty( $_POST['bbp_reply_id'] ) ) {
-		bbp_add_error( 'bbp_move_reply_reply_id', __( '<strong>ERROR</strong>: Reply ID to move not found!', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_reply_id', __( '<strong>ERROR</strong>: Reply ID to move not found!', 'buddyboss' ) );
 	} else {
 		$move_reply_id = (int) $_POST['bbp_reply_id'];
 	}
 
-	$move_reply = bbp_get_reply( $move_reply_id );
+	$move_reply = bboss_bbp_get_reply( $move_reply_id );
 
 	// Reply exists.
 	if ( empty( $move_reply ) ) {
-		bbp_add_error( 'bbp_mover_reply_r_not_found', __( '<strong>ERROR</strong>: The reply you want to move was not found.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_mover_reply_r_not_found', __( '<strong>ERROR</strong>: The reply you want to move was not found.', 'buddyboss' ) );
 	}
 
 	/** Topic to Move From */
 
 	// Get the reply's current topic.
-	$source_topic = bbp_get_topic( $move_reply->post_parent );
+	$source_topic = bboss_bbp_get_topic( $move_reply->post_parent );
 
 	// No topic.
 	if ( empty( $source_topic ) ) {
-		bbp_add_error( 'bbp_move_reply_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to move from was not found.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to move from was not found.', 'buddyboss' ) );
 	}
 
 	// Nonce check failed.
-	if ( ! bbp_verify_nonce_request( 'bbp-move-reply_' . $move_reply->ID ) ) {
-		bbp_add_error( 'bbp_move_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+	if ( ! bboss_bbp_verify_nonce_request( 'bbp-move-reply_' . $move_reply->ID ) ) {
+		bboss_bbp_add_error( 'bbp_move_reply_nonce', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 		return;
 	}
 
 	// Use cannot edit topic.
 	if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
-		bbp_add_error( 'bbp_move_reply_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_source_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the source discussion.', 'buddyboss' ) );
 	}
 
 	// How to move.
@@ -1417,7 +1417,7 @@ function bbp_move_reply_handler( $action = '' ) {
 
 	// Invalid move option.
 	if ( empty( $move_option ) || ! in_array( $move_option, array( 'existing', 'topic' ) ) ) {
-		bbp_add_error( 'bbp_move_reply_option', __( '<strong>ERROR</strong>: You need to choose a valid move option.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_move_reply_option', __( '<strong>ERROR</strong>: You need to choose a valid move option.', 'buddyboss' ) );
 
 		// Valid move option.
 	} else {
@@ -1429,26 +1429,26 @@ function bbp_move_reply_handler( $action = '' ) {
 			case 'existing':
 				// Get destination topic id.
 				if ( empty( $_POST['bbp_destination_topic'] ) ) {
-					bbp_add_error( 'bbp_move_reply_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_id', __( '<strong>ERROR</strong>: Destination discussion ID not found!', 'buddyboss' ) );
 				} else {
 					$destination_topic_id = (int) $_POST['bbp_destination_topic'];
 				}
 
 				// Get the destination topic.
-				$destination_topic = bbp_get_topic( $destination_topic_id );
+				$destination_topic = bboss_bbp_get_topic( $destination_topic_id );
 
 				// No destination topic.
 				if ( empty( $destination_topic ) ) {
-					bbp_add_error( 'bbp_move_reply_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to move to was not found!', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to move to was not found!', 'buddyboss' ) );
 				}
 
 				// User cannot edit the destination topic.
 				if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
-					bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion!', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to edit the destination discussion!', 'buddyboss' ) );
 				}
 
 				// Bump the reply position.
-				$reply_position = bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
+				$reply_position = bboss_bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
 
 				// Update the reply.
 				wp_update_post(
@@ -1464,8 +1464,8 @@ function bbp_move_reply_handler( $action = '' ) {
 				);
 
 				// Adjust reply meta values.
-				bbp_update_reply_topic_id( $move_reply->ID, $destination_topic->ID );
-				bbp_update_reply_forum_id( $move_reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
+				bboss_bbp_update_reply_topic_id( $move_reply->ID, $destination_topic->ID );
+				bboss_bbp_update_reply_forum_id( $move_reply->ID, bboss_bbp_get_topic_forum_id( $destination_topic->ID ) );
 
 				break;
 
@@ -1490,24 +1490,24 @@ function bbp_move_reply_handler( $action = '' ) {
 							'ID'          => $move_reply->ID,
 							'post_title'  => $destination_topic_title,
 							'post_name'   => false,
-							'post_type'   => bbp_get_topic_post_type(),
+							'post_type'   => bboss_bbp_get_topic_post_type(),
 							'post_parent' => $source_topic->post_parent,
 							'guid'        => '',
 						)
 					);
-					$destination_topic    = bbp_get_topic( $destination_topic_id );
+					$destination_topic    = bboss_bbp_get_topic( $destination_topic_id );
 
 					// Make sure the new topic knows its a topic.
-					bbp_update_topic_topic_id( $move_reply->ID );
+					bboss_bbp_update_topic_topic_id( $move_reply->ID );
 
 					// Shouldn't happen.
 					if ( false === $destination_topic_id || is_wp_error( $destination_topic_id ) || empty( $destination_topic ) ) {
-						bbp_add_error( 'bbp_move_reply_destination_reply', __( '<strong>ERROR</strong>: There was a problem converting the reply into the discussion. Please try again.', 'buddyboss' ) );
+						bboss_bbp_add_error( 'bbp_move_reply_destination_reply', __( '<strong>ERROR</strong>: There was a problem converting the reply into the discussion. Please try again.', 'buddyboss' ) );
 					}
 
 					// User cannot publish posts.
 				} else {
-					bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to create new discussions. The reply could not be converted into a discussion.', 'buddyboss' ) );
+					bboss_bbp_add_error( 'bbp_move_reply_destination_permission', __( '<strong>ERROR</strong>: You do not have the permissions to create new discussions. The reply could not be converted into a discussion.', 'buddyboss' ) );
 				}
 
 				break;
@@ -1515,7 +1515,7 @@ function bbp_move_reply_handler( $action = '' ) {
 	}
 
 	// Bail if there are errors.
-	if ( bbp_has_errors() ) {
+	if ( bboss_bbp_has_errors() ) {
 		return;
 	}
 
@@ -1547,19 +1547,19 @@ function bbp_move_reply_handler( $action = '' ) {
 	$freshness     = $move_reply->post_date;
 
 	// Get the reply to.
-	$parent = bbp_get_reply_to( $move_reply->ID );
+	$parent = bboss_bbp_get_reply_to( $move_reply->ID );
 
 	// Fix orphaned children.
 	$children = get_posts(
 		array(
-			'post_type'  => bbp_get_reply_post_type(),
+			'post_type'  => bboss_bbp_get_reply_post_type(),
 			'meta_key'   => '_bbp_reply_to',
 			'meta_type'  => 'NUMERIC',
 			'meta_value' => $move_reply->ID,
 		)
 	);
 	foreach ( $children as $child ) {
-		bbp_update_reply_to( $child->ID, $parent );
+		bboss_bbp_update_reply_to( $child->ID, $parent );
 	}
 
 	// Remove reply_to from moved reply.
@@ -1568,21 +1568,21 @@ function bbp_move_reply_handler( $action = '' ) {
 	// It is a new topic and we need to set some default metas to make
 	// the topic display in bbp_has_topics() list.
 	if ( 'topic' === $move_option ) {
-		bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
-		bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
-		bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
+		bboss_bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
+		bboss_bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
+		bboss_bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
 
 		// Otherwise update the existing destination topic.
 	} else {
-		bbp_update_topic_last_reply_id( $destination_topic->ID );
-		bbp_update_topic_last_active_id( $destination_topic->ID );
-		bbp_update_topic_last_active_time( $destination_topic->ID );
+		bboss_bbp_update_topic_last_reply_id( $destination_topic->ID );
+		bboss_bbp_update_topic_last_active_id( $destination_topic->ID );
+		bboss_bbp_update_topic_last_active_time( $destination_topic->ID );
 	}
 
 	// Update source topic ID last active.
-	bbp_update_topic_last_reply_id( $source_topic->ID );
-	bbp_update_topic_last_active_id( $source_topic->ID );
-	bbp_update_topic_last_active_time( $source_topic->ID );
+	bboss_bbp_update_topic_last_reply_id( $source_topic->ID );
+	bboss_bbp_update_topic_last_active_id( $source_topic->ID );
+	bboss_bbp_update_topic_last_active_time( $source_topic->ID );
 
 	/** Successful Move */
 
@@ -1590,7 +1590,7 @@ function bbp_move_reply_handler( $action = '' ) {
 	do_action( 'bbp_post_move_reply', $move_reply->ID, $source_topic->ID, $destination_topic->ID );
 
 	// Redirect back to the topic.
-	bbp_redirect( bbp_get_topic_permalink( $destination_topic->ID ) );
+	bboss_bbp_redirect( bboss_bbp_get_topic_permalink( $destination_topic->ID ) );
 }
 
 /**
@@ -1605,34 +1605,34 @@ function bbp_move_reply_handler( $action = '' ) {
  * @param int $source_topic_id      Source topic id.
  * @param int $destination_topic_id Destination topic id.
  *
- * @uses  bbp_update_forum_topic_count() To update the forum topic counts.
- * @uses  bbp_update_forum_reply_count() To update the forum reply counts.
- * @uses  bbp_update_topic_reply_count() To update the topic reply counts.
- * @uses  bbp_update_topic_voice_count() To update the topic voice counts.
- * @uses  bbp_update_topic_reply_count_hidden() To update the topic hidden reply
+ * @uses  bboss_bbp_update_forum_topic_count() To update the forum topic counts.
+ * @uses  bboss_bbp_update_forum_reply_count() To update the forum reply counts.
+ * @uses  bboss_bbp_update_topic_reply_count() To update the topic reply counts.
+ * @uses  bboss_bbp_update_topic_voice_count() To update the topic voice counts.
+ * @uses  bboss_bbp_update_topic_reply_count_hidden() To update the topic hidden reply
  *                                              count.
  * @uses  do_action() Calls 'bbp_move_reply_count' with the move reply id,
  *                    source topic id & destination topic id.
  */
-function bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id ) {
+function bboss_bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_topic_id ) {
 
 	// Forum topic counts.
-	bbp_update_forum_topic_count( bbp_get_topic_forum_id( $destination_topic_id ) );
+	bboss_bbp_update_forum_topic_count( bboss_bbp_get_topic_forum_id( $destination_topic_id ) );
 
 	// Forum reply counts.
-	bbp_update_forum_reply_count( bbp_get_topic_forum_id( $destination_topic_id ) );
+	bboss_bbp_update_forum_reply_count( bboss_bbp_get_topic_forum_id( $destination_topic_id ) );
 
 	// Topic reply counts.
-	bbp_update_topic_reply_count( $source_topic_id );
-	bbp_update_topic_reply_count( $destination_topic_id );
+	bboss_bbp_update_topic_reply_count( $source_topic_id );
+	bboss_bbp_update_topic_reply_count( $destination_topic_id );
 
 	// Topic hidden reply counts.
-	bbp_update_topic_reply_count_hidden( $source_topic_id );
-	bbp_update_topic_reply_count_hidden( $destination_topic_id );
+	bboss_bbp_update_topic_reply_count_hidden( $source_topic_id );
+	bboss_bbp_update_topic_reply_count_hidden( $destination_topic_id );
 
 	// Topic voice counts.
-	bbp_update_topic_voice_count( $source_topic_id );
-	bbp_update_topic_voice_count( $destination_topic_id );
+	bboss_bbp_update_topic_voice_count( $source_topic_id );
+	bboss_bbp_update_topic_voice_count( $destination_topic_id );
 
 	do_action( 'bbp_move_reply_count', $move_reply_id, $source_topic_id, $destination_topic_id );
 }
@@ -1646,24 +1646,24 @@ function bbp_move_reply_count( $move_reply_id, $source_topic_id, $destination_to
  * @since bbPress (r2740)
  *
  * @param string $action The requested action to compare this function to.
- * @uses bbp_get_reply() To get the reply
+ * @uses bboss_bbp_get_reply() To get the reply
  * @uses current_user_can() To check if the user is capable of editing or
  *                           deleting the reply
  * @uses check_ajax_referer() To verify the nonce and check the referer
- * @uses bbp_get_reply_post_type() To get the reply post type
- * @uses bbp_is_reply_spam() To check if the reply is marked as spam
- * @uses bbp_spam_reply() To make the reply as spam
- * @uses bbp_unspam_reply() To unmark the reply as spam
+ * @uses bboss_bbp_get_reply_post_type() To get the reply post type
+ * @uses bboss_bbp_is_reply_spam() To check if the reply is marked as spam
+ * @uses bboss_bbp_spam_reply() To make the reply as spam
+ * @uses bboss_bbp_unspam_reply() To unmark the reply as spam
  * @uses wp_trash_post() To trash the reply
  * @uses wp_untrash_post() To untrash the reply
  * @uses wp_delete_post() To delete the reply
  * @uses do_action() Calls 'bbp_toggle_reply_handler' with success, post data
  *                    and action
- * @uses bbp_get_reply_url() To get the reply url
- * @uses bbp_redirect() To redirect to the reply
+ * @uses bboss_bbp_get_reply_url() To get the reply url
+ * @uses bboss_bbp_redirect() To redirect to the reply
  * @uses bbPress::errors:add() To log the error messages
  */
-function bbp_toggle_reply_handler( $action = '' ) {
+function bboss_bbp_toggle_reply_handler( $action = '' ) {
 
 	// Bail if required GET actions aren't passed.
 	if ( empty( $_GET['reply_id'] ) ) {
@@ -1688,7 +1688,7 @@ function bbp_toggle_reply_handler( $action = '' ) {
 	$post_data = array( 'ID' => $reply_id ); // Prelim array.
 
 	// Make sure reply exists.
-	$reply = bbp_get_reply( $reply_id );
+	$reply = bboss_bbp_get_reply( $reply_id );
 	if ( empty( $reply ) ) {
 		return;
 	}
@@ -1696,18 +1696,18 @@ function bbp_toggle_reply_handler( $action = '' ) {
 	// What is the user doing here?
 	if ( ! current_user_can( 'edit_reply', $reply->ID ) || ( 'bbp_toggle_reply_trash' === $action && ! current_user_can( 'delete_reply', $reply->ID ) ) ) {
 
-		if ( 'bbp_toggle_reply_trash' === $action && bp_is_active( 'groups' ) ) {
-			$author_id    = bbp_get_reply_author_id( $reply->ID );
-			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
+		if ( 'bbp_toggle_reply_trash' === $action && bboss_is_active( 'groups' ) ) {
+			$author_id    = bboss_bbp_get_reply_author_id( $reply->ID );
+			$forum_id     = bboss_bbp_get_reply_forum_id( $reply->ID );
 			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
-			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
+			$allow_delete = bboss_moderator_can_delete_topic_reply( $reply, $args );
 			if ( ! $allow_delete ) {
-				bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+				bboss_bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
 
 				return;
 			}
 		} else {
-			bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+			bboss_bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
 
 			return;
 		}
@@ -1720,8 +1720,8 @@ function bbp_toggle_reply_handler( $action = '' ) {
 		case 'bbp_toggle_reply_spam':
 			check_ajax_referer( 'spam-reply_' . $reply_id );
 
-			$is_spam  = bbp_is_reply_spam( $reply_id );
-			$success  = $is_spam ? bbp_unspam_reply( $reply_id ) : bbp_spam_reply( $reply_id );
+			$is_spam  = bboss_bbp_is_reply_spam( $reply_id );
+			$success  = $is_spam ? bboss_bbp_unspam_reply( $reply_id ) : bboss_bbp_spam_reply( $reply_id );
 			$failure  = $is_spam ? __( '<strong>ERROR</strong>: There was a problem unmarking the reply as spam!', 'buddyboss' ) : __( '<strong>ERROR</strong>: There was a problem marking the reply as spam!', 'buddyboss' );
 			$view_all = ! $is_spam;
 
@@ -1737,7 +1737,7 @@ function bbp_toggle_reply_handler( $action = '' ) {
 
 			switch ( $sub_action ) {
 				case 'trash':
-					check_ajax_referer( 'trash-' . bbp_get_reply_post_type() . '_' . $reply_id );
+					check_ajax_referer( 'trash-' . bboss_bbp_get_reply_post_type() . '_' . $reply_id );
 
 					$view_all = true;
 					$success  = wp_trash_post( $reply_id );
@@ -1746,7 +1746,7 @@ function bbp_toggle_reply_handler( $action = '' ) {
 					break;
 
 				case 'untrash':
-					check_ajax_referer( 'untrash-' . bbp_get_reply_post_type() . '_' . $reply_id );
+					check_ajax_referer( 'untrash-' . bboss_bbp_get_reply_post_type() . '_' . $reply_id );
 
 					$success = wp_untrash_post( $reply_id );
 					$failure = __( '<strong>ERROR</strong>: There was a problem untrashing the reply!', 'buddyboss' );
@@ -1754,7 +1754,7 @@ function bbp_toggle_reply_handler( $action = '' ) {
 					break;
 
 				case 'delete':
-					check_ajax_referer( 'delete-' . bbp_get_reply_post_type() . '_' . $reply_id );
+					check_ajax_referer( 'delete-' . bboss_bbp_get_reply_post_type() . '_' . $reply_id );
 
 					$success = wp_delete_post( $reply_id );
 					$failure = __( '<strong>ERROR</strong>: There was a problem deleting the reply!', 'buddyboss' );
@@ -1771,27 +1771,27 @@ function bbp_toggle_reply_handler( $action = '' ) {
 	// No errors.
 	if ( ( false !== $success ) && ! is_wp_error( $success ) ) {
 		// Update total parent reply count when any parent trashed.
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
-		bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
+		bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		/** Redirect */
 
 		// Redirect to.
-		$redirect_to = bbp_get_redirect_to();
+		$redirect_to = bboss_bbp_get_redirect_to();
 
 		// Get the reply URL.
-		$reply_url = bbp_get_reply_url( $reply_id, $redirect_to );
+		$reply_url = bboss_bbp_get_reply_url( $reply_id, $redirect_to );
 
 		// Add view all if needed.
 		if ( ! empty( $view_all ) ) {
-			$reply_url = bbp_add_view_all( $reply_url, true );
+			$reply_url = bboss_bbp_add_view_all( $reply_url, true );
 		}
 
 		// Redirect back to reply.
-		bbp_redirect( $reply_url );
+		bboss_bbp_redirect( $reply_url );
 
 		// Handle errors.
 	} else {
-		bbp_add_error( 'bbp_toggle_reply', $failure );
+		bboss_bbp_add_error( 'bbp_toggle_reply', $failure );
 	}
 }
 
@@ -1804,23 +1804,23 @@ function bbp_toggle_reply_handler( $action = '' ) {
  *
  * @param int $reply_id Reply id.
  *
- * @uses  bbp_get_reply() To get the reply.
+ * @uses  bboss_bbp_get_reply() To get the reply.
  * @uses  do_action() Calls 'bbp_spam_reply' with the reply ID.
  * @uses  add_post_meta() To add the previous status to a meta.
  * @uses  wp_update_post() To insert the updated post.
  * @uses  do_action() Calls 'bbp_spammed_reply' with the reply ID.
  * @return mixed False or {@link WP_Error} on failure, reply id on success
  */
-function bbp_spam_reply( $reply_id = 0 ) {
+function bboss_bbp_spam_reply( $reply_id = 0 ) {
 
 	// Get reply.
-	$reply = bbp_get_reply( $reply_id );
+	$reply = bboss_bbp_get_reply( $reply_id );
 	if ( empty( $reply ) ) {
 		return $reply;
 	}
 
 	// Bail if already spam.
-	if ( bbp_get_spam_status_id() === $reply->post_status ) {
+	if ( bboss_bbp_get_spam_status_id() === $reply->post_status ) {
 		return false;
 	}
 
@@ -1831,7 +1831,7 @@ function bbp_spam_reply( $reply_id = 0 ) {
 	add_post_meta( $reply_id, '_bbp_spam_meta_status', $reply->post_status );
 
 	// Set post status to spam.
-	$reply->post_status = bbp_get_spam_status_id();
+	$reply->post_status = bboss_bbp_get_spam_status_id();
 
 	// No revisions.
 	remove_action( 'pre_post_update', 'wp_save_post_revision' );
@@ -1853,7 +1853,7 @@ function bbp_spam_reply( $reply_id = 0 ) {
  *
  * @param int $reply_id Reply id.
  *
- * @uses  bbp_get_reply() To get the reply.
+ * @uses  bboss_bbp_get_reply() To get the reply.
  * @uses  do_action() Calls 'bbp_unspam_reply' with the reply ID.
  * @uses  get_post_meta() To get the previous status meta.
  * @uses  delete_post_meta() To delete the previous status meta.
@@ -1862,16 +1862,16 @@ function bbp_spam_reply( $reply_id = 0 ) {
  *
  * @return mixed False or {@link WP_Error} on failure, reply id on success
  */
-function bbp_unspam_reply( $reply_id = 0 ) {
+function bboss_bbp_unspam_reply( $reply_id = 0 ) {
 
 	// Get reply.
-	$reply = bbp_get_reply( $reply_id );
+	$reply = bboss_bbp_get_reply( $reply_id );
 	if ( empty( $reply ) ) {
 		return $reply;
 	}
 
 	// Bail if already not spam.
-	if ( bbp_get_spam_status_id() !== $reply->post_status ) {
+	if ( bboss_bbp_get_spam_status_id() !== $reply->post_status ) {
 		return false;
 	}
 
@@ -1883,7 +1883,7 @@ function bbp_unspam_reply( $reply_id = 0 ) {
 
 	// If no previous status, default to publish.
 	if ( empty( $reply->post_status ) ) {
-		$reply->post_status = bbp_get_public_status_id();
+		$reply->post_status = bboss_bbp_get_public_status_id();
 	}
 
 	// Delete pre spam meta.
@@ -1907,14 +1907,14 @@ function bbp_unspam_reply( $reply_id = 0 ) {
 /**
  * Called before deleting a reply
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_is_reply() To check if the passed id is a reply
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_delete_reply' with the reply id
  */
-function bbp_delete_reply( $reply_id = 0 ) {
-	$reply_id = bbp_get_reply_id( $reply_id );
+function bboss_bbp_delete_reply( $reply_id = 0 ) {
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
-	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
+	if ( empty( $reply_id ) || ! bboss_bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
 
@@ -1926,14 +1926,14 @@ function bbp_delete_reply( $reply_id = 0 ) {
  *
  * @param int $reply_id Reply ID.
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_is_reply() To check if the passed id is a reply
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_trash_reply' with the reply id
  */
-function bbp_trash_reply( $reply_id = 0 ) {
-	$reply_id = bbp_get_reply_id( $reply_id );
+function bboss_bbp_trash_reply( $reply_id = 0 ) {
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
-	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
+	if ( empty( $reply_id ) || ! bboss_bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
 
@@ -1945,14 +1945,14 @@ function bbp_trash_reply( $reply_id = 0 ) {
  *
  * @param int $reply_id Reply ID.
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_is_reply() To check if the passed id is a reply
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_unstrash_reply' with the reply id
  */
-function bbp_untrash_reply( $reply_id = 0 ) {
-	$reply_id = bbp_get_reply_id( $reply_id );
+function bboss_bbp_untrash_reply( $reply_id = 0 ) {
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
-	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
+	if ( empty( $reply_id ) || ! bboss_bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
 
@@ -1966,14 +1966,14 @@ function bbp_untrash_reply( $reply_id = 0 ) {
  *
  * @param int $reply_id Reply ID.
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_is_reply() To check if the passed id is a reply
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_deleted_reply' with the reply id
  */
-function bbp_deleted_reply( $reply_id = 0 ) {
-	$reply_id = bbp_get_reply_id( $reply_id );
+function bboss_bbp_deleted_reply( $reply_id = 0 ) {
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
-	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
+	if ( empty( $reply_id ) || ! bboss_bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
 
@@ -1985,14 +1985,14 @@ function bbp_deleted_reply( $reply_id = 0 ) {
  *
  * @param int $reply_id Reply ID.
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_is_reply() To check if the passed id is a reply
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_trashed_reply' with the reply id
  */
-function bbp_trashed_reply( $reply_id = 0 ) {
-	$reply_id = bbp_get_reply_id( $reply_id );
+function bboss_bbp_trashed_reply( $reply_id = 0 ) {
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
-	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
+	if ( empty( $reply_id ) || ! bboss_bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
 
@@ -2005,14 +2005,14 @@ function bbp_trashed_reply( $reply_id = 0 ) {
  * @param int    $reply_id        Reply ID.
  * @param string $previous_status Post status.
  *
- * @uses bbp_get_reply_id() To get the reply id
- * @uses bbp_is_reply() To check if the passed id is a reply
+ * @uses bboss_bbp_get_reply_id() To get the reply id
+ * @uses bboss_bbp_is_reply() To check if the passed id is a reply
  * @uses do_action() Calls 'bbp_untrashed_reply' with the reply id
  */
-function bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
-	$reply_id = bbp_get_reply_id( $reply_id );
+function bboss_bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 
-	if ( empty( $reply_id ) || ! bbp_is_reply( $reply_id ) ) {
+	if ( empty( $reply_id ) || ! bboss_bbp_is_reply( $reply_id ) ) {
 		return false;
 	}
 
@@ -2038,7 +2038,7 @@ function bbp_untrashed_reply( $reply_id = 0, $previous_status = '' ) {
  * @uses  apply_filters() To allow the return value to be manipulated.
  * @return int
  */
-function bbp_get_replies_per_page( $default = 15 ) {
+function bboss_bbp_get_replies_per_page( $default = 15 ) {
 
 	// Get database option and cast as integer.
 	$retval = get_option( '_bbp_replies_per_page', $default );
@@ -2063,7 +2063,7 @@ function bbp_get_replies_per_page( $default = 15 ) {
  * @uses  apply_filters() To allow the return value to be manipulated.
  * @return int
  */
-function bbp_get_replies_per_rss_page( $default = 25 ) {
+function bboss_bbp_get_replies_per_rss_page( $default = 25 ) {
 
 	// Get database option and cast as integer.
 	$retval = get_option( '_bbp_replies_per_rss_page', $default );
@@ -2085,7 +2085,7 @@ function bbp_get_replies_per_rss_page( $default = 25 ) {
  * @since bbPress (r3752)
  * @global WP_Embed $wp_embed
  */
-function bbp_reply_content_autoembed() {
+function bboss_bbp_reply_content_autoembed() {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -2103,7 +2103,7 @@ function bbp_reply_content_autoembed() {
  *
  * @return mixed
  */
-function bb_validate_reply_embed( $content ) {
+function bboss_validate_reply_embed( $content ) {
 	global $wp_embed;
 
 	if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
@@ -2125,7 +2125,7 @@ function bb_validate_reply_embed( $content ) {
  *
  * @return string
  */
-function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
+function bboss_bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 	global $wp_embed;
 
 	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
@@ -2141,14 +2141,14 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 	}
 
 	if ( empty( $reply_id ) ) {
-		$reply_id = bbp_get_reply_id();
+		$reply_id = bboss_bbp_get_reply_id();
 	}
 
 	if ( metadata_exists( 'post', $reply_id, '_link_embed' ) ) {
 		// if not urls in content then check if embed was used or not, if not return content without embed.
 		$link_embed = get_post_meta( $reply_id, '_link_embed', true );
 		if ( ! empty( $link_embed ) ) {
-			$embed_data = bp_core_parse_url( $link_embed );
+			$embed_data = bboss_core_parse_url( $link_embed );
 
 			if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
 				$embed_code = $embed_data['description'];
@@ -2202,7 +2202,7 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 /** Filters *******************************************************************/
 
 /**
- * Used by bbp_has_replies() to add the lead topic post to the posts loop
+ * Used by bboss_bbp_has_replies() to add the lead topic post to the posts loop
  *
  * This function filters the 'post_where' of the WP_Query, and changes the query
  * to include both the topic AND its children in the same loop.
@@ -2212,7 +2212,7 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
  * @param string $where
  * @return string
  */
-function _bbp_has_replies_where( $where = '', $query = false ) {
+function bboss__bbp_has_replies_where( $where = '', $query = false ) {
 
 	/** Bail */
 
@@ -2228,7 +2228,7 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 
 	// Get post_type from query, define array to diff against
 	$queried_types = (array) $query->get( 'post_type' );
-	$post_types    = array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$post_types    = array( bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 
 	// Bail if query is not already for both topic and reply post types
 	if ( array_diff( $post_types, $queried_types ) ) {
@@ -2243,10 +2243,10 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 	/** Proceed */
 
 	// Table name for posts.
-	$table_name = bbp_db()->prefix . 'posts';
+	$table_name = bboss_bbp_db()->prefix . 'posts';
 
 	// Get the topic ID from the post_parent, set in bbp_has_replies()
-	$topic_id = bbp_get_topic_id( $query->get( 'post_parent' ) );
+	$topic_id = bboss_bbp_get_topic_id( $query->get( 'post_parent' ) );
 
 	// The texts to search for.
 	$search = array(
@@ -2278,21 +2278,21 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
  *
  * @since bbPress (r3171)
  *
- * @uses bbp_version()
- * @uses bbp_is_single_topic()
- * @uses bbp_user_can_view_forum()
- * @uses bbp_get_topic_forum_id()
+ * @uses bboss_bbp_version()
+ * @uses bboss_bbp_is_single_topic()
+ * @uses bboss_bbp_user_can_view_forum()
+ * @uses bboss_bbp_get_topic_forum_id()
  * @uses bbp_show_load_topic()
- * @uses bbp_topic_permalink()
- * @uses bbp_topic_title()
- * @uses bbp_get_topic_reply_count()
- * @uses bbp_topic_content()
- * @uses bbp_has_replies()
- * @uses bbp_replies()
- * @uses bbp_the_reply()
- * @uses bbp_reply_url()
- * @uses bbp_reply_title()
- * @uses bbp_reply_content()
+ * @uses bboss_bbp_topic_permalink()
+ * @uses bboss_bbp_topic_title()
+ * @uses bboss_bbp_get_topic_reply_count()
+ * @uses bboss_bbp_topic_content()
+ * @uses bboss_bbp_has_replies()
+ * @uses bboss_bbp_replies()
+ * @uses bboss_bbp_the_reply()
+ * @uses bboss_bbp_reply_url()
+ * @uses bboss_bbp_reply_title()
+ * @uses bboss_bbp_reply_content()
  * @uses get_wp_title_rss()
  * @uses get_option()
  * @uses bloginfo_rss
@@ -2305,17 +2305,17 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
  *
  * @param array $replies_query
  */
-function bbp_display_replies_feed_rss2( $replies_query = array() ) {
+function bboss_bbp_display_replies_feed_rss2( $replies_query = array() ) {
 
 	// User cannot access forum this topic is in
-	if ( bbp_is_single_topic() && ! bbp_user_can_view_forum( array( 'forum_id' => bbp_get_topic_forum_id() ) ) ) {
+	if ( bboss_bbp_is_single_topic() && ! bboss_bbp_user_can_view_forum( array( 'forum_id' => bboss_bbp_get_topic_forum_id() ) ) ) {
 		return;
 	}
 
 	// Adjust the title based on context
-	if ( bbp_is_single_topic() && bbp_user_can_view_forum( array( 'forum_id' => bbp_get_topic_forum_id() ) ) ) {
+	if ( bboss_bbp_is_single_topic() && bboss_bbp_user_can_view_forum( array( 'forum_id' => bboss_bbp_get_topic_forum_id() ) ) ) {
 		$title = apply_filters( 'wp_title_rss', get_wp_title_rss() );
-	} elseif ( ! bbp_show_lead_topic() ) {
+	} elseif ( ! bboss_bbp_show_lead_topic() ) {
 		$title = ' &#187; ' . __( 'All Posts', 'buddyboss' );
 	} else {
 		$title = ' &#187; ' . __( 'All Replies', 'buddyboss' );
@@ -2346,26 +2346,26 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 		<link><?php self_link(); ?></link>
 		<description></description>
 		<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ) ); ?></pubDate>
-		<generator>http://bbpress.org/?v=<?php bbp_version(); ?></generator>
+		<generator>http://bbpress.org/?v=<?php bboss_bbp_version(); ?></generator>
 		<language><?php bloginfo_rss( 'language' ); ?></language>
 
 		<?php do_action( 'bbp_feed_head' ); ?>
 
-		<?php if ( bbp_is_single_topic() ) : ?>
-			<?php if ( bbp_user_can_view_forum( array( 'forum_id' => bbp_get_topic_forum_id() ) ) ) : ?>
-				<?php if ( bbp_show_lead_topic() ) : ?>
+		<?php if ( bboss_bbp_is_single_topic() ) : ?>
+			<?php if ( bboss_bbp_user_can_view_forum( array( 'forum_id' => bboss_bbp_get_topic_forum_id() ) ) ) : ?>
+				<?php if ( bboss_bbp_show_lead_topic() ) : ?>
 
 					<item>
-						<guid><?php bbp_topic_permalink(); ?></guid>
-						<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
-						<link><?php bbp_topic_permalink(); ?></link>
+						<guid><?php bboss_bbp_topic_permalink(); ?></guid>
+						<title><![CDATA[<?php bboss_bbp_topic_title(); ?>]]></title>
+						<link><?php bboss_bbp_topic_permalink(); ?></link>
 						<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ); ?></pubDate>
 						<dc:creator><?php echo esc_html( (string) get_the_author() ); ?></dc:creator>
 
 						<description>
 							<![CDATA[
-							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss' ), esc_html( bbp_get_topic_reply_count() ) ); ?></p>
-							<?php bbp_topic_content(); ?>
+							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss' ), esc_html( bboss_bbp_get_topic_reply_count() ) ); ?></p>
+							<?php bboss_bbp_topic_content(); ?>
 							]]>
 						</description>
 
@@ -2379,22 +2379,22 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 			<?php endif; ?>
 		<?php endif; ?>
 
-		<?php if ( bbp_has_replies( $replies_query ) ) : ?>
+		<?php if ( bboss_bbp_has_replies( $replies_query ) ) : ?>
 			<?php
-			while ( bbp_replies() ) :
-				bbp_the_reply();
+			while ( bboss_bbp_replies() ) :
+				bboss_bbp_the_reply();
 				?>
 
 				<item>
-					<guid><?php bbp_reply_url(); ?></guid>
-					<title><![CDATA[<?php bbp_reply_title(); ?>]]></title>
-					<link><?php bbp_reply_url(); ?></link>
+					<guid><?php bboss_bbp_reply_url(); ?></guid>
+					<title><![CDATA[<?php bboss_bbp_reply_title(); ?>]]></title>
+					<link><?php bboss_bbp_reply_url(); ?></link>
 					<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ); ?></pubDate>
 					<dc:creator><?php echo esc_html( (string) get_the_author() ); ?></dc:creator>
 
 					<description>
 						<![CDATA[
-						<?php bbp_reply_content(); ?>
+						<?php bboss_bbp_reply_content(); ?>
 						]]>
 					</description>
 
@@ -2425,22 +2425,22 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
  *
  * @since bbPress (r3605)
  *
- * @uses bbp_is_reply_edit()
+ * @uses bboss_bbp_is_reply_edit()
  * @uses current_user_can()
- * @uses bbp_get_topic_id()
- * @uses bbp_redirect()
- * @uses bbp_get_topic_permalink()
+ * @uses bboss_bbp_get_topic_id()
+ * @uses bboss_bbp_redirect()
+ * @uses bboss_bbp_get_topic_permalink()
  */
-function bbp_check_reply_edit() {
+function bboss_bbp_check_reply_edit() {
 
 	// Bail if not editing a topic
-	if ( ! bbp_is_reply_edit() ) {
+	if ( ! bboss_bbp_is_reply_edit() ) {
 		return;
 	}
 
 	// User cannot edit topic, so redirect back to reply
-	if ( ! current_user_can( 'edit_reply', bbp_get_reply_id() ) ) {
-		bbp_redirect( bbp_get_reply_url() );
+	if ( ! current_user_can( 'edit_reply', bboss_bbp_get_reply_id() ) ) {
+		bboss_bbp_redirect( bboss_bbp_get_reply_url() );
 	}
 }
 
@@ -2461,11 +2461,11 @@ function bbp_check_reply_edit() {
  * @param type $reply_position
  * @return mixed
  */
-function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
+function bboss_bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
 	global $wpdb;
 
 	// Bail if reply_id is empty.
-	$reply_id = bbp_get_reply_id( $reply_id );
+	$reply_id = bboss_bbp_get_reply_id( $reply_id );
 	if ( empty( $reply_id ) ) {
 		return false;
 	}
@@ -2473,7 +2473,7 @@ function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
 	// Prepare the reply position.
 	$reply_position = is_numeric( $reply_position )
 		? (int) $reply_position
-		: bbp_get_reply_position_raw( $reply_id, bbp_get_reply_topic_id( $reply_id ) );
+		: bboss_bbp_get_reply_position_raw( $reply_id, bboss_bbp_get_reply_topic_id( $reply_id ) );
 
 	// Get the current reply position.
 	$current_position = get_post_field( 'menu_order', $reply_id );
@@ -2514,22 +2514,22 @@ function bbp_update_reply_position( $reply_id = 0, $reply_position = 0 ) {
  * @param int $reply_id
  * @param int $topic_id
  */
-function bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
+function bboss_bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
 
 	// Get required data
-	$reply_id       = bbp_get_reply_id( $reply_id );
-	$topic_id       = ! empty( $topic_id ) ? bbp_get_topic_id( $topic_id ) : bbp_get_reply_topic_id( $reply_id );
+	$reply_id       = bboss_bbp_get_reply_id( $reply_id );
+	$topic_id       = ! empty( $topic_id ) ? bboss_bbp_get_topic_id( $topic_id ) : bboss_bbp_get_reply_topic_id( $reply_id );
 	$reply_position = 0;
 
 	// If reply is actually the first post in a topic, return 0
 	if ( $reply_id !== $topic_id ) {
 
 		// Make sure the topic has replies before running another query
-		$reply_count = bbp_get_topic_reply_count( $topic_id, false );
+		$reply_count = bboss_bbp_get_topic_reply_count( $topic_id, false );
 		if ( ! empty( $reply_count ) ) {
 
 			// Get reply id's
-			$topic_replies = bbp_get_all_child_ids( $topic_id, bbp_get_reply_post_type() );
+			$topic_replies = bboss_bbp_get_all_child_ids( $topic_id, bboss_bbp_get_reply_post_type() );
 			if ( ! empty( $topic_replies ) ) {
 
 				// Reverse replies array and search for current reply position
@@ -2552,43 +2552,43 @@ function bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
  *
  * @since bbPress (r4944)
  */
-function bbp_list_replies( $args = array() ) {
+function bboss_bbp_list_replies( $args = array() ) {
 
 	// Reset the reply depth
-	bbpress()->reply_query->reply_depth = 0;
+	bboss_forums()->reply_query->reply_depth = 0;
 
 	// In reply loop
-	bbpress()->reply_query->in_the_loop = true;
+	bboss_forums()->reply_query->in_the_loop = true;
 
-	$r = bbp_parse_args(
+	$r = bboss_bbp_parse_args(
 		$args,
 		array(
 			'walker'         => null,
-			'max_depth'      => bbp_thread_replies_depth(),
+			'max_depth'      => bboss_bbp_thread_replies_depth(),
 			'style'          => 'ul',
 			'callback'       => null,
 			'end_callback'   => null,
-			'page'           => bbp_get_paged(),
-			'posts_per_page' => bbp_get_replies_per_page(),
-			'per_page'       => bbp_get_replies_per_page(),
+			'page'           => bboss_bbp_get_paged(),
+			'posts_per_page' => bboss_bbp_get_replies_per_page(),
+			'per_page'       => bboss_bbp_get_replies_per_page(),
 		),
 		'list_replies'
 	);
 
 	// Added condition to fix the user profile page My Replies' page issue.
-	if ( bp_is_user() ) {
+	if ( bboss_is_user() ) {
 		$r['per_page'] = -1;
 	}
 
 	// Get replies to loop through in $_replies.
-	$walker = new BBP_Walker_Reply();
-	$walker->paged_walk( bbpress()->reply_query->posts, $r['max_depth'], $r['page'], $r['per_page'], $r );
+	$walker = new BBoss_BBP_Walker_Reply();
+	$walker->paged_walk( bboss_forums()->reply_query->posts, $r['max_depth'], $r['page'], $r['per_page'], $r );
 
 	if ( $r['page'] > 1 ) {
 
 		// Get top level replies.
 		$top_level_replies = array_filter(
-			bbpress()->reply_query->posts,
+			bboss_forums()->reply_query->posts,
 			function( $post ) {
 				return empty( $post->reply_to );
 			}
@@ -2596,7 +2596,7 @@ function bbp_list_replies( $args = array() ) {
 
 		// Get all child level replies.
 		$child_level_replies = array_filter(
-			bbpress()->reply_query->posts,
+			bboss_forums()->reply_query->posts,
 			function( $post ) {
 				return ! empty( $post->reply_to );
 			}
@@ -2606,16 +2606,16 @@ function bbp_list_replies( $args = array() ) {
 		$length                = ( (int) $r['page'] - 1 ) * (int) $r['per_page'];
 		$top_replies_upto_page = array_slice( $top_level_replies, 0, $length );
 		$top_reply_ids         = wp_list_pluck( $top_replies_upto_page, 'ID' );
-		$offset_total          = bbp_replies_count_walk( $child_level_replies, $top_reply_ids, count( $top_reply_ids ) );
+		$offset_total          = bboss_bbp_replies_count_walk( $child_level_replies, $top_reply_ids, count( $top_reply_ids ) );
 
-		bbpress()->reply_query->offset = $offset_total;
+		bboss_forums()->reply_query->offset = $offset_total;
 	} else {
-		bbpress()->reply_query->offset = 0;
+		bboss_forums()->reply_query->offset = 0;
 	}
 
-	bbpress()->max_num_pages                     = $walker->max_pages;
-	bbpress()->reply_query->in_the_loop          = false;
-	bbpress()->reply_query->total_items_per_page = $walker->total_items_per_page;
+	bboss_forums()->max_num_pages                     = $walker->max_pages;
+	bboss_forums()->reply_query->in_the_loop          = false;
+	bboss_forums()->reply_query->total_items_per_page = $walker->total_items_per_page;
 
 }
 
@@ -2633,10 +2633,10 @@ function bbp_list_replies( $args = array() ) {
  *
  * @return int $reply_to
  */
-function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
+function bboss_bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
 
 	// The parent reply must actually be a reply
-	if ( ! bbp_is_reply( $reply_to ) ) {
+	if ( ! bboss_bbp_is_reply( $reply_to ) ) {
 		$reply_to = 0;
 	}
 
@@ -2653,25 +2653,25 @@ function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bbp_adjust_forum_role_labels( $author_role, $args ) {
+function bboss_bbp_adjust_forum_role_labels( $author_role, $args ) {
 	$display_role = __( 'Member', 'buddyboss' );
-	$reply_id     = bbp_get_reply_id( $args['reply_id'] );
-	$author_id    = bbp_get_reply_author_id( $reply_id );
+	$reply_id     = bboss_bbp_get_reply_id( $args['reply_id'] );
+	$author_id    = bboss_bbp_get_reply_author_id( $reply_id );
 
 	// if group forum
-	if ( bbp_is_forum_group_forum( bbp_get_reply_forum_id( $args['reply_id'] ) ) ) {
-		$current_group = ( bp_is_active( 'groups' ) ) ? bp_get_current_group_id() : 0;
+	if ( bboss_bbp_is_forum_group_forum( bboss_bbp_get_reply_forum_id( $args['reply_id'] ) ) ) {
+		$current_group = ( bboss_is_active( 'groups' ) ) ? bboss_get_current_group_id() : 0;
 
-		if ( bp_is_active( 'groups' ) && groups_is_user_member( $author_id, $current_group ) ) {
-			$display_role = get_group_role_label( $current_group, 'member_singular_label_name' );
+		if ( bboss_is_active( 'groups' ) && bboss_groups_is_user_member( $author_id, $current_group ) ) {
+			$display_role = bboss_get_group_role_label( $current_group, 'member_singular_label_name' );
 		}
 
-		if ( bp_is_active( 'groups' ) && groups_is_user_mod( $author_id, $current_group ) ) {
-			$display_role = get_group_role_label( $current_group, 'moderator_singular_label_name' );
+		if ( bboss_is_active( 'groups' ) && bboss_groups_is_user_mod( $author_id, $current_group ) ) {
+			$display_role = bboss_get_group_role_label( $current_group, 'moderator_singular_label_name' );
 		}
 
-		if ( bp_is_active( 'groups' ) && groups_is_user_admin( $author_id, $current_group ) ) {
-			$display_role = get_group_role_label( $current_group, 'organizer_singular_label_name' );
+		if ( bboss_is_active( 'groups' ) && bboss_groups_is_user_admin( $author_id, $current_group ) ) {
+			$display_role = bboss_get_group_role_label( $current_group, 'organizer_singular_label_name' );
 		}
 	} else {
 		if ( ! $author_id ) {
@@ -2683,11 +2683,11 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 			} else {
 				$user_roles = array_values( get_userdata( $author_id )->roles );
 
-				if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
+				if ( array_intersect( $user_roles, array( bboss_bbp_get_keymaster_role(), 'administrator' ) ) ) {
 					$display_role = __( 'Administrator', 'buddyboss' );
 				}
 
-				if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
+				if ( array_intersect( $user_roles, array( bboss_bbp_get_moderator_role(), 'editor' ) ) ) {
 					$display_role = __( 'Moderator', 'buddyboss' );
 				}
 			}
@@ -2716,7 +2716,7 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
  *
  * @return array
  */
-function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+function bboss_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
 	if (
 		! isset( $_POST['bbp_topic_id'] ) || // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -2730,20 +2730,20 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
 	$forum_id = filter_input( INPUT_POST, 'bbp_forum_id', FILTER_VALIDATE_INT );
 
 	if ( ! isset( $_POST['bbp_forum_id'] ) && ! empty( $topic_id ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$forum_id = bbp_get_topic_forum_id( $topic_id );
+		$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 	}
 
 	if ( empty( $forum_id ) ) {
 		return $caps;
 	}
 
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 	$group_id  = reset( $group_ids );
 
 	if ( $group_id ) {
-		$is_member = groups_is_user_member( get_current_user_id(), $group_id );
-		$is_mod    = groups_is_user_mod( get_current_user_id(), $group_id );
-		$is_admin  = groups_is_user_admin( get_current_user_id(), $group_id );
+		$is_member = bboss_groups_is_user_member( get_current_user_id(), $group_id );
+		$is_mod    = bboss_groups_is_user_mod( get_current_user_id(), $group_id );
+		$is_admin  = bboss_groups_is_user_admin( get_current_user_id(), $group_id );
 
 		switch ( $cap ) {
 
@@ -2794,7 +2794,7 @@ function bb_map_group_forum_reply_meta_caps( $caps = array(), $cap = '', $user_i
  *
  * @return int $count
  */
-function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
+function bboss_bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
 
 	if ( empty( $posts ) || empty( $top_reply_ids ) ) {
 		return $count;
@@ -2809,7 +2809,7 @@ function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
 	}
 
 	$child_reply_ids = wp_list_pluck( $child_posts, 'ID' );
-	$count           = $count + bbp_replies_count_walk( $posts, $child_reply_ids, count( $child_reply_ids ) );
+	$count           = $count + bboss_bbp_replies_count_walk( $posts, $child_reply_ids, count( $child_reply_ids ) );
 
 	return $count;
 }
@@ -2822,9 +2822,9 @@ function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
  *
  * @return array
  */
-function bbp_get_public_reply_statuses() {
+function bboss_bbp_get_public_reply_statuses() {
 	$statuses = array(
-		bbp_get_public_status_id()
+		bboss_bbp_get_public_status_id()
 	);
 
 	// Filter & return.
@@ -2839,11 +2839,11 @@ function bbp_get_public_reply_statuses() {
  *
  * @return array
  */
-function bbp_get_non_public_reply_statuses() {
+function bboss_bbp_get_non_public_reply_statuses() {
 	$statuses = array(
-		bbp_get_trash_status_id(),
-		bbp_get_spam_status_id(),
-		bbp_get_pending_status_id()
+		bboss_bbp_get_trash_status_id(),
+		bboss_bbp_get_spam_status_id(),
+		bboss_bbp_get_pending_status_id()
 	);
 
 	// Filter & return.

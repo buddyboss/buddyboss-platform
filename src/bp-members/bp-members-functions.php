@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool True if found, otherwise false.
  */
-function bp_members_has_directory() {
-	$bp = buddypress();
+function bboss_members_has_directory() {
+	$bp = bboss();
 
 	return (bool) ! empty( $bp->pages->members->id );
 }
@@ -37,33 +37,33 @@ function bp_members_has_directory() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_core_define_slugs() {
-	$bp = buddypress();
+function bboss_core_define_slugs() {
+	$bp = bboss();
 
 	// No custom members slug.
-	if ( ! defined( 'BP_MEMBERS_SLUG' ) ) {
+	if ( ! defined( 'BBOSS_MEMBERS_SLUG' ) ) {
 		if ( ! empty( $bp->pages->members ) ) {
-			define( 'BP_MEMBERS_SLUG', $bp->pages->members->slug );
+			define( 'BBOSS_MEMBERS_SLUG', $bp->pages->members->slug );
 		} else {
-			define( 'BP_MEMBERS_SLUG', 'members' );
+			define( 'BBOSS_MEMBERS_SLUG', 'members' );
 		}
 	}
 
 	// No custom registration slug.
-	if ( ! defined( 'BP_REGISTER_SLUG' ) ) {
+	if ( ! defined( 'BBOSS_REGISTER_SLUG' ) ) {
 		if ( ! empty( $bp->pages->register ) ) {
-			define( 'BP_REGISTER_SLUG', $bp->pages->register->slug );
+			define( 'BBOSS_REGISTER_SLUG', $bp->pages->register->slug );
 		} else {
-			define( 'BP_REGISTER_SLUG', 'register' );
+			define( 'BBOSS_REGISTER_SLUG', 'register' );
 		}
 	}
 
 	// No custom activation slug.
-	if ( ! defined( 'BP_ACTIVATION_SLUG' ) ) {
+	if ( ! defined( 'BBOSS_ACTIVATION_SLUG' ) ) {
 		if ( ! empty( $bp->pages->activate ) ) {
-			define( 'BP_ACTIVATION_SLUG', $bp->pages->activate->slug );
+			define( 'BBOSS_ACTIVATION_SLUG', $bp->pages->activate->slug );
 		} else {
-			define( 'BP_ACTIVATION_SLUG', 'activate' );
+			define( 'BBOSS_ACTIVATION_SLUG', 'activate' );
 		}
 	}
 }
@@ -72,8 +72,8 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
 /**
  * Fetch an array of users based on the parameters passed.
  *
- * Since BuddyPress 1.7, bp_core_get_users() uses BP_User_Query. If you
- * need backward compatibility with BP_Core_User::get_users(), filter the
+ * Since BuddyPress 1.7, bboss_core_get_users() uses BBoss_User_Query. If you
+ * need backward compatibility with BBoss_Core_User::get_users(), filter the
  * bp_use_legacy_user_query value, returning true.
  *
  * @since BuddyPress 1.2.0
@@ -81,7 +81,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * @since BuddyBoss 2.3.90 Added `xprofile_query` parameter. Added `user_ids` parameter.
  *
  * @param array|string $args {
- *     Array of arguments. All are optional. See {@link BP_User_Query} for
+ *     Array of arguments. All are optional. See {@link BBoss_User_Query} for
  *     a more complete description of arguments.
  *     @type string       $type                Sort order. Default: 'active'.
  *     @type int          $user_id             Limit results to friends of a user. Default: false.
@@ -102,10 +102,10 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * }
  * @return array
  */
-function bp_core_get_users( $args = '' ) {
+function bboss_core_get_users( $args = '' ) {
 	static $bp_core_get_users = array();
 	// Parse the user query arguments.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'                => 'active',      // Active, newest, alphabetical, random or popular.
@@ -130,7 +130,7 @@ function bp_core_get_users( $args = '' ) {
 
 	// For legacy users. Use of BP_Core_User::get_users() is deprecated.
 	if ( apply_filters( 'bp_use_legacy_user_query', false, __FUNCTION__, $r ) ) {
-		$retval = BP_Core_User::get_users(
+		$retval = BBoss_Core_User::get_users(
 			$r['type'],
 			$r['per_page'],
 			$r['page'],
@@ -149,7 +149,7 @@ function bp_core_get_users( $args = '' ) {
 		// Get users like we were asked to do...
 		$cache_key = 'bp_core_get_users_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_core_get_users[ $cache_key ] ) ) {
-			$users = new BP_User_Query( $r );
+			$users = new BBoss_User_Query( $r );
 
 			$bp_core_get_users[ $cache_key ] = $users;
 		} else {
@@ -184,27 +184,27 @@ function bp_core_get_users( $args = '' ) {
  * @param string|bool $user_login    Optional. user_login of the user.
  * @return string
  */
-function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_login = false ) {
+function bboss_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_login = false ) {
 
 	if ( empty( $user_id ) ) {
 		return;
 	}
 
-	$username = bp_core_get_username( $user_id, $user_nicename, $user_login );
+	$username = bboss_core_get_username( $user_id, $user_nicename, $user_login );
 
-	if ( 'unique_identifier' === bb_get_profile_slug_format() ) {
-		$username = bb_core_get_user_slug( $user_id );
+	if ( 'unique_identifier' === bboss_get_profile_slug_format() ) {
+		$username = bboss_core_get_user_slug( $user_id );
 		if ( empty( $username ) ) {
-			$username = bb_set_user_profile_slug( $user_id );
+			$username = bboss_set_user_profile_slug( $user_id );
 		}
 	}
 
-	if ( bp_is_username_compatibility_mode() ) {
+	if ( bboss_is_username_compatibility_mode() ) {
 		$username = rawurlencode( $username );
 	}
 
-	$after_domain = bp_core_enable_root_profiles() ? $username : bp_get_members_root_slug() . '/' . $username;
-	$domain       = trailingslashit( bp_get_root_domain() . '/' . $after_domain );
+	$after_domain = bboss_core_enable_root_profiles() ? $username : bboss_get_members_root_slug() . '/' . $username;
+	$domain       = trailingslashit( bboss_get_root_domain() . '/' . $after_domain );
 
 	// Don't use this filter.  Subject to removal in a future release.
 	// Use the 'bp_core_get_user_domain' filter instead.
@@ -235,13 +235,13 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
  * @param  int $user_id The ID of the user.
  * @return array|bool Array of data on success, boolean false on failure.
  */
-function bp_core_get_core_userdata( $user_id = 0 ) {
+function bboss_core_get_core_userdata( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
 		return false;
 	}
 
 	// Get core user data.
-	$userdata = BP_Core_User::get_core_userdata( $user_id );
+	$userdata = BBoss_Core_User::get_core_userdata( $user_id );
 
 	/**
 	 * Filters the userdata for a passed user.
@@ -263,8 +263,8 @@ function bp_core_get_core_userdata( $user_id = 0 ) {
  * @param string $user_login user_login of the user being queried.
  * @return int
  */
-function bp_core_get_displayed_userid( $user_login ) {
-	return apply_filters( 'bp_core_get_displayed_userid', bp_core_get_userid( $user_login ) );
+function bboss_core_get_displayed_userid( $user_login ) {
+	return apply_filters( 'bp_core_get_displayed_userid', bboss_core_get_userid( $user_login ) );
 }
 
 /**
@@ -275,7 +275,7 @@ function bp_core_get_displayed_userid( $user_login ) {
  * @param string $username user_login to check.
  * @return int|null The ID of the matched user on success, null on failure.
  */
-function bp_core_get_userid( $username = '' ) {
+function bboss_core_get_userid( $username = '' ) {
 	if ( empty( $username ) ) {
 		return false;
 	}
@@ -301,7 +301,7 @@ function bp_core_get_userid( $username = '' ) {
  * @param string $user_nicename user_nicename to check.
  * @return int|null The ID of the matched user on success, null on failure.
  */
-function bp_core_get_userid_from_nicename( $user_nicename = '' ) {
+function bboss_core_get_userid_from_nicename( $user_nicename = '' ) {
 	if ( empty( $user_nicename ) ) {
 		return false;
 	}
@@ -327,7 +327,7 @@ function bp_core_get_userid_from_nicename( $user_nicename = '' ) {
  * @param string $nickname nickname to check.
  * @return int|null The ID of the matched user on success, null on failure.
  */
-function bp_core_get_userid_from_nickname( $nickname ) {
+function bboss_core_get_userid_from_nickname( $nickname ) {
 	if ( empty( $nickname ) ) {
 		return false;
 	}
@@ -361,8 +361,8 @@ function bp_core_get_userid_from_nickname( $nickname ) {
  * @param string $nickname nickname to check.
  * @return WP_User|null WP_User object on success, null on failure.
  */
-function bp_get_user_by_nickname( $nickname ) {
-	$user_id = bp_core_get_userid_from_nickname( $nickname );
+function bboss_get_user_by_nickname( $nickname ) {
+	$user_id = bboss_core_get_userid_from_nickname( $nickname );
 	return $user_id ? get_user_by( 'ID', $user_id ) : null;
 }
 
@@ -379,17 +379,17 @@ function bp_get_user_by_nickname( $nickname ) {
  * @param string|bool $user_login    Optional. user_login of user being checked.
  * @return string The username of the matched user or an empty string if no user is found.
  */
-function bp_core_get_username( $user_id = 0, $user_nicename = false, $user_login = false ) {
+function bboss_core_get_username( $user_id = 0, $user_nicename = false, $user_login = false ) {
 
 	if ( ! $user_nicename && ! $user_login ) {
 		// Pull an audible and maybe use the login over the nicename.
-		if ( bp_is_username_compatibility_mode() ) {
+		if ( bboss_is_username_compatibility_mode() ) {
 			$username = get_the_author_meta( 'login', $user_id );
 		} else {
 			$username = get_the_author_meta( 'nicename', $user_id );
 		}
 	} else {
-		$username = bp_is_username_compatibility_mode() ? $user_login : $user_nicename;
+		$username = bboss_is_username_compatibility_mode() ? $user_login : $user_nicename;
 	}
 
 	/**
@@ -413,7 +413,7 @@ function bp_core_get_username( $user_id = 0, $user_nicename = false, $user_login
  * @param int $user_id User ID to check.
  * @return string The username of the matched user or an empty string if no user is found.
  */
-function bp_members_get_user_nicename( $user_id ) {
+function bboss_members_get_user_nicename( $user_id ) {
 	/**
 	 * Filters the user_nicename based on originally provided user ID.
 	 *
@@ -433,7 +433,7 @@ function bp_members_get_user_nicename( $user_id ) {
  * @return string The email for the matched user. Empty string if no user
  *                matches the $user_id.
  */
-function bp_core_get_user_email( $user_id ) {
+function bboss_core_get_user_email( $user_id ) {
 	/**
 	 * Filters the user email for user based on user ID.
 	 *
@@ -461,8 +461,8 @@ function bp_core_get_user_email( $user_id ) {
  * @return string|bool The link text based on passed parameters, or false on
  *                     no match.
  */
-function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false ) {
-	$display_name = bp_core_get_user_displayname( $user_id );
+function bboss_core_get_userlink( $user_id, $no_anchor = false, $just_link = false ) {
+	$display_name = bboss_core_get_user_displayname( $user_id );
 
 	if ( empty( $display_name ) ) {
 		return false;
@@ -472,7 +472,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 		return $display_name;
 	}
 
-	$url = bp_core_get_user_domain( $user_id );
+	$url = bboss_core_get_user_domain( $user_id );
 
 	if ( ! empty( $just_link ) ) {
 		return $url;
@@ -500,7 +500,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
  * @param array $user_ids Array of user IDs to get display names for.
  * @return array Associative array of the format "id" => "displayname".
  */
-function bp_core_get_user_displaynames( $user_ids ) {
+function bboss_core_get_user_displaynames( $user_ids ) {
 
 	// Sanitize.
 	$user_ids = wp_parse_id_list( $user_ids );
@@ -520,18 +520,18 @@ function bp_core_get_user_displaynames( $user_ids ) {
 	// each of those is an individual query per user, so a 50-member loop pays ~13 queries per row
 	// before a single name is rendered. Priming turns the whole batch into a handful of queries and
 	// changes no behaviour — the per-user calls below read the very caches filled here.
-	bb_core_prime_user_displayname_caches( $user_ids );
+	bboss_core_prime_user_displayname_caches( $user_ids );
 
 	$retval = array();
 	foreach ( $user_ids as $user_id ) {
-		$retval[ $user_id ] = bp_core_get_user_displayname( $user_id );
+		$retval[ $user_id ] = bboss_core_get_user_displayname( $user_id );
 	}
 
 	return $retval;
 }
 
 /**
- * Prime the caches that bp_core_get_user_displayname() reads, for a batch of users.
+ * Prime the caches that bboss_core_get_user_displayname() reads, for a batch of users.
  *
  * Fills three caches, all of which the single-user resolution already consults, so this is purely a
  * query-count optimisation with no effect on the value returned:
@@ -541,10 +541,10 @@ function bp_core_get_user_displaynames( $user_ids ) {
  *   stored row, and ends its chain at user_nicename.
  *
  * - `bp_xprofile_data` for the First Name, Last Name and Nickname fields, via
- *   BP_XProfile_ProfileData::get_value_byid(), which is the same primer xprofile_get_field_data()
+ *   BBoss_XProfile_ProfileData::get_value_byid(), which is the same primer bboss_xprofile_get_field_data()
  *   goes through — one query per field for the whole batch instead of one per user per field.
- * - the visibility reads bp_xprofile_get_hidden_fields_for_user() performs, through
- *   bb_xprofile_prime_hidden_fields_for_users(): the user_data_exists() probe, the field-ids memo
+ * - the visibility reads bboss_xprofile_get_hidden_fields_for_user() performs, through
+ *   bboss_xprofile_prime_hidden_fields_for_users(): the user_data_exists() probe, the field-ids memo
  *   per distinct hidden-level set, and the user-meta fallback. Where a key cannot be predicted -
  *   a site filtering the hidden level set - the per-user call falls back to its own query and
  *   behaviour is unchanged.
@@ -553,17 +553,17 @@ function bp_core_get_user_displaynames( $user_ids ) {
  *
  * @param array $user_ids  User IDs whose display names are about to be resolved.
  * @param int   $viewer_id Optional. Viewer the names will be resolved for. Defaults to the current
- *                         viewer, which is what bp_core_get_user_displayname() will use.
+ *                         viewer, which is what bboss_core_get_user_displayname() will use.
  */
-function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
+function bboss_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
 	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
 
-	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) ) {
+	if ( empty( $user_ids ) || ! bboss_is_active( 'xprofile' ) ) {
 		return;
 	}
 
 	if ( empty( $viewer_id ) ) {
-		$viewer_id = bb_core_get_viewer_user_id();
+		$viewer_id = bboss_core_get_viewer_user_id();
 	}
 
 	// Prime the WordPress user rows and their meta. bb_core_build_visible_display_name() reads the
@@ -576,24 +576,24 @@ function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
 	cache_users( $user_ids );
 
 	// Prime the name field values for the whole batch.
-	if ( class_exists( 'BP_XProfile_ProfileData' ) ) {
+	if ( class_exists( 'BBoss_XProfile_ProfileData' ) ) {
 		$name_field_ids = array_filter(
 			array(
-				(int) bp_xprofile_firstname_field_id(),
-				(int) bp_xprofile_lastname_field_id(),
-				(int) bp_xprofile_nickname_field_id(),
+				(int) bboss_xprofile_firstname_field_id(),
+				(int) bboss_xprofile_lastname_field_id(),
+				(int) bboss_xprofile_nickname_field_id(),
 			)
 		);
 
 		foreach ( array_unique( $name_field_ids ) as $field_id ) {
-			BP_XProfile_ProfileData::get_value_byid( $field_id, $user_ids );
+			BBoss_XProfile_ProfileData::get_value_byid( $field_id, $user_ids );
 		}
 	}
 
 	// Prime the visibility reads. Shared with the member-search producers, which resolve the same
 	// caches once per matched row - keeping one primer means the two cannot drift into priming
 	// different subsets of what the resolution actually reads.
-	bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id );
+	bboss_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id );
 }
 
 /**
@@ -605,20 +605,20 @@ function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
  * @param int|string|bool $user_id_or_username User ID or username.
  * @param int             $current_user_id   Optional. ID of the user viewing the profile. Default
  *                                             0, which resolves the viewer from the current request.
- *                                             Pass bb_core_guest_viewer_id() to force the public,
+ *                                             Pass bboss_core_guest_viewer_id() to force the public,
  *                                             logged-out view - required when the audience is
  *                                             provably not a member (an invitation email sent to a
  *                                             plain email address).
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
-function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 0 ) {
+function bboss_core_get_user_displayname( $user_id_or_username, $current_user_id = 0 ) {
 	if ( empty( $user_id_or_username ) ) {
 		return false;
 	}
 
 	if ( ! is_numeric( $user_id_or_username ) ) {
-		$user_id = bp_core_get_userid( $user_id_or_username );
+		$user_id = bboss_core_get_userid( $user_id_or_username );
 	} else {
 		$user_id = $user_id_or_username;
 	}
@@ -632,10 +632,10 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		// still be 0 while WordPress has already resolved the user, which would serve an
 		// authenticated caller the guest-level redaction of someone else's name. See
 		// bb_core_get_viewer_user_id().
-		$current_user_id = bb_core_get_viewer_user_id();
+		$current_user_id = bboss_core_get_viewer_user_id();
 	}
 
-	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
+	$list_fields = bboss_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 
 	// The site-wide Display Name Format can drop a name part for EVERYONE - the "First Name" and
 	// "Nickname" formats leave the surname out of the visible name entirely, whether or not the
@@ -644,7 +644,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	// asked about separately: the format -> display_name resync is a manual repair tool rather than
 	// something that runs on every save, so a stored display_name that has drifted to the full name
 	// would otherwise hand a guest the very name part the format exists to suppress.
-	$active_display_format  = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+	$active_display_format  = function_exists( 'bboss_core_display_name_format' ) ? bboss_core_display_name_format() : 'first_last_name';
 	$format_hides_last_name = in_array( $active_display_format, array( 'first_name', 'nickname' ), true );
 
 	// Only a hidden NAME field can change the visible name. bp_xprofile_get_hidden_fields_for_user()
@@ -663,8 +663,8 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	// ids rather than the whole hidden list - so this keeps the three in agreement.
 	$name_field_ids = array_filter(
 		array(
-			(int) bp_xprofile_firstname_field_id(),
-			(int) bp_xprofile_lastname_field_id(),
+			(int) bboss_xprofile_firstname_field_id(),
+			(int) bboss_xprofile_lastname_field_id(),
 		)
 	);
 
@@ -676,7 +676,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		// from a drifted string is not decidable. Assemble the name from the fields this viewer may
 		// see instead; see bb_core_build_visible_display_name(). That is also what the logged-in
 		// path resolves (xprofile_filter_get_user_display_name()), so guest and member agree.
-		$full_name = bb_core_build_visible_display_name( $user_id, $list_fields );
+		$full_name = bboss_core_build_visible_display_name( $user_id, $list_fields );
 	} else {
 		// Nothing is hidden from this viewer, so the stored column IS the public name and is
 		// returned untouched - which is what keeps a deliberately customised display name intact.
@@ -688,7 +688,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		// $current_user_id this call was asked about. try/finally so a throw cannot leave the
 		// marker raised for the rest of the request, which would stand those filters down and fail
 		// OPEN on the surfaces they protect.
-		bb_core_is_resolving_user_displayname( true );
+		bboss_core_is_resolving_user_displayname( true );
 
 		try {
 			$full_name = get_the_author_meta( 'display_name', $user_id );
@@ -697,7 +697,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 				$full_name = get_the_author_meta( 'nickname', $user_id );
 			}
 		} finally {
-			bb_core_is_resolving_user_displayname( false );
+			bboss_core_is_resolving_user_displayname( false );
 		}
 	}
 
@@ -734,10 +734,10 @@ add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 /**
  * Whether a member display-name resolution is currently reading the stored `display_name` column.
  *
- * The resolver bp_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
+ * The resolver bboss_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
  * viewer may not see out of it. It reads that column with get_the_author_meta(), which is also the
  * hook BuddyBoss uses to apply the same redaction to WordPress core's author output
- * (bb_core_filter_the_author_display_name()). Left unmarked the two chase each other: the
+ * (bboss_core_filter_the_author_display_name()). Left unmarked the two chase each other: the
  * resolution asks core for the column, core hands back a name already redacted for the current
  * request's viewer - not for the `$current_user_id` the resolution was asked about - and every
  * resolution costs two.
@@ -752,7 +752,7 @@ add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
  *                             finished, null (default) to only read the current state.
  * @return bool Whether a resolution is in progress.
  */
-function bb_core_is_resolving_user_displayname( $resolving = null ) {
+function bboss_core_is_resolving_user_displayname( $resolving = null ) {
 	static $depth = 0;
 
 	if ( true === $resolving ) {
@@ -772,7 +772,7 @@ function bb_core_is_resolving_user_displayname( $resolving = null ) {
  * @param string $email The email address for the user.
  * @return string The link to the users home base. False on no match.
  */
-function bp_core_get_userlink_by_email( $email ) {
+function bboss_core_get_userlink_by_email( $email ) {
 	$user = get_user_by( 'email', $email );
 
 	/**
@@ -782,7 +782,7 @@ function bp_core_get_userlink_by_email( $email ) {
 	 *
 	 * @param string|bool $value URL for the user if found, otherwise false.
 	 */
-	return apply_filters( 'bp_core_get_userlink_by_email', bp_core_get_userlink( $user->ID, false, false, true ) );
+	return apply_filters( 'bp_core_get_userlink_by_email', bboss_core_get_userlink( $user->ID, false, false, true ) );
 }
 
 /**
@@ -795,11 +795,11 @@ function bp_core_get_userlink_by_email( $email ) {
  *                         be user_nicename.
  * @return string|bool The link to the user's domain, false on no match.
  */
-function bp_core_get_userlink_by_username( $username ) {
-	if ( bp_is_username_compatibility_mode() ) {
-		$user_id = bp_core_get_userid( $username );
+function bboss_core_get_userlink_by_username( $username ) {
+	if ( bboss_is_username_compatibility_mode() ) {
+		$user_id = bboss_core_get_userid( $username );
 	} else {
-		$user_id = bp_core_get_userid_from_nicename( $username );
+		$user_id = bboss_core_get_userid_from_nicename( $username );
 	}
 
 	/**
@@ -809,7 +809,7 @@ function bp_core_get_userlink_by_username( $username ) {
 	 *
 	 * @param string|bool $value URL for the user if found, otherwise false.
 	 */
-	return apply_filters( 'bp_core_get_userlink_by_username', bp_core_get_userlink( $user_id, false, false, true ) );
+	return apply_filters( 'bp_core_get_userlink_by_username', bboss_core_get_userlink( $user_id, false, false, true ) );
 }
 
 /**
@@ -817,19 +817,19 @@ function bp_core_get_userlink_by_username( $username ) {
  *
  * Note that this is a raw count of non-spam, activated users. It does not
  * account for users who have logged activity (last_active). See
- * {@link bp_core_get_active_member_count()}.
+ * {@link bboss_core_get_active_member_count()}.
  *
  * @since BuddyPress 1.2.0
  *
  * @return int The total number of members.
  */
-function bp_core_get_total_member_count() {
+function bboss_core_get_total_member_count() {
 	global $wpdb;
 
 	$count = wp_cache_get( 'bp_total_member_count', 'bp' );
 
 	if ( false === $count ) {
-		$status_sql = bp_core_get_status_sql();
+		$status_sql = bboss_core_get_status_sql();
 		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_sql is the constant clause from bp_core_get_status_sql(); table name from $wpdb.
 		wp_cache_set( 'bp_total_member_count', $count, 'bp' );
 	}
@@ -851,9 +851,9 @@ function bp_core_get_total_member_count() {
  *
  * @return int The total number of members.
  */
-function bp_core_get_all_member_count() {
+function bboss_core_get_all_member_count() {
 	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
-	bp_has_members( bp_ajax_querystring( 'members' ) );
+	bboss_has_members( bboss_ajax_querystring( 'members' ) );
 	$count = $GLOBALS['members_template']->total_member_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 
@@ -872,16 +872,16 @@ function bp_core_get_all_member_count() {
  *
  * @since BuddyBoss 1.2.10
  */
-function bp_member_object_template_results_members_all_scope( $querystring, $object ) {
+function bboss_member_object_template_results_members_all_scope( $querystring, $object ) {
 	if ( 'members' !== $object ) {
 		return $querystring;
 	}
 
-	$querystring = bp_parse_args( $querystring );
+	$querystring = bboss_parse_args( $querystring );
 
 	if (
-		bp_is_active( 'activity' ) &&
-		bp_is_activity_follow_active() &&
+		bboss_is_active( 'activity' ) &&
+		bboss_is_activity_follow_active() &&
 		isset( $querystring['scope'] ) &&
 		(
 			'following' === $querystring['scope'] ||
@@ -889,7 +889,7 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 		)
 
 	) {
-		$counts = bp_total_follow_counts();
+		$counts = bboss_total_follow_counts();
 		if ( 'following' === $querystring['scope'] && ! empty( $counts['following'] ) ) {
 			unset( $querystring['include'] );
 		} elseif ( 'followers' === $querystring['scope'] && ! empty( $counts['followers'] ) ) {
@@ -911,12 +911,12 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
  *
  * @return int The number of active members.
  */
-function bp_core_get_active_member_count() {
+function bboss_core_get_active_member_count() {
 	global $wpdb;
 
 	$count = get_transient( 'bp_active_member_count' );
 	if ( false === $count ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Avoid a costly join by splitting the lookup.
 		if ( is_multisite() ) {
@@ -947,9 +947,9 @@ function bp_core_get_active_member_count() {
  *
  * This function is called from three places:
  *
- * - in bp_settings_action_capabilities() (from the front-end)
- * - by bp_core_mark_user_spam_admin()    (from wp-admin)
- * - bp_core_mark_user_ham_admin()        (from wp-admin)
+ * - in bboss_settings_action_capabilities() (from the front-end)
+ * - by bboss_core_mark_user_spam_admin()    (from wp-admin)
+ * - bboss_core_mark_user_ham_admin()        (from wp-admin)
  *
  * @since BuddyPress 1.6.0
  *
@@ -962,7 +962,7 @@ function bp_core_get_active_member_count() {
  *                              to 'make_spam_user'.
  * @return bool True on success, false on failure.
  */
-function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = true ) {
+function bboss_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = true ) {
 	global $wpdb;
 
 	// Bail if no user ID.
@@ -995,7 +995,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 		foreach ( (array) array_values( $blogs ) as $details ) {
 
 			// Do not mark the main or current root blog as spam.
-			if ( 1 == $details->userblog_id || bp_get_root_blog_id() == $details->userblog_id ) {
+			if ( 1 == $details->userblog_id || bboss_get_root_blog_id() == $details->userblog_id ) {
 				continue;
 			}
 
@@ -1046,8 +1046,8 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 	}
 
 	// Hide this user's activity.
-	if ( ( true === $is_spam ) && bp_is_active( 'activity' ) ) {
-		bp_activity_hide_user_activity( $user_id );
+	if ( ( true === $is_spam ) && bboss_is_active( 'activity' ) ) {
+		bboss_activity_hide_user_activity( $user_id );
 	}
 
 	// We need a special hook for is_spam so that components can delete data at spam time.
@@ -1096,8 +1096,8 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
  *
  * @param int $user_id The user ID passed from the make_spam_user hook.
  */
-function bp_core_mark_user_spam_admin( $user_id ) {
-	bp_core_process_spammer_status( $user_id, 'spam', false );
+function bboss_core_mark_user_spam_admin( $user_id ) {
+	bboss_core_process_spammer_status( $user_id, 'spam', false );
 }
 add_action( 'make_spam_user', 'bp_core_mark_user_spam_admin' );
 
@@ -1108,8 +1108,8 @@ add_action( 'make_spam_user', 'bp_core_mark_user_spam_admin' );
  *
  * @param int $user_id The user ID passed from the make_ham_user hook.
  */
-function bp_core_mark_user_ham_admin( $user_id ) {
-	bp_core_process_spammer_status( $user_id, 'ham', false );
+function bboss_core_mark_user_ham_admin( $user_id ) {
+	bboss_core_process_spammer_status( $user_id, 'ham', false );
 }
 add_action( 'make_ham_user', 'bp_core_mark_user_ham_admin' );
 
@@ -1121,14 +1121,14 @@ add_action( 'make_ham_user', 'bp_core_mark_user_ham_admin' );
  * @param int $user_id The ID for the user.
  * @return bool True if spammer, otherwise false.
  */
-function bp_is_user_spammer( $user_id = 0 ) {
+function bboss_is_user_spammer( $user_id = 0 ) {
 
 	// No user to check.
 	if ( empty( $user_id ) ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Assume user is not spam.
 	$is_spammer = false;
@@ -1138,15 +1138,15 @@ function bp_is_user_spammer( $user_id = 0 ) {
 
 	// Get locally-cached data if available.
 	switch ( $user_id ) {
-		case bp_loggedin_user_id():
+		case bboss_loggedin_user_id():
 			$user = ! empty( $bp->loggedin_user->userdata ) ? $bp->loggedin_user->userdata : false;
 			break;
 
-		case bp_displayed_user_id():
+		case bboss_displayed_user_id():
 			$user = ! empty( $bp->displayed_user->userdata ) ? $bp->displayed_user->userdata : false;
 			break;
 
-		case bp_get_member_user_id():
+		case bboss_get_member_user_id():
 			global $members_template;
 			$user = isset( $members_template ) && isset( $members_template->member ) ? $members_template->member : false;
 			break;
@@ -1192,14 +1192,14 @@ function bp_is_user_spammer( $user_id = 0 ) {
  * @param int $user_id The ID for the user.
  * @return bool True if deleted, otherwise false.
  */
-function bp_is_user_deleted( $user_id = 0 ) {
+function bboss_is_user_deleted( $user_id = 0 ) {
 
 	// No user to check.
 	if ( empty( $user_id ) ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Assume user is not deleted.
 	$is_deleted = false;
@@ -1209,11 +1209,11 @@ function bp_is_user_deleted( $user_id = 0 ) {
 
 	// Get locally-cached data if available.
 	switch ( $user_id ) {
-		case bp_loggedin_user_id():
+		case bboss_loggedin_user_id():
 			$user = ! empty( $bp->loggedin_user->userdata ) ? $bp->loggedin_user->userdata : false;
 			break;
 
-		case bp_displayed_user_id():
+		case bboss_displayed_user_id():
 			$user = ! empty( $bp->displayed_user->userdata ) ? $bp->displayed_user->userdata : false;
 			break;
 	}
@@ -1258,11 +1258,11 @@ function bp_is_user_deleted( $user_id = 0 ) {
  * @param int $user_id The user ID to check.
  * @return bool True if active, otherwise false.
  */
-function bp_is_user_active( $user_id = 0 ) {
+function bboss_is_user_active( $user_id = 0 ) {
 
 	// Default to current user.
 	if ( empty( $user_id ) && is_user_logged_in() ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	// No user to check.
@@ -1271,12 +1271,12 @@ function bp_is_user_active( $user_id = 0 ) {
 	}
 
 	// Check spam.
-	if ( bp_is_user_spammer( $user_id ) ) {
+	if ( bboss_is_user_spammer( $user_id ) ) {
 		return false;
 	}
 
 	// Check deleted.
-	if ( bp_is_user_deleted( $user_id ) ) {
+	if ( bboss_is_user_deleted( $user_id ) ) {
 		return false;
 	}
 
@@ -1290,16 +1290,16 @@ function bp_is_user_active( $user_id = 0 ) {
  * @since BuddyPress 1.6.0
  *
  * @todo No need for the user fallback checks, since they're done in
- *       bp_is_user_active().
+ *       bboss_is_user_active().
  *
  * @param int $user_id The user ID to check.
  * @return bool True if inactive, otherwise false.
  */
-function bp_is_user_inactive( $user_id = 0 ) {
+function bboss_is_user_inactive( $user_id = 0 ) {
 
 	// Default to current user.
 	if ( empty( $user_id ) && is_user_logged_in() ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	// No user to check.
@@ -1308,7 +1308,7 @@ function bp_is_user_inactive( $user_id = 0 ) {
 	}
 
 	// Return the inverse of active.
-	return ! bp_is_user_active( $user_id );
+	return ! bboss_is_user_active( $user_id );
 }
 
 /**
@@ -1320,11 +1320,11 @@ function bp_is_user_inactive( $user_id = 0 ) {
  * @param string $time    Time of last activity, in 'Y-m-d H:i:s' format.
  * @return bool True on success, false on failure.
  */
-function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
+function bboss_update_user_last_activity( $user_id = 0, $time = '' ) {
 
 	// Fall back on current user.
 	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	// Bail if the user id is 0, as there's nothing to update.
@@ -1333,17 +1333,17 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 	}
 
 	// Bail if this is switched user.
-	$old_user = bp_current_member_switched();
+	$old_user = bboss_current_member_switched();
 	if ( $old_user instanceof WP_User ) {
 		return false;
 	}
 
 	// Fall back on current time.
 	if ( empty( $time ) ) {
-		$time = bp_core_current_time();
+		$time = bboss_core_current_time();
 	}
 
-	return BP_Core_User::update_last_activity( $user_id, $time );
+	return BBoss_Core_User::update_last_activity( $user_id, $time );
 }
 
 /**
@@ -1365,7 +1365,7 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
  * @param bool   $single    Whether a single key is being fetched (vs an array).
  * @return string|null
  */
-function _bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key, $single ) {
+function bboss__bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key, $single ) {
 	static $warned = false;
 
 	if ( 'last_activity' === $meta_key ) {
@@ -1375,7 +1375,7 @@ function _bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key
 			$warned = true;
 		}
 
-		$user_last_activity = bp_get_user_last_activity( $object_id );
+		$user_last_activity = bboss_get_user_last_activity( $object_id );
 		if ( $single ) {
 			return $user_last_activity;
 		} else {
@@ -1404,10 +1404,10 @@ add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 
  * @param string $meta_key   Meta key being fetched.
  * @param string $meta_value Active time.
  */
-function _bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
+function bboss__bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
 	if ( 'last_activity' === $meta_key ) {
 		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
-		bp_update_user_last_activity( $object_id, $meta_value );
+		bboss_update_user_last_activity( $object_id, $meta_value );
 	}
 }
 add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning', 10, 4 );
@@ -1421,10 +1421,10 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
  * @return string Time of last activity, in 'Y-m-d H:i:s' format, or an empty
  *                string if none is found.
  */
-function bp_get_user_last_activity( $user_id = 0 ) {
+function bboss_get_user_last_activity( $user_id = 0 ) {
 	$activity = '';
 
-	$last_activity = BB_Presence::bb_get_users_last_activity( $user_id );
+	$last_activity = BBoss_Presence::bb_get_users_last_activity( $user_id );
 
 	if ( ! empty( $last_activity[ $user_id ] ) ) {
 		$activity = $last_activity[ $user_id ]['date_recorded'];
@@ -1452,10 +1452,10 @@ function bp_get_user_last_activity( $user_id = 0 ) {
  *
  * @return bool
  */
-function bp_last_activity_migrate() {
+function bboss_last_activity_migrate() {
 	global $wpdb;
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Wipe out existing last_activity data in the activity table -
 	// this helps to prevent duplicates when pulling from the usermeta
@@ -1496,11 +1496,11 @@ function bp_last_activity_migrate() {
  * @param int $user_id ID of the user being queried.
  * @return array Post IDs.
  */
-function bp_core_get_all_posts_for_user( $user_id = 0 ) {
+function bboss_core_get_all_posts_for_user( $user_id = 0 ) {
 	global $wpdb;
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
 	$cache_key = 'bp_get_all_posts_for_user_' . $user_id;
@@ -1525,11 +1525,11 @@ function bp_core_get_all_posts_for_user( $user_id = 0 ) {
  *                     logged-in user.
  * @return bool True on success, false on failure.
  */
-function bp_core_delete_account( $user_id = 0 ) {
+function bboss_core_delete_account( $user_id = 0 ) {
 
 	// Use logged in user ID if none is passed.
 	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	// Site admins cannot be deleted.
@@ -1538,17 +1538,17 @@ function bp_core_delete_account( $user_id = 0 ) {
 	}
 
 	// Extra checks if user is not deleting themselves.
-	if ( bp_loggedin_user_id() !== absint( $user_id ) ) {
+	if ( bboss_loggedin_user_id() !== absint( $user_id ) ) {
 
 		// Bail if current user cannot delete any users.
-		if ( ! bp_current_user_can( 'delete_users' ) ) {
+		if ( ! bboss_current_user_can( 'delete_users' ) ) {
 			return false;
 		}
 
 		// Bail if current user cannot delete this user.
 		// Capability on the root site (current_user_can_for_blog() is deprecated since WP 6.7).
-		if ( is_multisite() && bp_get_root_blog_id() !== get_current_blog_id() ) {
-			switch_to_blog( bp_get_root_blog_id() );
+		if ( is_multisite() && bboss_get_root_blog_id() !== get_current_blog_id() ) {
+			switch_to_blog( bboss_get_root_blog_id() );
 			$can_delete_user = current_user_can( 'delete_user', $user_id );
 			restore_current_blog();
 		} else {
@@ -1601,8 +1601,8 @@ function bp_core_delete_account( $user_id = 0 ) {
  * @param int $user_id ID of the user who is about to be deleted.
  * @return bool True on success, false on failure.
  */
-function bp_core_delete_avatar_on_user_delete( $user_id ) {
-	return bp_core_delete_existing_avatar(
+function bboss_core_delete_avatar_on_user_delete( $user_id ) {
+	return bboss_core_delete_existing_avatar(
 		array(
 			'item_id' => $user_id,
 			'object'  => 'user',
@@ -1622,7 +1622,7 @@ add_action( 'delete_user', 'bp_core_delete_avatar_on_user_delete' );
  * @param string $str String to be upper-cased.
  * @return string
  */
-function bp_core_ucfirst( $str ) {
+function bboss_core_ucfirst( $str ) {
 	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
 		$fc = mb_strtoupper( mb_substr( $str, 0, 1 ) );
 		return $fc . mb_substr( $str, 1 );
@@ -1644,7 +1644,7 @@ function bp_core_ucfirst( $str ) {
  * @return WP_User|WP_Error If the user is not a spammer, return the WP_User
  *                          object. Otherwise a new WP_Error object.
  */
-function bp_core_boot_spammer( $user ) {
+function bboss_core_boot_spammer( $user ) {
 
 	// Check to see if the $user has already failed logging in, if so return $user as-is.
 	if ( is_wp_error( $user ) || empty( $user ) ) {
@@ -1669,10 +1669,10 @@ add_filter( 'authenticate', 'bp_core_boot_spammer', 30 );
  *
  * @param int $user_id The user ID for the user to delete usermeta for.
  */
-function bp_core_remove_data( $user_id ) {
+function bboss_core_remove_data( $user_id ) {
 
 	// Remove last_activity data.
-	BP_Core_User::delete_last_activity( $user_id );
+	BBoss_Core_User::delete_last_activity( $user_id );
 
 	// Flush the cache to remove the user from all cached objects.
 	wp_cache_flush();
@@ -1688,14 +1688,14 @@ add_action( 'bp_make_spam_user', 'bp_core_remove_data' );
  *
  * @return bool True if editing is allowed, otherwise false.
  */
-function bp_core_can_edit_settings() {
+function bboss_core_can_edit_settings() {
 	$status = false;
 
-	if ( bp_is_my_profile() ) {
+	if ( bboss_is_my_profile() ) {
 		$status = true;
-	} elseif ( is_super_admin( bp_displayed_user_id() ) && ! is_super_admin() ) {
+	} elseif ( is_super_admin( bboss_displayed_user_id() ) && ! is_super_admin() ) {
 		$status = false;
-	} elseif ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) {
+	} elseif ( bboss_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) {
 		$status = true;
 	}
 
@@ -1716,7 +1716,7 @@ function bp_core_can_edit_settings() {
  *
  * @since BuddyPress 1.2.5
  */
-function bp_core_flush_illegal_names() {
+function bboss_core_flush_illegal_names() {
 	$illegal_names = get_site_option( 'illegal_names' );
 	update_site_option( 'illegal_names', $illegal_names );
 }
@@ -1731,7 +1731,7 @@ function bp_core_flush_illegal_names() {
  * @param array|string $oldvalue The old value of the option.
  * @return array Merged and unique array of illegal names.
  */
-function bp_core_get_illegal_names( $value = '', $oldvalue = '' ) {
+function bboss_core_get_illegal_names( $value = '', $oldvalue = '' ) {
 
 	// Make sure $value is array.
 	if ( empty( $value ) ) {
@@ -1834,7 +1834,7 @@ add_filter( 'pre_update_site_option_illegal_names', 'bp_core_get_illegal_names',
  * @return bool|array True if the address passes all checks; otherwise an array
  *                    of error codes.
  */
-function bp_core_validate_email_address( $user_email ) {
+function bboss_core_validate_email_address( $user_email ) {
 	$errors = array();
 
 	$user_email = sanitize_email( $user_email );
@@ -1861,7 +1861,7 @@ function bp_core_validate_email_address( $user_email ) {
 	}
 
 	// Check buddyboss enmail restrictions.
-	if ( function_exists( 'bb_is_allowed_register_email_address' ) && ! bb_is_allowed_register_email_address( $user_email ) ) {
+	if ( function_exists( 'bboss_is_allowed_register_email_address' ) && ! bboss_is_allowed_register_email_address( $user_email ) ) {
 		$errors['bb_restricted_email'] = 1;
 	}
 
@@ -1878,19 +1878,19 @@ function bp_core_validate_email_address( $user_email ) {
 /**
  * Add the appropriate errors to a WP_Error object, given results of a validation test.
  *
- * Functions like bp_core_validate_email_address() return a structured array
- * of error codes. bp_core_add_validation_error_messages() takes this array and
+ * Functions like bboss_core_validate_email_address() return a structured array
+ * of error codes. bboss_core_add_validation_error_messages() takes this array and
  * parses, adding the appropriate error messages to the WP_Error object.
  *
  * @since BuddyPress 1.7.0
  *
- * @see bp_core_validate_email_address()
+ * @see bboss_core_validate_email_address()
  *
  * @param WP_Error $errors             WP_Error object.
  * @param array    $validation_results The return value of a validation function
- *                                     like bp_core_validate_email_address().
+ *                                     like bboss_core_validate_email_address().
  */
-function bp_core_add_validation_error_messages( WP_Error $errors, $validation_results ) {
+function bboss_core_add_validation_error_messages( WP_Error $errors, $validation_results ) {
 	if ( ! empty( $validation_results['invalid'] ) ) {
 		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss' ) );
 	}
@@ -1921,10 +1921,10 @@ function bp_core_add_validation_error_messages( WP_Error $errors, $validation_re
  * @param string $user_email Email address to validate.
  * @return array Results of user validation including errors, if any.
  */
-function bp_core_validate_user_signup( $user_name, $user_email ) {
+function bboss_core_validate_user_signup( $user_name, $user_email ) {
 
 	// Make sure illegal names include BuddyPress slugs and values.
-	bp_core_flush_illegal_names();
+	bboss_core_flush_illegal_names();
 
 	// WordPress Multisite has its own validation. Use it, so that we
 	// properly mirror restrictions on username, etc.
@@ -1959,7 +1959,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
-			$field_name = xprofile_get_field( bp_xprofile_nickname_field_id() )->name;
+			$field_name = bboss_xprofile_get_field( bboss_xprofile_nickname_field_id() )->name;
 			/* translators: %s: nickname field name. */
 			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
 		}
@@ -1970,7 +1970,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 		}
 
 		// Check into signups.
-		$signups = BP_Signup::get(
+		$signups = BBoss_Signup::get(
 			array(
 				'user_login' => $user_name,
 			)
@@ -1985,8 +1985,8 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 
 		// Validate the email address and process the validation results into
 		// error messages.
-		$validate_email = bp_core_validate_email_address( $user_email );
-		bp_core_add_validation_error_messages( $errors, $validate_email );
+		$validate_email = bboss_core_validate_email_address( $user_email );
+		bboss_core_add_validation_error_messages( $errors, $validate_email );
 
 		// Assemble the return array.
 		$result = array(
@@ -2020,7 +2020,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
  * @param string $blog_title Blog title requested during registration.
  * @return array
  */
-function bp_core_validate_blog_signup( $blog_url, $blog_title ) {
+function bboss_core_validate_blog_signup( $blog_url, $blog_title ) {
 	if ( ! is_multisite() || ! function_exists( 'wpmu_validate_blog_signup' ) ) {
 		return false;
 	}
@@ -2049,8 +2049,8 @@ function bp_core_validate_blog_signup( $blog_url, $blog_title ) {
  *                              signup data, xprofile data, etc).
  * @return int|false True on success, WP_Error on failure.
  */
-function bp_core_signup_user( $user_login, $user_password, $user_email, $usermeta ) {
-	$bp = buddypress();
+function bboss_core_signup_user( $user_login, $user_password, $user_email, $usermeta ) {
+	$bp = bboss();
 
 	$user_login = strtolower( $user_login );
 
@@ -2083,13 +2083,13 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		 * to true in your wp-config.php file.
 		 */
 		if ( ! defined( 'BP_SIGNUPS_SKIP_USER_CREATION' ) || ! BP_SIGNUPS_SKIP_USER_CREATION ) {
-			$user_id = BP_Signup::add_backcompat( $user_login, $user_password, $user_email, $usermeta );
+			$user_id = BBoss_Signup::add_backcompat( $user_login, $user_password, $user_email, $usermeta );
 
 			if ( is_wp_error( $user_id ) ) {
 				return $user_id;
 			}
 
-			bp_update_user_meta( $user_id, 'activation_key', $activation_key );
+			bboss_update_user_meta( $user_id, 'activation_key', $activation_key );
 		}
 
 		$args = array(
@@ -2099,7 +2099,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 			'meta'           => $usermeta,
 		);
 
-		BP_Signup::add( $args );
+		BBoss_Signup::add( $args );
 	}
 
 	$bp->signup->username = $user_login;
@@ -2134,7 +2134,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		! empty( $activation_key ) &&
 		apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta )
 	) {
-		bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
+		bboss_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
 	}
 
 	return $user_id;
@@ -2153,7 +2153,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
  * @param string $usermeta    Miscellaneous metadata for the user.
  * @return bool
  */
-function bp_core_signup_blog( $blog_domain, $blog_path, $blog_title, $user_name, $user_email, $usermeta ) {
+function bboss_core_signup_blog( $blog_domain, $blog_path, $blog_title, $user_name, $user_email, $usermeta ) {
 	if ( ! is_multisite() || ! function_exists( 'wpmu_signup_blog' ) ) {
 		return false;
 	}
@@ -2179,7 +2179,7 @@ function bp_core_signup_blog( $blog_domain, $blog_path, $blog_title, $user_name,
  * @param string $key Activation key.
  * @return int|bool User ID on success, false on failure.
  */
-function bp_core_activate_signup( $key ) {
+function bboss_core_activate_signup( $key ) {
 	global $wpdb;
 
 	$user = false;
@@ -2201,7 +2201,7 @@ function bp_core_activate_signup( $key ) {
 		$user_id = $user['user_id'];
 
 	} else {
-		$signups = BP_Signup::get(
+		$signups = BBoss_Signup::get(
 			array(
 				'exclude_active' => false,
 				'activation_key' => $key,
@@ -2232,14 +2232,14 @@ function bp_core_activate_signup( $key ) {
 			$user_id = wp_create_user( $signup->user_login, $password, $signup->user_email );
 
 			// Otherwise, update the existing user's status.
-		} elseif ( $key === bp_get_user_meta( $user_id, 'activation_key', true ) || $key === wp_hash( $user_id ) ) {
+		} elseif ( $key === bboss_get_user_meta( $user_id, 'activation_key', true ) || $key === wp_hash( $user_id ) ) {
 
 			// Change the user's status so they become active.
 			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET user_status = 0 WHERE ID = %d", $user_id ) ) ) {
 				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
 			}
 
-			bp_delete_user_meta( $user_id, 'activation_key' );
+			bboss_delete_user_meta( $user_id, 'activation_key' );
 
 			$user_already_created = true;
 
@@ -2252,7 +2252,7 @@ function bp_core_activate_signup( $key ) {
 		}
 
 		// Fetch the signup so we have the data later on.
-		$signups = BP_Signup::get(
+		$signups = BBoss_Signup::get(
 			array(
 				'activation_key' => $key,
 			)
@@ -2261,7 +2261,7 @@ function bp_core_activate_signup( $key ) {
 		$signup = isset( $signups['signups'] ) && ! empty( $signups['signups'][0] ) ? $signups['signups'][0] : false;
 
 		// Activate the signup.
-		BP_Signup::validate( $key );
+		BBoss_Signup::validate( $key );
 
 		if ( isset( $user_already_exists ) ) {
 			return new WP_Error( 'user_already_exists', __( 'That username is already activated.', 'buddyboss' ), $signup );
@@ -2302,7 +2302,7 @@ function bp_core_activate_signup( $key ) {
 	}
 
 	// Set any profile data.
-	if ( bp_is_active( 'xprofile' ) ) {
+	if ( bboss_is_active( 'xprofile' ) ) {
 		if ( ! empty( $user['meta']['profile_field_ids'] ) ) {
 			$profile_field_ids = explode( ',', $user['meta']['profile_field_ids'] );
 
@@ -2310,7 +2310,7 @@ function bp_core_activate_signup( $key ) {
 				$current_field = isset( $user['meta'][ "field_{$field_id}" ] ) ? $user['meta'][ "field_{$field_id}" ] : false;
 
 				if ( ! empty( $current_field ) ) {
-					xprofile_set_field_data( $field_id, $user_id, $current_field );
+					bboss_xprofile_set_field_data( $field_id, $user_id, $current_field );
 				}
 
 				/*
@@ -2331,16 +2331,16 @@ function bp_core_activate_signup( $key ) {
 				 * receives.
 				 */
 				$visibility_meta_key = "field_{$field_id}_visibility";
-				$vfield              = xprofile_get_field( $field_id, null, false );
+				$vfield              = bboss_xprofile_get_field( $field_id, null, false );
 				$default             = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
-				$can_change          = bb_xprofile_can_change_field_visibility( $field_id );
+				$can_change          = bboss_xprofile_can_change_field_visibility( $field_id );
 
 				if ( $can_change && isset( $user['meta'][ $visibility_meta_key ] ) ) {
 					$visibility_level = $user['meta'][ $visibility_meta_key ];
 				} else {
 					$visibility_level = $default;
 				}
-				xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+				bboss_xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 			}
 		}
 	}
@@ -2385,13 +2385,13 @@ function bp_core_activate_signup( $key ) {
  *
  * @param int $user_id The user ID to add the default role for.
  */
-function bp_members_add_role_after_activation( $user_id ) {
+function bboss_members_add_role_after_activation( $user_id ) {
 	// Get default role to add.
-	$role = bp_get_option( 'default_role' );
+	$role = bboss_get_option( 'default_role' );
 
 	// Multisite.
-	if ( is_multisite() && ! is_user_member_of_blog( $user_id, bp_get_root_blog_id() ) ) {
-		add_user_to_blog( bp_get_root_blog_id(), $user_id, $role );
+	if ( is_multisite() && ! is_user_member_of_blog( $user_id, bboss_get_root_blog_id() ) ) {
+		add_user_to_blog( bboss_get_root_blog_id(), $user_id, $role );
 
 		// Single-site.
 	} elseif ( ! is_multisite() ) {
@@ -2406,7 +2406,7 @@ add_action( 'bp_core_activated_user', 'bp_members_add_role_after_activation', 1 
  *
  * @since BuddyPress 2.0.1
  */
-function bp_members_migrate_signups() {
+function bboss_members_migrate_signups() {
 	global $wpdb;
 
 	$status_2_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->users} WHERE user_status = '2'" );
@@ -2461,7 +2461,7 @@ function bp_members_migrate_signups() {
 			$signup->activation_key = wp_generate_password( 32, false );
 		}
 
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 			$meta['field_1'] = $signup->display_name;
 		}
 
@@ -2470,7 +2470,7 @@ function bp_members_migrate_signups() {
 		$user_login = preg_replace( '/\s+/', '', sanitize_user( $signup->user_login, true ) );
 		$user_email = sanitize_email( $signup->user_email );
 
-		BP_Signup::add(
+		BBoss_Signup::add(
 			array(
 				'user_login'     => $user_login,
 				'user_email'     => $user_email,
@@ -2499,7 +2499,7 @@ function bp_members_migrate_signups() {
  *
  * @return bool
  */
-function bp_core_map_user_registration( $user_id, $by_pass = false ) {
+function bboss_core_map_user_registration( $user_id, $by_pass = false ) {
 
 	// Only map data when the site admin is adding users, not on registration.
 	if ( ! is_admin() && empty( $by_pass ) ) {
@@ -2507,35 +2507,35 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 	}
 
 	// Add the user's fullname to Xprofile.
-	if ( bp_is_active( 'xprofile' ) ) {
+	if ( bboss_is_active( 'xprofile' ) ) {
 		$user      = get_user_by( 'ID', $user_id );
-		$firstname = bp_get_user_meta( $user_id, 'first_name', true );
-		$lastname  = bp_get_user_meta( $user_id, 'last_name', true );
+		$firstname = bboss_get_user_meta( $user_id, 'first_name', true );
+		$lastname  = bboss_get_user_meta( $user_id, 'last_name', true );
 		$nickname  = $user->nickname;
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $firstname );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $lastname );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
+		bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, $firstname );
+		bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, $lastname );
+		bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $user_id, $nickname );
 
 		$default_field_ids = array(
-			bp_xprofile_firstname_field_id(),
-			bp_xprofile_lastname_field_id(),
-			bp_xprofile_nickname_field_id(),
+			bboss_xprofile_firstname_field_id(),
+			bboss_xprofile_lastname_field_id(),
+			bboss_xprofile_nickname_field_id(),
 		);
 
 		// Set visibility levels for the default fields.
 		foreach ( $default_field_ids as $field_id ) {
-			$visibility = xprofile_get_field_visibility_level( $field_id, $user_id );
-			xprofile_set_field_visibility_level( $field_id, $user_id, $visibility );
+			$visibility = bboss_xprofile_get_field_visibility_level( $field_id, $user_id );
+			bboss_xprofile_set_field_visibility_level( $field_id, $user_id, $visibility );
 		}
 
-		bp_xprofile_update_display_name( $user_id );
+		bboss_xprofile_update_display_name( $user_id );
 	}
 
 	// Generate user profile slug on user registration.
-	$username = bb_core_get_user_slug( $user_id );
+	$username = bboss_core_get_user_slug( $user_id );
 	if ( empty( $username ) ) {
-		bb_set_user_profile_slug( $user_id );
+		bboss_set_user_profile_slug( $user_id );
 	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
@@ -2547,17 +2547,17 @@ add_action( 'user_register', 'bp_core_map_user_registration' );
  *
  * @return string|bool Directory path on success, false on failure.
  */
-function bp_core_signup_avatar_upload_dir() {
-	$bp = buddypress();
+function bboss_core_signup_avatar_upload_dir() {
+	$bp = bboss();
 
 	if ( empty( $bp->signup->avatar_dir ) ) {
 		return false;
 	}
 
 	$directory = 'avatars/signups';
-	$path      = bp_core_avatar_upload_path() . '/' . $directory . '/' . $bp->signup->avatar_dir;
+	$path      = bboss_core_avatar_upload_path() . '/' . $directory . '/' . $bp->signup->avatar_dir;
 	$newbdir   = $path;
-	$newurl    = bp_core_avatar_url() . '/' . $directory . '/' . $bp->signup->avatar_dir;
+	$newurl    = bboss_core_avatar_url() . '/' . $directory . '/' . $bp->signup->avatar_dir;
 	$newburl   = $newurl;
 	$newsubdir = '/' . $directory . '/' . $bp->signup->avatar_dir;
 
@@ -2592,10 +2592,10 @@ function bp_core_signup_avatar_upload_dir() {
  * @param string   $key        Activation key.
  * @param string   $user_login Optional. The user login name.
  */
-function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $user_login = '' ) {
+function bboss_core_signup_send_validation_email( $user_id, $user_email, $key, $user_login = '' ) {
 	$args = array(
 		'tokens' => array(
-			'activate.url' => esc_url( trailingslashit( bp_get_activation_page() ) . "{$key}/" ),
+			'activate.url' => esc_url( trailingslashit( bboss_get_activation_page() ) . "{$key}/" ),
 			'key'          => $key,
 			'user.email'   => $user_email,
 			'user.id'      => $user_id,
@@ -2608,7 +2608,7 @@ function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $use
 		$to = array( array( $user_email => $user_login ) );
 	}
 
-	bp_send_email( 'core-user-registration', $to, $args );
+	bboss_send_email( 'core-user-registration', $to, $args );
 }
 
 /**
@@ -2621,7 +2621,7 @@ function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $use
  * @param string                $password The inputted, attempted password.
  * @return WP_User|WP_Error
  */
-function bp_core_signup_disable_inactive( $user = null, $username = '', $password = '' ) {
+function bboss_core_signup_disable_inactive( $user = null, $username = '', $password = '' ) {
 	// Login form not used.
 	if ( empty( $username ) && empty( $password ) ) {
 		return $user;
@@ -2644,7 +2644,7 @@ function bp_core_signup_disable_inactive( $user = null, $username = '', $passwor
 	}
 
 	// Look for the unactivated signup corresponding to the login name.
-	$signup = BP_Signup::get( array( 'user_login' => sanitize_user( $user_login ) ) );
+	$signup = BBoss_Signup::get( array( 'user_login' => sanitize_user( $user_login ) ) );
 
 	// No signup or more than one, something is wrong. Let's bail.
 	if ( empty( $signup['signups'][0] ) || $signup['total'] > 1 ) {
@@ -2677,9 +2677,9 @@ add_filter( 'authenticate', 'bp_core_signup_disable_inactive', 30, 3 );
  *
  * @since BuddyPress 2.0.0
  *
- * @see bp_core_signup_disable_inactive()
+ * @see bboss_core_signup_disable_inactive()
  */
-function bp_members_login_resend_activation_email() {
+function bboss_members_login_resend_activation_email() {
 	global $error;
 
 	if ( empty( $_GET['id'] ) || empty( $_GET['_wpnonce'] ) ) {
@@ -2695,7 +2695,7 @@ function bp_members_login_resend_activation_email() {
 
 	// Resend the activation email.
 	// also updates the 'last sent' and '# of emails sent' values.
-	$resend = BP_Signup::resend( array( $signup_id ) );
+	$resend = BBoss_Signup::resend( array( $signup_id ) );
 
 	// Add feedback message.
 	if ( ! empty( $resend['errors'] ) ) {
@@ -2711,12 +2711,12 @@ add_action( 'login_form_bp-resend-activation', 'bp_members_login_resend_activati
  *
  * @since BuddyPress 1.1.0
  */
-function bp_core_wpsignup_redirect() {
+function bboss_core_wpsignup_redirect() {
 
 	do_action( 'bp_core_before_wpsignup_redirect' );
 
 	// Bail in admin or if custom signup page is broken.
-	if ( is_admin() || ! bp_has_custom_signup_page() ) {
+	if ( is_admin() || ! bboss_has_custom_signup_page() ) {
 		return;
 	}
 
@@ -2727,21 +2727,21 @@ function bp_core_wpsignup_redirect() {
 		return;
 	}
 
-	$allow_custom_registration = bp_allow_custom_registration();
+	$allow_custom_registration = bboss_allow_custom_registration();
 
 	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) && ! $allow_custom_registration ) {
-		bp_core_redirect( bp_get_signup_page() );
-	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
-		bp_core_redirect( bp_get_signup_page() );
-	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
-		$bp_custom_register_page_url = bp_custom_register_page_url();
+		bboss_core_redirect( bboss_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bboss_custom_register_page_url() ) {
+		bboss_core_redirect( bboss_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bboss_custom_register_page_url() ) {
+		$bp_custom_register_page_url = bboss_custom_register_page_url();
 
 		// Check if custom registration URL is https://site.com/wp-login.php?action=register then we do not need to redirect again.
 		if (
 			false === strpos( $bp_custom_register_page_url, 'wp-login.php' ) &&
 			'register' !== $action
 		) {
-			bp_core_redirect( $bp_custom_register_page_url );
+			bboss_core_redirect( $bp_custom_register_page_url );
 		}
 	}
 }
@@ -2759,7 +2759,7 @@ add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
  * This clears the logged-in spammer's cookies and will ask the spammer to
  * reauthenticate.
  *
- * Note: A spammer cannot log back in - {@see bp_core_boot_spammer()}.
+ * Note: A spammer cannot log back in - {@see bboss_core_boot_spammer()}.
  *
  * Runs on 'bp_init' at priority 5 so the members component globals are setup
  * before we do our spammer checks.
@@ -2768,7 +2768,7 @@ add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
  *
  * @since BuddyPress 1.8.0
  */
-function bp_stop_live_spammer() {
+function bboss_stop_live_spammer() {
 	// If we're on the login page, stop now to prevent redirect loop.
 	$is_login = false;
 	if ( isset( $GLOBALS['pagenow'] ) && ( false !== strpos( $GLOBALS['pagenow'], 'wp-login.php' ) ) ) {
@@ -2787,7 +2787,7 @@ function bp_stop_live_spammer() {
 	}
 
 	// If spammer, redirect to wp-login.php and reauthorize.
-	if ( bp_is_user_spammer( bp_loggedin_user_id() ) ) {
+	if ( bboss_is_user_spammer( bboss_loggedin_user_id() ) ) {
 		// Setup login args.
 		$args = array(
 			// Custom action used to throw an error message.
@@ -2818,7 +2818,7 @@ add_action( 'bp_init', 'bp_stop_live_spammer', 5 );
  *
  * @since BuddyPress 1.8.0
  */
-function bp_live_spammer_login_error() {
+function bboss_live_spammer_login_error() {
 	global $error;
 
 	$error = __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss' );
@@ -2835,8 +2835,8 @@ add_action( 'login_form_bp-spam', 'bp_live_spammer_login_error' );
  *
  * @return object The displayed user object, null otherwise.
  */
-function bp_get_displayed_user() {
-	$bp = buddypress();
+function bboss_get_displayed_user() {
+	$bp = bboss();
 
 	$displayed_user = null;
 	if ( ! empty( $bp->displayed_user->id ) ) {
@@ -2860,8 +2860,8 @@ function bp_get_displayed_user() {
  *
  * @since BuddyPress 2.7.0
  */
-function bp_member_type_tax_name() {
-	echo esc_attr( bp_get_member_type_tax_name() );
+function bboss_member_type_tax_name() {
+	echo esc_attr( bboss_get_member_type_tax_name() );
 }
 
 	/**
@@ -2871,7 +2871,7 @@ function bp_member_type_tax_name() {
 	 *
 	 * @return string The unique member taxonomy slug.
 	 */
-function bp_get_member_type_tax_name() {
+function bboss_get_member_type_tax_name() {
 	/**
 	 * Filters the slug of the profile type taxonomy.
 	 *
@@ -2904,14 +2904,14 @@ function bp_get_member_type_tax_name() {
  * }
  * @return object|WP_Error profile type object on success, WP_Error object on failure.
  */
-function bp_register_member_type( $member_type, $args = array() ) {
-	$bp = buddypress();
+function bboss_register_member_type( $member_type, $args = array() ) {
+	$bp = bboss();
 
 	if ( isset( $bp->members->types[ $member_type ] ) ) {
 		return new WP_Error( 'bp_member_type_exists', __( 'Profile type already exists.', 'buddyboss' ), $member_type );
 	}
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'labels'        => array(),
@@ -2991,8 +2991,8 @@ function bp_register_member_type( $member_type, $args = array() ) {
  * @param string $member_type The name of the profile type.
  * @return object A profile type object.
  */
-function bp_get_member_type_object( $member_type ) {
-	$types = bp_get_member_types( array(), 'objects' );
+function bboss_get_member_type_object( $member_type ) {
+	$types = bboss_get_member_types( array(), 'objects' );
 
 	if ( empty( $types[ $member_type ] ) ) {
 		return null;
@@ -3006,7 +3006,7 @@ function bp_get_member_type_object( $member_type ) {
  *
  * @since BuddyPress 2.2.0
  *
- * @see bp_register_member_type() for accepted arguments.
+ * @see bboss_register_member_type() for accepted arguments.
  *
  * @param array|string $args     Optional. An array of key => value arguments to match against
  *                               the profile type objects. Default empty array.
@@ -3017,8 +3017,8 @@ function bp_get_member_type_object( $member_type ) {
  *                               must match. Accepts 'or' or 'and'. Default 'and'.
  * @return array A list of profile type names or objects.
  */
-function bp_get_member_types( $args = array(), $output = 'names', $operator = 'and' ) {
-	$types = buddypress()->members->types;
+function bboss_get_member_types( $args = array(), $output = 'names', $operator = 'and' ) {
+	$types = bboss()->members->types;
 
 	$types = wp_filter_object_list( $types, $args, $operator );
 
@@ -3052,15 +3052,15 @@ function bp_get_member_types( $args = array(), $output = 'names', $operator = 'a
  * @param string $member_type profile type.
  * @param bool   $append      Optional. True to append this to existing types for user,
  *                            false to replace. Default: false.
- * @return false|array $retval See {@see bp_set_object_terms()}.
+ * @return false|array $retval See {@see bboss_set_object_terms()}.
  */
-function bp_set_member_type( $user_id, $member_type, $append = false ) {
+function bboss_set_member_type( $user_id, $member_type, $append = false ) {
 	// Pass an empty $member_type to remove a user's type.
-	if ( ! empty( $member_type ) && ! bp_get_member_type_object( $member_type ) ) {
+	if ( ! empty( $member_type ) && ! bboss_get_member_type_object( $member_type ) ) {
 		return false;
 	}
 
-	$retval = bp_set_object_terms( $user_id, $member_type, bp_get_member_type_tax_name(), $append );
+	$retval = bboss_set_object_terms( $user_id, $member_type, bboss_get_member_type_tax_name(), $append );
 
 	// Bust the cache if the type has been updated.
 	if ( ! is_wp_error( $retval ) ) {
@@ -3090,19 +3090,19 @@ function bp_set_member_type( $user_id, $member_type, $append = false ) {
  * @param string $member_type profile type.
  * @return bool|WP_Error
  */
-function bp_remove_member_type( $user_id, $member_type ) {
+function bboss_remove_member_type( $user_id, $member_type ) {
 	// Bail if no valid profile type was passed.
-	if ( empty( $member_type ) || ! bp_get_member_type_object( $member_type ) ) {
+	if ( empty( $member_type ) || ! bboss_get_member_type_object( $member_type ) ) {
 		return false;
 	}
 
 	// No need to continue if the member doesn't have the type.
-	$existing_types = bp_get_member_type( $user_id, false );
+	$existing_types = bboss_get_member_type( $user_id, false );
 	if ( empty( $existing_types ) || ! in_array( $member_type, (array) $existing_types, true ) ) {
 		return false;
 	}
 
-	$deleted = bp_remove_object_terms( $user_id, $member_type, bp_get_member_type_tax_name() );
+	$deleted = bboss_remove_object_terms( $user_id, $member_type, bboss_get_member_type_tax_name() );
 
 	// Bust the cache if the type has been removed.
 	if ( ! is_wp_error( $deleted ) ) {
@@ -3133,18 +3133,18 @@ function bp_remove_member_type( $user_id, $member_type ) {
  * @return string|array|bool On success, returns a single profile type (if $single is true) or an array of member
  *                           types (if $single is false). Returns false on failure.
  */
-function bp_get_member_type( $user_id, $single = true ) {
+function bboss_get_member_type( $user_id, $single = true ) {
 	$types = wp_cache_get( $user_id, 'bp_member_member_type' );
 
 	if ( empty( $types ) ) {
-		$raw_types = bp_get_object_terms( $user_id, bp_get_member_type_tax_name() );
+		$raw_types = bboss_get_object_terms( $user_id, bboss_get_member_type_tax_name() );
 
 		if ( ! is_wp_error( $raw_types ) ) {
 			$types = array();
 
 			// Only include currently registered group types.
 			foreach ( $raw_types as $mtype ) {
-				if ( bp_get_member_type_object( $mtype->name ) ) {
+				if ( bboss_get_member_type_object( $mtype->name ) ) {
 					$types[] = $mtype->name;
 				}
 			}
@@ -3183,14 +3183,14 @@ function bp_get_member_type( $user_id, $single = true ) {
  * @param string $member_type profile type.
  * @return bool Whether the user has the given profile type.
  */
-function bp_has_member_type( $user_id, $member_type ) {
+function bboss_has_member_type( $user_id, $member_type ) {
 	// Bail if no valid profile type was passed.
-	if ( empty( $member_type ) || ! bp_get_member_type_object( $member_type ) ) {
+	if ( empty( $member_type ) || ! bboss_get_member_type_object( $member_type ) ) {
 		return false;
 	}
 
 	// Get all user's profile types.
-	$types = bp_get_member_type( $user_id, false );
+	$types = bboss_get_member_type( $user_id, false );
 
 	if ( ! is_array( $types ) ) {
 		return false;
@@ -3205,10 +3205,10 @@ function bp_has_member_type( $user_id, $member_type ) {
  * @since BuddyPress 2.2.0
  *
  * @param int $user_id ID of the user.
- * @return false|array $value See {@see bp_set_member_type()}.
+ * @return false|array $value See {@see bboss_set_member_type()}.
  */
-function bp_remove_member_type_on_user_delete( $user_id ) {
-	return bp_set_member_type( $user_id, '' );
+function bboss_remove_member_type_on_user_delete( $user_id ) {
+	return bboss_set_member_type( $user_id, '' );
 }
 add_action( 'wpmu_delete_user', 'bp_remove_member_type_on_user_delete' );
 add_action( 'delete_user', 'bp_remove_member_type_on_user_delete' );
@@ -3220,7 +3220,7 @@ add_action( 'delete_user', 'bp_remove_member_type_on_user_delete' );
  *
  * @return string
  */
-function bp_get_current_member_type() {
+function bboss_get_current_member_type() {
 
 	/**
 	 * Filters the "current" profile type, if one is provided, in member directories.
@@ -3229,7 +3229,7 @@ function bp_get_current_member_type() {
 	 *
 	 * @param string $value "Current" profile type.
 	 */
-	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
+	return apply_filters( 'bp_get_current_member_type', bboss()->current_member_type );
 }
 
 /**
@@ -3237,9 +3237,9 @@ function bp_get_current_member_type() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_register_member_type_section() {
+function bboss_register_member_type_section() {
 
-	$is_member_type_enabled = bp_member_type_enable_disable();
+	$is_member_type_enabled = bboss_member_type_enable_disable();
 
 	if ( false === $is_member_type_enabled ) {
 
@@ -3251,12 +3251,12 @@ function bp_register_member_type_section() {
 
 	// profile types.
 	register_post_type(
-		bp_get_member_type_post_type(),
+		bboss_get_member_type_post_type(),
 		apply_filters(
 			'bp_register_member_type_post_type',
 			array(
 				'description'        => __( 'BuddyBoss profile type', 'buddyboss' ),
-				'labels'             => bp_get_member_type_post_type_labels(),
+				'labels'             => bboss_get_member_type_post_type_labels(),
 				'public'             => false,
 				'publicly_queryable' => false,
 				'query_var'          => false,
@@ -3266,7 +3266,7 @@ function bp_register_member_type_section() {
 				'map_meta_cap'       => true,
 				'show_in_rest'       => true,
 				'show_ui'            => false,
-				'supports'           => bp_get_member_type_post_type_supports(),
+				'supports'           => bboss_get_member_type_post_type_supports(),
 			)
 		)
 	);
@@ -3281,7 +3281,7 @@ function bp_register_member_type_section() {
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
 	// Hook for creating a profile type shortcode.
-	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
+	add_shortcode( 'profile', 'bboss_member_type_shortcode_callback' );
 
 }
 
@@ -3298,8 +3298,8 @@ add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
  *
  * @return string   custom post type of profile type.
  */
-function bp_member_type_post_type() {
-	echo esc_attr( bp_get_member_type_post_type() );
+function bboss_member_type_post_type() {
+	echo esc_attr( bboss_get_member_type_post_type() );
 }
 
 /**
@@ -3309,7 +3309,7 @@ function bp_member_type_post_type() {
  *
  * @return string The name of the profile type post type.
  */
-function bp_get_member_type_post_type() {
+function bboss_get_member_type_post_type() {
 
 	/**
 	 * Filters the name of the profile type post type.
@@ -3318,7 +3318,7 @@ function bp_get_member_type_post_type() {
 	 *
 	 * @param string $value profile type post type name.
 	 */
-	return apply_filters( 'bp_get_member_type_post_type', buddypress()->member_type_post_type );
+	return apply_filters( 'bp_get_member_type_post_type', bboss()->member_type_post_type );
 }
 
 /**
@@ -3328,7 +3328,7 @@ function bp_get_member_type_post_type() {
  *
  * @return array
  */
-function bp_get_member_type_post_type_labels() {
+function bboss_get_member_type_post_type_labels() {
 
 	/**
 	 * Filters profile type post type labels.
@@ -3363,7 +3363,7 @@ function bp_get_member_type_post_type_labels() {
  *
  * @return array
  */
-function bp_get_member_type_post_type_supports() {
+function bboss_get_member_type_post_type_supports() {
 
 	/**
 	 * Filters the features that the profile type post type supports.
@@ -3389,7 +3389,7 @@ function bp_get_member_type_post_type_supports() {
  * @param $post_id
  * @return mixed|string
  */
-function bp_get_member_type_key( $post_id ) {
+function bboss_get_member_type_key( $post_id ) {
 
 	if ( empty( $post_id ) ) {
 		return '';
@@ -3401,7 +3401,7 @@ function bp_get_member_type_key( $post_id ) {
 	// if Key is not set by admin user.
 	if ( empty( $key ) ) {
 		$key  = get_post_field( 'post_name', $post_id );
-		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+		$term = term_exists( sanitize_key( $key ), bboss_get_member_type_tax_name() );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
 			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
@@ -3422,9 +3422,9 @@ function bp_get_member_type_key( $post_id ) {
  *
  * @return array
  */
-function bp_get_member_type_by_wp_role( $role ) {
+function bboss_get_member_type_by_wp_role( $role ) {
 	$bp_member_type_ids = array();
-	$post_type          = bp_get_member_type_post_type();
+	$post_type          = bboss_get_member_type_post_type();
 
 	$bp_member_type_args = array(
 		'post_type' => $post_type,
@@ -3440,7 +3440,7 @@ function bp_get_member_type_by_wp_role( $role ) {
 			$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 			$selected_roles = (array) $selected_roles;
 			$singular_name  = strtolower( get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) );
-			$name           = bp_get_member_type_key( $post_id );
+			$name           = bboss_get_member_type_key( $post_id );
 			if ( in_array( $role, $selected_roles ) ) {
 				$bp_member_type_ids[] = array(
 					'ID'        => $post_id,
@@ -3463,11 +3463,11 @@ function bp_get_member_type_by_wp_role( $role ) {
  * @param $wp_roles
  * @param $member_type
  */
-function bp_remove_member_type_to_roles( $wp_roles, $member_type ) {
-	$users = bp_get_users_by_roles( $wp_roles );
+function bboss_remove_member_type_to_roles( $wp_roles, $member_type ) {
+	$users = bboss_get_users_by_roles( $wp_roles );
 	if ( isset( $users ) && ! empty( $users ) ) {
 		foreach ( $users as $single ) {
-			bp_remove_member_type( $single, $member_type );
+			bboss_remove_member_type( $single, $member_type );
 		}
 	}
 }
@@ -3480,11 +3480,11 @@ function bp_remove_member_type_to_roles( $wp_roles, $member_type ) {
  * @param $wp_roles
  * @param $member_type
  */
-function bp_set_member_type_to_roles( $wp_roles, $member_type ) {
-	$users = bp_get_users_by_roles( $wp_roles );
+function bboss_set_member_type_to_roles( $wp_roles, $member_type ) {
+	$users = bboss_get_users_by_roles( $wp_roles );
 	if ( isset( $users ) && ! empty( $users ) ) {
 		foreach ( $users as $single ) {
-			bp_set_user_member_type( $single, $member_type );
+			bboss_set_user_member_type( $single, $member_type );
 		}
 	}
 }
@@ -3498,7 +3498,7 @@ function bp_set_member_type_to_roles( $wp_roles, $member_type ) {
  *
  * @return array
  */
-function bp_get_users_by_roles( $roles ) {
+function bboss_get_users_by_roles( $roles ) {
 	$roles = (array) $roles;
 	$users = array();
 
@@ -3528,11 +3528,11 @@ function bp_get_users_by_roles( $roles ) {
  * @param string $member_type profile type.
  * @param bool   $append      Optional. True to append this to existing types for user,
  *                            false to replace. Default: false.
- * @return See {@see bp_set_object_terms()}.
+ * @return See {@see bboss_set_object_terms()}.
  */
-function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
+function bboss_set_user_member_type( $user_id, $member_type, $append = false ) {
 
-	$retval = bp_set_object_terms( $user_id, $member_type, 'bp_member_type', $append );
+	$retval = bboss_set_object_terms( $user_id, $member_type, 'bp_member_type', $append );
 
 	// Bust the cache if the type has been updated.
 	if ( ! is_wp_error( $retval ) ) {
@@ -3563,7 +3563,7 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_member_type_term_taxonomy_id( $member_type_name ) {
+function bboss_member_type_term_taxonomy_id( $member_type_name ) {
 	$member_type = get_term_by( 'slug', $member_type_name, 'bp_member_type' );
 	if ( ! $member_type ) {
 		return 0;
@@ -3584,7 +3584,7 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_member_type_post_by_type( $member_type ) {
+function bboss_member_type_post_by_type( $member_type ) {
 	static $member_type_post = array();
 	global $wpdb;
 
@@ -3617,7 +3617,7 @@ function bp_member_type_post_by_type( $member_type ) {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_member_type_by_type( $type_id ) {
+function bboss_member_type_by_type( $type_id ) {
 	global $wpdb;
 
 	$member_ids = array();
@@ -3645,20 +3645,20 @@ function bp_member_type_by_type( $type_id ) {
  *
  * @return array Member types
  */
-function bp_get_active_member_types( $args = array() ) {
+function bboss_get_active_member_types( $args = array() ) {
 
-	if ( ! bp_member_type_enable_disable() ) {
+	if ( ! bboss_member_type_enable_disable() ) {
 		return array();
 	}
 
 	static $cache           = array();
 	$bp_active_member_types = array();
 
-	$args = bp_parse_args(
+	$args = bboss_parse_args(
 		$args,
 		array(
 			'posts_per_page' => - 1,
-			'post_type'      => bp_get_member_type_post_type(),
+			'post_type'      => bboss_get_member_type_post_type(),
 			'post_status'    => 'publish',
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
@@ -3693,9 +3693,9 @@ function bp_get_active_member_types( $args = array() ) {
  *
  * @return array
  */
-function bp_get_removed_member_types() {
+function bboss_get_removed_member_types() {
 	$bp_member_type_ids  = array();
-	$post_type           = bp_get_member_type_post_type();
+	$post_type           = bboss_get_member_type_post_type();
 	$bp_member_type_args = array(
 		'post_type'  => $post_type,
 		'meta_query' => array(
@@ -3719,7 +3719,7 @@ function bp_get_removed_member_types() {
 			$bp_member_type_query->the_post();
 
 			$post_id              = get_the_ID();
-			$name                 = bp_get_member_type_key( $post_id );
+			$name                 = bboss_get_member_type_key( $post_id );
 			$bp_member_type_ids[] = array(
 				'ID'   => $post_id,
 				'name' => $name,
@@ -3737,10 +3737,10 @@ function bp_get_removed_member_types() {
  * @return array
  * @since BuddyBoss 1.0.0
  */
-function bp_get_users_of_removed_member_types() {
+function bboss_get_users_of_removed_member_types() {
 	$user_ids = array();
 	// get removed profile type post ids.
-	$bp_member_type_ids = bp_get_removed_member_types();
+	$bp_member_type_ids = bboss_get_removed_member_types();
 	// get removed profile type names/slugs.
 	$bp_member_type_names = array();
 	if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
@@ -3752,8 +3752,8 @@ function bp_get_users_of_removed_member_types() {
 	// get member user ids.
 	if ( isset( $bp_member_type_names ) && ! empty( $bp_member_type_names ) ) {
 		foreach ( $bp_member_type_names as $type_name ) {
-			$type_id           = bp_member_type_term_taxonomy_id( $type_name );
-			$member_type_users = bp_member_type_by_type( $type_id );
+			$type_id           = bboss_member_type_term_taxonomy_id( $type_name );
+			$member_type_users = bboss_member_type_by_type( $type_id );
 			if ( isset( $member_type_users ) && ! empty( $member_type_users ) ) {
 				foreach ( $member_type_users as $single ) {
 					$user_ids[] = $single;
@@ -3770,17 +3770,17 @@ function bp_get_users_of_removed_member_types() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_register_active_member_types() {
-	$member_type_ids = bp_get_active_member_types();
+function bboss_register_active_member_types() {
+	$member_type_ids = bboss_get_active_member_types();
 
 	if ( ! empty( $member_type_ids ) ) {
 
 		foreach ( $member_type_ids as $member_type_id ) {
-			$key = bp_get_member_type_key( $member_type_id );
+			$key = bboss_get_member_type_key( $member_type_id );
 
 			$label_name    = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 			$singular_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
-			bp_register_member_type(
+			bboss_register_member_type(
 				$key,
 				array(
 					'labels'        => array(
@@ -3804,12 +3804,12 @@ function bp_register_active_member_types() {
  * @param $user_id
  * @param $user_role
  */
-function bp_update_user_member_type_type_set( $user_id, $user_role ) {
+function bboss_update_user_member_type_type_set( $user_id, $user_role ) {
 
-	$get_member_type = bp_get_member_type_by_wp_role( $user_role );
+	$get_member_type = bboss_get_member_type_by_wp_role( $user_role );
 
 	if ( isset( $get_member_type[0]['name'] ) && ! empty( $get_member_type[0]['name'] ) ) {
-		bp_set_member_type( $user_id, $get_member_type[0]['name'] );
+		bboss_set_member_type( $user_id, $get_member_type[0]['name'] );
 	}
 }
 
@@ -3818,8 +3818,8 @@ function bp_update_user_member_type_type_set( $user_id, $user_role ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_member_type_directory() {
-	$member_types = bp_get_active_member_types();
+function bboss_member_type_directory() {
+	$member_types = bboss_get_active_member_types();
 
 	foreach ( $member_types as $member_type_id ) {
 
@@ -3827,9 +3827,9 @@ function bp_member_type_directory() {
 			continue;
 		}
 
-		$type_name        = bp_get_member_type_key( $member_type_id );
-		$type_id          = bp_member_type_term_taxonomy_id( $type_name );
-		$members_count    = count( bp_member_type_by_type( $type_id ) );
+		$type_name        = bboss_get_member_type_key( $member_type_id );
+		$type_id          = bboss_member_type_term_taxonomy_id( $type_name );
+		$members_count    = count( bboss_member_type_by_type( $type_id ) );
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 
 		if ( empty( $type_id ) ) {
@@ -3837,7 +3837,7 @@ function bp_member_type_directory() {
 		}
 		?>
 		<li id="members-<?php echo esc_attr( $type_id ); ?>">
-			<a href="<?php echo esc_url( bp_member_type_directory_permalink( $type_name ) ); ?>"><?php printf( '%s <span>%s</span>', esc_html( $member_type_name ), esc_html( $members_count ) ); // @todo no variables in the text domain please ?></a>
+			<a href="<?php echo esc_url( bboss_member_type_directory_permalink( $type_name ) ); ?>"><?php printf( '%s <span>%s</span>', esc_html( $member_type_name ), esc_html( $members_count ) ); // @todo no variables in the text domain please ?></a>
 		</li>
 		<?php
 	}
@@ -3848,7 +3848,7 @@ function bp_member_type_directory() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_remove_member_type_metabox() {
+function bboss_remove_member_type_metabox() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		remove_meta_box( 'bp_members_admin_member_type', get_current_screen()->id, 'side' );
 	}
@@ -3859,7 +3859,7 @@ function bp_remove_member_type_metabox() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_remove_member_type_metabox_globally() {
+function bboss_remove_member_type_metabox_globally() {
 	remove_meta_box( 'bp_members_admin_member_type', get_current_screen()->id, 'side' );
 }
 
@@ -3872,7 +3872,7 @@ function bp_remove_member_type_metabox_globally() {
  *
  * @return array
  */
-function bp_member_type_shortcode_add_body_class( $class ) {
+function bboss_member_type_shortcode_add_body_class( $class ) {
 
 	global $post;
 
@@ -3899,14 +3899,14 @@ function bp_member_type_shortcode_add_body_class( $class ) {
  *
  * @return false|string
  */
-function bp_member_type_shortcode_callback( $atts ) {
+function bboss_member_type_shortcode_callback( $atts ) {
 
 	ob_start();
 
 	echo '<div id="buddypress" class="buddypress-wrap bp-dir-hori-nav bp-shortcode-wrap">';
 	echo '<div class="members">';
 	echo '<div class="subnav-filters filters no-ajax" id="subnav-filters">';
-	bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'members' ) );
+	bboss_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'members' ) );
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
 
@@ -3917,13 +3917,13 @@ function bp_member_type_shortcode_callback( $atts ) {
 		$name = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $atts['type'] ) );
 
 		// Set the "current" profile type, if one is provided, in member directories.
-		buddypress()->current_member_type = $name;
-		buddypress()->current_component   = 'members';
-		buddypress()->is_directory        = true;
+		bboss()->current_member_type = $name;
+		bboss()->current_component   = 'members';
+		bboss()->is_directory        = true;
 	}
 
 	// Get a BuddyPress members-loop template part for display in a theme.
-	bp_get_template_part( 'members/members-loop' );
+	bboss_get_template_part( 'members/members-loop' );
 
 	echo '</div> <!-- #members-dir-list -->';
 	echo '</div><!-- .members-directory-content -->';
@@ -3943,22 +3943,22 @@ function bp_member_type_shortcode_callback( $atts ) {
  *
  * @return string
  */
-function bp_get_user_member_type( $user_id ) {
+function bboss_get_user_member_type( $user_id ) {
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
 	$member_type = __( 'Member', 'buddyboss' );
 
 	if (
-		true === bp_member_type_enable_disable() &&
-		true === bp_member_type_display_on_profile() &&
-		! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user_id ), true )
+		true === bboss_member_type_enable_disable() &&
+		true === bboss_member_type_display_on_profile() &&
+		! in_array( bboss_get_xprofile_member_type_field_id(), bboss_xprofile_get_hidden_fields_for_user( $user_id ), true )
 	) {
 		// Get the profile type.
-		$type     = bp_get_member_type( $user_id );
-		$type_obj = bp_get_member_type_object( $type );
+		$type     = bboss_get_member_type( $user_id );
+		$type_obj = bboss_get_member_type_object( $type );
 
 		// Output the.
 		if ( ! empty( $type_obj ) && isset( $type_obj->labels ) ) {
@@ -3982,7 +3982,7 @@ function bp_get_user_member_type( $user_id ) {
  *
  * @return string
  */
-function bp_get_user_gender_pronoun_type( $user_id = '' ) {
+function bboss_get_user_gender_pronoun_type( $user_id = '' ) {
 	global $wpdb;
 	static $static_cache = '';
 
@@ -3990,7 +3990,7 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
 		if ( empty( $static_cache ) ) {
-			$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$table         = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 			$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' " );
 			$static_cache = $exists_gender;
 		} else {
@@ -3999,7 +3999,7 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
-			$gender   = xprofile_get_field_data( $field_id, $user_id );
+			$gender   = bboss_xprofile_get_field_data( $field_id, $user_id );
 			if ( empty( $gender ) ) {
 				$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 			} else {
@@ -4028,18 +4028,18 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
  * @param bool   $pop Optional. Pop the latest user off the auth cookie, instead of appending the new one. Default false.
  * @param string $token Optional. The old user's session token to store for later reuse. Default empty string.
  */
-function bp_member_switching_set_olduser_cookie( $old_user_id, $pop = false, $token = '' ) {
-	$secure_auth_cookie    = BP_Core_Members_Switching::secure_auth_cookie();
-	$secure_olduser_cookie = BP_Core_Members_Switching::secure_olduser_cookie();
+function bboss_member_switching_set_olduser_cookie( $old_user_id, $pop = false, $token = '' ) {
+	$secure_auth_cookie    = BBoss_Core_Members_Switching::secure_auth_cookie();
+	$secure_olduser_cookie = BBoss_Core_Members_Switching::secure_olduser_cookie();
 	$expiration            = time() + 172800; // 48 hours
-	$auth_cookie           = bp_member_switching_get_auth_cookie();
+	$auth_cookie           = bboss_member_switching_get_auth_cookie();
 	$olduser_cookie        = wp_generate_auth_cookie( $old_user_id, $expiration, 'logged_in', $token );
 
 	if ( $secure_auth_cookie ) {
-		$auth_cookie_name = BP_MEMBER_SWITCHING_SECURE_COOKIE;
+		$auth_cookie_name = BBOSS_MEMBER_SWITCHING_SECURE_COOKIE;
 		$scheme           = 'secure_auth';
 	} else {
-		$auth_cookie_name = BP_MEMBER_SWITCHING_COOKIE;
+		$auth_cookie_name = BBOSS_MEMBER_SWITCHING_COOKIE;
 		$scheme           = 'auth';
 	}
 
@@ -4057,7 +4057,7 @@ function bp_member_switching_set_olduser_cookie( $old_user_id, $pop = false, $to
 	}
 
 	setcookie( $auth_cookie_name, $auth_cookie, $expiration, SITECOOKIEPATH, COOKIE_DOMAIN, $secure_auth_cookie, true );
-	setcookie( BP_MEMBER_SWITCHING_OLDUSER_COOKIE, $olduser_cookie, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_olduser_cookie, true );
+	setcookie( BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE, $olduser_cookie, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_olduser_cookie, true );
 }
 
 
@@ -4068,8 +4068,8 @@ function bp_member_switching_set_olduser_cookie( $old_user_id, $pop = false, $to
  *
  * @param bool $clear_all Optional. Whether to clear the cookies (as opposed to just popping the last user off the end). Default true.
  */
-function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
-	$auth_cookie = bp_member_switching_get_auth_cookie();
+function bboss_member_switching_clear_olduser_cookie( $clear_all = true ) {
+	$auth_cookie = bboss_member_switching_get_auth_cookie();
 	if ( ! empty( $auth_cookie ) ) {
 		array_pop( $auth_cookie );
 	}
@@ -4081,11 +4081,11 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
 		}
 
 		$expire = time() - 31536000;
-		setcookie( BP_MEMBER_SWITCHING_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
-		setcookie( BP_MEMBER_SWITCHING_SECURE_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
-		setcookie( BP_MEMBER_SWITCHING_OLDUSER_COOKIE, ' ', $expire, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( BBOSS_MEMBER_SWITCHING_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
+		setcookie( BBOSS_MEMBER_SWITCHING_SECURE_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
+		setcookie( BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE, ' ', $expire, COOKIEPATH, COOKIE_DOMAIN );
 	} else {
-		if ( BP_Core_Members_Switching::secure_auth_cookie() ) {
+		if ( BBoss_Core_Members_Switching::secure_auth_cookie() ) {
 			$scheme = 'secure_auth';
 		} else {
 			$scheme = 'auth';
@@ -4096,7 +4096,7 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
 		$old_user_id = wp_validate_auth_cookie( $old_cookie, $scheme );
 		if ( $old_user_id ) {
 			$parts = wp_parse_auth_cookie( $old_cookie, $scheme );
-			bp_member_switching_set_olduser_cookie( $old_user_id, true, $parts['token'] );
+			bboss_member_switching_set_olduser_cookie( $old_user_id, true, $parts['token'] );
 		}
 	}
 }
@@ -4108,9 +4108,9 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
  * @since BuddyBoss 1.0.0
  * @return string|false The old user cookie, or boolean false if there isn't one.
  */
-function bp_member_switching_get_olduser_cookie() {
-	if ( isset( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
-		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] );
+function bboss_member_switching_get_olduser_cookie() {
+	if ( isset( $_COOKIE[ BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
+		return wp_unslash( $_COOKIE[ BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE ] );
 	} else {
 		return false;
 	}
@@ -4123,11 +4123,11 @@ function bp_member_switching_get_olduser_cookie() {
  * @since BuddyBoss 1.0.0
  * @return string[] Array of originating user authentication cookie values. Empty array if there are none.
  */
-function bp_member_switching_get_auth_cookie() {
-	if ( BP_Core_Members_Switching::secure_auth_cookie() ) {
-		$auth_cookie_name = BP_MEMBER_SWITCHING_SECURE_COOKIE;
+function bboss_member_switching_get_auth_cookie() {
+	if ( BBoss_Core_Members_Switching::secure_auth_cookie() ) {
+		$auth_cookie_name = BBOSS_MEMBER_SWITCHING_SECURE_COOKIE;
 	} else {
-		$auth_cookie_name = BP_MEMBER_SWITCHING_COOKIE;
+		$auth_cookie_name = BBOSS_MEMBER_SWITCHING_COOKIE;
 	}
 
 	if ( isset( $_COOKIE[ $auth_cookie_name ] ) && is_string( $_COOKIE[ $auth_cookie_name ] ) ) {
@@ -4152,7 +4152,7 @@ function bp_member_switching_get_auth_cookie() {
  *
  * @return false|WP_User WP_User object on success, false on failure.
  */
-function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true ) {
+function bboss_member_switch_to( $user_id, $remember = false, $set_old_user = true ) {
 	$user = get_userdata( $user_id );
 
 	if ( ! $user ) {
@@ -4161,7 +4161,7 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 
 	$old_user_id  = ( is_user_logged_in() ) ? get_current_user_id() : false;
 	$old_token    = function_exists( 'wp_get_session_token' ) ? wp_get_session_token() : '';
-	$auth_cookie  = bp_member_switching_get_auth_cookie();
+	$auth_cookie  = bboss_member_switching_get_auth_cookie();
 	$cookie_parts = wp_parse_auth_cookie( end( $auth_cookie ) );
 
 	if ( $set_old_user && $old_user_id ) {
@@ -4169,12 +4169,12 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 		$new_token = '';
 		// We'll not override the old user.
 		if ( empty( $auth_cookie ) ) {
-			bp_member_switching_set_olduser_cookie( $old_user_id, false, $old_token );
+			bboss_member_switching_set_olduser_cookie( $old_user_id, false, $old_token );
 		}
 	} else {
 		// Switching back, either after being switched off or after being switched to another user.
 		$new_token = isset( $cookie_parts['token'] ) ? $cookie_parts['token'] : '';
-		bp_member_switching_clear_olduser_cookie( false );
+		bboss_member_switching_clear_olduser_cookie( false );
 	}
 
 	/**
@@ -4214,12 +4214,12 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
  * @return false|WP_User False if the user isn't logged in or they didn't switch in; old user object (which evaluates to
  *                       true) if the user switched into the current user account.
  */
-function bp_current_member_switched() {
+function bboss_current_member_switched() {
 	if ( ! is_user_logged_in() ) {
 		return false;
 	}
 
-	return BP_Core_Members_Switching::get_old_user();
+	return BBoss_Core_Members_Switching::get_old_user();
 }
 
 /**
@@ -4229,12 +4229,12 @@ function bp_current_member_switched() {
  *
  * @param int $user_id The user ID to add the Auto Group Membership Approval.
  */
-function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
+function bboss_member_add_auto_join_groups( $user_id, $key, $user ) {
 
-	$user_member_type = bp_get_member_type( $user_id );
+	$user_member_type = bboss_get_member_type( $user_id );
 
 	// Get post id of selected profile type.
-	$post_id = bp_member_type_post_by_type( $user_member_type );
+	$post_id = bboss_member_type_post_by_type( $user_member_type );
 
 	// Get selected Auto Membership Approval group types.
 	$group_types = get_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', true );
@@ -4249,18 +4249,18 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 				'group_type' => array( $group_type ),
 			);
 
-			if ( bp_has_groups( $groups_args ) ) :
+			if ( bboss_has_groups( $groups_args ) ) :
 
-				while ( bp_groups() ) :
-					bp_the_group();
+				while ( bboss_groups() ) :
+					bboss_the_group();
 
-					$group_id = bp_get_group_id();
+					$group_id = bboss_get_group_id();
 
 					// check if already member.
-					$membership = new BP_Groups_Member( $user_id, $group_id );
+					$membership = new BBoss_Groups_Member( $user_id, $group_id );
 					if ( ! isset( $membership->id ) ) {
 						// add as member.
-						groups_join_group( $group_id, $user_id );
+						bboss_groups_join_group( $group_id, $user_id );
 					}
 
 				endwhile;
@@ -4280,11 +4280,11 @@ add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 99, 3 );
  * @param $key
  * @param $user
  */
-function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user ) {
+function bboss_assign_default_member_type_to_activate_user( $user_id, $key, $user ) {
 	global $bp, $wpdb;
 
 	// Check whether member type is enabled.
-	if ( true === bp_member_type_enable_disable() ) {
+	if ( true === bboss_member_type_enable_disable() ) {
 
 		// Check Member Type Dropdown added on register page.
 		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->base_prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
@@ -4312,25 +4312,25 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 		 */
 		if (
 			'' !== $get_selected_member_type_on_register
-			&& ! bb_is_member_type_allowed_on_registration( $get_selected_member_type_on_register )
+			&& ! bboss_is_member_type_allowed_on_registration( $get_selected_member_type_on_register )
 		) {
 			$get_selected_member_type_on_register = '';
 		}
 
 		// return to user if default member type is not set.
-		$existing_selected = bp_member_type_default_on_registration();
+		$existing_selected = bboss_member_type_default_on_registration();
 
 		// Check one of them is added.
 		if ( '' !== $existing_selected || '' !== $get_selected_member_type_on_register ) {
 
-			$email = bp_core_get_user_email( $user_id );
+			$email = bboss_core_get_user_email( $user_id );
 
 			// Check if invites component enabled.
-			if ( bp_is_active( 'invites' ) ) {
+			if ( bboss_is_active( 'invites' ) ) {
 				$inviters = array();
 
 				$args = array(
-					'post_type'      => bp_get_invite_post_type(),
+					'post_type'      => bboss_get_invite_post_type(),
 					'posts_per_page' => - 1,
 					'meta_query'     => array(
 						array(
@@ -4350,9 +4350,9 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 					if ( isset( $member_type ) && ! empty( $member_type ) ) {
 
 						// Assign the invited member type to user.
-						bp_set_member_type( $user_id, '' );
-						bp_set_member_type( $user_id, $member_type );
-						$member_type_id                = bp_member_type_post_by_type( $member_type );
+						bboss_set_member_type( $user_id, '' );
+						bboss_set_member_type( $user_id, $member_type );
+						$member_type_id                = bboss_member_type_post_by_type( $member_type );
 						$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -4369,11 +4369,11 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 						if ( '' !== $get_selected_member_type_on_register ) {
 							// Get selected profile type role.
 							$selected_member_type_wp_roles = get_post_meta( $get_selected_member_type_on_register, '_bp_member_type_wp_roles', true );
-							$type_name                     = bp_get_member_type_key( $get_selected_member_type_on_register );
+							$type_name                     = bboss_get_member_type_key( $get_selected_member_type_on_register );
 
 							// Assign the default member type to user.
-							bp_set_member_type( $user_id, '' );
-							bp_set_member_type( $user_id, $type_name );
+							bboss_set_member_type( $user_id, '' );
+							bboss_set_member_type( $user_id, $type_name );
 							if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 								$bp_user = new WP_User( $user_id );
 								foreach ( $bp_user->roles as $role ) {
@@ -4385,9 +4385,9 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 							}
 						} else {
 							// Assign the default member type to user.
-							bp_set_member_type( $user_id, '' );
-							bp_set_member_type( $user_id, $existing_selected );
-							$member_type_id                = bp_member_type_post_by_type( $existing_selected );
+							bboss_set_member_type( $user_id, '' );
+							bboss_set_member_type( $user_id, $existing_selected );
+							$member_type_id                = bboss_member_type_post_by_type( $existing_selected );
 							$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 							if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -4407,11 +4407,11 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 					if ( '' !== $get_selected_member_type_on_register ) {
 						// Get selected profile type role.
 						$selected_member_type_wp_roles = get_post_meta( $get_selected_member_type_on_register, '_bp_member_type_wp_roles', true );
-						$type_name                     = bp_get_member_type_key( $get_selected_member_type_on_register );
+						$type_name                     = bboss_get_member_type_key( $get_selected_member_type_on_register );
 
 						// Assign the default member type to user.
-						bp_set_member_type( $user_id, '' );
-						bp_set_member_type( $user_id, $type_name );
+						bboss_set_member_type( $user_id, '' );
+						bboss_set_member_type( $user_id, $type_name );
 
 						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 							$bp_user = new WP_User( $user_id );
@@ -4424,9 +4424,9 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 						}
 					} else {
 						// Assign the default member type to user.
-						bp_set_member_type( $user_id, '' );
-						bp_set_member_type( $user_id, $existing_selected );
-						$member_type_id                = bp_member_type_post_by_type( $existing_selected );
+						bboss_set_member_type( $user_id, '' );
+						bboss_set_member_type( $user_id, $existing_selected );
+						$member_type_id                = bboss_member_type_post_by_type( $existing_selected );
 						$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -4445,11 +4445,11 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 				if ( '' !== $get_selected_member_type_on_register ) {
 					// Get selected profile type role.
 					$selected_member_type_wp_roles = get_post_meta( $get_selected_member_type_on_register, '_bp_member_type_wp_roles', true );
-					$type_name                     = bp_get_member_type_key( $get_selected_member_type_on_register );
+					$type_name                     = bboss_get_member_type_key( $get_selected_member_type_on_register );
 
 					// Assign the default member type to user.
-					bp_set_member_type( $user_id, '' );
-					bp_set_member_type( $user_id, $type_name );
+					bboss_set_member_type( $user_id, '' );
+					bboss_set_member_type( $user_id, $type_name );
 
 					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 						$bp_user = new WP_User( $user_id );
@@ -4462,10 +4462,10 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 					}
 				} else {
 					// Assign the default member type to user.
-					bp_set_member_type( $user_id, '' );
-					bp_set_member_type( $user_id, $existing_selected );
+					bboss_set_member_type( $user_id, '' );
+					bboss_set_member_type( $user_id, $existing_selected );
 
-					$member_type_id                = bp_member_type_post_by_type( $existing_selected );
+					$member_type_id                = bboss_member_type_post_by_type( $existing_selected );
 					$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -4492,26 +4492,26 @@ add_action( 'bp_core_activated_user', 'bp_assign_default_member_type_to_activate
  *
  * @param int $user_id User Id.
  */
-function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
+function bboss_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 	global $bp;
 
 	// Check whether member type is enabled.
-	if ( true === bp_member_type_enable_disable() ) {
+	if ( true === bboss_member_type_enable_disable() ) {
 
 		// return to user if default member type is not set.
-		$existing_selected = bp_member_type_default_on_registration();
+		$existing_selected = bboss_member_type_default_on_registration();
 		if ( '' === $existing_selected ) {
 			return;
 		}
 
-		$email = bp_core_get_user_email( $user_id );
+		$email = bboss_core_get_user_email( $user_id );
 
 		// Check if invites component enabled.
-		if ( bp_is_active( 'invites' ) ) {
+		if ( bboss_is_active( 'invites' ) ) {
 			$inviters = array();
 
 			$args = array(
-				'post_type'      => bp_get_invite_post_type(),
+				'post_type'      => bboss_get_invite_post_type(),
 				'posts_per_page' => - 1,
 				'meta_query'     => array(
 					array(
@@ -4530,10 +4530,10 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 				// Check if user is invited for specific member type.
 				if ( isset( $member_type ) && ! empty( $member_type ) ) {
 					// Assign the invited member type to user.
-					bp_set_member_type( $user_id, '' );
-					bp_set_member_type( $user_id, $member_type );
+					bboss_set_member_type( $user_id, '' );
+					bboss_set_member_type( $user_id, $member_type );
 
-					$member_type_id                = bp_member_type_post_by_type( $member_type );
+					$member_type_id                = bboss_member_type_post_by_type( $member_type );
 					$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -4592,21 +4592,21 @@ add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_
  *
  * @return bool
  */
-function bp_allow_user_to_send_invites() {
+function bboss_allow_user_to_send_invites() {
 
 	// if user not logged in and component not active then return false.
-	if ( ! bp_is_active( 'invites' ) || ! is_user_logged_in() ) {
+	if ( ! bboss_is_active( 'invites' ) || ! is_user_logged_in() ) {
 		return false;
 	}
 
 	// Get all active member type.
-	$member_types = bp_get_active_member_types();
+	$member_types = bboss_get_active_member_types();
 	if ( ! empty( $member_types ) ) {
 		$allowed_member_type    = array();
 		$disallowed_member_type = array();
 		foreach ( $member_types as $member_type_id ) {
-			$type_name = bp_get_member_type_key( $member_type_id );
-			$set_value = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $type_name );
+			$type_name = bboss_get_member_type_key( $member_type_id );
+			$set_value = bboss_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $type_name );
 			if ( true === $set_value ) {
 				$allowed_member_type[] = $type_name;
 			} else {
@@ -4619,7 +4619,7 @@ function bp_allow_user_to_send_invites() {
 		}
 
 		// Get the member type of current logged in user.
-		$member_type = bp_get_member_type( bp_loggedin_user_id() );
+		$member_type = bboss_get_member_type( bboss_loggedin_user_id() );
 		if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
 			return true;
 		} elseif ( false === $member_type && ! current_user_can( 'manage_options' ) ) {
@@ -4646,7 +4646,7 @@ function bp_allow_user_to_send_invites() {
  * @param  array $buttons  The WP Editor buttons list.
  * @return array           The filtered WP Editor buttons list.
  */
-function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
+function bboss_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 	$buttons = array(
 		'bold',
 		'italic',
@@ -4665,13 +4665,13 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
  *
  * @return string|null
  */
-function bp_get_xprofile_member_type_field_id() {
+function bboss_get_xprofile_member_type_field_id() {
 	global $wpdb;
 
 	static $get_parent_id_of_member_types_field = false;
 
 	if ( false === $get_parent_id_of_member_types_field ) {
-		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$table                               = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 		$get_parent_id_of_member_types_field = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
 	}
 
@@ -4683,12 +4683,12 @@ function bp_get_xprofile_member_type_field_id() {
  *
  * @return string|null
  */
-function bp_get_xprofile_gender_type_field_id() {
+function bboss_get_xprofile_gender_type_field_id() {
 	static $get_parent_id_of_gender_types_field = false;
 
 	if ( false === $get_parent_id_of_gender_types_field ) {
 		global $wpdb;
-		$table                               = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$table                               = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 		$get_parent_id_of_gender_types_field = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
 	}
 
@@ -4702,7 +4702,7 @@ function bp_get_xprofile_gender_type_field_id() {
  *
  * @since BuddyBoss 1.1.5
  */
-function bp_infusion_soft_sync_bp_data( $user_id ) {
+function bboss_infusion_soft_sync_bp_data( $user_id ) {
 
 	if ( function_exists( 'iMember360' ) ) {
 
@@ -4710,16 +4710,16 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 		$nickname_id   = (int) get_option( 'bp-xprofile-nickname-field-id' );
 		$last_name_id  = (int) get_option( 'bp-xprofile-lastname-field-id' );
 
-		$xprofile_nick_name  = xprofile_get_field_data( $nickname_id, $user_id );
-		$xprofile_first_name = xprofile_get_field_data( $first_name_id, $user_id );
-		$xprofile_last_name  = xprofile_get_field_data( $last_name_id, $user_id );
+		$xprofile_nick_name  = bboss_xprofile_get_field_data( $nickname_id, $user_id );
+		$xprofile_first_name = bboss_xprofile_get_field_data( $first_name_id, $user_id );
+		$xprofile_last_name  = bboss_xprofile_get_field_data( $last_name_id, $user_id );
 
 		if ( '' === $xprofile_first_name ) {
 			$result_first_name = get_user_meta( $user_id, 'first_name', true );
 			if ( empty( $result_first_name ) ) {
 				$result_first_name = get_user_meta( $user_id, 'nickname', true );
 			}
-			xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+			bboss_xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
 		}
 
 		if ( '' === trim( $xprofile_nick_name ) ) {
@@ -4727,18 +4727,18 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 			// make sure nickname is valid.
 			$nickname = get_user_meta( $user_id, 'nickname', true );
 			$nickname = sanitize_title( $nickname );
-			$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+			$invalid  = bboss_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
 
 			// or use the user_nicename.
 			if ( ! $nickname || $invalid ) {
 				$nickname = $user->user_nicename;
 			}
-			xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			bboss_xprofile_set_field_data( $nickname_id, $user_id, $nickname );
 		}
 
 		if ( '' === $xprofile_last_name ) {
 			$result_last_name = get_user_meta( $user_id, 'last_name', true );
-			xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+			bboss_xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
 		}
 	}
 
@@ -4750,9 +4750,9 @@ add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_members_directory_page_content() {
+function bboss_members_directory_page_content() {
 
-	$page_ids = bp_core_get_directory_page_ids();
+	$page_ids = bboss_core_get_directory_page_ids();
 
 	if ( ! empty( $page_ids['members'] ) ) {
 		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
@@ -4766,9 +4766,9 @@ add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_conte
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_activate_page_content() {
+function bboss_activate_page_content() {
 
-	$page_ids = bp_core_get_directory_page_ids();
+	$page_ids = bboss_core_get_directory_page_ids();
 
 	if ( ! empty( $page_ids['activate'] ) ) {
 		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
@@ -4782,9 +4782,9 @@ add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_register_page_content() {
+function bboss_register_page_content() {
 
-	$page_ids = bp_core_get_directory_page_ids();
+	$page_ids = bboss_core_get_directory_page_ids();
 
 	if ( ! empty( $page_ids['register'] ) ) {
 		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
@@ -4802,15 +4802,15 @@ add_action( 'bp_before_register_page', 'bp_register_page_content' );
  *
  * @return string|false Link for a report a Member.
  */
-function bp_member_get_report_link( $args = array() ) {
+function bboss_member_get_report_link( $args = array() ) {
 
 	// Restricted Report link for admin user.
-	$displayed_user_roles = bb_get_member_roles( bp_displayed_user_id() );
+	$displayed_user_roles = bboss_get_member_roles( bboss_displayed_user_id() );
 	if ( in_array( 'administrator', $displayed_user_roles, true ) ) {
 		return false;
 	}
 
-	$args = bp_parse_args(
+	$args = bboss_parse_args(
 		$args,
 		array(
 			'id'                => isset( $args['report_user'] ) ? 'member_report' : 'member_block',
@@ -4818,8 +4818,8 @@ function bp_member_get_report_link( $args = array() ) {
 			'position'          => 50,
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
-				'data-bp-content-id'   => bp_displayed_user_id(),
-				'data-bp-content-type' => isset( $args['report_user'] ) ? BP_Moderation_Members::$moderation_type_report : BP_Moderation_Members::$moderation_type,
+				'data-bp-content-id'   => bboss_displayed_user_id(),
+				'data-bp-content-type' => isset( $args['report_user'] ) ? BBoss_Moderation_Members::$moderation_type_report : BBoss_Moderation_Members::$moderation_type,
 			),
 		)
 	);
@@ -4829,7 +4829,7 @@ function bp_member_get_report_link( $args = array() ) {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
-	return apply_filters( 'bp_member_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+	return apply_filters( 'bp_member_get_report_link', bboss_moderation_get_report_button( $args, false ), $args );
 }
 
 /**
@@ -4839,7 +4839,7 @@ function bp_member_get_report_link( $args = array() ) {
  *
  * @return array|false List of user roles or false otherwise.
  */
-function bb_get_member_roles( $user_id = 0 ) {
+function bboss_get_member_roles( $user_id = 0 ) {
 
 	// Default return value.
 	$roles = array();
@@ -4870,10 +4870,10 @@ function bb_get_member_roles( $user_id = 0 ) {
  *
  * @return array|false
  */
-function bp_get_hidden_member_types() {
+function bboss_get_hidden_member_types() {
 	$args = array(
 		'posts_per_page' => - 1,
-		'post_type'      => bp_get_member_type_post_type(),
+		'post_type'      => bboss_get_member_type_post_type(),
 		'meta_query'     => array(
 			array(
 				'key'     => '_bp_member_type_enable_search_remove',
@@ -4911,13 +4911,13 @@ function bp_get_hidden_member_types() {
  *
  * @return string
  */
-function bb_is_online_user( $user_id, $expiry = false ) {
+function bboss_is_online_user( $user_id, $expiry = false ) {
 
-	if ( ! function_exists( 'bp_get_user_last_activity' ) ) {
+	if ( ! function_exists( 'bboss_get_user_last_activity' ) ) {
 		return;
 	}
 
-	$last_activity = strtotime( bp_get_user_last_activity( $user_id ) );
+	$last_activity = strtotime( bboss_get_user_last_activity( $user_id ) );
 
 	if ( empty( $last_activity ) ) {
 		return false;
@@ -4926,7 +4926,7 @@ function bb_is_online_user( $user_id, $expiry = false ) {
 	if ( is_int( $expiry ) && ! empty( $expiry ) ) {
 		$timeframe = $expiry;
 	} else {
-		$timeframe = bb_presence_interval() + bb_presence_time_span();
+		$timeframe = bboss_presence_interval() + bboss_presence_time_span();
 	}
 
 	$online_time = apply_filters( 'bb_default_online_presence_time', $timeframe );
@@ -4944,8 +4944,8 @@ function bb_is_online_user( $user_id, $expiry = false ) {
  *
  * @return string Return profile cover image width.
  */
-function bb_get_profile_cover_image_width( $default = 'default' ) {
-	return bp_get_option( 'bb-pro-cover-profile-width', $default );
+function bboss_get_profile_cover_image_width( $default = 'default' ) {
+	return bboss_get_option( 'bb-pro-cover-profile-width', $default );
 }
 
 /**
@@ -4958,8 +4958,8 @@ function bb_get_profile_cover_image_width( $default = 'default' ) {
  *
  * @return string Return profile cover image height.
  */
-function bb_get_profile_cover_image_height( $default = 'small' ) {
-	return bp_get_option( 'bb-pro-cover-profile-height', $default );
+function bboss_get_profile_cover_image_height( $default = 'small' ) {
+	return bboss_get_option( 'bb-pro-cover-profile-height', $default );
 }
 
 /**
@@ -4972,7 +4972,7 @@ function bb_get_profile_cover_image_height( $default = 'small' ) {
  *
  * @return string Return profile header layout style.
  */
-function bb_get_profile_header_layout_style( $default = 'left' ) {
+function bboss_get_profile_header_layout_style( $default = 'left' ) {
 	return function_exists( 'bb_platform_pro_profile_headers_style' ) ? bb_platform_pro_profile_headers_style( $default ) : $default;
 }
 
@@ -4986,7 +4986,7 @@ function bb_get_profile_header_layout_style( $default = 'left' ) {
  *
  * @return bool True if profile element is enabled otherwise false.
  */
-function bb_enabled_profile_header_layout_element( $element = 'online-status' ) {
+function bboss_enabled_profile_header_layout_element( $element = 'online-status' ) {
 	return (bool) function_exists( 'bb_platform_pro_profile_header_element_enable' ) ? bb_platform_pro_profile_header_element_enable( $element ) : true;
 }
 
@@ -5000,7 +5000,7 @@ function bb_enabled_profile_header_layout_element( $element = 'online-status' ) 
  *
  * @return bool True if member directory element is enabled otherwise false.
  */
-function bb_enabled_member_directory_element( $element = 'online-status' ) {
+function bboss_enabled_member_directory_element( $element = 'online-status' ) {
 	return (bool) function_exists( 'bb_platform_pro_enable_member_directory_element' ) ? bb_platform_pro_enable_member_directory_element( $element ) : true;
 }
 
@@ -5011,8 +5011,8 @@ function bb_enabled_member_directory_element( $element = 'online-status' ) {
  *
  * @return array Return selected profile actions.
  */
-function bb_get_enabled_member_directory_profile_actions() {
-	return function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : ( function_exists( 'bb_get_member_directory_profile_actions' ) ? array_column( bb_get_member_directory_profile_actions(), 'element_name' ) : array() );
+function bboss_get_enabled_member_directory_profile_actions() {
+	return function_exists( 'bb_platform_pro_get_member_directory_profile_actions' ) ? bb_platform_pro_get_member_directory_profile_actions() : ( function_exists( 'bboss_get_member_directory_profile_actions' ) ? array_column( bboss_get_member_directory_profile_actions(), 'element_name' ) : array() );
 }
 
 /**
@@ -5025,7 +5025,7 @@ function bb_get_enabled_member_directory_profile_actions() {
  *
  * @return bool True if member profile action is enabled otherwise false.
  */
-function bb_enabled_member_directory_profile_action( $action = '' ) {
+function bboss_enabled_member_directory_profile_action( $action = '' ) {
 
 	if ( empty( $action ) ) {
 		return false;
@@ -5041,8 +5041,8 @@ function bb_enabled_member_directory_profile_action( $action = '' ) {
  *
  * @return string Return the primary action for member directories.
  */
-function bb_get_member_directory_primary_action() {
-	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : bp_get_option( 'bb-member-profile-primary-action' );
+function bboss_get_member_directory_primary_action() {
+	return function_exists( 'bb_platform_pro_get_member_directory_primary_action' ) ? bb_platform_pro_get_member_directory_primary_action() : bboss_get_option( 'bb-member-profile-primary-action' );
 }
 
 /**
@@ -5055,29 +5055,29 @@ function bb_get_member_directory_primary_action() {
  *
  * @return int Member ID.
  */
-function bb_member_loop_set_member_id( $id ) {
+function bboss_member_loop_set_member_id( $id ) {
 
 	if ( $id > 0 ) {
 
 		// This will fix the issues in theme members directory page & members connections tab send message issue.
-		if ( is_user_logged_in() && bp_loggedin_user_id() === $id ) {
-			if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
+		if ( is_user_logged_in() && bboss_loggedin_user_id() === $id ) {
+			if ( 'my-friends' === bboss_current_action() && function_exists( 'bboss_get_friends_slug' ) && bboss_get_friends_slug() === bboss_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
-				return bp_get_member_user_id();
-			} elseif ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
+				return bboss_get_member_user_id();
+			} elseif ( 'requests' === bboss_current_action() && function_exists( 'bboss_get_friends_slug' ) && bboss_get_friends_slug() === bboss_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
-				return bp_get_member_user_id();
+				return bboss_get_member_user_id();
 			} else {
 				return $id;
 			}
 		} else {
 			if (
-				function_exists( 'bp_get_friends_slug' ) &&
-				bp_get_friends_slug() === bp_current_component() &&
-				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
+				function_exists( 'bboss_get_friends_slug' ) &&
+				bboss_get_friends_slug() === bboss_current_component() &&
+				( 'my-friends' === bboss_current_action() || 'mutual' === bboss_current_action() )
 			) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
-				return bp_get_member_user_id();
+				return bboss_get_member_user_id();
 			} else {
 				return $id;
 			}
@@ -5085,7 +5085,7 @@ function bb_member_loop_set_member_id( $id ) {
 	}
 
 	// This will fix the issues in theme members directory page & members connections tab send message issue.
-	return bp_get_member_user_id();
+	return bboss_get_member_user_id();
 }
 
 /**
@@ -5097,15 +5097,15 @@ function bb_member_loop_set_member_id( $id ) {
  *
  * @return bool
  */
-function bb_member_loop_set_my_profile( $my_profile ) {
+function bboss_member_loop_set_my_profile( $my_profile ) {
 
-	if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
-		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
+	if ( 'my-friends' === bboss_current_action() && function_exists( 'bboss_get_friends_slug' ) && bboss_get_friends_slug() === bboss_current_component() ) {
+		if ( $my_profile && bboss_loggedin_user_id() === bboss_displayed_user_id() ) {
 			return false;
 		}
 	}
-	if ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
-		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
+	if ( 'requests' === bboss_current_action() && function_exists( 'bboss_get_friends_slug' ) && bboss_get_friends_slug() === bboss_current_component() ) {
+		if ( $my_profile && bboss_loggedin_user_id() === bboss_displayed_user_id() ) {
 			return false;
 		}
 	}
@@ -5122,7 +5122,7 @@ function bb_member_loop_set_my_profile( $my_profile ) {
  *
  * @return array Return button arguments.
  */
-function bb_member_get_profile_action_arguments( $page = 'directory', $clicked = 'primary' ) {
+function bboss_member_get_profile_action_arguments( $page = 'directory', $clicked = 'primary' ) {
 	$button_args = array();
 	if ( 'directory' === $page ) {
 		$button_args = array(
@@ -5170,30 +5170,30 @@ function bb_member_get_profile_action_arguments( $page = 'directory', $clicked =
  *
  * @return void
  */
-function bb_members_notifications_mark_read() {
+function bboss_members_notifications_mark_read() {
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
 	// Mark individual notification as read for member following.
 	if ( ! empty( $_GET['rid'] ) ) {
-		BP_Notifications_Notification::update(
+		BBoss_Notifications_Notification::update(
 			array(
 				'is_new' => false,
 			),
 			array(
-				'user_id'          => bp_loggedin_user_id(),
+				'user_id'          => bboss_loggedin_user_id(),
 				'id'               => (int) $_GET['rid'],
 				'component_action' => 'bb_following_new',
 			)
 		);
 	}
 
-	if ( ! bp_core_can_edit_settings() || ! bp_current_action() ) {
+	if ( ! bboss_core_can_edit_settings() || ! bboss_current_action() ) {
 		return;
 	}
 
-	if ( 'general' === bp_current_action() ) {
+	if ( 'general' === bboss_current_action() ) {
 		$n_id = 0;
 		// For replies to a parent update.
 		if ( ! empty( $_GET['rid'] ) ) {
@@ -5202,12 +5202,12 @@ function bb_members_notifications_mark_read() {
 
 		// Mark individual notification as read.
 		if ( ! empty( $n_id ) ) {
-			BP_Notifications_Notification::update(
+			BBoss_Notifications_Notification::update(
 				array(
 					'is_new' => false,
 				),
 				array(
-					'user_id' => bp_loggedin_user_id(),
+					'user_id' => bboss_loggedin_user_id(),
 					'id'      => $n_id,
 				)
 			);
@@ -5225,13 +5225,13 @@ add_action( 'template_redirect', 'bb_members_notifications_mark_read' );
  *
  * @return string $mentionname User name appropriate for @-mentions.
  */
-function bb_members_get_user_mentionname( $user_id ) {
+function bboss_members_get_user_mentionname( $user_id ) {
 	$mentionname = '';
 
-	$userdata = bp_core_get_core_userdata( $user_id );
+	$userdata = bboss_core_get_core_userdata( $user_id );
 
 	if ( $userdata ) {
-		if ( bp_is_username_compatibility_mode() ) {
+		if ( bboss_is_username_compatibility_mode() ) {
 			$mentionname = str_replace( ' ', '-', $userdata->user_login );
 		} else {
 			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
@@ -5250,11 +5250,11 @@ function bb_members_get_user_mentionname( $user_id ) {
  *
  * @return array Return array of label color data
  */
-function bb_get_member_type_label_colors( $type ) {
+function bboss_get_member_type_label_colors( $type ) {
 	if ( empty( $type ) ) {
 		return false;
 	}
-	$post_id                    = bp_member_type_post_by_type( $type );
+	$post_id                    = bboss_member_type_post_by_type( $type );
 	$cache_key                  = 'bb-member-type-label-color-' . $type;
 	$bp_member_type_label_color = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $bp_member_type_label_color && ! empty( $post_id ) ) {
@@ -5293,14 +5293,14 @@ add_filter( 'gettext', 'bb_profile_drop_down_order_metabox_translate_order_text'
  *
  * @return mixed|string|void
  */
-function bb_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
+function bboss_profile_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
 
 	if ( ! function_exists( 'get_current_screen' ) ) {
 		return $translated_text;
 	}
 	$current_screen = get_current_screen();
 
-	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_get_member_type_post_type' ) || bp_get_member_type_post_type() !== $current_screen->id ) {
+	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bboss_get_member_type_post_type' ) || bboss_get_member_type_post_type() !== $current_screen->id ) {
 		return $translated_text;
 	}
 
@@ -5320,8 +5320,8 @@ function bb_profile_drop_down_order_metabox_translate_order_text( $translated_te
  *
  * @return string
  */
-function bb_get_user_presence( $user_id, $expiry = false ) {
-	if ( bb_is_online_user( $user_id, $expiry ) ) {
+function bboss_get_user_presence( $user_id, $expiry = false ) {
+	if ( bboss_is_online_user( $user_id, $expiry ) ) {
 		return 'online';
 	} else {
 		return 'offline';
@@ -5338,12 +5338,12 @@ function bb_get_user_presence( $user_id, $expiry = false ) {
  *
  * @return string
  */
-function bb_get_user_presence_html( $user_id, $expiry = true ) {
+function bboss_get_user_presence_html( $user_id, $expiry = true ) {
 	return sprintf(
 		'<span class="member-status %s" data-bb-user-id="%d" data-bb-user-presence="%s"></span>',
-		bb_get_user_presence( $user_id, $expiry ),
+		bboss_get_user_presence( $user_id, $expiry ),
 		$user_id,
-		bb_get_user_presence( $user_id, $expiry )
+		bboss_get_user_presence( $user_id, $expiry )
 	);
 }
 
@@ -5357,8 +5357,8 @@ function bb_get_user_presence_html( $user_id, $expiry = true ) {
  *
  * @return void
  */
-function bb_user_presence_html( $user_id, $expiry = true ) {
-	echo bb_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+function bboss_user_presence_html( $user_id, $expiry = true ) {
+	echo bboss_get_user_presence_html( $user_id, $expiry ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -5372,7 +5372,7 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  *
  * @return string
  */
-function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
+function bboss_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$unique_identifier = '';
 
 	// If empty user ID.
@@ -5382,12 +5382,12 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 
 	if ( ! $force ) {
 		// Get user slug if already exists.
-		$user_profile_slug = bb_core_get_user_slug( $user_id );
+		$user_profile_slug = bboss_core_get_user_slug( $user_id );
 
 		// Check the slug and it's not long.
 		if (
 			! empty( $user_profile_slug ) &&
-			bb_is_short_user_unique_identifier( $user_profile_slug )
+			bboss_is_short_user_unique_identifier( $user_profile_slug )
 		) {
 			return $user_profile_slug;
 		}
@@ -5397,7 +5397,7 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$new_unique_identifier = bb_generate_user_random_profile_slugs();
+		$new_unique_identifier = bboss_generate_user_random_profile_slugs();
 		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 	}
 
@@ -5413,7 +5413,7 @@ function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
  *
  * @return int The ID of the matched user on success, null on failure.
  */
-function bb_get_user_by_profile_slug( $profile_slug ) {
+function bboss_get_user_by_profile_slug( $profile_slug ) {
 
 	// Bail if empty.
 	if ( empty( $profile_slug ) ) {
@@ -5460,13 +5460,13 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
  *
  * @return string
  */
-function bb_core_get_user_slug( int $user_id ) {
+function bboss_core_get_user_slug( int $user_id ) {
 
 	if ( empty( $user_id ) ) {
 		return '';
 	}
 
-	$profile_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
+	$profile_slug = bboss_get_user_meta( $user_id, 'bb_profile_slug', true );
 
 	/**
 	 * Filters the profile slug based on originally provided user ID.
@@ -5490,26 +5490,26 @@ function bb_core_get_user_slug( int $user_id ) {
  *
  * @return string
  */
-function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
+function bboss_set_user_profile_slug( int $user_id, bool $force = false ) {
 
-	$unique_identifier = bb_generate_user_profile_slug( $user_id, $force );
+	$unique_identifier = bboss_generate_user_profile_slug( $user_id, $force );
 	if ( ! empty( $unique_identifier ) ) {
 
 		// Backward compatible to store 40 characters long unique slug.
-		$old_unique_identifier = bb_core_get_user_slug( $user_id );
+		$old_unique_identifier = bboss_core_get_user_slug( $user_id );
 		if ( ! empty( $old_unique_identifier ) ) {
 
 			// Delete the existing meta.
-			bp_delete_user_meta( $user_id, 'bb_profile_slug_' . $old_unique_identifier );
+			bboss_delete_user_meta( $user_id, 'bb_profile_slug_' . $old_unique_identifier );
 
 			// Backed up 40 characters long unique identifier.
-			if ( ! bb_is_short_user_unique_identifier( $old_unique_identifier ) ) {
-				bp_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
+			if ( ! bboss_is_short_user_unique_identifier( $old_unique_identifier ) ) {
+				bboss_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
 			}
 		}
 
-		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
-		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+		bboss_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
+		bboss_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
 	}
 
 	return $unique_identifier;
@@ -5522,7 +5522,7 @@ function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
  *
  * @param array $user_ids User IDs.
  */
-function bb_set_bulk_user_profile_slug( $user_ids ) {
+function bboss_set_bulk_user_profile_slug( $user_ids ) {
 	global $wpdb, $is_member_slug_background;
 
 	if ( empty( $user_ids ) ) {
@@ -5550,7 +5550,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE %s AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $wpdb->esc_like( 'bb_profile_long_slug_' ) . '%', $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb.
 
 		// fetch user slug if already exists.
-		$p_slug = bb_core_get_user_slug( $user_id );
+		$p_slug = bboss_core_get_user_slug( $user_id );
 		if ( ! empty( $p_slug ) && strlen( $p_slug ) <= 12 ) {
 
 			// Remove duplicate meta with same value.
@@ -5561,7 +5561,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 			delete_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
 			update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
 
-			bb_remove_orphaned_profile_slug( $user_id );
+			bboss_remove_orphaned_profile_slug( $user_id );
 
 			// Unset user if already setup.
 			unset( $user_ids[$key] );
@@ -5569,7 +5569,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	}
 
 	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : '';
-	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
+	$new_unique_identifier = bboss_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
 
 	$bps_sql_data = array();
 	foreach ( $user_ids as $key => $user_id ) {
@@ -5608,7 +5608,7 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
  *
  * @return array
  */
-function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
+function bboss_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
 	$max_ids       = absint( $max_ids );
 	$start         = 0;
 	$length        = 8;
@@ -5631,7 +5631,7 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
 	$generated_ids = $generate_ids_func( $generated_ids );
 
 	// Check the generated UUIDs already exists or not?
-	$match_found = bb_is_exists_user_unique_identifier( $generated_ids );
+	$match_found = bboss_is_exists_user_unique_identifier( $generated_ids );
 
 	// Validate the ID's with existing matches in DB.
 	while ( ! empty( $match_found ) ) {
@@ -5652,7 +5652,7 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
 		}
 
 		$generated_ids = $generate_ids_func( $generated_ids );
-		$match_found   = bb_is_exists_user_unique_identifier( $generated_ids );
+		$match_found   = bboss_is_exists_user_unique_identifier( $generated_ids );
 		$loop_count ++;
 	}
 
@@ -5669,7 +5669,7 @@ function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
  *
  * @return array
  */
-function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
+function bboss_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
 	global $wpdb;
 
 	if ( empty( $unique_identifier ) ) {
@@ -5743,7 +5743,7 @@ function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 )
  *
  * @return bool False if unique identifier is 40 characters long otherwise return true.
  */
-function bb_is_short_user_unique_identifier( $unique_identifier ) {
+function bboss_is_short_user_unique_identifier( $unique_identifier ) {
 	// Get length of provided unique identifier.
 	if ( function_exists( 'mb_strlen' ) ) {
 		$length = mb_strlen( $unique_identifier );
@@ -5769,10 +5769,10 @@ function bb_is_short_user_unique_identifier( $unique_identifier ) {
  *
  * @return void
  */
-function bb_remove_orphaned_profile_slug( $user_id ) {
+function bboss_remove_orphaned_profile_slug( $user_id ) {
 	global $wpdb;
 
-	$p_slug = bb_core_get_user_slug( $user_id );
+	$p_slug = bboss_core_get_user_slug( $user_id );
 
 	if ( empty( $p_slug ) || empty( $user_id ) ) {
 		return;
@@ -5793,7 +5793,7 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 
 	// Recursive deletion until no more rows are affected
 	while ( $wpdb->rows_affected > 0 ) {
-		bb_remove_orphaned_profile_slug( $user_id );
+		bboss_remove_orphaned_profile_slug( $user_id );
 	}
 }
 
@@ -5811,7 +5811,7 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
  *
  * @return string ` data-bb-hp-profile="{id}"` attribute fragment, or empty string.
  */
-function bb_get_hover_card_profile_attr( $user_id ) {
+function bboss_get_hover_card_profile_attr( $user_id ) {
 	$user_id = (int) $user_id;
 
 	if ( empty( $user_id ) ) {
@@ -5823,7 +5823,7 @@ function bb_get_hover_card_profile_attr( $user_id ) {
 	// (including on the logged-out heartbeat), and the per-member variants each
 	// cost a query on a cold cache. The merged list runs three small queries once
 	// per request and answers every subsequent member with an array lookup.
-	if ( function_exists( 'bb_moderation_moderated_user_ids' ) && bb_moderation_moderated_user_ids( $user_id ) ) {
+	if ( function_exists( 'bboss_moderation_moderated_user_ids' ) && bboss_moderation_moderated_user_ids( $user_id ) ) {
 		return '';
 	}
 
@@ -5834,7 +5834,7 @@ function bb_get_hover_card_profile_attr( $user_id ) {
  * Check whether a profile type may be self-selected on the registration form.
  *
  * Mirrors the gate the registration Profile Type dropdown itself uses
- * (see BP_XProfile_Field_Type_Member_Types::edit_field_options_html()): the
+ * (see BBoss_XProfile_Field_Type_Member_Types::edit_field_options_html()): the
  * type must be an active member-type post whose "_bp_member_type_enable_profile_field"
  * meta is unset or '1'. Used to reject a Profile Type that was submitted at
  * signup but is not actually offered on the registration form, closing the
@@ -5847,7 +5847,7 @@ function bb_get_hover_card_profile_attr( $user_id ) {
  *
  * @return bool True when the type is offered on the registration form.
  */
-function bb_is_member_type_allowed_on_registration( $member_type_id ) {
+function bboss_is_member_type_allowed_on_registration( $member_type_id ) {
 	$member_type_id = absint( $member_type_id );
 
 	if ( empty( $member_type_id ) ) {
@@ -5855,7 +5855,7 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
 	}
 
 	// Must be one of the active member-type posts (same source the dropdown iterates).
-	$active_member_types = array_map( 'absint', (array) bp_get_active_member_types() );
+	$active_member_types = array_map( 'absint', (array) bboss_get_active_member_types() );
 	if ( ! in_array( $member_type_id, $active_member_types, true ) ) {
 		return false;
 	}
@@ -5877,7 +5877,7 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
  *
  * Used to reject a profile type that was posted to the invite form but is not
  * actually offered there. `_bp_invitee_member_type` is read back at activation by
- * bp_assign_default_member_type_to_activate_user(), which applies the type's
+ * bboss_assign_default_member_type_to_activate_user(), which applies the type's
  * `_bp_member_type_wp_roles` mapping, so an ungated value is a privilege-escalation
  * path for any member who can send invites.
  *
@@ -5887,7 +5887,7 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
  *
  * @return bool True when the type is offered to this inviter.
  */
-function bb_is_member_type_allowed_on_invite( $member_type_key ) {
+function bboss_is_member_type_allowed_on_invite( $member_type_key ) {
 	$member_type_key = is_string( $member_type_key ) ? trim( $member_type_key ) : '';
 
 	if ( '' === $member_type_key ) {
@@ -5895,12 +5895,12 @@ function bb_is_member_type_allowed_on_invite( $member_type_key ) {
 	}
 
 	// The invitee type selector is only rendered when this gate passes.
-	if ( ! bp_check_member_send_invites_tab_member_type_allowed() ) {
+	if ( ! bboss_check_member_send_invites_tab_member_type_allowed() ) {
 		return false;
 	}
 
-	$inviter_member_type = bp_get_member_type( bp_loggedin_user_id() );
-	$inviter_type_id     = ! empty( $inviter_member_type ) ? bp_member_type_post_by_type( $inviter_member_type ) : 0;
+	$inviter_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
+	$inviter_type_id     = ! empty( $inviter_member_type ) ? bboss_member_type_post_by_type( $inviter_member_type ) : 0;
 
 	// Same source, and same fallback, the dropdown iterates.
 	$offered_types = ! empty( $inviter_type_id )
@@ -5908,11 +5908,11 @@ function bb_is_member_type_allowed_on_invite( $member_type_key ) {
 		: '';
 
 	if ( empty( $offered_types ) ) {
-		$offered_types = bp_get_active_member_types();
+		$offered_types = bboss_get_active_member_types();
 	}
 
 	foreach ( (array) $offered_types as $offered_type_id ) {
-		if ( bp_get_member_type_key( $offered_type_id ) === $member_type_key ) {
+		if ( bboss_get_member_type_key( $offered_type_id ) === $member_type_key ) {
 			return true;
 		}
 	}

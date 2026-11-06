@@ -2,7 +2,7 @@
 
 /**
  * @group xprofile
- * @group BP_XProfile_Query
+ * @group BBoss_XProfile_Query
  */
 class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 	protected $group;
@@ -20,11 +20,11 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'value' => 'foo',
@@ -40,11 +40,11 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[1],
@@ -65,9 +65,9 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		) );
 		$this->create_users( 2 );
 
-		xprofile_set_field_data( $f, $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $f, $this->users[0], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => 'Foo Field',
@@ -83,11 +83,11 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -104,11 +104,11 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo');
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -126,10 +126,10 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 2 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -147,12 +147,12 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], '1' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], '2' );
-		xprofile_set_field_data( $this->fields[0], $this->users[2], '3' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], '1' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], '2' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[2], '3' );
 
 		// <
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -166,7 +166,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->assertEqualSets( $expected, array_keys( $q->results ) );
 
 		// <=
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -180,7 +180,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->assertEqualSets( $expected, array_keys( $q->results ) );
 
 		// >=
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -194,7 +194,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->assertEqualSets( $expected, array_keys( $q->results ) );
 
 		// >
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -212,9 +212,9 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 2 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -232,10 +232,10 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'rab' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'rab' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -253,11 +253,11 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], '1' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], '10' );
-		xprofile_set_field_data( $this->fields[0], $this->users[2], '100' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], '1' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], '10' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[2], '100' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -271,7 +271,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$expected = array( $this->users[1] );
 		$this->assertEqualSets( $expected, array_keys( $q->results ) );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -290,10 +290,10 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'baz' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'baz' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -307,7 +307,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->assertEqualSets( $expected, array_keys( $q->results ) );
 
 		// RLIKE is a synonym for REGEXP.
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -325,10 +325,10 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'baz' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'baz' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -346,10 +346,10 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 2 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[1], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -366,13 +366,13 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[3], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[3], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				array(
 					'field' => $this->fields[0],
@@ -393,13 +393,13 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[3], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[3], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'AND',
 				array(
@@ -421,13 +421,13 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[3], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[3], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'OR',
 				array(
@@ -449,12 +449,12 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'AND',
 				array(
@@ -479,12 +479,12 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 1 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'boo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[3], 'far' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[2], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'boo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[3], 'far' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[2], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'AND',
 				array(
@@ -508,13 +508,13 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
-		xprofile_set_field_data( $this->fields[0], $this->users[3], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[3], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[3], 'bar' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'OR',
 				array(
@@ -539,12 +539,12 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 4 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[3], 'barry' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[3], 'barry' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'OR',
 				array(
@@ -568,12 +568,12 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 		$this->create_fields( 2 );
 		$this->create_users( 3 );
 
-		xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
-		xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
-		xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
-		xprofile_set_field_data( $this->fields[1], $this->users[1], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[0], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[0], $this->users[1], 'bar' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[2], 'foo' );
+		bboss_xprofile_set_field_data( $this->fields[1], $this->users[1], 'foo' );
 
-		$q = new BP_User_Query( array(
+		$q = new BBoss_User_Query( array(
 			'xprofile_query' => array(
 				'relation' => 'OR',
 				array(
@@ -605,7 +605,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 	public function test_find_compatible_table_alias_should_match_negative_siblings_joined_with_relation_and() {
 		$this->create_fields( 1 );
 
-		$q = new BP_XProfile_Query( array(
+		$q = new BBoss_XProfile_Query( array(
 			'relation' => 'AND',
 			array(
 				'field' => $this->fields[0],
@@ -619,7 +619,7 @@ class BP_Tests_BP_XProfile_Query extends BP_UnitTestCase {
 			)
 		) );
 
-		$sql = $q->get_sql( buddypress()->profile->table_name_data, 'user_id' );
+		$sql = $q->get_sql( bboss()->profile->table_name_data, 'user_id' );
 
 		$this->assertSame( 1, substr_count( $sql['join'], 'INNER JOIN' ) );
 	}

@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 						if ( ! empty( $reports_terms ) ) {
 							$count = 1;
 							foreach ( $reports_terms as $reports_term ) {
-								$reports_term = bp_moderation_maybe_translate_report_term( $reports_term );
+								$reports_term = bboss_moderation_maybe_translate_report_term( $reports_term );
 								$checked      = ( 1 === $count ) ? 'checked' : '';
 								$when_show    = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
 								?>

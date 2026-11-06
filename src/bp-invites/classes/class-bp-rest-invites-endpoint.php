@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Invites_Endpoint class
+ * BP REST: BBoss_REST_Invites_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Invites_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Invites_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Allow batch.
@@ -28,7 +28,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'invites';
 	}
 
@@ -116,7 +116,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	public function get_items( $request ) {
 
 		$args = array(
-			'post_type'      => bp_get_invite_post_type(),
+			'post_type'      => bboss_get_invite_post_type(),
 			'author'         => (int) get_current_user_id(),
 			'paged'          => ( ! empty( $request['page'] ) ? $request['page'] : '' ),
 			'posts_per_page' => ( ! empty( $request['per_page'] ) ? $request['per_page'] : '' ),
@@ -138,7 +138,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		wp_reset_postdata();
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $invites_query->found_posts, $args['posts_per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $invites_query->found_posts, $args['posts_per_page'] );
 
 		/**
 		 * Fires after a list of sent invites is fetched via the REST API.
@@ -174,7 +174,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = true;
 
-			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+			if ( function_exists( 'bboss_allow_user_to_send_invites' ) && false === bboss_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you don\'t have permission to view invites.', 'buddyboss' ),
@@ -234,7 +234,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		$invite_duplicate_array  = array();
 		$duplicate_email_inputs  = array();
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $k => $field ) {
@@ -254,17 +254,17 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 					if ( email_exists( (string) sanitize_email( wp_unslash( $field['email_id'] ) ) ) ) {
 						$invite_exists_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
-					} elseif ( function_exists( 'bb_is_email_address_already_invited' ) && bb_is_email_address_already_invited( sanitize_email( wp_unslash( $field['email_id'] ) ), bp_loggedin_user_id() ) ) {
+					} elseif ( function_exists( 'bboss_is_email_address_already_invited' ) && bboss_is_email_address_already_invited( sanitize_email( wp_unslash( $field['email_id'] ) ), bboss_loggedin_user_id() ) ) {
 						$invite_duplicate_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
-					} elseif ( ! function_exists( 'bb_is_allowed_register_email_address' ) ) {
+					} elseif ( ! function_exists( 'bboss_is_allowed_register_email_address' ) ) {
 						$invite_correct_array[] = array(
 							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
 							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
 							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
 						);
 					} elseif (
-						function_exists( 'bb_is_allowed_register_email_address' ) &&
-						bb_is_allowed_register_email_address( $field['email_id'] )
+						function_exists( 'bboss_is_allowed_register_email_address' ) &&
+						bboss_is_allowed_register_email_address( $field['email_id'] )
 					) {
 						$invite_correct_array[] = array(
 							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
@@ -289,18 +289,18 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		$query_string = array();
 		if ( ! empty( $invite_correct_array ) ) {
 
-			if ( ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
-				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
+			if ( ! function_exists( 'bboss_invites_kses_allowed_tags' ) ) {
+				require trailingslashit( bboss()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
 			}
 
 			// check if it has enough recipients to use batch emails.
-			$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
+			$min_count_recipients = function_exists( 'bboss_email_queue_has_min_count' ) && bboss_email_queue_has_min_count( $invite_correct_array );
 
 			// Resolved once: the inviter is the same person for every address in this request, and
 			// resolving reads profile fields and visibility rows. Doing it inside the loop - twice
 			// per invitee, as this did - multiplies that by the size of the invite batch for an
 			// answer that cannot change between iterations.
-			$inviter_public_name = $this->get_public_inviter_name( bp_loggedin_user_id() );
+			$inviter_public_name = $this->get_public_inviter_name( bboss_loggedin_user_id() );
 
 			foreach ( $invite_correct_array as $key => $value ) {
 
@@ -312,37 +312,37 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				$query_string[] = $email;
 				$inviter_name   = $inviter_public_name;
 
-				if ( true === bp_disable_invite_member_email_subject() ) {
+				if ( true === bboss_disable_invite_member_email_subject() ) {
 					$subject = $request->get_param( 'email_subject' );
 					if ( empty( $subject ) ) {
-						$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
+						$subject = stripslashes( wp_strip_all_tags( bboss_get_member_invitation_subject() ) );
 					} else {
 						$subject = sanitize_textarea_field( wp_unslash( $subject ) );
 						
 						$_POST['bp_member_invites_custom_subject'] = $subject;
 					}
 				} else {
-					$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
+					$subject = stripslashes( wp_strip_all_tags( bboss_get_member_invitation_subject() ) );
 				}
 
-				if ( true === bp_disable_invite_member_email_content() ) {
+				if ( true === bboss_disable_invite_member_email_content() ) {
 					$message = $request->get_param( 'email_content' );
 					if ( empty( $message ) ) {
-						$message = stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
+						$message = stripslashes( wp_strip_all_tags( bboss_get_member_invitation_message() ) );
 					} else {
 						$_POST['bp_member_invites_custom_content'] = $message;
 					}
 				} else {
-					$message = stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
+					$message = stripslashes( wp_strip_all_tags( bboss_get_member_invitation_message() ) );
 				}
 
 				$message .= '
 
-' . bp_get_member_invites_wildcard_replace( stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ), $email );
+' . bboss_get_member_invites_wildcard_replace( stripslashes( wp_strip_all_tags( bboss_get_invites_member_invite_url() ) ), $email );
 
 				$inviter_name = $inviter_public_name;
 				$site_name    = get_bloginfo( 'name' );
-				$inviter_url  = bp_loggedin_user_domain();
+				$inviter_url  = bboss_loggedin_user_domain();
 
 				$email_encode = rawurlencode( $email );
 
@@ -351,16 +351,16 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				// Set both variable which will use in email.
 				$_POST['custom_user_name']   = $name;
-				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', function_exists( 'bb_attachments_get_default_profile_group_avatar_image' ) ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) : buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' );
+				$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', function_exists( 'bboss_attachments_get_default_profile_group_avatar_image' ) ? bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) : bboss()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png' );
 
 				$accept_link = add_query_arg(
 					array(
 						'bp-invites' => 'accept-member-invitation',
 						'email'      => $email_encode,
 						// phpcs:ignore
-						'inviter'    => base64_encode( bp_loggedin_user_id() ),
+						'inviter'    => base64_encode( bboss_loggedin_user_id() ),
 					),
-					bp_get_root_domain() . '/' . bp_get_signup_slug() . '/'
+					bboss_get_root_domain() . '/' . bboss_get_signup_slug() . '/'
 				);
 				$accept_link = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 				$args        = array(
@@ -383,7 +383,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					'post_content' => $message,
 					'post_title'   => $subject,
 					'post_status'  => 'publish',
-					'post_type'    => bp_get_invite_post_type(),
+					'post_type'    => bboss_get_invite_post_type(),
 				);
 
 				$post_id = wp_insert_post( $insert_post_args );
@@ -392,12 +392,12 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					$invitations_ids[] = $post_id;
 
 					// Send invitation email.
-					if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
-						bb_email_queue()->add_record( 'invites-member-invite', $email, $args );
+					if ( function_exists( 'bboss_is_email_queue' ) && bboss_is_email_queue() && $min_count_recipients ) {
+						bboss_email_queue()->add_record( 'invites-member-invite', $email, $args );
 						// call email background process.
-						bb_email_queue()->bb_email_background_process();
+						bboss_email_queue()->bb_email_background_process();
 					} else {
-						bp_send_email( 'invites-member-invite', $email, $args );
+						bboss_send_email( 'invites-member-invite', $email, $args );
 					}
 
 					// Save a blank bp_ia_accepted post_meta.
@@ -452,7 +452,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $invitations_ids ) ) {
 			$send_invitations = get_posts(
 				array(
-					'post_type'              => bp_get_invite_post_type(),
+					'post_type'              => bboss_get_invite_post_type(),
 					'include'                => $invitations_ids,
 					'suppress_filters'       => false,
 					'update_post_meta_cache' => false,
@@ -502,7 +502,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = true;
 
-			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+			if ( function_exists( 'bboss_allow_user_to_send_invites' ) && false === bboss_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you don\'t have permission to create invites.', 'buddyboss' ),
@@ -597,7 +597,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			$retval = true;
 			$invite = get_post( $request['id'] );
 
-			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+			if ( function_exists( 'bboss_allow_user_to_send_invites' ) && false === bboss_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),
@@ -622,9 +622,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				function_exists( 'bb_invites_user_can_revoke' )
-					? ! bb_invites_user_can_revoke( $invite->ID )
-					: ( bp_loggedin_user_id() !== (int) $invite->post_author && ! bp_current_user_can( 'bp_moderate' ) )
+				function_exists( 'bboss_invites_user_can_revoke' )
+					? ! bboss_invites_user_can_revoke( $invite->ID )
+					: ( bboss_loggedin_user_id() !== (int) $invite->post_author && ! bboss_current_user_can( 'bp_moderate' ) )
 			) {
 				// Only the inviter (or a moderator) may revoke an invite. Older Platform has no helper, so check the same rule here.
 				$retval = new WP_Error(
@@ -667,15 +667,15 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 		$member_types = array();
 
-		if ( function_exists( 'bp_check_member_send_invites_tab_member_type_allowed' ) && true === bp_check_member_send_invites_tab_member_type_allowed() ) {
-			$current_user              = bp_loggedin_user_id();
-			$member_type               = bp_get_member_type( $current_user );
-			$member_type_post_id       = bp_member_type_post_by_type( $member_type );
+		if ( function_exists( 'bboss_check_member_send_invites_tab_member_type_allowed' ) && true === bboss_check_member_send_invites_tab_member_type_allowed() ) {
+			$current_user              = bboss_loggedin_user_id();
+			$member_type               = bboss_get_member_type( $current_user );
+			$member_type_post_id       = bboss_member_type_post_by_type( $member_type );
 			$get_selected_member_types = get_post_meta( $member_type_post_id, '_bp_member_type_allowed_member_type_invite', true );
 			if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
 				$member_types = $get_selected_member_types;
 			} else {
-				$member_types = bp_get_active_member_types();
+				$member_types = bboss_get_active_member_types();
 			}
 		}
 
@@ -683,8 +683,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $member_types ) ) {
 			foreach ( $member_types as $type ) {
-				$name     = bp_get_member_type_key( $type );
-				$type_obj = bp_get_member_type_object( $name );
+				$name     = bboss_get_member_type_key( $type );
+				$type_obj = bboss_get_member_type_object( $name );
 				if ( ! empty( $type_obj ) ) {
 					$member_type = $type_obj->labels['singular_name'];
 				}
@@ -731,7 +731,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() ) {
 			$retval = true;
 
-			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
+			if ( function_exists( 'bboss_allow_user_to_send_invites' ) && false === bboss_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' ),
@@ -775,10 +775,10 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		if (
-			function_exists( 'bp_allow_custom_registration' )
-			&& function_exists( 'bp_custom_register_page_url' )
-			&& bp_allow_custom_registration()
-			&& '' !== bp_custom_register_page_url()
+			function_exists( 'bboss_allow_custom_registration' )
+			&& function_exists( 'bboss_custom_register_page_url' )
+			&& bboss_allow_custom_registration()
+			&& '' !== bboss_custom_register_page_url()
 		) {
 			$data['status'] = ( '1' === get_post_meta( $item->ID, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Invited', 'buddyboss' );
 		} else {
@@ -841,7 +841,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				),
 			);
 
-			if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
+			if ( true === bboss_check_member_send_invites_tab_member_type_allowed() ) {
 				$args['fields']['description']                = __( 'Fields array with name, email_id and profile_type to create an invites.', 'buddyboss' );
 				$args['fields']['properties']['profile_type'] = array(
 					'description'       => __( 'Profile Type for the invite.', 'buddyboss' ),
@@ -852,20 +852,20 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			if ( true === bp_disable_invite_member_email_subject() ) {
+			if ( true === bboss_disable_invite_member_email_subject() ) {
 				$args['email_subject'] = array(
 					'description'       => __( 'Subject for invite a member.', 'buddyboss' ),
 					'type'              => 'string',
-					'default'           => stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) ),
+					'default'           => stripslashes( wp_strip_all_tags( bboss_get_member_invitation_subject() ) ),
 					'validate_callback' => 'rest_validate_request_arg',
 				);
 			}
 
-			if ( true === bp_disable_invite_member_email_content() ) {
+			if ( true === bboss_disable_invite_member_email_content() ) {
 				$args['email_content'] = array(
 					'description'       => __( 'Content for invite a member.', 'buddyboss' ),
 					'type'              => 'string',
-					'default'           => bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
+					'default'           => bboss_get_member_invites_wildcard_replace( bboss_get_member_invitation_message() ),
 					'validate_callback' => 'rest_validate_request_arg',
 				);
 			}
@@ -982,7 +982,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					'rand',
 				),
 			),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
@@ -1025,7 +1025,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * address with no member behind it, and the same value is stored in the `_bp_inviter_name` post
 	 * meta the invite list renders from. Resolved against the request's viewer the inviter sees
 	 * their own profile in full, so the email would carry name parts the site hides from everyone
-	 * else (PROD-9896). bb_core_guest_viewer_id() pins the resolution to the public, logged-out
+	 * else (PROD-9896). bboss_core_guest_viewer_id() pins the resolution to the public, logged-out
 	 * view.
 	 *
 	 * The guard is for a mixed-version install - this plugin can run against a Platform that
@@ -1040,10 +1040,10 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * @return string|bool Display name for a non-member audience, false when the user is unknown.
 	 */
 	protected function get_public_inviter_name( $user_id ) {
-		if ( function_exists( 'bb_core_guest_viewer_id' ) ) {
+		if ( function_exists( 'bboss_core_guest_viewer_id' ) ) {
 			// Decoded: the resolver's chain ends in esc_html(), which belongs to HTML output and
 			// not to a JSON field or an email token. ENT_QUOTES, since ENT_NOQUOTES leaves `'`.
-			return wp_specialchars_decode( (string) bp_core_get_user_displayname( $user_id, bb_core_guest_viewer_id() ), ENT_QUOTES );
+			return wp_specialchars_decode( (string) bboss_core_get_user_displayname( $user_id, bboss_core_guest_viewer_id() ), ENT_QUOTES );
 		}
 
 		return $this->get_public_inviter_name_fallback( $user_id );
@@ -1052,17 +1052,17 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	/**
 	 * Resolve the inviter's public name without Platform's guest-viewer sentinel.
 	 *
-	 * Reached only on a Platform that predates bb_core_guest_viewer_id(). Every viewer-aware entry
-	 * point is unusable here - bp_core_get_user_displayname() and
-	 * bp_xprofile_get_hidden_fields_for_user() both replace an empty viewer with the current user,
+	 * Reached only on a Platform that predates bboss_core_guest_viewer_id(). Every viewer-aware entry
+	 * point is unusable here - bboss_core_get_user_displayname() and
+	 * bboss_xprofile_get_hidden_fields_for_user() both replace an empty viewer with the current user,
 	 * and passing the sentinel by hand does not help either, because the Platform that lacks the
-	 * helper also lacks the branch in bp_xprofile_get_hidden_field_types_for_user() that recognises
+	 * helper also lacks the branch in bboss_xprofile_get_hidden_field_types_for_user() that recognises
 	 * it: -1 is non-empty, so it takes the "logged in" branch and, for an inviter who can moderate,
 	 * hides nothing at all.
 	 *
 	 * So the audience is not expressed as a viewer id at all. The set of fields withheld from a
 	 * logged-out visitor is read straight from the visibility levels
-	 * (bp_xprofile_get_fields_by_visibility_levels(), which takes the levels explicitly and has
+	 * (bboss_xprofile_get_fields_by_visibility_levels(), which takes the levels explicitly and has
 	 * been in BuddyPress since 1.6), and:
 	 *
 	 * - nothing in the name withheld -> the inviter's own resolution IS the public one, so the name
@@ -1070,7 +1070,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * - something withheld -> the name is rebuilt from the name fields a visitor may see, and never
 	 *   from the stored display_name, which may have drifted to a full name;
 	 * - nothing left to build from -> the nickname, which
-	 *   bp_xprofile_get_fields_by_visibility_levels() never lets a member hide, then the
+	 *   bboss_xprofile_get_fields_by_visibility_levels() never lets a member hide, then the
 	 *   user_nicename. This is the same fallback order Platform's own guest path uses.
 	 *
 	 * Third-party filters on the hidden-level lists are deliberately not applied: they are resolved
@@ -1089,7 +1089,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			// Same answer the viewer-aware path gives for an unknown user.
 			// ENT_QUOTES, matching the sibling resolver in this file - the resolver's own priority-16
 			// decode is ENT_NOQUOTES and leaves `&#039;` standing.
-			return wp_specialchars_decode( (string) bp_core_get_user_displayname( $user_id ), ENT_QUOTES );
+			return wp_specialchars_decode( (string) bboss_core_get_user_displayname( $user_id ), ENT_QUOTES );
 		}
 
 		$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
@@ -1098,7 +1098,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			$nickname = trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
 		}
 
-		$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+		$format = function_exists( 'bboss_core_display_name_format' ) ? bboss_core_display_name_format() : 'first_last_name';
 
 		// Under the Nickname format the visible name is the nickname field - the last name is not
 		// part of it at all - so read it directly rather than trusting a display_name that may have
@@ -1109,20 +1109,20 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 		$guest_hidden = array();
 		if (
-			function_exists( 'bp_is_active' )
-			&& bp_is_active( 'xprofile' )
-			&& function_exists( 'bp_xprofile_get_fields_by_visibility_levels' )
+			function_exists( 'bboss_is_active' )
+			&& bboss_is_active( 'xprofile' )
+			&& function_exists( 'bboss_xprofile_get_fields_by_visibility_levels' )
 		) {
 			// The exact level set bp_xprofile_get_hidden_field_types_for_user() withholds from a
 			// viewer who is not logged in.
 			$guest_hidden = array_map(
 				'intval',
-				(array) bp_xprofile_get_fields_by_visibility_levels( $user_id, array( 'friends', 'loggedin', 'adminsonly' ) )
+				(array) bboss_xprofile_get_fields_by_visibility_levels( $user_id, array( 'friends', 'loggedin', 'adminsonly' ) )
 			);
 		}
 
-		$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? (int) bp_xprofile_firstname_field_id() : 0;
-		$last_name_field_id  = function_exists( 'bp_xprofile_lastname_field_id' ) ? (int) bp_xprofile_lastname_field_id() : 0;
+		$first_name_field_id = function_exists( 'bboss_xprofile_firstname_field_id' ) ? (int) bboss_xprofile_firstname_field_id() : 0;
+		$last_name_field_id  = function_exists( 'bboss_xprofile_lastname_field_id' ) ? (int) bboss_xprofile_lastname_field_id() : 0;
 
 		$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $guest_hidden, true ) );
 
@@ -1134,7 +1134,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! $first_name_hidden && ! $last_name_hidden ) {
 			// ENT_QUOTES, matching the sibling resolver in this file - the resolver's own priority-16
 			// decode is ENT_NOQUOTES and leaves `&#039;` standing.
-			return wp_specialchars_decode( (string) bp_core_get_user_displayname( $user_id ), ENT_QUOTES );
+			return wp_specialchars_decode( (string) bboss_core_get_user_displayname( $user_id ), ENT_QUOTES );
 		}
 
 		$parts = array();
@@ -1158,14 +1158,14 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * non-string no-value normalises to '' rather than to something that cannot be concatenated.
 	 *
 	 * The WordPress user meta is read when the profile field has no stored row, because that is
-	 * what bp_xprofile_get_member_display_name() itself back-fills from: on an imported member the
+	 * what bboss_xprofile_get_member_display_name() itself back-fills from: on an imported member the
 	 * xprofile row does not exist yet, and reading only the field would drop a name the viewer is
 	 * entitled to see - so an invite email would show the nickname where the members endpoint shows
-	 * the real name. Delegates to Platform's bb_core_get_name_field_value() so every endpoint
+	 * the real name. Delegates to Platform's bboss_core_get_name_field_value() so every endpoint
 	 * resolves a name part the same way, and keeps a self-contained fallback for a Platform that
 	 * predates it.
 	 *
-	 * This body is byte-identical to BP_REST_Members_Endpoint::get_visible_name_field_value() and
+	 * This body is byte-identical to BBoss_REST_Members_Endpoint::get_visible_name_field_value() and
 	 * to the invites endpoint's copy, deliberately: see the members endpoint's docblock for the
 	 * shared homes that were checked (includes/functions.php, a trait, a synced bp-core class) and
 	 * why none of them survives both the bp-rest.php load guard and the Grunt sync into Platform.
@@ -1186,16 +1186,16 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		// Platform owns the rule. Delegating means a later change to it - a different empty-value
 		// test, another Unicode class - reaches every endpoint at once instead of leaving the
 		// copies below to drift into publishing a name part a sibling endpoint withholds.
-		if ( function_exists( 'bb_core_get_name_field_value' ) ) {
-			return (string) bb_core_get_name_field_value( $field_id, $user_id, $meta_key );
+		if ( function_exists( 'bboss_core_get_name_field_value' ) ) {
+			return (string) bboss_core_get_name_field_value( $field_id, $user_id, $meta_key );
 		}
 
 		// Self-contained fallback for a Platform that predates that helper, since this plugin is
 		// upgraded independently of it.
 		$value = '';
 
-		if ( $field_id > 0 && function_exists( 'xprofile_get_field_data' ) ) {
-			$stored = xprofile_get_field_data( $field_id, $user_id );
+		if ( $field_id > 0 && function_exists( 'bboss_xprofile_get_field_data' ) ) {
+			$stored = bboss_xprofile_get_field_data( $field_id, $user_id );
 			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
 		}
 
@@ -1207,3 +1207,11 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		return $value;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Invites_Endpoint', false ) || interface_exists( 'BBoss_REST_Invites_Endpoint', false ) || trait_exists( 'BBoss_REST_Invites_Endpoint', false ) ) && ! class_exists( 'BP_REST_Invites_Endpoint', false ) && ! interface_exists( 'BP_REST_Invites_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Invites_Endpoint', 'BP_REST_Invites_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.9.3
  */
-abstract class BP_Core_Notification_Abstract {
+abstract class BBoss_Core_Notification_Abstract {
 
 	/**
 	 * Preferences Group.
@@ -580,7 +580,7 @@ abstract class BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_filters() {
 		if ( ! empty( $this->notifications_filters ) && ! empty( $this->notifications ) ) {
-			$filtered_notifications = array_column( bb_register_notifications(), 'component_action', 'notification_type' );
+			$filtered_notifications = array_column( bboss_register_notifications(), 'component_action', 'notification_type' );
 			foreach ( $this->notifications_filters as $filters ) {
 				$label             = ( isset( $filters['label'] ) ? $filters['label'] : '' );
 				$position          = ( isset( $filters['position'] ) ? $filters['position'] : 0 );
@@ -604,7 +604,7 @@ abstract class BP_Core_Notification_Abstract {
 				}
 
 				if ( ! empty( $component_actions ) && ! empty( $label ) ) {
-					bp_nouveau_notifications_register_filter(
+					bboss_nouveau_notifications_register_filter(
 						array(
 							'id'       => ( is_array( $component_actions ) ? implode( ',', $component_actions ) : $component_actions ),
 							'label'    => $label,
@@ -651,7 +651,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * }
 	 */
 	final public function bb_register_subscription_type( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'label'              => array(
@@ -689,7 +689,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * Register validate callback function for subscription.
 	 *
 	 * @param bool             $response      True when subscription request correct otherwise false/WP_Error.
-	 * @param BB_Subscriptions $subscriptions Current instance of the subscription item being saved.
+	 * @param BBoss_Subscriptions $subscriptions Current instance of the subscription item being saved.
 	 *
 	 * @return bool|WP_Error True on success, false on failure.
 	 */
@@ -716,7 +716,7 @@ abstract class BP_Core_Notification_Abstract {
 				)
 			);
 		} else {
-			$type_data = bb_register_subscriptions_types( $type );
+			$type_data = bboss_register_subscriptions_types( $type );
 
 			if (
 				! empty( $type_data ) &&

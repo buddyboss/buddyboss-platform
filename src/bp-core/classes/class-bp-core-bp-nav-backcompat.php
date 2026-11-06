@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
+class BBoss_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Nav items.
 	 *
@@ -68,7 +68,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 			'2.6.0'
 		);
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( is_array( $value ) ) {
 			$value = new self( $value );
@@ -93,7 +93,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
-	 * @return BP_Core_BP_Nav_BackCompat
+	 * @return BBoss_Core_BP_Nav_BackCompat
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
@@ -158,7 +158,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 
 		// For top-level nav items, the backcompat nav hasn't yet been initialized.
 		if ( ! isset( $this->backcompat_nav[ $offset ] ) ) {
-			buddypress()->members->nav->delete_nav( $offset );
+			bboss()->members->nav->delete_nav( $offset );
 			unset( $this->backcompat_nav[ $offset ] );
 		}
 	}
@@ -188,7 +188,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 */
 	public function get_component( $offset = '' ) {
 		if ( ! isset( $this->component ) ) {
-			if ( bp_is_active( 'groups' ) && $offset === bp_get_current_group_slug() ) {
+			if ( bboss_is_active( 'groups' ) && $offset === bboss_get_current_group_slug() ) {
 				$this->component = 'groups';
 			} else {
 				$this->component = 'members';
@@ -218,7 +218,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 * @return bool|array
 	 */
 	protected function get_nav( $offset ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$component_nav = $this->get_component_nav( $offset );
 		$primary_nav   = $component_nav->get_primary( array( 'slug' => $offset ), false );
@@ -237,7 +237,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	}
 
 	/**
-	 * Get the BP_Core_Nav object corresponding to the component, based on a nav item name.
+	 * Get the BBoss_Core_Nav object corresponding to the component, based on a nav item name.
 	 *
 	 * The way bp_nav was previously organized makes it impossible to know for sure which component's nav is
 	 * being referenced by a given nav item name. We guess in the following manner:
@@ -248,12 +248,12 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $offset Nav item name.
-	 * @return BP_Core_Nav
+	 * @return BBoss_Core_Nav
 	 */
 	protected function get_component_nav( $offset = '' ) {
 		$component = $this->get_component( $offset );
 
-		$bp = buddypress();
+		$bp = bboss();
 		if ( ! isset( $bp->{$component}->nav ) ) {
 			return false;
 		}

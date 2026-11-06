@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
+class BBoss_Activity_oEmbed_Extension extends BBoss_Core_oEmbed_Extension {
 	/**
 	 * Custom oEmbed slug endpoint.
 	 *
@@ -60,7 +60,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @since BuddyPress 2.6.0
 	 */
 	protected function content() {
-		bp_get_asset_template_part( 'embeds/activity' );
+		bboss_get_asset_template_part( 'embeds/activity' );
 	}
 
 	/**
@@ -71,7 +71,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return bool
 	 */
 	protected function is_page() {
-		return bp_is_single_activity();
+		return bboss_is_single_activity();
 	}
 
 	/**
@@ -84,10 +84,10 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return int|bool Activity ID on success; boolean false on failure.
 	 */
 	protected function validate_url_to_item_id( $url ) {
-		if ( bp_core_enable_root_profiles() ) {
-			$domain = bp_get_root_domain();
+		if ( bboss_core_enable_root_profiles() ) {
+			$domain = bboss_get_root_domain();
 		} else {
-			$domain = bp_get_members_directory_permalink();
+			$domain = bboss_get_members_directory_permalink();
 		}
 
 		// Check the URL to see if this is a single activity URL.
@@ -96,7 +96,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		}
 
 		// Check for activity slug.
-		if ( false === strpos( $url, '/' . bp_get_activity_slug() . '/' ) ) {
+		if ( false === strpos( $url, '/' . bboss_get_activity_slug() . '/' ) ) {
 			return false;
 		}
 
@@ -111,11 +111,11 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		if ( ! empty( $activity_id ) ) {
 			// Check if activity item still exists.
-			$activity = new BP_Activity_Activity( $activity_id );
+			$activity = new BBoss_Activity_Activity( $activity_id );
 
 			// Okay, we're good to go! The JSON route is public, so also check the activity, its
 			// root post and its group the same way the activity page does (PROD-10649).
-			if ( ! empty( $activity->component ) && 0 === (int) $activity->is_spam && bb_activity_user_can_view( $activity ) ) {
+			if ( ! empty( $activity->component ) && 0 === (int) $activity->is_spam && bboss_activity_user_can_view( $activity ) ) {
 				return $activity_id;
 			}
 		}
@@ -132,13 +132,13 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return array
 	 */
 	protected function set_oembed_response_data( $item_id ) {
-		$activity = new BP_Activity_Activity( $item_id );
+		$activity = new BBoss_Activity_Activity( $item_id );
 
 		return array(
 			'content'      => $activity->content,
 			'title'        => __( 'Activity', 'buddyboss' ),
-			'author_name'  => bp_core_get_user_displayname( $activity->user_id ),
-			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
+			'author_name'  => bboss_core_get_user_displayname( $activity->user_id ),
+			'author_url'   => bboss_core_get_user_domain( $activity->user_id ),
 
 			// Custom identifier.
 			'x_buddypress' => 'activity',
@@ -154,8 +154,8 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return string
 	 */
 	protected function set_fallback_html( $item_id ) {
-		$activity    = new BP_Activity_Activity( $item_id );
-		$mentionname = bp_activity_do_mentions() ? ' (@' . bp_activity_get_user_mentionname( $activity->user_id ) . ')' : '';
+		$activity    = new BBoss_Activity_Activity( $item_id );
+		$mentionname = bboss_activity_do_mentions() ? ' (@' . bboss_activity_get_user_mentionname( $activity->user_id ) . ')' : '';
 		$date        = date_i18n( get_option( 'date_format' ), strtotime( $activity->date_recorded ) );
 
 		// Make sure we can use some activity functions that depend on the loop.
@@ -165,9 +165,9 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		// 'wp-embedded-content' CSS class is necessary due to how the embed JS works.
 		$blockquote = sprintf(
 			'<blockquote class="wp-embedded-content bp-activity-item">%1$s%2$s %3$s</blockquote>',
-			bp_activity_get_embed_excerpt( $activity->content ),
-			'- ' . bp_core_get_user_displayname( $activity->user_id ) . $mentionname,
-			'<a href="' . esc_url( bp_activity_get_permalink( $item_id ) ) . '">' . $date . '</a>'
+			bboss_activity_get_embed_excerpt( $activity->content ),
+			'- ' . bboss_core_get_user_displayname( $activity->user_id ) . $mentionname,
+			'<a href="' . esc_url( bboss_activity_get_permalink( $item_id ) ) . '">' . $date . '</a>'
 		);
 
 		// Clean up.
@@ -179,7 +179,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		 * @since BuddyPress 2.6.0
 		 *
 		 * @param string               $blockquote Current fallback HTML
-		 * @param BP_Activity_Activity $activity   Activity object
+		 * @param BBoss_Activity_Activity $activity   Activity object
 		 */
 		return apply_filters( 'bp_activity_embed_fallback_html', $blockquote, $activity );
 	}
@@ -205,7 +205,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 *
 	 * @since BuddyPress 2.6.0
 	 *
-	 * @see BP_Activity_Component::modify_iframe() where our custom sandbox value is set.
+	 * @see BBoss_Activity_Component::modify_iframe() where our custom sandbox value is set.
 	 *
 	 * @param string $result The oEmbed HTML result.
 	 * @param object $data   A data object result from an oEmbed provider.
@@ -269,7 +269,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Do stuff when our oEmbed activity header template part is loading.
 	 *
-	 * Currently, removes wpautop() from the bp_activity_action() function.
+	 * Currently, removes wpautop() from the bboss_activity_action() function.
 	 *
 	 * @since BuddyPress 2.6.0
 	 *
@@ -293,7 +293,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @since BuddyPress 2.6.0
 	 */
 	public function embed_comments_button() {
-		if ( ! did_action( 'bp_embed_content' ) || ! bp_is_single_activity() ) {
+		if ( ! did_action( 'bp_embed_content' ) || ! bboss_is_single_activity() ) {
 			return;
 		}
 
@@ -301,14 +301,14 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		add_filter( 'the_permalink', array( $this, 'filter_embed_url' ) );
 
 		// Only show comment bubble if we have some activity comments.
-		$count = bp_activity_get_comment_count();
+		$count = bboss_activity_get_comment_count();
 		if ( empty( $count ) ) {
 			return;
 		}
 		?>
 
 		<div class="wp-embed-comments">
-			<a href="<?php bp_activity_thread_permalink(); ?>">
+			<a href="<?php bboss_activity_thread_permalink(); ?>">
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
 				printf(
@@ -321,7 +321,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 						$count,
 						'buddyboss'
 					) ),
-					esc_html( bp_core_number_format( $count ) )
+					esc_html( bboss_core_number_format( $count ) )
 				);
 				?>
 			</a>

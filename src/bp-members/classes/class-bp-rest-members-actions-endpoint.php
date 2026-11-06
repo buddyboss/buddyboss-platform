@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Members_Actions_Endpoint class
+ * BP REST: BBoss_REST_Members_Actions_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
+class BBoss_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 	/**
-	 * Reuse some parts of the BP_REST_Members_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Members_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Members_Endpoint
+	 * @var BBoss_REST_Members_Endpoint
 	 */
 	protected $members_endpoint;
 
@@ -30,9 +30,9 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base        = buddypress()->members->id . '/action';
-		$this->members_endpoint = new BP_REST_Members_Endpoint();
+		$this->namespace        = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base        = bboss()->members->id . '/action';
+		$this->members_endpoint = new BBoss_REST_Members_Endpoint();
 	}
 
 	/**
@@ -68,7 +68,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 		register_rest_route(
 			$this->namespace,
-			'/' . buddypress()->members->id . '/presence',
+			'/' . bboss()->members->id . '/presence',
 			array(
 				'args'   => array(
 					'ids' => array(
@@ -147,7 +147,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 				break;
 		}
 
-		$member_query = bp_core_get_users( array( 'include' => (int) $request['id'] ) );
+		$member_query = bboss_core_get_users( array( 'include' => (int) $request['id'] ) );
 		$members      = $member_query['users'];
 
 		$request->set_param( 'context', 'view' );
@@ -165,7 +165,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 		/**
 		 * Fires after a Member action is updated via the REST API.
 		 *
-		 * @param BP_XProfile_Field $field Created field object.
+		 * @param BBoss_XProfile_Field $field Created field object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
@@ -196,7 +196,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 		if ( is_user_logged_in() ) {
 			$retval = true;
-			$user   = bp_rest_get_user( $request['id'] );
+			$user   = bboss_rest_get_user( $request['id'] );
 
 			if ( ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
@@ -239,11 +239,11 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	public function presence_item( $request ) {
 
 		if ( isset( $request['ids'] ) ) {
-			bp_core_record_activity();
+			bboss_core_record_activity();
 		}
 
 		$users  = $request->get_param( 'ids' );
-		$retval = bb_get_users_presence( $users );
+		$retval = bboss_get_users_presence( $users );
 
 		$response = rest_ensure_response( $retval );
 
@@ -381,12 +381,12 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		// Avatars.
-		if ( true === buddypress()->avatar->show_avatars ) {
+		if ( true === bboss()->avatar->show_avatars ) {
 			$avatar_properties = array();
 
 			$avatar_properties['full'] = array(
 				/* translators: Full image size for the member Avatar */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -394,7 +394,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: Thumb imaze size for the member Avatar */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -468,10 +468,10 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed
 	 */
 	private function bp_rest_follow_is_following( $args ) {
-		if ( bp_is_active( 'follow' ) && function_exists( 'bp_follow_is_following' ) ) {
+		if ( bboss_is_active( 'follow' ) && function_exists( 'bp_follow_is_following' ) ) {
 			return bp_follow_is_following( $args );
-		} elseif ( function_exists( 'bp_is_following' ) ) {
-			return bp_is_following( $args );
+		} elseif ( function_exists( 'bboss_is_following' ) ) {
+			return bboss_is_following( $args );
 		}
 
 		return false;
@@ -485,10 +485,10 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed
 	 */
 	private function bp_rest_follow_start_following( $args ) {
-		if ( bp_is_active( 'follow' ) && function_exists( 'bp_follow_start_following' ) ) {
+		if ( bboss_is_active( 'follow' ) && function_exists( 'bp_follow_start_following' ) ) {
 			return bp_follow_start_following( $args );
-		} elseif ( function_exists( 'bp_start_following' ) ) {
-			return bp_start_following( $args );
+		} elseif ( function_exists( 'bboss_start_following' ) ) {
+			return bboss_start_following( $args );
 		}
 
 		return false;
@@ -502,13 +502,21 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed
 	 */
 	private function bp_rest_follow_stop_following( $args ) {
-		if ( bp_is_active( 'follow' ) && function_exists( 'bp_follow_stop_following' ) ) {
+		if ( bboss_is_active( 'follow' ) && function_exists( 'bp_follow_stop_following' ) ) {
 			return bp_follow_stop_following( $args );
-		} elseif ( function_exists( 'bp_stop_following' ) ) {
-			return bp_stop_following( $args );
+		} elseif ( function_exists( 'bboss_stop_following' ) ) {
+			return bboss_stop_following( $args );
 		}
 
 		return false;
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Members_Actions_Endpoint', false ) || interface_exists( 'BBoss_REST_Members_Actions_Endpoint', false ) || trait_exists( 'BBoss_REST_Members_Actions_Endpoint', false ) ) && ! class_exists( 'BP_REST_Members_Actions_Endpoint', false ) && ! interface_exists( 'BP_REST_Members_Actions_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Members_Actions_Endpoint', 'BP_REST_Members_Actions_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

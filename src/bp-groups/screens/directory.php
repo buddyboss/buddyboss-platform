@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function groups_directory_groups_setup() {
-	if ( bp_is_groups_directory() ) {
-		bp_update_is_directory( true, 'groups' );
+function bboss_groups_directory_groups_setup() {
+	if ( bboss_is_groups_directory() ) {
+		bboss_update_is_directory( true, 'groups' );
 
 		/**
 		 * Fires before the loading of the Groups directory index.
@@ -32,7 +32,7 @@ function groups_directory_groups_setup() {
 		 *
 		 * @param string $value Path to the groups directory index template to load.
 		 */
-		bp_core_load_template( apply_filters( 'groups_template_directory_groups', 'groups/index' ) );
+		bboss_core_load_template( apply_filters( 'groups_template_directory_groups', 'groups/index' ) );
 	}
 }
 add_action( 'bp_screens', 'groups_directory_groups_setup', 2 );

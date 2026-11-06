@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  */
-function bb_register_activity_edit_core_fields( $registry, $component = 'activity' ) {
+function bboss_register_activity_edit_core_fields( $registry, $component = 'activity' ) {
 
 	// 1. Action (rich text).
 	$registry->register(
@@ -120,8 +120,8 @@ function bb_register_activity_edit_core_fields( $registry, $component = 'activit
 					),
 				);
 
-				if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
-					$actions = bp_activity_admin_get_activity_actions();
+				if ( function_exists( 'bboss_activity_admin_get_activity_actions' ) ) {
+					$actions = bboss_activity_admin_get_activity_actions();
 					foreach ( $actions as $key => $label ) {
 						$options[] = array(
 							'label' => $label,
@@ -133,8 +133,8 @@ function bb_register_activity_edit_core_fields( $registry, $component = 'activit
 				return $options;
 			},
 			'save_value'        => function ( $activity, $value ) {
-				if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
-					$actions = bp_activity_admin_get_activity_actions();
+				if ( function_exists( 'bboss_activity_admin_get_activity_actions' ) ) {
+					$actions = bboss_activity_admin_get_activity_actions();
 					if ( in_array( $value, array_keys( $actions ), true ) ) {
 						$activity->type = $value;
 					}

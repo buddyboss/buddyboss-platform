@@ -14,17 +14,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.5.0
  */
-class BP_PHPMailer implements BP_Email_Delivery {
+class BBoss_PHPMailer implements BBoss_Email_Delivery {
 
 	/**
 	 * Send email(s).
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param BP_Email $email Email to send.
+	 * @param BBoss_Email $email Email to send.
 	 * @return bool|WP_Error Returns true if email send, else a descriptive WP_Error.
 	 */
-	public function bp_email( BP_Email $email ) {
+	public function bp_email( BBoss_Email $email ) {
 		static $phpmailer = null;
 		$phpmailer_is_6_0 = false;
 
@@ -79,7 +79,7 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		 * Set up.
 		 */
 		$phpmailer->IsMail();
-		$phpmailer->CharSet = bp_get_option( 'blog_charset' );
+		$phpmailer->CharSet = bboss_get_option( 'blog_charset' );
 
 		/*
 		 * Content.

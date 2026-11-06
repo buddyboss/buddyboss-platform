@@ -15,10 +15,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.5.60
  */
-class BB_Recaptcha_Integration extends BP_Integration {
+class BBoss_Recaptcha_Integration extends BBoss_Integration {
 
 	/**
-	 * BB_Recaptcha_Integration constructor.
+	 * BBoss_Recaptcha_Integration constructor.
 	 */
 	public function __construct() {
 		$this->start(
@@ -42,7 +42,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * @return bool True if feature is enabled.
 	 */
 	private function is_feature_enabled() {
-		$active_features = bp_get_option( 'bb-active-features', array() );
+		$active_features = bboss_get_option( 'bb-active-features', array() );
 
 		// If the feature key doesn't exist yet (pre-migration), treat as enabled
 		// for backward compatibility.
@@ -61,7 +61,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * @return string Integration base directory path.
 	 */
 	private function get_integration_dir() {
-		return trailingslashit( buddypress()->plugin_dir ) . 'bb-features/integrations/' . $this->id . '/';
+		return trailingslashit( bboss()->plugin_dir ) . 'bb-features/integrations/' . $this->id . '/';
 	}
 
 	/**
@@ -72,7 +72,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * @return string Integration base URL.
 	 */
 	private function get_integration_url() {
-		return trailingslashit( buddypress()->plugin_url ) . 'bb-features/integrations/' . $this->id . '/';
+		return trailingslashit( bboss()->plugin_url ) . 'bb-features/integrations/' . $this->id . '/';
 	}
 
 	/**

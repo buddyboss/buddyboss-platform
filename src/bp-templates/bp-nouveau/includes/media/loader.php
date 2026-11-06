@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Media {
+class BBoss_Nouveau_Media {
 	/**
 	 * Constructor
 	 *
@@ -53,7 +53,7 @@ class BP_Nouveau_Media {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'media_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'media_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );
@@ -93,11 +93,11 @@ class BP_Nouveau_Media {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_media( $bp_nouveau = null ) {
+function bboss_nouveau_media( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->media = new BP_Nouveau_Media();
+	$bp_nouveau->media = new BBoss_Nouveau_Media();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_media', 10, 1 );

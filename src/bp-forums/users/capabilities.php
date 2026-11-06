@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses apply_filters() Filter mapped results
  * @return array Actual capabilities for meta capability
  */
-function bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+function bboss_bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
 	// What capability is being checked?
 	switch ( $cap ) {
@@ -31,7 +31,7 @@ function bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $a
 		case 'participate':
 		case 'moderate':
 			// Do not allow inactive users
-			if ( bbp_is_user_inactive( $user_id ) ) {
+			if ( bboss_bbp_is_user_inactive( $user_id ) ) {
 				$caps = array( 'do_not_allow' );
 
 				// Moderators are always participants
@@ -51,29 +51,29 @@ function bbp_map_primary_meta_caps( $caps = array(), $cap = '', $user_id = 0, $a
  * @since bbPress (r3860)
  *
  * @param int $user_id
- * @uses bbp_get_user_id() To get the user id
+ * @uses bboss_bbp_get_user_id() To get the user id
  * @uses get_userdata() To get the user data
  * @uses apply_filters() Calls 'bbp_set_user_role' with the role and user id
  * @return string
  */
-function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
+function bboss_bbp_set_user_role( $user_id = 0, $new_role = '' ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id, false, false );
+	$user_id = bboss_bbp_get_user_id( $user_id, false, false );
 	$user    = get_userdata( $user_id );
 
 	// User exists
 	if ( ! empty( $user ) ) {
 
 		// Get users forum role
-		$role = bbp_get_user_role( $user_id );
+		$role = bboss_bbp_get_user_role( $user_id );
 
 		// User already has this role so no new role is set
 		if ( $new_role === $role ) {
 			$new_role = false;
 
 			// Users role is different than the new role
-		} elseif ( bbp_is_valid_role( $new_role ) ) {
+		} elseif ( bboss_bbp_is_valid_role( $new_role ) ) {
 
 			// Remove the old role
 			if ( ! empty( $role ) ) {
@@ -84,7 +84,7 @@ function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
 			if ( ! empty( $new_role ) ) {
 
 				// Make sure Forums roles are added
-				bbp_add_forums_roles();
+				bboss_bbp_add_forums_roles();
 
 				$user->add_role( $new_role );
 			}
@@ -104,15 +104,15 @@ function bbp_set_user_role( $user_id = 0, $new_role = '' ) {
  * @since bbPress (r3860)
  *
  * @param int $user_id
- * @uses bbp_get_user_id() To get the user id
+ * @uses bboss_bbp_get_user_id() To get the user id
  * @uses get_userdata() To get the user data
  * @uses apply_filters() Calls 'bbp_get_user_role' with the role and user id
  * @return string
  */
-function bbp_get_user_role( $user_id = 0 ) {
+function bboss_bbp_get_user_role( $user_id = 0 ) {
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	$user    = get_userdata( $user_id );
 	$role    = false;
 
@@ -122,7 +122,7 @@ function bbp_get_user_role( $user_id = 0 ) {
 		// Look for a Forums role
 		$roles = array_intersect(
 			array_values( $user->roles ),
-			array_keys( bbp_get_dynamic_roles() )
+			array_keys( bboss_bbp_get_dynamic_roles() )
 		);
 
 		// If there's a role in the array, use the first one. This isn't very
@@ -142,18 +142,18 @@ function bbp_get_user_role( $user_id = 0 ) {
  * @since bbPress (r4446)
  *
  * @param int $user_id
- * @uses bbp_get_user_id() To get the user id
+ * @uses bboss_bbp_get_user_id() To get the user id
  * @uses get_userdata() To get the user data
  * @uses apply_filters() Calls 'bbp_get_user_blog_role' with the role and user id
  * @return string
  */
-function bbp_get_user_blog_role( $user_id = 0 ) {
+function bboss_bbp_get_user_blog_role( $user_id = 0 ) {
 
 	// Add Forums roles (returns $wp_roles global)
-	bbp_add_forums_roles();
+	bboss_bbp_add_forums_roles();
 
 	// Validate user id
-	$user_id = bbp_get_user_id( $user_id );
+	$user_id = bboss_bbp_get_user_id( $user_id );
 	$user    = get_userdata( $user_id );
 	$role    = false;
 
@@ -163,7 +163,7 @@ function bbp_get_user_blog_role( $user_id = 0 ) {
 		// Look for a non Forums role
 		$roles = array_intersect(
 			array_values( $user->roles ),
-			array_keys( bbp_get_blog_roles() )
+			array_keys( bboss_bbp_get_blog_roles() )
 		);
 
 		// If there's a role in the array, use the first one. This isn't very
@@ -187,7 +187,7 @@ function bbp_get_user_blog_role( $user_id = 0 ) {
  * @uses bbp_reset_user_caps() to reset caps
  * @usse bbp_save_user_caps() to save caps
  */
-function bbp_profile_update_role( $user_id = 0 ) {
+function bboss_bbp_profile_update_role( $user_id = 0 ) {
 
 	// Bail if no user ID was passed
 	if ( empty( $user_id ) ) {
@@ -201,7 +201,7 @@ function bbp_profile_update_role( $user_id = 0 ) {
 
 	// Fromus role we want the user to have
 	$new_role    = sanitize_text_field( $_POST['bbp-forums-role'] );
-	$forums_role = bbp_get_user_role( $user_id );
+	$forums_role = bboss_bbp_get_user_role( $user_id );
 
 	// Bail if no role change
 	if ( $new_role === $forums_role ) {
@@ -209,7 +209,7 @@ function bbp_profile_update_role( $user_id = 0 ) {
 	}
 
 	// Bail if trying to set their own role
-	if ( bbp_is_user_home_edit() ) {
+	if ( bboss_bbp_is_user_home_edit() ) {
 		return;
 	}
 
@@ -219,7 +219,7 @@ function bbp_profile_update_role( $user_id = 0 ) {
 	}
 
 	// Set the new forums role
-	bbp_set_user_role( $user_id, $new_role );
+	bboss_bbp_set_user_role( $user_id, $new_role );
 }
 
 /**
@@ -231,21 +231,21 @@ function bbp_profile_update_role( $user_id = 0 ) {
  * @since bbPress (r3380)
  *
  * @uses is_user_logged_in() To bail if user is not logged in
- * @uses bbp_get_user_role() To bail if user already has a role
- * @uses bbp_is_user_inactive() To bail if user is inactive
- * @uses bbp_allow_global_access() To know whether to save role to database
- * @uses bbp_get_user_role_map() To get the WP to BBP role map array
- * @uses bbp_get_default_role() To get the site's default forums role
+ * @uses bboss_bbp_get_user_role() To bail if user already has a role
+ * @uses bboss_bbp_is_user_inactive() To bail if user is inactive
+ * @uses bboss_bbp_allow_global_access() To know whether to save role to database
+ * @uses bboss_bbp_get_user_role_map() To get the WP to BBP role map array
+ * @uses bboss_bbp_get_default_role() To get the site's default forums role
  * @uses get_option()
  *
  * @return If not multisite, not global, or user is deleted/spammed
  */
-function bbp_set_current_user_default_role() {
+function bboss_bbp_set_current_user_default_role() {
 
 	/** Sanity */
 
 	// Bail if deactivating Forums
-	if ( bbp_is_deactivation() ) {
+	if ( bboss_bbp_is_deactivation() ) {
 		return;
 	}
 
@@ -260,31 +260,31 @@ function bbp_set_current_user_default_role() {
 	}
 
 	// Get the current user ID
-	$user_id = bbp_get_current_user_id();
+	$user_id = bboss_bbp_get_current_user_id();
 
 	// Bail if user already has a forums role
-	if ( bbp_get_user_role( $user_id ) ) {
+	if ( bboss_bbp_get_user_role( $user_id ) ) {
 		return;
 	}
 
 	// Bail if user is marked as spam or is deleted
-	if ( bbp_is_user_inactive( $user_id ) ) {
+	if ( bboss_bbp_is_user_inactive( $user_id ) ) {
 		return;
 	}
 
 	/** Ready */
 
 	// Load up Forums once
-	$bbp = bbpress();
+	$bbp = bboss_forums();
 
 	// Get whether or not to add a role to the user account
-	$add_to_site = bbp_allow_global_access();
+	$add_to_site = bboss_bbp_allow_global_access();
 
 	// Get the current user's WordPress role. Set to empty string if none found.
-	$user_role = bbp_get_user_blog_role( $user_id );
+	$user_role = bboss_bbp_get_user_blog_role( $user_id );
 
 	// Get the role map
-	$role_map = bbp_get_user_role_map();
+	$role_map = bboss_bbp_get_user_role_map();
 
 	/** Forum Role */
 
@@ -294,7 +294,7 @@ function bbp_set_current_user_default_role() {
 
 		// Use the default role
 	} else {
-		$new_role = bbp_get_default_role();
+		$new_role = bboss_bbp_get_default_role();
 	}
 
 	/** Add or Map */
@@ -303,7 +303,7 @@ function bbp_set_current_user_default_role() {
 	if ( true === $add_to_site ) {
 
 		// Make sure Forums roles are added
-		bbp_add_forums_roles();
+		bboss_bbp_add_forums_roles();
 
 		$bbp->current_user->add_role( $new_role );
 
@@ -323,16 +323,16 @@ function bbp_set_current_user_default_role() {
  *
  * @return array Filtered array of WordPress roles to Forums roles
  */
-function bbp_get_user_role_map() {
+function bboss_bbp_get_user_role_map() {
 
 	// Get the default role once here
-	$default_role = bbp_get_default_role();
+	$default_role = bboss_bbp_get_default_role();
 
 	// Return filtered results, forcing admins to keymasters.
 	return (array) apply_filters(
 		'bbp_get_user_role_map',
 		array(
-			'administrator' => bbp_get_keymaster_role(),
+			'administrator' => bboss_bbp_get_keymaster_role(),
 			'editor'        => $default_role,
 			'author'        => $default_role,
 			'contributor'   => $default_role,
@@ -351,11 +351,11 @@ function bbp_get_user_role_map() {
  * @param int $user_id int The ID for the user.
  * @return bool True if spammer, False if not.
  */
-function bbp_is_user_spammer( $user_id = 0 ) {
+function bboss_bbp_is_user_spammer( $user_id = 0 ) {
 
 	// Default to current user
 	if ( empty( $user_id ) && is_user_logged_in() ) {
-		$user_id = bbp_get_current_user_id();
+		$user_id = bboss_bbp_get_current_user_id();
 	}
 
 	// No user to check
@@ -388,27 +388,27 @@ function bbp_is_user_spammer( $user_id = 0 ) {
  *
  * @param int $user_id Optional. User ID to spam. Defaults to displayed user.
 
- * @uses bbp_is_single_user()
- * @uses bbp_is_user_home()
- * @uses bbp_get_displayed_user_id()
- * @uses bbp_is_user_keymaster()
+ * @uses bboss_bbp_is_single_user()
+ * @uses bboss_bbp_is_user_home()
+ * @uses bboss_bbp_get_displayed_user_id()
+ * @uses bboss_bbp_is_user_keymaster()
  * @uses get_blogs_of_user()
  * @uses get_current_blog_id()
- * @uses bbp_get_topic_post_type()
- * @uses bbp_get_reply_post_type()
+ * @uses bboss_bbp_get_topic_post_type()
+ * @uses bboss_bbp_get_reply_post_type()
  * @uses switch_to_blog()
  * @uses get_post_type()
- * @uses bbp_spam_topic()
- * @uses bbp_spam_reply()
+ * @uses bboss_bbp_spam_topic()
+ * @uses bboss_bbp_spam_reply()
  * @uses restore_current_blog()
  *
  * @return If no user ID passed
  */
-function bbp_make_spam_user( $user_id = 0 ) {
+function bboss_bbp_make_spam_user( $user_id = 0 ) {
 
 	// Use displayed user if it's not yourself
-	if ( empty( $user_id ) && bbp_is_single_user() && ! bbp_is_user_home() ) {
-		$user_id = bbp_get_displayed_user_id();
+	if ( empty( $user_id ) && bboss_bbp_is_single_user() && ! bboss_bbp_is_user_home() ) {
+		$user_id = bboss_bbp_get_displayed_user_id();
 	}
 
 	// Bail if no user ID
@@ -417,12 +417,12 @@ function bbp_make_spam_user( $user_id = 0 ) {
 	}
 
 	// Bail if user ID is keymaster
-	if ( bbp_is_user_keymaster( $user_id ) ) {
+	if ( bboss_bbp_is_user_keymaster( $user_id ) ) {
 		return false;
 	}
 
 	// Arm the torpedos
-	$bbp_db = bbp_db();
+	$bbp_db = bboss_bbp_db();
 
 	// Get the blog IDs of the user to mark as spam
 	$blogs = get_blogs_of_user( $user_id, true );
@@ -433,7 +433,7 @@ function bbp_make_spam_user( $user_id = 0 ) {
 	}
 
 	// Make array of post types to mark as spam
-	$post_types = array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$post_types = array( bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 	$post_types = "'" . implode( "', '", $post_types ) . "'";
 
 	// Loop through blogs and remove their posts
@@ -443,7 +443,7 @@ function bbp_make_spam_user( $user_id = 0 ) {
 		switch_to_blog( $blog_id );
 
 		// Get topics and replies
-		$posts = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_public_status_id() ) );
+		$posts = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bboss_bbp_get_public_status_id() ) );
 
 		// Loop through posts and spam them
 		if ( ! empty( $posts ) ) {
@@ -453,12 +453,12 @@ function bbp_make_spam_user( $user_id = 0 ) {
 				// correct one based on the post type
 				switch ( get_post_type( $post_id ) ) {
 
-					case bbp_get_topic_post_type():
-						bbp_spam_topic( $post_id );
+					case bboss_bbp_get_topic_post_type():
+						bboss_bbp_spam_topic( $post_id );
 						break;
 
-					case bbp_get_reply_post_type():
-						bbp_spam_reply( $post_id );
+					case bboss_bbp_get_reply_post_type():
+						bboss_bbp_spam_reply( $post_id );
 						break;
 				}
 			}
@@ -479,26 +479,26 @@ function bbp_make_spam_user( $user_id = 0 ) {
  *
  * @param int $user_id Optional. User ID to unspam. Defaults to displayed user.
  *
- * @uses bbp_is_single_user()
- * @uses bbp_is_user_home()
- * @uses bbp_get_displayed_user_id()
- * @uses bbp_is_user_keymaster()
+ * @uses bboss_bbp_is_single_user()
+ * @uses bboss_bbp_is_user_home()
+ * @uses bboss_bbp_get_displayed_user_id()
+ * @uses bboss_bbp_is_user_keymaster()
  * @uses get_blogs_of_user()
- * @uses bbp_get_topic_post_type()
- * @uses bbp_get_reply_post_type()
+ * @uses bboss_bbp_get_topic_post_type()
+ * @uses bboss_bbp_get_reply_post_type()
  * @uses switch_to_blog()
  * @uses get_post_type()
- * @uses bbp_unspam_topic()
- * @uses bbp_unspam_reply()
+ * @uses bboss_bbp_unspam_topic()
+ * @uses bboss_bbp_unspam_reply()
  * @uses restore_current_blog()
  *
  * @return If no user ID passed
  */
-function bbp_make_ham_user( $user_id = 0 ) {
+function bboss_bbp_make_ham_user( $user_id = 0 ) {
 
 	// Use displayed user if it's not yourself
-	if ( empty( $user_id ) && bbp_is_single_user() && ! bbp_is_user_home() ) {
-		$user_id = bbp_get_displayed_user_id();
+	if ( empty( $user_id ) && bboss_bbp_is_single_user() && ! bboss_bbp_is_user_home() ) {
+		$user_id = bboss_bbp_get_displayed_user_id();
 	}
 
 	// Bail if no user ID
@@ -507,12 +507,12 @@ function bbp_make_ham_user( $user_id = 0 ) {
 	}
 
 	// Bail if user ID is keymaster
-	if ( bbp_is_user_keymaster( $user_id ) ) {
+	if ( bboss_bbp_is_user_keymaster( $user_id ) ) {
 		return false;
 	}
 
 	// Arm the torpedos
-	$bbp_db = bbp_db();
+	$bbp_db = bboss_bbp_db();
 
 	// Get the blog IDs of the user to mark as spam
 	$blogs = get_blogs_of_user( $user_id, true );
@@ -523,7 +523,7 @@ function bbp_make_ham_user( $user_id = 0 ) {
 	}
 
 	// Make array of post types to mark as spam
-	$post_types = array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+	$post_types = array( bboss_bbp_get_topic_post_type(), bboss_bbp_get_reply_post_type() );
 	$post_types = "'" . implode( "', '", $post_types ) . "'";
 
 	// Loop through blogs and remove their posts
@@ -533,7 +533,7 @@ function bbp_make_ham_user( $user_id = 0 ) {
 		switch_to_blog( $blog_id );
 
 		// Get topics and replies
-		$posts = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_spam_status_id() ) );
+		$posts = $bbp_db->get_col( $bbp_db->prepare( "SELECT ID FROM {$bbp_db->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bboss_bbp_get_spam_status_id() ) );
 
 		// Loop through posts and spam them
 		if ( ! empty( $posts ) ) {
@@ -543,12 +543,12 @@ function bbp_make_ham_user( $user_id = 0 ) {
 				// correct one based on the post type
 				switch ( get_post_type( $post_id ) ) {
 
-					case bbp_get_topic_post_type():
-						bbp_unspam_topic( $post_id );
+					case bboss_bbp_get_topic_post_type():
+						bboss_bbp_unspam_topic( $post_id );
 						break;
 
-					case bbp_get_reply_post_type():
-						bbp_unspam_reply( $post_id );
+					case bboss_bbp_get_reply_post_type():
+						bboss_bbp_unspam_reply( $post_id );
 						break;
 				}
 			}
@@ -570,11 +570,11 @@ function bbp_make_ham_user( $user_id = 0 ) {
  * @param int $user_id int The ID for the user.
  * @return bool True if deleted, False if not.
  */
-function bbp_is_user_deleted( $user_id = 0 ) {
+function bboss_bbp_is_user_deleted( $user_id = 0 ) {
 
 	// Default to current user
 	if ( empty( $user_id ) && is_user_logged_in() ) {
-		$user_id = bbp_get_current_user_id();
+		$user_id = bboss_bbp_get_current_user_id();
 	}
 
 	// No user to check
@@ -606,18 +606,18 @@ function bbp_is_user_deleted( $user_id = 0 ) {
  * @since bbPress (r3502)
  *
  * @uses is_user_logged_in() To check if user is logged in
- * @uses bbp_get_displayed_user_id() To get current user ID
- * @uses bbp_is_user_spammer() To check if user is spammer
- * @uses bbp_is_user_deleted() To check if user is deleted
+ * @uses bboss_bbp_get_displayed_user_id() To get current user ID
+ * @uses bboss_bbp_is_user_spammer() To check if user is spammer
+ * @uses bboss_bbp_is_user_deleted() To check if user is deleted
  *
  * @param int $user_id The user ID to check
  * @return bool True if public, false if not
  */
-function bbp_is_user_active( $user_id = 0 ) {
+function bboss_bbp_is_user_active( $user_id = 0 ) {
 
 	// Default to current user
 	if ( empty( $user_id ) && is_user_logged_in() ) {
-		$user_id = bbp_get_current_user_id();
+		$user_id = bboss_bbp_get_current_user_id();
 	}
 
 	// No user to check
@@ -626,12 +626,12 @@ function bbp_is_user_active( $user_id = 0 ) {
 	}
 
 	// Check spam
-	if ( bbp_is_user_spammer( $user_id ) ) {
+	if ( bboss_bbp_is_user_spammer( $user_id ) ) {
 		return false;
 	}
 
 	// Check deleted
-	if ( bbp_is_user_deleted( $user_id ) ) {
+	if ( bboss_bbp_is_user_deleted( $user_id ) ) {
 		return false;
 	}
 
@@ -645,17 +645,17 @@ function bbp_is_user_active( $user_id = 0 ) {
  * @since bbPress (r3502)
  *
  * @uses is_user_logged_in() To check if user is logged in
- * @uses bbp_get_displayed_user_id() To get current user ID
- * @uses bbp_is_user_active() To check if user is active
+ * @uses bboss_bbp_get_displayed_user_id() To get current user ID
+ * @uses bboss_bbp_is_user_active() To check if user is active
  *
  * @param int $user_id The user ID to check. Defaults to current user ID
  * @return bool True if inactive, false if active
  */
-function bbp_is_user_inactive( $user_id = 0 ) {
+function bboss_bbp_is_user_inactive( $user_id = 0 ) {
 
 	// Default to current user
 	if ( empty( $user_id ) && is_user_logged_in() ) {
-		$user_id = bbp_get_current_user_id();
+		$user_id = bboss_bbp_get_current_user_id();
 	}
 
 	// No user to check
@@ -664,7 +664,7 @@ function bbp_is_user_inactive( $user_id = 0 ) {
 	}
 
 	// Return the inverse of active
-	return ! bbp_is_user_active( $user_id );
+	return ! bboss_bbp_is_user_active( $user_id );
 }
 
 /**
@@ -675,10 +675,10 @@ function bbp_is_user_inactive( $user_id = 0 ) {
  * @param int $user_id
  * @return bool True if keymaster, false if not
  */
-function bbp_is_user_keymaster( $user_id = 0 ) {
+function bboss_bbp_is_user_keymaster( $user_id = 0 ) {
 
 	// Default to current user ID if none is passed
-	$_user_id = (int) ! empty( $user_id ) ? $user_id : bbp_get_current_user_id();
+	$_user_id = (int) ! empty( $user_id ) ? $user_id : bboss_bbp_get_current_user_id();
 
 	// Filter and return
 	return (bool) apply_filters( 'bbp_is_user_keymaster', user_can( $_user_id, 'keep_gate' ), $_user_id, $user_id );
@@ -692,21 +692,21 @@ function bbp_is_user_keymaster( $user_id = 0 ) {
  * @param int $user_id User ID to check
  * @param int $blog_id Blog ID to check
  *
- * @uses bbp_get_user_id() To verify the user ID
+ * @uses bboss_bbp_get_user_id() To verify the user ID
  * @uses get_userdata() To get the user's data
- * @uses bbp_is_user_keymaster() To determine if user can see inactive users
- * @uses bbp_is_user_inactive() To check if user is spammer or deleted
+ * @uses bboss_bbp_is_user_keymaster() To determine if user can see inactive users
+ * @uses bboss_bbp_is_user_inactive() To check if user is spammer or deleted
  * @uses apply_filters() To allow override of this functions result
  *
  * @return boolean Whether or not the user has a profile on this blog_id
  */
-function bbp_user_has_profile( $user_id = 0 ) {
+function bboss_bbp_user_has_profile( $user_id = 0 ) {
 
 	// Assume every user has a profile
 	$retval = true;
 
 	// Validate user ID, default to displayed or current user
-	$user_id = bbp_get_user_id( $user_id, true, true );
+	$user_id = bboss_bbp_get_user_id( $user_id, true, true );
 
 	// Try to get this user's data
 	$user = get_userdata( $user_id );
@@ -716,7 +716,7 @@ function bbp_user_has_profile( $user_id = 0 ) {
 		$retval = false;
 
 		// User is inactive, and current user is not a keymaster
-	} elseif ( ! bbp_is_user_keymaster() && bbp_is_user_inactive( $user->ID ) ) {
+	} elseif ( ! bboss_bbp_is_user_keymaster() && bboss_bbp_is_user_inactive( $user->ID ) ) {
 		$retval = false;
 	}
 
@@ -731,7 +731,7 @@ function bbp_user_has_profile( $user_id = 0 ) {
  * the array of registered dynamic roles.
  *
  * Use this function anytime you are manually attempting to set a user role
- * without using the bbp_set_user_role() function, or if you need to halt
+ * without using the bboss_bbp_set_user_role() function, or if you need to halt
  * additional processing during role validation.
  *
  * @since BBPress 2.6.5
@@ -740,7 +740,7 @@ function bbp_user_has_profile( $user_id = 0 ) {
  *
  * @return bool True if role is valid. False if role is not valid.
  */
-function bbp_is_valid_role( $role = '' ) {
+function bboss_bbp_is_valid_role( $role = '' ) {
 
 	// Default return value
 	$retval = false;
@@ -749,7 +749,7 @@ function bbp_is_valid_role( $role = '' ) {
 	if ( ! empty( $role ) && is_string( $role ) ) {
 
 		// Get the dynamic role IDs
-		$roles = array_keys( bbp_get_dynamic_roles() );
+		$roles = array_keys( bboss_bbp_get_dynamic_roles() );
 
 		// Skip if no known role IDs
 		if ( ! empty( $roles ) ) {

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_moderation_add_admin_menu() {
+function bboss_moderation_add_admin_menu() {
 	global $submenu;
 
 	// Sidebar link points directly at the Settings 2.0 Moderation panel.
@@ -27,8 +27,8 @@ function bp_moderation_add_admin_menu() {
 	// third-party links) are caught upstream by
 	// `bb_redirect_bp_settings_before_permission_check()` at
 	// `admin_menu @ PHP_INT_MAX` so they don't 403.
-	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'moderation', 'flagged_members' )
+	$settings_url = function_exists( 'bboss_get_feature_settings_url' )
+		? bboss_get_feature_settings_url( 'moderation', 'flagged_members' )
 		: admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' );
 
 	$submenu['buddyboss-platform'][] = array(
@@ -38,7 +38,7 @@ function bp_moderation_add_admin_menu() {
 	);
 }
 
-add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
+add_action( bboss_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
 
 /**
  * Add moderation component to custom menus array.
@@ -53,7 +53,7 @@ add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
  *
  * @return array $custom_menus List of top-level BP menu items, with Moderation added.
  */
-function bp_moderation_admin_menu_order( $custom_menus = array() ) {
+function bboss_moderation_admin_menu_order( $custom_menus = array() ) {
 	array_push( $custom_menus, 'bp-moderation' );
 
 	return $custom_menus;
@@ -70,7 +70,7 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
  *
  * @since BuddyBoss 3.0.0
  */
-function bp_moderation_highlight_admin_menu() {
+function bboss_moderation_highlight_admin_menu() {
 	// Only output on bb-settings pages (covers all SPA-navigated tabs).
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( ! isset( $_GET['page'] ) || 'bb-settings' !== $_GET['page'] ) {

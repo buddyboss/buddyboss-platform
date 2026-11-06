@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Activity_Details_Endpoint class
+ * BP REST: BBoss_REST_Activity_Details_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,8 +21,8 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->activity->id;
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->activity->id;
 	}
 
 	/**
@@ -68,8 +68,8 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		$retval['filters'] = $this->get_activities_filters();
 		$retval['post_in'] = $this->get_activities_post_in();
 
-		if ( function_exists( 'bp_activity_get_visibility_levels' ) ) {
-			$retval['privacy'] = bp_activity_get_visibility_levels();
+		if ( function_exists( 'bboss_activity_get_visibility_levels' ) ) {
+			$retval['privacy'] = bboss_activity_get_visibility_levels();
 		}
 
 		$response = rest_ensure_response( $retval );
@@ -104,7 +104,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$retval = true;
 		}
 
@@ -155,7 +155,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			),
 		);
 
-		if ( function_exists( 'bp_activity_get_visibility_levels' ) ) {
+		if ( function_exists( 'bboss_activity_get_visibility_levels' ) ) {
 			$schema['properties']['privacy'] = array(
 				'context'     => array( 'embed', 'view' ),
 				'description' => __( 'Activity Privacy.', 'buddyboss' ),
@@ -180,12 +180,12 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	public function get_activities_tabs() {
 		$nav = array();
 
-		if ( function_exists( 'bb_get_enabled_activity_filter_options' ) ) {
-			$activity_filters = bb_get_enabled_activity_filter_options();
-			$filters_labels   = bb_get_activity_filter_options_labels();
+		if ( function_exists( 'bboss_get_enabled_activity_filter_options' ) ) {
+			$activity_filters = bboss_get_enabled_activity_filter_options();
+			$filters_labels   = bboss_get_activity_filter_options_labels();
 
 			// Allow valid options only.
-			$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+			$activity_filters = bboss_filter_activity_filter_scope_keys( $activity_filters );
 			arsort( $activity_filters );
 			if ( ! empty( $activity_filters ) ) {
 				$i = 1;
@@ -212,7 +212,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			unset( $activity_filters, $filters_labels, $i );
 		} else {
 
-			$nav_items = function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ? bp_nouveau_get_activity_directory_nav_items() : $this->bp_rest_legacy_get_activity_directory_nav_items();
+			$nav_items = function_exists( 'bboss_nouveau_get_activity_directory_nav_items' ) ? bboss_nouveau_get_activity_directory_nav_items() : $this->bp_rest_legacy_get_activity_directory_nav_items();
 			if ( ! empty( $nav_items ) ) {
 				foreach ( $nav_items as $key => $item ) {
 					$nav[ $key ]['title']    = $item['text'];
@@ -238,8 +238,8 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		}
 
 		// BuddyPress legacy template support added.
-		if ( function_exists( 'bp_nouveau_get_activity_filters' ) ) {
-			$activity_filters = bp_nouveau_get_activity_filters();
+		if ( function_exists( 'bboss_nouveau_get_activity_filters' ) ) {
+			$activity_filters = bboss_nouveau_get_activity_filters();
 		} else {
 			$activity_filters = $this->bp_rest_legacy_get_activity_filters();
 		}
@@ -257,12 +257,12 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		$post_in    = array();
 		$post_in[0] = __( 'My Profile', 'buddyboss' );
 
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bboss_is_active( 'groups' ) ) {
 			$args   = array(
 				'user_id' => get_current_user_id(),
 				'type'    => 'alphabetical',
 			);
-			$groups = groups_get_groups( $args );
+			$groups = bboss_groups_get_groups( $args );
 
 			if ( ! empty( $groups ) && ! empty( $groups['groups'] ) ) {
 				foreach ( $groups['groups'] as $group ) {
@@ -289,29 +289,29 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 
 		if ( is_user_logged_in() ) {
 
-			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+			if ( bboss_is_active( 'friends' ) && bboss_get_total_friend_count( bboss_loggedin_user_id() ) ) {
 				$nav_items['friends'] = array(
 					'text'     => __( 'My Friends', 'buddyboss' ),
 					'position' => 15,
 				);
 			}
 
-			if ( bp_is_active( 'groups' ) && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
+			if ( bboss_is_active( 'groups' ) && bboss_get_total_group_count_for_user( bboss_loggedin_user_id() ) ) {
 				$nav_items['groups'] = array(
 					'text'     => __( 'My Groups', 'buddyboss' ),
 					'position' => 25,
 				);
 			}
 
-			if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
+			if ( bboss_get_total_favorite_count_for_user( bboss_loggedin_user_id() ) ) {
 				$nav_items['favorites'] = array(
 					'text'     => __( 'My Favorites', 'buddyboss' ),
 					'position' => 35,
 				);
 			}
 
-			if ( bp_activity_do_mentions() ) {
-				if ( bp_get_total_mention_count_for_user( bp_loggedin_user_id() ) ) {
+			if ( bboss_activity_do_mentions() ) {
+				if ( bboss_get_total_mention_count_for_user( bboss_loggedin_user_id() ) ) {
 					$nav_items['mentions'] = array(
 						'text'     => __( 'Mentions', 'buddyboss' ),
 						'position' => 45,
@@ -329,7 +329,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function bp_rest_legacy_get_activity_filters() {
-		$filters_data = bp_get_activity_show_filters();
+		$filters_data = bboss_get_activity_show_filters();
 		$filters      = array();
 
 		preg_match_all( '/<option value="(.*?)"\s*>(.*?)<\/option>/', $filters_data, $matches );
@@ -345,3 +345,11 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_legacy_get_activity_filters', $filters );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Activity_Details_Endpoint', false ) || interface_exists( 'BBoss_REST_Activity_Details_Endpoint', false ) || trait_exists( 'BBoss_REST_Activity_Details_Endpoint', false ) ) && ! class_exists( 'BP_REST_Activity_Details_Endpoint', false ) && ! interface_exists( 'BP_REST_Activity_Details_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Activity_Details_Endpoint', 'BP_REST_Activity_Details_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

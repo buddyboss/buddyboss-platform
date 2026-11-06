@@ -28,9 +28,9 @@ class BP_UnitTest_Factory_For_User extends WP_UnitTest_Factory_For_User {
 	 * Also set a display name
 	 */
 	public function create_object( $args ) {
-		$r = bp_parse_args( $args, array(
+		$r = bboss_parse_args( $args, array(
 			'role' => 'subscriber',
-			'last_activity' => date_i18n( 'Y-m-d H:i:s', strtotime( bp_core_current_time() ) - 60*60*24*365 ),
+			'last_activity' => date_i18n( 'Y-m-d H:i:s', strtotime( bboss_core_current_time() ) - 60*60*24*365 ),
 		) );
 
 		$last_activity = $r['last_activity'];
@@ -39,13 +39,13 @@ class BP_UnitTest_Factory_For_User extends WP_UnitTest_Factory_For_User {
 		$user_id = wp_insert_user( $r );
 		$user = new WP_User( $user_id );
 
-		bp_update_user_last_activity( $user_id, $last_activity );
+		bboss_update_user_last_activity( $user_id, $last_activity );
 		$nickname = preg_replace('/[^a-zA-z0-9\-_@]/', '', $user->display_name );
 
-		if ( bp_is_active( 'xprofile' ) ) {
-			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, get_user_meta( $user->ID, 'first_name', true ) );
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, get_user_meta( $user->ID, 'last_name', true ) );
-			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
+		if ( bboss_is_active( 'xprofile' ) ) {
+			bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user_id, get_user_meta( $user->ID, 'first_name', true ) );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user_id, get_user_meta( $user->ID, 'last_name', true ) );
+			bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $user_id, $nickname );
 		}
 
 		update_user_meta( $user_id, 'nickname', $nickname );
@@ -60,11 +60,11 @@ class BP_UnitTest_Factory_For_Activity extends WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$this->default_generation_definitions = array(
-			'component'    => buddypress()->activity->id,
+			'component'    => bboss()->activity->id,
 			'content'      => new WP_UnitTest_Generator_Sequence( 'Activity content %s' ),
 			'primary_link' => 'http://example.com',
 			'type'         => 'activity_update',
-			'recorded_time' => bp_core_current_time(),
+			'recorded_time' => bboss_core_current_time(),
 		);
 	}
 
@@ -72,11 +72,11 @@ class BP_UnitTest_Factory_For_Activity extends WP_UnitTest_Factory_For_Thing {
 		if ( ! isset( $args['user_id'] ) )
 			$args['user_id'] = get_current_user_id();
 
-		return bp_activity_add( $args );
+		return bboss_activity_add( $args );
 	}
 
 	function update_object( $activity_id, $fields ) {
-		$activity = new BP_Activity_Activity( $activity_id );
+		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		foreach ( $fields as $field_name => $value ) {
 			if ( isset( $activity->$field_name ) )
@@ -88,7 +88,7 @@ class BP_UnitTest_Factory_For_Activity extends WP_UnitTest_Factory_For_Thing {
 	}
 
 	function get_object_by_id( $user_id ) {
-		return new BP_Activity_Activity( $user_id );
+		return new BBoss_Activity_Activity( $user_id );
 	}
 }
 
@@ -103,7 +103,7 @@ class BP_UnitTest_Factory_For_Group extends WP_UnitTest_Factory_For_Thing {
 			'slug'         => new WP_UnitTest_Generator_Sequence( 'group-slug-%s' ),
 			'status'       => 'public',
 			'enable_forum' => true,
-			'date_created' => bp_core_current_time(),
+			'date_created' => bboss_core_current_time(),
 		);
 	}
 
@@ -114,33 +114,33 @@ class BP_UnitTest_Factory_For_Group extends WP_UnitTest_Factory_For_Thing {
 
 			// Create a user. This is based on from BP_UnitTestCase->create_user().
 			} else {
-				$last_activity      = date_i18n( 'Y-m-d H:i:s', strtotime( bp_core_current_time() ) - 60 * 60 * 24 * 365 );
+				$last_activity      = date_i18n( 'Y-m-d H:i:s', strtotime( bboss_core_current_time() ) - 60 * 60 * 24 * 365 );
 				$user_factory       = new WP_UnitTest_Factory_For_User();
 				$args['creator_id'] = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 
-				bp_update_user_last_activity( $args['creator_id'] , $last_activity );
+				bboss_update_user_last_activity( $args['creator_id'] , $last_activity );
 
-				if ( bp_is_active( 'xprofile' ) ) {
+				if ( bboss_is_active( 'xprofile' ) ) {
 					$user = new WP_User( $args['creator_id']  );
-					xprofile_set_field_data( 1, $args['creator_id'] , $user->display_name );
+					bboss_xprofile_set_field_data( 1, $args['creator_id'] , $user->display_name );
 				}
 			}
 		}
 
-		$group_id = groups_create_group( $args );
+		$group_id = bboss_groups_create_group( $args );
 		if ( ! $group_id ) {
 			return false;
 		}
 
-		groups_update_groupmeta( $group_id, 'total_member_count', 1 );
-		$last_activity = isset( $args['last_activity'] ) ? $args['last_activity'] : bp_core_current_time();
-		groups_update_groupmeta( $group_id, 'last_activity', $last_activity );
+		bboss_groups_update_groupmeta( $group_id, 'total_member_count', 1 );
+		$last_activity = isset( $args['last_activity'] ) ? $args['last_activity'] : bboss_core_current_time();
+		bboss_groups_update_groupmeta( $group_id, 'last_activity', $last_activity );
 
 		return $group_id;
 	}
 
 	function update_object( $group_id, $fields ) {
-		$group = new BP_Groups_Group( $group_id );
+		$group = new BBoss_Groups_Group( $group_id );
 
 		foreach ( $fields as $field_name => $value ) {
 			if ( isset( $group->field_name ) )
@@ -152,7 +152,7 @@ class BP_UnitTest_Factory_For_Group extends WP_UnitTest_Factory_For_Thing {
 	}
 
 	function get_object_by_id( $group_id ) {
-		return new BP_Groups_Group( $group_id );
+		return new BBoss_Groups_Group( $group_id );
 	}
 }
 
@@ -166,7 +166,7 @@ class BP_UnitTest_Factory_For_Message extends WP_UnitTest_Factory_For_Thing {
 			'thread_id'  => 0,
 			'subject'    => new WP_UnitTest_Generator_Sequence( 'Message subject %s' ),
 			'content'    => new WP_UnitTest_Generator_Sequence( 'Message content %s' ),
-			'date_sent'  => bp_core_current_time(),
+			'date_sent'  => bboss_core_current_time(),
 		);
 	}
 
@@ -180,8 +180,8 @@ class BP_UnitTest_Factory_For_Message extends WP_UnitTest_Factory_For_Thing {
 			$args['recipients'] = array( $recipient->user_nicename );
 		}
 
-		$thread_id = messages_new_message( $args );
-		$thread = new BP_Messages_Thread( $thread_id );
+		$thread_id = bboss_messages_new_message( $args );
+		$thread = new BBoss_Messages_Thread( $thread_id );
 
 		return isset( $thread->last_message_id ) ? $thread->last_message_id : ( ( ! empty( $thread->messages ) ? end( $thread->messages )->id : 0 ) );
 
@@ -194,7 +194,7 @@ class BP_UnitTest_Factory_For_Message extends WP_UnitTest_Factory_For_Thing {
 	}
 
 	function get_object_by_id( $message_id ) {
-		return new BP_Messages_Message( $message_id );
+		return new BBoss_Messages_Message( $message_id );
 	}
 }
 
@@ -211,7 +211,7 @@ class BP_UnitTest_Factory_For_XProfileGroup extends WP_UnitTest_Factory_For_Thin
 	}
 
 	function create_object( $args ) {
-		$group_id = xprofile_insert_field_group( $args );
+		$group_id = bboss_xprofile_insert_field_group( $args );
 		return $group_id;
 	}
 
@@ -219,7 +219,7 @@ class BP_UnitTest_Factory_For_XProfileGroup extends WP_UnitTest_Factory_For_Thin
 	}
 
 	function get_object_by_id( $group_id ) {
-		return new BP_XProfile_Group( $group_id );
+		return new BBoss_XProfile_Group( $group_id );
 	}
 }
 
@@ -236,7 +236,7 @@ class BP_UnitTest_Factory_For_XProfileField extends WP_UnitTest_Factory_For_Thin
 	}
 
 	function create_object( $args ) {
-		$field_id = xprofile_insert_field( $args );
+		$field_id = bboss_xprofile_insert_field( $args );
 		return $field_id;
 	}
 
@@ -244,7 +244,7 @@ class BP_UnitTest_Factory_For_XProfileField extends WP_UnitTest_Factory_For_Thin
 	}
 
 	function get_object_by_id( $field_id ) {
-		return new BP_XProfile_Field( $field_id );
+		return new BBoss_XProfile_Field( $field_id );
 	}
 }
 
@@ -254,13 +254,13 @@ class BP_UnitTest_Factory_For_Notification extends WP_UnitTest_Factory_For_Thing
 	}
 
 	public function create_object( $args ) {
-		return bp_notifications_add_notification( $args );
+		return bboss_notifications_add_notification( $args );
 	}
 
 	public function update_object( $id, $fields ) {}
 
 	public function get_object_by_id( $id ) {
-		return new BP_Notifications_Notification( $id );
+		return new BBoss_Notifications_Notification( $id );
 	}
 }
 
@@ -270,13 +270,13 @@ class BP_UnitTest_Factory_For_Signup extends WP_UnitTest_Factory_For_Thing {
 	}
 
 	public function create_object( $args ) {
-		return BP_Signup::add( $args );
+		return BBoss_Signup::add( $args );
 	}
 
 	public function update_object( $id, $fields ) {}
 
 	public function get_object_by_id( $id ) {
-		return new BP_Signup( $id );
+		return new BBoss_Signup( $id );
 	}
 }
 
@@ -306,7 +306,7 @@ class BP_UnitTest_Factory_For_Friendship extends WP_UnitTest_Factory_For_Thing {
 	 * @return int Friendship ID.
 	 */
 	public function create_object( $args ) {
-		$friendship = new BP_Friends_Friendship();
+		$friendship = new BBoss_Friends_Friendship();
 
 		foreach ( array( 'initiator_user_id', 'friend_user_id' ) as $arg ) {
 			if ( isset( $args[ $arg ] ) ) {
@@ -345,9 +345,9 @@ class BP_UnitTest_Factory_For_Friendship extends WP_UnitTest_Factory_For_Thing {
 	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int $id
-	 * @return BP_Friends_Friendship
+	 * @return BBoss_Friends_Friendship
 	 */
 	public function get_object_by_id( $id ) {
-		return new BP_Friends_Friendship( $id );
+		return new BBoss_Friends_Friendship( $id );
 	}
 }

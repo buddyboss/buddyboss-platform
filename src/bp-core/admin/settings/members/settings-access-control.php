@@ -25,12 +25,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_members_register_access_control_fields() {
+function bboss_members_register_access_control_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Connection Access
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'members',
 		'member_connection',
 		'connection_access',
@@ -43,7 +43,7 @@ function bb_members_register_access_control_fields() {
 				'field' => 'bb_enable_member_connections',
 				'value' => true,
 			),
-			'pro_notice'  => bb_admin_settings_get_pro_notice(
+			'pro_notice'  => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'access_controls',
 					'context' => 'section',
@@ -53,7 +53,7 @@ function bb_members_register_access_control_fields() {
 	);
 
 	// FIELD: Connection Request access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'member_connection',
 		'connection_access',
@@ -67,7 +67,7 @@ function bb_members_register_access_control_fields() {
 			'default'            => '',
 			'pro_only'           => true,
 			'order'              => 10,
-			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
+			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 			'conditional'        => array(
 				'field' => 'bb_enable_member_connections',
 				'value' => true,
@@ -76,7 +76,7 @@ function bb_members_register_access_control_fields() {
 	);
 
 	// FIELD: Admin notice (displayed once at the end of the section).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'members',
 		'member_connection',
 		'connection_access',

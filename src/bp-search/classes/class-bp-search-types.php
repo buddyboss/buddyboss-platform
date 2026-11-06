@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Type' ) ) :
+if ( ! class_exists( 'BBoss_Search_Type' ) ) :
 
 	/**
 	 * BuddyPress Global Search Type - Parent class
 	 */
-	abstract class Bp_Search_Type {
+	abstract class BBoss_Search_Type {
 
 		/**
 		 * search term. might be used later for caching purposes

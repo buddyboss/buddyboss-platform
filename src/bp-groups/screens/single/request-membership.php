@@ -14,13 +14,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_group_request_membership() {
+function bboss_groups_screen_group_request_membership() {
 
 	if ( ! is_user_logged_in() ) {
 		return false;
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( 'private' != $bp->groups->current_group->status ) {
 		return false;
@@ -34,12 +34,12 @@ function groups_screen_group_request_membership() {
 			return false;
 		}
 
-		if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
-			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
+		if ( ! bboss_groups_send_membership_request( array( 'user_id' => bboss_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
+			bboss_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );
 		}
-		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
+		bboss_core_redirect( bboss_get_group_permalink( $bp->groups->current_group ) );
 	}
 
 	/**
@@ -58,5 +58,5 @@ function groups_screen_group_request_membership() {
 	 *
 	 * @param string $value Path to a group's Request Membership template.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_group_request_membership', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_group_request_membership', 'groups/single/home' ) );
 }

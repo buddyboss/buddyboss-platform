@@ -23,14 +23,14 @@ global $current_message; ?>
 				continue;
 			}
 
-			$participants[] = bp_core_get_userlink( $recepient_id );
+			$participants[] = bboss_core_get_userlink( $recepient_id );
 		}
 
 		echo ' ' . wp_kses_post( implode( ', ', $participants ) ) . ' ' . esc_html__( 'and you.', 'buddyboss' );
 		?>
 
 		<span class='view_thread_link'>
-			<a href='<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ); ?>'>
+			<a href='<?php echo esc_url( trailingslashit( bboss_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ); ?>'>
 				<?php esc_html_e( 'View Conversation', 'buddyboss' ); ?>
 			</a>
 		</span>
@@ -38,9 +38,9 @@ global $current_message; ?>
 
 	<div class="conversation">
 		<div class="item-avatar">
-			<a href="<?php echo esc_url( bp_core_get_userlink( $current_message->sender_id, true, true ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $current_message->sender_id ); ?>">
+			<a href="<?php echo esc_url( bboss_core_get_userlink( $current_message->sender_id, true, true ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $current_message->sender_id ); ?>">
 				<?php
-				echo wp_kses_post( bp_core_fetch_avatar(
+				echo wp_kses_post( bboss_core_fetch_avatar(
 					array(
 						'item_id' => $current_message->sender_id,
 						'width'   => 50,
@@ -53,7 +53,7 @@ global $current_message; ?>
 
 		<div class="item">
 			<div class="item-title">
-				<a href="<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ); ?>">
+				<a href="<?php echo esc_url( trailingslashit( bboss_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ); ?>">
 					<?php echo wp_kses_post( stripslashes( $current_message->subject ) ); ?>
 				</a>
 			</div>

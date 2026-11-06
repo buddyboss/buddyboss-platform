@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return double $wp_version
  */
-function bp_get_major_wp_version() {
+function bboss_get_major_wp_version() {
 	global $wp_version;
 
 	return (float) $wp_version;
@@ -37,7 +37,7 @@ if ( ! is_multisite() ) {
 	global $wpdb;
 
 	$wpdb->base_prefix = $wpdb->prefix;
-	$wpdb->blogid      = BP_ROOT_BLOG;
+	$wpdb->blogid      = BBOSS_ROOT_BLOG;
 
 	if ( ! function_exists( 'get_blog_option' ) ) {
 
@@ -128,7 +128,7 @@ if ( ! is_multisite() ) {
 		 * @return int
 		 */
 		function switch_to_blog( $new_blog, $deprecated = null ) {
-			return bp_get_root_blog_id();
+			return bboss_get_root_blog_id();
 		}
 	}
 
@@ -144,7 +144,7 @@ if ( ! is_multisite() ) {
 		 * @return int
 		 */
 		function restore_current_blog() {
-			return bp_get_root_blog_id();
+			return bboss_get_root_blog_id();
 		}
 	}
 
@@ -216,7 +216,7 @@ if ( ! is_multisite() ) {
  * @param string|bool $prefix Global table prefix.
  * @return string SQL chunk.
  */
-function bp_core_get_status_sql( $prefix = false ) {
+function bboss_core_get_status_sql( $prefix = false ) {
 	if ( ! is_multisite() ) {
 		return "{$prefix}user_status = 0";
 	} else {

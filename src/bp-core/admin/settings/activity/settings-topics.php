@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_activity_register_topics_panel_fields() {
+function bboss_activity_register_topics_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Activity Topics
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'activity',
 		'activity_topics',
 		'activity_topics',
@@ -34,7 +34,7 @@ function bb_activity_register_topics_panel_fields() {
 	);
 
 	// FIELD: Enable Topics.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_topics',
 		'activity_topics',
@@ -43,7 +43,7 @@ function bb_activity_register_topics_panel_fields() {
 			'label'             => __( 'Activity Topics', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Enable topics in activity feed', 'buddyboss' ),
-			'default'           => bb_is_enabled_activity_topics(),
+			'default'           => bboss_is_enabled_activity_topics(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 			'group'             => 'activity_topics_group',
@@ -51,7 +51,7 @@ function bb_activity_register_topics_panel_fields() {
 	);
 
 	// FIELD: Topic Required (sub-toggle, grouped with Enable Topics).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_topics',
 		'activity_topics',
@@ -60,7 +60,7 @@ function bb_activity_register_topics_panel_fields() {
 			'label'             => '',
 			'type'              => 'toggle',
 			'description'       => __( 'Require users to select a topic before posting in activity feed', 'buddyboss' ),
-			'default'           => bb_is_activity_topic_required(),
+			'default'           => bboss_is_activity_topic_required(),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
 			'group'             => 'activity_topics_group',
@@ -74,7 +74,7 @@ function bb_activity_register_topics_panel_fields() {
 	// FIELD: Topics List (custom topic_list type).
 	// Topics are managed via dedicated AJAX (bb_add_topic, bb_delete_topic, etc.)
 	// so the sanitize_callback prevents auto-save from overwriting topic data.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'activity',
 		'activity_topics',
 		'activity_topics',
@@ -84,7 +84,7 @@ function bb_activity_register_topics_panel_fields() {
 			'type'              => 'topic_list',
 			'description'       => __( 'Maximum of 20 topics can be added.', 'buddyboss' ),
 			'default'           => array(),
-			'sanitize_callback' => 'bb_sanitize_topic_list_noop',
+			'sanitize_callback' => 'bboss_sanitize_topic_list_noop',
 			'order'             => 30,
 			'conditional'       => array(
 				'field' => 'bb_enable_activity_topics',
@@ -96,13 +96,13 @@ function bb_activity_register_topics_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Group Topics (Pro hooks in here)
 	// -------------------------------------------------------------------------
-	if ( bp_is_active( 'groups' ) ) {
+	if ( bboss_is_active( 'groups' ) ) {
 		$group_topics_section_args = array(
 			'title'       => __( 'Group Topics', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636122',
-			'pro_notice'  => bb_admin_settings_get_pro_notice(
+			'pro_notice'  => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'group_activity_topics',
 					'context' => 'section',
@@ -120,7 +120,7 @@ function bb_activity_register_topics_panel_fields() {
 			);
 		}
 
-		bb_register_feature_section(
+		bboss_register_feature_section(
 			'activity',
 			'activity_topics',
 			'group_topics',
@@ -149,7 +149,7 @@ function bb_activity_register_topics_panel_fields() {
 			);
 		}
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'activity',
 			'activity_topics',
 			'group_topics',

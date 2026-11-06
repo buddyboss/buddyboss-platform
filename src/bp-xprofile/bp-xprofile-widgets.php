@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_xprofile_register_widgets() {
+function bboss_xprofile_register_widgets() {
 
 	/**
 	 * Profile Completion Widget
@@ -24,7 +24,7 @@ function bp_xprofile_register_widgets() {
 	add_action(
 		'widgets_init',
 		function () {
-			register_widget( 'BP_Xprofile_Profile_Completion_Widget' );
+			register_widget( 'BBoss_Xprofile_Profile_Completion_Widget' );
 		}
 	);
 

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Groups extends BP_Moderation_Abstract {
+class BBoss_Moderation_Groups extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -49,7 +49,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -80,9 +80,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $group_id ) {
-		$group = new BP_Groups_Group( $group_id );
+		$group = new BBoss_Groups_Group( $group_id );
 
-		$url = trailingslashit( bp_get_root_domain() . '/' . bp_get_groups_root_slug() . '/' . $group->slug . '/' );
+		$url = trailingslashit( bboss_get_root_domain() . '/' . bboss_get_groups_root_slug() . '/' . $group->slug . '/' );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
@@ -97,7 +97,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public static function get_content_owner_id( $group_id ) {
-		$g_admins = groups_get_group_admins( $group_id );
+		$g_admins = bboss_groups_get_group_admins( $group_id );
 
 		return ( ! empty( $g_admins ) ) ? wp_list_pluck( $g_admins, 'user_id' ) : 0;
 	}
@@ -156,7 +156,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 			return $restrict;
 		}
 
-		if ( bp_moderation_is_content_hidden( (int) $group->id, self::$moderation_type ) ) {
+		if ( bboss_moderation_is_content_hidden( (int) $group->id, self::$moderation_type ) ) {
 			return false;
 		}
 
@@ -175,8 +175,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 */
 	public function update_button_args( $args, $item_id ) {
 
-		$group_data    = groups_get_group( $item_id );
-		$is_group_user = groups_is_user_member( bp_loggedin_user_id(), $item_id );
+		$group_data    = bboss_groups_get_group( $item_id );
+		$is_group_user = bboss_groups_is_user_member( bboss_loggedin_user_id(), $item_id );
 
 		if ( 'private' === $group_data->status && false === $is_group_user ) {
 			$args = false;
@@ -200,7 +200,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		$group = new BP_Groups_Group( (int) $item_id );
+		$group = new BBoss_Groups_Group( (int) $item_id );
 
 		if ( empty( $group ) || empty( $group->id ) ) {
 			return false;

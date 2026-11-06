@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-topic-selector-list">
 			<ul>
 				<?php
-				if ( ! bb_is_activity_topic_required() ) {
+				if ( ! bboss_is_activity_topic_required() ) {
 				?>
 					<li>
 						<a href="#" data-topic-id="">

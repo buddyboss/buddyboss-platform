@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Activity_Template {
+class BBoss_Activity_Template {
 
 	/**
 	 * The loop iterator.
@@ -127,16 +127,16 @@ class BP_Activity_Template {
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same
-	 * format as {@link BP_Activity_Activity::get()}.
+	 * format as {@link BBoss_Activity_Activity::get()}.
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Activity_Activity::get() for a description of the argument
+	 * @see BBoss_Activity_Activity::get() for a description of the argument
 	 *      structure, as well as default values.
 	 *
 	 * @param array $args {
 	 *     Array of arguments. Supports all arguments from
-	 *     BP_Activity_Activity::get(), as well as 'page_arg' and
+	 *     BBoss_Activity_Activity::get(), as well as 'page_arg' and
 	 *     'include'. Default values for 'per_page' and 'display_comments'
 	 *     differ from the originating function, and are described below.
 	 *     @type string      $page_arg         The string used as a query parameter in
@@ -153,7 +153,7 @@ class BP_Activity_Template {
 	 * }
 	 */
 	public function __construct( $args ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		$function_args = func_get_args();
 
@@ -178,7 +178,7 @@ class BP_Activity_Template {
 				12 => 'page_arg',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$defaults = array(
@@ -204,29 +204,29 @@ class BP_Activity_Template {
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
 			'pin_type'          => '',
-			'status'            => bb_get_activity_published_status(),
+			'status'            => bboss_get_activity_published_status(),
 			'order_by'          => 'date_recorded',
 			'topic_id'          => false,
 		);
-		$r        = bp_parse_args( $args, $defaults );
+		$r        = bboss_parse_args( $args, $defaults );
 
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		// Check if post/comment replies are disabled.
-		$this->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
+		$this->disable_blogforum_replies = (bool) bboss_core_get_root_option( 'bp-disable-blogforum-comments' );
 
 		// Get an array of the logged in user's favorite activities.
-		$this->my_favs = function_exists( 'bb_activity_get_user_reacted_item_ids' )
-			? bb_activity_get_user_reacted_item_ids( bp_loggedin_user_id() )
+		$this->my_favs = function_exists( 'bboss_activity_get_user_reacted_item_ids' )
+			? bboss_activity_get_user_reacted_item_ids( bboss_loggedin_user_id() )
 			: array();
 
 		// Fetch specific activity items based on ID's.
 		if ( ! empty( $include ) ) {
-			$this->activities = bp_activity_get_specific(
+			$this->activities = bboss_activity_get_specific(
 				array(
 					'activity_ids'      => explode( ',', $include ),
 					'max'               => $max,
@@ -246,7 +246,7 @@ class BP_Activity_Template {
 
 			// Fetch all activity items.
 		} else {
-			$this->activities = bp_activity_get(
+			$this->activities = bboss_activity_get(
 				array(
 					'display_comments'  => $display_comments,
 					'max'               => $max,
@@ -276,7 +276,7 @@ class BP_Activity_Template {
 		}
 
 		/**
-		 * Filter documented in BP_Activity_Activity::get(). The Pinned Posts
+		 * Filter documented in BBoss_Activity_Activity::get(). The Pinned Posts
 		 * add-on supplies the pinned id for this feed; without a provider the
 		 * default 0 means no pinned post (and no `.bb-pinned` entry class).
 		 */
@@ -318,7 +318,7 @@ class BP_Activity_Template {
 			$this->activity_count = count( $this->activities );
 		}
 
-		$this->full_name = bp_get_displayed_user_fullname();
+		$this->full_name = bboss_get_displayed_user_fullname();
 
 		// Fetch parent content for activity comments so we do not have to query in the loop.
 		foreach ( (array) $this->activities as $activity ) {
@@ -330,7 +330,7 @@ class BP_Activity_Template {
 		}
 
 		if ( ! empty( $parent_ids ) ) {
-			$activity_parents = bp_activity_get_specific( array( 'activity_ids' => $parent_ids ) );
+			$activity_parents = bboss_activity_get_specific( array( 'activity_ids' => $parent_ids ) );
 		}
 
 		if ( ! empty( $activity_parents['activities'] ) ) {
@@ -362,7 +362,7 @@ class BP_Activity_Template {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @see bp_has_activities()
+	 * @see bboss_has_activities()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -403,13 +403,13 @@ class BP_Activity_Template {
 	/**
 	 * Whether there are activity items left in the loop to iterate over.
 	 *
-	 * This method is used by {@link bp_activities()} as part of the while loop
+	 * This method is used by {@link bboss_activities()} as part of the while loop
 	 * that controls iteration inside the activities loop, eg:
-	 *     while ( bp_activities() ) { ...
+	 *     while ( bboss_activities() ) { ...
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @see bp_activities()
+	 * @see bboss_activities()
 	 *
 	 * @return bool True if there are more activity items to show,
 	 *              otherwise false.
@@ -438,13 +438,13 @@ class BP_Activity_Template {
 	/**
 	 * Set up the current activity item inside the loop.
 	 *
-	 * Used by {@link bp_the_activity()} to set up the current activity item
+	 * Used by {@link bboss_the_activity()} to set up the current activity item
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current activity item.
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @see bp_the_activity()
+	 * @see bboss_the_activity()
 	 */
 	public function the_activity() {
 

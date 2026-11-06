@@ -17,14 +17,14 @@ defined( 'ABSPATH' ) || exit;
  * @since bbPress (r3421)
  * @return array Filtered option names and values
  */
-function bbp_get_default_options() {
+function bboss_bbp_get_default_options() {
 
 	// Default options
 	return apply_filters( 'bbp_get_default_options', array(
 
 		/** DB Version ********************************************************/
 
-		'_bbp_db_version'           => bbpress()->db_version,
+		'_bbp_db_version'           => bboss_forums()->db_version,
 
 		/** Settings **********************************************************/
 
@@ -42,7 +42,7 @@ function bbp_get_default_options() {
 		'_bbp_use_wp_editor'          => 1,                          // Use the WordPress editor if available
 		'_bbp_use_autoembed'          => 0,                          // Allow oEmbed in topics and replies
 		'_bbp_theme_package_id'       => 'default',                  // The ID for the current theme package
-		'_bbp_default_role'           => bbp_get_participant_role(), // Default forums role
+		'_bbp_default_role'           => bboss_bbp_get_participant_role(), // Default forums role
 		'_bbp_settings_integration'   => 0,                          // Put settings into existing admin pages
 
 		/** Per Page **********************************************************/
@@ -108,14 +108,14 @@ function bbp_get_default_options() {
  * This is non-destructive, so existing settings will not be overridden.
  *
  * @since bbPress (r3421)
- * @uses bbp_get_default_options() To get default options
+ * @uses bboss_bbp_get_default_options() To get default options
  * @uses add_option() Adds default options
  * @uses do_action() Calls 'bbp_add_options'
  */
-function bbp_add_options() {
+function bboss_bbp_add_options() {
 
 	// Add default options
-	foreach ( bbp_get_default_options() as $key => $value )
+	foreach ( bboss_bbp_get_default_options() as $key => $value )
 		add_option( $key, $value );
 
 	// Allow previously activated plugins to append their own options.
@@ -129,14 +129,14 @@ function bbp_add_options() {
  * This is destructive, so existing settings will be destroyed.
  *
  * @since bbPress (r3421)
- * @uses bbp_get_default_options() To get default options
+ * @uses bboss_bbp_get_default_options() To get default options
  * @uses delete_option() Removes default options
  * @uses do_action() Calls 'bbp_delete_options'
  */
-function bbp_delete_options() {
+function bboss_bbp_delete_options() {
 
 	// Add default options
-	foreach ( array_keys( bbp_get_default_options() ) as $key )
+	foreach ( array_keys( bboss_bbp_get_default_options() ) as $key )
 		delete_option( $key );
 
 	// Allow previously activated plugins to append their own options.
@@ -148,14 +148,14 @@ function bbp_delete_options() {
  * inside the $bbp->options array.
  *
  * @since bbPress (r3451)
- * @uses bbp_get_default_options() To get default options
+ * @uses bboss_bbp_get_default_options() To get default options
  * @uses add_filter() To add filters to 'pre_option_{$key}'
  * @uses do_action() Calls 'bbp_add_option_filters'
  */
-function bbp_setup_option_filters() {
+function bboss_bbp_setup_option_filters() {
 
 	// Add filters to each Forums option
-	foreach ( array_keys( bbp_get_default_options() ) as $key )
+	foreach ( array_keys( bboss_bbp_get_default_options() ) as $key )
 		add_filter( 'pre_option_' . $key, 'bbp_pre_get_option' );
 
 	// Allow previously activated plugins to append their own options.
@@ -170,14 +170,14 @@ function bbp_setup_option_filters() {
  * @param bool $value Optional. Default value false
  * @return mixed false if not overloaded, mixed if set
  */
-function bbp_pre_get_option( $value = '' ) {
+function bboss_bbp_pre_get_option( $value = '' ) {
 
 	// Remove the filter prefix
 	$option = str_replace( 'pre_option_', '', current_filter() );
 
 	// Check the options global for preset value
-	if ( isset( bbpress()->options[$option] ) )
-		$value = bbpress()->options[$option];
+	if ( isset( bboss_forums()->options[$option] ) )
+		$value = bboss_forums()->options[$option];
 
 	// Always return a value, even if false
 	return $value;
@@ -193,7 +193,7 @@ function bbp_pre_get_option( $value = '' ) {
  * @uses get_option() To get the favorites option
  * @return bool Is favorites enabled or not
  */
-function bbp_is_favorites_active( $default = 1 ) {
+function bboss_bbp_is_favorites_active( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_is_favorites_active', (bool) get_option( '_bbp_enable_favorites', $default ) );
 }
 
@@ -205,7 +205,7 @@ function bbp_is_favorites_active( $default = 1 ) {
  * @uses get_option() To get the subscriptions option
  * @return bool Is subscription enabled or not
  */
-function bbp_is_subscriptions_active( $default = 1 ) {
+function bboss_bbp_is_subscriptions_active( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_is_subscriptions_active', (bool) get_option( '_bbp_enable_subscriptions', $default ) );
 }
 
@@ -217,7 +217,7 @@ function bbp_is_subscriptions_active( $default = 1 ) {
  * @uses get_option() To get the allow tags
  * @return bool Are tags allowed?
  */
-function bbp_allow_topic_tags( $default = 1 ) {
+function bboss_bbp_allow_topic_tags( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_allow_topic_tags', (bool) get_option( '_bbp_allow_topic_tags', $default ) );
 }
 
@@ -229,7 +229,7 @@ function bbp_allow_topic_tags( $default = 1 ) {
  * @uses get_option() To get the forum-wide search setting
  * @return bool Is forum-wide searching allowed?
  */
-function bbp_allow_search( $default = 1 ) {
+function bboss_bbp_allow_search( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_allow_search', (bool) get_option( '_bbp_allow_search', $default ) );
 }
 
@@ -244,9 +244,9 @@ function bbp_allow_search( $default = 1 ) {
  * @uses get_option() To get thread replies option
  * @return bool Are replies threaded?
  */
-function bbp_thread_replies() {
-	$depth  = bbp_thread_replies_depth();
-	$allow  = bbp_allow_threaded_replies();
+function bboss_bbp_thread_replies() {
+	$depth  = bboss_bbp_thread_replies_depth();
+	$allow  = bboss_bbp_allow_threaded_replies();
 	$retval = (bool) ( ( $depth >= 2 ) && ( true === $allow ) );
 
 	return (bool) apply_filters( 'bbp_thread_replies', $retval, $depth, $allow );
@@ -260,7 +260,7 @@ function bbp_thread_replies() {
  * @uses get_option() To get the threaded replies setting
  * @return bool Are threaded replies allowed?
  */
-function bbp_allow_threaded_replies( $default = 1 ) {
+function bboss_bbp_allow_threaded_replies( $default = 1 ) {
 	return (bool) apply_filters( '_bbp_allow_threaded_replies', (bool) get_option( '_bbp_allow_threaded_replies', $default ) );
 }
 
@@ -275,7 +275,7 @@ function bbp_allow_threaded_replies( $default = 1 ) {
  * @uses get_option() To get the thread replies depth
  * @return int Thread replies depth
  */
-function bbp_thread_replies_depth( $default = 6 ) {
+function bboss_bbp_thread_replies_depth( $default = 6 ) {
 	return (int) apply_filters( 'bbp_thread_replies_depth', (int) get_option( '_bbp_thread_replies_depth', $default ) );
 }
 
@@ -287,7 +287,7 @@ function bbp_thread_replies_depth( $default = 6 ) {
  * @uses get_option() To get the allow revisions
  * @return bool Are revisions allowed?
  */
-function bbp_allow_revisions( $default = 1 ) {
+function bboss_bbp_allow_revisions( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_allow_revisions', (bool) get_option( '_bbp_allow_revisions', $default ) );
 }
 
@@ -299,7 +299,7 @@ function bbp_allow_revisions( $default = 1 ) {
  * @uses get_option() To get the allow anonymous option
  * @return bool Is anonymous posting allowed?
  */
-function bbp_allow_anonymous( $default = 0 ) {
+function bboss_bbp_allow_anonymous( $default = 0 ) {
 	return apply_filters( 'bbp_allow_anonymous', (bool) get_option( '_bbp_allow_anonymous', $default ) );
 }
 
@@ -311,7 +311,7 @@ function bbp_allow_anonymous( $default = 0 ) {
  * @uses get_option() To get the global access option
  * @return bool Is global access allowed?
  */
-function bbp_allow_global_access( $default = 1 ) {
+function bboss_bbp_allow_global_access( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_allow_global_access', (bool) get_option( '_bbp_allow_global_access', $default ) );
 }
 
@@ -323,7 +323,7 @@ function bbp_allow_global_access( $default = 1 ) {
  * @uses get_option() To get the default forums role option
  * @return string The default forums user role
  */
-function bbp_get_default_role( $default = 'bbp_participant' ) {
+function bboss_bbp_get_default_role( $default = 'bbp_participant' ) {
 	return apply_filters( 'bbp_get_default_role', $default );
 }
 
@@ -335,7 +335,7 @@ function bbp_get_default_role( $default = 'bbp_participant' ) {
  * @uses get_option() To get the WP editor option
  * @return bool Use WP editor?
  */
-function bbp_use_wp_editor( $default = 1 ) {
+function bboss_bbp_use_wp_editor( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_use_wp_editor', (bool) get_option( '_bbp_use_wp_editor', $default ) );
 }
 
@@ -347,7 +347,7 @@ function bbp_use_wp_editor( $default = 1 ) {
  * @uses get_option() To get the oEmbed option
  * @return bool Use oEmbed?
  */
-function bbp_use_autoembed( $default = 1 ) {
+function bboss_bbp_use_autoembed( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_use_autoembed', (bool) get_option( '_bbp_use_autoembed', $default ) );
 }
 
@@ -359,7 +359,7 @@ function bbp_use_autoembed( $default = 1 ) {
  * @uses get_option() To get the subtheme option
  * @return string ID of the subtheme
  */
-function bbp_get_theme_package_id( $default = 'default' ) {
+function bboss_bbp_get_theme_package_id( $default = 'default' ) {
 	return apply_filters( 'bbp_get_theme_package_id', get_option( '_bbp_theme_package_id', $default ) );
 }
 
@@ -369,8 +369,8 @@ function bbp_get_theme_package_id( $default = 'default' ) {
  * @since bbPress (r3246)
  * @param $default bool Optional. Default value 80
  */
-function bbp_title_max_length( $default = 80 ) {
-	echo esc_html( bbp_get_title_max_length( $default ) );
+function bboss_bbp_title_max_length( $default = 80 ) {
+	echo esc_html( bboss_bbp_get_title_max_length( $default ) );
 }
 	/**
 	 * Return the maximum length of a title
@@ -380,7 +380,7 @@ function bbp_title_max_length( $default = 80 ) {
 	 * @uses get_option() To get the maximum title length
 	 * @return int Is anonymous posting allowed?
 	 */
-	function bbp_get_title_max_length( $default = 80 ) {
+	function bboss_bbp_get_title_max_length( $default = 80 ) {
 		return (int) apply_filters( 'bbp_get_title_max_length', (int) get_option( '_bbp_title_max_length', $default ) );
 	}
 
@@ -390,8 +390,8 @@ function bbp_title_max_length( $default = 80 ) {
  * @since bbPress (r3575)
  * @param $default int Optional. Default value
  */
-function bbp_group_forums_root_id( $default = 0 ) {
-	echo esc_attr( bbp_get_group_forums_root_id( $default ) );
+function bboss_bbp_group_forums_root_id( $default = 0 ) {
+	echo esc_attr( bboss_bbp_get_group_forums_root_id( $default ) );
 }
 	/**
 	 * Return the grop forums root parent forum id
@@ -401,7 +401,7 @@ function bbp_group_forums_root_id( $default = 0 ) {
 	 * @uses get_option() To get the root group forum ID
 	 * @return int The post ID for the root forum
 	 */
-	function bbp_get_group_forums_root_id( $default = 0 ) {
+	function bboss_bbp_get_group_forums_root_id( $default = 0 ) {
 		return (int) apply_filters( 'bbp_get_group_forums_root_id', (int) get_option( '_bbp_group_forums_root_id', $default ) );
 	}
 
@@ -413,7 +413,7 @@ function bbp_group_forums_root_id( $default = 0 ) {
  * @uses get_option() To get the group forums option
  * @return bool Is group forums enabled or not
  */
-function bbp_is_group_forums_active( $default = 1 ) {
+function bboss_bbp_is_group_forums_active( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_is_group_forums_active', (bool) get_option( '_bbp_enable_group_forums', $default ) );
 }
 
@@ -425,7 +425,7 @@ function bbp_is_group_forums_active( $default = 1 ) {
  * @uses get_option() To get the Akismet option
  * @return bool Is Akismet enabled or not
  */
-function bbp_is_akismet_active( $default = 1 ) {
+function bboss_bbp_is_akismet_active( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_is_akismet_active', (bool) get_option( '_bbp_enable_akismet', $default ) );
 }
 
@@ -437,7 +437,7 @@ function bbp_is_akismet_active( $default = 1 ) {
  * @uses get_option() To get the admin integration setting
  * @return bool To deeply integrate settings, or not
  */
-function bbp_settings_integration( $default = 0 ) {
+function bboss_bbp_settings_integration( $default = 0 ) {
 	return (bool) apply_filters( 'bbp_settings_integration', (bool) get_option( '_bbp_settings_integration', $default ) );
 }
 
@@ -449,7 +449,7 @@ function bbp_settings_integration( $default = 0 ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_root_slug( $default = 'forums' ) {
+function bboss_bbp_get_root_slug( $default = 'forums' ) {
 	return apply_filters( 'bbp_get_root_slug', get_option( '_bbp_root_slug', $default ) );
 }
 
@@ -459,7 +459,7 @@ function bbp_get_root_slug( $default = 'forums' ) {
  * @since bbPress (r3759)
  * @return bool
  */
-function bbp_include_root_slug( $default = 1 ) {
+function bboss_bbp_include_root_slug( $default = 1 ) {
 	return (bool) apply_filters( 'bbp_include_root_slug', (bool) get_option( '_bbp_include_root', $default ) );
 }
 
@@ -470,7 +470,7 @@ function bbp_include_root_slug( $default = 1 ) {
  *
  * @return string
  */
-function bbp_show_on_root( $default = 'forums' ) {
+function bboss_bbp_show_on_root( $default = 'forums' ) {
 	return apply_filters( 'bbp_show_on_root', get_option( '_bbp_show_on_root', $default ) );
 }
 
@@ -480,11 +480,11 @@ function bbp_show_on_root( $default = 'forums' ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_maybe_get_root_slug() {
+function bboss_bbp_maybe_get_root_slug() {
 	$retval = '';
 
-	if ( bbp_get_root_slug() && bbp_include_root_slug() )
-		$retval = trailingslashit( bbp_get_root_slug() );
+	if ( bboss_bbp_get_root_slug() && bboss_bbp_include_root_slug() )
+		$retval = trailingslashit( bboss_bbp_get_root_slug() );
 
 	return apply_filters( 'bbp_maybe_get_root_slug', $retval );
 }
@@ -495,8 +495,8 @@ function bbp_maybe_get_root_slug() {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_forum_slug( $default = 'forum' ) {;
-	return apply_filters( 'bbp_get_forum_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_forum_slug', $default ) );
+function bboss_bbp_get_forum_slug( $default = 'forum' ) {;
+	return apply_filters( 'bbp_get_forum_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_forum_slug', $default ) );
 }
 
 /**
@@ -505,7 +505,7 @@ function bbp_get_forum_slug( $default = 'forum' ) {;
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_topic_archive_slug( $default = 'discussions' ) {
+function bboss_bbp_get_topic_archive_slug( $default = 'discussions' ) {
 	return apply_filters( 'bbp_get_topic_archive_slug', get_option( '_bbp_topic_archive_slug', $default ) );
 }
 
@@ -515,7 +515,7 @@ function bbp_get_topic_archive_slug( $default = 'discussions' ) {
  * @since bbPress (r4925)
  * @return string
  */
-function bbp_get_reply_archive_slug( $default = 'replies' ) {
+function bboss_bbp_get_reply_archive_slug( $default = 'replies' ) {
 	return apply_filters( 'bbp_get_reply_archive_slug', get_option( '_bbp_reply_archive_slug', $default ) );
 }
 
@@ -525,8 +525,8 @@ function bbp_get_reply_archive_slug( $default = 'replies' ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_topic_slug( $default = 'discussion' ) {
-	return apply_filters( 'bbp_get_topic_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_topic_slug', $default ) );
+function bboss_bbp_get_topic_slug( $default = 'discussion' ) {
+	return apply_filters( 'bbp_get_topic_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_topic_slug', $default ) );
 }
 
 /**
@@ -535,8 +535,8 @@ function bbp_get_topic_slug( $default = 'discussion' ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_topic_tag_tax_slug( $default = 'discussion-tag' ) {
-	return apply_filters( 'bbp_get_topic_tag_tax_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_topic_tag_slug', $default ) );
+function bboss_bbp_get_topic_tag_tax_slug( $default = 'discussion-tag' ) {
+	return apply_filters( 'bbp_get_topic_tag_tax_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_topic_tag_slug', $default ) );
 }
 
 /**
@@ -545,8 +545,8 @@ function bbp_get_topic_tag_tax_slug( $default = 'discussion-tag' ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_reply_slug( $default = 'reply' ) {
-	return apply_filters( 'bbp_get_reply_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_reply_slug', $default ) );
+function bboss_bbp_get_reply_slug( $default = 'reply' ) {
+	return apply_filters( 'bbp_get_reply_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_reply_slug', $default ) );
 }
 
 /**
@@ -555,8 +555,8 @@ function bbp_get_reply_slug( $default = 'reply' ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_user_slug( $default = 'user' ) {
-	return apply_filters( 'bbp_get_user_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_user_slug', $default ) );
+function bboss_bbp_get_user_slug( $default = 'user' ) {
+	return apply_filters( 'bbp_get_user_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_user_slug', $default ) );
 }
 
 /**
@@ -565,7 +565,7 @@ function bbp_get_user_slug( $default = 'user' ) {
  * @since bbPress (r4187)
  * @return string
  */
-function bbp_get_user_favorites_slug( $default = 'favorites' ) {
+function bboss_bbp_get_user_favorites_slug( $default = 'favorites' ) {
 	return apply_filters( 'bbp_get_user_favorites_slug', get_option( '_bbp_user_favs_slug', $default ) );
 }
 
@@ -575,7 +575,7 @@ function bbp_get_user_favorites_slug( $default = 'favorites' ) {
  * @since bbPress (r4187)
  * @return string
  */
-function bbp_get_user_subscriptions_slug( $default = 'subscriptions' ) {
+function bboss_bbp_get_user_subscriptions_slug( $default = 'subscriptions' ) {
 	return apply_filters( 'bbp_get_user_subscriptions_slug', get_option( '_bbp_user_subs_slug', $default ) );
 }
 
@@ -585,8 +585,8 @@ function bbp_get_user_subscriptions_slug( $default = 'subscriptions' ) {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_view_slug( $default = 'view' ) {
-	return apply_filters( 'bbp_get_view_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_view_slug', $default ) );
+function bboss_bbp_get_view_slug( $default = 'view' ) {
+	return apply_filters( 'bbp_get_view_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_view_slug', $default ) );
 }
 
 /**
@@ -596,8 +596,8 @@ function bbp_get_view_slug( $default = 'view' ) {
  *
  * @return string
  */
-function bbp_get_search_slug( $default = 'search' ) {
-	return apply_filters( 'bbp_get_search_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_search_slug', $default ) );
+function bboss_bbp_get_search_slug( $default = 'search' ) {
+	return apply_filters( 'bbp_get_search_slug', bboss_bbp_maybe_get_root_slug() . get_option( '_bbp_search_slug', $default ) );
 }
 
 /** Legacy ********************************************************************/
@@ -610,7 +610,7 @@ function bbp_get_search_slug( $default = 'search' ) {
  * @uses get_option() To get the old bb-config.php location
  * @return string The location of the bb-config.php file, if any
  */
-function bbp_get_config_location( $default = '' ) {
+function bboss_bbp_get_config_location( $default = '' ) {
 	return apply_filters( 'bbp_get_config_location', get_option( 'bb-config-location', $default ) );
 }
 
@@ -629,13 +629,13 @@ function bbp_get_config_location( $default = '' ) {
  *
  * @return string How to interact with engagements.
  */
-function bbp_engagements_strategy( $default = 'meta' ) {
+function bboss_bbp_engagements_strategy( $default = 'meta' ) {
 
 	// Get the option value.
 	$integration = get_option( '_bbp_engagements_strategy', $default );
 
 	// Check that class exists, or fallback.
-	$class_name = 'BBP_User_Engagements_' . ucwords( $integration );
+	$class_name = 'BBoss_BBP_User_Engagements_' . ucwords( $integration );
 
 	// Fallback to 'meta' if invalid.
 	if ( ! class_exists( $class_name ) ) {
@@ -655,7 +655,7 @@ function bbp_engagements_strategy( $default = 'meta' ) {
  * @param string $default Optional. Default value 'edit'.
  * @return string
  */
-function bbp_get_edit_slug( $default = 'edit' ) {
+function bboss_bbp_get_edit_slug( $default = 'edit' ) {
 
 	// Filter & return.
 	return apply_filters( 'bbp_get_edit_slug', get_option( '_bbp_edit_slug', $default ) );

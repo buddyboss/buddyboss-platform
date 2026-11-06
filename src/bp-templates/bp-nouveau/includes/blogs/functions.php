@@ -14,21 +14,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_blogs_directory_nav_items() {
+function bboss_nouveau_get_blogs_directory_nav_items() {
 	$nav_items = array();
 
 	$nav_items['all'] = array(
 		'component' => 'blogs',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'selected' ),
-		'link'      => bp_get_root_domain() . '/' . bp_get_blogs_root_slug(),
+		'link'      => bboss_get_root_domain() . '/' . bboss_get_blogs_root_slug(),
 		'text'      => __( 'All Sites', 'buddyboss' ),
-		'count'     => bp_get_total_blog_count(),
+		'count'     => bboss_get_total_blog_count(),
 		'position'  => 5,
 	);
 
 	if ( is_user_logged_in() ) {
-		$my_blogs_count = bp_get_total_blog_count_for_user( bp_loggedin_user_id() );
+		$my_blogs_count = bboss_get_total_blog_count_for_user( bboss_loggedin_user_id() );
 
 		// If the user has blogs create a nav item
 		if ( $my_blogs_count ) {
@@ -36,7 +36,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 				'component' => 'blogs',
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
-				'link'      => bp_loggedin_user_domain() . bp_get_blogs_slug(),
+				'link'      => bboss_loggedin_user_domain() . bboss_get_blogs_slug(),
 				'text'      => __( 'My Sites', 'buddyboss' ),
 				'count'     => $my_blogs_count,
 				'position'  => 15,
@@ -44,12 +44,12 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 		}
 
 		// If the user can create blogs, add the create nav
-		if ( bp_blog_signup_enabled() ) {
+		if ( bboss_blog_signup_enabled() ) {
 			$nav_items['create'] = array(
 				'component' => 'blogs',
 				'slug'      => 'create', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'no-ajax', 'site-create', 'create-button' ),
-				'link'      => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
+				'link'      => trailingslashit( bboss_get_blogs_directory_permalink() . 'create' ),
 				'text'      => __( 'Create a Site', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 999,
@@ -58,7 +58,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 	}
 
 	// Check for the deprecated hook :
-	$extra_nav_items = bp_nouveau_parse_hooked_dir_nav( 'bp_blogs_directory_blog_types', 'blogs', 20 );
+	$extra_nav_items = bboss_nouveau_parse_hooked_dir_nav( 'bp_blogs_directory_blog_types', 'blogs', 20 );
 
 	if ( ! empty( $extra_nav_items ) ) {
 		$nav_items = array_merge( $nav_items, $extra_nav_items );
@@ -83,7 +83,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
  *
  * @return array the filters
  */
-function bp_nouveau_get_blogs_filters( $context = '' ) {
+function bboss_nouveau_get_blogs_filters( $context = '' ) {
 	if ( empty( $context ) ) {
 		return array();
 	}
@@ -111,7 +111,7 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
 	), $context );
 
 	if ( $action ) {
-		return bp_nouveau_parse_hooked_options( $action, $filters );
+		return bboss_nouveau_parse_hooked_options( $action, $filters );
 	}
 
 	return $filters;
@@ -126,9 +126,9 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
  *
  * @return array An empty array to stop the button creation process.
  */
-function bp_nouveau_blogs_catch_button_args( $button = array() ) {
+function bboss_nouveau_blogs_catch_button_args( $button = array() ) {
 	// Globalize the arguments so that we can use it  in bp_nouveau_get_blogs_buttons().
-	bp_nouveau()->blogs->button_args = $button;
+	bboss_nouveau()->blogs->button_args = $button;
 
 	// return an empty array to stop the button creation process
 	return array();
@@ -141,7 +141,7 @@ function bp_nouveau_blogs_catch_button_args( $button = array() ) {
  *
  * @return string Javascript output
  */
-function bp_nouveau_get_blog_signup_inline_script() {
+function bboss_nouveau_get_blog_signup_inline_script() {
 	return '
 		( function( $ ) {
 			if ( $( \'body\' ).hasClass( \'register\' ) ) {
@@ -167,13 +167,13 @@ function bp_nouveau_get_blog_signup_inline_script() {
 }
 
 /**
- * Filter bp_get_blog_class().
+ * Filter bboss_get_blog_class().
  * Adds a class if blog item has a latest post.
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_blog_loop_item_has_lastest_post( $classes ) {
-	if ( bp_get_blog_latest_post_title() ) {
+function bboss_nouveau_blog_loop_item_has_lastest_post( $classes ) {
+	if ( bboss_get_blog_latest_post_title() ) {
 		$classes[] = 'has-latest-post';
 	}
 

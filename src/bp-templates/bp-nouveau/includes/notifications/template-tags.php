@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications_filters() {
-	echo bp_nouveau_get_notifications_filters(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
+function bboss_nouveau_notifications_filters() {
+	echo bboss_nouveau_get_notifications_filters(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 	/**
@@ -25,9 +25,9 @@ function bp_nouveau_notifications_filters() {
 	 *
 	 * @return string HTML output.
 	 */
-	function bp_nouveau_get_notifications_filters() {
+	function bboss_nouveau_get_notifications_filters() {
 		$output   = '';
-		$filters  = bp_nouveau_notifications_sort( bp_nouveau_notifications_get_filters() );
+		$filters  = bboss_nouveau_notifications_sort( bboss_nouveau_notifications_get_filters() );
 		$selected = 0;
 
 		if ( ! empty( $_REQUEST['type'] ) ) {
@@ -70,11 +70,11 @@ function bp_nouveau_notifications_filters() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications_sort_order_links() {
-	if ( 'unread' === bp_current_action() ) {
-		$link = bp_get_notifications_unread_permalink( bp_displayed_user_id() );
+function bboss_nouveau_notifications_sort_order_links() {
+	if ( 'unread' === bboss_current_action() ) {
+		$link = bboss_get_notifications_unread_permalink( bboss_displayed_user_id() );
 	} else {
-		$link = bp_get_notifications_read_permalink( bp_displayed_user_id() );
+		$link = bboss_get_notifications_read_permalink( bboss_displayed_user_id() );
 	}
 
 	$desc = add_query_arg( 'sort_order', 'DESC', $link );
@@ -94,7 +94,7 @@ function bp_nouveau_notifications_sort_order_links() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications_bulk_management_dropdown() {
+function bboss_nouveau_notifications_bulk_management_dropdown() {
 ?>
 
 	<div class="select-wrap">
@@ -106,9 +106,9 @@ function bp_nouveau_notifications_bulk_management_dropdown() {
 		<select name="notification_bulk_action" id="notification-select">
 			<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></option>
 
-			<?php if ( bp_is_current_action( 'unread' ) ) : ?>
+			<?php if ( bboss_is_current_action( 'unread' ) ) : ?>
 				<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss' ); ?></option>
-			<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
+			<?php elseif ( bboss_is_current_action( 'read' ) ) : ?>
 				<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss' ); ?></option>
 			<?php endif; ?>
 			<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></option>

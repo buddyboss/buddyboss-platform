@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Media_Album_Template {
+class BBoss_Media_Album_Template {
 
 	/**
 	 * The loop iterator.
@@ -110,16 +110,16 @@ class BP_Media_Album_Template {
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same
-	 * format as {@link BP_Media_Album::get()}.
+	 * format as {@link BBoss_Media_Album::get()}.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see BP_Media_Album::get() for a description of the argument
+	 * @see BBoss_Media_Album::get() for a description of the argument
 	 *      structure, as well as default values.
 	 *
 	 * @param array $args {
 	 *     Array of arguments. Supports all arguments from
-	 *     BP_Media_Album::get(), as well as 'page_arg' and
+	 *     BBoss_Media_Album::get(), as well as 'page_arg' and
 	 *     'include'. Default values for 'per_page'
 	 *     differ from the originating function, and are described below.
 	 *     @type string      $page_arg         The string used as a query parameter in
@@ -150,16 +150,16 @@ class BP_Media_Album_Template {
 			'privacy'      => false,
 			'search_terms' => false,
 		);
-		$r        = bp_parse_args( $args, $defaults );
+		$r        = bboss_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		// Fetch specific album items based on ID's.
 		if ( ! empty( $include ) ) {
-			$this->albums = bp_album_get_specific(
+			$this->albums = bboss_album_get_specific(
 				array(
 					'album_ids'   => explode( ',', $include ),
 					'max'         => $max,
@@ -173,7 +173,7 @@ class BP_Media_Album_Template {
 
 			// Fetch all albums.
 		} else {
-			$this->albums = bp_album_get(
+			$this->albums = bboss_album_get(
 				array(
 					'max'          => $max,
 					'count_total'  => $count_total,
@@ -234,7 +234,7 @@ class BP_Media_Album_Template {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see bp_has_albums()
+	 * @see bboss_has_albums()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -310,13 +310,13 @@ class BP_Media_Album_Template {
 	/**
 	 * Set up the current album item inside the loop.
 	 *
-	 * Used by {@link bp_the_album()} to set up the current album item
+	 * Used by {@link bboss_the_album()} to set up the current album item
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current album item.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see bp_the_album()
+	 * @see bboss_the_album()
 	 */
 	public function the_album() {
 

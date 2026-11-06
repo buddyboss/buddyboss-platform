@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since bbPress (r4011)
  */
-class BBP_Skip_Children {
+class BBoss_BBP_Skip_Children {
 
 	/**
 	 * @var int Post ID being updated
@@ -65,7 +65,7 @@ class BBP_Skip_Children {
 	public function pre_post_update( $post_id = 0 ) {
 
 		// Bail if post ID is not a Forums post type
-		if ( empty( $post_id ) || ! bbp_is_custom_post_type( $post_id ) ) {
+		if ( empty( $post_id ) || ! bboss_bbp_is_custom_post_type( $post_id ) ) {
 			return;
 		}
 
@@ -116,7 +116,7 @@ class BBP_Skip_Children {
 		wp_suspend_cache_invalidation( $this->original_cache_invalidation );
 	}
 }
-new BBP_Skip_Children();
+new BBoss_BBP_Skip_Children();
 
 /** General *******************************************************************/
 
@@ -131,7 +131,7 @@ new BBP_Skip_Children();
  * @param int     $post_id The post id.
  * @param WP_Post $post    The WP_Post object.
  */
-function bbp_clean_post_cache( $post_id = null, $post = null ) {
+function bboss_bbp_clean_post_cache( $post_id = null, $post = null ) {
 
 	// Bail if no post.
 	if ( empty( $post ) ) {
@@ -143,9 +143,9 @@ function bbp_clean_post_cache( $post_id = null, $post = null ) {
 
 	// Child query types to clean.
 	$post_types = array(
-		bbp_get_topic_post_type(),
-		bbp_get_forum_post_type(),
-		bbp_get_reply_post_type(),
+		bboss_bbp_get_topic_post_type(),
+		bboss_bbp_get_forum_post_type(),
+		bboss_bbp_get_reply_post_type(),
 	);
 
 	// Bail if not a bbPress post type.

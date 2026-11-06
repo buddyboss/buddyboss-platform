@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Account_Settings_Options_Endpoint class
+ * BP REST: BBoss_REST_Account_Settings_Options_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,7 +21,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'account-settings/(?P<nav>[\w-]+)';
 	}
 
@@ -544,7 +544,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'name'        => 'account_email',
 			'label'       => esc_html__( 'Account Email', 'buddyboss' ),
 			'field'       => 'email',
-			'value'       => esc_attr( bp_core_get_user_email( bp_loggedin_user_id() ) ),
+			'value'       => esc_attr( bboss_core_get_user_email( bboss_loggedin_user_id() ) ),
 			'placeholder' => esc_html__( 'Enter email', 'buddyboss' ),
 			'options'     => array(),
 			'group_label' => '',
@@ -585,14 +585,14 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$fields = array();
 
 		if (
-			function_exists( 'bb_register_notification_preferences' ) &&
-			function_exists( 'bb_enabled_legacy_email_preference' ) &&
-			false === bb_enabled_legacy_email_preference()
+			function_exists( 'bboss_register_notification_preferences' ) &&
+			function_exists( 'bboss_enabled_legacy_email_preference' ) &&
+			false === bboss_enabled_legacy_email_preference()
 		) {
-			$notification_preferences   = bb_register_notification_preferences();
-			$enabled_notification_types = bb_enable_notifications_options();
-			$manual_notifications       = bb_manual_notification_options();
-			$enabled_all_notification   = bp_get_option( 'bb_enabled_notification', array() );
+			$notification_preferences   = bboss_register_notification_preferences();
+			$enabled_notification_types = bboss_enable_notifications_options();
+			$manual_notifications       = bboss_manual_notification_options();
+			$enabled_all_notification   = bboss_get_option( 'bb_enabled_notification', array() );
 
 			if ( ! empty( $enabled_notification_types ) && ! empty( $enabled_notification_types['fields'] ) ) {
 				$fields_data = array(
@@ -610,7 +610,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 						$fields_data['subfields'][] = array(
 							'name'     => $key,
 							'label'    => $label,
-							'value'    => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), $key, true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), $key, true ) : 'yes' ),
+							'value'    => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), $key, true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), $key, true ) : 'yes' ),
 							'field'    => 'checkbox',
 							'disabled' => false,
 							'options'  => array(
@@ -647,16 +647,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				foreach ( $manual_notifications['fields'] as $key => $label ) {
 					$disabled = false;
 					if ( 'notification_web_push' === $key ) {
-						$disabled = 'no' === bp_get_user_meta( bp_loggedin_user_id(), 'enable_notification_web', true );
+						$disabled = 'no' === bboss_get_user_meta( bboss_loggedin_user_id(), 'enable_notification_web', true );
 					} elseif ( 'notification_app_push' === $key ) {
-						$disabled = 'no' === bp_get_user_meta( bp_loggedin_user_id(), 'enable_notification_app', true );
+						$disabled = 'no' === bboss_get_user_meta( bboss_loggedin_user_id(), 'enable_notification_app', true );
 					}
 
 					if ( ! empty( $label ) && ! empty( $key ) ) {
 						$fields_data['subfields'][] = array(
 							'name'     => $key,
 							'label'    => $label,
-							'value'    => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), $key, true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), $key, true ) : 'yes' ),
+							'value'    => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), $key, true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), $key, true ) : 'yes' ),
 							'field'    => 'checkbox',
 							'disabled' => $disabled,
 							'options'  => array(
@@ -746,7 +746,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 								'name'        => $field['key'],
 								'label'       => $field['label'],
 								'field'       => 'radio',
-								'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), $field['key'], true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), $field['key'], true ) : 'yes' ),
+								'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), $field['key'], true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), $field['key'], true ) : 'yes' ),
 								'options'     => array(
 									'yes' => esc_html__( 'Yes', 'buddyboss' ),
 									'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -754,7 +754,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 								'group_label' => '',
 							);
 
-							$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+							$options = bboss_notification_preferences_types( $field, bboss_loggedin_user_id() );
 							foreach ( $options as $key => $v ) {
 								$is_render   = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $field['key'], $key );
 								$is_disabled = apply_filters( 'bb_is_' . $field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $field['key'], $key );
@@ -789,7 +789,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				}
 			}
 		} else {
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				$fields_activity[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -799,16 +799,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'group_label' => esc_html__( 'Activity Feed', 'buddyboss' ),
 				);
 
-				if ( bp_activity_do_mentions() ) {
+				if ( bboss_activity_do_mentions() ) {
 					$fields_activity[] = array(
 						'name'        => 'notification_activity_new_mention',
 						'label'       => sprintf(
 						/* translators: %s: users mention name. */
 							__( 'A member mentions you in an update using "@%s"', 'buddyboss' ),
-							bp_activity_get_user_mentionname( bp_loggedin_user_id() )
+							bboss_activity_get_user_mentionname( bboss_loggedin_user_id() )
 						),
 						'field'       => 'radio',
-						'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_mention', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_mention', true ) : 'yes' ),
+						'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_activity_new_mention', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_activity_new_mention', true ) : 'yes' ),
 						'options'     => array(
 							'yes' => esc_html__( 'Yes', 'buddyboss' ),
 							'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -821,7 +821,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_activity_new_reply',
 					'label'       => __( "A member replies to an update or comment you've posted", 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_activity_new_reply', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_activity_new_reply', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_activity_new_reply', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -833,7 +833,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields          = array_merge( $fields, $fields_activity );
 			}
 
-			if ( bp_is_active( 'messages' ) ) {
+			if ( bboss_is_active( 'messages' ) ) {
 				$fields_messages[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -847,7 +847,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_messages_new_message',
 					'label'       => esc_html__( 'A member sends you a new message', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_messages_new_message', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_messages_new_message', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_messages_new_message', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -859,7 +859,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields          = array_merge( $fields, $fields_messages );
 			}
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$fields_groups[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -873,7 +873,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_groups_invite',
 					'label'       => esc_html__( 'A member invites you to join a group', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_invite', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_invite', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_invite', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_invite', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -885,7 +885,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_groups_group_updated',
 					'label'       => esc_html__( 'Group information is updated', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_group_updated', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_group_updated', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_group_updated', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_group_updated', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -897,7 +897,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_groups_admin_promotion',
 					'label'       => esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_admin_promotion', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_admin_promotion', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_admin_promotion', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_admin_promotion', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -909,7 +909,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_groups_membership_request',
 					'label'       => esc_html__( 'A member requests to join a private group you organize', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_membership_request', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_groups_membership_request', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_membership_request', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_groups_membership_request', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -921,7 +921,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_membership_request_completed',
 					'label'       => esc_html__( 'Your request to join a group has been approved or denied', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_membership_request_completed', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_membership_request_completed', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_membership_request_completed', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_membership_request_completed', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -929,12 +929,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'group_label' => '',
 				);
 
-				if ( function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
+				if ( function_exists( 'bboss_disable_group_messages' ) && true === bboss_disable_group_messages() ) {
 					$fields_groups[] = array(
 						'name'        => 'notification_group_messages_new_message',
 						'label'       => esc_html__( 'A group sends you a new message', 'buddyboss' ),
 						'field'       => 'radio',
-						'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
+						'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_group_messages_new_message', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_group_messages_new_message', true ) : 'yes' ),
 						'options'     => array(
 							'yes' => esc_html__( 'Yes', 'buddyboss' ),
 							'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -947,7 +947,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields        = array_merge( $fields, $fields_groups );
 			}
 
-			if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active() ) {
+			if ( bboss_is_active( 'forums' ) && function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active() ) {
 				$fields_forums[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -961,7 +961,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_forums_following_reply',
 					'label'       => esc_html__( 'A member replies to a discussion you are subscribed to', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_forums_following_reply', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_forums_following_reply', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -973,7 +973,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_forums_following_topic',
 					'label'       => esc_html__( 'A member creates discussion in a forum you are subscribed to', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_forums_following_topic', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_forums_following_topic', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -985,7 +985,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				$fields        = array_merge( $fields, $fields_forums );
 			}
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				$fields_friends[] = array(
 					'name'        => '',
 					'label'       => '',
@@ -999,7 +999,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_friends_friendship_request',
 					'label'       => esc_html__( 'A member invites you to connect', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_request', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_request', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_friends_friendship_request', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_friends_friendship_request', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -1011,7 +1011,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'name'        => 'notification_friends_friendship_accepted',
 					'label'       => esc_html__( 'A member accepts your connection request', 'buddyboss' ),
 					'field'       => 'radio',
-					'value'       => ( ! empty( bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) ) ? bp_get_user_meta( bp_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) : 'yes' ),
+					'value'       => ( ! empty( bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) ) ? bboss_get_user_meta( bboss_loggedin_user_id(), 'notification_friends_friendship_accepted', true ) : 'yes' ),
 					'options'     => array(
 						'yes' => esc_html__( 'Yes', 'buddyboss' ),
 						'no'  => esc_html__( 'No', 'buddyboss' ),
@@ -1042,9 +1042,9 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		// auth (application passwords, tokens) resolves — bp_loggedin_user_id() is then 0
 		// while WordPress already knows the user. Fall back so values and per-field
 		// options resolve for the authenticated member under every auth mode.
-		$user_id = bp_loggedin_user_id() ? bp_loggedin_user_id() : get_current_user_id();
+		$user_id = bboss_loggedin_user_id() ? bboss_loggedin_user_id() : get_current_user_id();
 
-		$field_groups = bp_xprofile_get_groups(
+		$field_groups = bboss_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
 				'user_id'                => $user_id,
@@ -1068,13 +1068,13 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					foreach ( $group->fields as $field ) {
 
 						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+						if ( function_exists( 'bboss_core_hide_display_name_field' ) && true === bboss_core_hide_display_name_field( $field->id ) ) {
 							continue;
 						}
 
-						$field_visibility = BP_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field );
+						$field_visibility = BBoss_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field );
 						$is_allowed       = 'allowed' === $field_visibility;
-						$current_level    = xprofile_get_field_visibility_level( $field->id, $user_id );
+						$current_level    = bboss_xprofile_get_field_visibility_level( $field->id, $user_id );
 
 						$fields[] = array(
 							'name'        => 'field_' . $field->id,
@@ -1082,7 +1082,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 							'field'       => $is_allowed ? 'select' : '',
 							'read_only'   => ! $is_allowed,
 							'value'       => $current_level,
-							'options'     => BP_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_options( $field, $user_id, $field_visibility, $current_level ),
+							'options'     => BBoss_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_options( $field, $user_id, $field_visibility, $current_level ),
 							'group_label' => '',
 						);
 					}
@@ -1105,7 +1105,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				'name'        => 'account-group-invites-preferences',
 				'label'       => esc_html__( 'Restrict Group invites to members who are connected.', 'buddyboss' ),
 				'field'       => 'checkbox',
-				'value'       => bp_nouveau_groups_get_group_invites_setting( bp_loggedin_user_id() ),
+				'value'       => bboss_nouveau_groups_get_group_invites_setting( bboss_loggedin_user_id() ),
 				'options'     => array(),
 				'group_label' => '',
 			),
@@ -1182,7 +1182,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		$post_fields = $request->get_param( 'fields' );
 
 		// Define local defaults.
-		$bp            = buddypress(); // The instance.
+		$bp            = bboss(); // The instance.
 		$email_error   = '';
 		$pass_error    = '';
 		$pass_changed  = false;        // true if the user changes their password .
@@ -1192,13 +1192,13 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		// The core userdata of the user who is currently being displayed.
-		$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+		$bp->displayed_user->userdata = bboss_core_get_core_userdata( bboss_displayed_user_id() );
 
 		// Fetch the full name displayed user.
 		$bp->displayed_user->fullname = isset( $bp->displayed_user->userdata->display_name ) ? $bp->displayed_user->userdata->display_name : '';
 
 		// The domain for the user currently being displayed.
-		$bp->displayed_user->domain = bp_core_get_user_domain( bp_displayed_user_id() );
+		$bp->displayed_user->domain = bboss_core_get_user_domain( bboss_displayed_user_id() );
 
 		if (
 			( is_super_admin() )
@@ -1208,12 +1208,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				&& wp_check_password(
 					$post_fields['current_password'],
 					$bp->displayed_user->userdata->user_pass,
-					bp_displayed_user_id()
+					bboss_displayed_user_id()
 				)
 			)
 		) {
 
-			$update_user = get_userdata( bp_displayed_user_id() );
+			$update_user = get_userdata( bboss_displayed_user_id() );
 
 			/* Email Change Attempt ******************************************/
 
@@ -1228,7 +1228,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				if ( $old_user_email !== $user_email ) {
 
 					// Run some tests on the email address.
-					$email_checks = bp_core_validate_email_address( $user_email );
+					$email_checks = bboss_core_validate_email_address( $user_email );
 
 					if ( true !== $email_checks ) {
 						if ( isset( $email_checks['invalid'] ) ) {
@@ -1257,19 +1257,19 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 							'newemail' => $user_email,
 						);
 
-						bp_update_user_meta( bp_displayed_user_id(), 'pending_email_change', $pending_email );
-						$verify_link = bp_displayed_user_domain() . bp_get_settings_slug() . '/?verify_email_change=' . $hash;
+						bboss_update_user_meta( bboss_displayed_user_id(), 'pending_email_change', $pending_email );
+						$verify_link = bboss_displayed_user_domain() . bboss_get_settings_slug() . '/?verify_email_change=' . $hash;
 
 						// Send the verification email.
 						$args = array(
 							'tokens' => array(
-								'displayname'    => bp_core_get_user_displayname( bp_displayed_user_id() ),
+								'displayname'    => bboss_core_get_user_displayname( bboss_displayed_user_id() ),
 								'old-user.email' => $old_user_email,
 								'user.email'     => $user_email,
 								'verify.url'     => esc_url( $verify_link ),
 							),
 						);
-						bp_send_email( 'settings-verify-email-change', bp_displayed_user_id(), $args );
+						bboss_send_email( 'settings-verify-email-change', bboss_displayed_user_id(), $args );
 
 						// We mark that the change has taken place so as to ensure a.
 						// success message, even though verification is still required.
@@ -1344,11 +1344,11 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			}
 
 			// Clear cached data, so that the changed settings take effect on the current page load.
-			clean_user_cache( bp_displayed_user_id() );
+			clean_user_cache( bboss_displayed_user_id() );
 
 			if (
-				function_exists( 'bb_enabled_legacy_email_preference' ) &&
-				! bb_enabled_legacy_email_preference()
+				function_exists( 'bboss_enabled_legacy_email_preference' ) &&
+				! bboss_enabled_legacy_email_preference()
 			) {
 				add_filter( 'send_password_change_email', '__return_false' );
 			}
@@ -1358,12 +1358,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 				&& ( empty( $pass_error ) )
 				&& ( wp_update_user( $update_user ) )
 			) {
-				$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+				$bp->displayed_user->userdata = bboss_core_get_core_userdata( bboss_displayed_user_id() );
 			}
 
 			if (
-				function_exists( 'bb_enabled_legacy_email_preference' ) &&
-				! bb_enabled_legacy_email_preference()
+				function_exists( 'bboss_enabled_legacy_email_preference' ) &&
+				! bboss_enabled_legacy_email_preference()
 			) {
 				remove_filter( 'send_password_change_email', '__return_false' );
 			}
@@ -1428,42 +1428,42 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 			// If the user is changing their password, send them a confirmation email.
 			if (
-				! bb_enabled_legacy_email_preference() &&
-				bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) &&
-				true === bb_is_notification_enabled( bp_displayed_user_id(), 'bb_account_password' )
+				! bboss_enabled_legacy_email_preference() &&
+				bboss_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) &&
+				true === bboss_is_notification_enabled( bboss_displayed_user_id(), 'bb_account_password' )
 			) {
 
 				$unsubscribe_args = array(
-					'user_id'           => (int) bp_displayed_user_id(),
+					'user_id'           => (int) bboss_displayed_user_id(),
 					'notification_type' => 'settings-password-changed',
 				);
 
 				$args = array(
 					'tokens' => array(
 						'reset.url'   => esc_url( wp_lostpassword_url() ),
-						'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'unsubscribe' => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 					),
 				);
 
 				// Send notification email.
-				bp_send_email( 'settings-password-changed', (int) bp_displayed_user_id(), $args );
+				bboss_send_email( 'settings-password-changed', (int) bboss_displayed_user_id(), $args );
 			}
 
 			if (
-				! bb_enabled_legacy_email_preference() &&
-				bb_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) &&
-				bp_is_active( 'notifications' )
+				! bboss_enabled_legacy_email_preference() &&
+				bboss_get_modern_notification_admin_settings_is_enabled( 'bb_account_password', 'members' ) &&
+				bboss_is_active( 'notifications' )
 			) {
 
 				// Send a notification to the user.
-				bp_notifications_add_notification(
+				bboss_notifications_add_notification(
 					array(
-						'user_id'           => bp_displayed_user_id(),
-						'item_id'           => bp_displayed_user_id(),
-						'secondary_item_id' => bp_displayed_user_id(),
-						'component_name'    => buddypress()->members->id,
+						'user_id'           => bboss_displayed_user_id(),
+						'item_id'           => bboss_displayed_user_id(),
+						'secondary_item_id' => bboss_displayed_user_id(),
+						'component_name'    => bboss()->members->id,
 						'component_action'  => 'bb_account_password',
-						'date_notified'     => bp_core_current_time(),
+						'date_notified'     => bboss_core_current_time(),
 						'allow_duplicate'   => true,
 						'is_new'            => 1,
 					)
@@ -1509,7 +1509,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		// phpcs:disable
 		if ( isset( $_POST['notifications'] ) && ! empty( $_POST['notifications'] ) ) {
-			bp_settings_update_notification_settings( bp_displayed_user_id(), (array) $_POST['notifications'] );
+			bboss_settings_update_notification_settings( bboss_displayed_user_id(), (array) $_POST['notifications'] );
 		}
 		// phpcs:enable
 
@@ -1530,7 +1530,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Update profile fields.
-	 * - from bp_xprofile_action_settings().
+	 * - from bboss_xprofile_action_settings().
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1544,7 +1544,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		if ( ! empty( $post_fields ) ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 
 			foreach ( $post_fields as $field => $value ) {
 
@@ -1554,16 +1554,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					continue;
 				}
 
-				$field_object = xprofile_get_field( $field_id, null, false );
+				$field_object = bboss_xprofile_get_field( $field_id, null, false );
 
 				// Skip an unknown/deleted field id rather than aborting the whole
 				// payload on it. Per-field semantics, matching the web settings screen
 				// and the sibling /xprofile/update endpoint.
-				if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+				if ( ! $field_object instanceof BBoss_XProfile_Field || empty( $field_object->id ) ) {
 					continue;
 				}
 
-				$validation = BP_REST_XProfile_Fields_Endpoint::bb_rest_validate_field_visibility_level(
+				$validation = BBoss_REST_XProfile_Fields_Endpoint::bb_rest_validate_field_visibility_level(
 					$field_object,
 					$user_id,
 					$value
@@ -1581,7 +1581,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			// skips a locked field and saves the rest, and /xprofile/update saves each
 			// field's value while reporting its visibility error - this matches both.
 			foreach ( $to_save as $field_id => $visibility_level ) {
-				xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+				bboss_xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 			}
 		}
 
@@ -1602,7 +1602,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Update Invites fields "Group Invites".
-	 * - from bp_nouveau_groups_screen_invites_restriction().
+	 * - from bboss_nouveau_groups_screen_invites_restriction().
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1615,9 +1615,9 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		// Nonce check.
 		if ( empty( $post_fields['account-group-invites-preferences'] ) ) {
-			bp_delete_user_meta( bp_displayed_user_id(), '_bp_nouveau_restrict_invites_to_friends' );
+			bboss_delete_user_meta( bboss_displayed_user_id(), '_bp_nouveau_restrict_invites_to_friends' );
 		} else {
-			bp_update_user_meta( bp_displayed_user_id(), '_bp_nouveau_restrict_invites_to_friends', (int) $post_fields['account-group-invites-preferences'] );
+			bboss_update_user_meta( bboss_displayed_user_id(), '_bp_nouveau_restrict_invites_to_friends', (int) $post_fields['account-group-invites-preferences'] );
 		}
 
 		do_action( 'bp_rest_invites_settings_after_save', $post_fields );
@@ -1632,7 +1632,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Update Export fields "Export Data".
-	 * - from bp_settings_action_export().
+	 * - from bboss_settings_action_export().
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1648,7 +1648,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $post_fields['member-data-export-submit'] ) ) {
 
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 
 			$user       = get_userdata( $user_id );
 			$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
@@ -1677,7 +1677,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Delete Account "Export Data".
-	 * - from bp_settings_action_delete_account().
+	 * - from bboss_settings_action_delete_account().
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1696,22 +1696,22 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			&& ! empty( $post_fields['member-delete-account'] )
 		) {
 
-			$bp = buddypress(); // The instance.
+			$bp = bboss(); // The instance.
 			add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 			// The core userdata of the user who is currently being displayed.
-			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
+			$bp->displayed_user->userdata = bboss_core_get_core_userdata( bboss_displayed_user_id() );
 
 			// Fetch the full name displayed user.
 			$bp->displayed_user->fullname = isset( $bp->displayed_user->userdata->display_name ) ? $bp->displayed_user->userdata->display_name : '';
 
 			// The domain for the user currently being displayed.
-			$bp->displayed_user->domain = bp_core_get_user_domain( bp_displayed_user_id() );
+			$bp->displayed_user->domain = bboss_core_get_user_domain( bboss_displayed_user_id() );
 
-			if ( bp_disable_account_deletion() && ! bp_current_user_can( 'delete_users' ) ) {
+			if ( bboss_disable_account_deletion() && ! bboss_current_user_can( 'delete_users' ) ) {
 				$error = esc_html__( 'Sorry, You can not able to delete the account.', 'buddyboss' );
-			} elseif ( bp_core_delete_account( bp_displayed_user_id() ) ) {
-				$username = bp_get_displayed_user_fullname();
+			} elseif ( bboss_core_delete_account( bboss_displayed_user_id() ) ) {
+				$username = bboss_get_displayed_user_fullname();
 				/* translators: %s: User's full name. */
 				$notice = sprintf( esc_html__( '%s was successfully deleted.', 'buddyboss' ), $username );
 			}
@@ -1741,18 +1741,18 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Add the 'pending email change' message to the settings page.
-	 * -- from: bp_settings_pending_email_notice().
+	 * -- from: bboss_settings_pending_email_notice().
 	 *
 	 * @return void|string
 	 */
 	protected function bp_rest_settings_pending_email_notice() {
-		$pending_email = bp_get_user_meta( bp_displayed_user_id(), 'pending_email_change', true );
+		$pending_email = bboss_get_user_meta( bboss_displayed_user_id(), 'pending_email_change', true );
 
 		if ( empty( $pending_email['newemail'] ) ) {
 			return;
 		}
 
-		if ( bp_get_displayed_user_email() === $pending_email['newemail'] ) {
+		if ( bboss_get_displayed_user_email() === $pending_email['newemail'] ) {
 			return;
 		}
 
@@ -1760,18 +1760,26 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		/* translators: 1: New email. 2: Current email. */
 			__( 'There is a pending change of your email address to %1$s. Check your email (%2$s) for the verification link.', 'buddyboss' ),
 			'<strong>' . esc_html( $pending_email['newemail'] ) . '</strong>',
-			'<strong>' . esc_html( bp_get_displayed_user_email() ) . '</strong>'
+			'<strong>' . esc_html( bboss_get_displayed_user_email() ) . '</strong>'
 		);
 	}
 
 	/**
 	 * Check current user can edit the visibility or not.
 	 *
-	 * @param BP_XProfile_Field $field_object Field Object.
+	 * @param BBoss_XProfile_Field $field_object Field Object.
 	 *
 	 * @return string 'allowed' or 'disabled'.
 	 */
 	public function bp_rest_get_xprofile_field_visibility( $field_object ) {
-		return BP_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field_object );
+		return BBoss_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field_object );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Account_Settings_Options_Endpoint', false ) || interface_exists( 'BBoss_REST_Account_Settings_Options_Endpoint', false ) || trait_exists( 'BBoss_REST_Account_Settings_Options_Endpoint', false ) ) && ! class_exists( 'BP_REST_Account_Settings_Options_Endpoint', false ) && ! interface_exists( 'BP_REST_Account_Settings_Options_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Account_Settings_Options_Endpoint', 'BP_REST_Account_Settings_Options_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

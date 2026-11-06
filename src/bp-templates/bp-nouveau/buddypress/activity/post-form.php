@@ -14,18 +14,18 @@ defined( 'ABSPATH' ) || exit;
 /*
  * Template tag to prepare the activity post form checks capability and enqueue needed scripts.
  */
-bp_nouveau_before_activity_post_form();
+bboss_nouveau_before_activity_post_form();
 
-$current_action = bp_current_action();
+$current_action = bboss_current_action();
 
-if ( bp_is_user_activity() && ! empty( $current_action ) ) {
+if ( bboss_is_user_activity() && ! empty( $current_action ) ) {
 	$current_action = explode( ',', $current_action );
 }
 
 $bp_hide_class = (
 	(
-		! bb_user_can_create_activity() &&
-		! bp_is_group_activity()
+		! bboss_user_can_create_activity() &&
+		! bboss_is_group_activity()
 	) ||
 	(
 		! empty( $current_action ) &&
@@ -37,7 +37,7 @@ $bp_hide_class = (
 
 // Added media off class.
 $media_enabled_class = '';
-if ( ! bp_is_active( 'media' ) ) {
+if ( ! bboss_is_active( 'media' ) ) {
 	$media_enabled_class = ' media-off';
 }
 ?>
@@ -48,4 +48,4 @@ if ( ! bp_is_active( 'media' ) ) {
 /*
  * Template tag to load the Javascript templates of the Post form UI.
  */
-bp_nouveau_after_activity_post_form();
+bboss_nouveau_after_activity_post_form();

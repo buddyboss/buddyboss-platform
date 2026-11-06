@@ -26,8 +26,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  */
-function bbp_user_engagements_interface( $rel_key = '', $rel_type = 'post' ) {
-	return apply_filters( 'bbp_user_engagements_interface', bbpress()->engagements, $rel_key, $rel_type );
+function bboss_bbp_user_engagements_interface( $rel_key = '', $rel_type = 'post' ) {
+	return apply_filters( 'bbp_user_engagements_interface', bboss_forums()->engagements, $rel_key, $rel_type );
 }
 
 /**
@@ -37,7 +37,7 @@ function bbp_user_engagements_interface( $rel_key = '', $rel_type = 'post' ) {
  * @since 2.6.0 bbPress (r6722)
  * @since BuddyBoss 2.3.4
  */
-class BBP_User_Engagements_Base {
+class BBoss_BBP_User_Engagements_Base {
 
 	/**
 	 * Type of strategy being used.
@@ -157,7 +157,7 @@ class BBP_User_Engagements_Base {
  * @since 2.6.0 bbPress (r6722)
  * @since BuddyBoss 2.3.4
  */
-class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
+class BBoss_BBP_User_Engagements_Meta extends BBoss_BBP_User_Engagements_Base {
 
 	/**
 	 * Type of strategy being used.
@@ -184,8 +184,8 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * @return bool Returns true on success, false on failure.
 	 */
 	public function add_user_to_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post', $unique = false ) {
-		if ( function_exists( 'bb_forum_favourite_legacy_data_support' ) && bb_forum_favourite_legacy_data_support() ) {
-			$bbp_user = new BBP_User_Engagements_User();
+		if ( function_exists( 'bboss_forum_favourite_legacy_data_support' ) && bboss_forum_favourite_legacy_data_support() ) {
+			$bbp_user = new BBoss_BBP_User_Engagements_User();
 			$bbp_user->add_user_to_object( $object_id, $user_id, $meta_key );
 		}
 		return add_metadata( $meta_type, $object_id, $meta_key, $user_id, $unique );
@@ -205,8 +205,8 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 	 * @return bool Returns true on success, false on failure.
 	 */
 	public function remove_user_from_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post' ) {
-		if ( function_exists( 'bb_forum_favourite_legacy_data_support' ) && bb_forum_favourite_legacy_data_support() ) {
-			$bbp_user = new BBP_User_Engagements_User();
+		if ( function_exists( 'bboss_forum_favourite_legacy_data_support' ) && bboss_forum_favourite_legacy_data_support() ) {
+			$bbp_user = new BBoss_BBP_User_Engagements_User();
 			$bbp_user->remove_user_from_object( $object_id, $user_id, $meta_key );
 		}
 		return delete_metadata( $meta_type, $object_id, $meta_key, $user_id, false );
@@ -296,7 +296,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 				'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					array(
 						'key'     => $meta_key,
-						'value'   => bbp_get_user_id( $args, false, false ),
+						'value'   => bboss_bbp_get_user_id( $args, false, false ),
 						'compare' => 'NUMERIC',
 					),
 				),
@@ -308,14 +308,14 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
 			'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				array(
 					'key'     => $meta_key,
-					'value'   => bbp_get_displayed_user_id(),
+					'value'   => bboss_bbp_get_displayed_user_id(),
 					'compare' => 'NUMERIC',
 				),
 			),
 		);
 
 		// Parse arguments.
-		return bbp_parse_args( $args, $defaults, $context_key );
+		return bboss_bbp_parse_args( $args, $defaults, $context_key );
 	}
 }
 
@@ -325,7 +325,7 @@ class BBP_User_Engagements_Meta extends BBP_User_Engagements_Base {
  * @since 2.6.0 bbPress (r6737)
  * @since BuddyBoss 2.3.4
  */
-class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
+class BBoss_BBP_User_Engagements_Term extends BBoss_BBP_User_Engagements_Base {
 
 	/**
 	 * Type of strategy being used.
@@ -540,7 +540,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 				'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 					array(
 						'taxonomy' => $tax_key,
-						'terms'    => $user_key . bbp_get_user_id( $args, false, false ),
+						'terms'    => $user_key . bboss_bbp_get_user_id( $args, false, false ),
 						'field'    => 'slug',
 					),
 				),
@@ -552,14 +552,14 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
 			'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				array(
 					'taxonomy' => $tax_key,
-					'terms'    => $user_key . bbp_get_displayed_user_id(),
+					'terms'    => $user_key . bboss_bbp_get_displayed_user_id(),
 					'field'    => 'slug',
 				),
 			),
 		);
 
 		// Parse arguments.
-		return bbp_parse_args( $args, $defaults, $context_key );
+		return bboss_bbp_parse_args( $args, $defaults, $context_key );
 	}
 }
 
@@ -576,7 +576,7 @@ class BBP_User_Engagements_Term extends BBP_User_Engagements_Base {
  * @since 2.6.0 bbPress (r6844)
  * @since BuddyBoss 2.3.4
  */
-class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
+class BBoss_BBP_User_Engagements_User extends BBoss_BBP_User_Engagements_Base {
 
 	/**
 	 * Type of strategy being used.
@@ -613,10 +613,10 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 				// Maybe guess at post type.
 				$post_type = ! empty( $object_id )
 					? get_post_type( $object_id )
-					: bbp_get_topic_post_type();
+					: bboss_bbp_get_topic_post_type();
 
 				// Forums & Topics used different keys.
-				$key = ( bbp_get_forum_post_type() === $post_type )
+				$key = ( bboss_bbp_get_forum_post_type() === $post_type )
 					? '_bbp_forum_subscriptions'
 					: '_bbp_subscriptions';
 
@@ -630,7 +630,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 
 		// Maybe prefix the key (for use in raw database queries).
 		if ( true === $prefix ) {
-			$key = bbp_db()->get_blog_prefix() . $key;
+			$key = bboss_bbp_db()->get_blog_prefix() . $key;
 		}
 
 		// Return the old (pluralized) user option key.
@@ -659,7 +659,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		// Maybe guess at post type.
 		$post_type = ! empty( $object_id )
 			? get_post_type( $object_id )
-			: bbp_get_topic_post_type();
+			: bboss_bbp_get_topic_post_type();
 
 		switch ( $meta_key ) {
 
@@ -671,7 +671,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 			// Subscriptions.
 			case '_bbp_subscription':
 				// Forums & Topics used different keys.
-				$key = ( bbp_get_forum_post_type() === $post_type )
+				$key = ( bboss_bbp_get_forum_post_type() === $post_type )
 					? 'bbp_get_forum_subscribers_'
 					: 'bbp_get_topic_subscribers_';
 
@@ -925,7 +925,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 
 		// Query for users.
 		$option_key = $this->get_user_option_key( $meta_key, 0, true );
-		$bbp_db     = bbp_db();
+		$bbp_db     = bboss_bbp_db();
 		$user_ids   = $bbp_db->get_col( "SELECT user_id FROM {$bbp_db->usermeta} WHERE meta_key = '{$option_key}'" );
 		$u_count    = count( $user_ids );
 
@@ -972,7 +972,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		// Cache is empty, so hit the database.
 		if ( false === $user_ids ) {
 			$option_key = $this->get_user_option_key( $meta_key, $object_id, true );
-			$bbp_db     = bbp_db();
+			$bbp_db     = bboss_bbp_db();
 			$user_ids   = $bbp_db->get_col( "SELECT user_id FROM {$bbp_db->usermeta} WHERE meta_key = '{$option_key}' and FIND_IN_SET('{$object_id}', meta_value) > 0" );
 
 			// Always cache results (even if empty, to prevent multiple misses).
@@ -997,7 +997,7 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 	 * @return array
 	 */
 	public function get_query( $args = array(), $context_key = '', $meta_key = '', $meta_type = 'post' ) {
-		$user_id    = bbp_get_user_id( $args, true, true );
+		$user_id    = bboss_bbp_get_user_id( $args, true, true );
 		$option_key = $this->get_user_option_key( $meta_key );
 		$object_ids = $this->parse_comma_list( get_user_option( $option_key, $user_id ) );
 
@@ -1012,6 +1012,6 @@ class BBP_User_Engagements_User extends BBP_User_Engagements_Base {
 		);
 
 		// Parse arguments.
-		return bbp_parse_args( $args, array(), $context_key );
+		return bboss_bbp_parse_args( $args, array(), $context_key );
 	}
 }

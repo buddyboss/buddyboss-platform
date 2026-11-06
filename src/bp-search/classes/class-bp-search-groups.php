@@ -8,12 +8,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Groups' ) ) :
+if ( ! class_exists( 'BBoss_Search_Groups' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search groups class
 	 */
-	class Bp_Search_Groups extends Bp_Search_Type {
+	class BBoss_Search_Groups extends BBoss_Search_Type {
 		private $type = 'groups';
 
 		/**
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @return object Bp_Search_Groups
+		 * @return object BBoss_Search_Groups
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication
@@ -30,7 +30,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 			// Only run these methods if they haven't been run previously
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Groups();
+				$instance = new BBoss_Search_Groups();
 			}
 
 			// Always return the instance
@@ -130,7 +130,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			if ( is_user_logged_in() ) {
 				if ( ! current_user_can( 'level_10' ) ) {
 					// get all hidden groups where i am a member of
-					$hidden_groups_sql = $wpdb->prepare( "SELECT DISTINCT gm.group_id FROM {$bp->groups->table_name_members} gm JOIN {$bp->groups->table_name} g ON gm.group_id = g.id WHERE gm.user_id = %d AND gm.is_confirmed = 1 AND gm.is_banned = 0 AND g.status='hidden' ", bp_loggedin_user_id() );
+					$hidden_groups_sql = $wpdb->prepare( "SELECT DISTINCT gm.group_id FROM {$bp->groups->table_name_members} gm JOIN {$bp->groups->table_name} g ON gm.group_id = g.id WHERE gm.user_id = %d AND gm.is_confirmed = 1 AND gm.is_banned = 0 AND g.status='hidden' ", bboss_loggedin_user_id() );
 					$hidden_groups_ids = $wpdb->get_col( $hidden_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_groups_sql is $wpdb->prepare()'d on the previous line (user id %d; $bp->groups table names).
 
 					$hidden_groups_condition = '';
@@ -197,18 +197,18 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 			do_action( 'bp_before_search_groups_html' );
 
-			if ( bp_has_groups( $args ) ) {
-				while ( bp_groups() ) {
-					bp_the_group();
+			if ( bboss_has_groups( $args ) ) {
+				while ( bboss_groups() ) {
+					bboss_the_group();
 
 					$result = array(
-						'id'    => bp_get_group_id(),
+						'id'    => bboss_get_group_id(),
 						'type'  => $this->type,
-						'title' => bp_get_group_name(),
-						'html'  => bp_search_buffer_template_part( 'loop/group', $template_type, false ),
+						'title' => bboss_get_group_name(),
+						'html'  => bboss_search_buffer_template_part( 'loop/group', $template_type, false ),
 					);
 
-					$this->search_results['items'][ bp_get_group_id() ] = $result;
+					$this->search_results['items'][ bboss_get_group_id() ] = $result;
 				}
 			}
 

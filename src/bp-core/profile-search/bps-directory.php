@@ -13,26 +13,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_directories() {
+function bboss_ps_directories() {
 	static $dirs = array();
 
 	if ( count( $dirs ) ) {
 		return $dirs;
 	}
 
-	$bp_pages = bp_core_get_directory_page_ids();
+	$bp_pages = bboss_core_get_directory_page_ids();
 	if ( isset( $bp_pages['members'] ) ) {
 		$members                 = $bp_pages['members'];
 		$dirs[ $members ]        = new stdClass();
 		$dirs[ $members ]->label = get_the_title( $members );
 		$dirs[ $members ]->link  = wp_parse_url( get_page_link( $members ), PHP_URL_PATH );
 
-		$member_types = bp_get_member_types( array(), 'objects' );
+		$member_types = bboss_get_member_types( array(), 'objects' );
 		foreach ( $member_types as $type ) {
 			if ( $type->has_directory == 1 ) {
 				$dirs[ $type->name ]        = new stdClass();
 				$dirs[ $type->name ]->label = $dirs[ $members ]->label . ' - ' . $type->labels['name'];
-				$dirs[ $type->name ]->link  = wp_parse_url( bp_get_member_type_directory_permalink( $type->name ), PHP_URL_PATH );
+				$dirs[ $type->name ]->link  = wp_parse_url( bboss_get_member_type_directory_permalink( $type->name ), PHP_URL_PATH );
 			}
 		}
 	}
@@ -59,10 +59,10 @@ add_action( 'wp_enqueue_scripts', 'bp_ps_clear_directory', 1 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_clear_directory() {
+function bboss_ps_clear_directory() {
 	global $bp;
 
-	$dirs    = bp_ps_directories();
+	$dirs    = bboss_ps_directories();
 	$current = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 	foreach ( $dirs as $dir ) {
@@ -84,28 +84,28 @@ function bp_ps_clear_directory() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_show_directory( $attr, $content ) {
+function bboss_ps_show_directory( $attr, $content ) {
 	ob_start();
 
-	if ( bp_ps_debug() ) {
+	if ( bboss_ps_debug() ) {
 		echo "<!--\n";
 		print_r( $attr );
-		print_r( bp_ps_hidden_filters() );
+		print_r( bboss_ps_hidden_filters() );
 		echo "-->\n";
 	}
 
 	if ( isset( $attr['order_by'] ) ) {
-		bp_ps_set_sort_options( $attr['order_by'] );
+		bboss_ps_set_sort_options( $attr['order_by'] );
 	}
 
 	$template = isset( $attr['template'] ) ? $attr['template'] : 'members/index';
 	bp_ps_call_template( $template );
 
-	if ( bp_get_theme_package_id() == 'nouveau' ) {
+	if ( bboss_get_theme_package_id() == 'nouveau' ) {
 		printf(
 			/* translators: %s: plugin name and version (wrapped in <strong>). */
 			'<p class=\"bp-ps-error\">' . esc_html__( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss' ) . '</p>',
-			'<strong>BP Profile Search ' . esc_html( bp_get_version() ) . '</strong>'
+			'<strong>BP Profile Search ' . esc_html( bboss_get_version() ) . '</strong>'
 		);
 	}
 
@@ -117,13 +117,13 @@ function bp_ps_show_directory( $attr, $content ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_set_sort_options( $options ) {
+function bboss_ps_set_sort_options( $options ) {
 	global $bp_ps_sort_options;
 
 	if ( ! isset( $bp_ps_sort_options ) ) {
 		$bp_ps_sort_options = array();
 	}
-	list (, $fields) = bp_ps_get_fields();
+	list (, $fields) = bboss_ps_get_fields();
 
 	$options = explode( ',', $options );
 	foreach ( $options as $option ) {
@@ -157,10 +157,10 @@ function bp_ps_set_sort_options( $options ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_display_sort_options() {
+function bboss_ps_display_sort_options() {
 	 global $bp_ps_sort_options;
 
-	$version = bp_get_version();
+	$version = bboss_get_version();
 	echo "
 <!-- BP Profile Search " . esc_html( $version ) . " -->
 ";
@@ -182,7 +182,7 @@ add_filter( 'bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_uid_clauses( $sql, $object ) {
+function bboss_ps_uid_clauses( $sql, $object ) {
 	$code  = $object->query_vars['type'];
 	$order = 'ASC';
 
@@ -191,7 +191,7 @@ function bp_ps_uid_clauses( $sql, $object ) {
 		$order = 'DESC';
 	}
 
-	list (, $fields) = bp_ps_get_fields();
+	list (, $fields) = bboss_ps_get_fields();
 	if ( isset( $fields[ $code ]->sort_directory ) && is_callable( $fields[ $code ]->sort_directory ) ) {
 		$f   = $fields[ $code ];
 		$sql = call_user_func( $f->sort_directory, $sql, $object, $f, $order );
@@ -206,7 +206,7 @@ function bp_ps_uid_clauses( $sql, $object ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_directory_members_item() {
+function bboss_ps_directory_members_item() {
 	global $members_template;
 
 	$code = $members_template->type;
@@ -214,7 +214,7 @@ function bp_ps_directory_members_item() {
 		$code = substr( $code, 1 );
 	}
 
-	list (, $fields) = bp_ps_get_fields();
+	list (, $fields) = bboss_ps_get_fields();
 	if ( isset( $fields[ $code ]->get_value ) && is_callable( $fields[ $code ]->get_value ) ) {
 		$f     = $fields[ $code ];
 		$name  = $f->name;

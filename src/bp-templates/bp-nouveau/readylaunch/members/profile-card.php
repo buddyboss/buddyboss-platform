@@ -5,7 +5,7 @@
  * This template handles the member profile card popup display functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 						<span class="card-meta-item card-meta-joined"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> <span></span></span>
 						<span class="card-meta-item card-meta-last-active"></span>
 						<?php
-						if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+						if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
 							?>
 							<span class="card-meta-item card-meta-followers"></span>
 							<?php
@@ -59,7 +59,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-rl-card-footer">
 				<?php
 				if ( is_user_logged_in() ) {
-					if ( bp_is_active( 'messages' ) ) {
+					if ( bboss_is_active( 'messages' ) ) {
 						?>
 						<div class="bb-rl-card-action bb-rl-card-action-message bb-rl-card-action-primary">
 							<a href="" class="card-button send-message">
@@ -70,13 +70,13 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 					}
 
-					if ( bp_is_active( 'friends' ) ) {
+					if ( bboss_is_active( 'friends' ) ) {
 						?>
 						<div class="bb-rl-card-action bb-rl-card-action-connect bb-rl-card-action-primary"></div>
 						<?php
 					}
 
-					if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+					if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
 						?>
 						<div class="bb-rl-card-action bb-rl-card-action-follow bb-rl-card-action-secondary"></div>
 						<?php

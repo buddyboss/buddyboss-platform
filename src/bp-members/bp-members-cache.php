@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.2.0
  *
- * @param BP_User_Query $bp_user_query BP_User_Query object.
+ * @param BBoss_User_Query $bp_user_query BBoss_User_Query object.
  */
-function bp_members_prefetch_member_type( BP_User_Query $bp_user_query ) {
-	$uncached_member_ids = bp_get_non_cached_ids( $bp_user_query->user_ids, 'bp_member_member_type' );
+function bboss_members_prefetch_member_type( BBoss_User_Query $bp_user_query ) {
+	$uncached_member_ids = bboss_get_non_cached_ids( $bp_user_query->user_ids, 'bp_member_member_type' );
 
-	$member_types = bp_get_object_terms(
+	$member_types = bboss_get_object_terms(
 		$uncached_member_ids,
-		bp_get_member_type_tax_name(),
+		bboss_get_member_type_tax_name(),
 		array(
 			'fields' => 'all_with_object_id',
 		)
@@ -34,7 +34,7 @@ function bp_members_prefetch_member_type( BP_User_Query $bp_user_query ) {
 			$keyed_member_types[ $member_type->object_id ] = array();
 		}
 
-		if ( bp_get_member_type_object( $member_type->name ) ) {
+		if ( bboss_get_member_type_object( $member_type->name ) ) {
 			$keyed_member_types[ $member_type->object_id ][] = $member_type->name;
 		}
 	}
@@ -61,12 +61,12 @@ add_action( 'bp_user_query_populate_extras', 'bp_members_prefetch_member_type' )
  *
  * @param int $user_id ID of the deleted user.
  */
-function bp_members_clear_member_type_cache( $user_id ) {
+function bboss_members_clear_member_type_cache( $user_id ) {
 	wp_cache_delete( $user_id, 'bp_member_member_type' );
 	wp_cache_delete( 'bp_get_all_posts_for_user_' . $user_id, 'bp_member' );
 	wp_cache_delete( 'bp_check_user_status_' . $user_id, 'bp_member' );
 	// Use below code for bp_member_type_by_type( $type_id ) function.
-	$member_type = function_exists( 'bp_get_member_type' ) ? bp_get_member_type( $user_id ) : '';
+	$member_type = function_exists( 'bboss_get_member_type' ) ? bboss_get_member_type( $user_id ) : '';
 	if ( ! empty( $member_type ) ) {
 		$get_term = get_term_by( 'slug', $member_type, 'bp_member_type' );
 		if ( ! empty( $get_term ) ) {
@@ -89,8 +89,8 @@ add_action( 'profile_update', 'bp_members_clear_member_type_cache' );
  *
  * @return bool True on success, false on failure.
  */
-function bp_members_reset_activity_cache_incrementor() {
-	return bp_core_reset_incrementor( 'bp_activity_with_last_activity' );
+function bboss_members_reset_activity_cache_incrementor() {
+	return bboss_core_reset_incrementor( 'bp_activity_with_last_activity' );
 }
 add_action( 'bp_core_user_updated_last_activity', 'bp_members_reset_activity_cache_incrementor' );
 
@@ -101,14 +101,14 @@ add_action( 'bp_core_user_updated_last_activity', 'bp_members_reset_activity_cac
  *
  * @param int $post_id post ID.
  */
-function bb_members_clear_member_type_cache_on_update( $post_id ) {
+function bboss_members_clear_member_type_cache_on_update( $post_id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
 
 	$post = get_post( $post_id );
 
-	if ( bp_get_member_type_post_type() !== $post->post_type ) {
+	if ( bboss_get_member_type_post_type() !== $post->post_type ) {
 		return;
 	}
 
@@ -142,13 +142,13 @@ add_action( 'save_post', 'bb_members_clear_member_type_cache_on_update' );
  *
  * @param int $post_id post ID.
  */
-function bb_members_clear_member_type_cache_before_delete( $post_id ) {
+function bboss_members_clear_member_type_cache_before_delete( $post_id ) {
 	global $wpdb;
 
 	$post = get_post( $post_id );
 
 	// Return if post is not 'bp-member-type' type.
-	if ( bp_get_member_type_post_type() !== $post->post_type ) {
+	if ( bboss_get_member_type_post_type() !== $post->post_type ) {
 		return;
 	}
 

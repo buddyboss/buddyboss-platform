@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Attachments_Member_Avatar_Endpoint class
+ * BP REST: BBoss_REST_Attachments_Member_Avatar_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,16 +13,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 
-	use BP_REST_Attachments;
+	use BBoss_REST_Attachments;
 
 	/**
-	 * BP_Attachment_Avatar Instance.
+	 * BBoss_Attachment_Avatar Instance.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Attachment_Avatar
+	 * @var BBoss_Attachment_Avatar
 	 */
 	protected $avatar_instance;
 
@@ -50,9 +50,9 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace       = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base       = 'members';
-		$this->avatar_instance = new BP_Attachment_Avatar();
+		$this->avatar_instance = new BBoss_Attachment_Avatar();
 	}
 
 	/**
@@ -115,7 +115,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 		$args = array();
 
 		foreach ( array( 'full', 'thumb' ) as $type ) {
-			$args[ $type ] = bp_core_fetch_avatar(
+			$args[ $type ] = bboss_core_fetch_avatar(
 				array(
 					'object'  => $this->object,
 					'type'    => $type,
@@ -171,7 +171,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -181,7 +181,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$this->user = bp_rest_get_user( $request['user_id'] );
+		$this->user = bboss_rest_get_user( $request['user_id'] );
 
 		if ( true === $retval && ! $this->user instanceof WP_User ) {
 			$retval = new WP_Error(
@@ -249,8 +249,8 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 			'object'        => 'user',
 			'avatar_dir'    => 'avatars',
 			'original_file' => $avatar->full,
-			'crop_w'        => bp_core_avatar_full_width(),
-			'crop_h'        => bp_core_avatar_full_height(),
+			'crop_w'        => bboss_core_avatar_full_width(),
+			'crop_h'        => bboss_core_avatar_full_height(),
 			'crop_x'        => 0,
 			'crop_y'        => 0,
 		);
@@ -307,7 +307,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && 'POST' === $request->get_method() && bp_disable_avatar_uploads() ) {
+		if ( true === $retval && 'POST' === $request->get_method() && bboss_disable_avatar_uploads() ) {
 			$retval = new WP_Error(
 				'bp_rest_attachments_member_avatar_disabled',
 				__( 'Sorry, member avatar upload is disabled.', 'buddyboss' ),
@@ -317,7 +317,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! empty( $args ) && ! bp_attachments_current_user_can( 'edit_avatar', $args ) ) {
+		if ( true === $retval && ! empty( $args ) && ! bboss_attachments_current_user_can( 'edit_avatar', $args ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
@@ -358,7 +358,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$user_id = (int) $this->user->ID;
 
-		if ( ! bp_get_user_has_avatar( $user_id ) ) {
+		if ( ! bboss_get_user_has_avatar( $user_id ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_member_avatar_no_uploaded_avatar',
 				__( 'Sorry, there are no uploaded avatars for this user on this site.', 'buddyboss' ),
@@ -371,7 +371,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 		$args = array();
 
 		foreach ( array( 'full', 'thumb' ) as $type ) {
-			$args[ $type ] = bp_core_fetch_avatar(
+			$args[ $type ] = bboss_core_fetch_avatar(
 				array(
 					'object'  => $this->object,
 					'type'    => $type,
@@ -384,7 +384,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 		// Get the avatar object before deleting it.
 		$avatar = $this->get_avatar_object( $args );
 
-		$deleted = bp_core_delete_existing_avatar(
+		$deleted = bboss_core_delete_existing_avatar(
 			array(
 				'object'  => $this->object,
 				'item_id' => $user_id,
@@ -561,3 +561,11 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_attachments_member_avatar_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Attachments_Member_Avatar_Endpoint', false ) || interface_exists( 'BBoss_REST_Attachments_Member_Avatar_Endpoint', false ) || trait_exists( 'BBoss_REST_Attachments_Member_Avatar_Endpoint', false ) ) && ! class_exists( 'BP_REST_Attachments_Member_Avatar_Endpoint', false ) && ! interface_exists( 'BP_REST_Attachments_Member_Avatar_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Attachments_Member_Avatar_Endpoint', 'BP_REST_Attachments_Member_Avatar_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

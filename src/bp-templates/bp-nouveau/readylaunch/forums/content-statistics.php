@@ -3,7 +3,7 @@
  * Statistics Content Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Get the statistics.
-$stats = bbp_get_statistics(); ?>
+$stats = bboss_bbp_get_statistics(); ?>
 
 <ul role="main" class="bbp-stats">
 

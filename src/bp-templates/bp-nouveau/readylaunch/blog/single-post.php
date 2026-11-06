@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 $bb_rl_blog_categories  = get_the_category();
 $bb_rl_blog_author_id   = (int) get_the_author_meta( 'ID' );
-$bb_rl_blog_author_url  = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $bb_rl_blog_author_id ) : get_author_posts_url( $bb_rl_blog_author_id );
-$bb_rl_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
+$bb_rl_blog_author_url  = function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $bb_rl_blog_author_id ) : get_author_posts_url( $bb_rl_blog_author_id );
+$bb_rl_blog_author_name = function_exists( 'bboss_core_get_user_displayname' ) ? bboss_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
 $bb_rl_blog_tags        = get_the_tags();
 
 if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
@@ -41,8 +41,8 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 	<div class="bb-rl-blog-single__meta">
 		<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar" data-bb-hp-profile="<?php echo esc_attr( $bb_rl_blog_author_id ); ?>">
 			<?php
-			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
+			if ( function_exists( 'bboss_core_fetch_avatar' ) ) {
+				echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
 					array(
 						'item_id' => $bb_rl_blog_author_id,
 						'html'    => true,
@@ -115,8 +115,8 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 		comments_template();
 	}
 
-	$bb_rl_blog_related_query = function_exists( 'bb_blog_is_related_posts_enabled' ) && bb_blog_is_related_posts_enabled()
-		? bb_blog_get_related_posts( get_the_ID(), 9 )
+	$bb_rl_blog_related_query = function_exists( 'bboss_blog_is_related_posts_enabled' ) && bboss_blog_is_related_posts_enabled()
+		? bboss_blog_get_related_posts( get_the_ID(), 9 )
 		: null;
 
 	if ( $bb_rl_blog_related_query && $bb_rl_blog_related_query->have_posts() ) :
@@ -137,7 +137,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 				<?php
 				while ( $bb_rl_blog_related_query->have_posts() ) :
 					$bb_rl_blog_related_query->the_post();
-					bp_get_template_part( 'blog/loop-post' );
+					bboss_get_template_part( 'blog/loop-post' );
 				endwhile;
 				wp_reset_postdata();
 				?>

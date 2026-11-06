@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Activity_Link_Preview_Endpoint class
+ * BP REST: BBoss_REST_Activity_Link_Preview_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,8 +21,8 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->activity->id;
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->activity->id;
 	}
 
 	/**
@@ -107,7 +107,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			$retval = array_merge( $retval, $short_circuit );
 		} else {
 			// Get URL parsed data.
-			$parse_url_data = ( function_exists( 'bp_core_parse_url' ) ? bp_core_parse_url( $url ) : '' );
+			$parse_url_data = ( function_exists( 'bboss_core_parse_url' ) ? bboss_core_parse_url( $url ) : '' );
 
 			// If empty data then send error.
 			if ( empty( $parse_url_data ) ) {
@@ -178,7 +178,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_is_active( 'activity' ) ) {
+		if ( true === $retval && ! bboss_is_active( 'activity' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
 				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
@@ -188,7 +188,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && function_exists( 'bp_is_activity_link_preview_active' ) && true !== bp_is_activity_link_preview_active() ) {
+		if ( true === $retval && function_exists( 'bboss_is_activity_link_preview_active' ) && true !== bboss_is_activity_link_preview_active() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Link Previews is disabled.', 'buddyboss' ),
@@ -267,3 +267,11 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Activity_Link_Preview_Endpoint', false ) || interface_exists( 'BBoss_REST_Activity_Link_Preview_Endpoint', false ) || trait_exists( 'BBoss_REST_Activity_Link_Preview_Endpoint', false ) ) && ! class_exists( 'BP_REST_Activity_Link_Preview_Endpoint', false ) && ! interface_exists( 'BP_REST_Activity_Link_Preview_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Activity_Link_Preview_Endpoint', 'BP_REST_Activity_Link_Preview_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

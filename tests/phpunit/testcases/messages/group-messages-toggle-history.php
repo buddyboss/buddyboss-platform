@@ -6,9 +6,9 @@
  */
 
 /**
- * Group threads are written through the real send path (bp_groups_messages_new_message() with the
- * request fields bp_media_messages_save_group_data() reads), and the setting is changed with
- * bp_update_option() without flushing the object cache, so only the product's own reset hooks keep
+ * Group threads are written through the real send path (bboss_groups_messages_new_message() with the
+ * request fields bboss_media_messages_save_group_data() reads), and the setting is changed with
+ * bboss_update_option() without flushing the object cache, so only the product's own reset hooks keep
  * the caches right.
  *
  * @group messages
@@ -38,7 +38,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	 */
 	public function set_up() {
 		parent::set_up();
-		$this->group_messages_option = bp_get_option( 'bp-disable-group-messages' );
+		$this->group_messages_option = bboss_get_option( 'bp-disable-group-messages' );
 		$this->clock                 = 0;
 	}
 
@@ -50,7 +50,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	public function tear_down() {
 		$_POST = array();
 		wp_cache_flush();
-		bp_update_option( 'bp-disable-group-messages', $this->group_messages_option );
+		bboss_update_option( 'bp-disable-group-messages', $this->group_messages_option );
 		wp_cache_flush();
 		parent::tear_down();
 	}
@@ -58,9 +58,9 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	/* Helpers ---------------------------------------------------------------- */
 
 	/**
-	 * Change "Group Messages" (true = enabled) the way the settings screen does: bp_update_option() only.
+	 * Change "Group Messages" (true = enabled) the way the settings screen does: bboss_update_option() only.
 	 *
-	 * Release's bb_clear_cache_while_group_messsage_settings_updated() unsets the unread-count group straight
+	 * Release's bboss_clear_cache_while_group_messsage_settings_updated() unsets the unread-count group straight
 	 * from WP_Object_Cache::$cache, which is a notice under the test cache; drop only that group first, so the
 	 * cache of the disabled group threads is left to the product hooks.
 	 *
@@ -70,7 +70,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	 */
 	protected function set_group_messages( $enabled ) {
 		wp_cache_flush_group( 'bp_messages_unread_count' );
-		bp_update_option( 'bp-disable-group-messages', $enabled ? 1 : 0 );
+		bboss_update_option( 'bp-disable-group-messages', $enabled ? 1 : 0 );
 	}
 
 	/**
@@ -103,7 +103,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 			'action'              => 'groups_get_group_potential_user_send_messages',
 		);
 
-		$thread_id = bp_groups_messages_new_message(
+		$thread_id = bboss_groups_messages_new_message(
 			array(
 				'sender_id'     => $sender,
 				'recipients'    => $members,
@@ -116,7 +116,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		$_POST     = array();
 
 		$this->assertIsInt( $thread_id );
-		groups_update_groupmeta( $group_id, 'group_message_thread', $thread_id );
+		bboss_groups_update_groupmeta( $group_id, 'group_message_thread', $thread_id );
 
 		return (int) $thread_id;
 	}
@@ -131,7 +131,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	 */
 	protected function reply( $thread_id, $sender ) {
 		$this->set_current_user( $sender );
-		$message_id = messages_new_message(
+		$message_id = bboss_messages_new_message(
 			array(
 				'sender_id' => $sender,
 				'thread_id' => $thread_id,
@@ -155,7 +155,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	 */
 	protected function stored_messages( $thread_id ) {
 		global $wpdb;
-		$table = buddypress()->messages->table_name_messages;
+		$table = bboss()->messages->table_name_messages;
 
 		return $wpdb->get_results( $wpdb->prepare( "SELECT id, sender_id, message, date_sent FROM {$table} WHERE thread_id = %d ORDER BY date_sent ASC, id ASC", $thread_id ), ARRAY_A ); // phpcs:ignore
 	}
@@ -168,7 +168,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	 * @return int[]
 	 */
 	protected function listed( $user_id ) {
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array(
 				'user_id'                        => $user_id,
 				'fields'                         => 'ids',
@@ -189,8 +189,8 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		$u2       = self::factory()->user->create();
 		$u3       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
-		groups_join_group( $group_id, $u2 );
-		groups_join_group( $group_id, $u3 );
+		bboss_groups_join_group( $group_id, $u2 );
+		bboss_groups_join_group( $group_id, $u3 );
 
 		return compact( 'u1', 'u2', 'u3', 'group_id' );
 	}
@@ -219,20 +219,20 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		$sorted = $before_ids;
 		sort( $sorted );
 		$this->assertSame( $sorted, $before_ids, 'IDs grow with send order.' );
-		$this->assertSame( max( $before_ids ), (int) BP_Messages_Thread::get_last_message( $thread_id )->id, 'Last message = highest ID.' );
+		$this->assertSame( max( $before_ids ), (int) BBoss_Messages_Thread::get_last_message( $thread_id )->id, 'Last message = highest ID.' );
 
 		// OFF: the thread cannot be opened, nothing stored changes.
 		$this->set_group_messages( false );
-		$this->assertSame( 0, bb_messages_validate_groups_thread( $thread_id ) );
+		$this->assertSame( 0, bboss_messages_validate_groups_thread( $thread_id ) );
 		$this->assertSame( $before, $this->stored_messages( $thread_id ), 'OFF changes no stored message.' );
 
 		// ON again: same history, same last message, and the thread opens.
 		$this->set_group_messages( true );
-		$this->assertSame( $thread_id, bb_messages_validate_groups_thread( $thread_id ) );
+		$this->assertSame( $thread_id, bboss_messages_validate_groups_thread( $thread_id ) );
 		$this->assertSame( $before, $this->stored_messages( $thread_id ), 'History unchanged after ON -> OFF -> ON.' );
 
 		$this->set_current_user( $f['u2'] );
-		$thread = new BP_Messages_Thread( $thread_id, 'ASC' );
+		$thread = new BBoss_Messages_Thread( $thread_id, 'ASC' );
 		// BP_Messages_Thread::get_messages() returns newest first whatever $order (release behaviour, the views reverse it).
 		$this->assertSame( array_reverse( $before_ids ), array_map( 'intval', wp_list_pluck( $thread->messages, 'id' ) ), 'The thread shows the same messages, newest first.' );
 		$this->assertSame( max( $before_ids ), (int) $thread->last_message_id );
@@ -240,17 +240,17 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		// A reply after re-enabling.
 		$new_id = $this->reply( $thread_id, $f['u3'] );
 		$this->assertGreaterThan( max( $before_ids ), $new_id, 'New message ID is higher than every earlier one.' );
-		$this->assertSame( $new_id, (int) BP_Messages_Thread::get_last_message( $thread_id )->id );
+		$this->assertSame( $new_id, (int) BBoss_Messages_Thread::get_last_message( $thread_id )->id );
 
 		$this->set_current_user( $f['u2'] );
-		$thread = new BP_Messages_Thread( $thread_id, 'ASC' );
+		$thread = new BBoss_Messages_Thread( $thread_id, 'ASC' );
 		$this->assertSame( array_reverse( array_merge( $before_ids, array( $new_id ) ) ), array_map( 'intval', wp_list_pluck( $thread->messages, 'id' ) ) );
 		$this->assertSame( $new_id, (int) $thread->last_message_id, 'The new reply is the last message.' );
 	}
 
 	/**
 	 * Requirement (PROD-3077 list rule + "disabled-id cache not stale after re-enable"): with the setting changed
-	 * only through bp_update_option(), the member's list hides the group thread while OFF and shows it again
+	 * only through bboss_update_option(), the member's list hides the group thread while OFF and shows it again
 	 * after ON with the reply sent after re-enabling as its last message; a group thread created while ON is
 	 * hidden on the next OFF, and the persistent copy of the list is not left behind while ON.
 	 */
@@ -265,22 +265,22 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 
 		// OFF: hidden; the list is cached (object cache and, without a persistent cache, the option).
 		$this->set_group_messages( false );
-		$this->assertSame( array( $thread_id ), bb_messages_get_disabled_group_thread_ids() );
+		$this->assertSame( array( $thread_id ), bboss_messages_get_disabled_group_thread_ids() );
 		$this->assertNotContains( $thread_id, $this->listed( $f['u2'] ), 'OFF: hidden from the list.' );
-		$this->assertSame( array( $thread_id ), bb_messages_get_cached_disabled_group_thread_ids() );
+		$this->assertSame( array( $thread_id ), bboss_messages_get_cached_disabled_group_thread_ids() );
 
 		// ON: the cached OFF list is dropped and nothing is hidden.
 		$this->set_group_messages( true );
-		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Cache reset when the setting changes.' );
-		$this->assertFalse( bp_get_option( '_bb_messages_disabled_group_thread_ids', false ), 'No persistent copy left while ON.' );
-		$this->assertSame( array(), bb_messages_get_disabled_group_thread_ids() );
-		$this->assertFalse( bb_messages_is_disabled_group_thread( $thread_id ) );
+		$this->assertFalse( bboss_messages_get_cached_disabled_group_thread_ids(), 'Cache reset when the setting changes.' );
+		$this->assertFalse( bboss_get_option( '_bb_messages_disabled_group_thread_ids', false ), 'No persistent copy left while ON.' );
+		$this->assertSame( array(), bboss_messages_get_disabled_group_thread_ids() );
+		$this->assertFalse( bboss_messages_is_disabled_group_thread( $thread_id ) );
 
 		$new_id = $this->reply( $thread_id, $f['u3'] );
 
 		$this->set_current_user( $f['u2'] );
 		$this->assertContains( $thread_id, $this->listed( $f['u2'] ), 'ON again: listed.' );
-		$threads = BP_Messages_Thread::get_current_threads_for_user(
+		$threads = BBoss_Messages_Thread::get_current_threads_for_user(
 			array(
 				'user_id'                        => $f['u2'],
 				'exclude_disabled_group_threads' => true,
@@ -297,7 +297,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		$second = $this->send_group_broadcast( $f['u1'], array( $f['u2'], $f['u3'] ), $f['group_id'] );
 
 		$this->set_group_messages( false );
-		$ids = bb_messages_get_disabled_group_thread_ids();
+		$ids = bboss_messages_get_disabled_group_thread_ids();
 		sort( $ids );
 		$this->assertSame( array( $thread_id, $second ), $ids, 'OFF again: both group threads, nothing stale.' );
 		$this->assertSame( array(), array_values( array_intersect( array( $thread_id, $second ), $this->listed( $f['u2'] ) ) ) );
@@ -306,7 +306,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	/**
 	 * Requirement (Groups component inactive path, doc 52:88): the disabled list does not depend on the Groups
 	 * component. With Groups inactive and Group Messages OFF, the list hides exactly the threads the release
-	 * open check refuses (bb_messages_validate_groups_thread() has no Groups check either), private threads stay
+	 * open check refuses (bboss_messages_validate_groups_thread() has no Groups check either), private threads stay
 	 * listed and open; with Group Messages ON nothing is hidden.
 	 */
 	public function test_groups_component_inactive_list_matches_open_check() {
@@ -316,7 +316,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		$group_thread = $this->send_group_broadcast( $f['u1'], array( $f['u2'], $f['u3'] ), $f['group_id'] );
 		$this->reply( $group_thread, $f['u2'] );
 		$this->set_current_user( $f['u1'] );
-		$private_thread = (int) messages_new_message(
+		$private_thread = (int) bboss_messages_new_message(
 			array(
 				'sender_id'  => $f['u1'],
 				'recipients' => array( $f['u2'] ),
@@ -327,26 +327,26 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		);
 		$this->assertGreaterThan( 0, $private_thread );
 
-		$active_components = buddypress()->active_components;
-		unset( buddypress()->active_components['groups'] );
+		$active_components = bboss()->active_components;
+		unset( bboss()->active_components['groups'] );
 
 		try {
-			$this->assertFalse( bp_is_active( 'groups' ) );
+			$this->assertFalse( bboss_is_active( 'groups' ) );
 
 			$this->set_group_messages( false );
-			$this->assertSame( array( $group_thread ), bb_messages_get_disabled_group_thread_ids() );
-			$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ), 'Release open check refuses it.' );
-			$this->assertSame( $private_thread, bb_messages_validate_groups_thread( $private_thread ) );
+			$this->assertSame( array( $group_thread ), bboss_messages_get_disabled_group_thread_ids() );
+			$this->assertSame( 0, bboss_messages_validate_groups_thread( $group_thread ), 'Release open check refuses it.' );
+			$this->assertSame( $private_thread, bboss_messages_validate_groups_thread( $private_thread ) );
 
 			$listed = $this->listed( $f['u2'] );
 			$this->assertNotContains( $group_thread, $listed, 'List agrees with the open check.' );
 			$this->assertContains( $private_thread, $listed );
 
 			$this->set_group_messages( true );
-			$this->assertSame( array(), bb_messages_get_disabled_group_thread_ids() );
-			$this->assertSame( $group_thread, bb_messages_validate_groups_thread( $group_thread ) );
+			$this->assertSame( array(), bboss_messages_get_disabled_group_thread_ids() );
+			$this->assertSame( $group_thread, bboss_messages_validate_groups_thread( $group_thread ) );
 		} finally {
-			buddypress()->active_components = $active_components;
+			bboss()->active_components = $active_components;
 		}
 	}
 
@@ -359,7 +359,7 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 	public function test_existing_rows_without_hooks_are_found_on_first_lookup() {
 		global $wpdb;
 
-		$bp       = buddypress();
+		$bp       = bboss();
 		$messages = $bp->messages->table_name_messages;
 		$meta     = $bp->messages->table_name_meta;
 		$recips   = $bp->messages->table_name_recipients;
@@ -429,17 +429,17 @@ class BP_Tests_Messages_Group_Messages_Toggle_History extends BP_UnitTestCase {
 		// State of a site that has just been updated: Group Messages OFF, nothing cached or stored.
 		$wpdb->update( $wpdb->options, array( 'option_value' => '0' ), array( 'option_name' => 'bp-disable-group-messages' ) ); // phpcs:ignore
 		wp_cache_flush();
-		bp_delete_option( '_bb_messages_disabled_group_thread_ids' );
-		$this->assertFalse( bp_disable_group_messages() );
-		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids() );
+		bboss_delete_option( '_bb_messages_disabled_group_thread_ids' );
+		$this->assertFalse( bboss_disable_group_messages() );
+		$this->assertFalse( bboss_messages_get_cached_disabled_group_thread_ids() );
 
 		$rows_before = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$messages}" ) . ':' . (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$meta}" ); // phpcs:ignore
 
-		$ids = bb_messages_get_disabled_group_thread_ids();
+		$ids = bboss_messages_get_disabled_group_thread_ids();
 		$this->assertContains( $group_tid, $ids, 'Existing group thread is found.' );
 		$this->assertNotContains( $priv_tid, $ids, 'Existing private thread is not hidden.' );
-		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_tid ), 'Same answer as the release open check.' );
-		$this->assertSame( $priv_tid, bb_messages_validate_groups_thread( $priv_tid ) );
+		$this->assertSame( 0, bboss_messages_validate_groups_thread( $group_tid ), 'Same answer as the release open check.' );
+		$this->assertSame( $priv_tid, bboss_messages_validate_groups_thread( $priv_tid ) );
 
 		$listed = $this->listed( $f['u1'] );
 		$this->assertNotContains( $group_tid, $listed );

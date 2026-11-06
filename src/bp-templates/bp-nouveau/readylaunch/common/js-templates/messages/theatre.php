@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
 						</span>
 						<ul class="media-privacy">
 							<?php
-							foreach ( bp_media_get_visibility_levels() as $item_key => $privacy_item ) {
+							foreach ( bboss_media_get_visibility_levels() as $item_key => $privacy_item ) {
 								?>
 								<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?>">
 									<?php echo esc_attr( $privacy_item ); ?>

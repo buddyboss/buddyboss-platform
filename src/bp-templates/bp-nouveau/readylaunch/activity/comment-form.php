@@ -3,7 +3,7 @@
  * ReadyLaunch - The template for BP Nouveau Activity Comment form.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -13,19 +13,19 @@ defined( 'ABSPATH' ) || exit;
 
 global $activities_template;
 
-if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_comment() ) {
+if ( ! bboss_nouveau_current_user_can( 'comment_activity' ) || ! bboss_activity_can_comment() ) {
 	return;
 }
 
-$activity_id  = bp_get_activity_id();
-$media_active = bp_is_active( 'media' );
+$activity_id  = bboss_get_activity_id();
+$media_active = bboss_is_active( 'media' );
 ?>
 
-<form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php echo esc_attr( $activity_id ); ?>" class="ac-form not-initialized"<?php bp_activity_comment_form_nojs_display(); ?>>
+<form action="<?php bboss_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php echo esc_attr( $activity_id ); ?>" class="ac-form not-initialized"<?php bboss_activity_comment_form_nojs_display(); ?>>
 	<div class="bb-rl-ac-form-container">
 		<div class="bb-rl-ac-reply-content">
 			<div class="bb-rl-ac-reply-avatar">
-				<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
+				<?php bboss_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
 			</div>
 			<div class="ac-textarea">
 				<label for="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="bp-screen-reader-text">
@@ -60,7 +60,7 @@ $media_active = bp_is_active( 'media' );
 						</div>
 					</div>
 
-					<?php if ( bp_is_active( 'document' ) ) : ?>
+					<?php if ( bboss_is_active( 'document' ) ) : ?>
 					<div class="dropzone closed document document-dropzone" id="bb-rl-ac-reply-post-document-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="bb-rl-ac-reply-post-document-template" style="display:none;">
 						<div class="dz-preview dz-file-preview">
@@ -81,7 +81,7 @@ $media_active = bp_is_active( 'media' );
 					</div>
 					<?php endif; ?>
 
-					<?php if ( bp_is_active( 'video' ) ) : ?>
+					<?php if ( bboss_is_active( 'video' ) ) : ?>
 					<div class="dropzone closed video video-dropzone" id="bb-rl-ac-reply-post-video-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="bb-rl-ac-reply-post-video-template" style="display:none;">
 						<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -123,14 +123,14 @@ $media_active = bp_is_active( 'media' );
 									<i class="bb-icons-rl-camera"></i>
 								</a>
 							</div>
-							<?php if ( bp_is_active( 'video' ) ) : ?>
+							<?php if ( bboss_is_active( 'video' ) ) : ?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
 								<a href="#" id="bb-rl-ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icons-rl-video-camera"></i>
 								</a>
 							</div>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'document' ) ) : ?>
+							<?php if ( bboss_is_active( 'document' ) ) : ?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
 								<a href="#" id="bb-rl-ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icons-rl-paperclip-horizontal"></i>
@@ -160,7 +160,7 @@ $media_active = bp_is_active( 'media' );
 			?>
 			<div class="bb-rl-ac-submit-wrap">
 				<?php
-				bp_nouveau_submit_button( 'activity-new-comment' );
+				bboss_nouveau_submit_button( 'activity-new-comment' );
 				?>
 			</div>
 		</div>

@@ -19,7 +19,7 @@ add_action( 'bp_init', array( 'BP_Members_Admin', 'register_members_admin' ) );
  *
  * @return array List of profile header elements.
  */
-function bb_get_profile_header_elements() {
+function bboss_get_profile_header_elements() {
 	$elements = array();
 
 	$elements[] = array(
@@ -30,7 +30,7 @@ function bb_get_profile_header_elements() {
 	$elements[] = array(
 		'element_name'  => 'profile-type',
 		'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
-		'element_class' => bp_member_type_enable_disable() && bp_member_type_display_on_profile() ? '' : 'bp-hide'
+		'element_class' => bboss_member_type_enable_disable() && bboss_member_type_display_on_profile() ? '' : 'bp-hide'
 	);
 
 	$elements[] = array(
@@ -48,7 +48,7 @@ function bb_get_profile_header_elements() {
 		'element_label' => esc_html__( 'Last Active', 'buddyboss' ),
 	);
 
-	$activity_follow_active = function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
+	$activity_follow_active = function_exists( 'bboss_is_active' ) && bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active();
 
 	$elements[] = array(
 		'element_name'  => 'followers',
@@ -65,7 +65,7 @@ function bb_get_profile_header_elements() {
 	$elements[] = array(
 		'element_name'  => 'social-networks',
 		'element_label' => esc_html__( 'Social Networks', 'buddyboss' ),
-		'element_class' => ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) ? '' : 'bp-hide',
+		'element_class' => ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'xprofile' ) && function_exists( 'bboss_enabled_member_social_networks' ) && bboss_enabled_member_social_networks() ) ? '' : 'bp-hide',
 	);
 
 	/**
@@ -85,7 +85,7 @@ function bb_get_profile_header_elements() {
  *
  * @return array List of elements for member directory.
  */
-function bb_get_member_directory_elements() {
+function bboss_get_member_directory_elements() {
 	$elements = array();
 
 	$elements[] = array(
@@ -96,13 +96,13 @@ function bb_get_member_directory_elements() {
 	$elements[] = array(
 		'element_name'  => 'profile-type',
 		'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
-		'element_class' => bp_member_type_enable_disable() && bp_member_type_display_on_profile() ? '' : 'bp-hide',
+		'element_class' => bboss_member_type_enable_disable() && bboss_member_type_display_on_profile() ? '' : 'bp-hide',
 	);
 
 	$elements[] = array(
 		'element_name'  => 'followers',
 		'element_label' => esc_html__( 'Followers', 'buddyboss' ),
-		'element_class' => ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) ? '' : 'bp-hide',
+		'element_class' => ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active() ) ? '' : 'bp-hide',
 	);
 
 	$elements[] = array(
@@ -132,31 +132,31 @@ function bb_get_member_directory_elements() {
  *
  * @return array List of profile actions for member directory.
  */
-function bb_get_member_directory_profile_actions() {
+function bboss_get_member_directory_profile_actions() {
 	$profile_actions = array();
 
 	$profile_actions[] = array(
 		'element_name'  => 'follow',
 		'element_label' => esc_html__( 'Follow', 'buddyboss' ),
-		'element_class' => ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) ? '' : 'bp-hide',
+		'element_class' => ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active() ) ? '' : 'bp-hide',
 	);
 
 	$profile_actions[] = array(
 		'element_name'  => 'connect',
 		'element_label' => esc_html__( 'Connect', 'buddyboss' ),
-		'element_class' => function_exists( 'bp_is_active' ) && bp_is_active( 'friends' ) ? '' : 'bp-hide',
+		'element_class' => function_exists( 'bboss_is_active' ) && bboss_is_active( 'friends' ) ? '' : 'bp-hide',
 	);
 
-	$bp_force_friendship_to_message = bp_force_friendship_to_message();
+	$bp_force_friendship_to_message = bboss_force_friendship_to_message();
 
 	$profile_actions[] = array(
 		'element_name'  => 'message',
 		'element_label' => esc_html__( 'Send Message', 'buddyboss' ),
 		'element_class' => (
-			bp_is_active( 'messages' ) &&
+			bboss_is_active( 'messages' ) &&
 			(
 				! $bp_force_friendship_to_message ||
-				( $bp_force_friendship_to_message && bp_is_active( 'friends' ) )
+				( $bp_force_friendship_to_message && bboss_is_active( 'friends' ) )
 			)
 		) ? '' : 'bp-hide',
 	);

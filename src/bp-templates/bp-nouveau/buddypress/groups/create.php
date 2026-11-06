@@ -11,38 +11,38 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
+bboss_nouveau_groups_create_hook( 'before', 'page' ); ?>
 
 <h2 class="bp-subhead"><?php esc_html_e( 'Create A New Group', 'buddyboss' ); ?></h2>
 
-<?php bp_nouveau_groups_create_hook( 'before', 'content_template' ); ?>
+<?php bboss_nouveau_groups_create_hook( 'before', 'content_template' ); ?>
 
 <?php
-$current_group_step = bp_get_groups_current_create_step();
+$current_group_step = bboss_get_groups_current_create_step();
 if ( 'group-invites' !== $current_group_step ) {
 	?>
-	<form action="<?php bp_group_creation_form_action(); ?>" method="post" id="create-group-form" class="standard-form" enctype="multipart/form-data">
+	<form action="<?php bboss_group_creation_form_action(); ?>" method="post" id="create-group-form" class="standard-form" enctype="multipart/form-data">
 <?php } else { ?>
 	<div id="create-group-form" class="standard-form">
 	<?php
 }
-	bp_nouveau_groups_create_hook( 'before' );
-	bp_nouveau_template_notices();
+	bboss_nouveau_groups_create_hook( 'before' );
+	bboss_nouveau_template_notices();
 ?>
 	<div class="item-body" id="group-create-body">
 
-		<nav class="<?php bp_nouveau_groups_create_steps_classes(); ?>" id="group-create-tabs" role="navigation" aria-label="<?php esc_attr_e( 'Group creation menu', 'buddyboss' ); ?>">
+		<nav class="<?php bboss_nouveau_groups_create_steps_classes(); ?>" id="group-create-tabs" role="navigation" aria-label="<?php esc_attr_e( 'Group creation menu', 'buddyboss' ); ?>">
 			<ol class="group-create-buttons button-tabs">
-				<?php bp_group_creation_tabs(); ?>
+				<?php bboss_group_creation_tabs(); ?>
 			</ol>
 		</nav>
 
-		<?php bp_nouveau_group_creation_screen(); ?>
+		<?php bboss_nouveau_group_creation_screen(); ?>
 
 	</div><!-- .item-body -->
 
 <?php
-bp_nouveau_groups_create_hook( 'after' );
+bboss_nouveau_groups_create_hook( 'after' );
 
 if ( 'group-invites' !== $current_group_step ) {
 	?>
@@ -52,5 +52,5 @@ if ( 'group-invites' !== $current_group_step ) {
 	<?php
 }
 
-bp_nouveau_groups_create_hook( 'after', 'content_template' );
-bp_nouveau_groups_create_hook( 'after', 'page' );
+bboss_nouveau_groups_create_hook( 'after', 'content_template' );
+bboss_nouveau_groups_create_hook( 'after', 'page' );

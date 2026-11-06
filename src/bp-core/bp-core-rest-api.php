@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.3.5
  *
  */
-function bp_rest_is_plugin_active() {
+function bboss_rest_is_plugin_active() {
 	return (bool) has_action( 'bp_rest_api_init', 'bp_rest', 5 );
 }
 
@@ -31,8 +31,8 @@ function bp_rest_is_plugin_active() {
  * @return bool Whether to use the REST Endpoints of built BuddyBoss.
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_in_buddypress() {
-	return ! bp_rest_is_plugin_active();
+function bboss_rest_in_buddypress() {
+	return ! bboss_rest_is_plugin_active();
 }
 
 /**
@@ -41,7 +41,7 @@ function bp_rest_in_buddypress() {
  * @return boolean True if the BP REST API is available. False otherwise.
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_api_is_available() {
+function bboss_rest_api_is_available() {
 
 	/**
 	 * Filter here to disable the BP REST API.
@@ -52,7 +52,7 @@ function bp_rest_api_is_available() {
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
-	return apply_filters( 'bp_rest_api_is_available', function_exists( 'create_initial_rest_routes' ) && bp_rest_in_buddypress() ) || bp_rest_is_plugin_active();
+	return apply_filters( 'bp_rest_api_is_available', function_exists( 'create_initial_rest_routes' ) && bboss_rest_in_buddypress() ) || bboss_rest_is_plugin_active();
 }
 
 /**
@@ -60,8 +60,8 @@ function bp_rest_api_is_available() {
  *
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_api_register_request_script() {
-	if ( ! bp_rest_api_is_available() ) {
+function bboss_rest_api_register_request_script() {
+	if ( ! bboss_rest_api_is_available() ) {
 		return;
 	}
 
@@ -74,9 +74,9 @@ function bp_rest_api_register_request_script() {
 
 	wp_register_script(
 		'bp-api-request',
-		sprintf( '%1$sbp-core/js/bp-api-request%2$s.js', buddypress()->plugin_url, bp_core_get_minified_asset_suffix() ),
+		sprintf( '%1$sbp-core/js/bp-api-request%2$s.js', bboss()->plugin_url, bboss_core_get_minified_asset_suffix() ),
 		$dependencies,
-		bp_get_version(),
+		bboss_get_version(),
 		true
 	);
 
@@ -99,7 +99,7 @@ add_action( 'bp_init', 'bp_rest_api_register_request_script' );
  * @return string
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_namespace() {
+function bboss_rest_namespace() {
 
 	/**
 	 * Filter API namespace.
@@ -117,7 +117,7 @@ function bp_rest_namespace() {
  * @return string
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_version() {
+function bboss_rest_version() {
 
 	/**
 	 * Filter API version.
@@ -138,20 +138,20 @@ function bp_rest_version() {
  * @return string
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_get_user_url( $user_ids ) {
+function bboss_rest_get_user_url( $user_ids ) {
 	if ( is_array( $user_ids ) ) {
 		return sprintf(
 			'/%s/%s/members?include=%s',
-			bp_rest_namespace(),
-			bp_rest_version(),
+			bboss_rest_namespace(),
+			bboss_rest_version(),
 			implode( ',', $user_ids )
 		);
 	}
 
 	return sprintf(
 		'/%s/%s/members/%d',
-		bp_rest_namespace(),
-		bp_rest_version(),
+		bboss_rest_namespace(),
+		bboss_rest_version(),
 		absint( $user_ids )
 	);
 }
@@ -166,7 +166,7 @@ function bp_rest_get_user_url( $user_ids ) {
  * @return WP_REST_Response $response The response data.
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_response_add_total_headers( WP_REST_Response $response, $total = 0, $per_page = 0 ) {
+function bboss_rest_response_add_total_headers( WP_REST_Response $response, $total = 0, $per_page = 0 ) {
 	if ( ! $total || ! $per_page ) {
 		return $response;
 	}
@@ -189,7 +189,7 @@ function bp_rest_response_add_total_headers( WP_REST_Response $response, $total 
  * @return string|null ISO8601/RFC3339 formatted datetime.
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_prepare_date_response( $date_gmt, $date = null ) {
+function bboss_rest_prepare_date_response( $date_gmt, $date = null ) {
 	if ( isset( $date ) ) {
 		return mysql_to_rfc3339( $date ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 	}
@@ -209,13 +209,13 @@ function bp_rest_prepare_date_response( $date_gmt, $date = null ) {
  * @return array|null
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_sanitize_member_types( $value ) {
+function bboss_rest_sanitize_member_types( $value ) {
 	if ( empty( $value ) ) {
 		return $value;
 	}
 
 	$types              = explode( ',', $value );
-	$registered_types   = bp_get_member_types();
+	$registered_types   = bboss_get_member_types();
 	$registered_types[] = 'any';
 	$valid_types        = array_intersect( $types, $registered_types );
 
@@ -230,13 +230,13 @@ function bp_rest_sanitize_member_types( $value ) {
  * @return WP_Error|boolean
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_validate_member_types( $value ) {
+function bboss_rest_validate_member_types( $value ) {
 	if ( empty( $value ) ) {
 		return true;
 	}
 
 	$types            = explode( ',', $value );
-	$registered_types = bp_get_member_types();
+	$registered_types = bboss_get_member_types();
 
 	// Add the special value.
 	$registered_types[] = 'any';
@@ -263,13 +263,13 @@ function bp_rest_validate_member_types( $value ) {
  * @return array|null
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_sanitize_group_types( $value ) {
+function bboss_rest_sanitize_group_types( $value ) {
 	if ( empty( $value ) ) {
 		return null;
 	}
 
 	$types       = explode( ',', $value );
-	$valid_types = array_intersect( $types, bp_groups_get_group_types() );
+	$valid_types = array_intersect( $types, bboss_groups_get_group_types() );
 
 	return empty( $valid_types ) ? null : $valid_types;
 }
@@ -282,13 +282,13 @@ function bp_rest_sanitize_group_types( $value ) {
  * @return WP_Error|bool
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_validate_group_types( $value ) {
+function bboss_rest_validate_group_types( $value ) {
 	if ( empty( $value ) ) {
 		return true;
 	}
 
 	$types            = explode( ',', $value );
-	$registered_types = bp_groups_get_group_types();
+	$registered_types = bboss_groups_get_group_types();
 	foreach ( $types as $type ) {
 		if ( ! in_array( $type, $registered_types, true ) ) {
 			return new WP_Error(
@@ -312,7 +312,7 @@ function bp_rest_validate_group_types( $value ) {
  * @return array Sanitized array of strings.
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_sanitize_string_list( $list ) {
+function bboss_rest_sanitize_string_list( $list ) {
 	if ( ! is_array( $list ) ) {
 		$list = preg_split( '/[\s,]+/', $list );
 	}
@@ -328,7 +328,7 @@ function bp_rest_sanitize_string_list( $list ) {
  * @return WP_User|boolean
  * @since BuddyBoss 1.3.5
  */
-function bp_rest_get_user( $user_id ) {
+function bboss_rest_get_user( $user_id ) {
 	if ( (int) $user_id <= 0 ) {
 		return false;
 	}
@@ -359,10 +359,10 @@ function bp_rest_get_user( $user_id ) {
  * @see   `register_rest_field()` for a full description.
  * }
  */
-function bp_rest_register_field( $component_id, $attribute, $args = array(), $object_type = '' ) {
+function bboss_rest_register_field( $component_id, $attribute, $args = array(), $object_type = '' ) {
 	$registered_fields = false;
 
-	if ( ! $component_id || ! bp_is_active( $component_id ) || ! $attribute ) {
+	if ( ! $component_id || ! bboss_is_active( $component_id ) || ! $attribute ) {
 		return $registered_fields;
 	}
 
@@ -378,7 +378,7 @@ function bp_rest_register_field( $component_id, $attribute, $args = array(), $ob
 		$field_name .= '_' . $object_type;
 	}
 
-	$args = bp_parse_args(
+	$args = bboss_parse_args(
 		$args,
 		array(
 			'get_callback'    => null,
@@ -406,7 +406,7 @@ function bp_rest_register_field( $component_id, $attribute, $args = array(), $ob
  *
  * @return bool
  */
-function bb_is_rest() {
+function bboss_is_rest() {
 	return ! empty( $GLOBALS['wp']->query_vars['rest_route'] );
 }
 
@@ -419,9 +419,9 @@ function bb_is_rest() {
  * @since BuddyBoss 2.0.8
  * @return string|array
  */
-function bb_input_clean( $var ) {
+function bboss_input_clean( $var ) {
 	if ( is_array( $var ) ) {
-		return array_map( 'bb_input_clean', $var );
+		return array_map( 'bboss_input_clean', $var );
 	} else {
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 	}
@@ -436,14 +436,14 @@ function bb_input_clean( $var ) {
  *
  * @return string $content
  */
-function bb_rest_raw_content( $content ) {
+function bboss_rest_raw_content( $content ) {
 
 	if ( empty( $content ) ) {
 		return $content;
 	}
 
-	$content = function_exists( 'bb_moderation_remove_mention_link' ) ? bb_moderation_remove_mention_link( $content ) : $content;
-	$content = function_exists( 'bb_mention_remove_deleted_users_link' ) ? bb_mention_remove_deleted_users_link( $content ) : $content;
+	$content = function_exists( 'bboss_moderation_remove_mention_link' ) ? bboss_moderation_remove_mention_link( $content ) : $content;
+	$content = function_exists( 'bboss_mention_remove_deleted_users_link' ) ? bboss_mention_remove_deleted_users_link( $content ) : $content;
 
 	/**
 	 * Function will return content without mentioned link for moderated/deleted members.
@@ -464,10 +464,155 @@ function bb_rest_raw_content( $content ) {
  *
  * @return mixed $response The response data.
  */
-function bb_rest_before_rest_request( $response, $handler, $request ) {
+function bboss_rest_before_rest_request( $response, $handler, $request ) {
 	$GLOBALS['bb_rest_request'] = $request;
 
 	return $response;
 }
 
 add_filter( 'rest_request_before_callbacks', 'bb_rest_before_rest_request', 10, 3 );
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( function_exists( 'bboss_is_rest' ) && ! function_exists( 'bb_is_rest' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_is_rest()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_is_rest() instead.
+	 */
+	function bb_is_rest() {
+		return bboss_is_rest();
+	}
+}
+if ( function_exists( 'bboss_rest_raw_content' ) && ! function_exists( 'bb_rest_raw_content' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_raw_content()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_raw_content() instead.
+	 */
+	function bb_rest_raw_content( $content ) {
+		return bboss_rest_raw_content( $content );
+	}
+}
+if ( function_exists( 'bboss_rest_get_user' ) && ! function_exists( 'bp_rest_get_user' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_get_user()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_get_user() instead.
+	 */
+	function bp_rest_get_user( $user_id ) {
+		return bboss_rest_get_user( $user_id );
+	}
+}
+if ( function_exists( 'bboss_rest_get_user_url' ) && ! function_exists( 'bp_rest_get_user_url' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_get_user_url()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_get_user_url() instead.
+	 */
+	function bp_rest_get_user_url( $user_ids ) {
+		return bboss_rest_get_user_url( $user_ids );
+	}
+}
+if ( function_exists( 'bboss_rest_namespace' ) && ! function_exists( 'bp_rest_namespace' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_namespace()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_namespace() instead.
+	 */
+	function bp_rest_namespace() {
+		return bboss_rest_namespace();
+	}
+}
+if ( function_exists( 'bboss_rest_prepare_date_response' ) && ! function_exists( 'bp_rest_prepare_date_response' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_prepare_date_response()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_prepare_date_response() instead.
+	 */
+	function bp_rest_prepare_date_response( $date_gmt, $date = null ) {
+		return bboss_rest_prepare_date_response( $date_gmt, $date );
+	}
+}
+if ( function_exists( 'bboss_rest_register_field' ) && ! function_exists( 'bp_rest_register_field' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_register_field()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_register_field() instead.
+	 */
+	function bp_rest_register_field( $component_id, $attribute, $args = array(), $object_type = '' ) {
+		return bboss_rest_register_field( $component_id, $attribute, $args, $object_type );
+	}
+}
+if ( function_exists( 'bboss_rest_response_add_total_headers' ) && ! function_exists( 'bp_rest_response_add_total_headers' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_response_add_total_headers()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_response_add_total_headers() instead.
+	 */
+	function bp_rest_response_add_total_headers( WP_REST_Response $response, $total = 0, $per_page = 0 ) {
+		return bboss_rest_response_add_total_headers( $response, $total, $per_page );
+	}
+}
+if ( function_exists( 'bboss_rest_sanitize_group_types' ) && ! function_exists( 'bp_rest_sanitize_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_group_types()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_sanitize_group_types() instead.
+	 */
+	function bp_rest_sanitize_group_types( $value ) {
+		return bboss_rest_sanitize_group_types( $value );
+	}
+}
+if ( function_exists( 'bboss_rest_sanitize_member_types' ) && ! function_exists( 'bp_rest_sanitize_member_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_member_types()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_sanitize_member_types() instead.
+	 */
+	function bp_rest_sanitize_member_types( $value ) {
+		return bboss_rest_sanitize_member_types( $value );
+	}
+}
+if ( function_exists( 'bboss_rest_sanitize_string_list' ) && ! function_exists( 'bp_rest_sanitize_string_list' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_sanitize_string_list()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_sanitize_string_list() instead.
+	 */
+	function bp_rest_sanitize_string_list( $list ) {
+		return bboss_rest_sanitize_string_list( $list );
+	}
+}
+if ( function_exists( 'bboss_rest_validate_group_types' ) && ! function_exists( 'bp_rest_validate_group_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_validate_group_types()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_validate_group_types() instead.
+	 */
+	function bp_rest_validate_group_types( $value ) {
+		return bboss_rest_validate_group_types( $value );
+	}
+}
+if ( function_exists( 'bboss_rest_validate_member_types' ) && ! function_exists( 'bp_rest_validate_member_types' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_validate_member_types()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_validate_member_types() instead.
+	 */
+	function bp_rest_validate_member_types( $value ) {
+		return bboss_rest_validate_member_types( $value );
+	}
+}
+if ( function_exists( 'bboss_rest_version' ) && ! function_exists( 'bp_rest_version' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_rest_version()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_rest_version() instead.
+	 */
+	function bp_rest_version() {
+		return bboss_rest_version();
+	}
+}
+// @bbwt-com-end compat-layer

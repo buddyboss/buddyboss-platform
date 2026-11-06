@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Members_Endpoint class
+ * BP REST: BBoss_REST_Members_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
+class BBoss_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 	/**
 	 * Allow batch.
@@ -42,7 +42,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'members';
 	}
 
@@ -259,7 +259,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				} else {
 					$response = rest_ensure_response( array() );
 
-					return bp_rest_response_add_total_headers( $response, 0, $args['per_page'] );
+					return bboss_rest_response_add_total_headers( $response, 0, $args['per_page'] );
 				}
 			}
 
@@ -272,7 +272,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				} else {
 					$response = rest_ensure_response( array() );
 
-					return bp_rest_response_add_total_headers( $response, 0, $args['per_page'] );
+					return bboss_rest_response_add_total_headers( $response, 0, $args['per_page'] );
 				}
 			}
 
@@ -306,10 +306,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				empty( $request['scope'] )
 				|| ( isset( $request['scope'] ) && 'all' === $request['scope'] )
 			)
-			&& function_exists( 'bp_get_users_of_removed_member_types' )
-			&& ! empty( bp_get_users_of_removed_member_types() )
+			&& function_exists( 'bboss_get_users_of_removed_member_types' )
+			&& ! empty( bboss_get_users_of_removed_member_types() )
 		) {
-			$args['exclude'] = bp_get_users_of_removed_member_types();
+			$args['exclude'] = bboss_get_users_of_removed_member_types();
 		}
 
 		/**
@@ -323,7 +323,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$args = apply_filters( 'bp_rest_members_get_items_query_args', $args, $request );
 
 		// Actually, query it.
-		$member_query = new BP_User_Query( $args );
+		$member_query = new BBoss_User_Query( $args );
 		$members      = array_values( $member_query->results );
 
 		$retval = array();
@@ -334,7 +334,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $member_query->total_users, $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $member_query->total_users, $args['per_page'] );
 
 		/**
 		 * Fires after a list of members is fetched via the REST API.
@@ -361,7 +361,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -393,7 +393,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -403,7 +403,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		$user = bp_rest_get_user( $request['id'] );
+		$user = bboss_rest_get_user( $request['id'] );
 
 		if ( true === $retval && ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
@@ -488,7 +488,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 		$retval = $error;
 
-		$user             = bp_rest_get_user( $request['id'] );
+		$user             = bboss_rest_get_user( $request['id'] );
 		$member_type_edit = isset( $request['member_type'] );
 
 		if ( ! $user instanceof WP_User ) {
@@ -507,7 +507,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			}
 
 			if ( get_current_user_id() === $user->ID ) {
-				if ( $member_type_edit && ! bp_current_user_can( 'bp_moderate' ) ) {
+				if ( $member_type_edit && ! bboss_current_user_can( 'bp_moderate' ) ) {
 					$retval = $error;
 				} else {
 					$retval = parent::update_item_permissions_check( $request );
@@ -556,7 +556,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$user_id = (int) $request['id'];
 		if ( empty( $user_id ) ) {
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 		}
 
 		if ( empty( $user_id ) ) {
@@ -569,7 +569,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		$user = bp_rest_get_user( $user_id );
+		$user = bboss_rest_get_user( $user_id );
 
 		if ( ! $user instanceof WP_User ) {
 			return new WP_Error(
@@ -583,7 +583,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$previous = $this->prepare_item_for_response( $user, $request );
 		$status   = false;
-		if ( bp_core_delete_account( $user_id ) ) {
+		if ( bboss_core_delete_account( $user_id ) ) {
 			$status = true;
 		}
 
@@ -630,10 +630,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$retval  = true;
 			$user_id = (int) $request['id'];
 			if ( empty( $user_id ) ) {
-				$user_id = bp_loggedin_user_id();
+				$user_id = bboss_loggedin_user_id();
 			}
 
-			if ( bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
+			if ( bboss_loggedin_user_id() !== absint( $user_id ) && ! bboss_current_user_can( 'delete_users' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_user_cannot_delete',
 					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
@@ -641,7 +641,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 						'status' => rest_authorization_required_code(),
 					)
 				);
-			} elseif ( function_exists( 'bp_disable_account_deletion' ) && bp_disable_account_deletion() ) {
+			} elseif ( function_exists( 'bboss_disable_account_deletion' ) && bboss_disable_account_deletion() ) {
 				$retval = new WP_Error(
 					'bp_rest_user_cannot_delete',
 					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
@@ -735,7 +735,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		// Update current user's last activity.
 		if ( strpos( $request->get_route(), 'members/me' ) !== false && get_current_user_id() === $user->ID ) {
-			bp_update_user_last_activity();
+			bboss_update_user_last_activity();
 		}
 
 		/**
@@ -769,11 +769,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$member_types = array();
 		if (
-			function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
-			function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
-			! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user->ID ), true )
+			function_exists( 'bboss_get_xprofile_member_type_field_id' ) &&
+			function_exists( 'bboss_xprofile_get_hidden_fields_for_user' ) &&
+			! in_array( bboss_get_xprofile_member_type_field_id(), bboss_xprofile_get_hidden_fields_for_user( $user->ID ), true )
 		) {
-			$member_types = bp_get_member_type( $user->ID, false );
+			$member_types = bboss_get_member_type( $user->ID, false );
 		}
 
 		// Names are viewer-dependent (a member may hide their last name from guests/non-friends).
@@ -789,27 +789,27 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		// messaging and the personal-data exporters deliberately re-point, and falls back to the
 		// WordPress current user only when BP has no value. Guarded because this plugin can run
 		// against a Platform that predates the helper.
-		$viewer_id = function_exists( 'bb_core_get_viewer_user_id' )
-			? (int) bb_core_get_viewer_user_id()
+		$viewer_id = function_exists( 'bboss_core_get_viewer_user_id' )
+			? (int) bboss_core_get_viewer_user_id()
 			: (int) get_current_user_id();
 
 		$data      = array(
 			'id'                 => $user->ID,
 			'name'               => $this->get_visible_display_name( $user, $viewer_id ),
 			'user_login'         => $user->user_login,
-			'link'               => bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login ),
+			'link'               => bboss_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login ),
 			'member_types'       => $member_types,
 			'roles'              => array(),
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
-			'registered_date'    => bp_rest_prepare_date_response( $user_data->user_registered ),
+			'registered_date'    => bboss_rest_prepare_date_response( $user_data->user_registered ),
 			// Decoded, as Platform's own core-author bridge decodes: the resolver's filter chain
 			// ends in esc_html(), which is right for HTML output and wrong for a JSON string -
 			// it shipped `O&#039;Brien` where the column holds `O'Brien`. ENT_QUOTES because the
 			// default ENT_NOQUOTES does not undo the apostrophe.
-			'profile_name'       => wp_specialchars_decode( (string) bp_core_get_user_displayname( $user->ID, $viewer_id ), ENT_QUOTES ),
+			'profile_name'       => wp_specialchars_decode( (string) bboss_core_get_user_displayname( $user->ID, $viewer_id ), ENT_QUOTES ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
-			'is_online'          => function_exists( 'bb_is_online_user' ) ? (bool) bb_is_online_user( $user->ID ) : false,
+			'is_online'          => function_exists( 'bboss_is_online_user' ) ? (bool) bboss_is_online_user( $user->ID ) : false,
 			'xprofile'           => array(),
 			'followers'          => ! empty( $followers ) ? count( $followers ) : 0,
 			'following'          => ! empty( $following ) ? count( $following ) : 0,
@@ -830,27 +830,27 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$data['friendship_status'] = (
 			(
-				bp_is_active( 'friends' )
-				&& function_exists( 'friends_check_friendship_status' )
+				bboss_is_active( 'friends' )
+				&& function_exists( 'bboss_friends_check_friendship_status' )
 			)
-			? friends_check_friendship_status( get_current_user_id(), $user->ID )
+			? bboss_friends_check_friendship_status( get_current_user_id(), $user->ID )
 			: ''
 		);
 
 		$data['friendship_id'] = (
 			(
-				bp_is_active( 'friends' )
-				&& function_exists( 'friends_get_friendship_id' )
+				bboss_is_active( 'friends' )
+				&& function_exists( 'bboss_friends_get_friendship_id' )
 			)
-			? friends_get_friendship_id( get_current_user_id(), $user->ID )
+			? bboss_friends_get_friendship_id( get_current_user_id(), $user->ID )
 			: ''
 		);
 
-		$data['create_friendship'] = ( bp_is_active( 'friends' ) && is_user_logged_in() && apply_filters( 'bp_rest_user_can_create_friendship', true, $user->ID ) );
+		$data['create_friendship'] = ( bboss_is_active( 'friends' ) && is_user_logged_in() && apply_filters( 'bp_rest_user_can_create_friendship', true, $user->ID ) );
 
 		$data['is_following'] = (bool) (
-		function_exists( 'bp_is_following' )
-			? bp_is_following(
+		function_exists( 'bboss_is_following' )
+			? bboss_is_following(
 				array(
 					'leader_id'   => $user->ID,
 					'follower_id' => get_current_user_id(),
@@ -859,18 +859,18 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			: '0'
 		);
 
-		$data['can_follow'] = bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();;
+		$data['can_follow'] = bboss_is_active( 'activity' ) && function_exists( 'bboss_is_activity_follow_active' ) && bboss_is_activity_follow_active();;
 
 		if ( 'edit' === $context ) {
-			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
+			$data['registered_date']    = bboss_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
 			$data['capabilities']       = (array) array_keys( $user_data->allcaps );
 			$data['extra_capabilities'] = (array) array_keys( $user_data->caps );
 		}
 
 		// The name used for that user in @-mentions.
-		if ( bp_is_active( 'activity' ) ) {
-			$data['mention_name'] = bp_activity_get_user_mentionname( $user->ID );
+		if ( bboss_is_active( 'activity' ) ) {
+			$data['mention_name'] = bboss_activity_get_user_mentionname( $user->ID );
 		}
 
 		// Get item schema.
@@ -884,8 +884,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$group_ids = strpos( $group_ids, ',' ) !== false ? explode( ',', $group_ids ) : array( $group_ids );
 				foreach ( $group_ids as $group_id ) {
 					if (
-						groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
-						groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+						bboss_groups_is_user_admin( bboss_loggedin_user_id(), $group_id ) ||
+						bboss_groups_is_user_mod( bboss_loggedin_user_id(), $group_id )
 					) {
 						$blocked_by_show_avatar = true;
 						break;
@@ -897,20 +897,20 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				add_filter( 'bb_get_blocked_avatar_url', array( $this, 'bb_moderation_fetch_avatar_url_filter', ), 10, 3 );
 			}
 			$data['avatar_urls'] = array(
-				'full'       => bp_core_fetch_avatar(
+				'full'       => bboss_core_fetch_avatar(
 					array(
 						'item_id' => $user->ID,
 						'html'    => false,
 						'type'    => 'full',
 					)
 				),
-				'thumb'      => bp_core_fetch_avatar(
+				'thumb'      => bboss_core_fetch_avatar(
 					array(
 						'item_id' => $user->ID,
 						'html'    => false,
 					)
 				),
-				'is_default' => ! bp_get_user_has_avatar( $user->ID ),
+				'is_default' => ! bboss_get_user_has_avatar( $user->ID ),
 			);
 			if ( true === $blocked_by_show_avatar ) {
 				remove_filter( 'bb_get_blocked_avatar_url', array( $this, 'bb_moderation_fetch_avatar_url_filter' ), 10, 3 );
@@ -920,8 +920,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		// Cover Image.
 		$data['cover_url']        = (
-			empty( bp_disable_cover_image_uploads() )
-			? bp_attachments_get_attachment(
+			empty( bboss_disable_cover_image_uploads() )
+			? bboss_attachments_get_attachment(
 				'url',
 				array(
 					'object_dir' => 'members',
@@ -930,24 +930,24 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			)
 			: false
 		);
-		$data['cover_is_default'] = ! bp_attachments_get_user_has_cover_image( $user->ID );
+		$data['cover_is_default'] = ! bboss_attachments_get_user_has_cover_image( $user->ID );
 
 		// Fallback.
 		if ( false === $data['member_types'] ) {
 			$data['member_types'] = array();
 		}
 
-		if ( function_exists( 'bp_member_type_enable_disable' ) && bp_member_type_enable_disable() === false ) {
+		if ( function_exists( 'bboss_member_type_enable_disable' ) && bboss_member_type_enable_disable() === false ) {
 			$data['member_types'] = array();
 		}
 
 		if ( ! empty( $data['member_types'] ) ) {
 			$member_types = array();
 			foreach ( $data['member_types'] as $name ) {
-				$member_types[ $name ] = bp_get_member_type_object( $name );
+				$member_types[ $name ] = bboss_get_member_type_object( $name );
 
 				// Member type's label background and text color.
-				$label_color_data = function_exists( 'bb_get_member_type_label_colors' ) ? bb_get_member_type_label_colors( $name ) : '';
+				$label_color_data = function_exists( 'bboss_get_member_type_label_colors' ) ? bboss_get_member_type_label_colors( $name ) : '';
 				if ( ! empty( $label_color_data ) ) {
 					$member_types[ $name ]->label_colors = $label_color_data;
 				}
@@ -959,10 +959,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$allowed_message = false;
 
 		if (
-			bp_is_active( 'messages' ) &&
-			bb_messages_user_can_send_message(
+			bboss_is_active( 'messages' ) &&
+			bboss_messages_user_can_send_message(
 				array(
-					'sender_id'     => bp_loggedin_user_id(),
+					'sender_id'     => bboss_loggedin_user_id(),
 					'recipients_id' => $user->ID,
 				)
 			)
@@ -973,8 +973,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		// It will check non-admin members can send message or not before they can connected to each other.
 		// Also check access controls settings.
 		$data['can_send_message'] = (
-			bp_is_active( 'messages' ) &&
-			bp_loggedin_user_id() &&
+			bboss_is_active( 'messages' ) &&
+			bboss_loggedin_user_id() &&
 			apply_filters( 'bp_rest_user_can_show_send_message_button', true, $user->ID ) &&
 			$allowed_message
 		);
@@ -1022,8 +1022,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if (
 			isset( $prepared_user->ID, $prepared_user->display_name )
 			&& isset( $request['name'] )
-			&& function_exists( 'bp_is_active' )
-			&& bp_is_active( 'xprofile' )
+			&& function_exists( 'bboss_is_active' )
+			&& bboss_is_active( 'xprofile' )
 		) {
 			$existing_user = get_userdata( (int) $prepared_user->ID );
 
@@ -1031,7 +1031,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$stored_name = (string) $existing_user->display_name;
 				$served_name = (string) $this->get_visible_display_name(
 					$existing_user,
-					function_exists( 'bb_core_get_viewer_user_id' ) ? (int) bb_core_get_viewer_user_id() : (int) get_current_user_id()
+					function_exists( 'bboss_core_get_viewer_user_id' ) ? (int) bboss_core_get_viewer_user_id() : (int) get_current_user_id()
 				);
 
 				if (
@@ -1067,7 +1067,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( isset( $prepared_user->ID ) && isset( $request['member_type'] ) ) {
 			// Append on update. Add on creation.
 			$append = WP_REST_Server::EDITABLE === $request->get_method();
-			bp_set_member_type( $prepared_user->ID, $request['member_type'], $append );
+			bboss_set_member_type( $prepared_user->ID, $request['member_type'], $append );
 		}
 
 		/**
@@ -1087,7 +1087,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param int $user_id   User ID whose profile data is returned.
 	 * @param int $viewer_id ID of the user viewing the data. Fields hidden from this viewer by their
 	 *                       per-field visibility are omitted. 0 falls back to the logged-in user
-	 *                       inside bp_xprofile_get_hidden_fields_for_user().
+	 *                       inside bboss_xprofile_get_hidden_fields_for_user().
 	 *
 	 * @return array
 	 * @since 0.1.0
@@ -1096,8 +1096,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$data = array();
 
 		// Get XProfile groups, only if the component is active.
-		if ( bp_is_active( 'xprofile' ) ) {
-			$fields_endpoint = new BP_REST_XProfile_Fields_Endpoint();
+		if ( bboss_is_active( 'xprofile' ) ) {
+			$fields_endpoint = new BBoss_REST_XProfile_Fields_Endpoint();
 
 			// Fields hidden from this viewer are ALSO excluded by Platform: BP_XProfile_Group::get()
 			// merges bp_xprofile_get_hidden_fields_for_user() into its exclude_fields SQL. We do NOT
@@ -1105,11 +1105,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			// hidden surname must never surface here even if that internal SQL behaviour ever changes.
 			// So we suppress hidden fields explicitly too (mirroring BP_REST_XProfile_Fields_Endpoint),
 			// making the privacy guarantee self-contained. A self-view/admin resolves to an empty list.
-			$hidden_fields = function_exists( 'bp_xprofile_get_hidden_fields_for_user' )
-				? array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) )
+			$hidden_fields = function_exists( 'bboss_xprofile_get_hidden_fields_for_user' )
+				? array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) )
 				: array();
 
-			$groups = bp_xprofile_get_groups(
+			$groups = bboss_xprofile_get_groups(
 				array(
 					'user_id'                        => $user_id,
 					'fetch_fields'                   => true,
@@ -1137,12 +1137,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * Added support for display name format support from platform.
 					 */
 					// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-					if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $item->id ) ) {
+					if ( function_exists( 'bboss_core_hide_display_name_field' ) && true === bboss_core_hide_display_name_field( $item->id ) ) {
 						continue;
 					}
 
-					if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-						if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() === $item->id ) {
+					if ( function_exists( 'bboss_member_type_enable_disable' ) && false === bboss_member_type_enable_disable() ) {
+						if ( function_exists( 'bboss_get_xprofile_member_type_field_id' ) && bboss_get_xprofile_member_type_field_id() === $item->id ) {
 							continue;
 						}
 					}
@@ -1230,10 +1230,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$member_type_args = array(
 			'description'       => __( 'Set type(s) for a member.', 'buddyboss' ),
 			'type'              => 'string',
-			'enum'              => bp_get_member_types(),
+			'enum'              => bboss_get_member_types(),
 			'context'           => array( 'edit' ),
-			'sanitize_callback' => 'bp_rest_sanitize_member_types',
-			'validate_callback' => 'bp_rest_sanitize_member_types',
+			'sanitize_callback' => 'bboss_rest_sanitize_member_types',
+			'validate_callback' => 'bboss_rest_sanitize_member_types',
 		);
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
@@ -1455,12 +1455,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		// Avatars.
-		if ( true === buddypress()->avatar->show_avatars ) {
+		if ( true === bboss()->avatar->show_avatars ) {
 			$avatar_properties = array();
 
 			$avatar_properties['full'] = array(
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bboss_core_number_format( bboss_core_avatar_full_width() ), bboss_core_number_format( bboss_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -1468,7 +1468,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bboss_core_number_format( bboss_core_avatar_thumb_width() ), bboss_core_number_format( bboss_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -1577,7 +1577,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
@@ -1619,7 +1619,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 * @return array
 	 * @since 0.1.0
-	 * - bp-core\profile-search\bps-search.php bp_ps_search()
+	 * - bp-core\profile-search\bps-search.php bboss_ps_search()
 	 */
 	public function rest_bp_ps_search( $request ) {
 		$results = array(
@@ -1627,7 +1627,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'validated' => true,
 		);
 
-		$fields = bp_ps_parse_request( $request );
+		$fields = bboss_ps_parse_request( $request );
 
 		$copied_arr = array();
 
@@ -1669,14 +1669,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$copied_arr = $found;
 			if ( isset( $copied_arr ) && ! empty( $copied_arr ) ) {
 				foreach ( $copied_arr as $key => $user ) {
-					$field_visibility = xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
+					$field_visibility = bboss_xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
 					if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
 						$key = array_search( $user, $found, true );
 						if ( false !== $key ) {
 							unset( $found[ $key ] );
 						}
 					}
-					if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user ), get_current_user_id() ) ) {
+					if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === bboss_friends_check_friendship( intval( $user ), get_current_user_id() ) ) {
 						$key = array_search( $user, $found, true );
 						if ( false !== $key ) {
 							unset( $found[ $key ] );
@@ -1713,10 +1713,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
 	 */
 	public function rest_bp_get_following_ids( $args ) {
-		if ( bp_is_active( 'follow' ) ) {
-			return bp_get_following_ids( $args );
+		if ( bboss_is_active( 'follow' ) ) {
+			return bboss_get_following_ids( $args );
 		} else {
-			return ( function_exists( 'bp_get_following' ) && bp_is_activity_follow_active() ? bp_get_following( $args ) : '' );
+			return ( function_exists( 'bboss_get_following' ) && bboss_is_activity_follow_active() ? bboss_get_following( $args ) : '' );
 		}
 	}
 
@@ -1728,10 +1728,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
 	 */
 	public function rest_bp_get_follower_ids( $args ) {
-		if ( bp_is_active( 'follow' ) ) {
-			return bp_get_follower_ids( $args );
+		if ( bboss_is_active( 'follow' ) ) {
+			return bboss_get_follower_ids( $args );
 		} else {
-			return ( function_exists( 'bp_get_followers' ) && bp_is_activity_follow_active() ? bp_get_followers( $args ) : '' );
+			return ( function_exists( 'bboss_get_followers' ) && bboss_is_activity_follow_active() ? bboss_get_followers( $args ) : '' );
 		}
 	}
 
@@ -1743,7 +1743,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * would otherwise expose what the web front end withholds from that same viewer.
 	 *
 	 * The name is then ASSEMBLED from the fields this viewer may see rather than subtracted out of
-	 * the stored column, mirroring Platform's bb_core_build_visible_display_name() (PROD-9896).
+	 * the stored column, mirroring Platform's bboss_core_build_visible_display_name() (PROD-9896).
 	 * While nothing is withheld the `name` field stays anchored to the stored display name, which
 	 * is what keeps it round-trippable against WP_REST_Users_Controller.
 	 *
@@ -1759,15 +1759,15 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		if (
 			'' === $display_name
-			|| ! function_exists( 'bp_is_active' )
-			|| ! bp_is_active( 'xprofile' )
-			|| ! function_exists( 'bp_xprofile_get_hidden_fields_for_user' )
-			|| ! function_exists( 'bp_xprofile_lastname_field_id' )
+			|| ! function_exists( 'bboss_is_active' )
+			|| ! bboss_is_active( 'xprofile' )
+			|| ! function_exists( 'bboss_xprofile_get_hidden_fields_for_user' )
+			|| ! function_exists( 'bboss_xprofile_lastname_field_id' )
 		) {
 			return $display_name;
 		}
 
-		$active_display_format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+		$active_display_format = function_exists( 'bboss_core_display_name_format' ) ? bboss_core_display_name_format() : 'first_last_name';
 
 		// Under the Nickname display format the visible name is the nickname and nothing else -
 		// neither name field is part of it, whether or not either has data - so read it directly
@@ -1780,10 +1780,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		// where Platform can answer - the groups endpoint resolves the same way, for the same
 		// reason - and keep the meta chain only for a Platform that cannot.
 		if ( 'nickname' === $active_display_format ) {
-			if ( function_exists( 'bb_core_build_visible_display_name' ) && function_exists( 'bp_core_get_user_displayname' ) ) {
+			if ( function_exists( 'bboss_core_build_visible_display_name' ) && function_exists( 'bboss_core_get_user_displayname' ) ) {
 				// Decoded for the same reason as `profile_name` above - the resolver's chain ends
 				// in esc_html(), which is an HTML-output concern, not a JSON one.
-				$resolved = wp_specialchars_decode( (string) bp_core_get_user_displayname( $user->ID, (int) $viewer_id ), ENT_QUOTES );
+				$resolved = wp_specialchars_decode( (string) bboss_core_get_user_displayname( $user->ID, (int) $viewer_id ), ENT_QUOTES );
 
 				if ( is_string( $resolved ) && '' !== $resolved ) {
 					return $resolved;
@@ -1793,9 +1793,9 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			return $this->get_fallback_display_name( $user );
 		}
 
-		$hidden_fields       = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user->ID, $viewer_id ) );
-		$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? (int) bp_xprofile_firstname_field_id() : 0;
-		$last_name_field_id  = (int) bp_xprofile_lastname_field_id();
+		$hidden_fields       = array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user->ID, $viewer_id ) );
+		$first_name_field_id = function_exists( 'bboss_xprofile_firstname_field_id' ) ? (int) bboss_xprofile_firstname_field_id() : 0;
+		$last_name_field_id  = (int) bboss_xprofile_lastname_field_id();
 
 		// The first name can be restricted per member, or site-wide through the field's own default
 		// visibility, which bp_xprofile_get_fields_by_visibility_levels() applies to every member
@@ -1870,9 +1870,9 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * non-string no-value normalises to '' rather than to something that cannot be concatenated.
 	 *
 	 * The WordPress user meta is read when the profile field has no stored row, because that is
-	 * what bp_xprofile_get_member_display_name() itself back-fills from: on an imported member the
+	 * what bboss_xprofile_get_member_display_name() itself back-fills from: on an imported member the
 	 * xprofile row does not exist yet, and reading only the field would drop a name the viewer is
-	 * entitled to see. Delegates to Platform's bb_core_get_name_field_value() so every endpoint
+	 * entitled to see. Delegates to Platform's bboss_core_get_name_field_value() so every endpoint
 	 * resolves a name part the same way, and keeps a self-contained fallback for a Platform that
 	 * predates it.
 	 *
@@ -1898,7 +1898,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *    guard against a redeclaration fatal - a new failure mode traded for no behaviour change.
 	 *
 	 * The drift this leaves is bounded by delegation: on any Platform that HAS
-	 * bb_core_get_name_field_value() all three controllers return Platform's answer, so the copies
+	 * bboss_core_get_name_field_value() all three controllers return Platform's answer, so the copies
 	 * below only ever run on an unpaired install and only ever have to stay in step with each
 	 * other. Keep them byte-identical, signature included, and change all three together.
 	 *
@@ -1917,16 +1917,16 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		// Platform owns the rule. Delegating means a later change to it - a different empty-value
 		// test, another Unicode class - reaches every endpoint at once instead of leaving the
 		// copies below to drift into publishing a name part a sibling endpoint withholds.
-		if ( function_exists( 'bb_core_get_name_field_value' ) ) {
-			return (string) bb_core_get_name_field_value( $field_id, $user_id, $meta_key );
+		if ( function_exists( 'bboss_core_get_name_field_value' ) ) {
+			return (string) bboss_core_get_name_field_value( $field_id, $user_id, $meta_key );
 		}
 
 		// Self-contained fallback for a Platform that predates that helper, since this plugin is
 		// upgraded independently of it.
 		$value = '';
 
-		if ( $field_id > 0 && function_exists( 'xprofile_get_field_data' ) ) {
-			$stored = xprofile_get_field_data( $field_id, $user_id );
+		if ( $field_id > 0 && function_exists( 'bboss_xprofile_get_field_data' ) ) {
+			$stored = bboss_xprofile_get_field_data( $field_id, $user_id );
 			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
 		}
 
@@ -1941,7 +1941,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Last-resort label for a member whose name resolved to nothing.
 	 *
-	 * Platform's bp_core_get_user_displayname() ends its chain at `user_nicename`, not at the
+	 * Platform's bboss_core_get_user_displayname() ends its chain at `user_nicename`, not at the
 	 * nickname: the nickname usermeta can be empty on a raw import, and WordPress guarantees a
 	 * non-empty nicename for every real user. Stopping one step earlier here meant `name` could
 	 * come back as an empty string while `profile_name` in the SAME response - which delegates to
@@ -1969,7 +1969,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 	/**
 	 * Return the current member's last active time.
-	 * -- from bp_get_member_last_active().
+	 * -- from bboss_get_member_last_active().
 	 *
 	 * @param int   $user_id User ID.
 	 * @param array $args    Array of optional arguments.
@@ -1979,7 +1979,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function bp_rest_get_member_last_active( $user_id, $args = array() ) {
 
 		// Parse the activity format.
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'active_format' => true,
@@ -1987,7 +1987,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			)
 		);
 
-		$last_active = bp_get_user_last_activity( $user_id );
+		$last_active = bboss_get_user_last_activity( $user_id );
 
 		// Backwards compatibility for anyone forcing a 'true' active_format.
 		if ( true === $r['active_format'] ) {
@@ -2000,13 +2000,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			// We do not want relative time, so return now.
 			// @todo Should the 'bp_member_last_active' filter be applied here?
 			if ( ! $r['relative'] ) {
-				return ( empty( $last_active ) ? __( 'Not recently active', 'buddyboss' ) : bp_rest_prepare_date_response( $last_active ) );
+				return ( empty( $last_active ) ? __( 'Not recently active', 'buddyboss' ) : bboss_rest_prepare_date_response( $last_active ) );
 			}
 
 			// Backwards compatibility for pre 1.5 'ago' strings.
 			$last_activity = ! empty( $r['active_format'] )
-				? bp_core_get_last_activity( $last_active, $r['active_format'] )
-				: bp_core_time_since( $last_active );
+				? bboss_core_get_last_activity( $last_active, $r['active_format'] )
+				: bboss_core_time_since( $last_active );
 
 			// Member has never logged in or been active.
 		} else {
@@ -2037,3 +2037,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		return $old_avatar_url;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Members_Endpoint', false ) || interface_exists( 'BBoss_REST_Members_Endpoint', false ) || trait_exists( 'BBoss_REST_Members_Endpoint', false ) ) && ! class_exists( 'BP_REST_Members_Endpoint', false ) && ! interface_exists( 'BP_REST_Members_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Members_Endpoint', 'BP_REST_Members_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

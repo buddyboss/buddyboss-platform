@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-abstract class BP_Suspend_Abstract {
+abstract class BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -94,7 +94,7 @@ abstract class BP_Suspend_Abstract {
 	);
 
 	/**
-	 * BP_Suspend_Abstract constructor.
+	 * BBoss_Suspend_Abstract constructor.
 	 *
 	 * @since BuddyBoss 2.7.30
 	 */
@@ -146,7 +146,7 @@ abstract class BP_Suspend_Abstract {
 	 */
 	protected function exclude_joint_query( $item_id_field, $item_type = '' ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( empty( $item_type ) ) {
 			$item_type = $this->item_type;
@@ -294,7 +294,7 @@ abstract class BP_Suspend_Abstract {
 		$user_suspended = $suspended_record->user_suspended;
 
 		$suspended_id   = $suspended_record->id;
-		$reported_users = BP_Core_Suspend::get_suspend_detail( $suspended_id );
+		$reported_users = BBoss_Core_Suspend::get_suspend_detail( $suspended_id );
 		if (
 			! empty( $reported_users )
 			|| ! empty( $hide_sitewide )
@@ -309,23 +309,23 @@ abstract class BP_Suspend_Abstract {
 				'hide_sitewide'  => false,
 			);
 
-			if ( true === $hide_sitewide && BP_Moderation_Members::$moderation_type !== $suspended_record->item_type ) {
+			if ( true === $hide_sitewide && BBoss_Moderation_Members::$moderation_type !== $suspended_record->item_type ) {
 				$suspend_args['hide_parent'] = $hide_sitewide;
 			}
 
-			if ( BP_Moderation_Members::$moderation_type === $suspended_record->item_type ) {
+			if ( BBoss_Moderation_Members::$moderation_type === $suspended_record->item_type ) {
 				$suspend_args['hide_parent']    = false;
 				$suspend_args['user_suspended'] = $hide_sitewide;
 			} elseif ( true === $hide_sitewide ) {
 				$suspend_args['hide_parent'] = $hide_sitewide;
 			}
 
-			$current_suspended_id = BP_Core_Suspend::add_suspend( $suspend_args );
+			$current_suspended_id = BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 			if ( ! empty( $reported_users ) ) {
 				$reported_users[] = $user_id;
 				foreach ( $reported_users as $user_id ) {
-					BP_Core_Suspend::add_suspend_details(
+					BBoss_Core_Suspend::add_suspend_details(
 						array(
 							'suspend_id' => $current_suspended_id,
 							'user_id'    => $user_id,
@@ -396,7 +396,7 @@ abstract class BP_Suspend_Abstract {
 			return 'bb_moderation';
 		}
 
-		if ( BP_Suspend_Member::$type === $args['item_type'] ) {
+		if ( BBoss_Suspend_Member::$type === $args['item_type'] ) {
 			if ( ! empty( $args['action_suspend'] ) ) {
 				if ( ! empty( $args['user_suspended'] ) ) {
 					$type = 'suspend';
@@ -435,13 +435,13 @@ abstract class BP_Suspend_Abstract {
 		$suspended_user = ! empty( $args['user_suspended'] ) ? $args['user_suspended'] : '';
 
 		if (
-			BP_Core_Suspend::check_hidden_content( $item_id, $item_type ) ||
+			BBoss_Core_Suspend::check_hidden_content( $item_id, $item_type ) ||
 			(
 				(
 					! empty( $args['action_suspend'] ) ||
 					! empty( $args['user_suspended'] )
 				) &&
-				BP_Core_Suspend::check_suspended_content( $item_id, $item_type )
+				BBoss_Core_Suspend::check_suspended_content( $item_id, $item_type )
 			)
 		) {
 			return true;
@@ -450,7 +450,7 @@ abstract class BP_Suspend_Abstract {
 		if (
 			! empty( $blocked_user ) &&
 			empty( $suspended_user ) &&
-			BP_Core_Suspend::check_blocked_user_content( $item_id, $item_type, $blocked_user )
+			BBoss_Core_Suspend::check_blocked_user_content( $item_id, $item_type, $blocked_user )
 		) {
 			return true;
 		}
@@ -477,7 +477,7 @@ abstract class BP_Suspend_Abstract {
 		if (
 			! empty( $blocked_user ) &&
 			empty( $action_suspend ) &&
-			! BP_Core_Suspend::check_blocked_user_content( $item_id, $item_type, $blocked_user )
+			! BBoss_Core_Suspend::check_blocked_user_content( $item_id, $item_type, $blocked_user )
 		) {
 			return true;
 		}
@@ -488,13 +488,13 @@ abstract class BP_Suspend_Abstract {
 				|| empty( $hide_parent )
 			) &&
 			! (
-				BP_Core_Suspend::check_hidden_content( $item_id, $item_type ) ||
+				BBoss_Core_Suspend::check_hidden_content( $item_id, $item_type ) ||
 				(
 					(
 						! empty( $args['action_suspend'] ) ||
 						! empty( $args['user_suspended'] )
 					) &&
-					BP_Core_Suspend::check_suspended_content( $item_id, $item_type )
+					BBoss_Core_Suspend::check_suspended_content( $item_id, $item_type )
 				)
 			)
 		) {

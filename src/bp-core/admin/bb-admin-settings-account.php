@@ -25,9 +25,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_account_settings_feature() {
+function bboss_admin_settings_register_account_settings_feature() {
 
-	bb_register_feature(
+	bboss_register_feature(
 		'settings',
 		array(
 			'label'              => __( 'Account Settings', 'buddyboss' ),
@@ -40,7 +40,7 @@ function bb_admin_settings_register_account_settings_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'settings' );
+				return bboss_is_active( 'settings' );
 			},
 			'settings_route'     => '',
 			'order'              => 30,

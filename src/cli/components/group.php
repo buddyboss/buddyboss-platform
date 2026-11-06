@@ -98,7 +98,7 @@ class Group extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'name'         => '',
@@ -107,13 +107,13 @@ class Group extends BuddypressCommand {
 				'creator-id'   => 1,
 				'status'       => 'public',
 				'enable-forum' => 0,
-				'date-created' => bp_core_current_time(),
+				'date-created' => bboss_core_current_time(),
 			)
 		);
 
 		// Auto-generate some stuff.
 		if ( empty( $r['slug'] ) ) {
-			$r['slug'] = groups_check_slug( sanitize_title( $r['name'] ) );
+			$r['slug'] = bboss_groups_check_slug( sanitize_title( $r['name'] ) );
 		}
 
 		if ( empty( $r['description'] ) ) {
@@ -125,7 +125,7 @@ class Group extends BuddypressCommand {
 			$r['status'] = 'public';
 		}
 
-		$group_id = groups_create_group(
+		$group_id = bboss_groups_create_group(
 			array(
 				'name'         => $r['name'],
 				'slug'         => $r['slug'],
@@ -146,17 +146,17 @@ class Group extends BuddypressCommand {
 			WP_CLI::error( 'Could not create group.' );
 		}
 
-		groups_update_groupmeta( $group_id, 'total_member_count', 1 );
+		bboss_groups_update_groupmeta( $group_id, 'total_member_count', 1 );
 
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'porcelain' ) ) {
 			WP_CLI::line( $group_id );
 		} else {
-			$group     = groups_get_group(
+			$group     = bboss_groups_get_group(
 				array(
 					'group_id' => $group_id,
 				)
 			);
-			$permalink = bp_get_group_permalink( $group );
+			$permalink = bboss_get_group_permalink( $group );
 			WP_CLI::success( sprintf( 'Group (ID %d) created: %s', $group_id, $permalink ) );
 		}
 	}
@@ -247,9 +247,9 @@ class Group extends BuddypressCommand {
 	 */
 	public function get( $args, $assoc_args ) {
 		$group_id         = $this->get_group_id_from_identifier( $args[0] );
-		$group            = groups_get_group( $group_id );
+		$group            = bboss_groups_get_group( $group_id );
 		$group_arr        = get_object_vars( $group );
-		$group_arr['url'] = bp_get_group_permalink( $group );
+		$group_arr['url'] = bboss_get_group_permalink( $group );
 
 		if ( empty( $assoc_args['fields'] ) ) {
 			$assoc_args['fields'] = array_keys( $group_arr );
@@ -287,7 +287,7 @@ class Group extends BuddypressCommand {
 			array( $group_id ),
 			$assoc_args,
 			function( $group_id ) {
-				if ( groups_delete_group( $group_id ) ) {
+				if ( bboss_groups_delete_group( $group_id ) ) {
 					return array( 'success', 'Group successfully deleted.' );
 				} else {
 					return array( 'error', 'Could not delete the group.' );
@@ -305,7 +305,7 @@ class Group extends BuddypressCommand {
 	 * : Identifier(s) for the group(s). Can be a numeric ID or the group slug.
 	 *
 	 * [--<field>=<value>]
-	 * : One or more fields to update. See groups_create_group()
+	 * : One or more fields to update. See bboss_groups_create_group()
 	 *
 	 * ## EXAMPLE
 	 *
@@ -322,7 +322,7 @@ class Group extends BuddypressCommand {
 			$clean_group_ids,
 			$assoc_args,
 			function( $params ) {
-				return groups_create_group( $params );
+				return bboss_groups_create_group( $params );
 			}
 		);
 	}
@@ -333,7 +333,7 @@ class Group extends BuddypressCommand {
 	 * ## OPTIONS
 	 *
 	 * [--<field>=<value>]
-	 * : One or more parameters to pass. See groups_get_groups()
+	 * : One or more parameters to pass. See bboss_groups_get_groups()
 	 *
 	 * [--fields=<fields>]
 	 * : Fields to display.
@@ -388,7 +388,7 @@ class Group extends BuddypressCommand {
 	 */
 	public function _list( $args, $assoc_args ) {
 		$formatter  = $this->get_formatter( $assoc_args );
-		$query_args = bp_parse_args(
+		$query_args = bboss_parse_args(
 			$assoc_args,
 			array(
 				'count'       => 50,
@@ -411,7 +411,7 @@ class Group extends BuddypressCommand {
 			$query_args['fields'] = 'ids';
 		}
 
-		$groups = groups_get_groups( $query_args );
+		$groups = bboss_groups_get_groups( $query_args );
 		if ( empty( $groups['groups'] ) ) {
 			WP_CLI::error( 'No groups found.' );
 		}

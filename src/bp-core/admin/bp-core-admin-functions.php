@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Initializes the wp-admin area "BuddyPress" menus and sub menus.
  */
-function bp_core_admin_menu_init() {
-	add_action( bp_core_admin_hook(), 'bp_core_add_admin_menu', 9 );
+function bboss_core_admin_menu_init() {
+	add_action( bboss_core_admin_hook(), 'bp_core_add_admin_menu', 9 );
 }
 
 /**
@@ -31,7 +31,7 @@ function bp_core_admin_menu_init() {
  *
  * @global array $_parent_pages
  */
-function bp_core_admin_backpat_menu() {
+function bboss_core_admin_backpat_menu() {
 	global $_parent_pages, $_registered_pages, $submenu;
 
 	// If there's no bp-general-settings menu (perhaps because the current
@@ -58,7 +58,7 @@ function bp_core_admin_backpat_menu() {
 	unset( $_registered_pages['toplevel_page_bp-general-settings'] );
 }
 
-add_action( bp_core_admin_hook(), 'bp_core_admin_backpat_menu', 999 );
+add_action( bboss_core_admin_hook(), 'bp_core_admin_backpat_menu', 999 );
 
 /**
  * This tells WP to highlight the Settings > BuddyPress menu item,
@@ -72,7 +72,7 @@ add_action( bp_core_admin_hook(), 'bp_core_admin_backpat_menu', 999 );
  *
  * @global string $plugin_page
  */
-function bp_core_modify_admin_menu_highlight() {
+function bboss_core_modify_admin_menu_highlight() {
 	global $plugin_page, $submenu_file;
 
 	// This tweaks the Settings subnav menu to show only one BuddyPress menu item.
@@ -106,12 +106,12 @@ function bp_core_modify_admin_menu_highlight() {
  *
  * @since BuddyPress 1.6.0
  *
- * @see   bp_core_admin_backpat_menu()
+ * @see   bboss_core_admin_backpat_menu()
  *
  * @todo  Add convenience links into the markup once new positions are finalised.
  */
-function bp_core_admin_backpat_page() {
-	$url          = bp_core_do_network_admin() ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
+function bboss_core_admin_backpat_page() {
+	$url          = bboss_core_do_network_admin() ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
 	$settings_url = add_query_arg( 'page', 'bp-components', $url ); ?>
 
 	<div class="wrap">
@@ -119,7 +119,7 @@ function bp_core_admin_backpat_page() {
 
 		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss' ); ?></p>
 		<?php /* translators: 1: Settings > BuddyPress URL, 2: Settings 2.0 profile fields URL. */ ?>
-		<p><?php echo wp_kses_post( sprintf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss' ), esc_url( $settings_url ), esc_url( bb_get_feature_settings_url( 'members', 'profile_fields' ) ) ) ); ?></p>
+		<p><?php echo wp_kses_post( sprintf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss' ), esc_url( $settings_url ), esc_url( bboss_get_feature_settings_url( 'members', 'profile_fields' ) ) ) ); ?></p>
 	</div>
 
 	<?php
@@ -135,27 +135,27 @@ function bp_core_admin_backpat_page() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_core_print_admin_notices() {
+function bboss_core_print_admin_notices() {
 
 	// Only the super admin should see messages.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
 
 	// On multisite installs, don't show on a non-root blog, unless
 	// 'do_network_admin' is overridden.
-	if ( is_multisite() && bp_core_do_network_admin() && ! bp_is_root_blog() ) {
+	if ( is_multisite() && bboss_core_do_network_admin() && ! bboss_is_root_blog() ) {
 		return;
 	}
 
 	$notice_types = array();
-	foreach ( buddypress()->admin->notices as $notice ) {
+	foreach ( bboss()->admin->notices as $notice ) {
 		$notice_types[] = $notice['type'];
 	}
 	$notice_types = array_unique( $notice_types );
 
 	foreach ( $notice_types as $type ) {
-		$notices = wp_list_filter( buddypress()->admin->notices, array( 'type' => $type ) );
+		$notices = wp_list_filter( bboss()->admin->notices, array( 'type' => $type ) );
 		printf( '<div id="message" class="fade %s">', sanitize_html_class( $type ) );
 
 		foreach ( $notices as $notice ) {
@@ -181,7 +181,7 @@ add_action( 'network_admin_notices', 'bp_core_print_admin_notices' );
  * @param string $notice The notice you are adding to the queue.
  * @param string $type   The notice type; optional. Usually either "updated" or "error".
  */
-function bp_core_add_admin_notice( $notice = '', $type = 'updated' ) {
+function bboss_core_add_admin_notice( $notice = '', $type = 'updated' ) {
 
 	// Do not add if the notice is empty.
 	if ( empty( $notice ) ) {
@@ -189,12 +189,12 @@ function bp_core_add_admin_notice( $notice = '', $type = 'updated' ) {
 	}
 
 	// Double check the object before referencing it.
-	if ( ! isset( buddypress()->admin->notices ) ) {
-		buddypress()->admin->notices = array();
+	if ( ! isset( bboss()->admin->notices ) ) {
+		bboss()->admin->notices = array();
 	}
 
 	// Add the notice.
-	buddypress()->admin->notices[] = array(
+	bboss()->admin->notices[] = array(
 		'message' => $notice,
 		'type'    => $type,
 	);
@@ -214,11 +214,11 @@ function bp_core_add_admin_notice( $notice = '', $type = 'updated' ) {
  *
  * @global wpdb       $wpdb WordPress database abstraction object.
  */
-function bp_core_activation_notice() {
+function bboss_core_activation_notice() {
 	global $wp_rewrite, $wpdb;
 
 	// Only the super admin gets warnings.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
 
@@ -228,12 +228,12 @@ function bp_core_activation_notice() {
 	}
 
 	// On multisite installs, don't load on a non-root blog, unless do_network_admin is overridden.
-	if ( is_multisite() && bp_core_do_network_admin() && ! bp_is_root_blog() ) {
+	if ( is_multisite() && bboss_core_do_network_admin() && ! bboss_is_root_blog() ) {
 		return;
 	}
 
 	// Bail if in network admin, and BuddyPress is not network activated.
-	if ( is_network_admin() && ! bp_is_network_activated() ) {
+	if ( is_network_admin() && ! bboss_is_network_activated() ) {
 		return;
 	}
 
@@ -242,23 +242,23 @@ function bp_core_activation_notice() {
 	 * happen during the wizard because of the order which the components
 	 * are loaded.
 	 */
-	if ( bp_is_active( 'blogs' ) ) {
-		$bp    = buddypress();
+	if ( bboss_is_active( 'blogs' ) ) {
+		$bp    = bboss();
 		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->blogs->table_name}" );
 
 		if ( empty( $count ) ) {
-			bp_blogs_record_existing_blogs();
+			bboss_blogs_record_existing_blogs();
 		}
 	}
 
 	// Add notice if no rewrite rules are enabled.
 	if ( empty( $wp_rewrite->permalink_structure ) ) {
 		/* translators: %s: URL of the Pages settings screen. */
-		bp_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss' ), admin_url( 'options-permalink.php' ) ), 'error' );
+		bboss_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss' ), admin_url( 'options-permalink.php' ) ), 'error' );
 	}
 
 	// Get BuddyPress instance.
-	$bp = buddypress();
+	$bp = bboss();
 
 	/**
 	 * Check for orphaned BP components (BP component is enabled, no WP page exists).
@@ -272,12 +272,12 @@ function bp_core_activation_notice() {
 			$component_id = 'media';
 		}
 		if ( 'documents' === $component_id ) {
-			if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+			if ( bboss_is_active( 'media' ) && ( bboss_is_group_document_support_enabled() || bboss_is_profile_document_support_enabled() ) ) {
 				$component_id = 'document';
 			}
 		}
 		if ( 'videos' === $component_id ) {
-			if ( bp_is_active( 'media' ) && ( bp_is_group_video_support_enabled() || bp_is_profile_video_support_enabled() ) ) {
+			if ( bboss_is_active( 'media' ) && ( bboss_is_group_video_support_enabled() || bboss_is_profile_video_support_enabled() ) ) {
 				$component_id = 'video';
 			}
 		}
@@ -291,8 +291,8 @@ function bp_core_activation_notice() {
 
 	// Activate and Register are special cases. They are not components but they need WP pages.
 	// If user registration is disabled, we can skip this step.
-	$allow_custom_registration = bp_allow_custom_registration();
-	if ( bp_get_signup_allowed() && ! $allow_custom_registration ) {
+	$allow_custom_registration = bboss_allow_custom_registration();
+	if ( bboss_get_signup_allowed() && ! $allow_custom_registration ) {
 		$wp_page_components[] = array(
 			'id'   => 'activate',
 			'name' => __( 'Activate', 'buddyboss' ),
@@ -307,7 +307,7 @@ function bp_core_activation_notice() {
 	// On the first admin screen after a new installation, this isn't set, so grab it to suppress
 	// a misleading error message.
 	if ( empty( $bp->pages->members ) ) {
-		$bp->pages = bp_core_get_directory_pages();
+		$bp->pages = bboss_core_get_directory_pages();
 	}
 
 	foreach ( $wp_page_components as $component ) {
@@ -316,8 +316,8 @@ function bp_core_activation_notice() {
 		}
 	}
 
-	if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-		if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+	if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) ) {
+		if ( bboss_nouveau_get_appearance_settings( 'user_front_page' ) ) {
 			if ( ! isset( $bp->pages->profile_dashboard ) ) {
 				$orphaned_components[] = 'Profile Dashboard';
 			}
@@ -325,9 +325,9 @@ function bp_core_activation_notice() {
 	}
 
 	// If forum enabled and forum page is not set then add to forums to $orphaned_components components to show the notice.
-	if ( bp_is_active( 'forums' ) ) {
+	if ( bboss_is_active( 'forums' ) ) {
 
-		$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+		$id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 
 		// Check the status of current set value.
 		$status = get_post_status( $id );
@@ -345,9 +345,9 @@ function bp_core_activation_notice() {
 		// `?page=bp-pages` slug now redirects via
 		// bb_redirect_bp_settings_before_permission_check() but we link
 		// directly to the canonical URL to avoid the redirect hop.
-		$admin_url = function_exists( 'bb_get_feature_settings_url' )
-			? bb_get_feature_settings_url( 'appearance', 'pages' )
-			: bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
+		$admin_url = function_exists( 'bboss_get_feature_settings_url' )
+			? bboss_get_feature_settings_url( 'appearance', 'pages' )
+			: bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection to suppress the "Repair" link when the user is already on the Pages panel.
 		$on_pages_panel = isset( $_GET['page'], $_GET['tab'], $_GET['panel'] )
@@ -389,14 +389,14 @@ function bp_core_activation_notice() {
 			);
 		}
 
-		bp_core_add_admin_notice( $notice );
+		bboss_core_add_admin_notice( $notice );
 	}
 
 	// BP components cannot share a single WP page. Check for duplicate assignments, and post a message if found.
 	$dupe_names = array();
-	$page_ids   = bp_core_get_directory_page_ids();
+	$page_ids   = bboss_core_get_directory_page_ids();
 	$dupes      = array_diff_assoc( $page_ids, array_unique( $page_ids ) );
-	$bp_pages   = bp_core_get_directory_pages();
+	$bp_pages   = bboss_core_get_directory_pages();
 
 	if ( ! empty( $dupes ) ) {
 		foreach ( array_keys( $dupes ) as $dupe_component ) {
@@ -411,9 +411,9 @@ function bp_core_activation_notice() {
 	if ( ! empty( $dupe_names ) ) {
 		// Settings 2.0: Pages live under Appearance → Pages. Same canonical
 		// URL as the orphaned-components branch above; see comment there.
-		$admin_url = function_exists( 'bb_get_feature_settings_url' )
-			? bb_get_feature_settings_url( 'appearance', 'pages' )
-			: bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
+		$admin_url = function_exists( 'bboss_get_feature_settings_url' )
+			? bboss_get_feature_settings_url( 'appearance', 'pages' )
+			: bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection to suppress the "Repair" link when the user is already on the Pages panel.
 		$on_pages_panel = isset( $_GET['page'], $_GET['tab'], $_GET['panel'] )
@@ -449,7 +449,7 @@ function bp_core_activation_notice() {
 			);
 		}
 
-		bp_core_add_admin_notice( $notice );
+		bboss_core_add_admin_notice( $notice );
 	}
 
 	do_action( 'bp_core_activation_notice' );
@@ -462,7 +462,7 @@ function bp_core_activation_notice() {
  *
  * @internal Used internally to redirect BuddyPress to the about page on activation.
  */
-function bp_do_activation_redirect() {
+function bboss_do_activation_redirect() {
 
 	// Bail if no activation redirect.
 	if ( ! get_transient( '_bp_activation_redirect' ) ) {
@@ -484,15 +484,15 @@ function bp_do_activation_redirect() {
 	}
 
 	// In Appearance > Menus, make "BuddyBoss" available by default.
-	$get_existing_option = get_user_option( 'metaboxhidden_nav-menus', bp_loggedin_user_id() );
+	$get_existing_option = get_user_option( 'metaboxhidden_nav-menus', bboss_loggedin_user_id() );
 	if ( '' === $get_existing_option || false === $get_existing_option ) {
 		$hidden_metaboxes = array();
-		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $hidden_metaboxes ); // update the user metaboxes.
+		update_user_option( bboss_loggedin_user_id(), 'metaboxhidden_nav-menus', $hidden_metaboxes ); // update the user metaboxes.
 	} else {
 		if ( ( $key = array_search( 'add-buddypress-nav-menu', $get_existing_option ) ) !== false ) {
 			unset( $get_existing_option[ $key ] );
 		}
-		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
+		update_user_option( bboss_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
 
 	/**
@@ -508,14 +508,14 @@ function bp_do_activation_redirect() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_check_for_legacy_theme() {
+function bboss_check_for_legacy_theme() {
 	$using_lagecy = false;
 
 	if ( current_theme_supports( 'buddypress-use-legacy' ) ) {
 		$using_lagecy = true;
 	}
 
-	if ( bp_get_theme_package_id() == 'legacy' ) {
+	if ( bboss_get_theme_package_id() == 'legacy' ) {
 		$using_lagecy = true;
 	}
 
@@ -529,7 +529,7 @@ function bp_check_for_legacy_theme() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_print_legacy_theme_deprecated_notice() {
+function bboss_print_legacy_theme_deprecated_notice() {
 	// Builds without pricing links (the wordpress.org edition) name the theme without a link.
 	$theme_link = 'BuddyBoss Theme';
 	// @bbwt-com-start pricing-links
@@ -559,7 +559,7 @@ function bp_print_legacy_theme_deprecated_notice() {
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
-function bp_core_settings_admin_tabs( $active_tab = '' ) {
+function bboss_core_settings_admin_tabs( $active_tab = '' ) {
 
 	$tabs_html    = '';
 	$idle_class   = '';
@@ -573,7 +573,7 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
-	$tabs = apply_filters( 'bp_core_settings_admin_tabs', bp_core_get_settings_admin_active_tab( $active_tab ) );
+	$tabs = apply_filters( 'bp_core_settings_admin_tabs', bboss_core_get_settings_admin_active_tab( $active_tab ) );
 
 	$count = count( array_values( $tabs ) );
 	$i     = 1;
@@ -611,7 +611,7 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
  *
  * @return string
  */
-function bp_core_get_settings_admin_active_tab( $active_tab = '' ) {
+function bboss_core_get_settings_admin_active_tab( $active_tab = '' ) {
 
 	global $bp_admin_setting_tabs;
 
@@ -636,7 +636,7 @@ function bp_core_get_settings_admin_active_tab( $active_tab = '' ) {
 	$tabs = array_map(
 		function ( $tab ) {
 			return array(
-				'href' => bp_core_admin_setting_url( $tab->tab_name ),
+				'href' => bboss_core_admin_setting_url( $tab->tab_name ),
 				'name' => $tab->tab_label,
 				'slug' => $tab->tab_name,
 			);
@@ -664,7 +664,7 @@ function bp_core_get_settings_admin_active_tab( $active_tab = '' ) {
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
-function bp_core_admin_tabs( $active_tab = '' ) {
+function bboss_core_admin_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = 'nav-tab';
 	$active_class = 'nav-tab nav-tab-active';
@@ -676,7 +676,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
-	$tabs = apply_filters( 'bp_core_admin_tabs', bp_core_get_admin_tabs( $active_tab ) );
+	$tabs = apply_filters( 'bp_core_admin_tabs', bboss_core_get_admin_tabs( $active_tab ) );
 
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
@@ -710,7 +710,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
  *
  * @return string
  */
-function bp_core_get_admin_tabs( $active_tab = '' ) {
+function bboss_core_get_admin_tabs( $active_tab = '' ) {
 
 	// Legacy top-level tab bar shown on bp-tools / bp-help / bp-components /
 	// bp-pages pages. The "Integrations" tab was removed along with the
@@ -739,7 +739,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			// legacy top-tab Tools link directly at the new React panel so
 			// any page still rendering this tab bar (e.g. bp-help) doesn't
 			// have to depend on the bp-tools redirect to land users correctly.
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools' ), 'admin.php' ) ),
+			'href'  => bboss_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools' ), 'admin.php' ) ),
 			'name'  => __( 'Tools', 'buddyboss' ),
 			'class' => 'bp-tools',
 		),
@@ -762,7 +762,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_get_admin_active_tab() {
+function bboss_core_get_admin_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-general' );
 
 	return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
@@ -773,10 +773,10 @@ function bp_core_get_admin_active_tab() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_get_admin_active_tab_object() {
+function bboss_core_get_admin_active_tab_object() {
 	global $bp_admin_setting_tabs;
 
-	$active_tab = bp_core_get_admin_active_tab();
+	$active_tab = bboss_core_get_admin_active_tab();
 
 	if ( ! isset( $bp_admin_setting_tabs[ $active_tab ] ) ) {
 		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-general' );
@@ -796,8 +796,8 @@ function bp_core_get_admin_active_tab_object() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_setting_url( $tab, $args = array() ) {
-	$args = bp_parse_args(
+function bboss_core_admin_setting_url( $tab, $args = array() ) {
+	$args = bboss_parse_args(
 		$args,
 		array(
 			'page' => 'bp-settings',
@@ -805,7 +805,7 @@ function bp_core_admin_setting_url( $tab, $args = array() ) {
 		)
 	);
 
-	return bp_get_admin_url( add_query_arg( $args, 'admin.php' ) );
+	return bboss_get_admin_url( add_query_arg( $args, 'admin.php' ) );
 }
 
 /**
@@ -815,11 +815,11 @@ function bp_core_admin_setting_url( $tab, $args = array() ) {
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
-function bp_core_admin_integration_tabs( $active_tab = '' ) {
+function bboss_core_admin_integration_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	$active_tab   = $active_tab ?: bp_core_get_admin_integration_active_tab();
+	$active_tab   = $active_tab ?: bboss_core_get_admin_integration_active_tab();
 
 	/**
 	 * Filters the admin tabs to be displayed.
@@ -828,7 +828,7 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
-	$tabs = apply_filters( 'bp_core_admin_integration_tabs', bp_core_get_admin_integrations_tabs( $active_tab ) );
+	$tabs = apply_filters( 'bp_core_admin_integration_tabs', bboss_core_get_admin_integrations_tabs( $active_tab ) );
 
 	$count = count( array_values( $tabs ) );
 	$i     = 1;
@@ -866,7 +866,7 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
  *
  * @return string
  */
-function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
+function bboss_core_get_admin_integrations_tabs( $active_tab = '' ) {
 	global $bp_admin_integration_tabs;
 
 	if ( ! $bp_admin_integration_tabs ) {
@@ -890,7 +890,7 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
 	$tabs = array_map(
 		function ( $tab ) {
 			return array(
-				'href' => bp_core_admin_integrations_url( $tab->tab_name ),
+				'href' => bboss_core_admin_integrations_url( $tab->tab_name ),
 				'name' => $tab->tab_label,
 				'slug' => $tab->tab_name,
 			);
@@ -913,7 +913,7 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_get_admin_integration_active_tab() {
+function bboss_core_get_admin_integration_active_tab() {
 
 	if ( ! is_plugin_active( 'buddyboss-app/buddyboss-app.php' ) ) {
 
@@ -935,10 +935,10 @@ function bp_core_get_admin_integration_active_tab() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_get_admin_integration_active_tab_object() {
+function bboss_core_get_admin_integration_active_tab_object() {
 	global $bp_admin_integration_tabs;
 
-	$active_tab = bp_core_get_admin_integration_active_tab();
+	$active_tab = bboss_core_get_admin_integration_active_tab();
 	if ( isset( $bp_admin_integration_tabs[ $active_tab ] ) ) {
 		return $bp_admin_integration_tabs[ $active_tab ];
 	}
@@ -957,8 +957,8 @@ function bp_core_get_admin_integration_active_tab_object() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_integrations_url( $tab, $args = array() ) {
-	$args = bp_parse_args(
+function bboss_core_admin_integrations_url( $tab, $args = array() ) {
+	$args = bboss_parse_args(
 		$args,
 		array(
 			'page' => 'bp-integrations',
@@ -966,7 +966,7 @@ function bp_core_admin_integrations_url( $tab, $args = array() ) {
 		)
 	);
 
-	return bp_get_admin_url( add_query_arg( $args, 'admin.php' ) );
+	return bboss_get_admin_url( add_query_arg( $args, 'admin.php' ) );
 }
 
 /** Help **********************************************************************/
@@ -978,9 +978,9 @@ function bp_core_admin_integrations_url( $tab, $args = array() ) {
  *
  * @param string $screen Current screen.
  *
- * @todo  Make this part of the BP_Component class and split into each component.
+ * @todo  Make this part of the BBoss_Component class and split into each component.
  */
-function bp_core_add_contextual_help( $screen = '' ) {
+function bboss_core_add_contextual_help( $screen = '' ) {
 
 	$screen = get_current_screen();
 
@@ -993,7 +993,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 				array(
 					'id'      => 'bp-comp-overview',
 					'title'   => __( 'Overview', 'buddyboss' ),
-					'content' => bp_core_add_contextual_help_content( 'bp-comp-overview' ),
+					'content' => bboss_core_add_contextual_help_content( 'bp-comp-overview' ),
 				)
 			);
 
@@ -1012,7 +1012,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 				array(
 					'id'      => 'bp-page-overview',
 					'title'   => __( 'Overview', 'buddyboss' ),
-					'content' => bp_core_add_contextual_help_content( 'bp-page-overview' ),
+					'content' => bboss_core_add_contextual_help_content( 'bp-page-overview' ),
 				)
 			);
 
@@ -1031,7 +1031,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 				array(
 					'id'      => 'bp-settings-overview',
 					'title'   => __( 'Overview', 'buddyboss' ),
-					'content' => bp_core_add_contextual_help_content( 'bp-settings-overview' ),
+					'content' => bboss_core_add_contextual_help_content( 'bp-settings-overview' ),
 				)
 			);
 
@@ -1059,7 +1059,7 @@ add_action( 'load-settings_page_bp-settings', 'bp_core_add_contextual_help' );
  *
  * @return string
  */
-function bp_core_add_contextual_help_content( $tab = '' ) {
+function bboss_core_add_contextual_help_content( $tab = '' ) {
 
 	switch ( $tab ) {
 		case 'bp-comp-overview':
@@ -1098,26 +1098,26 @@ function bp_core_add_contextual_help_content( $tab = '' ) {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_admin_separator() {
+function bboss_admin_separator() {
 
 	// Bail if BuddyPress is not network activated and viewing network admin.
-	if ( is_network_admin() && ! bp_is_network_activated() ) {
+	if ( is_network_admin() && ! bboss_is_network_activated() ) {
 		return;
 	}
 
 	// Bail if BuddyPress is network activated and viewing site admin.
-	if ( ! is_network_admin() && bp_is_network_activated() ) {
+	if ( ! is_network_admin() && bboss_is_network_activated() ) {
 		return;
 	}
 
 	// Prevent duplicate separators when no core menu items exist.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
 
 	// Bail if there are no components with admin UI's. Hardcoded for now, until
 	// there's a real API for determining this later.
-	if ( ! bp_is_active( 'activity' ) && ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'activity' ) && ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
@@ -1135,10 +1135,10 @@ function bp_admin_separator() {
  *
  * @return bool Always true.
  */
-function bp_admin_custom_menu_order( $menu_order = false ) {
+function bboss_admin_custom_menu_order( $menu_order = false ) {
 
 	// Bail if user cannot see admin pages.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return $menu_order;
 	}
 
@@ -1154,10 +1154,10 @@ function bp_admin_custom_menu_order( $menu_order = false ) {
  *
  * @return array Modified menu order.
  */
-function bp_admin_menu_order( $menu_order = array() ) {
+function bboss_admin_menu_order( $menu_order = array() ) {
 
 	// Bail if user cannot see admin pages.
-	if ( empty( $menu_order ) || ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( empty( $menu_order ) || ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return $menu_order;
 	}
 
@@ -1223,7 +1223,7 @@ function bp_admin_menu_order( $menu_order = array() ) {
  *
  * @return string
  */
-function bp_admin_list_table_current_bulk_action() {
+function bboss_admin_list_table_current_bulk_action() {
 
 	$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
 
@@ -1242,12 +1242,12 @@ function bp_admin_list_table_current_bulk_action() {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_admin_wp_nav_menu_meta_box() {
-	if ( ! bp_is_root_blog() ) {
+function bboss_admin_wp_nav_menu_meta_box() {
+	if ( ! bboss_is_root_blog() ) {
 		return;
 	}
 
-	add_meta_box( 'add-buddypress-nav-menu', 'BuddyBoss', 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
+	add_meta_box( 'add-buddypress-nav-menu', 'BuddyBoss', 'bboss_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
 
 	add_action( 'admin_print_footer_scripts', 'bp_admin_wp_nav_menu_restrict_items' );
 }
@@ -1259,14 +1259,14 @@ function bp_admin_wp_nav_menu_meta_box() {
  *
  * @global $nav_menu_selected_id
  */
-function bp_admin_do_wp_nav_menu_meta_box() {
+function bboss_admin_do_wp_nav_menu_meta_box() {
 	global $nav_menu_selected_id;
 
 	$db_fields = array(
 		'parent' => 'post_parent',
 		'id'     => 'ID',
 	);
-	$walker    = new BP_Walker_Nav_Menu_Checklist( $db_fields );
+	$walker    = new BBoss_Walker_Nav_Menu_Checklist( $db_fields );
 	$args      = array( 'walker' => $walker );
 
 	$post_type_name = 'buddypress';
@@ -1274,10 +1274,10 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 	$tabs = array();
 
 	$tabs['loggedin']['label'] = __( 'Logged-In', 'buddyboss' );
-	$tabs['loggedin']['pages'] = bp_nav_menu_get_loggedin_pages();
+	$tabs['loggedin']['pages'] = bboss_nav_menu_get_loggedin_pages();
 
 	$tabs['loggedout']['label'] = __( 'Logged-Out', 'buddyboss' );
-	$tabs['loggedout']['pages'] = bp_nav_menu_get_loggedout_pages();
+	$tabs['loggedout']['pages'] = bboss_nav_menu_get_loggedout_pages();
 
 	?>
 
@@ -1351,17 +1351,17 @@ function bp_admin_do_wp_nav_menu_meta_box() {
  *
  * @since BuddyPress 2.5.0
  */
-function bp_admin_email_maybe_add_translation_notice() {
-	if ( get_current_screen()->post_type !== bp_get_email_post_type() || get_locale() === 'en_US' ) {
+function bboss_admin_email_maybe_add_translation_notice() {
+	if ( get_current_screen()->post_type !== bboss_get_email_post_type() || get_locale() === 'en_US' ) {
 		return;
 	}
 
 	// If user can't access BP Tools, there's no point showing the message.
-	if ( ! current_user_can( buddypress()->admin->capability ) ) {
+	if ( ! current_user_can( bboss()->admin->capability ) ) {
 		return;
 	}
 
-	bp_core_add_admin_notice(
+	bboss_core_add_admin_notice(
 		sprintf(
 			/* translators: %s: URL of the BuddyBoss Tools screen. */
 			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
@@ -1371,7 +1371,7 @@ function bp_admin_email_maybe_add_translation_notice() {
 						'page' => 'bp-repair-community',
 						'tab'  => 'bp-repair-community',
 					),
-					bp_get_admin_url( 'admin.php' )
+					bboss_get_admin_url( 'admin.php' )
 				)
 			)
 		),
@@ -1387,16 +1387,16 @@ add_action( 'admin_head-edit.php', 'bp_admin_email_maybe_add_translation_notice'
  * @since BuddyPress 2.5.0
  * @todo  change link to BuddyBoss page
  */
-function bp_admin_email_add_codex_notice() {
-	if ( get_current_screen()->post_type !== bp_get_email_post_type() ) {
+function bboss_admin_email_add_codex_notice() {
+	if ( get_current_screen()->post_type !== bboss_get_email_post_type() ) {
 		return;
 	}
 
-	bp_core_add_admin_notice(
+	bboss_core_add_admin_notice(
 		sprintf(
 			/* translators: %s: URL of the email tokens documentation. */
 			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
-			bp_get_admin_url(
+			bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -1428,9 +1428,9 @@ add_action( 'admin_head-post.php', 'bp_admin_email_add_codex_notice' );
  * @type callable $callback Meta box display callback.
  * }
  */
-function bp_email_tax_type_metabox( $post, $box ) {
+function bboss_email_tax_type_metabox( $post, $box ) {
 	$r = array(
-		'taxonomy' => bp_get_email_tax_type(),
+		'taxonomy' => bboss_get_email_tax_type(),
 	);
 
 	$tax_name = esc_attr( $r['taxonomy'] );
@@ -1449,7 +1449,7 @@ function bp_email_tax_type_metabox( $post, $box ) {
 					$post->ID,
 					array(
 						'taxonomy' => $tax_name,
-						'walker'   => new BP_Walker_Category_Checklist(),
+						'walker'   => new BBoss_Walker_Category_Checklist(),
 					)
 				);
 				?>
@@ -1466,13 +1466,13 @@ function bp_email_tax_type_metabox( $post, $box ) {
  *
  * @since BuddyPress 2.5.0
  */
-function bp_email_custom_metaboxes() {
+function bboss_email_custom_metaboxes() {
 	// Remove default 'Excerpt' metabox and replace with our own.
 	remove_meta_box( 'postexcerpt', null, 'normal' );
-	add_meta_box( 'postexcerpt', __( 'Plain text email content', 'buddyboss' ), 'bp_email_plaintext_metabox', null, 'normal', 'high' );
+	add_meta_box( 'postexcerpt', __( 'Plain text email content', 'buddyboss' ), 'bboss_email_plaintext_metabox', null, 'normal', 'high' );
 }
 
-add_action( 'add_meta_boxes_' . bp_get_email_post_type(), 'bp_email_custom_metaboxes' );
+add_action( 'add_meta_boxes_' . bboss_get_email_post_type(), 'bp_email_custom_metaboxes' );
 
 /**
  * Customized version of the 'Excerpt' metabox for our 'bp-email' post type.
@@ -1483,7 +1483,7 @@ add_action( 'add_meta_boxes_' . bp_get_email_post_type(), 'bp_email_custom_metab
  *
  * @param WP_Post $post
  */
-function bp_email_plaintext_metabox( $post ) {
+function bboss_email_plaintext_metabox( $post ) {
 	?>
 	<!-- accesslint:ignore -->
 	<label class="screen-reader-text" for="excerpt">
@@ -1516,7 +1516,7 @@ function bp_email_plaintext_metabox( $post ) {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_admin_wp_nav_menu_restrict_items() {
+function bboss_admin_wp_nav_menu_restrict_items() {
 	$inline_js = <<<'JS'
 jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
 	var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
@@ -1540,9 +1540,9 @@ JS;
  *
  * @since BuddyPress 2.0.0
  */
-function add_active_moderation_popup() {
+function bboss_add_active_moderation_popup() {
 	global $pagenow;
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( 'users.php' === $pagenow && 0 === strpos( get_current_screen()->id, 'users' ) ) {
 		include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/moderation-activate-alert-popup.php';
@@ -1565,7 +1565,7 @@ add_action( 'admin_footer', 'add_active_moderation_popup' );
  *
  * @return array $actions User row action links.
  */
-function bp_core_admin_user_row_actions( $actions, $user_object ) {
+function bboss_core_admin_user_row_actions( $actions, $user_object ) {
 
 	// Setup the $user_id variable from the current user object.
 	$user_id = 0;
@@ -1574,24 +1574,24 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 	}
 
 	// Bail early if user cannot perform this action, or is looking at themselves.
-	if ( current_user_can( 'edit_user', $user_id ) && ( bp_loggedin_user_id() !== $user_id ) ) {
+	if ( current_user_can( 'edit_user', $user_id ) && ( bboss_loggedin_user_id() !== $user_id ) ) {
 
 		// Admin URL could be single site or network.
-		$url = bp_get_admin_url( 'users.php' );
+		$url = bboss_get_admin_url( 'users.php' );
 
 		// If spammed, create unspam link.
-		if ( ! bp_is_active( 'moderation' ) ) {
+		if ( ! bboss_is_active( 'moderation' ) ) {
 			// `bp_is_user_spammer()` lives in bp-members-functions.php; when
 			// members is also deactivated the function is undefined. Gate the
 			// call so the row action degrades gracefully instead of fatalling.
-			if ( bp_is_active( 'members' ) && function_exists( 'bp_is_user_spammer' ) && bp_is_user_spammer( $user_id ) ) {
+			if ( bboss_is_active( 'members' ) && function_exists( 'bboss_is_user_spammer' ) && bboss_is_user_spammer( $user_id ) ) {
 				$actions['ham'] = sprintf( '<a class="bp-show-moderation-alert" href="javascript:void(0);" data-action="not-spam">%1$s</a>', esc_html__( 'Not Spam', 'buddyboss' ) );
 				// If not already spammed, create spam link.
 			} else {
 				$actions['spam'] = sprintf( '<a class="submitdelete bp-show-moderation-alert" href="javascript:void(0);" data-action="spam">%1$s</a>', esc_html__( 'Spam', 'buddyboss' ) );
 			}
 		} else {
-			if ( bp_moderation_is_user_suspended( $user_id ) ) {
+			if ( bboss_moderation_is_user_suspended( $user_id ) ) {
 				$url                  = add_query_arg(
 					array(
 						'action' => 'unsuspend',
@@ -1600,8 +1600,8 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 					$url
 				);
 				$unsuspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
-				$suspend_id           = bp_is_active( 'moderation' ) ? BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type ) : '';
-				$meta_value           = ! empty( $suspend_id ) ? bb_suspend_get_meta( $suspend_id, 'suspend' ) : '';
+				$suspend_id           = bboss_is_active( 'moderation' ) ? BBoss_Core_Suspend::get_suspend_id( $user_id, BBoss_Moderation_Members::$moderation_type ) : '';
+				$meta_value           = ! empty( $suspend_id ) ? bboss_suspend_get_meta( $suspend_id, 'suspend' ) : '';
 				$actions['unsuspend'] = sprintf(
 					'<a class="ham %1$s" href="%2$s" data-action="unsuspend" %3$s>%4$s</a>',
 					! empty( $meta_value ) ? 'disabled' : 'bp-unsuspend-user',
@@ -1620,8 +1620,8 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 					$url
 				);
 				$suspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
-				$suspend_id         = bp_is_active( 'moderation' ) ? BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type ) : '';
-				$meta_value         = ! empty( $suspend_id ) ? bb_suspend_get_meta( $suspend_id, 'unsuspend' ) : '';
+				$suspend_id         = bboss_is_active( 'moderation' ) ? BBoss_Core_Suspend::get_suspend_id( $user_id, BBoss_Moderation_Members::$moderation_type ) : '';
+				$meta_value         = ! empty( $suspend_id ) ? bboss_suspend_get_meta( $suspend_id, 'unsuspend' ) : '';
 				$actions['suspend'] = sprintf(
 					'<a class="submitdelete %1$s" href="%2$s" data-action="suspend" %3$s>%4$s</a>',
 					! empty( $meta_value ) ? 'disabled' : 'bp-suspend-user',
@@ -1636,7 +1636,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 	}
 
 	// Create a "View" link.
-	$url             = bp_core_get_user_domain( $user_id );
+	$url             = bboss_core_get_user_domain( $user_id );
 	$actions['view'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html__( 'View', 'buddyboss' ) );
 
 	// Return new actions.
@@ -1648,7 +1648,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_core_admin_user_manage_spammers() {
+function bboss_core_admin_user_manage_spammers() {
 
 	// Print our inline scripts on non-Multisite.
 	add_action( 'admin_footer', 'bp_core_admin_user_spammed_js' );
@@ -1678,7 +1678,7 @@ function bp_core_admin_user_manage_spammers() {
 		// shows a misleading "Member unsuspended." notice on the next
 		// page-load even though no state changed). Returning early lets
 		// the original screen render normally instead of looping.
-		if ( ! bp_is_active( 'moderation' ) ) {
+		if ( ! bboss_is_active( 'moderation' ) ) {
 			return;
 		}
 
@@ -1695,9 +1695,9 @@ function bp_core_admin_user_manage_spammers() {
 		$status = ( $action == 'suspend' ) ? 'suspend' : 'unsuspend';
 
 		if ( 'suspend' === $status ) {
-			BP_Suspend_Member::suspend_user( $user_id );
-		} elseif ( bp_moderation_is_user_suspended( $user_id ) ) {
-			BP_Suspend_Member::unsuspend_user( $user_id );
+			BBoss_Suspend_Member::suspend_user( $user_id );
+		} elseif ( bboss_moderation_is_user_suspended( $user_id ) ) {
+			BBoss_Suspend_Member::unsuspend_user( $user_id );
 		}
 
 		$redirect = add_query_arg( array( 'updated' => 'marked-' . $status ), $redirect );
@@ -1714,7 +1714,7 @@ function bp_core_admin_user_manage_spammers() {
 			$notice = __( 'Member unsuspended.', 'buddyboss' );
 		}
 
-		bp_core_add_admin_notice( $notice );
+		bboss_core_add_admin_notice( $notice );
 	}
 }
 
@@ -1723,7 +1723,7 @@ function bp_core_admin_user_manage_spammers() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_core_admin_user_spammed_js() {
+function bboss_core_admin_user_spammed_js() {
 	$inline_js = <<<'JS'
 jQuery( document ).ready( function ( $ ) {
 	$( '.row-actions .ham' ).each( function () {
@@ -1743,7 +1743,7 @@ JS;
  *
  * @since BuddyPress 2.7.0
  */
-function bp_core_admin_notice_dismiss_callback() {
+function bboss_core_admin_notice_dismiss_callback() {
 	if ( ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error();
 	}
@@ -1758,7 +1758,7 @@ function bp_core_admin_notice_dismiss_callback() {
 		wp_send_json_error();
 	}
 
-	bp_update_option( "bp-dismissed-notice-$notice_id", 1 );
+	bboss_update_option( "bp-dismissed-notice-$notice_id", 1 );
 
 	wp_send_json_success();
 }
@@ -1774,7 +1774,7 @@ add_action( 'wp_ajax_bp_dismiss_notice', 'bp_core_admin_notice_dismiss_callback'
  *
  * @return string
  */
-function bp_core_admin_body_classes( $classes ) {
+function bboss_core_admin_body_classes( $classes ) {
 	return $classes . ' buddypress';
 }
 
@@ -1789,7 +1789,7 @@ add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
  *
  * @param $post_id
  */
-function bp_delete_member_type( $post_id ) {
+function bboss_delete_member_type( $post_id ) {
 	global $wpdb;
 
 	// `bp_get_member_type_post_type()` and `bp_get_member_type_key()` are
@@ -1798,7 +1798,7 @@ function bp_delete_member_type( $post_id ) {
 	// undefined and the unguarded calls below would fatal on every post
 	// delete (this hook fires for *every* post type, not just member
 	// types).
-	if ( ! bp_is_active( 'members' ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+	if ( ! bboss_is_active( 'members' ) || ! function_exists( 'bboss_get_member_type_post_type' ) ) {
 		return;
 	}
 
@@ -1813,11 +1813,11 @@ function bp_delete_member_type( $post_id ) {
 	}
 
 	// Return if post is not 'bp-member-type' type.
-	if ( bp_get_member_type_post_type() !== $post->post_type ) {
+	if ( bboss_get_member_type_post_type() !== $post->post_type ) {
 		return;
 	}
 
-	$member_type_name = bp_get_member_type_key( $post_id );
+	$member_type_name = bboss_get_member_type_key( $post_id );
 	$type_term        = get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get profile type term data from database by name field.
 
 	// term exist.
@@ -1831,8 +1831,8 @@ function bp_delete_member_type( $post_id ) {
 	}
 
 	// Clean up xprofile field member_type meta referencing this deleted type.
-	if ( ! empty( $member_type_name ) && bp_is_active( 'xprofile' ) ) {
-		$bp = buddypress();
+	if ( ! empty( $member_type_name ) && bboss_is_active( 'xprofile' ) ) {
+		$bp = bboss();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time cleanup on delete.
 		$wpdb->delete(
@@ -1855,7 +1855,7 @@ add_action( 'before_delete_post', 'bp_delete_member_type' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_member_type_invalid_role_extended_profile_error_callback() {
+function bboss_member_type_invalid_role_extended_profile_error_callback() {
 
 	// If there are no errors, then we'll exit the function.
 	if ( ! ( $errors = get_transient( 'bp_invalid_role_selection_extended_profile' ) ) ) {
@@ -1883,7 +1883,7 @@ add_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_create_background_page() {
+function bboss_core_admin_create_background_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error();
 	}
@@ -1892,18 +1892,18 @@ function bp_core_admin_create_background_page() {
 		wp_send_json_error();
 	}
 
-	$page_ids    = bp_core_get_directory_page_ids( 'all' );
-	$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+	$page_ids    = bboss_core_get_directory_page_ids( 'all' );
+	$valid_pages = array_merge( bboss_core_admin_get_directory_pages(), bboss_core_admin_get_static_pages() );
 
 	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
 
-		$default_title = bp_core_get_directory_page_default_titles();
+		$default_title = bboss_core_get_directory_page_default_titles();
 		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
 
 		$new_page = array(
 			'post_title'     => $title,
 			'post_status'    => 'publish',
-			'post_author'    => bp_loggedin_user_id(),
+			'post_author'    => bboss_loggedin_user_id(),
 			'post_type'      => 'page',
 			'comment_status' => 'closed',
 			'ping_status'    => 'closed',
@@ -1914,16 +1914,16 @@ function bp_core_admin_create_background_page() {
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.
 		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
-			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
+			bboss_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			// Else store into the directory pages.
 		} else {
-			bp_core_update_directory_page_ids( $page_ids );
+			bboss_core_update_directory_page_ids( $page_ids );
 		}
 
 		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
 		if ( 'new_forums_page' === sanitize_text_field( $_POST['page'] ) ) {
 			$slug = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
+			bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
 			flush_rewrite_rules( true );
 		}
 	}
@@ -1950,10 +1950,10 @@ add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_creat
  *
  * @since BuddyBoss 1.8.6
  */
-function bb_discussion_page_show_notice_in_avatar_section() {
+function bboss_discussion_page_show_notice_in_avatar_section() {
 	global $pagenow;
 
-	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'BuddyBoss' === bb_get_profile_avatar_type() ) {
+	if ( 'options-discussion.php' === $pagenow && function_exists( 'bboss_get_profile_avatar_type' ) && 'BuddyBoss' === bboss_get_profile_avatar_type() ) {
 
 		$avatar_notice = sprintf(
 			/* translators: %s: URL of the Discussion settings screen. */
@@ -1989,7 +1989,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 			wp_json_encode( wp_kses_post( $avatar_notice_html ) )
 		);
 
-		wp_register_script( 'bb-discussion-avatar-notice', false, array( 'jquery' ), bp_get_version(), true );
+		wp_register_script( 'bb-discussion-avatar-notice', false, array( 'jquery' ), bboss_get_version(), true );
 		wp_enqueue_script( 'bb-discussion-avatar-notice' );
 		wp_add_inline_script( 'bb-discussion-avatar-notice', $inline_js );
 	}
@@ -2019,7 +2019,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
  *
  * @param $post_id
  */
-function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
+function bboss_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 
 	// if called by autosave, then bail here.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -2037,13 +2037,13 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 	}
 
 	// update!
-	$forum_page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+	$forum_page_id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 
 	if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 		$slug = get_page_uri( $post_id );
 		if ( '' !== $slug ) {
-			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
-			bp_update_option( 'rewrite_rules', '' );
+			bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
+			bboss_update_option( 'rewrite_rules', '' );
 		}
 	}
 }
@@ -2059,7 +2059,7 @@ add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
  * @param array               $categories          Array of block categories.
  * @param string|WP_Post|null $editor_name_or_post Post being loaded.
  */
-function bp_block_category( $categories = array(), $editor_name_or_post = null ) {
+function bboss_block_category( $categories = array(), $editor_name_or_post = null ) {
 	if ( $editor_name_or_post instanceof WP_Post ) {
 		$post_types = array( 'post', 'page' );
 
@@ -2087,7 +2087,7 @@ function bp_block_category( $categories = array(), $editor_name_or_post = null )
  *
  * @since BuddyBoss 1.8.3
  */
-function bb_block_init_category_filter() {
+function bboss_block_init_category_filter() {
 	if ( function_exists( 'get_default_block_categories' ) ) {
 		add_filter( 'block_categories_all', 'bp_block_category', 1, 2 );
 	} else {
@@ -2097,11 +2097,11 @@ function bb_block_init_category_filter() {
 
 add_action( 'bp_init', 'bb_block_init_category_filter' );
 
-function bp_document_ajax_check_file_mime_type() {
+function bboss_document_ajax_check_file_mime_type() {
 	// Verify nonce and capability.
 	check_ajax_referer( 'bb_admin_settings', 'nonce' );
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
 	}
 
@@ -2131,7 +2131,7 @@ add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
-function bp_core_admin_moderation_tabs( $active_tab = '' ) {
+function bboss_core_admin_moderation_tabs( $active_tab = '' ) {
 
 	$tabs_html    = '';
 	$idle_class   = 'nav-tab';
@@ -2144,7 +2144,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
-	$tabs = apply_filters( 'bp_core_admin_moderation_tabs', bp_core_get_moderation_admin_tabs( $active_tab ) );
+	$tabs = apply_filters( 'bp_core_admin_moderation_tabs', bboss_core_get_moderation_admin_tabs( $active_tab ) );
 
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
@@ -2172,20 +2172,20 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
  *
  * @return array
  */
-function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
+function bboss_core_get_moderation_admin_tabs( $active_tab = '' ) {
 
 	$tabs = array();
 
-	if ( bp_is_moderation_member_blocking_enable() ) {
+	if ( bboss_is_moderation_member_blocking_enable() ) {
 		$tabs[] = array(
-			'href'  => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ),
+			'href'  => bboss_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ),
 			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
 
 	$tabs[] = array(
-		'href'  => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=reported_content' ),
+		'href'  => bboss_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=reported_content' ),
 		'name'  => esc_html__( 'Reported Content', 'buddyboss' ),
 		'class' => 'bp-reported-content',
 	);
@@ -2210,7 +2210,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  *
  * @return string
  */
-function bb_get_pro_label_notice( $type = 'default' ) {
+function bboss_get_pro_label_notice( $type = 'default' ) {
 	static $retval = array();
 
 	if ( isset( $retval[ $type ] ) ) {
@@ -2236,23 +2236,23 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			) ||
 			(
 				'schedule_posts' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_schedule_posts_version(), '<' )
 			) ||
 			(
 				'polls' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_poll_version(), '<' )
 			) ||
 			(
 				'sso' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_sso_version(), '<' )
 			) ||
 			(
 				'group_activity_topics' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_group_activity_topics_version(), '<' )
 			) ||
 			(
 				'post_feature_image' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
@@ -2286,7 +2286,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
  *
  * @return string
  */
-function bb_get_pro_fields_class( $type = 'default' ) {
+function bboss_get_pro_fields_class( $type = 'default' ) {
 	static $retval = array();
 
 	if ( isset( $retval[ $type ] ) ) {
@@ -2314,23 +2314,23 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			) ||
 			(
 				'schedule_posts' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_schedule_posts_version(), '<' )
 			) ||
 			(
 				'polls' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_poll_version(), '<' )
 			) ||
 			(
 				'sso' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_sso_version(), '<' )
 			) ||
 			(
 				'group_activity_topics' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_group_activity_topics_version(), '<' )
 			) ||
 			(
 				'post_feature_image' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
@@ -2352,11 +2352,11 @@ add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
  *
  * @return void
  */
-function bb_disable_multiple_select_situation() {
+function bboss_disable_multiple_select_situation() {
 
 	global $typenow;
 
-	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
+	if ( function_exists( 'bboss_get_email_post_type' ) && bboss_get_email_post_type() === $typenow ) {
 		// Pass the email post type to JS via wp_json_encode() and attach the
 		// behaviour through a dependency-only (src-less) handle instead of a raw
 		// inline <script> tag (the handler runs on DOM ready, so the footer is fine).
@@ -2367,10 +2367,10 @@ function bb_disable_multiple_select_situation() {
 		jQuery( group ).not( this ).prop( \'checked\', false );
 	} );
 } );',
-			wp_json_encode( bp_get_email_post_type() )
+			wp_json_encode( bboss_get_email_post_type() )
 		);
 
-		wp_register_script( 'bb-email-type-single-select', false, array( 'jquery' ), bp_get_version(), true );
+		wp_register_script( 'bb-email-type-single-select', false, array( 'jquery' ), bboss_get_version(), true );
 		wp_enqueue_script( 'bb-email-type-single-select' );
 		wp_add_inline_script( 'bb-email-type-single-select', $inline_js );
 	}
@@ -2384,8 +2384,8 @@ function bb_disable_multiple_select_situation() {
  *
  * @return void
  */
-function bb_cpt_feed_enabled_disabled() {
-	bb_sync_blogs_component_state(
+function bboss_cpt_feed_enabled_disabled() {
+	bboss_sync_blogs_component_state(
 		function ( $cpt ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in the settings save handler.
 			return isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
@@ -2405,8 +2405,8 @@ function bb_cpt_feed_enabled_disabled() {
  * @param callable $is_feed_enabled_cb Callback that receives a post type slug and
  *                                     returns bool whether its feed is enabled.
  */
-function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
-	$bp                = buddypress();
+function bboss_sync_blogs_component_state( $is_feed_enabled_cb ) {
+	$bp                = bboss();
 	$active_components = $bp->active_components;
 
 	// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
@@ -2421,7 +2421,7 @@ function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
 		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
 	}
 
-	$post_types = bb_feed_post_types();
+	$post_types = bboss_feed_post_types();
 
 	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
 		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
@@ -2459,11 +2459,11 @@ function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
 		if ( $is_blogs_active ) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-			bp_core_install_blog_tracking();
+			bboss_core_install_blog_tracking();
 		}
 
-		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
-		bp_update_option( 'bp-active-components', $bp->active_components );
+		bboss_core_add_page_mappings( $bp->active_components, 'keep', false );
+		bboss_update_option( 'bp-active-components', $bp->active_components );
 	}
 }
 
@@ -2479,8 +2479,8 @@ function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
  *
  * @return void Sends JSON error and dies on failure.
  */
-function bb_admin_verify_ajax_request( $nonce_action ) {
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+function bboss_admin_verify_ajax_request( $nonce_action ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
 			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 			403
@@ -2516,14 +2516,14 @@ function bb_admin_verify_ajax_request( $nonce_action ) {
  * @param string $action    Optional. Submission context: 'all', 'active', or 'inactive'. Default 'all'.
  * @return array The calculated list of component settings.
  */
-function bp_core_admin_get_active_components_from_submitted_settings( $submitted, $action = 'all' ) {
+function bboss_core_admin_get_active_components_from_submitted_settings( $submitted, $action = 'all' ) {
 	$current_action = $action;
 
 	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ), true ) ) {
 		$current_action = $_GET['action'];
 	}
 
-	$current_components = buddypress()->active_components;
+	$current_components = bboss()->active_components;
 
 	switch ( $current_action ) {
 		case 'inactive':
@@ -2553,8 +2553,8 @@ function bp_core_admin_get_active_components_from_submitted_settings( $submitted
  * @param string $type Optional. Component type to fetch: 'all', 'optional', or 'required'. Default 'all'.
  * @return array Requested components' data.
  */
-function bp_core_admin_get_components( $type = 'all' ) {
-	$components = bp_core_get_components( $type );
+function bboss_core_admin_get_components( $type = 'all' ) {
+	$components = bboss_core_get_components( $type );
 
 	/**
 	 * Filters the list of component information.

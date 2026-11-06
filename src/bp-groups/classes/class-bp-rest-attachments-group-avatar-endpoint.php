@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Attachments_Group_Avatar_Endpoint class
+ * BP REST: BBoss_REST_Attachments_Group_Avatar_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,25 +13,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 
-	use BP_REST_Attachments;
+	use BBoss_REST_Attachments;
 
 	/**
-	 * Reuse some parts of the BP_REST_Groups_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Groups_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Groups_Endpoint
+	 * @var BBoss_REST_Groups_Endpoint
 	 */
 	protected $groups_endpoint;
 
 	/**
-	 * BP_Attachment_Avatar Instance.
+	 * BBoss_Attachment_Avatar Instance.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Attachment_Avatar
+	 * @var BBoss_Attachment_Avatar
 	 */
 	protected $avatar_instance;
 
@@ -40,7 +40,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Groups_Group
+	 * @var BBoss_Groups_Group
 	 */
 	protected $group;
 
@@ -59,10 +59,10 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base       = buddypress()->groups->id;
-		$this->groups_endpoint = new BP_REST_Groups_Endpoint();
-		$this->avatar_instance = new BP_Attachment_Avatar();
+		$this->namespace       = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base       = bboss()->groups->id;
+		$this->groups_endpoint = new BBoss_REST_Groups_Endpoint();
+		$this->avatar_instance = new BBoss_Attachment_Avatar();
 	}
 
 	/**
@@ -124,7 +124,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		$args = array();
 
 		foreach ( array( 'full', 'thumb' ) as $type ) {
-			$args[ $type ] = bp_core_fetch_avatar(
+			$args[ $type ] = bboss_core_fetch_avatar(
 				array(
 					'object'  => $this->object,
 					'type'    => $type,
@@ -179,7 +179,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -257,8 +257,8 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			'object'        => 'group',
 			'avatar_dir'    => sanitize_key( 'group' ) . '-avatars',
 			'original_file' => $avatar->full,
-			'crop_w'        => bp_core_avatar_full_width(),
-			'crop_h'        => bp_core_avatar_full_height(),
+			'crop_w'        => bboss_core_avatar_full_width(),
+			'crop_h'        => bboss_core_avatar_full_height(),
 			'crop_x'        => 0,
 			'crop_y'        => 0,
 		);
@@ -298,7 +298,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		$retval = $this->get_item_permissions_check( $request );
 
 		if ( ! is_wp_error( $retval ) ) {
-			if ( bp_disable_group_avatar_uploads() || false === buddypress()->avatar->show_avatars ) {
+			if ( bboss_disable_group_avatar_uploads() || false === bboss()->avatar->show_avatars ) {
 				$retval = new WP_Error(
 					'bp_rest_attachments_group_avatar_disabled',
 					__( 'Sorry, group avatar upload is disabled.', 'buddyboss' ),
@@ -306,7 +306,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 						'status' => 500,
 					)
 				);
-			} elseif ( groups_is_user_admin( bp_loggedin_user_id(), $this->group->id ) || current_user_can( 'bp_moderate' ) ) {
+			} elseif ( bboss_groups_is_user_admin( bboss_loggedin_user_id(), $this->group->id ) || current_user_can( 'bp_moderate' ) ) {
 				$retval = true;
 			} else {
 				$retval = new WP_Error(
@@ -350,7 +350,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$group_id = (int) $this->group->id;
 
-		if ( ! bp_get_group_has_avatar( $group_id ) ) {
+		if ( ! bboss_get_group_has_avatar( $group_id ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_avatar_no_uploaded_avatar',
 				__( 'Sorry, there are no uploaded avatars for this group on this site.', 'buddyboss' ),
@@ -363,7 +363,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		$args = array();
 
 		foreach ( array( 'full', 'thumb' ) as $type ) {
-			$args[ $type ] = bp_core_fetch_avatar(
+			$args[ $type ] = bboss_core_fetch_avatar(
 				array(
 					'object'  => $this->object,
 					'type'    => $type,
@@ -376,7 +376,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		// Get the avatar object before deleting it.
 		$avatar = $this->get_avatar_object( $args );
 
-		$deleted = bp_core_delete_existing_avatar(
+		$deleted = bboss_core_delete_existing_avatar(
 			array(
 				'object'  => $this->object,
 				'item_id' => $group_id,
@@ -543,3 +543,11 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_attachments_group_avatar_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', false ) || interface_exists( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', false ) || trait_exists( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', false ) ) && ! class_exists( 'BP_REST_Attachments_Group_Avatar_Endpoint', false ) && ! interface_exists( 'BP_REST_Attachments_Group_Avatar_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Attachments_Group_Avatar_Endpoint', 'BP_REST_Attachments_Group_Avatar_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

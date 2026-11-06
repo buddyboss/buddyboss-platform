@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_QM_Helpers Class
+ * BBoss_QM_Helpers Class
  *
  * This class handles compatibility code for Query Monitor plugins used in conjunction with Platform.
  */
-class BB_QM_Helpers {
+class BBoss_QM_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -27,7 +27,7 @@ class BB_QM_Helpers {
 	private static $instance = null;
 
 	/**
-	 * BB_QM_Helpers constructor.
+	 * BBoss_QM_Helpers constructor.
 	 */
 	public function __construct() {
 		$this->compatibility_init();
@@ -78,4 +78,4 @@ class BB_QM_Helpers {
 
 }
 
-BB_QM_Helpers::instance();
+BBoss_QM_Helpers::instance();

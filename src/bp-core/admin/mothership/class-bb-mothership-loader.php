@@ -191,8 +191,8 @@ class BB_Mothership_Loader {
 		// instead.
 		if ( ! class_exists( MothershipServiceProvider::class ) || ! method_exists( Container::class, 'singleton' ) ) {
 			$message = 'BuddyBoss: the GroundLevel vendor tree is out of date (run `composer install`) — Mothership licensing is disabled for this request.';
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( $message, true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( $message, true );
 			} else {
 				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
@@ -236,8 +236,8 @@ class BB_Mothership_Loader {
 			}
 		} catch ( \Throwable $e ) {
 			$message = 'BuddyBoss Mothership container setup failed: ' . $e->getMessage();
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( $message, true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( $message, true );
 			} else {
 				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
@@ -320,8 +320,8 @@ class BB_Mothership_Loader {
 			// gracefully — license activation falls back to BuddyBoss's own controller.
 			// bb_error_log() may not be loaded this early in the boot sequence, so guard it.
 			$message = 'BuddyBoss Mothership bootstrap failed: ' . $e->getMessage();
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( $message, true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( $message, true );
 			} else {
 				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
@@ -485,8 +485,8 @@ class BB_Mothership_Loader {
 			}
 		} catch ( \Throwable $e ) {
 			$message = 'BuddyBoss NPS survey cleanup failed: ' . $e->getMessage();
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( $message, true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( $message, true );
 			} else {
 				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
@@ -786,11 +786,11 @@ class BB_Mothership_Loader {
 			if ( ! is_network_admin() && current_user_can( 'manage_network_options' ) ) {
 				$target = network_admin_url( 'admin.php?page=' . $page );
 			}
-		} elseif ( is_network_admin() && function_exists( 'buddypress' ) ) {
+		} elseif ( is_network_admin() && function_exists( 'bboss' ) ) {
 			$main_site_id = get_main_site_id();
 			$active       = (array) get_blog_option( $main_site_id, 'active_plugins', array() );
 
-			if ( in_array( buddypress()->basename, $active, true ) ) {
+			if ( in_array( bboss()->basename, $active, true ) ) {
 				$target = get_admin_url( $main_site_id, 'admin.php?page=' . $page );
 			}
 		}
@@ -810,7 +810,7 @@ class BB_Mothership_Loader {
 	 * @param bool   $network_deactivating Whether it was deactivated network-wide.
 	 */
 	public function handle_network_deactivation( $plugin, $network_deactivating ): void {
-		if ( ! $network_deactivating || ! function_exists( 'buddypress' ) || buddypress()->basename !== $plugin ) {
+		if ( ! $network_deactivating || ! function_exists( 'bboss' ) || bboss()->basename !== $plugin ) {
 			return;
 		}
 
@@ -851,7 +851,7 @@ class BB_Mothership_Loader {
 					$log_message .= sprintf( ' - Error code: %d', $error_code );
 				}
 			}
-			bb_error_log( $log_message, true );
+			bboss_error_log( $log_message, true );
 		} else {
 			// License is active - ensure status is updated.
 			$this->pluginConnector->updateLicenseActivationStatus( true ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -881,8 +881,8 @@ class BB_Mothership_Loader {
 			return $transient;
 		}
 
-		$plugin_file = ( function_exists( 'buddypress' ) && isset( buddypress()->basename ) )
-			? buddypress()->basename
+		$plugin_file = ( function_exists( 'bboss' ) && isset( bboss()->basename ) )
+			? bboss()->basename
 			: 'buddyboss-platform/bp-loader.php';
 
 		try {
@@ -933,8 +933,8 @@ class BB_Mothership_Loader {
 			}
 		} catch ( \Throwable $e ) {
 			// Never break the update transient — degrade silently.
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( 'BuddyBoss platform update injection failed: ' . $e->getMessage(), true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( 'BuddyBoss platform update injection failed: ' . $e->getMessage(), true );
 			}
 		}
 
@@ -1073,8 +1073,8 @@ class BB_Mothership_Loader {
 
 			return $callback( $connector, $credentials, $products );
 		} catch ( \Throwable $e ) {
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( 'BuddyBoss: update check via licensed site failed: ' . $e->getMessage(), true );
+			if ( function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( 'BuddyBoss: update check via licensed site failed: ' . $e->getMessage(), true );
 			}
 
 			return null;
@@ -1230,7 +1230,7 @@ class BB_Mothership_Loader {
 				require_once ABSPATH . '/wp-admin/includes/plugin.php';
 			}
 
-			if ( is_plugin_active_for_network( buddypress()->basename ) ) {
+			if ( is_plugin_active_for_network( bboss()->basename ) ) {
 				$network_activated = true;
 			}
 		}
@@ -1296,7 +1296,7 @@ class BB_Mothership_Loader {
 			$software_id = $license_data['software_product_id'];
 			$plugin_id   = self::map_software_id_to_plugin_id( $software_id );
 
-			if ( PLATFORM_EDITION !== $plugin_id ) {
+			if ( BBOSS_PLATFORM_EDITION !== $plugin_id ) {
 				$plugin_connector->setDynamicPluginId( $plugin_id );
 				$domain = $container->get( Credentials::class )->getDomain();
 
@@ -1311,7 +1311,7 @@ class BB_Mothership_Loader {
 				try {
 					$response = $container->get( LicenseActivations::class )->activate( $plugin_id, $license_data['license_key'], $domain );
 				} catch ( \Exception $e ) {
-					bb_error_log( sprintf( $error_html, $e->getMessage() ), true );
+					bboss_error_log( sprintf( $error_html, $e->getMessage() ), true );
 					// Clear the dynamic plugin ID on exception to prevent orphaned state.
 					$plugin_connector->clearDynamicPluginId();
 					continue;
@@ -1340,19 +1340,19 @@ class BB_Mothership_Loader {
 						}
 					} catch ( \Exception $e ) {
 						// Log the exception.
-						bb_error_log( 'Error storing migrated license key: ' . $e->getMessage(), true );
+						bboss_error_log( 'Error storing migrated license key: ' . $e->getMessage(), true );
 					}
 				} else {
 					// Migration failed - clear the dynamic plugin ID to prevent orphaned state.
 					$error_code    = $response->statusCode; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					$error_message = $response->getErrorMessage();
 
-					bb_error_log( sprintf( 'BuddyBoss License Migration Failed (Code: %d): %s', $error_code, $error_message ), true );
+					bboss_error_log( sprintf( 'BuddyBoss License Migration Failed (Code: %d): %s', $error_code, $error_message ), true );
 
 					// If it's a 422 product mismatch, definitely clear the dynamic plugin ID.
 					if ( 422 === $error_code ) {
 						$plugin_connector->clearDynamicPluginId();
-						bb_error_log( 'BuddyBoss: Cleared dynamic plugin ID due to 422 product mismatch during migration', true );
+						bboss_error_log( 'BuddyBoss: Cleared dynamic plugin ID due to 422 product mismatch during migration', true );
 					} elseif ( 429 !== $error_code ) {
 						// For errors other than rate limiting, also clear the dynamic plugin ID.
 						// (Rate limit might be temporary, so we keep the plugin ID for retry).
@@ -1382,7 +1382,7 @@ class BB_Mothership_Loader {
 
 		if ( $reset_time > 0 && $current_time < $reset_time ) {
 			$wait_minutes = ceil( ( $reset_time - $current_time ) / 60 );
-			bb_error_log(
+			bboss_error_log(
 				sprintf(
 					'BuddyBoss: Skipping migration activation - rate limited for %d more minutes (reset: %s)',
 					$wait_minutes,
@@ -1420,6 +1420,6 @@ class BB_Mothership_Loader {
 			'BUDDYBOSS_THEME_20S' => 'bb-web-20-sites',
 		);
 
-		return isset( $mapping[ $software_id ] ) ? $mapping[ $software_id ] : PLATFORM_EDITION;
+		return isset( $mapping[ $software_id ] ) ? $mapping[ $software_id ] : BBOSS_PLATFORM_EDITION;
 	}
 }

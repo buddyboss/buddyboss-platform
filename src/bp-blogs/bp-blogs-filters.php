@@ -32,7 +32,7 @@ add_filter( 'bp_blog_latest_post_content', 'prepend_attachment' );
  * @param string $url The original URL (points to wp-signup.php by default).
  * @return string The new URL.
  */
-function bp_blogs_creation_location( $url ) {
+function bboss_blogs_creation_location( $url ) {
 
 	/**
 	 * Filters the 'Create a new site' link URL.
@@ -41,7 +41,7 @@ function bp_blogs_creation_location( $url ) {
 	 *
 	 * @param string $value URL for the 'Create a new site' signup page.
 	 */
-	return apply_filters( 'bp_blogs_creation_location', trailingslashit( bp_get_blogs_directory_permalink() . 'create' ), $url );
+	return apply_filters( 'bp_blogs_creation_location', trailingslashit( bboss_get_blogs_directory_permalink() . 'create' ), $url );
 }
 add_filter( 'wp_signup_location', 'bp_blogs_creation_location' );
 
@@ -50,12 +50,12 @@ add_filter( 'wp_signup_location', 'bp_blogs_creation_location' );
  *
  * @since BuddyPress 2.1.0
  *
- * @see bp_blogs_update_post_activity_meta()
+ * @see bboss_blogs_update_post_activity_meta()
  *
  * @param array $retval Current SQL clauses in array format.
  * @return array
  */
-function bp_blogs_comments_clauses_select_by_id( $retval ) {
+function bboss_blogs_comments_clauses_select_by_id( $retval ) {
 	$retval['fields'] = 'comment_ID';
 
 	return $retval;
@@ -64,7 +64,7 @@ function bp_blogs_comments_clauses_select_by_id( $retval ) {
 /**
  * Check whether the current activity about a post or a comment can be published.
  *
- * Abstracted from the deprecated `bp_blogs_record_post()`.
+ * Abstracted from the deprecated `bboss_blogs_record_post()`.
  *
  * @since BuddyPress 2.2.0
  *
@@ -74,11 +74,11 @@ function bp_blogs_comments_clauses_select_by_id( $retval ) {
  * @param int  $user_id ID of the post author.
  * @return bool True to authorize the post to be published, otherwise false.
  */
-function bp_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, $user_id = 0 ) {
-	$bp = buddypress();
+function bboss_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, $user_id = 0 ) {
+	$bp = bboss();
 
 	// If blog is not trackable, do not record the activity.
-	if ( ! bp_blogs_is_blog_trackable( $blog_id, $user_id ) ) {
+	if ( ! bboss_blogs_is_blog_trackable( $blog_id, $user_id ) ) {
 		return false;
 	}
 
@@ -86,12 +86,12 @@ function bp_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, 
 	 * Stop infinite loops with WordPress MU Sitewide Tags.
 	 * That plugin changed the way its settings were stored at some point. Thus the dual check.
 	 */
-	$sitewide_tags_blog_settings = bp_core_get_root_option( 'sitewide_tags_blog' );
+	$sitewide_tags_blog_settings = bboss_core_get_root_option( 'sitewide_tags_blog' );
 	if ( ! empty( $sitewide_tags_blog_settings ) ) {
 		$st_options   = maybe_unserialize( $sitewide_tags_blog_settings );
 		$tags_blog_id = isset( $st_options['tags_blog_id'] ) ? $st_options['tags_blog_id'] : 0;
 	} else {
-		$tags_blog_id = bp_core_get_root_option( 'sitewide_tags_blog' );
+		$tags_blog_id = bboss_core_get_root_option( 'sitewide_tags_blog' );
 		$tags_blog_id = intval( $tags_blog_id );
 	}
 
@@ -132,8 +132,8 @@ add_filter( 'bp_activity_post_pre_comment', 'bp_blogs_post_pre_publish', 10, 4 )
  * @param  array $sizes Current array of custom site icon sizes.
  * @return array
  */
-function bp_blogs_register_custom_site_icon_size( $sizes ) {
-	$sizes[] = bp_core_avatar_thumb_width();
+function bboss_blogs_register_custom_site_icon_size( $sizes ) {
+	$sizes[] = bboss_core_avatar_thumb_width();
 	return $sizes;
 }
 add_filter( 'site_icon_image_sizes', 'bp_blogs_register_custom_site_icon_size' );
@@ -147,7 +147,7 @@ add_filter( 'site_icon_image_sizes', 'bp_blogs_register_custom_site_icon_size' )
  *
  * @return array
  */
-function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
+function bboss_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 	global $activities_template;
 
 	if ( ( 'blogs' === $activities_template->activity->component ) && isset( $activities_template->activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activities_template->activity->secondary_item_id ) === $activities_template->activity->type ) {
@@ -185,13 +185,13 @@ add_filter( 'bb_nouveau_get_activity_inner_buttons', 'bb_nouveau_get_activity_in
  * @param array      $activity_args Activity comment arguments.
  * @param object     $activity_post_object The post type tracking args object.
  */
-function bb_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ) {
+function bboss_blogs_comment_mention_notification( $activity_id, $comment, $activity_args, $activity_post_object ) {
 	// Are mentions disabled?
-	if ( ! bp_activity_do_mentions() ) {
+	if ( ! bboss_activity_do_mentions() ) {
 		return;
 	}
 
-	$activity = new BP_Activity_Activity( $activity_id );
+	$activity = new BBoss_Activity_Activity( $activity_id );
 	if ( empty( $activity->component ) ) {
 		return;
 	}
@@ -202,14 +202,14 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 	}
 
 	// Try to find mentions.
-	$usernames = bp_activity_find_mentions( $comment->comment_content );
+	$usernames = bboss_activity_find_mentions( $comment->comment_content );
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
 
 		// Are mentions disabled?
 		if (
-			! bp_activity_do_mentions() ||
+			! bboss_activity_do_mentions() ||
 			(
 				! empty( $activity->privacy ) &&
 				'onlyme' === $activity->privacy
@@ -233,16 +233,16 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 			// User Mentions email.
 			if (
 				(
-					! bb_enabled_legacy_email_preference() &&
-					true === bb_is_notification_enabled( $user_id, 'bb_new_mention' )
+					! bboss_enabled_legacy_email_preference() &&
+					true === bboss_is_notification_enabled( $user_id, 'bb_new_mention' )
 				) ||
 				(
-					bb_enabled_legacy_email_preference() &&
-					true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+					bboss_enabled_legacy_email_preference() &&
+					true === bboss_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
 				)
 			) {
 
-				$poster_name   = bp_core_get_user_displayname( $activity->user_id, $user_id );
+				$poster_name   = bboss_core_get_user_displayname( $activity->user_id, $user_id );
 				$title_text    = get_the_title( $comment_post );
 				$reply_content = apply_filters( 'comment_text', $comment->comment_content, $comment, array() );
 				$reply_url     = get_comment_link( $comment );
@@ -262,7 +262,7 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 						'mentioned.url'     => $reply_url,
 						'poster.name'       => $poster_name,
 						'receiver-user.id'  => $user_id,
-						'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+						'unsubscribe'       => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $reply_content,
 						'author_id'         => $activity->user_id,
@@ -271,26 +271,26 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 					),
 				);
 
-				bp_send_email( $email_type, $user_id, $args );
+				bboss_send_email( $email_type, $user_id, $args );
 
 				// Updates mention count for the user.
-				bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+				bboss_activity_update_mention_count_for_user( $user_id, $activity->id );
 			}
 
-			if ( bp_is_active( 'notifications' ) ) {
+			if ( bboss_is_active( 'notifications' ) ) {
 
 				// Specify the Notification type.
 				$component_action = 'bb_new_mention';
 				$component_name   = 'core';
 
-				bp_notifications_add_notification(
+				bboss_notifications_add_notification(
 					array(
 						'user_id'           => $user_id,
 						'item_id'           => $comment->comment_ID,
 						'secondary_item_id' => $comment->user_id,
 						'component_name'    => $component_name,
 						'component_action'  => $component_action,
-						'date_notified'     => bp_core_current_time(),
+						'date_notified'     => bboss_core_current_time(),
 						'is_new'            => 1,
 					)
 				);
@@ -313,16 +313,16 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bb_blogs_comment_mention_
  * @since buddypress 4.0.0
  * @since BuddyBoss 2.3.70
  *
- * @see   bp_blogs_update_blogmeta()
- * @see   bp_blogs_add_blogmeta()
- * @see   bp_blogs_delete_blogmeta()
- * @see   bp_blogs_get_blogmeta()
+ * @see   bboss_blogs_update_blogmeta()
+ * @see   bboss_blogs_add_blogmeta()
+ * @see   bboss_blogs_delete_blogmeta()
+ * @see   bboss_blogs_get_blogmeta()
  *
  * @param string $retval column name.
  *
  * @return string
  */
-function bp_blogs_filter_meta_column_name( $retval ) {
+function bboss_blogs_filter_meta_column_name( $retval ) {
 	if ( 'bp_blog_id' === $retval ) {
 		$retval = 'blog_id';
 	}

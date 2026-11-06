@@ -8,13 +8,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Input;
 
 /**
- * BB_Tutor_Plugin_Compatibility Class
+ * BBoss_Tutor_Plugin_Compatibility Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
  * @since BuddyBoss 2.1.7
  */
-class BB_Tutor_Plugin_Compatibility {
+class BBoss_Tutor_Plugin_Compatibility {
 
 	/**
 	 * The single instance of the class.
@@ -26,7 +26,7 @@ class BB_Tutor_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * BB_Tutor_Plugin_Compatibility constructor.
+	 * BBoss_Tutor_Plugin_Compatibility constructor.
 	 */
 	public function __construct() {
 		$this->compatibility_init();
@@ -97,4 +97,4 @@ class BB_Tutor_Plugin_Compatibility {
 
 }
 
-BB_Tutor_Plugin_Compatibility::instance();
+BBoss_Tutor_Plugin_Compatibility::instance();

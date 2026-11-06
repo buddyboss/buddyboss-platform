@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 
     <div class="bp-hello-content">
 		<?php
-		$component_link = bp_get_admin_url(
+		$component_link = bboss_get_admin_url(
 			add_query_arg(
 				array(
 					'page' => 'bp-components'

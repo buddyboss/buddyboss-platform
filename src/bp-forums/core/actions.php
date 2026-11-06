@@ -14,7 +14,7 @@
  * There are a few common places that additional actions can currently be found
  *
  *  - Forums: In {@link bbPress::setup_actions()} in bbpress.php
- *  - Admin: More in {@link BBP_Admin::setup_actions()} in admin.php
+ *  - Admin: More in {@link BBoss_BBP_Admin::setup_actions()} in admin.php
  *
  * @see /core/filters.php
  */
@@ -93,7 +93,7 @@ add_action( 'bbp_roles_init', 'bbp_add_forums_roles', 1 );
 /**
  * When setting up the current user, make sure they have a role for the forums.
  *
- * This is multisite aware, thanks to bbp_filter_user_roles_option(), hooked to
+ * This is multisite aware, thanks to bboss_bbp_filter_user_roles_option(), hooked to
  * the 'bbp_loaded' action above.
  */
 add_action( 'bbp_setup_current_user', 'bbp_set_current_user_default_role' );
@@ -319,9 +319,9 @@ add_action( 'before_delete_post', 'bb_forums_delete_topic_reply_media_attachment
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_load_forums_notifications() {
-	if ( class_exists( 'BP_Forums_Notification' ) ) {
-		BP_Forums_Notification::instance();
+function bboss_load_forums_notifications() {
+	if ( class_exists( 'BBoss_Forums_Notification' ) ) {
+		BBoss_Forums_Notification::instance();
 	}
 }
 // Load Forums Notifications.
@@ -332,20 +332,20 @@ add_action( 'bp_forums_includes', 'bb_load_forums_notifications' );
  *
  * @since BuddyBoss 1.5.9
  */
-function forums_notification_settings() {
-	if ( bp_action_variables() ) {
-		bp_do_404();
+function bboss_forums_notification_settings() {
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 
 		return;
 	}
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() || ! bbp_is_subscriptions_active() ) {
+	if ( false === bboss_enabled_legacy_email_preference() || ! bboss_bbp_is_subscriptions_active() ) {
 		return;
 	}
 
-	$notification_forums_following_reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_reply', true );
-	$notification_forums_following_topic = bp_get_user_meta( bp_displayed_user_id(), 'notification_forums_following_topic', true );
+	$notification_forums_following_reply = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_forums_following_reply', true );
+	$notification_forums_following_topic = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_forums_following_topic', true );
 	if ( ! $notification_forums_following_reply ) {
 		$notification_forums_following_reply = 'yes';
 	}
@@ -441,14 +441,14 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  * @since BuddyBoss 3.7.1 Writes merge onto a fresh read of the row
  *                              instead of writing the whole row back.
  */
-function bb_post_topic_reply_draft() {
+function bboss_post_topic_reply_draft() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 
 	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
 	$usermeta_key      = 'bb_user_topic_reply_draft';
-	$user_id           = bp_loggedin_user_id();
+	$user_id           = bboss_loggedin_user_id();
 	$all_data          = array();
 
 	// ONE slash state from here on: UNSLASHED. The two shipped clients post
@@ -524,7 +524,7 @@ function bb_post_topic_reply_draft() {
 
 		// Accept only the draft key shapes the forum composer actually builds,
 		// resolved against real forum/topic/reply IDs (hardening).
-		$draft_key_context = bb_draft_topic_reply_key_context( $draft_topic_reply['data_key'] );
+		$draft_key_context = bboss_draft_topic_reply_key_context( $draft_topic_reply['data_key'] );
 
 		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
 
@@ -534,7 +534,7 @@ function bb_post_topic_reply_draft() {
 		// been stored through this handler's save path, which already enforced
 		// view + publish, so a key present in this row was authorized when it
 		// was written.
-		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+		$existing_draft = bboss_get_user_meta( $user_id, $usermeta_key, true );
 
 		// A DISCARD of a key the member already holds is theirs to remove even
 		// after they lose access to the forum it targets - removed from a
@@ -554,7 +554,7 @@ function bb_post_topic_reply_draft() {
 		// it or its attachments.
 		$discard_conflict = (
 			$discarding_own_draft &&
-			! bb_draft_base_matches( $existing_draft[ (string) $draft_topic_reply['data_key'] ], bb_draft_request_base() )
+			! bboss_draft_base_matches( $existing_draft[ (string) $draft_topic_reply['data_key'] ], bboss_draft_request_base() )
 		);
 
 		// The shape check above resolves client-supplied post IDs, so on its own
@@ -577,7 +577,7 @@ function bb_post_topic_reply_draft() {
 		$draft_key_allowed = ( false !== $draft_key_context ) || $discarding_own_draft;
 
 		if ( $draft_key_allowed && ! empty( $draft_key_context['forum_id'] ) && ! $discarding_own_draft ) {
-			$draft_key_allowed = bbp_user_can_view_forum(
+			$draft_key_allowed = bboss_bbp_user_can_view_forum(
 				array(
 					'user_id'  => $user_id,
 					'forum_id' => (int) $draft_key_context['forum_id'],
@@ -590,7 +590,7 @@ function bb_post_topic_reply_draft() {
 		// activity composer already does per group. Discarding one's own stored
 		// draft never does.
 		if ( $draft_key_allowed && $is_draft_update ) {
-			$draft_key_allowed = bb_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id );
+			$draft_key_allowed = bboss_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id );
 		}
 
 		// A primary rejection is recorded, not thrown. The unload beacon carries
@@ -614,7 +614,7 @@ function bb_post_topic_reply_draft() {
 
 			$primary_rejected  = true;
 			$primary_rejection = array(
-				'message'        => bb_draft_conflict_message(),
+				'message'        => bboss_draft_conflict_message(),
 				'conflict'       => true,
 				'draft_activity' => $existing_draft[ (string) $draft_topic_reply['data_key'] ],
 			);
@@ -656,28 +656,28 @@ function bb_post_topic_reply_draft() {
 
 			// Keyed by type so the per-type cap inside matches what each cap below
 			// enforces (H4 per-type parity).
-			bb_draft_protect_payload_attachments( $protect_lists, $user_id );
+			bboss_draft_protect_payload_attachments( $protect_lists, $user_id );
 
 			// Never replace a stored version this composer did not show (see the
 			// activity handler). Recorded, not thrown, so the sibling merge still
 			// runs, like every other primary rejection here (GH1).
-			if ( ! bb_draft_base_matches( $existing_draft[ $draft_topic_reply['data_key'] ] ?? array(), bb_draft_request_base() ) ) {
+			if ( ! bboss_draft_base_matches( $existing_draft[ $draft_topic_reply['data_key'] ] ?? array(), bboss_draft_request_base() ) ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_conflict_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'] );
 
 				$primary_rejected  = true;
 				$primary_rejection = array(
-					'message'        => bb_draft_conflict_message(),
+					'message'        => bboss_draft_conflict_message(),
 					'conflict'       => true,
 					'draft_activity' => $existing_draft[ $draft_topic_reply['data_key'] ],
 				);
-			} elseif ( bb_draft_save_waits_for_handback( $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'] ) ) {
+			} elseif ( bboss_draft_save_waits_for_handback( $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'] ) ) {
 				// A held draft of this key that this browser has not received yet
 				// would be dropped unseen by this save (see the activity handler).
 				// Moved into the hold first, so the hand-back below includes it.
 				$held_key = $usermeta_key . ':' . $draft_topic_reply['data_key'];
 
-				bb_draft_promote_evicted(
+				bboss_draft_promote_evicted(
 					$user_id,
 					function ( $key ) use ( $held_key ) {
 						return $key === $held_key;
@@ -689,7 +689,7 @@ function bb_post_topic_reply_draft() {
 
 				$primary_rejected  = true;
 				$primary_rejection = array(
-					'message'  => bb_draft_conflict_message(),
+					'message'  => bboss_draft_conflict_message(),
 					'conflict' => true,
 					'held'     => true,
 				);
@@ -702,11 +702,11 @@ function bb_post_topic_reply_draft() {
 			// bb_forums_sanitize_draft_entry(). bbp_kses_data() on a multi-MB
 			// payload is the expensive step, and it used to run before any cap
 			// could refuse the request (M4).
-			$draft_topic_reply = bb_forums_strip_draft_data_urls( $draft_topic_reply );
-			$draft_topic_reply = bb_draft_strip_document_render_fields( $draft_topic_reply );
+			$draft_topic_reply = bboss_forums_strip_draft_data_urls( $draft_topic_reply );
+			$draft_topic_reply = bboss_draft_strip_document_render_fields( $draft_topic_reply );
 			$raw_entry_size    = strlen( maybe_serialize( $draft_topic_reply ) );
 
-			if ( $raw_entry_size > bb_draft_max_size() ) {
+			if ( $raw_entry_size > bboss_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $raw_entry_size, 'per_draft' );
 
@@ -719,15 +719,15 @@ function bb_post_topic_reply_draft() {
 			// kses is the expensive step and it is skipped once the raw width
 			// already failed - the primary is not going to be stored either way.
 			if ( ! $primary_rejected ) {
-				$draft_topic_reply    = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+				$draft_topic_reply    = bboss_forums_sanitize_draft_entry( $draft_topic_reply );
 
-				$draft_topic_reply['_draft_rev'] = bb_draft_sanitize_rev( $draft_topic_reply['_draft_rev'] ?? '' );
+				$draft_topic_reply['_draft_rev'] = bboss_draft_sanitize_rev( $draft_topic_reply['_draft_rev'] ?? '' );
 
 				// Browser-side bookkeeping is never stored with the draft.
 				unset( $draft_topic_reply['bb_draft_pending_sync'], $draft_topic_reply['_draft_base'], $draft_topic_reply['bb_draft_owner'] );
 				$sanitized_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
 
-				if ( $sanitized_entry_size > bb_draft_max_size() ) {
+				if ( $sanitized_entry_size > bboss_draft_max_size() ) {
 					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $sanitized_entry_size, 'per_draft' );
 
@@ -770,8 +770,8 @@ function bb_post_topic_reply_draft() {
 			$is_draft_update &&
 			is_array( $existing_draft ) &&
 			isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) &&
-			! bb_draft_topic_reply_entry_has_payload( $draft_topic_reply ) &&
-			bb_draft_topic_reply_entry_has_payload( $existing_draft[ $draft_topic_reply['data_key'] ] )
+			! bboss_draft_topic_reply_entry_has_payload( $draft_topic_reply ) &&
+			bboss_draft_topic_reply_entry_has_payload( $existing_draft[ $draft_topic_reply['data_key'] ] )
 		);
 
 		// Captured for the response: the member keeps their stored draft, and
@@ -845,7 +845,7 @@ function bb_post_topic_reply_draft() {
 				// (H4). The refusal is safe here because
 				// bb_draft_protect_payload_attachments() has already stamped the
 				// member's uploads (BLOCKER-1).
-				if ( is_array( $new_media_data ) && bb_draft_max_attachments_per_type( 'media' ) < count( $new_media_data ) ) {
+				if ( is_array( $new_media_data ) && bboss_draft_max_attachments_per_type( 'media' ) < count( $new_media_data ) ) {
 					// Recorded, not thrown: falling through preserves any sibling
 					// update the same beacon carried (GH1). The member's uploads
 					// were already protected above (BLOCKER-1), so refusing the
@@ -859,7 +859,7 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
-						if ( empty( $new_media_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $user_id ) ) {
+						if ( empty( $new_media_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $user_id ) ) {
 							unset( $new_media_data[ $media_key ] );
 							continue;
 						}
@@ -902,7 +902,7 @@ function bb_post_topic_reply_draft() {
 				// (H4). The refusal is safe here because
 				// bb_draft_protect_payload_attachments() has already stamped the
 				// member's uploads (BLOCKER-1).
-				if ( is_array( $new_document_data ) && bb_draft_max_attachments_per_type( 'document' ) < count( $new_document_data ) ) {
+				if ( is_array( $new_document_data ) && bboss_draft_max_attachments_per_type( 'document' ) < count( $new_document_data ) ) {
 					// Recorded, not thrown: falling through preserves any sibling
 					// update the same beacon carried (GH1). The member's uploads
 					// were already protected above (BLOCKER-1), so refusing the
@@ -916,7 +916,7 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
-						if ( empty( $new_document_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $user_id ) ) {
+						if ( empty( $new_document_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $user_id ) ) {
 							unset( $new_document_data[ $document_key ] );
 							continue;
 						}
@@ -959,7 +959,7 @@ function bb_post_topic_reply_draft() {
 				// (H4). The refusal is safe here because
 				// bb_draft_protect_payload_attachments() has already stamped the
 				// member's uploads (BLOCKER-1).
-				if ( is_array( $new_video_data ) && bb_draft_max_attachments_per_type( 'video' ) < count( $new_video_data ) ) {
+				if ( is_array( $new_video_data ) && bboss_draft_max_attachments_per_type( 'video' ) < count( $new_video_data ) ) {
 					// Recorded, not thrown: falling through preserves any sibling
 					// update the same beacon carried (GH1). The member's uploads
 					// were already protected above (BLOCKER-1), so refusing the
@@ -973,7 +973,7 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
-						if ( empty( $new_video_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $user_id ) ) {
+						if ( empty( $new_video_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $user_id ) ) {
 							unset( $new_video_data[ $video_key ] );
 							continue;
 						}
@@ -1009,7 +1009,7 @@ function bb_post_topic_reply_draft() {
 			// untouched.
 			$draft_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
 
-			if ( $draft_entry_size > bb_draft_max_size() ) {
+			if ( $draft_entry_size > bboss_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $draft_entry_size, 'per_draft' );
 
@@ -1047,7 +1047,7 @@ function bb_post_topic_reply_draft() {
 			// instead of issuing a query each. The row is capped by BYTES, not by
 			// entry count, so a member holding many small drafts otherwise turned
 			// a single autosave into one uncached get_post() per draft (H-5).
-			bb_draft_prime_topic_reply_key_posts( array_keys( $mergeable_data ) );
+			bboss_draft_prime_topic_reply_key_posts( array_keys( $mergeable_data ) );
 
 			foreach ( $mergeable_data as $data_key => $d_data ) {
 
@@ -1064,7 +1064,7 @@ function bb_post_topic_reply_draft() {
 					// Shed document preview text first, as the primary entry
 					// does, so neither the size caps below nor the unchanged-entry
 					// check compare it - the stored copy never carries it.
-					$d_data = bb_draft_strip_document_render_fields( array( 'data' => $d_data ) );
+					$d_data = bboss_draft_strip_document_render_fields( array( 'data' => $d_data ) );
 					$d_data = $d_data['data'];
 
 					// Re-authorize per sibling key. The unload beacon replays
@@ -1074,7 +1074,7 @@ function bb_post_topic_reply_draft() {
 					// private). Without this the primary path's view/publish gate
 					// would apply only to the key being edited, and a sibling
 					// draft in a now-unreadable forum would keep taking writes.
-					$sibling_context = bb_draft_topic_reply_key_context( (string) $data_key );
+					$sibling_context = bboss_draft_topic_reply_key_context( (string) $data_key );
 
 					if ( false === $sibling_context ) {
 						continue;
@@ -1082,7 +1082,7 @@ function bb_post_topic_reply_draft() {
 
 					if (
 						! empty( $sibling_context['forum_id'] ) &&
-						! bbp_user_can_view_forum(
+						! bboss_bbp_user_can_view_forum(
 							array(
 								'user_id'  => $user_id,
 								'forum_id' => (int) $sibling_context['forum_id'],
@@ -1092,7 +1092,7 @@ function bb_post_topic_reply_draft() {
 						continue;
 					}
 
-					if ( ! bb_draft_user_can_save_topic_reply_draft( $sibling_context, $user_id ) ) {
+					if ( ! bboss_draft_user_can_save_topic_reply_draft( $sibling_context, $user_id ) ) {
 						continue;
 					}
 
@@ -1103,8 +1103,8 @@ function bb_post_topic_reply_draft() {
 					// unload sync replays every key the tab holds, not just
 					// the one being edited (Q12).
 					if (
-						! bb_draft_topic_reply_entry_has_payload( array( 'data' => $d_data ) ) &&
-						bb_draft_topic_reply_entry_has_payload( $existing_draft[ $data_key ] )
+						! bboss_draft_topic_reply_entry_has_payload( array( 'data' => $d_data ) ) &&
+						bboss_draft_topic_reply_entry_has_payload( $existing_draft[ $data_key ] )
 					) {
 						continue;
 					}
@@ -1118,7 +1118,7 @@ function bb_post_topic_reply_draft() {
 
 					// A replayed sibling may only replace the version this tab
 					// held. Another tab or device may have saved it since.
-					if ( isset( $all_base[ $data_key ] ) && ! bb_draft_base_matches( $existing_draft[ $data_key ], bb_draft_parse_base( $all_base[ $data_key ] ) ) ) {
+					if ( isset( $all_base[ $data_key ] ) && ! bboss_draft_base_matches( $existing_draft[ $data_key ], bboss_draft_parse_base( $all_base[ $data_key ] ) ) ) {
 						continue;
 					}
 
@@ -1152,7 +1152,7 @@ function bb_post_topic_reply_draft() {
 							: (array) json_decode( $sibling_protect_list, true );
 					}
 
-					bb_draft_protect_payload_attachments( $sibling_protect_lists, $user_id );
+					bboss_draft_protect_payload_attachments( $sibling_protect_lists, $user_id );
 
 					// Strip data URLs, then judge the RAW width BEFORE the
 					// expensive kses pass, mirroring the primary entry's M4
@@ -1161,19 +1161,19 @@ function bb_post_topic_reply_draft() {
 					// siblings, so running kses on every sibling before any size
 					// check reintroduced the M4 CPU amplification - just scaled by
 					// sibling count instead of capped at one entry.
-					$merged_entry = bb_forums_strip_draft_data_urls( $merged_entry );
+					$merged_entry = bboss_forums_strip_draft_data_urls( $merged_entry );
 
-					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
+					if ( strlen( maybe_serialize( $merged_entry ) ) > bboss_draft_max_size() ) {
 						// Keep the previously stored entry rather than failing the
 						// whole request - the unload sync carries sibling drafts too.
 						continue;
 					}
 
-					$merged_entry = bb_forums_sanitize_draft_entry( $merged_entry );
+					$merged_entry = bboss_forums_sanitize_draft_entry( $merged_entry );
 
-					$merged_entry['_draft_rev'] = bb_draft_sanitize_rev( $all_rev[ $data_key ] ?? '' );
+					$merged_entry['_draft_rev'] = bboss_draft_sanitize_rev( $all_rev[ $data_key ] ?? '' );
 
-					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
+					if ( strlen( maybe_serialize( $merged_entry ) ) > bboss_draft_max_size() ) {
 						// Keep the previously stored entry rather than failing the
 						// whole request - the unload sync carries sibling drafts too.
 						continue;
@@ -1198,7 +1198,7 @@ function bb_post_topic_reply_draft() {
 						// Per-type cap, matching the primary entry's type-specific
 						// caps above (bbp_media/document/video each read their own
 						// upload limit).
-						$sibling_type_cap   = bb_draft_max_attachments_per_type( $sibling_type_keys[0] );
+						$sibling_type_cap   = bboss_draft_max_attachments_per_type( $sibling_type_keys[0] );
 						$sibling_type_count = 0;
 
 						foreach ( $sibling_type_keys as $sibling_type_key ) {
@@ -1261,7 +1261,7 @@ function bb_post_topic_reply_draft() {
 						}
 
 						foreach ( $sibling_owned_list as $sibling_owned_index => $sibling_owned_attachment ) {
-							if ( empty( $sibling_owned_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $sibling_owned_attachment['id'], false, $user_id ) ) {
+							if ( empty( $sibling_owned_attachment['id'] ) || ! bboss_user_can_manage_draft_attachment( $sibling_owned_attachment['id'], false, $user_id ) ) {
 								unset( $sibling_owned_list[ $sibling_owned_index ] );
 							}
 						}
@@ -1284,8 +1284,8 @@ function bb_post_topic_reply_draft() {
 					// is re-checked per ID: this list is client JSON, and the
 					// stamping loop below writes without further checks
 					//.
-					foreach ( bb_draft_collect_attachment_ids( $merged_entry ) as $sibling_attachment_id ) {
-						if ( bb_user_can_manage_draft_attachment( $sibling_attachment_id, false, $user_id ) ) {
+					foreach ( bboss_draft_collect_attachment_ids( $merged_entry ) as $sibling_attachment_id ) {
+						if ( bboss_user_can_manage_draft_attachment( $sibling_attachment_id, false, $user_id ) ) {
 							$stamp_attachment_ids[] = (int) $sibling_attachment_id;
 						}
 					}
@@ -1307,7 +1307,7 @@ function bb_post_topic_reply_draft() {
 		// reverted the other tab's autosave. Only the keys this request actually
 		// decided about are ours to write; every other key belongs to whoever
 		// wrote it last (M2).
-		$fresh_draft_row = bb_draft_fresh_value( $user_id, $usermeta_key, true ) ?? '';
+		$fresh_draft_row = bboss_draft_fresh_value( $user_id, $usermeta_key, true ) ?? '';
 		$stored_row_size = strlen( maybe_serialize( $fresh_draft_row ) );
 
 		if ( ! is_array( $fresh_draft_row ) ) {
@@ -1346,7 +1346,7 @@ function bb_post_topic_reply_draft() {
 		// no caller primes the size memo before this point today, but the trim
 		// and the budget below are the first things to consume it, and they must
 		// measure the row this request is actually about to write.
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		// Attachments the user's OTHER draft rows still reference, so a release
 		// below does not strip the stamp of a file a live activity/group draft
@@ -1357,8 +1357,8 @@ function bb_post_topic_reply_draft() {
 		$cross_row_retained_ids = null;
 
 		if ( empty( $existing_draft ) ) {
-			bp_delete_user_meta( $user_id, $usermeta_key );
-			bb_draft_flush_user_meta_sizes( $user_id );
+			bboss_delete_user_meta( $user_id, $usermeta_key );
+			bboss_draft_flush_user_meta_sizes( $user_id );
 		} else {
 			// The aggregated row itself must respect the per-user draft budget -
 			// trim oldest inner drafts first, protecting the one just saved.
@@ -1367,25 +1367,25 @@ function bb_post_topic_reply_draft() {
 			// every activity draft an eviction candidate on the next save. A
 			// single per-draft cap is kept as the floor so a member carrying
 			// heavy activity drafts can still save a forum draft at all.
-			$draft_sizes       = bb_draft_get_user_meta_sizes( $user_id );
+			$draft_sizes       = bboss_draft_get_user_meta_sizes( $user_id );
 			$forum_row_bytes   = isset( $draft_sizes['drafts'][ $usermeta_key ] ) ? (int) $draft_sizes['drafts'][ $usermeta_key ] : 0;
 			$other_draft_bytes = array_sum( $draft_sizes['drafts'] ) - $forum_row_bytes;
-			$forum_row_cap     = max( bb_draft_max_size(), bb_draft_user_total_max_size() - $other_draft_bytes );
+			$forum_row_cap     = max( bboss_draft_max_size(), bboss_draft_user_total_max_size() - $other_draft_bytes );
 
 			// Evict first, refuse only when even that cannot fit: when the
 			// member's NON-draft meta leaves less room than the draft cap, trim
 			// the row down to that room too, instead of letting the budget
 			// below refuse a row that trimming would have made fit (V13).
-			$draft_headroom = bb_draft_user_meta_budget() - max( 0, (int) $draft_sizes['total'] - array_sum( $draft_sizes['drafts'] ) );
-			$forum_row_cap  = max( bb_draft_max_size(), min( $forum_row_cap, $draft_headroom ) );
+			$draft_headroom = bboss_draft_user_meta_budget() - max( 0, (int) $draft_sizes['total'] - array_sum( $draft_sizes['drafts'] ) );
+			$forum_row_cap  = max( bboss_draft_max_size(), min( $forum_row_cap, $draft_headroom ) );
 
-			$trimmed_row = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
+			$trimmed_row = bboss_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
 
 			// A page-unload save cannot read its response, so it must not trim
 			// other drafts out of the row - they could not be handed back. Refuse
 			// instead; the browser keeps every one of these drafts locally and
 			// saves them on the next visit (see bb_draft_enforce_user_budget()).
-			if ( ! empty( $trimmed_row['evicted'] ) && bb_draft_is_beacon_request() ) {
+			if ( ! empty( $trimmed_row['evicted'] ) && bboss_draft_is_beacon_request() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
 				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], strlen( maybe_serialize( $existing_draft ) ), 'drafts_over_cap' );
 
@@ -1416,7 +1416,7 @@ function bb_post_topic_reply_draft() {
 			// discard because the USER is over budget would deadlock the very
 			// remedy the budget error tells them to perform.
 			if ( $forum_row_size > $stored_row_size ) {
-				$draft_budget = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size, bb_draft_is_beacon_request() ? 'beacon' : 'save' );
+				$draft_budget = bboss_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size, bboss_draft_is_beacon_request() ? 'beacon' : 'save' );
 
 				if ( empty( $draft_budget['allowed'] ) ) {
 					$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
@@ -1441,7 +1441,7 @@ function bb_post_topic_reply_draft() {
 							// runs), so announcing them would tell the member drafts
 							// were removed that are still on the server (H4).
 							'evicted_draft_keys' => $draft_budget['evicted'],
-							'evicted_drafts'     => bb_draft_handback( $user_id, $draft_budget['entries'] ),
+							'evicted_drafts'     => bboss_draft_handback( $user_id, $draft_budget['entries'] ),
 						)
 					);
 				}
@@ -1483,7 +1483,7 @@ function bb_post_topic_reply_draft() {
 					$trimmed_held[ $usermeta_key . ':' . $trimmed_inner_key ] = $trimmed_entry;
 				}
 
-				bb_draft_hold_evicted( $user_id, $trimmed_held );
+				bboss_draft_hold_evicted( $user_id, $trimmed_held );
 			}
 
 			// wp_slash(): the row is uniformly unslashed in memory (see the
@@ -1492,15 +1492,15 @@ function bb_post_topic_reply_draft() {
 			// receives the row byte-for-byte (S5). The in-memory $existing_draft
 			// stays unslashed for the consumers below, which parse its
 			// attachment JSON.
-			bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
-			bb_draft_flush_user_meta_sizes( $user_id );
+			bboss_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
+			bboss_draft_flush_user_meta_sizes( $user_id );
 
 			// The trimmed row is now stored, so the evictions really happened:
 			// announce them. Their attachment stamps are deliberately KEPT - the
 			// entries are handed back to the browser and still reference those
 			// files, and the orphan-stamp sweep releases a stamp only once nothing
 			// stored references it and it is past retention.
-			bb_draft_mark_evicted_attachments( $trimmed_entries, $user_id );
+			bboss_draft_mark_evicted_attachments( $trimmed_entries, $user_id );
 
 			foreach ( array_keys( $trimmed_entries ) as $trimmed_inner_key ) {
 				/** This action is documented in bp-core/bb-core-drafts.php */
@@ -1519,10 +1519,10 @@ function bb_post_topic_reply_draft() {
 		// its attachments are released for the orphan cron, minus anything the
 		// written row or another draft row still references.
 		if ( ! $is_draft_update && ! $primary_rejected && ! empty( $unstamp_draft_entry ) ) {
-			if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $unstamp_draft_entry ) ) {
-				$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+			if ( null === $cross_row_retained_ids && bboss_draft_collect_attachment_ids( $unstamp_draft_entry ) ) {
+				$cross_row_retained_ids = bboss_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
 			}
-			bb_draft_release_replaced_attachments( $unstamp_draft_entry, array(), $user_id, $existing_draft, (array) $cross_row_retained_ids );
+			bboss_draft_release_replaced_attachments( $unstamp_draft_entry, array(), $user_id, $existing_draft, (array) $cross_row_retained_ids );
 		}
 
 		// Re-stamp only attachments a SURVIVING entry of the written row still
@@ -1539,7 +1539,7 @@ function bb_post_topic_reply_draft() {
 		// budget, not a crafted payload.
 		$surviving_stamp_ids = array();
 		foreach ( $existing_draft as $surviving_entry ) {
-			foreach ( bb_draft_collect_attachment_ids( $surviving_entry ) as $surviving_id ) {
+			foreach ( bboss_draft_collect_attachment_ids( $surviving_entry ) as $surviving_id ) {
 				$surviving_stamp_ids[ (int) $surviving_id ] = true;
 			}
 		}
@@ -1573,7 +1573,7 @@ function bb_post_topic_reply_draft() {
 			// Kept deliberately: the merged row is reachable from client JSON, so
 			// a crafted sibling entry could name another member's attachment. The
 			// stamp must never be applied on that basis.
-			if ( bb_user_can_manage_draft_attachment( $restamp_attachment_id, false, $user_id ) ) {
+			if ( bboss_user_can_manage_draft_attachment( $restamp_attachment_id, false, $user_id ) ) {
 				update_post_meta( $restamp_attachment_id, 'bb_media_draft', '1' );
 			}
 		}
@@ -1595,7 +1595,7 @@ function bb_post_topic_reply_draft() {
 		// ordinary autosave of an unchanged attachment list no longer aborts a
 		// running sweep (H-4).
 		if ( $reference_added ) {
-			bb_draft_invalidate_referenced_cache( array_keys( $surviving_stamp_ids ) );
+			bboss_draft_invalidate_referenced_cache( array_keys( $surviving_stamp_ids ) );
 		}
 
 		// A kept stored primary answers with the STORED entry, never the empty
@@ -1617,7 +1617,7 @@ function bb_post_topic_reply_draft() {
 			if ( ! empty( $evicted_draft_keys ) ) {
 				$primary_rejection['evicted_draft_keys'] = $evicted_draft_keys;
 			}
-			$primary_rejection['evicted_drafts'] = bb_draft_handback( $user_id, isset( $evicted_drafts ) ? $evicted_drafts : array() );
+			$primary_rejection['evicted_drafts'] = bboss_draft_handback( $user_id, isset( $evicted_drafts ) ? $evicted_drafts : array() );
 			wp_send_json_error( $primary_rejection );
 		}
 	}
@@ -1626,7 +1626,7 @@ function bb_post_topic_reply_draft() {
 		array(
 			'draft_activity'     => $draft_topic_reply,
 			'evicted_draft_keys' => isset( $evicted_draft_keys ) ? $evicted_draft_keys : array(),
-			'evicted_drafts'     => bb_draft_handback( $user_id, isset( $evicted_drafts ) ? $evicted_drafts : array() ),
+			'evicted_drafts'     => bboss_draft_handback( $user_id, isset( $evicted_drafts ) ? $evicted_drafts : array() ),
 		)
 	);
 }
@@ -1640,12 +1640,12 @@ function bb_post_topic_reply_draft() {
  *
  * @since BuddyBoss 3.7.1
  */
-function bb_get_topic_reply_drafts() {
+function bboss_get_topic_reply_drafts() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 
-	$draft_data = bp_get_user_meta( bp_loggedin_user_id(), 'bb_user_topic_reply_draft', true );
+	$draft_data = bboss_get_user_meta( bboss_loggedin_user_id(), 'bb_user_topic_reply_draft', true );
 	$drafts     = array();
 
 	// The page sends the key prefixes its forms can use (draft_discussion_{forum},
@@ -1684,7 +1684,7 @@ function bb_get_topic_reply_drafts() {
 			// An entry with no text and no attachment has nothing to restore.
 			// Handing it back applies the "Draft" indicator over an empty
 			// composer, which is what members reported (Q12).
-			if ( ! bb_draft_topic_reply_entry_has_payload( $data ) ) {
+			if ( ! bboss_draft_topic_reply_entry_has_payload( $data ) ) {
 				continue;
 			}
 
@@ -1692,7 +1692,7 @@ function bb_get_topic_reply_drafts() {
 		}
 	}
 
-	$owed = bb_draft_handback( bp_loggedin_user_id() );
+	$owed = bboss_draft_handback( bboss_loggedin_user_id() );
 
 	// Held forum drafts of this page's forms that still wait in the overflow
 	// are handed back with the rest, so a form here never saves over one
@@ -1701,8 +1701,8 @@ function bb_get_topic_reply_drafts() {
 	if ( ! empty( $prefixes ) ) {
 		$owed = array_merge(
 			$owed,
-			bb_draft_promote_evicted(
-				bp_loggedin_user_id(),
+			bboss_draft_promote_evicted(
+				bboss_loggedin_user_id(),
 				function ( $key ) use ( $prefixes ) {
 					if ( 0 !== strpos( $key, 'bb_user_topic_reply_draft:' ) ) {
 						return false;
@@ -1727,7 +1727,7 @@ function bb_get_topic_reply_drafts() {
 	foreach ( $owed as $owed_key => $owed_entry ) {
 		$owed_parts = explode( ':', (string) $owed_key, 2 );
 
-		if ( 2 !== count( $owed_parts ) || 'bb_user_topic_reply_draft' !== $owed_parts[0] || isset( $drafts[ $owed_parts[1] ] ) || ! is_array( $owed_entry ) || ! bb_draft_topic_reply_entry_has_payload( $owed_entry ) ) {
+		if ( 2 !== count( $owed_parts ) || 'bb_user_topic_reply_draft' !== $owed_parts[0] || isset( $drafts[ $owed_parts[1] ] ) || ! is_array( $owed_entry ) || ! bboss_draft_topic_reply_entry_has_payload( $owed_entry ) ) {
 			continue;
 		}
 
@@ -1758,7 +1758,7 @@ function bb_get_topic_reply_drafts() {
  *
  * @since BuddyBoss 2.2.1
  */
-function bb_forum_add_content_popup() {
+function bboss_forum_add_content_popup() {
 	global $template_forum_ids;
 
 	if ( empty( $template_forum_ids ) ) {
@@ -1783,7 +1783,7 @@ function bb_forum_add_content_popup() {
 								</a>
 							</header>
 							<div class="bb-action-popup-content">
-								<?php echo wp_kses_post( bbp_get_forum_content( $forum_id ) ) ; ?>
+								<?php echo wp_kses_post( bboss_bbp_get_forum_content( $forum_id ) ) ; ?>
 							</div>
 						</div>
 					</div>
@@ -1803,7 +1803,7 @@ function bb_forum_add_content_popup() {
  *
  * @param int $post_id Discussion/Reply id.
  */
-function bb_forums_save_link_preview_data( $post_id ) {
+function bboss_forums_save_link_preview_data( $post_id ) {
 
 	$link_preview_data = array();
 
@@ -1886,7 +1886,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	$preview_data['url'] = $link_url;
 
 	if ( ! empty( $link_image ) ) {
-		$attachment_id = bb_media_sideload_attachment( $link_image );
+		$attachment_id = bboss_bb_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		} else {
@@ -1925,20 +1925,20 @@ function bb_forums_save_link_preview_data( $post_id ) {
  *
  * @return void
  */
-function bb_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post ) {
+function bboss_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, $post ) {
 	// Only process topics transitioning from 'future' to 'publish'.
 	if ( 'publish' !== $new_status || 'future' !== $old_status ) {
 		return;
 	}
 
 	// Only process topic post type.
-	if ( ! function_exists( 'bbp_get_topic_post_type' ) || bbp_get_topic_post_type() !== $post->post_type ) {
+	if ( ! function_exists( 'bboss_bbp_get_topic_post_type' ) || bboss_bbp_get_topic_post_type() !== $post->post_type ) {
 		return;
 	}
 
 	// Get forum ID.
 	$topic_id = $post->ID;
-	$forum_id = bbp_get_topic_forum_id( $topic_id );
+	$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 	if ( empty( $forum_id ) ) {
 		return;
@@ -1951,12 +1951,12 @@ function bb_forums_notify_on_scheduled_topic_publish( $new_status, $old_status, 
 	}
 
 	// Get topic author data.
-	$author_id      = bbp_get_topic_author_id( $topic_id );
+	$author_id      = bboss_bbp_get_topic_author_id( $topic_id );
 	$anonymous_data = false;
 
 	// Send notification to forum subscribers.
-	if ( function_exists( 'bbp_notify_forum_subscribers' ) ) {
-		bbp_notify_forum_subscribers( $topic_id, $forum_id, $anonymous_data, $author_id );
+	if ( function_exists( 'bboss_bbp_notify_forum_subscribers' ) ) {
+		bboss_bbp_notify_forum_subscribers( $topic_id, $forum_id, $anonymous_data, $author_id );
 		// Mark as sent to prevent duplicates.
 		update_post_meta( $topic_id, '_bbp_scheduled_notification_sent', true );
 	}
@@ -1978,27 +1978,27 @@ add_action( 'transition_post_status', 'bb_forums_notify_on_scheduled_topic_publi
  *
  * @return void
  */
-function bb_forums_notify_on_scheduled_reply_publish( $new_status, $old_status, $post ) {
+function bboss_forums_notify_on_scheduled_reply_publish( $new_status, $old_status, $post ) {
 	// Only process replies transitioning from 'future' to 'publish'.
 	if ( 'publish' !== $new_status || 'future' !== $old_status ) {
 		return;
 	}
 
 	// Only process reply post type.
-	if ( ! function_exists( 'bbp_get_reply_post_type' ) || bbp_get_reply_post_type() !== $post->post_type ) {
+	if ( ! function_exists( 'bboss_bbp_get_reply_post_type' ) || bboss_bbp_get_reply_post_type() !== $post->post_type ) {
 		return;
 	}
 
 	// Get topic ID.
 	$reply_id = $post->ID;
-	$topic_id = bbp_get_reply_topic_id( $reply_id );
+	$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 
 	if ( empty( $topic_id ) ) {
 		return;
 	}
 
 	// Get forum ID.
-	$forum_id = bbp_get_topic_forum_id( $topic_id );
+	$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 	// Check if notification was already sent (prevent duplicates).
 	$notification_sent = get_post_meta( $reply_id, '_bbp_scheduled_notification_sent', true );
@@ -2007,12 +2007,12 @@ function bb_forums_notify_on_scheduled_reply_publish( $new_status, $old_status, 
 	}
 
 	// Get reply author data.
-	$author_id      = bbp_get_reply_author_id( $reply_id );
+	$author_id      = bboss_bbp_get_reply_author_id( $reply_id );
 	$anonymous_data = false;
 
 	// Send notification to topic subscribers.
-	if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
-		bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id );
+	if ( function_exists( 'bboss_bbp_notify_topic_subscribers' ) ) {
+		bboss_bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $author_id );
 		// Mark as sent to prevent duplicates.
 		update_post_meta( $reply_id, '_bbp_scheduled_notification_sent', true );
 	}

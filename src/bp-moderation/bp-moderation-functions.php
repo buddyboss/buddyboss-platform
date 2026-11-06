@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return mixed|void
  */
-function bp_moderation_content_types() {
+function bboss_moderation_content_types() {
 
 	/**
 	 * Filter to update content types
@@ -41,9 +41,9 @@ function bp_moderation_content_types() {
  *
  * @return mixed|void
  */
-function bp_moderation_get_content_type( $key ) {
+function bboss_moderation_get_content_type( $key ) {
 
-	$content_types = bp_moderation_content_types();
+	$content_types = bboss_moderation_content_types();
 
 	/**
 	 * Filter to update Content type
@@ -58,20 +58,20 @@ function bp_moderation_get_content_type( $key ) {
 /**
  * Retrieve an Moderation reports.
  *
- * The bp_moderation_get() function shares all arguments with
- * BP_Moderation::get().
+ * The bboss_moderation_get() function shares all arguments with
+ * BBoss_Moderation::get().
  *
  * @since BuddyBoss 1.5.6
  *
- * @param array|string $args See BP_Moderation::get() for description.
+ * @param array|string $args See BBoss_Moderation::get() for description.
  *
- * @return array $moderation See BP_Moderation::get() for description.
- * @see   BP_Moderation::get() For more information on accepted arguments
+ * @return array $moderation See BBoss_Moderation::get() for description.
+ * @see   BBoss_Moderation::get() For more information on accepted arguments
  *        and the format of the returned value.
  */
-function bp_moderation_get( $args = '' ) {
+function bboss_moderation_get( $args = '' ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'max'               => false,
@@ -119,7 +119,7 @@ function bp_moderation_get( $args = '' ) {
 		'moderation_get'
 	);
 
-	$moderation = BP_Moderation::get(
+	$moderation = BBoss_Moderation::get(
 		array(
 			'page'              => $r['page'],
 			'per_page'          => $r['per_page'],
@@ -149,7 +149,7 @@ function bp_moderation_get( $args = '' ) {
 	 *
 	 * @param array         $r          Arguments used for the moderation query.
 	 *
-	 * @param BP_Moderation $moderation Requested moderation object.
+	 * @param BBoss_Moderation $moderation Requested moderation object.
 	 */
 	return apply_filters_ref_array(
 		'bp_moderation_get',
@@ -167,14 +167,14 @@ function bp_moderation_get( $args = '' ) {
  *
  * @param bool $force_cache Bypass cache it true.
  *
- * @return array $moderation See BP_Moderation::get() for description.
+ * @return array $moderation See BBoss_Moderation::get() for description.
  */
-function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
+function bboss_moderation_get_hidden_user_ids( $force_cache = false ) {
 
 	static $cache = array();
 
 	$args = array(
-		'in_types'          => BP_Moderation_Members::$moderation_type,
+		'in_types'          => BBoss_Moderation_Members::$moderation_type,
 		'update_meta_cache' => false,
 		'filter_query'      => array(
 			'relation' => 'OR',
@@ -189,12 +189,12 @@ function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
 		),
 	);
 
-	$cache_key = 'bp_moderation_get_hidden_user_ids_' . BP_Moderation_Members::$moderation_type . '_' . get_current_user_id();
+	$cache_key = 'bp_moderation_get_hidden_user_ids_' . BBoss_Moderation_Members::$moderation_type . '_' . get_current_user_id();
 	if ( isset( $cache[ $cache_key ] ) && false === $force_cache ) {
 		return $cache[ $cache_key ];
 	}
 
-	$hidden_users = bp_moderation_get( $args );
+	$hidden_users = bboss_moderation_get( $args );
 
 	$hidden_users_ids = array();
 	if ( ! empty( $hidden_users['moderations'] ) ) {
@@ -216,9 +216,9 @@ function bp_moderation_get_hidden_user_ids( $force_cache = false ) {
  *
  * @return string|array
  */
-function bp_moderation_get_report_button( $args, $html = true ) {
+function bboss_moderation_get_report_button( $args, $html = true ) {
 
-	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+	if ( ! bboss_is_active( 'moderation' ) || ! is_user_logged_in() ) {
 		return ! empty( $html ) ? '' : array();
 	}
 
@@ -240,33 +240,33 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	}
 
 	// Check the current user's permission.
-	$user_can = bp_moderation_user_can( $item_id, $item_type, false );
+	$user_can = bboss_moderation_user_can( $item_id, $item_type, false );
 
 	if ( false === (bool) $user_can ) {
 		return ! empty( $html ) ? '' : array();
 	}
 
 	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+	if ( BBoss_Moderation_Members::$moderation_type === $item_type ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
-	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+	} elseif ( BBoss_Moderation_Members::$moderation_type_report === $item_type ) {
 		$button_text          = __( 'Report Member', 'buddyboss' );
 		$reported_button_text = __( 'Report Member', 'buddyboss' );
 	} else {
-		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
-		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
+		$button_text          = bboss_moderation_get_report_button_text( $item_type, $item_id );
+		$reported_button_text = bboss_moderation_get_reported_button_text( $item_type, $item_id );
 	}
 
-	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$sub_items     = bboss_moderation_get_sub_items( $item_id, $item_type );
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
-	$args['button_attr'] = bp_parse_args(
+	$args['button_attr'] = bboss_parse_args(
 		$args['button_attr'],
 		array(
 			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
-			'href'                 => ( BP_Moderation_Members::$moderation_type === $item_type ) ? '#block-member' : '#content-report',
+			'href'                 => ( BBoss_Moderation_Members::$moderation_type === $item_type ) ? '#block-member' : '#content-report',
 			'class'                => 'button item-button bp-secondary-action report-content',
 			'data-bp-content-id'   => '',
 			'data-bp-content-type' => '',
@@ -274,18 +274,18 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		)
 	);
 
-	$button = bp_parse_args(
+	$button = bboss_parse_args(
 		$args,
 		array(
 			'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html( $button_text ) ),
 		)
 	);
 
-	BP_Moderation::$no_cache = true;
+	BBoss_Moderation::$no_cache = true;
 
-	$is_reported = bp_moderation_report_exist( $item_sub_id, $item_sub_type );
+	$is_reported = bboss_moderation_report_exist( $item_sub_id, $item_sub_type );
 
-	BP_Moderation::$no_cache = false;
+	BBoss_Moderation::$no_cache = false;
 
 	if ( $is_reported ) {
 		$button['link_text']                = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
@@ -298,7 +298,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
 
-	$button['button_attr']['reported_type'] = bp_moderation_get_report_type( $item_type, $item_id );
+	$button['button_attr']['reported_type'] = bboss_moderation_get_report_type( $item_type, $item_id );
 
 	/**
 	 * Filter to update report link args
@@ -341,13 +341,13 @@ function bp_moderation_get_report_button( $args, $html = true ) {
  *
  * @return bool
  */
-function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
+function bboss_moderation_report_exist( $item_id, $item_type, $blocking_user_id = false ) {
 	$response = false;
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$moderation = new BP_Moderation( $item_id, $item_type, $blocking_user_id );
+		$moderation = new BBoss_Moderation( $item_id, $item_type, $blocking_user_id );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && empty( $moderation->user_report ) );
-		if ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
+		if ( BBoss_Moderation_Members::$moderation_type_report === $item_type ) {
 			$response = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) && ! empty( $moderation->user_report ) );
 		}
 	}
@@ -365,12 +365,12 @@ function bp_moderation_report_exist( $item_id, $item_type, $blocking_user_id = f
  *
  * @return bool True if suspended, otherwise false.
  */
-function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
-	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+function bboss_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
+	if ( ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 		return false;
 	}
 
-	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type, $blocking_user_id );
+	return bboss_moderation_report_exist( $user_id, BBoss_Moderation_Members::$moderation_type, $blocking_user_id );
 }
 
 /**
@@ -382,8 +382,8 @@ function bp_moderation_is_user_blocked( $user_id, $blocking_user_id = false ) {
  *
  * @return bool
  */
-function bp_moderation_is_user_suspended( $user_id ) {
-	return BP_Core_Suspend::check_user_suspend( $user_id );
+function bboss_moderation_is_user_suspended( $user_id ) {
+	return BBoss_Core_Suspend::check_user_suspend( $user_id );
 }
 
 /**
@@ -396,7 +396,7 @@ function bp_moderation_is_user_suspended( $user_id ) {
  *
  * @return array
  */
-function bp_moderation_get_sub_items( $item_id, $item_type ) {
+function bboss_moderation_get_sub_items( $item_id, $item_type ) {
 
 	/**
 	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
@@ -430,7 +430,7 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
  *
  * @return bool
  */
-function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true ) {
+function bboss_moderation_can_report( $item_id, $item_type, $bypass_validate = true ) {
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
@@ -451,11 +451,11 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 	}
 
 	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+	if ( BBoss_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 			return false;
 		}
-	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+	} elseif ( ! bboss_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
 
@@ -473,12 +473,12 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
 		return false;
 	}
 
-	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$sub_items     = bboss_moderation_get_sub_items( $item_id, $item_type );
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
 	// If Sub type moderation disabled then reporting option should not show.
-	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
+	if ( in_array( $item_sub_type, array( BBoss_Moderation_Document::$moderation ), true ) && ! bboss_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
 		return false;
 	}
 
@@ -500,7 +500,7 @@ function bp_moderation_can_report( $item_id, $item_type, $bypass_validate = true
  *
  * @return bool
  */
-function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true ) {
+function bboss_moderation_user_can( $item_id, $item_type, $bypass_validate = true ) {
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
@@ -521,15 +521,15 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 	}
 
 	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+	if ( BBoss_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 			return false;
 		}
-	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
-		if ( ! bb_is_moderation_member_reporting_enable( 0 ) ) {
+	} elseif ( BBoss_Moderation_Members::$moderation_type_report === $item_type ) {
+		if ( ! bboss_is_moderation_member_reporting_enable( 0 ) ) {
 			return false;
 		}
-	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+	} elseif ( ! bboss_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
 
@@ -547,16 +547,16 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
-	$sub_items     = bp_moderation_get_sub_items( $item_id, $item_type );
+	$sub_items     = bboss_moderation_get_sub_items( $item_id, $item_type );
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
 	// If Sub type moderation disabled then reporting option should not show.
-	if ( in_array( $item_sub_type, array( BP_Moderation_Document::$moderation ), true ) && ! bp_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
+	if ( in_array( $item_sub_type, array( BBoss_Moderation_Document::$moderation ), true ) && ! bboss_is_moderation_content_reporting_enable( 0, $item_sub_type ) ) {
 		return false;
 	}
 
-	if ( in_array( $item_sub_type, array( BP_Moderation_Members::$moderation_type_report ), true ) && bp_loggedin_user_id() === $item_sub_id ) {
+	if ( in_array( $item_sub_type, array( BBoss_Moderation_Members::$moderation_type_report ), true ) && bboss_loggedin_user_id() === $item_sub_id ) {
 		return false;
 	}
 
@@ -564,13 +564,13 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
 		return false;
 	}
 
-	$owner_ids = bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
+	$owner_ids = bboss_moderation_get_content_owner_id( $item_sub_id, $item_sub_type );
 	if ( ! is_array( $owner_ids ) ) {
 		$owner_ids = array( $owner_ids );
 	}
 
 	// Hide if content is created by current user.
-	if ( in_array( bp_loggedin_user_id(), $owner_ids, true ) ) {
+	if ( in_array( bboss_loggedin_user_id(), $owner_ids, true ) ) {
 		return false;
 	}
 
@@ -587,21 +587,21 @@ function bp_moderation_user_can( $item_id, $item_type, $bypass_validate = true )
  *
  * @return bool
  */
-function bp_moderation_is_content_hidden( $item_id, $item_type ) {
+function bboss_moderation_is_content_hidden( $item_id, $item_type ) {
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return false;
 	}
 
 	// Check moderation setting enabled or not.
-	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+	if ( BBoss_Moderation_Members::$moderation_type === $item_type ) {
+		if ( ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 			return false;
 		}
-	} elseif ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+	} elseif ( ! bboss_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 		return false;
 	}
 
-	return (bool) BP_Core_Suspend::check_hidden_content( $item_id, $item_type );
+	return (bool) BBoss_Core_Suspend::check_hidden_content( $item_id, $item_type );
 }
 
 /** Moderation actions *******************************************************/
@@ -615,15 +615,15 @@ function bp_moderation_is_content_hidden( $item_id, $item_type ) {
  *
  * @return bool
  */
-function bp_moderation_add( $args = array() ) {
+function bboss_moderation_add( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
 		// Called member class externally when content_type = report_member.
-		if ( BP_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
-			$class = BP_Moderation_Abstract::get_class( BP_Moderation_Members::$moderation_type );
+		if ( BBoss_Moderation_Members::$moderation_type_report === $args['content_type'] ) {
+			$class = BBoss_Moderation_Abstract::get_class( BBoss_Moderation_Members::$moderation_type );
 		} else {
-			$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+			$class = BBoss_Moderation_Abstract::get_class( $args['content_type'] );
 		}
 
 		if ( method_exists( $class, 'report' ) ) {
@@ -643,11 +643,11 @@ function bp_moderation_add( $args = array() ) {
  *
  * @return bool
  */
-function bp_moderation_hide( $args = array() ) {
+function bboss_moderation_hide( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		$class = BBoss_Moderation_Abstract::get_class( $args['content_type'] );
 
 		if ( method_exists( $class, 'hide' ) ) {
 			$response = $class::hide( $args );
@@ -666,11 +666,11 @@ function bp_moderation_hide( $args = array() ) {
  *
  * @return bool
  */
-function bp_moderation_unhide( $args = array() ) {
+function bboss_moderation_unhide( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		$class = BBoss_Moderation_Abstract::get_class( $args['content_type'] );
 
 		if ( method_exists( $class, 'unhide' ) ) {
 			$response = $class::unhide( $args );
@@ -689,11 +689,11 @@ function bp_moderation_unhide( $args = array() ) {
  *
  * @return bool
  */
-function bp_moderation_delete( $args = array() ) {
+function bboss_moderation_delete( $args = array() ) {
 	$response = false;
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+		$class = BBoss_Moderation_Abstract::get_class( $args['content_type'] );
 
 		if ( method_exists( $class, 'delete' ) ) {
 			$response = $class::delete( $args );
@@ -720,7 +720,7 @@ function bp_moderation_delete( $args = array() ) {
  *
  * @return mixed The meta value(s) being requested.
  */
-function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
+function bboss_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = get_metadata( 'moderation', $moderation_id, $meta_key, $single );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -752,7 +752,7 @@ function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = t
  *
  * @return int|bool The meta ID on successful update, false on failure.
  */
-function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
+function bboss_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = add_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -775,7 +775,7 @@ function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique
  *                  metadata, returns true. On successful creation of new metadata,
  *                  returns the integer ID of the new metadata row.
  */
-function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
+function bboss_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = update_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $prev_value );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -805,11 +805,11 @@ function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $pre
  *
  * @return bool True on success, false on failure.
  */
-function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+function bboss_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
 	// Legacy - if no meta_key is passed, delete all for the item.
 	if ( empty( $meta_key ) ) {
-		$all_meta = bp_moderation_get_meta( $moderation_id );
+		$all_meta = bboss_moderation_get_meta( $moderation_id );
 		$keys     = ! empty( $all_meta ) ? array_keys( $all_meta ) : array();
 
 		// With no meta_key, ignore $delete_all.
@@ -844,7 +844,7 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
  *
  * @return mixed The meta value(s) being requested.
  */
-function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) {
+function bboss_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = get_metadata( 'suspend', $suspend_id, $meta_key, $single );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -876,7 +876,7 @@ function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) 
  *
  * @return int|bool The meta ID on successful update, false on failure.
  */
-function bb_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = false ) {
+function bboss_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = add_metadata( 'suspend', $suspend_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -899,7 +899,7 @@ function bb_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = fal
  *                  metadata returns true. On successful creation of new metadata,
  *                  returns the integer ID of the new metadata row.
  */
-function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value = '' ) {
+function bboss_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = update_metadata( 'suspend', $suspend_id, $meta_key, $meta_value, $prev_value );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -930,7 +930,7 @@ function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_valu
  *
  * @return bool True on success, false on failure.
  */
-function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+function bboss_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 	// Legacy - if no meta_key is passed, delete all for the item.
 	if ( empty( $meta_key ) ) {
 		$all_meta = bp_suspend_get_meta( $suspend_id );
@@ -970,7 +970,7 @@ function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', 
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_member_blocking_enable( $default = 0 ) {
+function bboss_is_moderation_member_blocking_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_member_blocking_enable', (bool) get_option( 'bpm_blocking_member_blocking', $default ) );
 }
 
@@ -984,7 +984,7 @@ function bp_is_moderation_member_blocking_enable( $default = 0 ) {
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
+function bboss_is_moderation_auto_suspend_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_auto_suspend_enable', (bool) get_option( 'bpm_blocking_auto_suspend', $default ) );
 }
 
@@ -998,9 +998,9 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_moderation_auto_suspend_threshold( $default = 5 ) {
+function bboss_moderation_auto_suspend_threshold( $default = 5 ) {
 
-	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', $default ) );
+	return apply_filters( 'bp_moderation_auto_suspend_threshold', (int) bboss_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', $default ) );
 }
 
 /**
@@ -1013,7 +1013,7 @@ function bp_moderation_auto_suspend_threshold( $default = 5 ) {
  * @return bool Is member reporting enabled or not.
  * @uses get_option() To get the bb_blocking_member_reporting option.
  */
-function bb_is_moderation_member_reporting_enable( $default = 0 ) {
+function bboss_is_moderation_member_reporting_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bb_is_moderation_member_reporting_enable', (bool) get_option( 'bb_blocking_member_reporting', $default ) );
 }
 
@@ -1027,7 +1027,7 @@ function bb_is_moderation_member_reporting_enable( $default = 0 ) {
  * @return bool Is auto suspend report enabled or not.
  * @uses get_option() To get the bb_reporting_auto_suspend option.
  */
-function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
+function bboss_is_moderation_auto_suspend_report_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bb_is_moderation_auto_suspend_report_enable', (bool) get_option( 'bb_reporting_auto_suspend', $default ) );
 }
 
@@ -1039,10 +1039,10 @@ function bb_is_moderation_auto_suspend_report_enable( $default = 0 ) {
  * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not.
- * @uses bp_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option.
+ * @uses bboss_moderation_get_setting() To get the bb_reporting_auto_suspend_threshold option.
  */
-function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
-	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bp_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
+function bboss_moderation_auto_suspend_report_threshold( $default = 5 ) {
+	return apply_filters( 'bb_moderation_auto_suspend_report_threshold', (int) bboss_moderation_get_setting( 'bb_reporting_auto_suspend_threshold', $default ) );
 }
 
 /**
@@ -1055,7 +1055,7 @@ function bb_moderation_auto_suspend_report_threshold( $default = 5 ) {
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
+function bboss_is_moderation_blocking_email_notification_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_blocking_email_notification_enable', (bool) get_option( 'bpm_blocking_email_notification', $default ) );
 }
 
@@ -1070,28 +1070,28 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
+function bboss_is_moderation_content_reporting_enable( $default = 0, $content_type = '' ) {
 
-	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
-		$content_type = BP_Moderation_Members::$moderation_type_report;
+	if ( BBoss_Moderation_Members::$moderation_type_report === $content_type ) {
+		$content_type = BBoss_Moderation_Members::$moderation_type_report;
 
 		// Check for folder type and content type as document.
-	} elseif ( BP_Moderation_Folder::$moderation_type === $content_type ) {
-		$content_type = BP_Moderation_Document::$moderation_type;
+	} elseif ( BBoss_Moderation_Folder::$moderation_type === $content_type ) {
+		$content_type = BBoss_Moderation_Document::$moderation_type;
 
 		// Check for album type and content type as media.
-	} elseif ( BP_Moderation_Album::$moderation_type === $content_type ) {
-		$content_type = BP_Moderation_Media::$moderation_type;
+	} elseif ( BBoss_Moderation_Album::$moderation_type === $content_type ) {
+		$content_type = BBoss_Moderation_Media::$moderation_type;
 
 		// Check for message type and content type as user.
-	} elseif ( BP_Moderation_Message::$moderation_type === $content_type ) {
-		return bp_is_moderation_member_blocking_enable( 0 );
+	} elseif ( BBoss_Moderation_Message::$moderation_type === $content_type ) {
+		return bboss_is_moderation_member_blocking_enable( 0 );
 	}
 
 	$settings = (array) get_option( 'bpm_reporting_content_reporting', array() );
 
-	if ( BP_Moderation_Members::$moderation_type_report === $content_type ) {
-		$settings[ $content_type ] = bb_is_moderation_member_reporting_enable();
+	if ( BBoss_Moderation_Members::$moderation_type_report === $content_type ) {
+		$settings[ $content_type ] = bboss_is_moderation_member_reporting_enable();
 	}
 
 	if ( ! isset( $settings[ $content_type ] ) || empty( $settings[ $content_type ] ) ) {
@@ -1115,8 +1115,8 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
-	$is_enabled = bp_is_moderation_content_reporting_enable( false, $content_type );
+function bboss_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
+	$is_enabled = bboss_is_moderation_content_reporting_enable( false, $content_type );
 	if ( empty( $is_enabled ) ) {
 		return false;
 	}
@@ -1143,7 +1143,7 @@ function bp_is_moderation_auto_hide_enable( $default = 0, $content_type = '' ) {
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
+function bboss_moderation_reporting_auto_hide_threshold( $default = 5, $content_type = '' ) {
 
 	$settings = get_option( 'bpm_reporting_auto_hide_threshold', array() );
 
@@ -1167,7 +1167,7 @@ function bp_moderation_reporting_auto_hide_threshold( $default = 5, $content_typ
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
  */
-function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
+function bboss_is_moderation_reporting_email_notification_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_reporting_email_notification_enable', (bool) get_option( 'bpm_reporting_email_notification', $default ) );
 }
 
@@ -1183,10 +1183,10 @@ function bp_is_moderation_reporting_email_notification_enable( $default = 0 ) {
  *
  * @return int|array
  */
-function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
+function bboss_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
 	$user_ids = 0;
-	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$class    = BBoss_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_owner_id' ) ) {
 		$user_ids = $class::get_content_owner_id( $moderation_item_id );
@@ -1205,10 +1205,10 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  *
  * @return string
  */
-function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type ) {
+function bboss_moderation_get_permalink( $moderation_item_id, $moderation_item_type ) {
 
 	$link  = '';
-	$class = BP_Moderation_Abstract::get_class( $moderation_item_type );
+	$class = BBoss_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_permalink' ) ) {
 		$link = $class::get_permalink( $moderation_item_id );
@@ -1225,10 +1225,10 @@ function bp_moderation_get_permalink( $moderation_item_id, $moderation_item_type
  * @param string $email  user email address.
  * @param array  $tokens user details.
  *
- * @return bool|BP_Email|WP_Error
+ * @return bool|BBoss_Email|WP_Error
  */
-function bp_moderation_member_suspend_email( $email, $tokens ) {
-	return bp_send_email(
+function bboss_moderation_member_suspend_email( $email, $tokens ) {
+	return bboss_send_email(
 		'user-moderation-email',
 		$email,
 		array(
@@ -1250,10 +1250,10 @@ function bp_moderation_member_suspend_email( $email, $tokens ) {
  * @param string $email  user email.
  * @param array  $tokens email tokens.
  *
- * @return bool|BP_Email|WP_Error
+ * @return bool|BBoss_Email|WP_Error
  */
-function bp_moderation_content_hide_email( $email, $tokens ) {
-	return bp_send_email(
+function bboss_moderation_content_hide_email( $email, $tokens ) {
+	return bboss_send_email(
 		'content-moderation-email',
 		$email,
 		array(
@@ -1277,15 +1277,15 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
  *
  * @return mixed|void
  */
-function bp_moderation_item_count( $args = array() ) {
+function bboss_moderation_item_count( $args = array() ) {
 	$moderation_request_args = array(
 		'per_page'    => 1,
 		'count_total' => true,
 	);
 
-	$moderation_request_args = bp_parse_args( $args, $moderation_request_args );
+	$moderation_request_args = bboss_parse_args( $args, $moderation_request_args );
 
-	$result = BP_Moderation::get( $moderation_request_args );
+	$result = BBoss_Moderation::get( $moderation_request_args );
 
 	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
 }
@@ -1300,7 +1300,7 @@ function bp_moderation_item_count( $args = array() ) {
  *
  * @return mixed|void
  */
-function bp_moderation_get_report_type( $item_type, $item_id ) {
+function bboss_moderation_get_report_type( $item_type, $item_id ) {
 	if ( ! $item_type || ! $item_id ) {
 		return false;
 	}
@@ -1326,7 +1326,7 @@ function bp_moderation_get_report_type( $item_type, $item_id ) {
  *
  * @return false|mixed|void
  */
-function bp_moderation_get_report_button_text( $item_type, $item_id ) {
+function bboss_moderation_get_report_button_text( $item_type, $item_id ) {
 	if ( ! $item_type || ! $item_id ) {
 		return false;
 	}
@@ -1352,7 +1352,7 @@ function bp_moderation_get_report_button_text( $item_type, $item_id ) {
  *
  * @return false|mixed|void
  */
-function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
+function bboss_moderation_get_reported_button_text( $item_type, $item_id ) {
 	if ( ! $item_type || ! $item_id ) {
 		return false;
 	}
@@ -1375,7 +1375,7 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
  *
  * @return array
  */
-function bb_moderation_get_reporting_category_fields_array() {
+function bboss_moderation_get_reporting_category_fields_array() {
 
 	$result = array(
 		'content'         => esc_html__( 'Content', 'buddyboss' ),
@@ -1403,16 +1403,16 @@ function bb_moderation_get_reporting_category_fields_array() {
  *
  * @return array|mixed
  */
-function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
+function bboss_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
 	static $cache = array();
 	global $wpdb;
 	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	$cache_key = 'bb_moderation_blocked_by_' . $user_id;
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
-		$sql  = bb_moderation_get_blocked_by_sql( $user_id );
+		$sql  = bboss_moderation_get_blocked_by_sql( $user_id );
 		$data = $wpdb->get_col( $sql ); // phpcs:ignore
 		$data = ! empty( $data ) ? array_map( 'intval', $data ) : array();
 
@@ -1433,15 +1433,15 @@ function bb_moderation_get_blocked_by_user_ids( $user_id = 0, $force = false ) {
  *
  * @return string|void
  */
-function bb_moderation_get_blocked_by_sql( $user_id = 0 ) {
+function bboss_moderation_get_blocked_by_sql( $user_id = 0 ) {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
-	$type = BP_Moderation_Members::$moderation_type;
+	$type = BBoss_Moderation_Members::$moderation_type;
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	return $wpdb->prepare( "SELECT DISTINCT m.user_id FROM {$bp->moderation->table_name} s LEFT JOIN {$bp->moderation->table_name_reports} m ON m.moderation_id = s.id WHERE s.item_type = %s AND s.item_id = %d AND s.reported != 0 AND m.user_report != 1", $type, $user_id );
@@ -1456,12 +1456,12 @@ function bb_moderation_get_blocked_by_sql( $user_id = 0 ) {
  *
  * @return bool
  */
-function bb_moderation_is_user_blocked_by( $user_id ) {
-	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+function bboss_moderation_is_user_blocked_by( $user_id ) {
+	if ( ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 		return false;
 	}
 
-	$blocked_by_members = bb_moderation_get_blocked_by_user_ids();
+	$blocked_by_members = bboss_moderation_get_blocked_by_user_ids();
 
 	return ( ! empty( $blocked_by_members ) && in_array( (int) $user_id, $blocked_by_members, true ) );
 }
@@ -1478,18 +1478,18 @@ function bb_moderation_is_user_blocked_by( $user_id ) {
  *
  * @return string $avatar_url    Updated avatar url.
  */
-function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
+function bboss_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
 	// Check for group.
 	if (
-		bp_is_active( 'groups' ) &&
+		bboss_is_active( 'groups' ) &&
 		(
-			bp_is_group_members() ||
+			bboss_is_group_members() ||
 			(
-				function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum()
+				function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_group_forum()
 			) ||
 			(
-				function_exists( 'bp_get_group_current_admin_tab' ) &&
-				'manage-members' === bp_get_group_current_admin_tab()
+				function_exists( 'bboss_get_group_current_admin_tab' ) &&
+				'manage-members' === bboss_get_group_current_admin_tab()
 			) ||
 			(
 				wp_doing_ajax() &&
@@ -1498,19 +1498,19 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 			)
 		)
 	) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 		if (
-			groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
-			groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+			bboss_groups_is_user_admin( bboss_loggedin_user_id(), $group_id ) ||
+			bboss_groups_is_user_mod( bboss_loggedin_user_id(), $group_id )
 		) {
 			return $old_avatar_url;
 		}
 	}
 
 	// Check for activity.
-	$activity_id = bp_is_active( 'activity' ) && function_exists( 'bp_get_activity_id' ) ? bp_get_activity_id() : 0;
+	$activity_id = bboss_is_active( 'activity' ) && function_exists( 'bboss_get_activity_id' ) ? bboss_get_activity_id() : 0;
 	if ( ! empty( $activity_id ) ) {
-		$activity = new BP_Activity_Activity( $activity_id );
+		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		// check activity exists.
 		if ( empty( $activity->id ) ) {
@@ -1518,12 +1518,12 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
 		}
 
 		$activity_component = $activity->component;
-		$group_id           = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+		$group_id           = bboss_is_active( 'groups' ) && bboss()->groups->id === $activity->component ? $activity->item_id : 0;
 
 		if ( ! empty( $group_id ) && 'groups' === $activity_component ) {
 			if (
-				groups_is_user_admin( bp_loggedin_user_id(), $group_id ) ||
-				groups_is_user_mod( bp_loggedin_user_id(), $group_id )
+				bboss_groups_is_user_admin( bboss_loggedin_user_id(), $group_id ) ||
+				bboss_groups_is_user_mod( bboss_loggedin_user_id(), $group_id )
 			) {
 				return $old_avatar_url;
 			}
@@ -1543,7 +1543,7 @@ function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $p
  *
  * @return mixed|void
  */
-function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
+function bboss_moderation_is_blocked_label( $value, $user_id = 0 ) {
 
 	/**
 	 * Filter to update is_blocked_label.
@@ -1566,7 +1566,7 @@ function bb_moderation_is_blocked_label( $value, $user_id = 0 ) {
  *
  * @return mixed|void
  */
-function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
+function bboss_moderation_has_blocked_label( $value, $user_id = 0 ) {
 
 	/**
 	 * Filter to update has_blocked_label.
@@ -1589,7 +1589,7 @@ function bb_moderation_has_blocked_label( $value, $user_id = 0 ) {
  *
  * @return mixed|void
  */
-function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
+function bboss_moderation_is_blocked_avatar( $user_id, $args = array() ) {
 
 	/**
 	 * Filter to update is_blocked_avatar.
@@ -1600,7 +1600,7 @@ function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
 	 * @param int   $user_id User id.
 	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
 	 */
-	return apply_filters( 'bb_moderation_is_blocked_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
+	return apply_filters( 'bb_moderation_is_blocked_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }
 
 /**
@@ -1614,7 +1614,7 @@ function bb_moderation_is_blocked_avatar( $user_id, $args = array() ) {
  *
  * @return mixed|void
  */
-function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
+function bboss_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array() ) {
 
 	/**
 	 * Filter to update has_blocked_avatar.
@@ -1637,7 +1637,7 @@ function bb_moderation_has_blocked_avatar( $avatar_url, $user_id, $args = array(
  *
  * @return mixed|void
  */
-function bb_moderation_is_suspended_label( $user_id = 0 ) {
+function bboss_moderation_is_suspended_label( $user_id = 0 ) {
 
 	/**
 	 * Filter to update is_suspended_label.
@@ -1660,7 +1660,7 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
  *
  * @return mixed|void
  */
-function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
+function bboss_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 
 	/**
 	 * Filter to update is_suspended_avatar.
@@ -1671,7 +1671,7 @@ function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
 	 * @param int   $user_id User id.
 	 * @param array $args    Arguments passed to get_avatar_data(), after processing.
 	 */
-	return apply_filters( 'bb_moderation_is_suspended_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
+	return apply_filters( 'bb_moderation_is_suspended_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ), $user_id, $args );
 }
 
 /**
@@ -1681,7 +1681,7 @@ function bb_moderation_is_suspended_avatar( $user_id = 0, $args = array() ) {
  *
  * @return mixed|void
  */
-function bb_moderation_is_deleted_label() {
+function bboss_moderation_is_deleted_label() {
 
 	/**
 	 * Filter to fetch the delete user's label.
@@ -1700,7 +1700,7 @@ function bb_moderation_is_deleted_label() {
  *
  * @return mixed|void
  */
-function bb_moderation_is_deleted_avatar() {
+function bboss_moderation_is_deleted_avatar() {
 
 	/**
 	 * Filter to fetch the delete users avatar.
@@ -1709,7 +1709,7 @@ function bb_moderation_is_deleted_avatar() {
 	 *
 	 * @param string Get default avatar image URL based on settings.
 	 */
-	return apply_filters( 'bb_moderation_is_deleted_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
+	return apply_filters( 'bb_moderation_is_deleted_avatar', bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) );
 }
 
 /**
@@ -1723,7 +1723,7 @@ function bb_moderation_is_deleted_avatar() {
  *
  * @return string
  */
-function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
+function bboss_moderation_has_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked to other user.
@@ -1749,7 +1749,7 @@ function bb_moderation_has_blocked_message( $value, $item_type = '', $item_id = 
  *
  * @return string
  */
-function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
+function bboss_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when current user blocked by other user.
@@ -1774,7 +1774,7 @@ function bb_moderation_is_blocked_message( $value, $item_type = '', $item_id = 0
  *
  * @return string
  */
-function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
+function bboss_moderation_is_suspended_message( $value, $item_type = '', $item_id = 0 ) {
 
 	/**
 	 * Filter will return text when user is suspended.
@@ -1798,13 +1798,13 @@ function bb_moderation_is_suspended_message( $value, $item_type = '', $item_id =
  *
  * @return mixed
  */
-function bb_moderation_remove_mention_link( $content ) {
+function bboss_moderation_remove_mention_link( $content ) {
 
 	if ( empty( $content ) ) {
 		return $content;
 	}
 
-	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+	$usernames = bboss_find_mentions_by_at_sign( array(), $content );
 
 	// No mentions? Stop now!
 	if ( empty( $usernames ) ) {
@@ -1813,9 +1813,9 @@ function bb_moderation_remove_mention_link( $content ) {
 
 	foreach ( (array) $usernames as $user_id => $username ) {
 		if (
-			bp_moderation_is_user_blocked( $user_id ) ||
-			bb_moderation_is_user_blocked_by( $user_id ) ||
-			bp_moderation_is_user_suspended( $user_id )
+			bboss_moderation_is_user_blocked( $user_id ) ||
+			bboss_moderation_is_user_blocked_by( $user_id ) ||
+			bboss_moderation_is_user_suspended( $user_id )
 		) {
 			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );
 			if ( ! empty( $content_matches ) ) {
@@ -1840,13 +1840,13 @@ function bb_moderation_remove_mention_link( $content ) {
  *
  * @return array|mixed
  */
-function bb_moderation_get_suspended_user_ids( $force = false ) {
+function bboss_moderation_get_suspended_user_ids( $force = false ) {
 	static $cache = array();
 	global $wpdb, $bp;
 
 	$cache_key = 'bb_moderation_suspended_user_ids';
 	if ( ! isset( $cache[ $cache_key ] ) || $force ) {
-		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended = 1", BP_Suspend_Member::$type ) ); // phpcs:ignore
+		$result = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT item_id FROM {$bp->moderation->table_name} WHERE item_type = %s AND user_suspended = 1", BBoss_Suspend_Member::$type ) ); // phpcs:ignore
 		$data   = ! empty( $result ) ? array_map( 'intval', $result ) : array();
 
 		$cache[ $cache_key ] = $data;
@@ -1866,7 +1866,7 @@ function bb_moderation_get_suspended_user_ids( $force = false ) {
  *
  * @return array|bool
  */
-function bb_moderation_moderated_user_ids( $user_id = 0 ) {
+function bboss_moderation_moderated_user_ids( $user_id = 0 ) {
 	static $cache = array();
 
 	$cache_key = 'bb_moderation_moderated_user_ids';
@@ -1879,9 +1879,9 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
 		return $cache[ $cache_key ];
 	}
 
-	$hidden_users_ids   = bp_moderation_get_hidden_user_ids(); // Blocked user_ids.
-	$blocked_by_members = bb_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
-	$suspended_user_id  = bb_moderation_get_suspended_user_ids();
+	$hidden_users_ids   = bboss_moderation_get_hidden_user_ids(); // Blocked user_ids.
+	$blocked_by_members = bboss_moderation_get_blocked_by_user_ids(); // Blocked by user_ids.
+	$suspended_user_id  = bboss_moderation_get_suspended_user_ids();
 
 	$all_users = array();
 	if ( ! empty( $hidden_users_ids ) ) {
@@ -1918,9 +1918,9 @@ function bb_moderation_moderated_user_ids( $user_id = 0 ) {
  *
  * @return bool
  */
-function bb_moderation_allowed_specific_notification( $args ) {
+function bboss_moderation_allowed_specific_notification( $args ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'              => '',
@@ -1938,22 +1938,22 @@ function bb_moderation_allowed_specific_notification( $args ) {
 	switch ( $r['type'] ) {
 		case 'activity':
 			if (
-				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
+				bboss_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(
 					(
 						empty( $r['group_id'] ) &&
 						(
-							bp_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
-							bb_moderation_is_user_blocked_by( $r['recipient_user_id'] )
+							bboss_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
+							bboss_moderation_is_user_blocked_by( $r['recipient_user_id'] )
 						)
 					) ||
 					(
-						bp_is_active( 'groups' ) &&
+						bboss_is_active( 'groups' ) &&
 						! empty( $r['group_id'] ) &&
-						bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
+						bboss_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
 						(
-							! groups_is_user_admin( $r['sender_id'], $r['group_id'] ) &&
-							! groups_is_user_mod( $r['sender_id'], $r['group_id'] )
+							! bboss_groups_is_user_admin( $r['sender_id'], $r['group_id'] ) &&
+							! bboss_groups_is_user_mod( $r['sender_id'], $r['group_id'] )
 						)
 					)
 				)
@@ -1963,22 +1963,22 @@ function bb_moderation_allowed_specific_notification( $args ) {
 			break;
 		case 'messages':
 			if (
-				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
+				bboss_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(
 					(
 						empty( $r['group_id'] ) &&
 						(
-							bp_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
-							bb_moderation_is_user_blocked_by( $r['recipient_user_id'] )
+							bboss_moderation_is_user_blocked( $r['recipient_user_id'] ) ||
+							bboss_moderation_is_user_blocked_by( $r['recipient_user_id'] )
 						)
 					) ||
 					(
-						bp_is_active( 'groups' ) &&
+						bboss_is_active( 'groups' ) &&
 						! empty( $r['group_id'] ) &&
-						bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
+						bboss_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
 						(
-							! groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
-							! groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
+							! bboss_groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
+							! bboss_groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
 						)
 					)
 				)
@@ -1989,9 +1989,9 @@ function bb_moderation_allowed_specific_notification( $args ) {
 		case 'forums':
 		case 'groups':
 			if (
-				bp_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
+				bboss_moderation_is_user_suspended( $r['recipient_user_id'] ) ||
 				(
-					bb_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
+					bboss_moderation_is_user_blocked_by( $r['recipient_user_id'] ) &&
 					(
 						(
 							empty( $r['group_id'] ) &&
@@ -1999,11 +1999,11 @@ function bb_moderation_allowed_specific_notification( $args ) {
 						)
 						||
 						(
-							bp_is_active( 'groups' ) &&
+							bboss_is_active( 'groups' ) &&
 							! empty( $r['group_id'] ) &&
 							(
-								! groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
-								! groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
+								! bboss_groups_is_user_admin( $r['recipient_user_id'], $r['group_id'] ) &&
+								! bboss_groups_is_user_mod( $r['recipient_user_id'], $r['group_id'] )
 							)
 						)
 					)
@@ -2031,12 +2031,12 @@ function bb_moderation_allowed_specific_notification( $args ) {
  *
  * @return bool
  */
-function bb_moderation_to_hide_forum_activity( $activity_id ) {
-	$activity_data = new BP_Activity_Activity( $activity_id );
+function bboss_moderation_to_hide_forum_activity( $activity_id ) {
+	$activity_data = new BBoss_Activity_Activity( $activity_id );
 	$hide_activity = false;
 	if (
-		bp_is_active( 'activity' ) &&
-		bp_is_active( 'forums' ) &&
+		bboss_is_active( 'activity' ) &&
+		bboss_is_active( 'forums' ) &&
 		in_array(
 			$activity_data->type,
 			array(
@@ -2045,20 +2045,20 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
 			true
 		)
 	) {
-		if ( bp_moderation_is_user_blocked( $activity_data->user_id ) ) {
-			$content = bb_moderation_has_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+		if ( bboss_moderation_is_user_blocked( $activity_data->user_id ) ) {
+			$content = bboss_moderation_has_blocked_message( $activity_data->content, BBoss_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
 			if ( $activity_data->content !== $content ) {
 				$hide_activity = true;
 			}
 		}
-		if ( bb_moderation_is_user_blocked_by( $activity_data->user_id ) ) {
-			$content = bb_moderation_is_blocked_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+		if ( bboss_moderation_is_user_blocked_by( $activity_data->user_id ) ) {
+			$content = bboss_moderation_is_blocked_message( $activity_data->content, BBoss_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
 			if ( $activity_data->content !== $content ) {
 				$hide_activity = true;
 			}
 		}
-		if ( bp_moderation_is_user_suspended( $activity_data->user_id ) ) {
-			$content = bb_moderation_is_suspended_message( $activity_data->content, BP_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
+		if ( bboss_moderation_is_user_suspended( $activity_data->user_id ) ) {
+			$content = bboss_moderation_is_suspended_message( $activity_data->content, BBoss_Moderation_Forum_Replies::$moderation_type, $activity_data->id );
 			if ( $activity_data->content !== $content ) {
 				$hide_activity = true;
 			}
@@ -2075,7 +2075,7 @@ function bb_moderation_to_hide_forum_activity( $activity_id ) {
  *
  * @return void
  */
-function bb_moderation_migration_on_update() {
+function bboss_moderation_migration_on_update() {
 	global $wpdb;
 
 	/**
@@ -2087,15 +2087,15 @@ function bb_moderation_migration_on_update() {
 	$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Run migration only if not run previously.
-	$moderation_repaired = bp_get_option( 'bb_moderation_migration_run', false );
+	$moderation_repaired = bboss_get_option( 'bb_moderation_migration_run', false );
 	if ( true !== $moderation_repaired ) {
 		$suspend_request_args = array(
-			'in_types' => array( BP_Moderation_Members::$moderation_type ),
+			'in_types' => array( BBoss_Moderation_Members::$moderation_type ),
 			'reported' => false,
 			'per_page' => false,
 		);
 
-		$suspend_requests = BP_Moderation::get( $suspend_request_args );
+		$suspend_requests = BBoss_Moderation::get( $suspend_request_args );
 
 		if ( ! empty( $suspend_requests['moderations'] ) ) {
 			foreach ( $suspend_requests['moderations'] as $data ) {
@@ -2109,29 +2109,29 @@ function bb_moderation_migration_on_update() {
 						'blog_id'     => $data->blog_id,
 					);
 
-					BP_Core_Suspend::add_suspend( $args );
+					BBoss_Core_Suspend::add_suspend( $args );
 				}
 
 				// updated data based on suspend entries.
 				if ( isset( $data->user_suspended ) ) {
 					if ( ! empty( $data->user_suspended ) ) {
-						BP_Suspend_Member::suspend_user( $data->item_id );
+						BBoss_Suspend_Member::suspend_user( $data->item_id );
 					} elseif (
 						empty( $data->user_suspended ) &&
 						empty( $data->user_report )
 					) {
-						BP_Suspend_Member::unsuspend_user( $data->item_id, array( 'hide_sitewide' => 1 ) );
+						BBoss_Suspend_Member::unsuspend_user( $data->item_id, array( 'hide_sitewide' => 1 ) );
 					}
 				}
 			}
 		}
 
 		$hidden_request_args = array(
-			'exclude_types' => array( BP_Moderation_Members::$moderation_type ),
+			'exclude_types' => array( BBoss_Moderation_Members::$moderation_type ),
 			'per_page'      => false,
 		);
 
-		$hidden_requests = BP_Moderation::get( $hidden_request_args );
+		$hidden_requests = BBoss_Moderation::get( $hidden_request_args );
 
 		if ( ! empty( $hidden_requests['moderations'] ) ) {
 			foreach ( $hidden_requests['moderations'] as $data ) {
@@ -2139,7 +2139,7 @@ function bb_moderation_migration_on_update() {
 				// update data for the hidden data.
 				if ( isset( $data->hide_sitewide ) ) {
 					if ( ! empty( $data->hide_sitewide ) ) {
-						$moderation = new BP_Moderation( $data->item_id, $data->item_type );
+						$moderation = new BBoss_Moderation( $data->item_id, $data->item_type );
 						$moderation->hide();
 					} else {
 						$args = array(
@@ -2148,20 +2148,20 @@ function bb_moderation_migration_on_update() {
 						);
 
 						if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-							$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+							$moderation = new BBoss_Moderation( $args['content_id'], $args['content_type'] );
 
 							if ( method_exists( $moderation, 'unhide_related_content' ) ) {
 								$moderation->hide_sitewide = 0;
 
 								$moderation->unhide_related_content();
-								bp_moderation_delete_meta( $moderation->id, '_hide_by' );
+								bboss_moderation_delete_meta( $moderation->id, '_hide_by' );
 
 								/**
 								 * Fires after a moderation report item has been unhide
 								 *
 								 * @since BuddyBoss 1.5.6
 								 *
-								 * @param BP_Moderation $this current class object.
+								 * @param BBoss_Moderation $this current class object.
 								 */
 								do_action( 'bp_moderation_after_unhide', $moderation );
 							}
@@ -2171,7 +2171,7 @@ function bb_moderation_migration_on_update() {
 			}
 		}
 
-		bp_update_option( 'bb_moderation_migration_run', true );
+		bboss_update_option( 'bb_moderation_migration_run', true );
 	}
 
 	/**
@@ -2179,7 +2179,7 @@ function bb_moderation_migration_on_update() {
 	 *
 	 * @since BuddyBoss 2.7.30
 	 */
-	$bp_prefix  = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix  = function_exists( 'bboss_core_get_table_prefix' ) ? bboss_core_get_table_prefix() : $wpdb->base_prefix;
 	$table_name = $bp_prefix . 'bp_suspend_meta';
 	// Check if the 'bp_suspend_meta' table exists.
 	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // phpcs:ignore
@@ -2187,7 +2187,7 @@ function bb_moderation_migration_on_update() {
 	if ( $table_exists !== $table_name ) {
 		$sql             = array();
 		$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
-		$bp_prefix       = bp_core_get_table_prefix();
+		$bp_prefix       = bboss_core_get_table_prefix();
 
 		$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -2231,13 +2231,13 @@ function bb_moderation_migration_on_update() {
  *
  * @return array|bool
  */
-function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
+function bboss_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 	global $wpdb, $bp;
 
 	static $cache = array();
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	if ( ! empty( $user_id ) ) {
@@ -2277,9 +2277,9 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 	// Prepare the query with parameters.
 	$retval = $wpdb->prepare(
 		$query, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- the literal query built just above (table names from buddypress(), four placeholders bound here).
-		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
+		BBoss_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
 		$user_id,                                // m.user_id = 2.
-		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
+		BBoss_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
 		$user_id                                 // ms.item_id = 2.
 	);
 
@@ -2298,7 +2298,7 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
  *
  * @return array
  */
-function bp_moderation_get_default_report_categories() {
+function bboss_moderation_get_default_report_categories() {
 	return array(
 		'offensive'      => array(
 			'name'        => __( 'Offensive', 'buddyboss' ),
@@ -2339,7 +2339,7 @@ function bp_moderation_get_default_report_categories() {
  * 
  * @return WP_Term|object
  */
-function bp_moderation_maybe_translate_report_term( $term ) {
+function bboss_moderation_maybe_translate_report_term( $term ) {
 	if ( empty( $term ) || empty( $term->term_id ) || 'bpm_category' !== $term->taxonomy ) {
 		return $term;
 	}
@@ -2348,7 +2348,7 @@ function bp_moderation_maybe_translate_report_term( $term ) {
 
 	// Fallback for installs that pre-date the meta marker: match by slug.
 	if ( empty( $key ) && ! empty( $term->slug ) ) {
-		$defaults = bp_moderation_get_default_report_categories();
+		$defaults = bboss_moderation_get_default_report_categories();
 		if ( isset( $defaults[ $term->slug ] ) ) {
 			$key = $term->slug;
 		}
@@ -2358,7 +2358,7 @@ function bp_moderation_maybe_translate_report_term( $term ) {
 		return $term;
 	}
 
-	$defaults = bp_moderation_get_default_report_categories();
+	$defaults = bboss_moderation_get_default_report_categories();
 	if ( ! isset( $defaults[ $key ] ) ) {
 		return $term;
 	}

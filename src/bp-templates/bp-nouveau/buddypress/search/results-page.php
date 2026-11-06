@@ -20,7 +20,7 @@ $post_title = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 	$post_title = __( 'No results found', "buddyboss" );
-} elseif ( BP_Search::instance()->has_search_results() ) {
+} elseif ( BBoss_Search::instance()->has_search_results() ) {
 	/* translators: %s: search query. */
 	$post_title = sprintf( __( 'Showing results for \'%s\'', "buddyboss" ), esc_html( sanitize_text_field( wp_unslash( $_GET['s'] ) ) ) );
 } else {
@@ -35,5 +35,5 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 </header>
 
 <div id="buddypress">
-	<?php bp_get_template_part("search/results-page-content"); ?>
+	<?php bboss_get_template_part("search/results-page-content"); ?>
 </div>

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Groups {
+class BBoss_Nouveau_Groups {
 	/**
 	 * Constructor
 	 *
@@ -55,7 +55,7 @@ class BP_Nouveau_Groups {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );
@@ -76,7 +76,7 @@ class BP_Nouveau_Groups {
 
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_groups_enqueue_scripts' );
 
-		if ( true === bp_disable_group_messages() ) {
+		if ( true === bboss_disable_group_messages() ) {
 			add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_groups_messages_enqueue_scripts', 99999999 );
 		}
 
@@ -91,7 +91,7 @@ class BP_Nouveau_Groups {
 		add_action( 'dynamic_sidebar_after', array( $this, 'group_home_sidebar_unset' ), 10, 1 );
 
 		// Add a new nav item to settings to let users choose their group invites preferences
-		if ( bp_is_active( 'friends' ) && ! bp_nouveau_groups_disallow_all_members_invites() ) {
+		if ( bboss_is_active( 'friends' ) && ! bboss_nouveau_groups_disallow_all_members_invites() ) {
 			add_action( 'bp_settings_setup_nav', 'bp_nouveau_groups_invites_restriction_nav' );
 		}
 	}
@@ -104,7 +104,7 @@ class BP_Nouveau_Groups {
 	protected function setup_filters() {
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_groups_register_scripts', 10, 1 );
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_groups_localize_scripts', 10, 1 );
-		if ( true === bp_disable_group_messages() ) {
+		if ( true === bboss_disable_group_messages() ) {
 			add_filter( 'bp_core_get_js_strings', 'bp_nouveau_groups_messages_localize_scripts', 10, 1 );
 		}
 		add_filter( 'groups_create_group_steps', 'bp_nouveau_group_invites_create_steps', 10, 1 );
@@ -127,7 +127,7 @@ class BP_Nouveau_Groups {
 		add_filter( 'bp_groups_get_front_template', 'bp_nouveau_group_reset_front_template', 10, 2 );
 
 		// Add a new nav item to settings to let users choose their group invites preferences
-		if ( bp_is_active( 'friends' ) && ! bp_nouveau_groups_disallow_all_members_invites() ) {
+		if ( bboss_is_active( 'friends' ) && ! bboss_nouveau_groups_disallow_all_members_invites() ) {
 			add_filter( 'bp_settings_admin_nav', 'bp_nouveau_groups_invites_restriction_admin_nav', 10, 1 );
 		}
 	}
@@ -148,7 +148,7 @@ class BP_Nouveau_Groups {
 		$this->is_group_home_sidebar = true;
 
 		// Add needed filters.
-		bp_nouveau_groups_add_home_widget_filters();
+		bboss_nouveau_groups_add_home_widget_filters();
 	}
 
 	/**
@@ -167,7 +167,7 @@ class BP_Nouveau_Groups {
 		$this->is_group_home_sidebar = false;
 
 		// Remove no more needed filters.
-		bp_nouveau_groups_remove_home_widget_filters();
+		bboss_nouveau_groups_remove_home_widget_filters();
 	}
 }
 
@@ -176,11 +176,11 @@ class BP_Nouveau_Groups {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_groups( $bp_nouveau = null ) {
+function bboss_nouveau_groups( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->groups = new BP_Nouveau_Groups();
+	$bp_nouveau->groups = new BBoss_Nouveau_Groups();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_groups', 10, 1 );

@@ -3,7 +3,7 @@
  * Topics Loop - Single Topic Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -11,20 +11,20 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$forum_id     = bbp_get_topic_forum_id();
-$topic_id     = bbp_get_topic_id();
+$forum_id     = bboss_bbp_get_topic_forum_id();
+$topic_id     = bboss_bbp_get_topic_id();
 $group_avatar = '';
-if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
+if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_group_forum( $forum_id ) ) {
+	$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 
-	if ( ! empty( $group_ids ) && function_exists( 'groups_get_group' ) ) {
+	if ( ! empty( $group_ids ) && function_exists( 'bboss_groups_get_group' ) ) {
 		$group_id = $group_ids[0]; // Get the first group ID.
-		$group    = groups_get_group( $group_id );
+		$group    = bboss_groups_get_group( $group_id );
 
 		if ( $group && ! empty( $group->name ) ) {
 			// Get group avatar.
-			if ( function_exists( 'bp_core_fetch_avatar' ) && ! bp_disable_group_avatar_uploads() ) {
-				$group_avatar = bp_core_fetch_avatar(
+			if ( function_exists( 'bboss_core_fetch_avatar' ) && ! bboss_disable_group_avatar_uploads() ) {
+				$group_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id' => $group_id,
 						'object'  => 'group',
@@ -46,38 +46,38 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 }
 ?>
 
-<li id="bbp-topic-<?php bbp_topic_id(); ?>" <?php bbp_topic_class(); ?>>
+<li id="bbp-topic-<?php bboss_bbp_topic_id(); ?>" <?php bboss_bbp_topic_class(); ?>>
 
 	<div class="bb-rl-topic-avatar">
-		<?php bbp_topic_author_link( array( 'size' => '48' ) ); ?>
+		<?php bboss_bbp_topic_author_link( array( 'size' => '48' ) ); ?>
 	</div>
 
 	<div class="bb-rl-topic-content">
 
 		<div class="bb-rl-topic-status-wrapper">
 
-			<?php if ( ! bbp_is_topic_open() ) { ?>
+			<?php if ( ! bboss_bbp_is_topic_open() ) { ?>
 				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Closed', 'buddyboss' ); ?>"><i class="bb-icons-rl-lock-simple bb-rl-topic-status closed"></i></span>
 				<?php
 			}
 
-			if ( bbp_is_topic_super_sticky() ) {
+			if ( bboss_bbp_is_topic_super_sticky() ) {
 				?>
 				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status super-sticky"></i></span>
-			<?php } elseif ( bbp_is_topic_sticky() ) { ?>
+			<?php } elseif ( bboss_bbp_is_topic_sticky() ) { ?>
 				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status sticky"></i></span>
 				<?php
 			}
 
 			if ( is_user_logged_in() ) {
-				$is_subscribed = bbp_is_user_subscribed_to_topic( get_current_user_id(), bbp_get_topic_id() );
+				$is_subscribed = bboss_bbp_is_user_subscribed_to_topic( get_current_user_id(), bboss_bbp_get_topic_id() );
 				if ( $is_subscribed ) {
 					?>
 					<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Subscribed', 'buddyboss' ); ?>"><i class="bb-icons-rl-rss"></i></span>
 					<?php
 				}
 
-				if ( bbp_is_single_forum() ) {
+				if ( bboss_bbp_is_single_forum() ) {
 					?>
 					<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
 
@@ -88,28 +88,28 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 						<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 							<?php
 
-							if ( ! empty( bbp_get_topic_stick_link() ) ) {
-								if ( bbp_is_topic_sticky() ) {
+							if ( ! empty( bboss_bbp_get_topic_stick_link() ) ) {
+								if ( bboss_bbp_is_topic_sticky() ) {
 									?>
 									<div class="generic-button bb-rl-context-item bb-rl-unstick">
-										<?php bbp_topic_stick_link(); ?>
+										<?php bboss_bbp_topic_stick_link(); ?>
 									</div>
 									<?php
 								} else {
 									?>
 									<div class="generic-button bb-rl-context-item bb-rl-stick">
-										<?php bbp_topic_stick_link(); ?>
+										<?php bboss_bbp_topic_stick_link(); ?>
 								</div>
 									<?php
 								}
 							}
 
-							if ( function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) && bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) {
+							if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'moderation' ) && function_exists( 'bboss_bbp_get_topic_report_link' ) && bboss_bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) ) {
 								?>
 									<div class="generic-button bb-rl-context-item">
 										<?php
-										if ( bp_is_active( 'moderation' ) && function_exists( 'bbp_get_topic_report_link' ) ) {
-											echo wp_kses_post( bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) );
+										if ( bboss_is_active( 'moderation' ) && function_exists( 'bboss_bbp_get_topic_report_link' ) ) {
+											echo wp_kses_post( bboss_bbp_get_topic_report_link( array( 'id' => get_the_ID() ) ) );
 										}
 										?>
 									</div>
@@ -125,27 +125,27 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			?>
 		</div><!-- .bb-rl-topic-status-wrapper -->
 		<?php
-		if ( ! bbp_is_single_forum() ) {
+		if ( ! bboss_bbp_is_single_forum() ) {
 			do_action( 'bbp_theme_before_topic_started_in' );
 			?>
 			<div class="bb-rl-topic-started-in">
-				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>' ), esc_url( bbp_get_forum_permalink( bbp_get_topic_forum_id() ) ), wp_kses_post( $group_avatar ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id() ) ) ); ?>
+				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>' ), esc_url( bboss_bbp_get_forum_permalink( bboss_bbp_get_topic_forum_id() ) ), wp_kses_post( $group_avatar ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id() ) ) ); ?>
 			</div>
 			<?php
 			do_action( 'bbp_theme_after_topic_started_in' );
 		}
 		?>
 		<div class="bb-rl-topic-title">
-			<a class="bb-rl-topic-permalink" href="<?php bbp_topic_permalink(); ?>"><?php bbp_topic_title(); ?></a>
+			<a class="bb-rl-topic-permalink" href="<?php bboss_bbp_topic_permalink(); ?>"><?php bboss_bbp_topic_title(); ?></a>
 		</div>
 
 		<p class="bb-rl-topic-description">
-			<?php echo wp_kses_post( get_the_excerpt( bbp_get_topic_id() ) ); ?>
+			<?php echo wp_kses_post( get_the_excerpt( bboss_bbp_get_topic_id() ) ); ?>
 		</p>
 
 		<?php
-			$terms = bbp_get_topic_tag_list( bbp_get_topic_id() );
-		if ( $terms && bbp_allow_topic_tags() ) {
+			$terms = bboss_bbp_get_topic_tag_list( bboss_bbp_get_topic_id() );
+		if ( $terms && bboss_bbp_allow_topic_tags() ) {
 			echo $terms; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			?>
@@ -159,16 +159,16 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		<div class="bb-rl-topic-footer">
 			<div class="bb-rl-topic-meta">
 
-			<?php if ( bbp_is_user_home() ) : ?>
+			<?php if ( bboss_bbp_is_user_home() ) : ?>
 
-				<?php if ( bbp_is_favorites() ) : ?>
+				<?php if ( bboss_bbp_is_favorites() ) : ?>
 
 					<span class="bb-rl-row-actions">
 
 						<?php do_action( 'bbp_theme_before_topic_favorites_action' ); ?>
 
 						<?php
-						bbp_topic_favorite_link(
+						bboss_bbp_topic_favorite_link(
 							array(
 								'before'    => '',
 								'favorite'  => '+',
@@ -181,14 +181,14 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 					</span>
 
-				<?php elseif ( bbp_is_subscriptions() ) : ?>
+				<?php elseif ( bboss_bbp_is_subscriptions() ) : ?>
 
 					<span class="bb-rl-row-actions">
 
 						<?php do_action( 'bbp_theme_before_topic_subscription_action' ); ?>
 
 						<?php
-						bbp_topic_subscription_link(
+						bboss_bbp_topic_subscription_link(
 							array(
 								'before'      => '',
 								'subscribe'   => '+',
@@ -209,7 +209,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 			<?php do_action( 'bbp_theme_after_topic_title' ); ?>
 
-			<?php bbp_topic_pagination(); ?>
+			<?php bboss_bbp_topic_pagination(); ?>
 
 			<?php do_action( 'bbp_theme_before_topic_meta' ); ?>
 
@@ -217,7 +217,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 				<?php do_action( 'bbp_theme_before_topic_started_by' ); ?>
 
-				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss' ), wp_kses_post( bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
+				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss' ), wp_kses_post( bboss_bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
 
 				<?php do_action( 'bbp_theme_after_topic_started_by' ); ?>
 
@@ -229,7 +229,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 					<?php do_action( 'bbp_theme_before_topic_freshness_link' ); ?>
 
-					<?php bbp_topic_freshness_link(); ?>
+					<?php bboss_bbp_topic_freshness_link(); ?>
 
 					<?php do_action( 'bbp_theme_after_topic_freshness_link' ); ?>
 
@@ -239,17 +239,17 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 			<?php do_action( 'bbp_theme_after_topic_meta' ); ?>
 
-			<?php bbp_topic_row_actions(); ?>
+			<?php bboss_bbp_topic_row_actions(); ?>
 
 			</div>
 
 
 			<div class="bb-rl-topic-stats">
-				<div class="bb-rl-topic-voice-count"><i class="bb-icons-rl-user"></i> <?php bbp_topic_voice_count(); ?></div>
-				<div class="bb-rl-topic-reply-count"><i class="bb-icons-rl-chat"></i> <?php bbp_show_lead_topic() ? bbp_topic_reply_count() : bbp_topic_post_count(); ?></div>
+				<div class="bb-rl-topic-voice-count"><i class="bb-icons-rl-user"></i> <?php bboss_bbp_topic_voice_count(); ?></div>
+				<div class="bb-rl-topic-reply-count"><i class="bb-icons-rl-chat"></i> <?php bboss_bbp_show_lead_topic() ? bboss_bbp_topic_reply_count() : bboss_bbp_topic_post_count(); ?></div>
 			</div>
 		</div>
 
 	</div>
 
-</li><!-- #bbp-topic-<?php bbp_topic_id(); ?> -->
+</li><!-- #bbp-topic-<?php bboss_bbp_topic_id(); ?> -->

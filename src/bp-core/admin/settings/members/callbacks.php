@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Sanitized display name format value.
  */
-function bb_members_sanitize_display_name_format( $value ) {
+function bboss_members_sanitize_display_name_format( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'first_name', 'first_last_name', 'nickname' );
 
@@ -44,7 +44,7 @@ function bb_members_sanitize_display_name_format( $value ) {
  *
  * @return string Sanitized slug format value.
  */
-function bb_members_sanitize_slug_format( $value ) {
+function bboss_members_sanitize_slug_format( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'username', 'unique_identifier' );
 
@@ -66,7 +66,7 @@ function bb_members_sanitize_slug_format( $value ) {
  *
  * @return string Sanitized avatar type value.
  */
-function bb_members_sanitize_avatar_type( $value ) {
+function bboss_members_sanitize_avatar_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'BuddyBoss', 'WordPress' );
 
@@ -88,7 +88,7 @@ function bb_members_sanitize_avatar_type( $value ) {
  *
  * @return string Sanitized default avatar type value.
  */
-function bb_members_sanitize_default_avatar_type( $value ) {
+function bboss_members_sanitize_default_avatar_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'buddyboss', 'display-name', 'custom' );
 
@@ -110,7 +110,7 @@ function bb_members_sanitize_default_avatar_type( $value ) {
  *
  * @return string Sanitized default cover type value.
  */
-function bb_members_sanitize_default_cover_type( $value ) {
+function bboss_members_sanitize_default_cover_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'buddyboss', 'none', 'custom' );
 
@@ -132,7 +132,7 @@ function bb_members_sanitize_default_cover_type( $value ) {
  *
  * @return string Sanitized layout format value.
  */
-function bb_members_sanitize_layout_format( $value ) {
+function bboss_members_sanitize_layout_format( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'list_grid', 'grid', 'list' );
 
@@ -154,7 +154,7 @@ function bb_members_sanitize_layout_format( $value ) {
  *
  * @return string Sanitized default format value.
  */
-function bb_members_sanitize_default_format( $value ) {
+function bboss_members_sanitize_default_format( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'grid', 'list' );
 
@@ -176,7 +176,7 @@ function bb_members_sanitize_default_format( $value ) {
  *
  * @return array Sanitized array of element_slug => 0|1.
  */
-function bb_members_sanitize_toggle_list( $value ) {
+function bboss_members_sanitize_toggle_list( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -200,7 +200,7 @@ function bb_members_sanitize_toggle_list( $value ) {
  *
  * @return string Sanitized header style value.
  */
-function bb_members_sanitize_header_style( $value ) {
+function bboss_members_sanitize_header_style( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'left', 'centered' );
 
@@ -222,7 +222,7 @@ function bb_members_sanitize_header_style( $value ) {
  *
  * @return string Sanitized cover width value.
  */
-function bb_members_sanitize_cover_width( $value ) {
+function bboss_members_sanitize_cover_width( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'default', 'full' );
 
@@ -244,7 +244,7 @@ function bb_members_sanitize_cover_width( $value ) {
  *
  * @return string Sanitized cover height value.
  */
-function bb_members_sanitize_cover_height( $value ) {
+function bboss_members_sanitize_cover_height( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'small', 'large' );
 
@@ -290,7 +290,7 @@ function bb_members_sanitize_cover_height( $value ) {
  *
  * @return void
  */
-function bb_members_sync_connection_component( $feature_id, $settings, $saved ) {
+function bboss_members_sync_connection_component( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id || ! array_key_exists( 'bb_enable_member_connections', $settings ) ) {
 		return;
 	}
@@ -298,7 +298,7 @@ function bb_members_sync_connection_component( $feature_id, $settings, $saved ) 
 	$enable = ! empty( $settings['bb_enable_member_connections'] );
 
 	// Sync to bp-active-components (legacy, so bp_is_active('friends') works).
-	$active_components = bp_get_option( 'bp-active-components', array() );
+	$active_components = bboss_get_option( 'bp-active-components', array() );
 	if ( ! is_array( $active_components ) ) {
 		$active_components = array();
 	}
@@ -319,26 +319,26 @@ function bb_members_sync_connection_component( $feature_id, $settings, $saved ) 
 		// Replicate legacy component toggle: install pages, update option, uninstall removed.
 		// Schema file is not auto-loaded in AJAX context, so require it explicitly.
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+		require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 
-		bp_core_install( $active_components );
-		bp_core_add_page_mappings( $active_components );
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_core_install( $active_components );
+		bboss_core_add_page_mappings( $active_components );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		$uninstalled = array_diff_key( $previously_active, $active_components );
 		if ( ! empty( $uninstalled ) ) {
-			bp_core_uninstall( $uninstalled );
+			bboss_core_uninstall( $uninstalled );
 		}
 	}
 
 	// Sync to bb-active-features (primary storage for Settings 2.0).
-	$active_features = bp_get_option( 'bb-active-features', array() );
+	$active_features = bboss_get_option( 'bb-active-features', array() );
 	if ( ! is_array( $active_features ) ) {
 		$active_features = array();
 	}
 
 	$active_features['friends'] = $enable ? 1 : 0;
-	bp_update_option( 'bb-active-features', $active_features );
+	bboss_update_option( 'bb-active-features', $active_features );
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_sync_connection_component', 2, 3 );
@@ -355,7 +355,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_sync_connection_
  *
  * @return array The pre-save state array.
  */
-function bb_members_get_pre_save_state( $state = null ) {
+function bboss_members_get_pre_save_state( $state = null ) {
 	static $saved_state = array();
 
 	if ( null !== $state && is_array( $state ) ) {
@@ -377,20 +377,20 @@ function bb_members_get_pre_save_state( $state = null ) {
  *
  * @return void
  */
-function bb_members_capture_pre_save_state( $feature_id ) {
+function bboss_members_capture_pre_save_state( $feature_id ) {
 	if ( 'members' !== $feature_id ) {
 		return;
 	}
 
-	bb_members_get_pre_save_state(
+	bboss_members_get_pre_save_state(
 		array(
-			'profile_avatar_type'         => bb_get_profile_avatar_type(),
-			'disable_avatar_uploads'      => bp_disable_avatar_uploads(),
-			'default_profile_avatar_type' => bb_get_default_profile_avatar_type(),
-			'enable_profile_gravatar'     => bp_enable_profile_gravatar(),
-			'default_profile_cover_type'  => bb_get_default_profile_cover_type(),
-			'profile_slug_format'         => bb_get_profile_slug_format(),
-			'display_name_format'         => bp_get_option( 'bp-display-name-format', 'first_name' ),
+			'profile_avatar_type'         => bboss_get_profile_avatar_type(),
+			'disable_avatar_uploads'      => bboss_disable_avatar_uploads(),
+			'default_profile_avatar_type' => bboss_get_default_profile_avatar_type(),
+			'enable_profile_gravatar'     => bboss_enable_profile_gravatar(),
+			'default_profile_cover_type'  => bboss_get_default_profile_cover_type(),
+			'profile_slug_format'         => bboss_get_profile_slug_format(),
+			'display_name_format'         => bboss_get_option( 'bp-display-name-format', 'first_name' ),
 		)
 	);
 }
@@ -412,7 +412,7 @@ add_action( 'bb_admin_settings_before_save_feature', 'bb_members_capture_pre_sav
  *
  * @return void
  */
-function bb_members_handle_display_name_format_change( $feature_id, $settings, $saved ) {
+function bboss_members_handle_display_name_format_change( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
 		return;
 	}
@@ -421,35 +421,35 @@ function bb_members_handle_display_name_format_change( $feature_id, $settings, $
 		return;
 	}
 
-	$display_name_format = bp_get_option( 'bp-display-name-format', 'first_name' );
+	$display_name_format = bboss_get_option( 'bp-display-name-format', 'first_name' );
 
 	// Skip field meta updates if the format hasn't actually changed.
-	$pre_save_state = bb_members_get_pre_save_state();
+	$pre_save_state = bboss_members_get_pre_save_state();
 	$format_before  = ! empty( $pre_save_state['display_name_format'] ) ? $pre_save_state['display_name_format'] : '';
 	if ( $format_before === $display_name_format ) {
 		return;
 	}
 
 	if ( 'first_last_name' === $display_name_format || 'first_name' === $display_name_format ) {
-		$firstname_field_id = bp_xprofile_firstname_field_id();
-		bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
-		bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+		$firstname_field_id = bboss_xprofile_firstname_field_id();
+		bboss_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+		bboss_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
 
 		// Make the first name field required if not already.
-		$field = xprofile_get_field( $firstname_field_id );
+		$field = bboss_xprofile_get_field( $firstname_field_id );
 		if ( $field ) {
 			$field->is_required = true;
 			$field->save();
 		}
 
 		if ( 'first_last_name' === $display_name_format ) {
-			$lastname_field_id = bp_xprofile_lastname_field_id();
-			bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
+			$lastname_field_id = bboss_xprofile_lastname_field_id();
+			bboss_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
 		}
 	} elseif ( 'nickname' === $display_name_format ) {
-		$nickname_field_id = bp_xprofile_nickname_field_id();
-		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
-		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
+		$nickname_field_id = bboss_xprofile_nickname_field_id();
+		bboss_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+		bboss_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
 }
 
@@ -469,7 +469,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_display_n
  *
  * @return void
  */
-function bb_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved ) {
+function bboss_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
 		return;
 	}
@@ -478,10 +478,10 @@ function bb_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved
 		return;
 	}
 
-	$avatar_type = bb_get_profile_avatar_type();
+	$avatar_type = bboss_get_profile_avatar_type();
 
 	if ( 'WordPress' === $avatar_type ) {
-		bp_update_option( 'bp-enable-profile-gravatar', '' );
+		bboss_update_option( 'bp-enable-profile-gravatar', '' );
 	}
 }
 
@@ -510,7 +510,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_avatar_ty
  *
  * @return void
  */
-function bb_members_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
+function bboss_members_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
 		return;
 	}
@@ -522,30 +522,30 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		return;
 	}
 
-	$pre_save_state = bb_members_get_pre_save_state();
+	$pre_save_state = bboss_members_get_pre_save_state();
 
 	// --- Avatar type validation ---
 	// Only validate avatar sub-options when avatar type is BuddyBoss.
 	// When WordPress is selected, these sub-options are irrelevant.
-	$current_avatar_type = isset( $settings['bp-profile-avatar-type'] ) ? $settings['bp-profile-avatar-type'] : bb_get_profile_avatar_type();
+	$current_avatar_type = isset( $settings['bp-profile-avatar-type'] ) ? $settings['bp-profile-avatar-type'] : bboss_get_profile_avatar_type();
 
 	if ( $has_avatar && 'BuddyBoss' === $current_avatar_type ) {
-		$avatar_type = bb_get_default_profile_avatar_type();
+		$avatar_type = bboss_get_default_profile_avatar_type();
 
 		// Revert only when they had Custom and then removed the image. Do not revert when they
 		// just selected Custom (so Save keeps Custom and Upload Custom Avatar section stays visible).
 		if ( 'custom' === $avatar_type ) {
-			$custom_avatar = bb_get_default_custom_upload_profile_avatar();
+			$custom_avatar = bboss_get_default_custom_upload_profile_avatar();
 			$prev_type     = ! empty( $pre_save_state['default_profile_avatar_type'] ) ? $pre_save_state['default_profile_avatar_type'] : 'buddyboss';
 
 			if ( empty( $custom_avatar ) && 'custom' === $prev_type ) {
-				bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+				bboss_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 			}
 		}
 
 		// If 'display-name' but no image editor available, revert.
 		if ( 'display-name' === $avatar_type && ! wp_image_editor_supports() ) {
-			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+			bboss_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 		}
 	}
 	// When avatar type is WordPress, no avatar sub-option validation is needed
@@ -553,15 +553,15 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 
 	// --- Cover type validation ---
 	if ( $has_cover ) {
-		$cover_type = bb_get_default_profile_cover_type();
+		$cover_type = bboss_get_default_profile_cover_type();
 
 		// Revert only when they had Custom and then removed the image.
 		if ( 'custom' === $cover_type ) {
-			$custom_cover = bb_get_default_custom_upload_profile_cover();
+			$custom_cover = bboss_get_default_custom_upload_profile_cover();
 			$prev_type    = ! empty( $pre_save_state['default_profile_cover_type'] ) ? $pre_save_state['default_profile_cover_type'] : 'buddyboss';
 
 			if ( empty( $custom_cover ) && 'custom' === $prev_type ) {
-				bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
+				bboss_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
 			}
 		}
 	}
@@ -572,7 +572,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_validate_image_s
 /**
  * Sync reverted image setting values into the save response.
  *
- * After bb_members_validate_image_settings_after_save() may revert avatar/cover
+ * After bboss_members_validate_image_settings_after_save() may revert avatar/cover
  * type values, this filter updates only the affected keys in the response so
  * React stays in sync.
  *
@@ -585,7 +585,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_validate_image_s
  *
  * @return array Modified response data.
  */
-function bb_members_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
+function bboss_members_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
 		return $response_data;
 	}
@@ -601,7 +601,7 @@ function bb_members_sync_reverted_image_values( $response_data, $feature_id, $se
 
 	foreach ( $revertable_keys as $key ) {
 		if ( isset( $saved[ $key ] ) ) {
-			$actual = bp_get_option( $key, $saved[ $key ] );
+			$actual = bboss_get_option( $key, $saved[ $key ] );
 			if ( $actual !== $saved[ $key ] ) {
 				$response_data['saved'][ $key ] = $actual;
 			}
@@ -627,7 +627,7 @@ add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_sync_reverted
  *
  * @return void
  */
-function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) {
+function bboss_members_handle_slug_format_change( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
 		return;
 	}
@@ -636,9 +636,9 @@ function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) 
 		return;
 	}
 
-	$pre_save_state = bb_members_get_pre_save_state();
+	$pre_save_state = bboss_members_get_pre_save_state();
 	$slug_before    = ! empty( $pre_save_state['profile_slug_format'] ) ? $pre_save_state['profile_slug_format'] : '';
-	$slug_after     = bb_get_profile_slug_format();
+	$slug_after     = bboss_get_profile_slug_format();
 
 	if ( $slug_before !== $slug_after ) {
 		// Flush all caches — slug format affects every member URL site-wide.
@@ -680,8 +680,8 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
  * Convert an element array to a Settings 2.0 option format.
  *
  * Public utility used by Pro and extensions to transform element arrays
- * (from bb_get_profile_header_elements(), bb_get_member_directory_elements(),
- * bb_get_member_directory_profile_actions()) into the Settings 2.0 options format.
+ * (from bboss_get_profile_header_elements(), bboss_get_member_directory_elements(),
+ * bboss_get_member_directory_profile_actions()) into the Settings 2.0 options format.
  * Platform itself no longer calls this directly — it is kept as a public
  * API for Pro and third-party plugins that need to transform element arrays
  * into Settings 2.0 option format.
@@ -692,7 +692,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
  *
  * @return array Options array with 'label', 'value', and optional 'disabled' keys.
  */
-function bb_members_elements_to_options( $elements ) {
+function bboss_members_elements_to_options( $elements ) {
 	$options = array();
 
 	foreach ( $elements as $element ) {
@@ -726,7 +726,7 @@ function bb_members_elements_to_options( $elements ) {
  *
  * @return array Modified field data.
  */
-function bb_members_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
+function bboss_members_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
 	if ( 'members' !== $feature_id || 'bp-default-profile-cover-type' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
 		return $field_data;
 	}
@@ -737,7 +737,7 @@ function bb_members_enrich_cover_upload_help_text( $field_data, $field, $feature
 		// is the public alias the theme-compat layer accepts; internally it
 		// maps to the `xprofile` cover settings just like the AJAX upload
 		// dispatch in `bp_attachments_cover_image_ajax_upload()` does.
-		$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions( 'members' );
+		$cover_dimensions = bboss_attachments_get_default_custom_cover_image_dimensions( 'members' );
 
 		if ( empty( $field_data['upload_config']['help_text'] ) ) {
 			$field_data['upload_config']['help_text'] = sprintf(
@@ -777,7 +777,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_cover_uplo
  *
  * @return array Extended list including member profile getter functions.
  */
-function bb_members_allow_image_url_getters( $allowed_url_getters ) {
+function bboss_members_allow_image_url_getters( $allowed_url_getters ) {
 	$allowed_url_getters[] = 'bb_get_default_custom_upload_profile_avatar';
 	$allowed_url_getters[] = 'bb_get_default_custom_upload_profile_cover';
 
@@ -801,7 +801,7 @@ add_filter( 'bb_admin_settings_allowed_url_getters', 'bb_members_allow_image_url
  *
  * @return array Modified field data.
  */
-function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
+function bboss_members_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
 	if ( 'members' !== $feature_id || 'bp-default-profile-avatar-type' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
 		return $field_data;
 	}
@@ -810,8 +810,8 @@ function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $featur
 		$field_data['upload_config']['help_text'] = sprintf(
 			/* translators: 1: width in pixels, 2: height in pixels. */
 			__( 'Upload a default avatar image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss' ),
-			absint( bp_core_avatar_full_width() ),
-			absint( bp_core_avatar_full_height() )
+			absint( bboss_core_avatar_full_width() ),
+			absint( bboss_core_avatar_full_height() )
 		);
 	}
 
@@ -823,7 +823,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upl
 /**
  * Inject profile type options at AJAX time.
  *
- * The bp_get_active_member_types() runs a WP_Query for bp-member-type CPT which
+ * The bboss_get_active_member_types() runs a WP_Query for bp-member-type CPT which
  * should not execute on every admin page load. This filter populates the
  * Default Profile Type select options only when the admin fetches settings.
  *
@@ -835,7 +835,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upl
  *
  * @return array Modified field data.
  */
-function bb_members_enrich_profile_type_options( $field_data, $field, $feature_id ) {
+function bboss_members_enrich_profile_type_options( $field_data, $field, $feature_id ) {
 	if ( 'members' !== $feature_id || 'bp-member-type-default-on-registration' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
 		return $field_data;
 	}
@@ -851,7 +851,7 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 		),
 	);
 
-	$member_types = bp_get_active_member_types();
+	$member_types = bboss_get_active_member_types();
 
 	// Prime post caches to avoid N+1 get_post_meta() calls in the loop.
 	// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
@@ -860,7 +860,7 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 	}
 
 	foreach ( $member_types as $member_type_id ) {
-		$type_name        = bp_get_member_type_key( $member_type_id );
+		$type_name        = bboss_get_member_type_key( $member_type_id );
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 
 		if ( ! empty( $type_name ) ) {
@@ -898,7 +898,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_ty
  *
  * @return array Filtered response data, possibly with bbAdminDataUpdates appended.
  */
-function bb_members_push_profile_types_flag_after_save( $response_data, $feature_id, $settings, $saved ) {
+function bboss_members_push_profile_types_flag_after_save( $response_data, $feature_id, $settings, $saved ) {
 	if ( ! is_array( $saved ) || ! array_key_exists( 'bp-member-type-enable-disable', $saved ) ) {
 		return $response_data;
 	}
@@ -908,9 +908,9 @@ function bb_members_push_profile_types_flag_after_save( $response_data, $feature
 	}
 
 	$response_data['bbAdminDataUpdates']['isProfileTypesEnabled'] = (
-		bp_is_active( 'xprofile' )
-		&& function_exists( 'bp_member_type_enable_disable' )
-		&& bp_member_type_enable_disable()
+		bboss_is_active( 'xprofile' )
+		&& function_exists( 'bboss_member_type_enable_disable' )
+		&& bboss_member_type_enable_disable()
 	);
 
 	return $response_data;

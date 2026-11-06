@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings - Groups Meta Fields Registration.
  *
  * Registers core group fields for the Group Edit modal
- * in the Settings 2.0 admin interface via BB_Admin_Meta_Field_Registry.
+ * in the Settings 2.0 admin interface via BBoss_Admin_Meta_Field_Registry.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  */
-function bb_groups_register_core_meta_fields( $registry, $component ) {
+function bboss_groups_register_core_meta_fields( $registry, $component ) {
 
 	// =========================================================================
 	// TAB: Details (order 10–50).
@@ -64,7 +64,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			},
 			'get_extra_data'    => function ( $group ) {
 				return array(
-					'base_url' => bp_get_groups_directory_permalink(),
+					'base_url' => bboss_get_groups_directory_permalink(),
 				);
 			},
 			'save_value'        => function ( $group, $value ) {
@@ -73,7 +73,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				// Only check for slug conflicts when it actually changed,
 				// matching legacy groups_edit_base_group_details() behavior.
 				if ( $new_slug && strtolower( $new_slug ) !== strtolower( $group->slug ) ) {
-					$group->slug = groups_check_slug( $new_slug );
+					$group->slug = bboss_groups_check_slug( $new_slug );
 				}
 			},
 			'sanitize_callback' => 'sanitize_title',
@@ -158,11 +158,11 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'             => 50,
 			'save_phase'        => 'after',
 			'is_visible'        => function ( $group ) {
-				$types = bp_groups_get_group_types( array(), 'objects' );
+				$types = bboss_groups_get_group_types( array(), 'objects' );
 				return ! empty( $types );
 			},
 			'get_value'         => function ( $group ) {
-				return bp_groups_get_group_type( $group->id, true );
+				return bboss_groups_get_group_type( $group->id, true );
 			},
 			'get_options'       => function ( $group ) {
 				$options     = array(
@@ -171,7 +171,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 						'label' => __( 'Select Group Type', 'buddyboss' ),
 					),
 				);
-				$type_objects = bp_groups_get_group_types( array(), 'objects' );
+				$type_objects = bboss_groups_get_group_types( array(), 'objects' );
 				foreach ( $type_objects as $type_obj ) {
 					$options[] = array(
 						'value' => $type_obj->name,
@@ -181,11 +181,11 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				return $options;
 			},
 			'save_value'        => function ( $group, $value ) {
-				$current_type = bp_groups_get_group_type( $group->id, true );
+				$current_type = bboss_groups_get_group_type( $group->id, true );
 				if ( ! empty( $value ) ) {
-					bp_groups_set_group_type( $group->id, sanitize_key( $value ) );
+					bboss_groups_set_group_type( $group->id, sanitize_key( $value ) );
 				} elseif ( ! empty( $current_type ) ) {
-					bp_groups_remove_group_type( $group->id, $current_type );
+					bboss_groups_remove_group_type( $group->id, $current_type );
 				}
 			},
 			'sanitize_callback' => 'sanitize_key',
@@ -213,7 +213,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 320,
 			'get_fn'     => 'bp_group_get_activity_feed_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'activity' );
+				return bboss_is_active( 'activity' );
 			},
 		),
 		array(
@@ -224,7 +224,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 330,
 			'get_fn'     => 'bp_group_get_media_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'media' ) && bp_is_group_media_support_enabled();
+				return bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled();
 			},
 		),
 		array(
@@ -235,7 +235,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 340,
 			'get_fn'     => 'bp_group_get_album_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'media' ) && bp_is_group_albums_support_enabled();
+				return bboss_is_active( 'media' ) && bboss_is_group_albums_support_enabled();
 			},
 		),
 		array(
@@ -246,7 +246,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 350,
 			'get_fn'     => 'bp_group_get_document_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'media' ) && bp_is_group_document_support_enabled();
+				return bboss_is_active( 'media' ) && bboss_is_group_document_support_enabled();
 			},
 		),
 		array(
@@ -257,7 +257,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 355,
 			'get_fn'     => 'bp_group_get_video_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'video' ) && function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
+				return bboss_is_active( 'video' ) && function_exists( 'bboss_is_group_video_support_enabled' ) && bboss_is_group_video_support_enabled();
 			},
 		),
 		array(
@@ -268,7 +268,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 360,
 			'get_fn'     => 'bp_group_get_message_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'messages' ) && bp_disable_group_messages();
+				return bboss_is_active( 'messages' ) && bboss_disable_group_messages();
 			},
 		),
 	);
@@ -284,10 +284,10 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				if ( function_exists( $perm['get_fn'] ) ) {
 					return call_user_func( $perm['get_fn'], $group->id );
 				}
-				return groups_get_groupmeta( $group->id, $perm['meta_key'] );
+				return bboss_groups_get_groupmeta( $group->id, $perm['meta_key'] );
 			},
 			'get_options'       => function ( $group ) use ( $perm ) {
-				$statuses = bb_groups_get_settings_status( $perm['type_slug'] );
+				$statuses = bboss_groups_get_settings_status( $perm['type_slug'] );
 				$labels   = array(
 					'members' => __( 'All Members', 'buddyboss' ),
 					'mods'    => __( 'Organizers and Moderators', 'buddyboss' ),
@@ -340,7 +340,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'             => 450,
 			'save_phase'        => 'before',
 			'is_visible'        => function ( $group ) {
-				return bp_enable_group_hierarchies();
+				return bboss_enable_group_hierarchies();
 			},
 			'get_value'         => function ( $group ) {
 				return (int) $group->parent_id;
@@ -364,7 +364,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'             => 460,
 			'save_phase'        => 'before',
 			'is_visible'        => function ( $group ) {
-				return bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) && bbp_is_group_forums_active();
+				return bboss_is_active( 'forums' ) && function_exists( 'bboss_bbp_is_group_forums_active' ) && bboss_bbp_is_group_forums_active();
 			},
 			'get_value'         => function ( $group ) {
 				return (int) $group->enable_forum;
@@ -394,21 +394,21 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				'value' => '1',
 			),
 			'is_visible'        => function ( $group ) {
-				return bp_is_active( 'forums' )
-					&& function_exists( 'bbp_is_group_forums_active' )
-					&& bbp_is_group_forums_active()
-					&& function_exists( 'bbp_is_user_keymaster' )
-					&& bbp_is_user_keymaster();
+				return bboss_is_active( 'forums' )
+					&& function_exists( 'bboss_bbp_is_group_forums_active' )
+					&& bboss_bbp_is_group_forums_active()
+					&& function_exists( 'bboss_bbp_is_user_keymaster' )
+					&& bboss_bbp_is_user_keymaster();
 			},
 			'get_value'         => function ( $group ) {
-				if ( ! function_exists( 'bbp_get_group_forum_ids' ) ) {
+				if ( ! function_exists( 'bboss_bbp_get_group_forum_ids' ) ) {
 					return 0;
 				}
-				$forum_ids = bbp_get_group_forum_ids( $group->id );
+				$forum_ids = bboss_bbp_get_group_forum_ids( $group->id );
 				return ! empty( $forum_ids ) ? (int) current( $forum_ids ) : 0;
 			},
 			'save_value'        => function ( $group, $value ) {
-				if ( ! function_exists( 'bbp_get_group_forum_ids' ) || ! function_exists( 'bbp_update_group_forum_ids' ) || ! function_exists( 'bbp_update_forum_group_ids' ) ) {
+				if ( ! function_exists( 'bboss_bbp_get_group_forum_ids' ) || ! function_exists( 'bboss_bbp_update_group_forum_ids' ) || ! function_exists( 'bboss_bbp_update_forum_group_ids' ) ) {
 					return;
 				}
 
@@ -417,12 +417,12 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				// Verify the new forum ID is actually a forum post type (prevent arbitrary post association).
 				if ( ! empty( $new_forum_id ) ) {
 					$forum_post = get_post( $new_forum_id );
-					if ( ! $forum_post || bbp_get_forum_post_type() !== $forum_post->post_type ) {
+					if ( ! $forum_post || bboss_bbp_get_forum_post_type() !== $forum_post->post_type ) {
 						return;
 					}
 				}
 
-				$old_forum_ids = bbp_get_group_forum_ids( $group->id );
+				$old_forum_ids = bboss_bbp_get_group_forum_ids( $group->id );
 				$old_forum_id  = ! empty( $old_forum_ids ) ? (int) current( $old_forum_ids ) : 0;
 
 				// No change.
@@ -432,21 +432,21 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 
 				// Remove group from old forum's group IDs.
 				if ( ! empty( $old_forum_id ) ) {
-					$old_group_ids = bbp_get_forum_group_ids( $old_forum_id );
+					$old_group_ids = bboss_bbp_get_forum_group_ids( $old_forum_id );
 					$old_group_ids = array_diff( $old_group_ids, array( $group->id ) );
-					bbp_update_forum_group_ids( $old_forum_id, array_values( $old_group_ids ) );
+					bboss_bbp_update_forum_group_ids( $old_forum_id, array_values( $old_group_ids ) );
 				}
 
 				// Update group → forum relationship.
 				if ( ! empty( $new_forum_id ) ) {
-					bbp_update_group_forum_ids( $group->id, array( $new_forum_id ) );
+					bboss_bbp_update_group_forum_ids( $group->id, array( $new_forum_id ) );
 
 					// Add group to new forum's group IDs.
-					$new_group_ids   = bbp_get_forum_group_ids( $new_forum_id );
+					$new_group_ids   = bboss_bbp_get_forum_group_ids( $new_forum_id );
 					$new_group_ids[] = $group->id;
-					bbp_update_forum_group_ids( $new_forum_id, array_unique( $new_group_ids ) );
+					bboss_bbp_update_forum_group_ids( $new_forum_id, array_unique( $new_group_ids ) );
 				} else {
-					bbp_update_group_forum_ids( $group->id, array() );
+					bboss_bbp_update_group_forum_ids( $group->id, array() );
 				}
 			},
 			'sanitize_callback' => 'absint',

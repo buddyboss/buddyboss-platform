@@ -11,9 +11,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_before_loop();
+bboss_nouveau_before_loop();
 
-if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
+if ( bboss_has_activities( bboss_ajax_querystring( 'activity' ) ) ) :
 
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 		?>
@@ -21,15 +21,15 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 		<?php
 	endif;
 
-	while ( bp_activities() ) :
-		bp_the_activity();
-		bp_get_template_part( 'activity/entry' );
+	while ( bboss_activities() ) :
+		bboss_the_activity();
+		bboss_get_template_part( 'activity/entry' );
 	endwhile;
 
-	if ( bp_activity_has_more_items() ) :
+	if ( bboss_activity_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline" href="<?php bp_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			<a class="button outline" href="<?php bboss_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
 		<?php
 	endif;
@@ -44,7 +44,7 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 	endif;
 
 else :
-	bp_nouveau_user_feedback( 'activity-loop-none' );
+	bboss_nouveau_user_feedback( 'activity-loop-none' );
 endif;
 
-bp_nouveau_after_loop();
+bboss_nouveau_after_loop();

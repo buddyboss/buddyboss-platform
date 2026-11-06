@@ -19,8 +19,8 @@ class BP_Tests_Routing_Messages extends BP_UnitTestCase {
 	}
 
 	function test_member_messages() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() );
-		$this->assertTrue( bp_is_messages_inbox() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_messages_slug() );
+		$this->assertTrue( bboss_is_messages_inbox() );
 	}
 
 	/**
@@ -32,12 +32,12 @@ class BP_Tests_Routing_Messages extends BP_UnitTestCase {
 	// }
 
 	function test_member_messages_compose() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/compose' );
-		$this->assertTrue( bp_is_messages_compose_screen() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_messages_slug() . '/compose' );
+		$this->assertTrue( bboss_is_messages_compose_screen() );
 	}
 
 	function test_member_messages_notices() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/notices' );
-		$this->assertTrue( bp_is_notices() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_messages_slug() . '/notices' );
+		$this->assertTrue( bboss_is_notices() );
 	}
 }

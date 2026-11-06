@@ -3,7 +3,7 @@
  * Two-Factor integration feature configuration.
  *
  * Registers the integration in the BuddyBoss Feature Registry. Auto-discovered by
- * BB_Feature_Autoloader from bb-features/integrations/two-factor/, so this file
+ * BBoss_Feature_Autoloader from bb-features/integrations/two-factor/, so this file
  * runs on every request and must stay cheap.
  *
  * @since   BuddyBoss 3.6.0
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/includes/compat.php';
 require_once __DIR__ . '/bb-two-factor-functions.php';
 
-bb_register_integration(
+bboss_register_integration(
 	'two-factor',
 	array(
 		'label'                   => __( 'Two-Factor Authentication', 'buddyboss' ),
@@ -40,12 +40,12 @@ bb_register_integration(
 
 		// Removes the card from the features grid outright. A false
 		// is_available_callback alone would only render it greyed out.
-		'hidden'                  => ! bb_two_factor_plugin_is_active(),
+		'hidden'                  => ! bboss_two_factor_plugin_is_active(),
 
 		// Active but too old to build on: the card stays visible and greyed out,
 		// which matches what the member sees (no Security tab).
-		'is_available_callback'   => 'bb_two_factor_is_supported',
-		'is_active_callback'      => 'bb_two_factor_feature_is_on',
+		'is_available_callback'   => 'bboss_two_factor_is_supported',
+		'is_active_callback'      => 'bboss_two_factor_feature_is_on',
 
 		'confirm_off_title'       => __( 'Hide two-factor settings from members?', 'buddyboss' ),
 		'confirm_off_message'     => __( 'The Security tab will be removed from the Account page, so members can no longer set up or change two-factor authentication from the front end. Anyone who already turned it on is still asked for a second factor when they sign in, and their authenticator apps and recovery codes are untouched.', 'buddyboss' ),

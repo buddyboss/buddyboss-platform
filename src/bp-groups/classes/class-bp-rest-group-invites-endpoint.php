@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Group_Invites_Endpoint class
+ * BP REST: BBoss_REST_Group_Invites_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 
 	/**
-	 * Reuse some parts of the BP_REST_Groups_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Groups_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Groups_Endpoint
+	 * @var BBoss_REST_Groups_Endpoint
 	 */
 	protected $groups_endpoint;
 
@@ -40,10 +40,10 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace              = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base              = buddypress()->groups->id . '/invites';
-		$this->groups_endpoint        = new BP_REST_Groups_Endpoint();
-		$this->group_members_endpoint = new BP_REST_Group_Membership_Endpoint();
+		$this->namespace              = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base              = bboss()->groups->id . '/invites';
+		$this->groups_endpoint        = new BBoss_REST_Groups_Endpoint();
+		$this->group_members_endpoint = new BBoss_REST_Group_Membership_Endpoint();
 	}
 
 	/**
@@ -171,8 +171,8 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		// If the query is not restricted by group, user or inviter, limit it to the current user, if not an admin.
-		if ( ! $args['item_id'] && ! $args['user_id'] && ! $args['inviter_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
-			$args['user_id'] = bp_loggedin_user_id();
+		if ( ! $args['item_id'] && ! $args['user_id'] && ! $args['inviter_id'] && ! bboss_current_user_can( 'bp_moderate' ) ) {
+			$args['user_id'] = bboss_loggedin_user_id();
 		}
 
 		if ( ! empty( $request['include'] ) ) {
@@ -196,11 +196,11 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_group_invites_get_items_query_args', $args, $request );
 
 		// Get invites.
-		$invites_data = groups_get_invites( $args );
+		$invites_data = bboss_groups_get_invites( $args );
 
 		$retval = array();
 		foreach ( $invites_data as $invitation ) {
-			if ( $invitation instanceof BP_Invitation ) {
+			if ( $invitation instanceof BBoss_Invitation ) {
 				$retval[] = $this->prepare_response_for_collection(
 					$this->prepare_item_for_response( $invitation, $request )
 				);
@@ -208,7 +208,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, count( $invites_data ), $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, count( $invites_data ), $args['per_page'] );
 
 		/**
 		 * Fires after a list of group invites are fetched via the REST API.
@@ -241,23 +241,23 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user_id     = bp_loggedin_user_id();
+		$user_id     = bboss_loggedin_user_id();
 		$user_id_arg = $request['user_id'];
 		$group       = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		$inviter     = bp_rest_get_user( $request['inviter_id'] );
+		$inviter     = bboss_rest_get_user( $request['inviter_id'] );
 
 		// If the query is not restricted by group or user, limit it to the current user, if not an admin.
-		if ( ! $request['group_id'] && ! $request['user_id'] && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! $request['group_id'] && ! $request['user_id'] && ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$user_id_arg = $user_id;
 		}
 
-		$user = bp_rest_get_user( $user_id_arg );
+		$user = bboss_rest_get_user( $user_id_arg );
 
 		if ( $user_id ) {
 			$retval = true;
 
 			// If a group ID has been passed, check that it is valid.
-			if ( $request['group_id'] && ! $group instanceof BP_Groups_Group ) {
+			if ( $request['group_id'] && ! $group instanceof BBoss_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
 					__( 'Invalid group ID.', 'buddyboss' ),
@@ -326,7 +326,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a membership request is fetched via the REST API.
 		 *
-		 * @param BP_Invitation    $invite   Invitation object.
+		 * @param BBoss_Invitation    $invite   Invitation object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -346,7 +346,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 		$invite  = $this->fetch_single_invite( $request['invite_id'] );
 		$retval  = new WP_Error(
 			'bp_rest_authorization_required',
@@ -402,12 +402,12 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [send_invite=true] Whether the invite should be sent to the invitee.
 	 */
 	public function create_item( $request ) {
-		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bp_loggedin_user_id();
+		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bboss_loggedin_user_id();
 		$group          = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		$user           = bp_rest_get_user( $request['user_id'] );
-		$inviter        = bp_rest_get_user( $inviter_id_arg );
+		$user           = bboss_rest_get_user( $request['user_id'] );
+		$inviter        = bboss_rest_get_user( $inviter_id_arg );
 
-		$invite_id = groups_invite_user(
+		$invite_id = bboss_groups_invite_user(
 			array(
 				'user_id'     => $user->ID,
 				'group_id'    => $group->id,
@@ -427,7 +427,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$invite = new BP_Invitation( $invite_id );
+		$invite = new BBoss_Invitation( $invite_id );
 
 		// Set context.
 		$request->set_param( 'context', 'edit' );
@@ -441,10 +441,10 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a member is invited to a group via the REST API.
 		 *
-		 * @param BP_Invitation    $invite   The invitation object.
+		 * @param BBoss_Invitation    $invite   The invitation object.
 		 * @param WP_User          $user     The invited user.
 		 * @param WP_User          $inviter  The inviter user.
-		 * @param BP_Groups_Group  $group    The group object.
+		 * @param BBoss_Groups_Group  $group    The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -464,10 +464,10 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bp_loggedin_user_id();
+		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bboss_loggedin_user_id();
 		$group          = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		$user           = bp_rest_get_user( $request['user_id'] );
-		$inviter        = bp_rest_get_user( $inviter_id_arg );
+		$user           = bboss_rest_get_user( $request['user_id'] );
+		$inviter        = bboss_rest_get_user( $inviter_id_arg );
 		$retval         = new WP_Error(
 			'bp_rest_authorization_required',
 			__( 'Sorry, you need to be logged in to create an invitation.', 'buddyboss' ),
@@ -496,7 +496,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 					)
 				);
 				// Only a site admin or the user herself can extend invites.
-			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() !== $inviter_id_arg ) {
+			} elseif ( ! bboss_current_user_can( 'bp_moderate' ) && bboss_loggedin_user_id() !== $inviter_id_arg ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_create_item',
 					__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss' ),
@@ -539,22 +539,22 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [send_invite=true] Whether the invite should be sent to the invitee.
 	 */
 	public function create_multiple_item( $request ) {
-		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bp_loggedin_user_id();
+		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bboss_loggedin_user_id();
 		$group          = $this->groups_endpoint->get_group_object( $request['group_id'] );
 		$user_ids       = (array) $request['user_id'];
-		$inviter        = bp_rest_get_user( $inviter_id_arg );
+		$inviter        = bboss_rest_get_user( $inviter_id_arg );
 		$users          = array();
 		$retval         = array();
 
 		if ( ! empty( $user_ids ) ) {
 			foreach ( $user_ids as $user_id ) {
-				$users[] = bp_rest_get_user( $user_id );
+				$users[] = bboss_rest_get_user( $user_id );
 			}
 		}
 
 		$invited = array();
 		foreach ( $users as $user ) {
-			$invited[ $user->ID ] = groups_invite_user(
+			$invited[ $user->ID ] = bboss_groups_invite_user(
 				array(
 					'user_id'     => $user->ID,
 					'group_id'    => $group->id,
@@ -579,7 +579,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 
 		foreach ( $invited as $invite_id ) {
 
-			$invite = new BP_Invitation( $invite_id );
+			$invite = new BBoss_Invitation( $invite_id );
 
 			// Set context.
 			$request->set_param( 'context', 'edit' );
@@ -598,7 +598,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param array            $users    The invited user.
 		 * @param WP_User          $inviter  The inviter user.
-		 * @param BP_Groups_Group  $group    The group object.
+		 * @param BBoss_Groups_Group  $group    The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -618,9 +618,9 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function create_multiple_item_permissions_check( $request ) {
-		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bp_loggedin_user_id();
+		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bboss_loggedin_user_id();
 		$group          = $this->groups_endpoint->get_group_object( $request['group_id'] );
-		$inviter        = bp_rest_get_user( $inviter_id_arg );
+		$inviter        = bboss_rest_get_user( $inviter_id_arg );
 		$user_ids       = (array) $request['user_id'];
 		$retval         = new WP_Error(
 			'bp_rest_authorization_required',
@@ -651,7 +651,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				);
 
 				// Only a site admin or the user herself can extend invites.
-			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() !== $inviter_id_arg ) {
+			} elseif ( ! bboss_current_user_can( 'bp_moderate' ) && bboss_loggedin_user_id() !== $inviter_id_arg ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_create_item',
 					__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss' ),
@@ -694,7 +694,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		$invite = $this->fetch_single_invite( $request['invite_id'] );
-		$accept = groups_accept_invite( $invite->user_id, $invite->item_id );
+		$accept = bboss_groups_accept_invite( $invite->user_id, $invite->item_id );
 		if ( ! $accept ) {
 			return new WP_Error(
 				'bp_rest_group_invite_cannot_update_item',
@@ -705,7 +705,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$accepted_member     = new BP_Groups_Member( $invite->user_id, $invite->item_id );
+		$accepted_member     = new BBoss_Groups_Member( $invite->user_id, $invite->item_id );
 		$request['group_id'] = $invite->item_id;
 		$retval              = $this->prepare_response_for_collection(
 			$this->group_members_endpoint->prepare_item_for_response( $accepted_member, $request )
@@ -717,8 +717,8 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a group invite is accepted via the REST API.
 		 *
-		 * @param BP_Groups_Member $accepted_member Accepted group member.
-		 * @param BP_Groups_Group  $group           The group object.
+		 * @param BBoss_Groups_Member $accepted_member Accepted group member.
+		 * @param BBoss_Groups_Group  $group           The group object.
 		 * @param WP_REST_Response $response        The response data.
 		 * @param WP_REST_Request  $request         The request sent to the API.
 		 *
@@ -745,7 +745,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'status' => rest_authorization_required_code(),
 			)
 		);
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 		$invite  = $this->fetch_single_invite( $request['invite_id'] );
 
 		if ( $user_id ) {
@@ -762,7 +762,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 
 				// Only the invitee or a site admin should be able to accept an invitation.
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
+				! bboss_current_user_can( 'bp_moderate' ) &&
 				$user_id !== $invite->user_id
 			) {
 				$retval = new WP_Error(
@@ -805,7 +805,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	public function delete_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 		$invite  = $this->fetch_single_invite( $request['invite_id'] );
 
 		// Set the invite response before it is deleted.
@@ -816,13 +816,13 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		 * use the `reject` function.
 		 */
 		if ( $user_id === $invite->user_id ) {
-			$deleted = groups_reject_invite( $invite->user_id, $invite->item_id, $invite->inviter_id );
+			$deleted = bboss_groups_reject_invite( $invite->user_id, $invite->item_id, $invite->inviter_id );
 			/**
 			 * Otherwise, this change is being initiated by a group admin, site admin,
 			 * or the inviter, and we should use the `uninvite` function.
 			 */
 		} else {
-			$deleted = groups_uninvite_user( $invite->user_id, $invite->item_id, $invite->inviter_id );
+			$deleted = bboss_groups_uninvite_user( $invite->user_id, $invite->item_id, $invite->inviter_id );
 		}
 
 		if ( ! $deleted ) {
@@ -844,14 +844,14 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		$user  = bp_rest_get_user( $invite->user_id );
+		$user  = bboss_rest_get_user( $invite->user_id );
 		$group = $this->groups_endpoint->get_group_object( $invite->item_id );
 
 		/**
 		 * Fires after a group invite is deleted via the REST API.
 		 *
 		 * @param WP_User          $user     The invited user.
-		 * @param BP_Groups_Group  $group    The group object.
+		 * @param BBoss_Groups_Group  $group    The group object.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -878,7 +878,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'status' => rest_authorization_required_code(),
 			)
 		);
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 		$invite  = $this->fetch_single_invite( $request['invite_id'] );
 
 		if ( $user_id ) {
@@ -895,9 +895,9 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 
 				// The inviter, the invitee, group admins, and site admins can all delete invites.
 			} elseif (
-				! bp_current_user_can( 'bp_moderate' ) &&
+				! bboss_current_user_can( 'bp_moderate' ) &&
 				! in_array( $user_id, array( $invite->user_id, $invite->inviter_id ), true ) &&
-				! groups_is_user_admin( $user_id, $invite->item_id )
+				! bboss_groups_is_user_admin( $user_id, $invite->item_id )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_delete_item',
@@ -923,7 +923,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares group invitation data to return as an object.
 	 *
-	 * @param BP_Invitation   $invite  Invite object.
+	 * @param BBoss_Invitation   $invite  Invite object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -936,7 +936,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			'invite_sent'   => $invite->invite_sent,
 			'inviter_id'    => $invite->inviter_id,
 			'group_id'      => $invite->item_id,
-			'date_modified' => bp_rest_prepare_date_response( $invite->date_modified ),
+			'date_modified' => bboss_rest_prepare_date_response( $invite->date_modified ),
 			'type'          => $invite->type,
 			'message'       => array(
 				'raw'      => $invite->content,
@@ -956,7 +956,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Invitation    $invite   The invite object.
+		 * @param BBoss_Invitation    $invite   The invite object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -966,7 +966,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Invitation $invite Invite object.
+	 * @param BBoss_Invitation $invite Invite object.
 	 *
 	 * @return array Links for the given plugin.
 	 * @since 0.1.0
@@ -984,15 +984,15 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $invite->user_id ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $invite->user_id ) ),
 				'embeddable' => true,
 			),
 			'inviter'    => array(
-				'href'       => rest_url( bp_rest_get_user_url( $invite->inviter_id ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $invite->inviter_id ) ),
 				'embeddable' => true,
 			),
 			'group'      => array(
-				'href'       => rest_url( $this->namespace . '/' . buddypress()->groups->id . '/' . $invite->item_id ),
+				'href'       => rest_url( $this->namespace . '/' . bboss()->groups->id . '/' . $invite->item_id ),
 				'embeddable' => true,
 			),
 		);
@@ -1013,11 +1013,11 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param int $invite_id The ID of the invitation you wish to fetch.
 	 *
-	 * @return BP_Invitation|bool $invite Invitation if found, false otherwise.
+	 * @return BBoss_Invitation|bool $invite Invitation if found, false otherwise.
 	 * @since 0.1.0
 	 */
 	public function fetch_single_invite( $invite_id = 0 ) {
-		$invites = groups_get_invites( array( 'id' => $invite_id ) );
+		$invites = bboss_groups_get_invites( array( 'id' => $invite_id ) );
 		if ( $invites ) {
 			return current( $invites );
 		} else {
@@ -1044,7 +1044,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			$args['message']['type']        = 'string';
 			$args['message']['description'] = __( 'The optional message to send to the invited user.', 'buddyboss' );
 			$args['send_invite']            = $args['invite_sent'];
-			$args['inviter_id']['default']  = bp_loggedin_user_id();
+			$args['inviter_id']['default']  = bboss_loggedin_user_id();
 			$args['group_id']['required']   = true;
 			$args['user_id']['required']    = true;
 
@@ -1243,3 +1243,11 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_group_invites_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Group_Invites_Endpoint', false ) || interface_exists( 'BBoss_REST_Group_Invites_Endpoint', false ) || trait_exists( 'BBoss_REST_Group_Invites_Endpoint', false ) ) && ! class_exists( 'BP_REST_Group_Invites_Endpoint', false ) && ! interface_exists( 'BP_REST_Group_Invites_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Group_Invites_Endpoint', 'BP_REST_Group_Invites_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

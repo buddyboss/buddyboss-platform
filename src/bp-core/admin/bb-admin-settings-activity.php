@@ -20,13 +20,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_activity_feature() {
+function bboss_admin_settings_register_activity_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'activity',
 		array(
 			'label'              => __( 'Activity Feeds', 'buddyboss' ),
@@ -39,7 +39,7 @@ function bb_admin_settings_register_activity_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'activity' );
+				return bboss_is_active( 'activity' );
 			},
 			'settings_route'     => '/settings/activity',
 			'order'              => 70,
@@ -48,7 +48,7 @@ function bb_admin_settings_register_activity_feature() {
 
 	// When activity is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on activity functions that aren't loaded.
-	if ( ! bp_is_active( 'activity' ) ) {
+	if ( ! bboss_is_active( 'activity' ) ) {
 		return;
 	}
 
@@ -69,7 +69,7 @@ function bb_admin_settings_register_activity_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Activity Settings (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'activity_settings',
 		array(
@@ -78,7 +78,7 @@ function bb_admin_settings_register_activity_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-pulse',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -93,7 +93,7 @@ function bb_admin_settings_register_activity_feature() {
 	);
 
 	// Side Panel 2: Activity Comments.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'activity_comments',
 		array(
@@ -102,7 +102,7 @@ function bb_admin_settings_register_activity_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -117,7 +117,7 @@ function bb_admin_settings_register_activity_feature() {
 	);
 
 	// Side Panel 3: Activity Topics.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'activity_topics',
 		array(
@@ -126,7 +126,7 @@ function bb_admin_settings_register_activity_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-squares-four',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -141,7 +141,7 @@ function bb_admin_settings_register_activity_feature() {
 	);
 
 	// Side Panel 4: Posts Visibility.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'posts_visibility',
 		array(
@@ -157,7 +157,7 @@ function bb_admin_settings_register_activity_feature() {
 	);
 
 	// Side Panel 5: Activity Sharing.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'activity_sharing',
 		array(
@@ -173,7 +173,7 @@ function bb_admin_settings_register_activity_feature() {
 	);
 
 	// Side Panel 6: Access Controls.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'access_controls',
 		array(
@@ -187,7 +187,7 @@ function bb_admin_settings_register_activity_feature() {
 	);
 
 	// Side Panel: All Activities (navigation link).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'activity',
 		'all_activities',
 		array(
@@ -196,7 +196,7 @@ function bb_admin_settings_register_activity_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-dashes',
 			),
-			'link'       => bp_get_admin_url( 'admin.php?page=bb-settings' ),
+			'link'       => bboss_get_admin_url( 'admin.php?page=bb-settings' ),
 			'divider'    => true,
 			'order'      => 100,
 			'is_default' => false,
@@ -214,7 +214,7 @@ function bb_admin_settings_register_activity_feature() {
 			'value' => -1,
 		),
 	);
-	foreach ( bp_activity_edit_times() as $time ) {
+	foreach ( bboss_activity_edit_times() as $time ) {
 		$edit_time_options[] = array(
 			'label' => $time['label'],
 			'value' => $time['value'],
@@ -222,22 +222,22 @@ function bb_admin_settings_register_activity_feature() {
 	}
 
 	// Panel 1: Activity Settings.
-	bb_activity_register_settings_panel_fields( $edit_time_options );
+	bboss_activity_register_settings_panel_fields( $edit_time_options );
 
 	// Panel 2: Activity Comments.
-	bb_activity_register_comments_panel_fields( $edit_time_options );
+	bboss_activity_register_comments_panel_fields( $edit_time_options );
 
 	// Panel 3: Activity Topics.
-	bb_activity_register_topics_panel_fields();
+	bboss_activity_register_topics_panel_fields();
 
 	// Panel 4: Posts Visibility.
-	bb_activity_register_visibility_panel_fields();
+	bboss_activity_register_visibility_panel_fields();
 
 	// Panel 5: Activity Sharing.
-	bb_activity_register_sharing_panel_fields();
+	bboss_activity_register_sharing_panel_fields();
 
 	// Panel 6: Access Controls.
-	bb_activity_register_access_control_fields();
+	bboss_activity_register_access_control_fields();
 
 	/**
 	 * Fires after all Activity settings panels are registered.

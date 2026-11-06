@@ -23,8 +23,8 @@ add_filter( 'bb_before_core_activate_signup', 'bb_recaptcha_validate_activate' )
  *
  * @return string
  */
-function bb_admin_recaptcha_class( $classes ) {
-	$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
+function bboss_admin_recaptcha_class( $classes ) {
+	$current_tab = bboss_filter_input_string( INPUT_GET, 'tab' );
 	if ( 'bb-recaptcha' === $current_tab ) {
 		$classes .= ' bb-recaptcha-settings';
 	}
@@ -44,33 +44,33 @@ function bb_admin_recaptcha_class( $classes ) {
  * @return WP_User|WP_Error|null WP_User object if the user is authenticated, WP_Error object on error, or null if not
  *                               authenticated.
  */
-function bb_recaptcha_validate_login( $user ) {
+function bboss_recaptcha_validate_login( $user ) {
 	// Apply only on WordPress login page and bypass recaptcha for rest api.
-	$bb_wp_login = bb_filter_input_string( INPUT_POST, 'log' );
+	$bb_wp_login = bboss_filter_input_string( INPUT_POST, 'log' );
 	if (
-		apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ||
+		apply_filters( 'bb_recaptcha_rest_api_bypass', bboss_is_rest() ) ||
 		! $bb_wp_login
 	) {
 		return $user;
 	}
 
-	$verified = bb_recaptcha_connection_status();
+	$verified = bboss_recaptcha_connection_status();
 
 	// If the connection is unverified and login is not enabled, proceed to bypass the captcha.
 	if (
 		empty( $verified ) ||
 		'connected' !== $verified ||
-		! bb_recaptcha_is_enabled( 'bb_login' )
+		! bboss_recaptcha_is_enabled( 'bb_login' )
 	) {
 		return $user;
 	}
 
 	// If the user accesses the login page using the bypass login URL, continue to bypass the captcha.
-	if ( bb_recaptcha_allow_bypass_enable() ) {
-		$get_url_string = bb_filter_input_string( INPUT_POST, 'bb_recaptcha_login_bypass' );
+	if ( bboss_recaptcha_allow_bypass_enable() ) {
+		$get_url_string = bboss_filter_input_string( INPUT_POST, 'bb_recaptcha_login_bypass' );
 		if ( ! empty( $get_url_string ) ) {
 			$get_url_string    = base64_decode( $get_url_string );
-			$admin_bypass_text = bb_recaptcha_setting( 'bypass_text' );
+			$admin_bypass_text = bboss_recaptcha_setting( 'bypass_text' );
 			if ( $get_url_string === $admin_bypass_text ) {
 				return $user;
 			} else {
@@ -88,11 +88,11 @@ function bb_recaptcha_validate_login( $user ) {
 	 * bb_recaptcha_verification_front() fail-closed everywhere it is reached,
 	 * while leaving genuinely uncovered forms working rather than locked out.
 	 */
-	$protected = bb_recaptcha_is_protected_login_request();
+	$protected = bboss_recaptcha_is_protected_login_request();
 
 	// Note the uncovered endpoint for developers (WP_DEBUG only).
 	if ( ! $protected ) {
-		bb_recaptcha_log_uncovered_login();
+		bboss_recaptcha_log_uncovered_login();
 	}
 
 	/**
@@ -101,7 +101,7 @@ function bb_recaptcha_validate_login( $user ) {
 	 * By this point the request is a standard WordPress login (the `log` field is
 	 * present), reCAPTCHA is connected, and it is enabled for login. The default
 	 * is whether the endpoint renders the widget - see
-	 * bb_recaptcha_is_protected_login_request(). Return false to skip verification
+	 * bboss_recaptcha_is_protected_login_request(). Return false to skip verification
 	 * for a specific custom login form that BuddyBoss does not render the widget
 	 * on (e.g. a third-party front-end login that reuses the WordPress `log`/`pwd`
 	 * field names). This must be a server-side decision; never key it on a
@@ -119,7 +119,7 @@ function bb_recaptcha_validate_login( $user ) {
 	}
 
 	// Validate the recaptcha.
-	$captcha = bb_recaptcha_verification_front( 'bb_login' );
+	$captcha = bboss_recaptcha_verification_front( 'bb_login' );
 	if ( is_wp_error( $captcha ) ) {
 		return $captcha;
 	}
@@ -138,10 +138,10 @@ function bb_recaptcha_validate_login( $user ) {
  * @return bool|WP_Error Returns the validated return value or a WP_Error object
  *                       if reCAPTCHA verification fails.
  */
-function bb_recaptcha_validate_activate( $retval ) {
+function bboss_recaptcha_validate_activate( $retval ) {
 
 	// Bypass recaptcha for rest api.
-	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ) {
+	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bboss_is_rest() ) ) {
 		return $retval;
 	}
 
@@ -156,19 +156,19 @@ function bb_recaptcha_validate_activate( $retval ) {
 		return $retval;
 	}
 
-	$verified = bb_recaptcha_connection_status();
+	$verified = bboss_recaptcha_connection_status();
 
 	// If the connection is unverified and activation is not enabled, proceed to bypass the captcha.
 	if (
 		empty( $verified ) ||
 		'connected' !== $verified ||
-		! bb_recaptcha_is_enabled( 'bb_activate' )
+		! bboss_recaptcha_is_enabled( 'bb_activate' )
 	) {
 		return $retval;
 	}
 
 	// Validate the recaptcha.
-	$captcha = bb_recaptcha_verification_front( 'bb_activate' );
+	$captcha = bboss_recaptcha_verification_front( 'bb_activate' );
 	if ( is_wp_error( $captcha ) ) {
 		return $captcha;
 	}

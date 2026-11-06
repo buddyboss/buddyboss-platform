@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Activity extends BP_Moderation_Abstract {
+class BBoss_Moderation_Activity extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	public static $moderation_type = 'activity';
 
 	/**
-	 * BP_Moderation_Activity constructor.
+	 * BBoss_Moderation_Activity constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -57,7 +57,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_get_activity_content', array( $this, 'bb_activity_content_remove_mention_link' ), 10, 1 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -87,7 +87,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $activity_id ) {
-		$url = bp_activity_get_permalink( $activity_id );
+		$url = bboss_activity_get_permalink( $activity_id );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
@@ -102,7 +102,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return int
 	 */
 	public static function get_content_owner_id( $activity_id ) {
-		$activity = new BP_Activity_Activity( $activity_id );
+		$activity = new BBoss_Activity_Activity( $activity_id );
 
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
 	}
@@ -138,7 +138,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$exclude_group_sql = '';
 		// Allow group activities from blocked/suspended users.
 		if (
-			bp_is_active( 'groups' ) &&
+			bboss_is_active( 'groups' ) &&
 			function_exists( 'did_action' ) && ! did_action( 'get_template_part_activity/widget' )
 		) {
 			$exclude_group_sql = ' OR a.component = "groups"';
@@ -151,14 +151,14 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		// Allow to search isblocked members activity comment but isblocked members activity should not be searchable.
 		if (
-			function_exists( 'bb_did_filter' ) &&
-			! bb_did_filter( 'bp_activity_comments_search_where_conditions' )
+			function_exists( 'bboss_did_filter' ) &&
+			! bboss_did_filter( 'bp_activity_comments_search_where_conditions' )
 		) {
 			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 				$where['moderation_where'] .= ' AND ';
 			}
 
-			$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+			$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) )';
 
 			// Exclude activities authored by members blocked by the current user.
 			// Blocking no longer materializes suspend entries for the blocked member's
@@ -204,7 +204,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$this->is_content_hidden( (int) $activity->id ) &&
 			(
 				// Allow comment to group activity.
-				! bp_is_active( 'groups' ) ||
+				! bboss_is_active( 'groups' ) ||
 				'groups' !== $activity->component
 			)
 		) {
@@ -225,7 +225,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function update_button_sub_items( $item_id ) {
 
-		$activity = new BP_Activity_Activity( (int) $item_id );
+		$activity = new BBoss_Activity_Activity( (int) $item_id );
 
 		if ( empty( $activity->id ) ) {
 			return array();
@@ -247,19 +247,19 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			case 'bbp_forum_create':
 				$forum_id = $activity->item_id;
 				$updated  = true;
-				if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( $forum_id ) ) {
-					$sub_items['id']   = current( bbp_get_forum_group_ids( $forum_id ) );
-					$sub_items['type'] = BP_Moderation_Groups::$moderation_type;
+				if ( function_exists( 'bboss_bbp_is_forum_group_forum' ) && bboss_bbp_is_forum_group_forum( $forum_id ) ) {
+					$sub_items['id']   = current( bboss_bbp_get_forum_group_ids( $forum_id ) );
+					$sub_items['type'] = BBoss_Moderation_Groups::$moderation_type;
 				} else {
 					$sub_items['id']   = $activity->item_id;
-					$sub_items['type'] = BP_Moderation_Forums::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Forums::$moderation_type;
 				}
 				break;
 			case 'bbp_topic_create':
 				$updated = true;
-				if ( bp_is_active( 'forums' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Topics::$moderation_type ) ) {
+				if ( bboss_is_active( 'forums' ) && bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Forum_Topics::$moderation_type ) ) {
 					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-					$sub_items['type'] = BP_Moderation_Forum_Topics::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Forum_Topics::$moderation_type;
 				} else {
 					$sub_items['id']   = false;
 					$sub_items['type'] = false;
@@ -267,9 +267,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				break;
 			case 'bbp_reply_create':
 				$updated = true;
-				if ( bp_is_active( 'forums' ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Forum_Replies::$moderation_type ) ) {
+				if ( bboss_is_active( 'forums' ) && bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Forum_Replies::$moderation_type ) ) {
 					$sub_items['id']   = ( 'groups' === $activity->component ) ? $activity->secondary_item_id : $activity->item_id;
-					$sub_items['type'] = BP_Moderation_Forum_Replies::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Forum_Replies::$moderation_type;
 				} else {
 					$sub_items['id']   = false;
 					$sub_items['type'] = false;
@@ -277,27 +277,27 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				break;
 		}
 
-		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+		$media_id     = bboss_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bboss_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bboss_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bboss_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bboss_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bboss_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
-			if ( bp_is_active( 'media' ) && ! empty( $media_id ) ) {
-				if ( ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+			if ( bboss_is_active( 'media' ) && ! empty( $media_id ) ) {
+				if ( ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Media::$moderation_type ) ) {
 					$sub_items['id']   = false;
 					$sub_items['type'] = false;
 				} else {
 					$sub_items['id']   = $media_id;
-					$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Media::$moderation_type;
 				}
-			} elseif ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+			} elseif ( bboss_is_active( 'media' ) && ! empty( $media_ids ) ) {
 				$explode_medias = explode( ',', $media_ids );
-				if ( 1 === count( $explode_medias ) && ! empty( current( $explode_medias ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Media::$moderation_type ) ) {
+				if ( 1 === count( $explode_medias ) && ! empty( current( $explode_medias ) ) && bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Media::$moderation_type ) ) {
 					$sub_items['id']   = current( $explode_medias );
-					$sub_items['type'] = BP_Moderation_Media::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Media::$moderation_type;
 				} elseif ( 1 < count( $explode_medias ) ) {
 					$sub_items['id']   = $activity->id;
 					$sub_items['type'] = self::$moderation_type;
@@ -310,19 +310,19 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = false;
 			}
 		} elseif ( ( ! empty( $document_id ) || ! empty( $document_ids ) ) && false === $updated ) {
-			if ( bp_is_active( 'document' ) && ! empty( $document_id ) ) {
-				if ( ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+			if ( bboss_is_active( 'document' ) && ! empty( $document_id ) ) {
+				if ( ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Document::$moderation_type ) ) {
 					$sub_items['id']   = false;
 					$sub_items['type'] = false;
 				} else {
 					$sub_items['id']   = $document_id;
-					$sub_items['type'] = BP_Moderation_Document::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Document::$moderation_type;
 				}
-			} elseif ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
+			} elseif ( bboss_is_active( 'document' ) && ! empty( $document_ids ) ) {
 				$explode_documents = explode( ',', $document_ids );
-				if ( 1 === count( $explode_documents ) && ! empty( current( $explode_documents ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Document::$moderation_type ) ) {
+				if ( 1 === count( $explode_documents ) && ! empty( current( $explode_documents ) ) && bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Document::$moderation_type ) ) {
 					$sub_items['id']   = current( $explode_documents );
-					$sub_items['type'] = BP_Moderation_Document::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Document::$moderation_type;
 				} elseif ( 1 < count( $explode_documents ) ) {
 					$sub_items['id']   = $activity->id;
 					$sub_items['type'] = self::$moderation_type;
@@ -335,19 +335,19 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$sub_items['type'] = false;
 			}
 		} elseif ( ( ! empty( $video_id ) || ! empty( $video_ids ) ) && false === $updated ) {
-			if ( bp_is_active( 'video' ) && ! empty( $video_id ) ) {
-				if ( ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+			if ( bboss_is_active( 'video' ) && ! empty( $video_id ) ) {
+				if ( ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Video::$moderation_type ) ) {
 					$sub_items['id']   = false;
 					$sub_items['type'] = false;
 				} else {
 					$sub_items['id']   = $video_id;
-					$sub_items['type'] = BP_Moderation_Video::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Video::$moderation_type;
 				}
-			} elseif ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
+			} elseif ( bboss_is_active( 'video' ) && ! empty( $video_ids ) ) {
 				$explode_videos = explode( ',', $video_ids );
-				if ( 1 === count( $explode_videos ) && ! empty( current( $explode_videos ) ) && bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Video::$moderation_type ) ) {
+				if ( 1 === count( $explode_videos ) && ! empty( current( $explode_videos ) ) && bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Video::$moderation_type ) ) {
 					$sub_items['id']   = current( $explode_videos );
-					$sub_items['type'] = BP_Moderation_Video::$moderation_type;
+					$sub_items['type'] = BBoss_Moderation_Video::$moderation_type;
 				} elseif ( 1 < count( $explode_videos ) ) {
 					$sub_items['id']   = $activity->id;
 					$sub_items['type'] = self::$moderation_type;
@@ -380,7 +380,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		$activity = new BP_Activity_Activity( (int) $item_id );
+		$activity = new BBoss_Activity_Activity( (int) $item_id );
 
 		if ( empty( $activity ) || empty( $activity->id ) ) {
 			return false;
@@ -419,7 +419,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function report_button_text( $button_text, $item_id ) {
 
-		$activity = new BP_Activity_Activity( $item_id );
+		$activity = new BBoss_Activity_Activity( $item_id );
 
 		if ( empty( $activity->id ) ) {
 			return $button_text;
@@ -444,12 +444,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$button_text = esc_html__( 'Report Post', 'buddyboss' );
 		}
 
-		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+		$media_id     = bboss_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bboss_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bboss_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bboss_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bboss_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bboss_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
 			if ( ! empty( $media_id ) ) {
@@ -508,7 +508,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function report_content_type( $content_type, $item_id ) {
 
-		$activity = new BP_Activity_Activity( $item_id );
+		$activity = new BBoss_Activity_Activity( $item_id );
 
 		if ( empty( $activity->id ) ) {
 			return $content_type;
@@ -533,12 +533,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 				$content_type = esc_html__( 'Post', 'buddyboss' );
 		}
 
-		$media_id     = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-		$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-		$document_id  = bp_activity_get_meta( $activity->id, 'bp_document_id', true );
-		$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-		$video_id     = bp_activity_get_meta( $activity->id, 'bp_video_id', true );
-		$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
+		$media_id     = bboss_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids    = bboss_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$document_id  = bboss_activity_get_meta( $activity->id, 'bp_document_id', true );
+		$document_ids = bboss_activity_get_meta( $activity->id, 'bp_document_ids', true );
+		$video_id     = bboss_activity_get_meta( $activity->id, 'bp_video_id', true );
+		$video_ids    = bboss_activity_get_meta( $activity->id, 'bp_video_ids', true );
 
 		if ( ( ! empty( $media_id ) || ! empty( $media_ids ) ) && false === $updated ) {
 			if ( ! empty( $media_id ) ) {
@@ -590,12 +590,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.2.5
 	 *
-	 * @param BP_Activity_Follow $follow Contains following data.
+	 * @param BBoss_Activity_Follow $follow Contains following data.
 	 */
 	public function bb_follow_before_save( $follow ) {
 		if (
-			bb_moderation_is_user_blocked_by( $follow->leader_id ) ||
-			bp_moderation_is_user_blocked( $follow->leader_id )
+			bboss_moderation_is_user_blocked_by( $follow->leader_id ) ||
+			bboss_moderation_is_user_blocked( $follow->leader_id )
 		) {
 			$follow->leader_id = '';
 		}
@@ -615,7 +615,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			return $content;
 		}
 
-		$content = bb_moderation_remove_mention_link( $content );
+		$content = bboss_moderation_remove_mention_link( $content );
 
 		return $content;
 	}

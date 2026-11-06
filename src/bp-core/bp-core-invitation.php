@@ -8,7 +8,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-function bb_invite_setup_globals() {
+function bboss_invite_setup_globals() {
 	global $wpdb;
 
 	$wpdb->{'invitemeta'} = $wpdb->prefix . 'bp_invitations_invitemeta';
@@ -31,12 +31,12 @@ add_action( 'bp_setup_globals', 'bb_invite_setup_globals', 10 );
  *
  * @return bool True on success, false on failure.
  */
-function invitation_delete_invitemeta( $invite_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+function bboss_invitation_delete_invitemeta( $invite_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
 	global $wpdb;
 
 	// Legacy - if no meta_key is passed, delete all for the item.
 	if ( empty( $meta_key ) ) {
-		$table_name = buddypress()->table_prefix . 'bp_invitations_invitemeta';
+		$table_name = bboss()->table_prefix . 'bp_invitations_invitemeta';
 		$keys       = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$table_name} WHERE invite_id = %d", $invite_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress()->table_prefix.
 
 		// With no meta_key, ignore $delete_all.
@@ -70,7 +70,7 @@ function invitation_delete_invitemeta( $invite_id, $meta_key = false, $meta_valu
  *
  * @return mixed Metadata value.
  */
-function invitation_get_invitemeta( $invite_id, $meta_key = '', $single = true ) {
+function bboss_invitation_get_invitemeta( $invite_id, $meta_key = '', $single = true ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = get_metadata( 'invite', $invite_id, $meta_key, $single );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -94,7 +94,7 @@ function invitation_get_invitemeta( $invite_id, $meta_key = '', $single = true )
  *                          metadata, returns true. On successful creation of new metadata,
  *                          returns the integer ID of the new metadata row.
  */
-function invitation_update_invitemeta( $invite_id, $meta_key, $meta_value, $prev_value = '' ) {
+function bboss_invitation_update_invitemeta( $invite_id, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = update_metadata( 'invite', $invite_id, $meta_key, $meta_value, $prev_value );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
@@ -117,7 +117,7 @@ function invitation_update_invitemeta( $invite_id, $meta_key, $meta_value, $prev
  *
  * @return int|bool The meta ID on successful update, false on failure.
  */
-function invitation_add_invitemeta( $invite_id, $meta_key, $meta_value, $unique = false ) {
+function bboss_invitation_add_invitemeta( $invite_id, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = add_metadata( 'invite', $invite_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );

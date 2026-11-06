@@ -27,14 +27,14 @@ defined( 'ABSPATH' ) || exit;
  * Called from bb-admin-settings-search.php after side panels are registered.
  * All standard post types are registered as fields within a single section
  * so the React UI renders them in one continuous card — matching the Figma design.
- * Custom post types are deferred to bb_search_lazy_register_cpt_fields().
+ * Custom post types are deferred to bboss_search_lazy_register_cpt_fields().
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_search_register_pages_posts_fields() {
+function bboss_search_register_pages_posts_fields() {
 
 	// Single section for the entire Pages & Posts panel (one card in React UI).
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'search',
 		'pages_posts',
 		'pages_posts_content',
@@ -47,7 +47,7 @@ function bb_search_register_pages_posts_fields() {
 
 	$order = 10;
 
-	foreach ( BB_SEARCH_STANDARD_POST_TYPES as $post_type ) {
+	foreach ( BBOSS_SEARCH_STANDARD_POST_TYPES as $post_type ) {
 		$post_type_obj = get_post_type_object( $post_type );
 
 		if ( ! $post_type_obj ) {
@@ -74,7 +74,7 @@ function bb_search_register_pages_posts_fields() {
 		$default = in_array( $post_type, array( 'post', 'page' ), true ) ? 1 : 0;
 
 		// FIELD: Post type toggle (parent).
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'search',
 			'pages_posts',
 			'pages_posts_content',
@@ -83,18 +83,18 @@ function bb_search_register_pages_posts_fields() {
 				'label'             => $label,
 				'description'       => $toggle_description,
 				'type'              => 'toggle',
-				'default'           => absint( bp_get_option( 'bp_search_post_type_' . $post_type, $default ) ),
+				'default'           => absint( bboss_get_option( 'bp_search_post_type_' . $post_type, $default ) ),
 				'sanitize_callback' => 'absint',
 				'order'             => $order,
 			)
 		);
 
 		// Taxonomy child fields (returns count for meta field ordering).
-		$taxonomy_count = bb_search_register_taxonomy_fields( $post_type, $order );
+		$taxonomy_count = bboss_search_register_taxonomy_fields( $post_type, $order );
 
 		// Meta Data child field (post & page only).
 		if ( in_array( $post_type, array( 'post', 'page' ), true ) ) {
-			bb_search_register_meta_field( $post_type, $order, $taxonomy_count );
+			bboss_search_register_meta_field( $post_type, $order, $taxonomy_count );
 		}
 
 		$order += 100;
@@ -111,7 +111,7 @@ function bb_search_register_pages_posts_fields() {
  *
  * @return int Number of taxonomy fields registered.
  */
-function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
+function bboss_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 
 	/**
 	 * Filter to add or remove the Taxonomy from Post Type.
@@ -135,7 +135,7 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 
 		$option_name = 'bp_search_' . $post_type . '_tax_' . $taxonomy;
 
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'search',
 			'pages_posts',
 			'pages_posts_content',
@@ -143,7 +143,7 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 				'name'              => $option_name,
 				'label'             => $taxonomy_obj->labels->name,
 				'type'              => 'checkbox',
-				'default'           => absint( bp_get_option( $option_name, 0 ) ),
+				'default'           => absint( bboss_get_option( $option_name, 0 ) ),
 				'sanitize_callback' => 'absint',
 				'parent_field'      => 'bp_search_post_type_' . $post_type,
 				'order'             => $child_order,
@@ -165,11 +165,11 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
  * @param int    $base_order     Base order of the parent toggle field.
  * @param int    $taxonomy_count Number of taxonomy fields already registered for this post type.
  */
-function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_count = 0 ) {
+function bboss_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_count = 0 ) {
 
 	$child_order = $base_order + 10 + ( $taxonomy_count * 10 );
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'search',
 		'pages_posts',
 		'pages_posts_content',
@@ -177,7 +177,7 @@ function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_
 			'name'              => 'bp_search_post_type_meta_' . $post_type,
 			'label'             => __( 'Meta Data', 'buddyboss' ),
 			'type'              => 'checkbox',
-			'default'           => absint( bp_get_option( 'bp_search_post_type_meta_' . $post_type, 0 ) ),
+			'default'           => absint( bboss_get_option( 'bp_search_post_type_meta_' . $post_type, 0 ) ),
 			'sanitize_callback' => 'absint',
 			'parent_field'      => 'bp_search_post_type_' . $post_type,
 			'order'             => $child_order,
@@ -197,7 +197,7 @@ function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_
  *
  * @param string $feature_id The feature being loaded.
  */
-function bb_search_lazy_register_cpt_fields( $feature_id ) {
+function bboss_search_lazy_register_cpt_fields( $feature_id ) {
 	// Only run for the search feature.
 	if ( 'search' !== $feature_id ) {
 		return;
@@ -208,10 +208,10 @@ function bb_search_lazy_register_cpt_fields( $feature_id ) {
 	// Collect CPTs (exclude standard + excluded types).
 	$cpt_list = array();
 	foreach ( $post_types as $post_type ) {
-		if ( in_array( $post_type, BB_SEARCH_EXCLUDED_POST_TYPES, true ) ) {
+		if ( in_array( $post_type, BBOSS_SEARCH_EXCLUDED_POST_TYPES, true ) ) {
 			continue;
 		}
-		if ( in_array( $post_type, BB_SEARCH_STANDARD_POST_TYPES, true ) ) {
+		if ( in_array( $post_type, BBOSS_SEARCH_STANDARD_POST_TYPES, true ) ) {
 			continue;
 		}
 		$post_type_obj = get_post_type_object( $post_type );
@@ -227,11 +227,11 @@ function bb_search_lazy_register_cpt_fields( $feature_id ) {
 	}
 
 	// Start CPT order after standard post types (each uses 100 increment).
-	$parent_order = 10 + ( count( BB_SEARCH_STANDARD_POST_TYPES ) * 100 );
+	$parent_order = 10 + ( count( BBOSS_SEARCH_STANDARD_POST_TYPES ) * 100 );
 
 	// Hidden parent field — renders as a label-only row ("Custom Post Types")
 	// with CPT toggles as its children in the React UI.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'search',
 		'pages_posts',
 		'pages_posts_content',
@@ -249,7 +249,7 @@ function bb_search_lazy_register_cpt_fields( $feature_id ) {
 		$label = $post_type_obj->labels->name;
 
 		// Toggle field per CPT — child of the hidden "Custom Post Types" parent.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'search',
 			'pages_posts',
 			'pages_posts_content',
@@ -257,7 +257,7 @@ function bb_search_lazy_register_cpt_fields( $feature_id ) {
 				'name'              => 'bp_search_post_type_' . $post_type,
 				'label'             => $label,
 				'type'              => 'toggle',
-				'default'           => absint( bp_get_option( 'bp_search_post_type_' . $post_type, 0 ) ),
+				'default'           => absint( bboss_get_option( 'bp_search_post_type_' . $post_type, 0 ) ),
 				'sanitize_callback' => 'absint',
 				'parent_field'      => 'bp_search_custom_post_types',
 				'order'             => $child_order,

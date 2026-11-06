@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_moderation_slug() {
-	echo esc_html( bp_get_moderation_slug() );
+function bboss_moderation_slug() {
+	echo esc_html( bboss_get_moderation_slug() );
 }
 
 /**
@@ -25,7 +25,7 @@ function bp_moderation_slug() {
  *
  * @return string The moderation component slug.
  */
-function bp_get_moderation_slug() {
+function bboss_get_moderation_slug() {
 
 	/**
 	 * Filters the moderation component slug.
@@ -34,7 +34,7 @@ function bp_get_moderation_slug() {
 	 *
 	 * @param string $slug Activity component slug.
 	 */
-	return apply_filters( 'bp_get_moderation_slug', buddypress()->moderation->slug );
+	return apply_filters( 'bp_get_moderation_slug', bboss()->moderation->slug );
 }
 
 /**
@@ -42,8 +42,8 @@ function bp_get_moderation_slug() {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_moderation_root_slug() {
-	echo esc_html( bp_get_moderation_root_slug() );
+function bboss_moderation_root_slug() {
+	echo esc_html( bboss_get_moderation_root_slug() );
 }
 
 /**
@@ -53,7 +53,7 @@ function bp_moderation_root_slug() {
  *
  * @return string The moderation component root slug.
  */
-function bp_get_moderation_root_slug() {
+function bboss_get_moderation_root_slug() {
 
 	/**
 	 * Filters the moderation component root slug.
@@ -62,14 +62,14 @@ function bp_get_moderation_root_slug() {
 	 *
 	 * @param string $root_slug Activity component root slug.
 	 */
-	return apply_filters( 'bp_get_moderation_root_slug', buddypress()->moderation->root_slug );
+	return apply_filters( 'bp_get_moderation_root_slug', bboss()->moderation->root_slug );
 }
 
 /**
  *
  * Initialize the moderation loop.
  *
- * Based on the $args passed, bp_has_moderation() populates the
+ * Based on the $args passed, bboss_has_moderation() populates the
  * $moderation_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of moderation items.
  *
@@ -77,9 +77,9 @@ function bp_get_moderation_root_slug() {
  *
  * @param array|string $args                {
  *                                          Arguments for limiting the contents of the moderation loop. Most arguments
- *                                          are in the same format as {@link BP_Moderation::get()}. However,
+ *                                          are in the same format as {@link BBoss_Moderation::get()}. However,
  *                                          because the format of the arguments accepted here differs in a number of
- *                                          ways, and because bp_has_moderation() determines some default arguments in
+ *                                          ways, and because bboss_has_moderation() determines some default arguments in
  *                                          a dynamic fashion, we list all accepted arguments here as well.
  *
  *     Arguments can be passed as an associative array, or as a URL querystring
@@ -101,23 +101,23 @@ function bp_get_moderation_root_slug() {
  * @type array         $meta_query          Array of meta_query conditions. See WP_Meta_Query::queries.
  * @type array         $date_query          Array of date_query conditions. See first parameter of
  *                                           WP_Date_Query::__construct().
- * @type array         $filter_query        Array of advanced query conditions. See BP_Moderation_Query::__construct().
+ * @type array         $filter_query        Array of advanced query conditions. See BBoss_Moderation_Query::__construct().
  * @type bool          $display_reporters   Whether to include moderation reported users. Default: false.
  * @type bool          $update_meta_cache   Whether to pre-fetch metadata for queried moderation items. Default: true.
  * @type string|bool   $count_total         If true, an additional DB query is run to count the total moderation items
  *                                           for the query. Default: false.
  * }
  * @return bool Returns true when moderation found, otherwise false.
- * @global object      $moderation_template {@link BP_Moderation_Template}
+ * @global object      $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_has_moderation( $args = '' ) {
+function bboss_has_moderation( $args = '' ) {
 	global $moderation_template;
 
-	$args = bp_parse_args( $args );
+	$args = bboss_parse_args( $args );
 
-	if ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) {
+	if ( bboss_is_my_profile() && 'blocked-members' === bboss_current_action() ) {
 		$args['in_types'] = array( 'user' );
-		$args['user_id']  = bp_loggedin_user_id();
+		$args['user_id']  = bboss_loggedin_user_id();
 	}
 
 	/*
@@ -125,7 +125,7 @@ function bp_has_moderation( $args = '' ) {
 	 */
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'page'              => 1,               // The current page.
@@ -155,7 +155,7 @@ function bp_has_moderation( $args = '' ) {
 	/*
 	 * Query
 	 */
-	$moderation_template = new BP_Moderation_Template( $r );
+	$moderation_template = new BBoss_Moderation_Template( $r );
 
 	/**
 	 * Filters whether or not there are moderation items to display.
@@ -164,7 +164,7 @@ function bp_has_moderation( $args = '' ) {
 	 *
 	 * @param bool   $value               Whether or not there are moderation items to display.
 	 * @param string $moderation_template Current moderation template being used.
-	 * @param array  $r                   Array of moderations passed into the BP_Moderation_Template class.
+	 * @param array  $r                   Array of moderations passed into the BBoss_Moderation_Template class.
 	 */
 	return apply_filters( 'bp_has_moderation', $moderation_template->has_moderation(), $moderation_template, $r );
 }
@@ -175,9 +175,9 @@ function bp_has_moderation( $args = '' ) {
  * @since BuddyBoss 1.5.6
  *
  * @return bool Returns true when moderation are found.
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_moderation() {
+function bboss_moderation() {
 	global $moderation_template;
 
 	return $moderation_template->user_moderations();
@@ -190,9 +190,9 @@ function bp_moderation() {
  * @since BuddyBoss 1.5.6
  *
  * @return object The current moderation within the loop.
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_the_moderation() {
+function bboss_the_moderation() {
 	global $moderation_template;
 
 	return $moderation_template->the_moderation();
@@ -204,9 +204,9 @@ function bp_the_moderation() {
  * @since BuddyBoss 1.5.6
  *
  * @return int The moderation ID.
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_get_moderation_id() {
+function bboss_get_moderation_id() {
 	global $moderation_template;
 
 	/**
@@ -230,9 +230,9 @@ function bp_get_moderation_id() {
  * @since BuddyBoss 1.5.6
  *
  * @return int The moderation ID.
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_get_moderation_item_id() {
+function bboss_get_moderation_item_id() {
 	global $moderation_template;
 
 	/**
@@ -257,9 +257,9 @@ function bp_get_moderation_item_id() {
  *
  * @return string The moderation type.
  *
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_get_moderation_item_type() {
+function bboss_get_moderation_item_type() {
 	global $moderation_template;
 
 	/**
@@ -284,9 +284,9 @@ function bp_get_moderation_item_type() {
  *
  * @return int hide/show.
  *
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_get_moderation_hide_site_wide() {
+function bboss_get_moderation_hide_site_wide() {
 	global $moderation_template;
 
 	/**
@@ -311,9 +311,9 @@ function bp_get_moderation_hide_site_wide() {
  *
  * @return string moderation late updated.
  *
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_get_moderation_last_updated() {
+function bboss_get_moderation_last_updated() {
 	global $moderation_template;
 
 	/**
@@ -344,9 +344,9 @@ function bp_get_moderation_last_updated() {
  *
  * @return string moderation reported category.
  *
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_get_moderation_reported_category() {
+function bboss_get_moderation_reported_category() {
 	global $moderation_template;
 
 	/**
@@ -371,9 +371,9 @@ function bp_get_moderation_reported_category() {
  * @since BuddyBoss 1.5.6
  *
  * @return bool $has_more_items True if more items, false if not.
- * @global object $moderation_template {@link BP_Moderation_Template}
+ * @global object $moderation_template {@link BBoss_Moderation_Template}
  */
-function bp_moderation_has_more_items() {
+function bboss_moderation_has_more_items() {
 	global $moderation_template;
 
 	if ( ! empty( $moderation_template->has_more_items ) ) {
@@ -403,8 +403,8 @@ function bp_moderation_has_more_items() {
  *
  * @since BuddyBoss 1.5.6
  */
-function bp_moderation_load_more_link() {
-	echo esc_url( bp_get_moderation_load_more_link() );
+function bboss_moderation_load_more_link() {
+	echo esc_url( bboss_get_moderation_load_more_link() );
 }
 
 /**
@@ -414,10 +414,10 @@ function bp_moderation_load_more_link() {
  *
  * @return string $link
  */
-function bp_get_moderation_load_more_link() {
+function bboss_get_moderation_load_more_link() {
 	global $moderation_template;
 
-	$url  = bp_get_requested_url();
+	$url  = bboss_get_requested_url();
 	$link = add_query_arg( $moderation_template->pag_arg, $moderation_template->pag_page + 1, $url );
 
 	/**

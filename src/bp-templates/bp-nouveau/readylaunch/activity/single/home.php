@@ -6,7 +6,7 @@
  * activity stream, edit forms, and loading placeholders.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,25 +14,25 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 ?>
 <div class="bb-rl-inner-container bb-rl-activity-page">
 <div id="bb-rl-single-activity-edit-form-wrap" style="display: none;">
 	<div id="bb-rl-activity-form" class="bb-rl-activity-update-form 
 	<?php
-	echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : '';
+	echo ( ! bboss_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : '';
 	?>
 	">
 	</div>
 </div>
 
 <?php
-bp_nouveau_template_notices();
-bp_nouveau_before_single_activity_content();
+bboss_nouveau_template_notices();
+bboss_nouveau_before_single_activity_content();
 ?>
 
 <div class="bb-rl-screen-content">
-<div class="activity" data-bp-single="<?php echo esc_attr( bp_current_action() ); ?>">
+<div class="activity" data-bp-single="<?php echo esc_attr( bboss_current_action() ); ?>">
 	<?php
 	do_action( 'bp_before_single_activity_content' );
 	?>
@@ -63,7 +63,7 @@ bp_nouveau_before_single_activity_content();
 			<?php
 			echo '</li>';
 		} else {
-			bp_get_template_part( 'activity/activity-loop' );
+			bboss_get_template_part( 'activity/activity-loop' );
 		}
 		?>
 	</ul>

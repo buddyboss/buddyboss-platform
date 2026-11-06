@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $meta_key Usermeta key.
  * @return bool True when the key is a BuddyBoss draft key.
  */
-function bb_draft_is_draft_meta_key( $meta_key ) {
+function bboss_draft_is_draft_meta_key( $meta_key ) {
 	if ( 'draft_user' === $meta_key || 'bb_user_topic_reply_draft' === $meta_key ) {
 		return true;
 	}
@@ -41,8 +41,8 @@ function bb_draft_is_draft_meta_key( $meta_key ) {
 /**
  * How `bp_get_user_meta_key` wraps the draft meta keys on this install.
  *
- * Every draft writer stores through `bp_update_user_meta()`, which passes
- * the key through {@see bp_get_user_meta_key()}. The maintenance layer, by
+ * Every draft writer stores through `bboss_update_user_meta()`, which passes
+ * the key through {@see bboss_get_user_meta_key()}. The maintenance layer, by
  * contrast, has to recognise keys coming back OUT of the database, so it
  * needs the inverse of that filter. The filter is arbitrary, but its
  * documented purpose (and every real use) is to wrap the key, so the wrap
@@ -50,7 +50,7 @@ function bb_draft_is_draft_meta_key( $meta_key ) {
  * draft shapes. A filter that is not a pure wrap (a hash, or one that
  * rewrites only some keys) is reported as non-invertible, and the callers
  * then decline to act rather than guess — see
- * {@see bb_draft_get_rows_batch()}.
+ * {@see bboss_draft_get_rows_batch()}.
  *
  * @since BuddyBoss 3.7.1
  *
@@ -60,7 +60,7 @@ function bb_draft_is_draft_meta_key( $meta_key ) {
  *     @type bool   $invertible Whether a stored key can be mapped back.
  * }
  */
-function bb_draft_meta_key_wrap() {
+function bboss_draft_meta_key_wrap() {
 	// Keyed on the filtered value of a REAL draft key, not a synthetic probe: a
 	// test (or a plugin on a late hook) may add or remove the filter
 	// mid-request, and the memo must follow it. A synthetic probe cannot follow
@@ -73,7 +73,7 @@ function bb_draft_meta_key_wrap() {
 	static $memo = array();
 
 	$canonical_key = 'draft_user';
-	$filtered      = (string) bp_get_user_meta_key( $canonical_key );
+	$filtered      = (string) bboss_get_user_meta_key( $canonical_key );
 
 	if ( isset( $memo[ $filtered ] ) ) {
 		return $memo[ $filtered ];
@@ -104,7 +104,7 @@ function bb_draft_meta_key_wrap() {
 	// on (M1).
 	if ( $wrap['invertible'] ) {
 		foreach ( array( 'draft_user', 'bb_user_topic_reply_draft', 'draft_user_1', 'draft_group_1' ) as $canonical ) {
-			if ( (string) bp_get_user_meta_key( $canonical ) !== $wrap['prefix'] . $canonical . $wrap['suffix'] ) {
+			if ( (string) bboss_get_user_meta_key( $canonical ) !== $wrap['prefix'] . $canonical . $wrap['suffix'] ) {
 				$wrap = $identity;
 
 				$wrap['invertible'] = false;
@@ -122,10 +122,10 @@ function bb_draft_meta_key_wrap() {
  * Map a stored usermeta key back to the draft key the writers asked for.
  *
  * The maintenance passes and the size measurement both read raw keys out of
- * the database, while every writer stores the {@see bp_get_user_meta_key()}
+ * the database, while every writer stores the {@see bboss_get_user_meta_key()}
  * form. Comparing the two directly is what made the caps, the expiry cron
  * and the healing pass inert on installs that filter that key — and worse,
- * it let a stray unfiltered row hand {@see bb_draft_dispose()} a key that
+ * it let a stray unfiltered row hand {@see bboss_draft_dispose()} a key that
  * re-filtered onto a DIFFERENT, live row (N2).
  *
  * @since BuddyBoss 3.7.1
@@ -133,9 +133,9 @@ function bb_draft_meta_key_wrap() {
  * @param string $stored_key Key as stored in the usermeta table.
  * @return string Logical draft key, or '' when the key is not a BuddyBoss draft.
  */
-function bb_draft_logical_meta_key( $stored_key ) {
+function bboss_draft_logical_meta_key( $stored_key ) {
 	$stored_key = (string) $stored_key;
-	$wrap       = bb_draft_meta_key_wrap();
+	$wrap       = bboss_draft_meta_key_wrap();
 
 	if ( empty( $wrap['invertible'] ) ) {
 		return '';
@@ -159,7 +159,7 @@ function bb_draft_logical_meta_key( $stored_key ) {
 		$logical = substr( $logical, 0, - strlen( $wrap['suffix'] ) );
 	}
 
-	return bb_draft_is_draft_meta_key( $logical ) ? $logical : '';
+	return bboss_draft_is_draft_meta_key( $logical ) ? $logical : '';
 }
 
 /**
@@ -173,10 +173,10 @@ function bb_draft_logical_meta_key( $stored_key ) {
  *     @type string[] $values     Values for the fragment's placeholders.
  * }
  */
-function bb_draft_meta_key_sql() {
+function bboss_draft_meta_key_sql() {
 	global $wpdb;
 
-	$wrap = bb_draft_meta_key_wrap();
+	$wrap = bboss_draft_meta_key_wrap();
 
 	if ( empty( $wrap['invertible'] ) ) {
 		return array(
@@ -211,7 +211,7 @@ function bb_draft_meta_key_sql() {
  *
  * @return int Size limit in bytes.
  */
-function bb_draft_max_size() {
+function bboss_draft_max_size() {
 
 	/**
 	 * Filters the maximum stored size of a single draft.
@@ -237,7 +237,7 @@ function bb_draft_max_size() {
  *
  * @return int Size limit in bytes.
  */
-function bb_draft_user_total_max_size() {
+function bboss_draft_user_total_max_size() {
 
 	/**
 	 * Filters the maximum combined stored size of a user's drafts.
@@ -260,13 +260,13 @@ function bb_draft_user_total_max_size() {
  * drafts. Draft saves are refused when the user's total meta would exceed
  * this budget, whatever the draft share of it is. The default leaves ~200KB
  * of headroom below the platform limit, which also covers what the measured
- * total does not count ({@see bb_draft_get_user_meta_sizes()}).
+ * total does not count ({@see bboss_draft_get_user_meta_sizes()}).
  *
  * @since BuddyBoss 3.7.1
  *
  * @return int Budget in bytes.
  */
-function bb_draft_user_meta_budget() {
+function bboss_draft_user_meta_budget() {
 
 	/**
 	 * Filters the total user-meta budget draft saves must respect.
@@ -303,7 +303,7 @@ function bb_draft_user_meta_budget() {
  * @param string $content Draft content, UNSLASHED.
  * @return string Content without data-URL images, in the slash state it was given.
  */
-function bb_draft_strip_data_urls( $content ) {
+function bboss_draft_strip_data_urls( $content ) {
 	if ( ! is_string( $content ) || false === stripos( $content, 'data:' ) ) {
 		return $content;
 	}
@@ -399,10 +399,10 @@ function bb_draft_strip_data_urls( $content ) {
  * The lists arrive as client JSON and every entry costs a per-ID ownership
  * lookup, so they have to be bounded before that loop runs. The bound was a
  * hard 50, which is BELOW what an administrator can configure: the media
- * "Upload Limit" field accepts up to 100 ({@see bb_media_sanitize_upload_limit()}).
+ * "Upload Limit" field accepts up to 100 ({@see bboss_media_sanitize_upload_limit()}).
  * On such a site the draft paths silently truncated the list they then STORED
  * and left the dropped attachments unstamped - which is exactly the predicate
- * `bp_media_delete_orphaned_attachments()` reaps. A member attaching 60 photos
+ * `bboss_media_delete_orphaned_attachments()` reaps. A member attaching 60 photos
  * kept 50 in the draft and lost 10 files six hours later (H4).
  *
  * The floor of 50 keeps the previous behaviour for every site at or below it.
@@ -415,7 +415,7 @@ function bb_draft_strip_data_urls( $content ) {
  *                     load-bearing, not cosmetic. Default 'media'.
  * @return int Maximum entries accepted per attachment type.
  */
-function bb_draft_max_attachments_per_type( $type = 'media' ) {
+function bboss_draft_max_attachments_per_type( $type = 'media' ) {
 	// Each attachment type has its OWN independently-configurable upload limit
 	// (Photos, Documents and Videos each accept up to 100). Reading only the
 	// Photos limit for all three reintroduced the H4 truncation for the other
@@ -424,14 +424,14 @@ function bb_draft_max_attachments_per_type( $type = 'media' ) {
 	// site was silently cut to 50, and the dropped 10 lost to the orphan cron.
 	switch ( $type ) {
 		case 'document':
-			$configured = function_exists( 'bp_media_allowed_upload_document_per_batch' ) ? (int) bp_media_allowed_upload_document_per_batch() : 0;
+			$configured = function_exists( 'bboss_media_allowed_upload_document_per_batch' ) ? (int) bboss_media_allowed_upload_document_per_batch() : 0;
 			break;
 		case 'video':
 			$configured = function_exists( 'bp_video_allowed_upload_video_per_batch' ) ? (int) bp_video_allowed_upload_video_per_batch() : 0;
 			break;
 		case 'media':
 		default:
-			$configured = function_exists( 'bp_media_allowed_upload_media_per_batch' ) ? (int) bp_media_allowed_upload_media_per_batch() : 0;
+			$configured = function_exists( 'bboss_media_allowed_upload_media_per_batch' ) ? (int) bboss_media_allowed_upload_media_per_batch() : 0;
 			break;
 	}
 
@@ -449,7 +449,7 @@ function bb_draft_max_attachments_per_type( $type = 'media' ) {
 /**
  * Stamp every attachment a draft payload claims, before any size cap can refuse it.
  *
- * `bb_media_draft` is what keeps `bp_media_delete_orphaned_attachments()` from
+ * `bb_media_draft` is what keeps `bboss_media_delete_orphaned_attachments()` from
  * hard-deleting a freshly uploaded file six hours later. Whether that stamp is
  * applied must NOT depend on whether the draft's TEXT fits the size caps: the
  * member has already uploaded the file and it is sitting in their composer
@@ -474,7 +474,7 @@ function bb_draft_max_attachments_per_type( $type = 'media' ) {
  * @param int   $user_id Acting user ID.
  * @return int[] Attachment IDs stamped.
  */
-function bb_draft_protect_payload_attachments( $lists, $user_id ) {
+function bboss_draft_protect_payload_attachments( $lists, $user_id ) {
 	$user_id = (int) $user_id;
 	$stamped = array();
 
@@ -494,7 +494,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		// and it must match the type-specific cap the handlers enforce or this
 		// pass would stamp fewer than the handler stores (or vice versa) - the
 		// BLOCKER-1 mismatch. Callers pass a media/document/video-keyed array.
-		$max_per_type = bb_draft_max_attachments_per_type( is_string( $type ) ? $type : 'media' );
+		$max_per_type = bboss_draft_max_attachments_per_type( is_string( $type ) ? $type : 'media' );
 
 		if ( $max_per_type < count( $list ) ) {
 			$list = array_slice( $list, 0, $max_per_type );
@@ -518,7 +518,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 				continue;
 			}
 
-			if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
+			if ( ! bboss_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 				continue;
 			}
 
@@ -561,13 +561,13 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
  * size: it sums value bytes only, so the meta_key strings and the outer
  * array's own serialization overhead are not counted. On a member carrying
  * hundreds of meta rows that is a few KB. The gap is deliberate headroom —
- * {@see bb_draft_user_meta_budget()} defaults to 800 KB against a ~1 MB
+ * {@see bboss_draft_user_meta_budget()} defaults to 800 KB against a ~1 MB
  * platform item limit, which is what absorbs it.
  *
  * @since BuddyBoss 3.7.1
  *
  * The result is memoized per request because a single save asks for it more
- * than once; {@see bb_draft_flush_user_meta_sizes()} clears it after a write.
+ * than once; {@see bboss_draft_flush_user_meta_sizes()} clears it after a write.
  *
  * @param int  $user_id User ID.
  * @param bool $flush   Optional. True to drop the memoized entry and return
@@ -577,7 +577,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
  *     @type array $drafts Draft meta key => stored bytes.
  * }
  */
-function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
+function bboss_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 	$user_id = (int) $user_id;
 
 	// Memoized per request: a single draft save asks for these sizes more than
@@ -625,7 +625,7 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 			// Keyed by the LOGICAL draft key, so the cap arithmetic and every
 			// key handed on to bp_get_user_meta()/bb_draft_dispose() speak the
 			// same language the writers used (N2).
-			$logical_key = bb_draft_logical_meta_key( $meta_key );
+			$logical_key = bboss_draft_logical_meta_key( $meta_key );
 
 			if ( '' !== $logical_key ) {
 				$sizes['drafts'][ $logical_key ] = isset( $sizes['drafts'][ $logical_key ] ) ? $sizes['drafts'][ $logical_key ] + $bytes : $bytes;
@@ -650,7 +650,7 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
  * @param string $key Array key.
  * @return int Bytes the key occupies in a serialized array.
  */
-function bb_draft_serialized_key_bytes( $key ) {
+function bboss_draft_serialized_key_bytes( $key ) {
 	// PHP normalizes a canonical-integer array key to an int when it is SET,
 	// and serialize() then writes it as `i:N;` - not as the quoted string form.
 	// Pricing every key as a string overstated an integer key by 4 bytes
@@ -683,8 +683,8 @@ function bb_draft_serialized_key_bytes( $key ) {
  * @param int $user_id User ID.
  * @return void
  */
-function bb_draft_flush_user_meta_sizes( $user_id ) {
-	bb_draft_get_user_meta_sizes( (int) $user_id, true );
+function bboss_draft_flush_user_meta_sizes( $user_id ) {
+	bboss_draft_get_user_meta_sizes( (int) $user_id, true );
 }
 
 
@@ -700,7 +700,7 @@ function bb_draft_flush_user_meta_sizes( $user_id ) {
  * @param array $draft Draft array containing a `data` member.
  * @return int[] Attachment IDs.
  */
-function bb_draft_collect_attachment_ids( $draft ) {
+function bboss_draft_collect_attachment_ids( $draft ) {
 	$ids = array();
 
 	if ( empty( $draft['data'] ) || ! is_array( $draft['data'] ) ) {
@@ -763,7 +763,7 @@ function bb_draft_collect_attachment_ids( $draft ) {
  * back; it does not for forum videos.
  *
  * Handles both stored shapes, the same pair
- * {@see bb_draft_collect_attachment_ids()} handles: the activity composer
+ * {@see bboss_draft_collect_attachment_ids()} handles: the activity composer
  * stores `data['video']` as a real array, the forum composer stores
  * `data['bbp_video']` as a JSON string. Idempotent — shedding an
  * already-shed draft returns it unchanged, so callers may compare sizes
@@ -779,7 +779,7 @@ function bb_draft_collect_attachment_ids( $draft ) {
  * @param array $draft Draft entry.
  * @return array The draft with any poster frames and data URLs removed.
  */
-function bb_draft_shed_preview_frames( $draft ) {
+function bboss_draft_shed_preview_frames( $draft ) {
 	if ( empty( $draft['data'] ) || ! is_array( $draft['data'] ) ) {
 		return $draft;
 	}
@@ -791,7 +791,7 @@ function bb_draft_shed_preview_frames( $draft ) {
 
 	foreach ( array_unique( array_merge( $activity_content_keys, $forum_content_keys ) ) as $content_key ) {
 		if ( isset( $draft['data'][ $content_key ] ) && is_string( $draft['data'][ $content_key ] ) && false !== stripos( $draft['data'][ $content_key ], 'data:' ) ) {
-			$stripped = bb_draft_strip_data_urls( $draft['data'][ $content_key ] );
+			$stripped = bboss_draft_strip_data_urls( $draft['data'][ $content_key ] );
 
 			// Assigned only when something changed, so the callers' before/after
 			// comparison still means "something was reclaimed".
@@ -801,7 +801,7 @@ function bb_draft_shed_preview_frames( $draft ) {
 		}
 	}
 
-	$draft = bb_draft_strip_document_render_fields( $draft );
+	$draft = bboss_draft_strip_document_render_fields( $draft );
 
 	if ( ! empty( $draft['data']['video'] ) && is_array( $draft['data']['video'] ) ) {
 		foreach ( $draft['data']['video'] as $index => $entry ) {
@@ -852,7 +852,7 @@ function bb_draft_shed_preview_frames( $draft ) {
  * @param array $draft Draft entry, activity (`document`) or forum (`bbp_document` JSON).
  * @return array The draft without those fields.
  */
-function bb_draft_strip_document_render_fields( $draft ) {
+function bboss_draft_strip_document_render_fields( $draft ) {
 	if ( empty( $draft['data'] ) || ! is_array( $draft['data'] ) ) {
 		return $draft;
 	}
@@ -910,8 +910,8 @@ function bb_draft_strip_document_render_fields( $draft ) {
  * @param mixed  $read     The value the heal read.
  * @return bool True when the stored row is unchanged.
  */
-function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
-	return maybe_serialize( bb_draft_fresh_value( $user_id, $meta_key ) ) === maybe_serialize( $read );
+function bboss_draft_row_unchanged( $user_id, $meta_key, $read ) {
+	return maybe_serialize( bboss_draft_fresh_value( $user_id, $meta_key ) ) === maybe_serialize( $read );
 }
 
 /**
@@ -934,14 +934,14 @@ function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
  * @param string $meta_key Draft usermeta key.
  * @return bool Whether the row was salvaged and stored.
  */
-function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
+function bboss_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 	$user_id = (int) $user_id;
 
-	if ( $user_id <= 0 || ! bb_draft_is_draft_meta_key( $meta_key ) ) {
+	if ( $user_id <= 0 || ! bboss_draft_is_draft_meta_key( $meta_key ) ) {
 		return false;
 	}
 
-	$stored = bp_get_user_meta( $user_id, $meta_key, true );
+	$stored = bboss_get_user_meta( $user_id, $meta_key, true );
 
 	if ( ! is_array( $stored ) || empty( $stored ) ) {
 		return false;
@@ -955,18 +955,18 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 	// Returning true (handled - nothing to do) is what keeps that from happening.
 	// This is the guard bb_draft_heal_forum_row() already applies per inner
 	// entry; the flat-key path lacked it (stale-size TOCTOU).
-	if ( strlen( maybe_serialize( $stored ) ) <= bb_draft_max_size() ) {
+	if ( strlen( maybe_serialize( $stored ) ) <= bboss_draft_max_size() ) {
 		return true;
 	}
 
-	$shed = bb_draft_shed_preview_frames( $stored );
+	$shed = bboss_draft_shed_preview_frames( $stored );
 
 	// Nothing was reclaimable, so this row is oversized on its own merits.
 	if ( maybe_serialize( $shed ) === maybe_serialize( $stored ) ) {
 		return false;
 	}
 
-	if ( strlen( maybe_serialize( $shed ) ) > bb_draft_max_size() ) {
+	if ( strlen( maybe_serialize( $shed ) ) > bboss_draft_max_size() ) {
 		return false;
 	}
 
@@ -976,12 +976,12 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 	// (Q6) - without the re-slash it mangled exactly that text,
 	// turning `path C:\temp\notes` into `path C:tempnotes` (S2).
 	// A live save since the read already passed the caps; leave it be.
-	if ( ! bb_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
+	if ( ! bboss_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
 		return true;
 	}
 
-	bp_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
-	bb_draft_flush_user_meta_sizes( $user_id );
+	bboss_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
+	bboss_draft_flush_user_meta_sizes( $user_id );
 
 	return true;
 }
@@ -1003,36 +1003,36 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
  * @param string $meta_key Draft usermeta key.
  * @return bool Whether the row was removed.
  */
-function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
+function bboss_draft_hold_oversized_draft( $user_id, $meta_key ) {
 	$user_id = (int) $user_id;
-	$stored  = bp_get_user_meta( $user_id, $meta_key, true );
+	$stored  = bboss_get_user_meta( $user_id, $meta_key, true );
 
 	if ( ! is_array( $stored ) || empty( $stored ) ) {
-		return bb_draft_dispose( $user_id, $meta_key, '', is_multisite() );
+		return bboss_draft_dispose( $user_id, $meta_key, '', is_multisite() );
 	}
 
 	// A live save since the read already passed the caps; removing the row
 	// now would remove that newer draft instead.
-	if ( ! bb_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
+	if ( ! bboss_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
 		return false;
 	}
 
-	$entry = bb_draft_shed_preview_frames( $stored );
+	$entry = bboss_draft_shed_preview_frames( $stored );
 
 	// Held before the row goes, so a fatal between the two steps cannot lose
 	// the draft ({@see bb_draft_enforce_user_budget()}).
-	bb_draft_hold_evicted( $user_id, array( $meta_key => $entry ) );
+	bboss_draft_hold_evicted( $user_id, array( $meta_key => $entry ) );
 
 	// Kept stamped: the held entry still references the files. A failed
 	// removal means the row is already gone - a parallel eviction that holds
 	// it too, or a discard - so the hold stays: dropping it could leave the
 	// draft in no store, while keeping it at worst offers a discarded draft
 	// back once.
-	if ( ! bb_draft_dispose( $user_id, $meta_key, '', true ) ) {
+	if ( ! bboss_draft_dispose( $user_id, $meta_key, '', true ) ) {
 		return false;
 	}
 
-	bb_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
+	bboss_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
 
 	/** This action is documented in bp-core/bb-core-drafts.php */
 	do_action( 'bb_draft_evicted', $user_id, $meta_key, 'draft_cap' );
@@ -1053,7 +1053,7 @@ function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
  * @param int $user_id User ID.
  * @return int Number of draft rows rewritten.
  */
-function bb_draft_shed_user_drafts( $user_id ) {
+function bboss_draft_shed_user_drafts( $user_id ) {
 	$user_id   = (int) $user_id;
 	$rewritten = 0;
 
@@ -1061,14 +1061,14 @@ function bb_draft_shed_user_drafts( $user_id ) {
 		return 0;
 	}
 
-	$sizes = bb_draft_get_user_meta_sizes( $user_id );
+	$sizes = bboss_draft_get_user_meta_sizes( $user_id );
 
 	if ( empty( $sizes['drafts'] ) ) {
 		return 0;
 	}
 
 	foreach ( array_keys( $sizes['drafts'] ) as $meta_key ) {
-		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+		$stored = bboss_get_user_meta( $user_id, $meta_key, true );
 
 		if ( empty( $stored ) || ! is_array( $stored ) ) {
 			continue;
@@ -1079,11 +1079,11 @@ function bb_draft_shed_user_drafts( $user_id ) {
 
 			foreach ( $stored as $inner_key => $inner_draft ) {
 				if ( is_array( $inner_draft ) ) {
-					$shed[ $inner_key ] = bb_draft_shed_preview_frames( $inner_draft );
+					$shed[ $inner_key ] = bboss_draft_shed_preview_frames( $inner_draft );
 				}
 			}
 		} else {
-			$shed = bb_draft_shed_preview_frames( $stored );
+			$shed = bboss_draft_shed_preview_frames( $stored );
 		}
 
 		if ( maybe_serialize( $shed ) === maybe_serialize( $stored ) ) {
@@ -1091,18 +1091,18 @@ function bb_draft_shed_user_drafts( $user_id ) {
 		}
 
 		// A live save since the read already passed the caps; leave it be.
-		if ( ! bb_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
+		if ( ! bboss_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
 			continue;
 		}
 
 		// wp_slash(): read unslashed, and update_metadata() unslashes once
 		// more on write (see bb_draft_salvage_oversized_draft()).
-		bp_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
+		bboss_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
 		++$rewritten;
 	}
 
 	if ( $rewritten ) {
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 	}
 
 	return $rewritten;
@@ -1118,7 +1118,7 @@ function bb_draft_shed_user_drafts( $user_id ) {
  * and a group draft - lost its `bb_media_draft` protection the moment one row
  * was disposed, and the general orphan-media cron could then hard-delete a file
  * a live draft still pointed at (L7). This builds the retain set the dispose
- * passes to {@see bb_draft_unstamp_attachments()} so a still-referenced
+ * passes to {@see bboss_draft_unstamp_attachments()} so a still-referenced
  * attachment keeps its stamp.
  *
  * Read from live storage on each call, so inside a multi-eviction loop it
@@ -1132,14 +1132,14 @@ function bb_draft_shed_user_drafts( $user_id ) {
  * @param string|null $exclude_inner Inner key being disposed; '' for a whole
  *                                   activity row; null to exclude the excluded
  *                                   row entirely, inner entries included (the
- *                                   mode {@see bb_draft_collect_other_row_referenced_ids()}
+ *                                   mode {@see bboss_draft_collect_other_row_referenced_ids()}
  *                                   uses). Note that '' is NOT the whole-row
  *                                   mode for the aggregated forum row: no real
  *                                   inner key equals '', so '' excludes nothing
  *                                   there.
  * @return int[] Attachment IDs still referenced by the user's other drafts.
  */
-function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
+function bboss_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
 	$user_id = (int) $user_id;
 	$ids     = array();
 
@@ -1147,7 +1147,7 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 		return $ids;
 	}
 
-	$sizes = bb_draft_get_user_meta_sizes( $user_id );
+	$sizes = bboss_draft_get_user_meta_sizes( $user_id );
 
 	if ( empty( $sizes['drafts'] ) || ! is_array( $sizes['drafts'] ) ) {
 		return $ids;
@@ -1162,7 +1162,7 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 			continue;
 		}
 
-		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+		$stored = bboss_get_user_meta( $user_id, $meta_key, true );
 
 		if ( empty( $stored ) || ! is_array( $stored ) ) {
 			continue;
@@ -1176,7 +1176,7 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 					continue;
 				}
 
-				$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $inner_draft ) );
+				$ids = array_merge( $ids, bboss_draft_collect_attachment_ids( $inner_draft ) );
 			}
 		} else {
 			// A whole activity row. Skipped only when IT is the entry being
@@ -1185,7 +1185,7 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 				continue;
 			}
 
-			$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $stored ) );
+			$ids = array_merge( $ids, bboss_draft_collect_attachment_ids( $stored ) );
 		}
 	}
 
@@ -1195,17 +1195,17 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 /**
  * Collect attachment IDs referenced by the user's draft rows OTHER than one row.
  *
- * The whole-row companion to {@see bb_draft_collect_other_referenced_ids()}, for
+ * The whole-row companion to {@see bboss_draft_collect_other_referenced_ids()}, for
  * the release sites that already hold their OWN row's surviving set in memory -
  * the forum row-trim eviction, the expiry batch and the row heal - and only need
  * the cross-ROW additions. Without merging these, releasing an entry from the
  * forum row stripped the stamp of an attachment a DIFFERENT usermeta row still
- * held: the L7 gap, reopened through every release path bb_draft_dispose() did
+ * held: the L7 gap, reopened through every release path bboss_draft_dispose() did
  * not itself cover.
  *
  * @since BuddyBoss 3.7.1
  *
- * Delegates to {@see bb_draft_collect_other_referenced_ids()} rather than
+ * Delegates to {@see bboss_draft_collect_other_referenced_ids()} rather than
  * repeating its loop: both compute the retain set that decides whether a
  * still-referenced attachment keeps its `bb_media_draft` protection, and two
  * copies of that invariant means a fix landing on one of them silently reopens
@@ -1215,8 +1215,8 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
  * @param string $exclude_meta_key Meta key whose row the caller handles itself.
  * @return int[] Attachment IDs referenced by the user's other draft rows.
  */
-function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
-	return bb_draft_collect_other_referenced_ids( $user_id, $exclude_meta_key, null );
+function bboss_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
+	return bboss_draft_collect_other_referenced_ids( $user_id, $exclude_meta_key, null );
 }
 
 /**
@@ -1232,7 +1232,7 @@ function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key 
  * content across reply targets, so one attachment is routinely referenced by
  * several inner drafts at once; releasing an inner draft without excluding
  * what its siblings still hold let the orphan crons delete files a stored
- * draft was still pointing at. {@see bb_draft_heal_forum_row()} and the
+ * draft was still pointing at. {@see bboss_draft_heal_forum_row()} and the
  * forum handler's eviction branch already apply this whole-row exclusion
  * themselves.
  *
@@ -1248,8 +1248,8 @@ function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key 
  *                              also keep their stamps.
  * @return void
  */
-function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array(), $retain_ids = array() ) {
-	$attachment_ids = bb_draft_collect_attachment_ids( $draft );
+function bboss_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+	$attachment_ids = bboss_draft_collect_attachment_ids( $draft );
 	// Pre-resolved IDs a DIFFERENT draft row still references (cross-row retain).
 	// The same-row $retain_entries only ever covered siblings in one aggregated
 	// row, so an attachment held by another usermeta row lost its stamp when this
@@ -1258,7 +1258,7 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
 
 	if ( ! empty( $retain_entries ) && is_array( $retain_entries ) ) {
 		foreach ( $retain_entries as $retain_entry ) {
-			$retained = array_merge( $retained, bb_draft_collect_attachment_ids( $retain_entry ) );
+			$retained = array_merge( $retained, bboss_draft_collect_attachment_ids( $retain_entry ) );
 		}
 	}
 
@@ -1268,11 +1268,11 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
 		}
 
 		// An evicted draft handed back to the browser may still use it.
-		if ( bb_draft_attachment_is_eviction_protected( $attachment_id ) ) {
+		if ( bboss_draft_attachment_is_eviction_protected( $attachment_id ) ) {
 			continue;
 		}
 
-		if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
+		if ( ! bboss_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 			continue;
 		}
 
@@ -1314,25 +1314,25 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
  *                              also keep their stamps (L7).
  * @return int[] Attachment IDs whose stamps were released.
  */
-function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array(), $retain_ids = array() ) {
-	$retained = array_merge( bb_draft_collect_attachment_ids( $current_entry ), array_map( 'intval', (array) $retain_ids ) );
+function bboss_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+	$retained = array_merge( bboss_draft_collect_attachment_ids( $current_entry ), array_map( 'intval', (array) $retain_ids ) );
 
 	if ( ! empty( $retain_entries ) && is_array( $retain_entries ) ) {
 		foreach ( $retain_entries as $retain_entry ) {
-			$retained = array_merge( $retained, bb_draft_collect_attachment_ids( $retain_entry ) );
+			$retained = array_merge( $retained, bboss_draft_collect_attachment_ids( $retain_entry ) );
 		}
 	}
 
-	$released = array_values( array_diff( bb_draft_collect_attachment_ids( $previous_entry ), $retained ) );
+	$released = array_values( array_diff( bboss_draft_collect_attachment_ids( $previous_entry ), $retained ) );
 	$affected = array();
 
 	foreach ( $released as $attachment_id ) {
 		// An evicted draft handed back to the browser may still use it.
-		if ( bb_draft_attachment_is_eviction_protected( $attachment_id ) ) {
+		if ( bboss_draft_attachment_is_eviction_protected( $attachment_id ) ) {
 			continue;
 		}
 
-		if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
+		if ( ! bboss_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 			continue;
 		}
 
@@ -1386,14 +1386,14 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
  *                                         Default false.
  * @return bool Whether a stored draft was removed.
  */
-function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachment_release = false ) {
+function bboss_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachment_release = false ) {
 	$user_id = (int) $user_id;
 
-	if ( $user_id <= 0 || ! bb_draft_is_draft_meta_key( $meta_key ) ) {
+	if ( $user_id <= 0 || ! bboss_draft_is_draft_meta_key( $meta_key ) ) {
 		return false;
 	}
 
-	$stored = bp_get_user_meta( $user_id, $meta_key, true );
+	$stored = bboss_get_user_meta( $user_id, $meta_key, true );
 
 	// A corrupt row (serialized value truncated mid-write, wrong type) or a
 	// legacy-empty array() left behind by the old forum publish paths carries
@@ -1402,9 +1402,9 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 	// is the very cache-poisoning row this ticket is about. A missing row
 	// reads as '' and has no meta to delete, so it still reports failure.
 	if ( ! is_array( $stored ) || empty( $stored ) ) {
-		if ( '' === $inner_key && metadata_exists( 'user', $user_id, bp_get_user_meta_key( $meta_key ) ) ) {
-			bp_delete_user_meta( $user_id, $meta_key );
-			bb_draft_flush_user_meta_sizes( $user_id );
+		if ( '' === $inner_key && metadata_exists( 'user', $user_id, bboss_get_user_meta_key( $meta_key ) ) ) {
+			bboss_delete_user_meta( $user_id, $meta_key );
+			bboss_draft_flush_user_meta_sizes( $user_id );
 
 			return true;
 		}
@@ -1437,12 +1437,12 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 		$disposed_entry = $stored[ $inner_key ];
 		$retain_ids     = $defer_attachment_release
 			? array()
-			: bb_draft_collect_other_referenced_ids( $user_id, $meta_key, $inner_key );
+			: bboss_draft_collect_other_referenced_ids( $user_id, $meta_key, $inner_key );
 
 		unset( $stored[ $inner_key ] );
 
 		if ( empty( $stored ) ) {
-			bp_delete_user_meta( $user_id, $meta_key );
+			bboss_delete_user_meta( $user_id, $meta_key );
 		} else {
 			// wp_slash(): $stored came from bp_get_user_meta() and is therefore
 			// UNSLASHED, while update_metadata() unslashes the value once more
@@ -1455,15 +1455,15 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 			// per-user budget eviction and the nightly expiry cron all route
 			// through here, so it corrupted drafts the member never touched
 			// (S1).
-			bp_update_user_meta( $user_id, $meta_key, wp_slash( $stored ) );
+			bboss_update_user_meta( $user_id, $meta_key, wp_slash( $stored ) );
 		}
 
-		bb_draft_flush_user_meta_sizes( $user_id );
+		bboss_draft_flush_user_meta_sizes( $user_id );
 
 		if ( ! $defer_attachment_release ) {
 			// Same-row siblings ($retain_entries) PLUS anything the user's other
 			// draft rows still reference (L7).
-			bb_draft_unstamp_attachments( $disposed_entry, $user_id, $retain_entries, $retain_ids );
+			bboss_draft_unstamp_attachments( $disposed_entry, $user_id, $retain_entries, $retain_ids );
 		}
 
 		return true;
@@ -1488,19 +1488,19 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 		// expiry sweep routes populated rows to bb_draft_dispose_forum_inner_keys()
 		// and the healer does its own release - so this was latent, which is
 		// exactly why the comment above needed to stop being wrong about it.
-		$retain_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $meta_key );
+		$retain_ids = bboss_draft_collect_other_row_referenced_ids( $user_id, $meta_key );
 	}
 
-	bp_delete_user_meta( $user_id, $meta_key );
-	bb_draft_flush_user_meta_sizes( $user_id );
+	bboss_delete_user_meta( $user_id, $meta_key );
+	bboss_draft_flush_user_meta_sizes( $user_id );
 
 	if ( ! $defer_attachment_release ) {
 		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
 			foreach ( $stored as $inner_draft ) {
-				bb_draft_unstamp_attachments( $inner_draft, $user_id, array(), $retain_ids );
+				bboss_draft_unstamp_attachments( $inner_draft, $user_id, array(), $retain_ids );
 			}
 		} else {
-			bb_draft_unstamp_attachments( $stored, $user_id, array(), $retain_ids );
+			bboss_draft_unstamp_attachments( $stored, $user_id, array(), $retain_ids );
 		}
 	}
 
@@ -1511,8 +1511,8 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
  * Remove several expired inner drafts from the aggregate forum row in ONE write.
  *
  * The expiry sweep used to route each expired inner draft through
- * {@see bb_draft_dispose()}, and each of those does a full-row read plus a
- * full-row write - the O(n.B) shape {@see bb_draft_heal_forum_row()} was
+ * {@see bboss_draft_dispose()}, and each of those does a full-row read plus a
+ * full-row write - the O(n.B) shape {@see bboss_draft_heal_forum_row()} was
  * rewritten to avoid, now reintroduced by the RECURRING daily cron against the
  * widest rows on the site by definition (M4). This does what the healer does:
  * decide in memory, write once, then release the attachment stamps of the
@@ -1527,14 +1527,14 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
  *                                           (H2). Default false.
  * @return int Number of inner drafts removed.
  */
-function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release = false ) {
+function bboss_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release = false ) {
 	$user_id = (int) $user_id;
 
 	if ( $user_id <= 0 || empty( $inner_keys ) || ! is_array( $inner_keys ) ) {
 		return 0;
 	}
 
-	$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
 	if ( ! is_array( $row ) || empty( $row ) ) {
 		return 0;
@@ -1561,15 +1561,15 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
 
 	// One write for the whole batch.
 	if ( empty( $row ) ) {
-		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
+		bboss_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
 	} else {
 		// wp_slash(): the row came back unslashed and update_metadata() unslashes
 		// once more on write, so re-slash to store the surviving drafts
 		// byte-for-byte (R2, S5).
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 	}
 
-	bb_draft_flush_user_meta_sizes( $user_id );
+	bboss_draft_flush_user_meta_sizes( $user_id );
 
 	// Release the stamps of removed attachments no surviving inner draft holds.
 	// On multisite the root-only expiry sweep passes $defer_attachment_release,
@@ -1582,15 +1582,15 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
 		// cross-row set an aged-out forum inner draft would strip the stamp of a
 		// file a live activity/group draft still holds - the L7 gap, reached
 		// through an unattended path (L8 fan-out).
-		$surviving = bb_draft_collect_other_row_referenced_ids( $user_id, 'bb_user_topic_reply_draft' );
+		$surviving = bboss_draft_collect_other_row_referenced_ids( $user_id, 'bb_user_topic_reply_draft' );
 
 		foreach ( $row as $surviving_entry ) {
-			$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
+			$surviving = array_merge( $surviving, bboss_draft_collect_attachment_ids( $surviving_entry ) );
 		}
 
 		foreach ( $removed as $removed_entry ) {
-			foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
-				if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
+			foreach ( array_diff( bboss_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
+				if ( bboss_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 					delete_post_meta( $attachment_id, 'bb_media_draft' );
 					delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
 				}
@@ -1614,7 +1614,7 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
  * @param mixed $rev Client-supplied revision id.
  * @return string Revision id.
  */
-function bb_draft_sanitize_rev( $rev ) {
+function bboss_draft_sanitize_rev( $rev ) {
 	if ( is_string( $rev ) && preg_match( '/^[A-Za-z0-9]{8,32}$/', $rev ) ) {
 		return $rev;
 	}
@@ -1634,7 +1634,7 @@ function bb_draft_sanitize_rev( $rev ) {
  * @return array|null Revision list, or null when the client sent none (an old
  *                    client, whose saves are not conflict-checked).
  */
-function bb_draft_parse_base( $raw ) {
+function bboss_draft_parse_base( $raw ) {
 	if ( null === $raw ) {
 		return null;
 	}
@@ -1658,11 +1658,11 @@ function bb_draft_parse_base( $raw ) {
  *
  * @since BuddyBoss 3.7.1
  *
- * @return array|null See {@see bb_draft_parse_base()}.
+ * @return array|null See {@see bboss_draft_parse_base()}.
  */
-function bb_draft_request_base() {
+function bboss_draft_request_base() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
-	return isset( $_POST['bb_draft_base'] ) ? bb_draft_parse_base( wp_unslash( $_POST['bb_draft_base'] ) ) : null;
+	return isset( $_POST['bb_draft_base'] ) ? bboss_draft_parse_base( wp_unslash( $_POST['bb_draft_base'] ) ) : null;
 }
 
 /**
@@ -1681,7 +1681,7 @@ function bb_draft_request_base() {
  * @param array|null $base   Revisions the write was built on, or null (unchecked).
  * @return bool True when the write may proceed.
  */
-function bb_draft_base_matches( $stored, $base ) {
+function bboss_draft_base_matches( $stored, $base ) {
 	if ( null === $base || empty( $stored ) || ! is_array( $stored ) ) {
 		return true;
 	}
@@ -1711,7 +1711,7 @@ function bb_draft_base_matches( $stored, $base ) {
  * @param int    $user_id      Publishing user ID.
  * @return string Draft meta key to clear, or '' to keep the stored draft.
  */
-function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
+function bboss_draft_activity_publish_key( $fallback_key, $user_id ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside the nonce-checked publish handler.
 	if ( ! isset( $_POST['bb_draft_key'] ) ) {
 		return $fallback_key;
@@ -1722,11 +1722,11 @@ function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
 
 	$draft_object = 0 === strpos( $data_key, 'draft_group' ) ? 'group' : 'user';
 
-	if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $data_key ) || ! bb_draft_validate_activity_data_key( $data_key, $draft_object, 0, $user_id, 'manage' ) ) {
+	if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $data_key ) || ! bboss_draft_validate_activity_data_key( $data_key, $draft_object, 0, $user_id, 'manage' ) ) {
 		return '';
 	}
 
-	if ( ! bb_draft_base_matches( bb_draft_fresh_value( $user_id, $data_key ), bb_draft_request_base() ) ) {
+	if ( ! bboss_draft_base_matches( bboss_draft_fresh_value( $user_id, $data_key ), bboss_draft_request_base() ) ) {
 		return '';
 	}
 
@@ -1740,7 +1740,7 @@ function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
  *
  * @return string
  */
-function bb_draft_conflict_message() {
+function bboss_draft_conflict_message() {
 	return __( 'A different version of this draft is already saved. Copy your text, then reload the page to see it.', 'buddyboss' );
 }
 
@@ -1752,7 +1752,7 @@ function bb_draft_conflict_message() {
  * @param int $user_id User ID.
  * @return string
  */
-function bb_draft_evicted_hold_option( $user_id ) {
+function bboss_draft_evicted_hold_option( $user_id ) {
 	return 'bb_draft_evicted_' . (int) $user_id;
 }
 
@@ -1763,7 +1763,7 @@ function bb_draft_evicted_hold_option( $user_id ) {
  *
  * @return int Seconds.
  */
-function bb_draft_evicted_hold_seconds() {
+function bboss_draft_evicted_hold_seconds() {
 	/**
 	 * Filters how long evicted drafts are held for a lost hand-back.
 	 *
@@ -1788,8 +1788,8 @@ function bb_draft_evicted_hold_seconds() {
  * @param int $user_id User ID.
  * @return array Map of evicted key => array( 'entry' => array, 'at' => int ).
  */
-function bb_draft_get_evicted_hold( $user_id ) {
-	$name = bb_draft_evicted_hold_option( $user_id );
+function bboss_draft_get_evicted_hold( $user_id ) {
+	$name = bboss_draft_evicted_hold_option( $user_id );
 	$hold = is_multisite() ? get_site_option( $name, array() ) : get_option( $name, array() );
 
 	return is_array( $hold ) ? $hold : array();
@@ -1803,7 +1803,7 @@ function bb_draft_get_evicted_hold( $user_id ) {
  * @param int $user_id User ID.
  * @return string
  */
-function bb_draft_evicted_overflow_option( $user_id ) {
+function bboss_draft_evicted_overflow_option( $user_id ) {
 	return 'bb_draft_evicted_' . (int) $user_id . '_overflow';
 }
 
@@ -1815,7 +1815,7 @@ function bb_draft_evicted_overflow_option( $user_id ) {
  * @param int $user_id User ID.
  * @return string
  */
-function bb_draft_evicted_overflow_keys_option( $user_id ) {
+function bboss_draft_evicted_overflow_keys_option( $user_id ) {
 	return 'bb_draft_evicted_' . (int) $user_id . '_overflow_keys';
 }
 
@@ -1831,12 +1831,12 @@ function bb_draft_evicted_overflow_keys_option( $user_id ) {
  * @param int $user_id User ID.
  * @return string[]
  */
-function bb_draft_get_evicted_overflow_keys( $user_id ) {
+function bboss_draft_get_evicted_overflow_keys( $user_id ) {
 	if ( 2 !== (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
 		return array();
 	}
 
-	$name = bb_draft_evicted_overflow_keys_option( $user_id );
+	$name = bboss_draft_evicted_overflow_keys_option( $user_id );
 	$keys = is_multisite() ? get_site_option( $name, array() ) : get_option( $name, array() );
 
 	return is_array( $keys ) ? array_map( 'strval', $keys ) : array();
@@ -1850,16 +1850,16 @@ function bb_draft_get_evicted_overflow_keys( $user_id ) {
  * @param int  $user_id User ID.
  * @param bool $force   Optional. Read the option even when the member's flag
  *                      says there is no overflow. Default false.
- * @return array Map like {@see bb_draft_get_evicted_hold()}.
+ * @return array Map like {@see bboss_draft_get_evicted_hold()}.
  */
-function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
+function bboss_draft_get_evicted_overflow( $user_id, $force = false ) {
 	// Only a member flagged with an overflow has one; reading the option for
 	// everyone else would record a `notoptions` miss per member.
 	if ( ! $force && 2 !== (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
 		return array();
 	}
 
-	$name     = bb_draft_evicted_overflow_option( $user_id );
+	$name     = bboss_draft_evicted_overflow_option( $user_id );
 	$overflow = is_multisite() ? get_site_option( $name, array() ) : get_option( $name, array() );
 
 	return is_array( $overflow ) ? $overflow : array();
@@ -1871,20 +1871,20 @@ function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
  * @since BuddyBoss 3.7.1
  *
  * @param int        $user_id  User ID.
- * @param array      $hold     Map as returned by {@see bb_draft_get_evicted_hold()}.
+ * @param array      $hold     Map as returned by {@see bboss_draft_get_evicted_hold()}.
  * @param array|null $overflow Optional. Held drafts waiting for room in the hold,
  *                             or null to leave the stored overflow as it is.
  * @return void
  */
-function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
-	$name          = bb_draft_evicted_hold_option( $user_id );
-	$overflow_name = bb_draft_evicted_overflow_option( $user_id );
+function bboss_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
+	$name          = bboss_draft_evicted_hold_option( $user_id );
+	$overflow_name = bboss_draft_evicted_overflow_option( $user_id );
 	$has_overflow  = null === $overflow
 		? 2 === (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true )
 		: ! empty( $overflow );
 
 	if ( null !== $overflow ) {
-		$keys_name = bb_draft_evicted_overflow_keys_option( $user_id );
+		$keys_name = bboss_draft_evicted_overflow_keys_option( $user_id );
 
 		if ( empty( $overflow ) ) {
 			if ( is_multisite() ) {
@@ -1934,13 +1934,13 @@ function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
  * @since BuddyBoss 3.7.1
  *
  * @param int   $user_id User ID.
- * @param array $held    Every held draft, map like {@see bb_draft_get_evicted_hold()}.
+ * @param array $held    Every held draft, map like {@see bboss_draft_get_evicted_hold()}.
  * @return void
  */
-function bb_draft_store_evicted_hold( $user_id, $held ) {
-	$split = bb_draft_split_evicted_hold( $held );
+function bboss_draft_store_evicted_hold( $user_id, $held ) {
+	$split = bboss_draft_split_evicted_hold( $held );
 
-	bb_draft_set_evicted_hold( $user_id, $split['hold'], $split['overflow'] );
+	bboss_draft_set_evicted_hold( $user_id, $split['hold'], $split['overflow'] );
 }
 
 /**
@@ -1955,12 +1955,12 @@ function bb_draft_store_evicted_hold( $user_id, $held ) {
  * @param string $key     Evicted key ("meta_key" or "meta_key:inner_key").
  * @return array|false The held entry, or false.
  */
-function bb_draft_get_held_entry( $user_id, $key ) {
+function bboss_draft_get_held_entry( $user_id, $key ) {
 	if ( ! get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
 		return false;
 	}
 
-	$owed = bb_draft_pending_evicted( $user_id );
+	$owed = bboss_draft_pending_evicted( $user_id );
 
 	if ( isset( $owed[ $key ] ) && is_array( $owed[ $key ] ) ) {
 		return $owed[ $key ];
@@ -1969,11 +1969,11 @@ function bb_draft_get_held_entry( $user_id, $key ) {
 	// A draft waiting in the overflow is still the member's: the composer for
 	// its key must fetch it, or a fresh save there would replace it. The key
 	// list is checked first, so the overflow is read only for such a key.
-	if ( ! in_array( (string) $key, bb_draft_get_evicted_overflow_keys( $user_id ), true ) ) {
+	if ( ! in_array( (string) $key, bboss_draft_get_evicted_overflow_keys( $user_id ), true ) ) {
 		return false;
 	}
 
-	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
+	$overflow = bboss_draft_drop_settled_evicted( $user_id, bboss_draft_get_evicted_overflow( $user_id ) );
 
 	return isset( $overflow[ $key ]['entry'] ) && is_array( $overflow[ $key ]['entry'] ) ? $overflow[ $key ]['entry'] : false;
 }
@@ -1982,7 +1982,7 @@ function bb_draft_get_held_entry( $user_id, $key ) {
  * Whether a save to a key must wait because a held draft for it was not
  * handed back yet.
  *
- * A stored draft for a key ends its hold ({@see bb_draft_drop_settled_evicted()}),
+ * A stored draft for a key ends its hold ({@see bboss_draft_drop_settled_evicted()}),
  * so saving text the member typed without having received the held draft
  * would drop that draft unseen. The save is refused instead and the held
  * draft handed back.
@@ -1997,7 +1997,7 @@ function bb_draft_get_held_entry( $user_id, $key ) {
  * acknowledgement, as before.
  *
  * A refused save keeps its own acknowledgement of the key from ending the
- * hold in the same request ({@see bb_draft_withhold_request_ack()}).
+ * hold in the same request ({@see bboss_draft_withhold_request_ack()}).
  *
  * @since BuddyBoss 3.7.1
  *
@@ -2005,8 +2005,8 @@ function bb_draft_get_held_entry( $user_id, $key ) {
  * @param string $evicted_key Key like `evicted_draft_keys` ("meta_key" or "meta_key:inner_key").
  * @return bool True when the save must be refused.
  */
-function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
-	$held = bb_draft_get_held_entry( $user_id, (string) $evicted_key );
+function bboss_draft_save_waits_for_handback( $user_id, $evicted_key ) {
+	$held = bboss_draft_get_held_entry( $user_id, (string) $evicted_key );
 
 	if ( false === $held ) {
 		return false;
@@ -2015,16 +2015,16 @@ function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
 	$held_rev = ( isset( $held['_draft_rev'] ) && is_string( $held['_draft_rev'] ) ) ? $held['_draft_rev'] : '';
 
 	if ( '' !== $held_rev ) {
-		$base = bb_draft_request_base();
+		$base = bboss_draft_request_base();
 
 		if ( is_array( $base ) && in_array( $held_rev, $base, true ) ) {
 			return false;
 		}
-	} elseif ( in_array( (string) $evicted_key, bb_draft_request_acked_evictions(), true ) ) {
+	} elseif ( in_array( (string) $evicted_key, bboss_draft_request_acked_evictions(), true ) ) {
 		return false;
 	}
 
-	bb_draft_withhold_request_ack( $evicted_key );
+	bboss_draft_withhold_request_ack( $evicted_key );
 
 	return true;
 }
@@ -2045,17 +2045,17 @@ function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
  * @param string $evicted_key Key like `evicted_draft_keys`.
  * @return void
  */
-function bb_draft_withhold_request_ack( $evicted_key ) {
+function bboss_draft_withhold_request_ack( $evicted_key ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
 	if ( empty( $_POST['bb_draft_evicted_ack'] ) ) {
 		return;
 	}
 
-	$_POST['bb_draft_evicted_ack'] = implode( ',', array_diff( bb_draft_request_acked_evictions(), array( (string) $evicted_key ) ) );
+	$_POST['bb_draft_evicted_ack'] = implode( ',', array_diff( bboss_draft_request_acked_evictions(), array( (string) $evicted_key ) ) );
 }
 
 /**
- * The hand-back for a save refused by {@see bb_draft_save_waits_for_handback()}.
+ * The hand-back for a save refused by {@see bboss_draft_save_waits_for_handback()}.
  *
  * Includes the held draft even when it waits in the overflow.
  *
@@ -2065,13 +2065,13 @@ function bb_draft_withhold_request_ack( $evicted_key ) {
  * @param string $evicted_key The refused key.
  * @return array Entries keyed like `evicted_draft_keys`.
  */
-function bb_draft_handback_for_key( $user_id, $evicted_key ) {
-	$owed = bb_draft_handback( $user_id );
+function bboss_draft_handback_for_key( $user_id, $evicted_key ) {
+	$owed = bboss_draft_handback( $user_id );
 
 	if ( ! isset( $owed[ $evicted_key ] ) ) {
 		$owed = array_merge(
 			$owed,
-			bb_draft_promote_evicted(
+			bboss_draft_promote_evicted(
 				$user_id,
 				function ( $key ) use ( $evicted_key ) {
 					return $key === $evicted_key;
@@ -2087,7 +2087,7 @@ function bb_draft_handback_for_key( $user_id, $evicted_key ) {
  * Move a member's waiting held drafts into the hold because a composer asked
  * for them.
  *
- * Call after {@see bb_draft_handback()} and add the result to its return, so
+ * Call after {@see bboss_draft_handback()} and add the result to its return, so
  * the drafts are handed back and acknowledged like any held draft. They may
  * take the hold over its size cap until acknowledged.
  *
@@ -2097,12 +2097,12 @@ function bb_draft_handback_for_key( $user_id, $evicted_key ) {
  * @param callable $wanted  Receives an evicted key, returns whether to move it.
  * @return array The moved entries, keyed like `evicted_draft_keys`.
  */
-function bb_draft_promote_evicted( $user_id, $wanted ) {
+function bboss_draft_promote_evicted( $user_id, $wanted ) {
 	if ( 2 !== (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
 		return array();
 	}
 
-	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
+	$overflow = bboss_draft_drop_settled_evicted( $user_id, bboss_draft_get_evicted_overflow( $user_id ) );
 
 	// Nothing wanted is waiting: a composer fetch reads and goes, without
 	// taking the lock.
@@ -2113,8 +2113,8 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
 	// About to write: take the lock and work from the hold and overflow as
 	// they are now, so a draft another request evicted in the meantime is not
 	// written away.
-	$locked   = bb_draft_lock_evicted_hold( $user_id );
-	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
+	$locked   = bboss_draft_lock_evicted_hold( $user_id );
+	$overflow = bboss_draft_drop_settled_evicted( $user_id, bboss_draft_get_evicted_overflow( $user_id ) );
 	$moved    = array();
 
 	foreach ( $overflow as $key => $held ) {
@@ -2125,10 +2125,10 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
 	}
 
 	if ( ! empty( $moved ) ) {
-		bb_draft_set_evicted_hold( $user_id, array_merge( bb_draft_get_evicted_hold( $user_id ), $moved ), $overflow );
+		bboss_draft_set_evicted_hold( $user_id, array_merge( bboss_draft_get_evicted_hold( $user_id ), $moved ), $overflow );
 	}
 
-	bb_draft_unlock_evicted_hold( $user_id, $locked );
+	bboss_draft_unlock_evicted_hold( $user_id, $locked );
 
 	return wp_list_pluck( $moved, 'entry' );
 }
@@ -2147,11 +2147,11 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
  * @param int $user_id User ID.
  * @return bool Whether this request took the lock (and must release it).
  */
-function bb_draft_lock_evicted_hold( $user_id ) {
+function bboss_draft_lock_evicted_hold( $user_id ) {
 	$key = 'bb_draft_hold_lock_' . (int) $user_id;
 
 	for ( $attempt = 0; $attempt < 10; $attempt++ ) {
-		if ( bb_draft_acquire_lock( $key, 5, is_multisite() ) ) {
+		if ( bboss_draft_acquire_lock( $key, 5, is_multisite() ) ) {
 			return true;
 		}
 
@@ -2162,7 +2162,7 @@ function bb_draft_lock_evicted_hold( $user_id ) {
 }
 
 /**
- * Release the lock taken by {@see bb_draft_lock_evicted_hold()}.
+ * Release the lock taken by {@see bboss_draft_lock_evicted_hold()}.
  *
  * @since BuddyBoss 3.7.1
  *
@@ -2170,9 +2170,9 @@ function bb_draft_lock_evicted_hold( $user_id ) {
  * @param bool $locked  Whether the lock was taken.
  * @return void
  */
-function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
+function bboss_draft_unlock_evicted_hold( $user_id, $locked ) {
 	if ( $locked ) {
-		bb_draft_release_lock( 'bb_draft_hold_lock_' . (int) $user_id, is_multisite() );
+		bboss_draft_release_lock( 'bb_draft_hold_lock_' . (int) $user_id, is_multisite() );
 	}
 }
 
@@ -2189,20 +2189,20 @@ function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
  * @param array $entries Evicted entries keyed like `evicted_draft_keys`.
  * @return void
  */
-function bb_draft_hold_evicted( $user_id, $entries ) {
+function bboss_draft_hold_evicted( $user_id, $entries ) {
 	if ( empty( $entries ) ) {
 		return;
 	}
 
-	$entries = bb_draft_stamp_handback_revs( $entries );
-	$locked  = bb_draft_lock_evicted_hold( $user_id );
-	$hold    = array_merge( bb_draft_get_evicted_overflow( $user_id ), bb_draft_get_evicted_hold( $user_id ) );
+	$entries = bboss_draft_stamp_handback_revs( $entries );
+	$locked  = bboss_draft_lock_evicted_hold( $user_id );
+	$hold    = array_merge( bboss_draft_get_evicted_overflow( $user_id ), bboss_draft_get_evicted_hold( $user_id ) );
 	$now     = time();
 
 	foreach ( $entries as $key => $entry ) {
 		// A forum entry with no text or attachments has nothing to restore,
 		// and legacy forum rows carry many of them.
-		if ( false !== strpos( (string) $key, ':' ) && ! bb_draft_topic_reply_entry_has_payload( $entry ) ) {
+		if ( false !== strpos( (string) $key, ':' ) && ! bboss_draft_topic_reply_entry_has_payload( $entry ) ) {
 			continue;
 		}
 
@@ -2212,18 +2212,18 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 		);
 	}
 
-	bb_draft_store_evicted_hold( $user_id, $hold );
-	bb_draft_unlock_evicted_hold( $user_id, $locked );
+	bboss_draft_store_evicted_hold( $user_id, $hold );
+	bboss_draft_unlock_evicted_hold( $user_id, $locked );
 
 	// The sweep's reference set now has to include these files; a set cached
 	// before the hold was written would let it release their stamps.
 	$held_ids = array();
 
 	foreach ( $hold as $held ) {
-		$held_ids = array_merge( $held_ids, bb_draft_collect_attachment_ids( $held['entry'] ) );
+		$held_ids = array_merge( $held_ids, bboss_draft_collect_attachment_ids( $held['entry'] ) );
 	}
 
-	bb_draft_invalidate_referenced_cache( $held_ids );
+	bboss_draft_invalidate_referenced_cache( $held_ids );
 }
 
 
@@ -2234,7 +2234,7 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
  * holds) carries none. Without one the browser cannot tell its own copy of
  * that draft from another version and merges the two, repeating the text,
  * and a save built on the held draft cannot be told from one that never saw
- * it ({@see bb_draft_save_waits_for_handback()}). The id is generated once,
+ * it ({@see bboss_draft_save_waits_for_handback()}). The id is generated once,
  * when the entry is first held or handed back, and stays with it.
  *
  * @since BuddyBoss 3.7.1
@@ -2242,10 +2242,10 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
  * @param array $entries Entries keyed like `evicted_draft_keys`.
  * @return array The entries, each array entry with a `_draft_rev`.
  */
-function bb_draft_stamp_handback_revs( $entries ) {
+function bboss_draft_stamp_handback_revs( $entries ) {
 	foreach ( (array) $entries as $key => $entry ) {
 		if ( is_array( $entry ) && ( empty( $entry['_draft_rev'] ) || ! is_string( $entry['_draft_rev'] ) ) ) {
-			$entries[ $key ]['_draft_rev'] = bb_draft_sanitize_rev( null );
+			$entries[ $key ]['_draft_rev'] = bboss_draft_sanitize_rev( null );
 		}
 	}
 
@@ -2261,21 +2261,21 @@ function bb_draft_stamp_handback_revs( $entries ) {
  * cache's item limit is the problem this ticket fixes. The upgrade heal can
  * evict hundreds of drafts from one old forum row, so the drafts that do not
  * fit wait in a separate overflow option, read only when the hold has room
- * again ({@see bb_draft_pending_evicted()}). Nothing is dropped; overflow
+ * again ({@see bboss_draft_pending_evicted()}). Nothing is dropped; overflow
  * entries expire with the hold time like any held draft.
  *
  * A single draft larger than the cap waits in the overflow too, and its
- * composer's fetch hands it back ({@see bb_draft_promote_evicted()}).
+ * composer's fetch hands it back ({@see bboss_draft_promote_evicted()}).
  *
  * @since BuddyBoss 3.7.1
  *
- * @param array $hold Map as returned by {@see bb_draft_get_evicted_hold()}.
+ * @param array $hold Map as returned by {@see bboss_draft_get_evicted_hold()}.
  * @return array {
  *     @type array $hold     Drafts within the cap.
  *     @type array $overflow Drafts waiting for room.
  * }
  */
-function bb_draft_split_evicted_hold( $hold ) {
+function bboss_draft_split_evicted_hold( $hold ) {
 	/**
 	 * Filters the maximum size of one member's held evicted drafts.
 	 *
@@ -2286,7 +2286,7 @@ function bb_draft_split_evicted_hold( $hold ) {
 	 *
 	 * @param int $max_bytes Serialized bytes. Default the per-user draft budget.
 	 */
-	$max_bytes = max( 0, (int) apply_filters( 'bb_draft_evicted_hold_max_size', bb_draft_user_total_max_size() ) );
+	$max_bytes = max( 0, (int) apply_filters( 'bb_draft_evicted_hold_max_size', bboss_draft_user_total_max_size() ) );
 
 	if ( strlen( maybe_serialize( $hold ) ) <= $max_bytes ) {
 		return array(
@@ -2314,7 +2314,7 @@ function bb_draft_split_evicted_hold( $hold ) {
 	$bytes    = strlen( maybe_serialize( array() ) );
 
 	foreach ( $hold as $key => $held ) {
-		$held_bytes = strlen( maybe_serialize( $held ) ) + bb_draft_serialized_key_bytes( $key );
+		$held_bytes = strlen( maybe_serialize( $held ) ) + bboss_draft_serialized_key_bytes( $key );
 
 		if ( $bytes + $held_bytes > $max_bytes ) {
 			$overflow[ $key ] = $held;
@@ -2343,7 +2343,7 @@ function bb_draft_split_evicted_hold( $hold ) {
  * @param string[] $acked   Keys the browser reports it has stored.
  * @return array Entries keyed like `evicted_draft_keys`.
  */
-function bb_draft_pending_evicted( $user_id, $acked = array() ) {
+function bboss_draft_pending_evicted( $user_id, $acked = array() ) {
 	// Every draft save and fetch lands here. Reading the option for a member
 	// with nothing held would record a miss in the site-wide `notoptions`
 	// cache item, one key per drafting member, so check the meta flag first.
@@ -2353,9 +2353,9 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 		return array();
 	}
 
-	$hold    = bb_draft_get_evicted_hold( $user_id );
+	$hold    = bboss_draft_get_evicted_hold( $user_id );
 	$unheld  = count( $hold );
-	$hold    = bb_draft_drop_settled_evicted( $user_id, $hold, $acked );
+	$hold    = bboss_draft_drop_settled_evicted( $user_id, $hold, $acked );
 	$changed = count( $hold ) !== $unheld;
 	$promote = 2 === $flag && ( $changed || ! empty( $acked ) );
 
@@ -2367,8 +2367,8 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 
 	// About to write: take the lock and work from the hold as it is now, so a
 	// draft another request held in the meantime is not written away.
-	$locked = bb_draft_lock_evicted_hold( $user_id );
-	$hold   = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_hold( $user_id ), $acked );
+	$locked = bboss_draft_lock_evicted_hold( $user_id );
+	$hold   = bboss_draft_drop_settled_evicted( $user_id, bboss_draft_get_evicted_hold( $user_id ), $acked );
 
 	// Room was made in the hold: move the newest waiting drafts in, so the
 	// browser gets them back in turn. An acknowledgement can also name a
@@ -2376,16 +2376,16 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 	// view: an overflow left only with drafts larger than the hold waits for
 	// its composer's fetch ({@see bb_draft_promote_evicted()}).
 	if ( $promote ) {
-		$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ), $acked );
+		$overflow = bboss_draft_drop_settled_evicted( $user_id, bboss_draft_get_evicted_overflow( $user_id ), $acked );
 
-		bb_draft_store_evicted_hold( $user_id, array_merge( $overflow, $hold ) );
-		bb_draft_unlock_evicted_hold( $user_id, $locked );
+		bboss_draft_store_evicted_hold( $user_id, array_merge( $overflow, $hold ) );
+		bboss_draft_unlock_evicted_hold( $user_id, $locked );
 
-		return wp_list_pluck( bb_draft_get_evicted_hold( $user_id ), 'entry' );
+		return wp_list_pluck( bboss_draft_get_evicted_hold( $user_id ), 'entry' );
 	}
 
-	bb_draft_set_evicted_hold( $user_id, $hold );
-	bb_draft_unlock_evicted_hold( $user_id, $locked );
+	bboss_draft_set_evicted_hold( $user_id, $hold );
+	bboss_draft_unlock_evicted_hold( $user_id, $locked );
 
 	return wp_list_pluck( $hold, 'entry' );
 }
@@ -2399,12 +2399,12 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
  * @since BuddyBoss 3.7.1
  *
  * @param int      $user_id User ID.
- * @param array    $hold    Map like {@see bb_draft_get_evicted_hold()}.
+ * @param array    $hold    Map like {@see bboss_draft_get_evicted_hold()}.
  * @param string[] $acked   Keys the browser reports it has stored.
  * @return array The remaining held drafts.
  */
-function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
-	$cutoff = time() - bb_draft_evicted_hold_seconds();
+function bboss_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
+	$cutoff = time() - bboss_draft_evicted_hold_seconds();
 	$acked  = array_map( 'strval', (array) $acked );
 	$forum  = null;
 
@@ -2416,11 +2416,11 @@ function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
 
 			if ( 2 === count( $parts ) ) {
 				if ( null === $forum ) {
-					$forum = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+					$forum = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 				}
 				$drop = is_array( $forum ) && isset( $forum[ $parts[1] ] );
 			} else {
-				$drop = metadata_exists( 'user', $user_id, bp_get_user_meta_key( $parts[0] ) );
+				$drop = metadata_exists( 'user', $user_id, bboss_get_user_meta_key( $parts[0] ) );
 			}
 		}
 
@@ -2439,7 +2439,7 @@ function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
  *
  * @return string[]
  */
-function bb_draft_request_acked_evictions() {
+function bboss_draft_request_acked_evictions() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
 	$raw = isset( $_POST['bb_draft_evicted_ack'] ) ? wp_unslash( $_POST['bb_draft_evicted_ack'] ) : '';
 
@@ -2455,11 +2455,11 @@ function bb_draft_request_acked_evictions() {
  *
  * @since BuddyBoss 3.7.1
  *
- * @param array $hold   Held and overflow entries, like {@see bb_draft_get_evicted_hold()}.
+ * @param array $hold   Held and overflow entries, like {@see bboss_draft_get_evicted_hold()}.
  * @param int   $cutoff Entries held before this timestamp have expired.
  * @return array|null The remaining entries, or null when none expired.
  */
-function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
+function bboss_draft_prune_expired_hold_entries( $hold, $cutoff ) {
 	$kept = array();
 
 	foreach ( (array) $hold as $key => $held ) {
@@ -2481,10 +2481,10 @@ function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
  *
  * @return void
  */
-function bb_drafts_prune_evicted_holds() {
+function bboss_drafts_prune_evicted_holds() {
 	global $wpdb;
 
-	$cutoff = time() - bb_draft_evicted_hold_seconds();
+	$cutoff = time() - bboss_draft_evicted_hold_seconds();
 	$limit  = 500;
 
 	// The scan pages through the hold rows by name and keeps its place between
@@ -2512,7 +2512,7 @@ function bb_drafts_prune_evicted_holds() {
 		}
 
 		foreach ( $user_ids as $user_id => $has_overflow_row ) {
-			$hold = bb_draft_prune_expired_hold_entries( array_merge( bb_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bb_draft_get_evicted_hold( $user_id ) ), $cutoff );
+			$hold = bboss_draft_prune_expired_hold_entries( array_merge( bboss_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bboss_draft_get_evicted_hold( $user_id ) ), $cutoff );
 
 			if ( null === $hold ) {
 				continue;
@@ -2521,14 +2521,14 @@ function bb_drafts_prune_evicted_holds() {
 			// Something expired: take the member's lock and prune the hold as it
 			// is now, so a draft a save evicted since the read above is not
 			// written away.
-			$locked = bb_draft_lock_evicted_hold( $user_id );
-			$hold   = bb_draft_prune_expired_hold_entries( array_merge( bb_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bb_draft_get_evicted_hold( $user_id ) ), $cutoff );
+			$locked = bboss_draft_lock_evicted_hold( $user_id );
+			$hold   = bboss_draft_prune_expired_hold_entries( array_merge( bboss_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bboss_draft_get_evicted_hold( $user_id ) ), $cutoff );
 
 			if ( null !== $hold ) {
-				bb_draft_store_evicted_hold( $user_id, $hold );
+				bboss_draft_store_evicted_hold( $user_id, $hold );
 			}
 
-			bb_draft_unlock_evicted_hold( $user_id, $locked );
+			bboss_draft_unlock_evicted_hold( $user_id, $locked );
 		}
 
 		// A short page is the end of the list; start from the top next run.
@@ -2547,15 +2547,15 @@ function bb_drafts_prune_evicted_holds() {
 	}
 
 	if ( is_multisite() ) {
-		$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+		$ledger = get_site_option( bboss_draft_eviction_file_ledger_option(), array() );
 
 		if ( ! empty( $ledger ) ) {
-			$kept = array_intersect_key( (array) $ledger, array_flip( bb_draft_get_evicted_attachment_ledger_ids() ) );
+			$kept = array_intersect_key( (array) $ledger, array_flip( bboss_draft_get_evicted_attachment_ledger_ids() ) );
 
 			if ( empty( $kept ) ) {
-				delete_site_option( bb_draft_eviction_file_ledger_option() );
+				delete_site_option( bboss_draft_eviction_file_ledger_option() );
 			} elseif ( count( $kept ) !== count( $ledger ) ) {
-				update_site_option( bb_draft_eviction_file_ledger_option(), $kept );
+				update_site_option( bboss_draft_eviction_file_ledger_option(), $kept );
 			}
 		}
 	}
@@ -2574,8 +2574,8 @@ add_action( 'bb_draft_cleanup_hook', 'bb_drafts_prune_evicted_holds', 20 );
  * @param int $user_id Deleted user ID.
  * @return void
  */
-function bb_draft_delete_user_evicted_hold( $user_id ) {
-	bb_draft_set_evicted_hold( (int) $user_id, array(), array() );
+function bboss_draft_delete_user_evicted_hold( $user_id ) {
+	bboss_draft_set_evicted_hold( (int) $user_id, array(), array() );
 }
 add_action( 'wpmu_delete_user', 'bb_draft_delete_user_evicted_hold' );
 
@@ -2588,7 +2588,7 @@ if ( ! is_multisite() ) {
  * Build the `evicted_drafts` hand-back for a draft response.
  *
  * Applies the browser's acknowledgement first, holds this request's fresh
- * evictions ({@see bb_draft_hold_evicted()}), and returns every eviction still
+ * evictions ({@see bboss_draft_hold_evicted()}), and returns every eviction still
  * owed - so a hand-back lost with an earlier response is sent again.
  *
  * @since BuddyBoss 3.7.1
@@ -2597,14 +2597,14 @@ if ( ! is_multisite() ) {
  * @param array $fresh   Entries evicted by this request.
  * @return array Entries keyed like `evicted_draft_keys`.
  */
-function bb_draft_handback( $user_id, $fresh = array() ) {
-	$owed = bb_draft_pending_evicted( $user_id, bb_draft_request_acked_evictions() );
+function bboss_draft_handback( $user_id, $fresh = array() ) {
+	$owed = bboss_draft_pending_evicted( $user_id, bboss_draft_request_acked_evictions() );
 
 	// Stamped before it is held, so the hold and this response carry the
 	// same revision ({@see bb_draft_stamp_handback_revs()}).
-	$fresh = bb_draft_stamp_handback_revs( $fresh );
+	$fresh = bboss_draft_stamp_handback_revs( $fresh );
 
-	bb_draft_hold_evicted( $user_id, $fresh );
+	bboss_draft_hold_evicted( $user_id, $fresh );
 
 	return array_merge( $owed, (array) $fresh );
 }
@@ -2616,15 +2616,15 @@ function bb_draft_handback( $user_id, $fresh = array() ) {
  *
  * @param int    $user_id  User ID.
  * @param string $meta_key Logical draft meta key, wrapped here through
- *                         bp_get_user_meta_key() exactly as every writer does.
+ *                         bboss_get_user_meta_key() exactly as every writer does.
  * @param bool   $refresh_cache Optional. Also update this key in the member's
  *                              cached meta. Default false.
  * @return mixed|null The unserialized value, or null when the row is gone.
  */
-function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
+function bboss_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
 	global $wpdb;
 
-	$stored_key = bp_get_user_meta_key( $meta_key );
+	$stored_key = bboss_get_user_meta_key( $meta_key );
 	$raw        = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s LIMIT 1", (int) $user_id, $stored_key ) );
 
 	// Bring just this key of the member's cached meta up to date, instead of
@@ -2642,7 +2642,7 @@ function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
 		}
 	}
 
-	return null === $raw ? null : bb_draft_safe_unserialize( $raw );
+	return null === $raw ? null : bboss_draft_safe_unserialize( $raw );
 }
 
 /**
@@ -2650,7 +2650,7 @@ function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
  *
  * The orphan-stamp sweep keeps their stamps until that time plus the draft
  * retention, because the handed-back copy in the browser still references
- * them ({@see bb_drafts_release_orphaned_draft_stamps()}).
+ * them ({@see bboss_drafts_release_orphaned_draft_stamps()}).
  *
  * @since BuddyBoss 3.7.1
  *
@@ -2658,12 +2658,12 @@ function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
  * @param int   $user_id Owning user ID.
  * @return void
  */
-function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
+function bboss_draft_mark_evicted_attachments( $entries, $user_id ) {
 	$now = time();
 
 	foreach ( (array) $entries as $entry ) {
-		foreach ( bb_draft_collect_attachment_ids( $entry ) as $attachment_id ) {
-			if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
+		foreach ( bboss_draft_collect_attachment_ids( $entry ) as $attachment_id ) {
+			if ( bboss_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 				update_post_meta( $attachment_id, 'bb_draft_evicted_at', $now );
 			}
 		}
@@ -2678,7 +2678,7 @@ function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
  *
  * @return string
  */
-function bb_draft_eviction_file_ledger_option() {
+function bboss_draft_eviction_file_ledger_option() {
 	return 'bb_draft_eviction_file_ledger';
 }
 
@@ -2686,7 +2686,7 @@ function bb_draft_eviction_file_ledger_option() {
  * Keep the files of evicted drafts protected for the retention window.
  *
  * A live eviction runs on the blog that owns the files and marks them with
- * `bb_draft_evicted_at` ({@see bb_draft_mark_evicted_attachments()}). The
+ * `bb_draft_evicted_at` ({@see bboss_draft_mark_evicted_attachments()}). The
  * upgrade heal on multisite runs from the root blog only, where the same IDs
  * may name another blog's attachments (H2), so it records the IDs in a
  * network-wide ledger instead. Every blog's orphan-stamp sweep treats a
@@ -2703,9 +2703,9 @@ function bb_draft_eviction_file_ledger_option() {
  *                         multisite. Default false.
  * @return void
  */
-function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = false ) {
+function bboss_draft_protect_evicted_attachments( $entries, $user_id, $from_root = false ) {
 	if ( ! $from_root || ! is_multisite() ) {
-		bb_draft_mark_evicted_attachments( $entries, $user_id );
+		bboss_draft_mark_evicted_attachments( $entries, $user_id );
 
 		return;
 	}
@@ -2713,14 +2713,14 @@ function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = 
 	$ids = array();
 
 	foreach ( (array) $entries as $entry ) {
-		$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $entry ) );
+		$ids = array_merge( $ids, bboss_draft_collect_attachment_ids( $entry ) );
 	}
 
 	if ( empty( $ids ) ) {
 		return;
 	}
 
-	$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+	$ledger = get_site_option( bboss_draft_eviction_file_ledger_option(), array() );
 	$ledger = is_array( $ledger ) ? $ledger : array();
 	$now    = time();
 
@@ -2728,10 +2728,10 @@ function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = 
 		$ledger[ (int) $attachment_id ] = $now;
 	}
 
-	update_site_option( bb_draft_eviction_file_ledger_option(), $ledger );
+	update_site_option( bboss_draft_eviction_file_ledger_option(), $ledger );
 
 	// The sweep's cached reference set must include these files now.
-	bb_draft_invalidate_referenced_cache( $ids );
+	bboss_draft_invalidate_referenced_cache( $ids );
 }
 
 /**
@@ -2741,13 +2741,13 @@ function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = 
  *
  * @return int[]
  */
-function bb_draft_get_evicted_attachment_ledger_ids() {
+function bboss_draft_get_evicted_attachment_ledger_ids() {
 	if ( ! is_multisite() ) {
 		return array();
 	}
 
-	$ledger            = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
-	$retention_seconds = bb_draft_retention_seconds();
+	$ledger            = get_site_option( bboss_draft_eviction_file_ledger_option(), array() );
+	$retention_seconds = bboss_draft_retention_seconds();
 	$cutoff            = time() - $retention_seconds;
 	$ids               = array();
 
@@ -2769,7 +2769,7 @@ function bb_draft_get_evicted_attachment_ledger_ids() {
  * cannot see it. Discarding a sibling draft that shares the file must not
  * release the file's stamp, or the orphan-attachment crons delete a file the
  * handed-back draft still needs. This applies the same window the
- * orphan-stamp sweep uses ({@see bb_drafts_release_orphaned_draft_stamps()}):
+ * orphan-stamp sweep uses ({@see bboss_drafts_release_orphaned_draft_stamps()}):
  * the eviction time plus the draft retention, or for ever when expiry is off.
  * The sweep releases the stamp once that window ends.
  *
@@ -2778,14 +2778,14 @@ function bb_draft_get_evicted_attachment_ledger_ids() {
  * @param int $attachment_id Attachment ID.
  * @return bool True when the file must keep its draft stamp.
  */
-function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
+function bboss_draft_attachment_is_eviction_protected( $attachment_id ) {
 	$attachment_id = (int) $attachment_id;
 
 	if ( $attachment_id <= 0 ) {
 		return false;
 	}
 
-	$retention_seconds = bb_draft_retention_seconds();
+	$retention_seconds = bboss_draft_retention_seconds();
 	$cutoff            = time() - $retention_seconds;
 	$evicted_at        = (int) get_post_meta( $attachment_id, 'bb_draft_evicted_at', true );
 
@@ -2799,7 +2799,7 @@ function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
 		return false;
 	}
 
-	$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+	$ledger = get_site_option( bboss_draft_eviction_file_ledger_option(), array() );
 
 	if ( ! is_array( $ledger ) || ! isset( $ledger[ $attachment_id ] ) ) {
 		return false;
@@ -2819,7 +2819,7 @@ function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
  *
  * @return bool True for a page-unload save.
  */
-function bb_draft_is_beacon_request() {
+function bboss_draft_is_beacon_request() {
 	return ! empty( $_POST['bb_draft_beacon'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
 }
 
@@ -2827,10 +2827,10 @@ function bb_draft_is_beacon_request() {
  * Enforce the per-user draft and meta budgets before storing a draft.
  *
  * When the combined size of the user's drafts would exceed
- * {@see bb_draft_user_total_max_size()}, the oldest drafts are evicted
- * through {@see bb_draft_dispose()} until the new draft fits, by their
+ * {@see bboss_draft_user_total_max_size()}, the oldest drafts are evicted
+ * through {@see bboss_draft_dispose()} until the new draft fits, by their
  * `_draft_saved_at` stamp; unstamped legacy drafts count as oldest. When the
- * user's TOTAL meta would exceed {@see bb_draft_user_meta_budget()}, the
+ * user's TOTAL meta would exceed {@see bboss_draft_user_meta_budget()}, the
  * save is refused instead — the draft system must never be what pushes a
  * user's meta cache entry past the platform item limit.
  *
@@ -2843,7 +2843,7 @@ function bb_draft_is_beacon_request() {
  * space inside the very row it is being asked to make room in; it can only
  * evict the member's OTHER draft rows.
  *
- * That is why {@see bb_forums_trim_draft_row()} runs first in the forum
+ * That is why {@see bboss_forums_trim_draft_row()} runs first in the forum
  * handler: it trims the aggregate row down, and this function then handles
  * the cross-row budget. A caller passing the aggregate key without trimming
  * first will not get inner-draft eviction from here.
@@ -2851,14 +2851,14 @@ function bb_draft_is_beacon_request() {
  * Do NOT add inner-row eviction here. It reads like a missing feature and a
  * protected-inner-key parameter looks like the fix, so it has been proposed
  * more than once; it was built and measured, and it does not work. This
- * function evicts through {@see bb_draft_dispose()}, which WRITES TO
+ * function evicts through {@see bboss_draft_dispose()}, which WRITES TO
  * STORAGE, and the forum handler then writes its own in-memory copy of the
  * row over that write. The eviction is therefore announced but never
  * performed: the response still reports the key as evicted, so the client
  * drops its local copy, while the row stays over budget on the server - a
  * manufactured data loss, strictly worse than the gap this paragraph
  * describes. Returning keys for the caller to apply instead of writing them
- * only duplicates {@see bb_forums_trim_draft_row()}, which already does
+ * only duplicates {@see bboss_forums_trim_draft_row()}, which already does
  * exactly that one call earlier. Trim-then-budget is required ordering, not
  * convenience. Moot for the activity caller either way, since an activity
  * draft is one draft per meta row (M4).
@@ -2890,7 +2890,7 @@ function bb_draft_is_beacon_request() {
  *                             refusal wherever it is observed.
  * }
  */
-function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
+function bboss_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
 	$user_id  = (int) $user_id;
 	$new_size = (int) $new_size;
 	$result   = array(
@@ -2900,14 +2900,14 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		'reason'  => '',
 	);
 
-	$sizes        = bb_draft_get_user_meta_sizes( $user_id );
+	$sizes        = bboss_draft_get_user_meta_sizes( $user_id );
 	$current_size = isset( $sizes['drafts'][ $current_key ] ) ? $sizes['drafts'][ $current_key ] : 0;
 
 	$draft_bytes     = array_sum( $sizes['drafts'] );
 	$non_draft_bytes = max( 0, $sizes['total'] - $draft_bytes );
 
 	$draft_total = $draft_bytes - $current_size + $new_size;
-	$total_cap   = bb_draft_user_total_max_size();
+	$total_cap   = bboss_draft_user_total_max_size();
 
 	// How many bytes of DRAFTS the platform meta budget still leaves room for,
 	// once the member's non-draft meta is accounted for.
@@ -2930,7 +2930,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 	// member's own drafts are entitled to, and the existing oldest-first
 	// eviction and no-delete feasibility refusal below do the rest.
 	if ( 'heal' !== $context ) {
-		$draft_headroom = bb_draft_user_meta_budget() - $non_draft_bytes;
+		$draft_headroom = bboss_draft_user_meta_budget() - $non_draft_bytes;
 
 		if ( $draft_headroom < $total_cap ) {
 			$total_cap = $draft_headroom;
@@ -2960,7 +2960,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 			continue;
 		}
 
-		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+		$stored = bboss_get_user_meta( $user_id, $meta_key, true );
 
 		if ( empty( $stored ) || ! is_array( $stored ) ) {
 			continue;
@@ -2983,7 +2983,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 					// going, destroying drafts it did not need to - the same
 					// undercount f643e4d0c8 fixed in bb_forums_trim_draft_row(),
 					// which is the sibling of this loop.
-					'bytes'     => strlen( maybe_serialize( $inner_draft ) ) + bb_draft_serialized_key_bytes( (string) $inner_key ),
+					'bytes'     => strlen( maybe_serialize( $inner_draft ) ) + bboss_draft_serialized_key_bytes( (string) $inner_key ),
 					'entry'     => $inner_draft,
 				);
 			}
@@ -3079,7 +3079,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		$remaining -= $candidate['bytes'];
 	}
 
-	bb_draft_hold_evicted( $user_id, $planned );
+	bboss_draft_hold_evicted( $user_id, $planned );
 
 	foreach ( $candidates as $candidate ) {
 		if ( $draft_total <= $total_cap ) {
@@ -3089,10 +3089,10 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		$evicted_key = '' !== $candidate['inner_key'] ? $candidate['meta_key'] . ':' . $candidate['inner_key'] : $candidate['meta_key'];
 
 		if ( ! isset( $planned[ $evicted_key ] ) ) {
-			bb_draft_hold_evicted( $user_id, array( $evicted_key => $candidate['entry'] ) );
+			bboss_draft_hold_evicted( $user_id, array( $evicted_key => $candidate['entry'] ) );
 		}
 
-		if ( ! bb_draft_dispose( $user_id, $candidate['meta_key'], $candidate['inner_key'], $defer_attachment_release ) ) {
+		if ( ! bboss_draft_dispose( $user_id, $candidate['meta_key'], $candidate['inner_key'], $defer_attachment_release ) ) {
 			// The row is already gone: a parallel request evicted it (and holds
 			// it too) or another tab discarded it. The hold stays - taking it
 			// back could leave a parallel-evicted draft in no store, while
@@ -3108,7 +3108,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		// A heal on multisite runs on the root blog, where these IDs may name
 		// another blog's attachments (H2), so it records them in the network
 		// ledger instead of marking them.
-		bb_draft_protect_evicted_attachments( array( $candidate['entry'] ), $user_id, 'heal' === $context );
+		bboss_draft_protect_evicted_attachments( array( $candidate['entry'] ), $user_id, 'heal' === $context );
 
 		/**
 		 * Fires when a stored draft is evicted to keep a user under the draft size budget.
@@ -3150,7 +3150,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
  *
  * - `group` — a real per-user check (membership, group admin/mod, or the
  *   `bp_moderate` capability).
- * - `user`  — the SITE-WIDE {@see bb_user_can_create_activity()} switch,
+ * - `user`  — the SITE-WIDE {@see bboss_user_can_create_activity()} switch,
  *   which is a filter defaulting to true and is not a per-user capability.
  *   This mirrors the publish path; do not read it as a per-member gate.
  *
@@ -3165,7 +3165,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
  *                             validates the key shape only.
  * @return bool True when the key is valid for this user.
  */
-function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context = 'save' ) {
+function bboss_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context = 'save' ) {
 	$user_id = (int) $user_id;
 
 	// Deleting or fetching addresses the member's OWN stored meta - no posting
@@ -3180,7 +3180,7 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 	if ( 'group' === $draft_object ) {
 		$item_id = (int) $item_id;
 
-		if ( $item_id <= 0 || 'draft_group_' . $item_id !== $data_key || ! bp_is_active( 'groups' ) ) {
+		if ( $item_id <= 0 || 'draft_group_' . $item_id !== $data_key || ! bboss_is_active( 'groups' ) ) {
 			return false;
 		}
 
@@ -3188,11 +3188,11 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 		// bp_loggedin_user_id(), and the two helpers fire DIFFERENT public
 		// filters - switching would silently drop sites that grant bp_moderate
 		// through the long-standing `bp_current_user_can` filter.
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
-		if ( ! groups_is_user_member( $user_id, $item_id ) && ! groups_is_user_admin( $user_id, $item_id ) && ! groups_is_user_mod( $user_id, $item_id ) ) {
+		if ( ! bboss_groups_is_user_member( $user_id, $item_id ) && ! bboss_groups_is_user_admin( $user_id, $item_id ) && ! bboss_groups_is_user_mod( $user_id, $item_id ) ) {
 			return false;
 		}
 
@@ -3201,7 +3201,7 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 	}
 
 	if ( 'user' === $draft_object ) {
-		if ( ! bb_user_can_create_activity() ) {
+		if ( ! bboss_user_can_create_activity() ) {
 			return false;
 		}
 
@@ -3231,7 +3231,7 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
  * @param WP_Post $post Forum, topic or reply.
  * @return bool
  */
-function bb_draft_post_accepts_drafts( $post ) {
+function bboss_draft_post_accepts_drafts( $post ) {
 	return ! in_array( get_post_status( $post ), array( 'trash', 'spam', 'pending', 'draft', 'auto-draft', 'future', 'inherit' ), true );
 }
 
@@ -3260,7 +3260,7 @@ function bb_draft_post_accepts_drafts( $post ) {
  *     @type int    $reply_id Reply being replied to; 0 when absent.
  * }
  */
-function bb_draft_topic_reply_key_context( $data_key ) {
+function bboss_draft_topic_reply_key_context( $data_key ) {
 	$context = array(
 		'object'   => '',
 		'forum_id' => 0,
@@ -3283,7 +3283,7 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 	if ( preg_match( '/^draft_discussion_(\d+)$/', $data_key, $matches ) ) {
 		$forum = get_post( (int) $matches[1] );
 
-		if ( empty( $forum ) || bbp_get_forum_post_type() !== $forum->post_type || ! bb_draft_post_accepts_drafts( $forum ) ) {
+		if ( empty( $forum ) || bboss_bbp_get_forum_post_type() !== $forum->post_type || ! bboss_draft_post_accepts_drafts( $forum ) ) {
 			return false;
 		}
 
@@ -3296,14 +3296,14 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 	if ( preg_match( '/^draft_reply_(\d+)(?:_(\d+))?$/', $data_key, $matches ) ) {
 		$topic = get_post( (int) $matches[1] );
 
-		if ( empty( $topic ) || bbp_get_topic_post_type() !== $topic->post_type || ! bb_draft_post_accepts_drafts( $topic ) ) {
+		if ( empty( $topic ) || bboss_bbp_get_topic_post_type() !== $topic->post_type || ! bboss_draft_post_accepts_drafts( $topic ) ) {
 			return false;
 		}
 
 		if ( isset( $matches[2] ) ) {
 			$reply = get_post( (int) $matches[2] );
 
-			if ( empty( $reply ) || bbp_get_reply_post_type() !== $reply->post_type || ! bb_draft_post_accepts_drafts( $reply ) ) {
+			if ( empty( $reply ) || bboss_bbp_get_reply_post_type() !== $reply->post_type || ! bboss_draft_post_accepts_drafts( $reply ) ) {
 				return false;
 			}
 
@@ -3315,7 +3315,7 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 			// a reply" vs "does not" outcomes reopen the L1 existence/post-type
 			// oracle for the reply shape. Tying it to the topic collapses both
 			// outcomes into the same indistinguishable rejection (L9).
-			if ( (int) bbp_get_reply_topic_id( (int) $matches[2] ) !== (int) $matches[1] ) {
+			if ( (int) bboss_bbp_get_reply_topic_id( (int) $matches[2] ) !== (int) $matches[1] ) {
 				return false;
 			}
 
@@ -3326,7 +3326,7 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 		$context['topic_id'] = (int) $matches[1];
 		// Derived, never client-supplied: the forum a reply draft belongs to is
 		// whichever forum owns the topic named in the key.
-		$context['forum_id'] = (int) bbp_get_topic_forum_id( (int) $matches[1] );
+		$context['forum_id'] = (int) bboss_bbp_get_topic_forum_id( (int) $matches[1] );
 
 		return $context;
 	}
@@ -3337,9 +3337,9 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 /**
  * Prime the post and meta caches for a batch of forum draft keys.
  *
- * The bb_draft_topic_reply_key_context() resolver reads each key through
+ * The bboss_draft_topic_reply_key_context() resolver reads each key through
  * get_post(), and the reply shape resolves two more values -
- * bbp_get_reply_topic_id() and bbp_get_topic_forum_id() - out of post meta.
+ * bboss_bbp_get_reply_topic_id() and bboss_bbp_get_topic_forum_id() - out of post meta.
  * Called once per key in a loop
  * that is bounded only by how many drafts a member has stored, that is a textbook
  * N+1: the unload beacon replays every key the tab holds, so a member with many
@@ -3354,7 +3354,7 @@ function bb_draft_topic_reply_key_context( $data_key ) {
  * @param string[] $data_keys Draft keys about to be resolved.
  * @return void
  */
-function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
+function bboss_draft_prime_topic_reply_key_posts( $data_keys ) {
 	if ( ! is_array( $data_keys ) || empty( $data_keys ) ) {
 		return;
 	}
@@ -3404,21 +3404,21 @@ function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
  *
  * @since BuddyBoss 3.7.1
  *
- * @param array $key_context Resolved context from {@see bb_draft_topic_reply_key_context()}.
+ * @param array $key_context Resolved context from {@see bboss_draft_topic_reply_key_context()}.
  * @param int   $user_id     Acting user ID.
  * @return bool True when the member may save this draft.
  */
-function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
+function bboss_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
 	if ( empty( $key_context['object'] ) ) {
 		return false;
 	}
 
 	$can_save = ( 'topic' === $key_context['object'] )
-		? bbp_current_user_can_publish_topics()
-		: bbp_current_user_can_publish_replies();
+		? bboss_bbp_current_user_can_publish_topics()
+		: bboss_bbp_current_user_can_publish_replies();
 
 	if ( $can_save && ! empty( $key_context['forum_id'] ) ) {
-		$can_save = bbp_user_can_view_forum(
+		$can_save = bboss_bbp_user_can_view_forum(
 			array(
 				'user_id'  => (int) $user_id,
 				'forum_id' => (int) $key_context['forum_id'],
@@ -3465,7 +3465,7 @@ function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
  * @param array $entry Stored forum draft entry (`object`, `data`, ...).
  * @return bool True when the entry holds restorable content.
  */
-function bb_draft_topic_reply_entry_has_payload( $entry ) {
+function bboss_draft_topic_reply_entry_has_payload( $entry ) {
 	if ( empty( $entry['data'] ) || ! is_array( $entry['data'] ) ) {
 		return false;
 	}
@@ -3475,7 +3475,7 @@ function bb_draft_topic_reply_entry_has_payload( $entry ) {
 	// Attachments of any kind make the draft worth restoring on their own —
 	// a photo-only or document-only draft is legitimate. Resolved through the
 	// shared collector so this agrees with every other attachment-aware path.
-	$attachment_ids = bb_draft_collect_attachment_ids( $entry );
+	$attachment_ids = bboss_draft_collect_attachment_ids( $entry );
 
 	if ( ! empty( $attachment_ids ) ) {
 		return true;
@@ -3538,7 +3538,7 @@ function bb_draft_topic_reply_entry_has_payload( $entry ) {
  *
  * @return int Retention window in days; 0 when expiry is disabled.
  */
-function bb_draft_retention_days() {
+function bboss_draft_retention_days() {
 
 	/**
 	 * Filters how many days an untouched draft is kept before expiry.
@@ -3561,8 +3561,8 @@ function bb_draft_retention_days() {
  *
  * @return int Retention window in seconds; 0 when expiry is disabled.
  */
-function bb_draft_retention_seconds() {
-	return bb_draft_retention_days() * DAY_IN_SECONDS;
+function bboss_draft_retention_seconds() {
+	return bboss_draft_retention_days() * DAY_IN_SECONDS;
 }
 
 /**
@@ -3576,7 +3576,7 @@ function bb_draft_retention_seconds() {
  * @param mixed $value Possibly serialized value.
  * @return mixed Unserialized value, or the input when not serialized.
  */
-function bb_draft_safe_unserialize( $value ) {
+function bboss_draft_safe_unserialize( $value ) {
 	if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
 		return $value;
 	}
@@ -3599,7 +3599,7 @@ function bb_draft_safe_unserialize( $value ) {
  *
  * @return int Byte budget for one window's values. Default 10 MB.
  */
-function bb_draft_batch_max_bytes() {
+function bboss_draft_batch_max_bytes() {
 
 	/**
 	 * Filters the byte budget for one draft maintenance window.
@@ -3623,17 +3623,17 @@ function bb_draft_batch_max_bytes() {
  * composite index is what would make this a true keyset seek.
  *
  * The SQL LIKE patterns only narrow the scan; every returned key must still
- * resolve through {@see bb_draft_logical_meta_key()} before it is acted on,
+ * resolve through {@see bboss_draft_logical_meta_key()} before it is acted on,
  * because LIKE cannot express "numeric suffix" and third-party plugins may
  * store their own draft_* keys. The patterns are built from
- * {@see bb_draft_meta_key_wrap()} so they match the keys the writers really
+ * {@see bboss_draft_meta_key_wrap()} so they match the keys the writers really
  * stored; when that wrap cannot be inverted the batch returns nothing.
  *
  * @since BuddyBoss 3.7.1
  *
  * Values are fetched in a SECOND query, for the trimmed window only, so the
  * windowing query never carries `meta_value` and the payload pulled into PHP
- * is bounded in BYTES as well as rows ({@see bb_draft_batch_max_bytes()}).
+ * is bounded in BYTES as well as rows ({@see bboss_draft_batch_max_bytes()}).
  * At least one row is always kept, so a row wider than the whole budget still
  * makes progress rather than stalling the cursor.
  *
@@ -3641,21 +3641,21 @@ function bb_draft_batch_max_bytes() {
  * @param int  $limit         Maximum rows to fetch.
  * @param bool $with_values   Whether to fetch meta_value for the window.
  * @param int  $max_bytes     Optional. Byte budget for the window's values;
- *                            0 uses {@see bb_draft_batch_max_bytes()}.
+ *                            0 uses {@see bboss_draft_batch_max_bytes()}.
  * @return array {
  *     @type array[] $rows     Validated draft rows (umeta_id, user_id, meta_key, bytes[, meta_value]).
  *     @type int     $last_id  Raw scan cursor - resume after this row ID.
  *     @type bool    $has_more Whether the raw window was full (more rows may exist).
  * }
  */
-function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true, $max_bytes = 0 ) {
+function bboss_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true, $max_bytes = 0 ) {
 	global $wpdb;
 
-	$key_sql   = bb_draft_meta_key_sql();
+	$key_sql   = bboss_draft_meta_key_sql();
 	$max_bytes = (int) $max_bytes;
 
 	if ( $with_values && $max_bytes <= 0 ) {
-		$max_bytes = bb_draft_batch_max_bytes();
+		$max_bytes = bboss_draft_batch_max_bytes();
 	}
 
 	// A `bp_get_user_meta_key` filter this code cannot invert means a stored
@@ -3809,7 +3809,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 					function ( $row ) {
 						$row['stored_meta_key'] = $row['meta_key'];
 						// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- an array key on a row already fetched, not a query argument.
-						$row['meta_key'] = bb_draft_logical_meta_key( $row['meta_key'] );
+						$row['meta_key'] = bboss_draft_logical_meta_key( $row['meta_key'] );
 
 						return $row;
 					},
@@ -3839,7 +3839,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
  * Legacy rows saved before stamping existed age from the
  * `bb_draft_cleanup_epoch` option recorded at upgrade, so pre-existing
  * drafts still expire. Deletion goes row-at-a-time through
- * {@see bb_draft_dispose()} (meta API - replication-safe, cache-coherent,
+ * {@see bboss_draft_dispose()} (meta API - replication-safe, cache-coherent,
  * attachment stamps released).
  *
  * The scan cursor is persisted in the `bb_draft_cleanup_cursor` site option
@@ -3865,10 +3865,10 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
  *
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
  */
-function bb_drafts_delete_expired( $time_budget = 10 ) {
+function bboss_drafts_delete_expired( $time_budget = 10 ) {
 	$time_budget       = (int) $time_budget;
 	$started_at        = time();
-	$retention_seconds = bb_draft_retention_seconds();
+	$retention_seconds = bboss_draft_retention_seconds();
 	$deleted           = 0;
 	$complete          = true;
 
@@ -3895,7 +3895,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// per-sweep keys are kept because they are what the other party reads, and
 	// because the reads short-circuit before the gate is taken, so a caller
 	// blocked by them never acquires (and never has to release) it.
-	if ( get_site_transient( 'bb_draft_cleanup_lock' ) || get_site_transient( 'bb_draft_oneshot_lock' ) || ! bb_draft_acquire_lock( 'bb_draft_maintenance_lock', 5 * MINUTE_IN_SECONDS, true ) ) {
+	if ( get_site_transient( 'bb_draft_cleanup_lock' ) || get_site_transient( 'bb_draft_oneshot_lock' ) || ! bboss_draft_acquire_lock( 'bb_draft_maintenance_lock', 5 * MINUTE_IN_SECONDS, true ) ) {
 		// Re-arm the continuation on a lock collision when a drain is already
 		// in progress (a cursor is persisted). WP core deletes a single-event
 		// cron entry BEFORE invoking its callback, so a `bb_draft_cleanup`
@@ -3924,7 +3924,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	if ( 1 > $retention_seconds ) {
 		delete_site_option( 'bb_draft_cleanup_cursor' );
 		delete_site_transient( 'bb_draft_cleanup_lock' );
-		bb_draft_release_lock( 'bb_draft_maintenance_lock', true );
+		bboss_draft_release_lock( 'bb_draft_maintenance_lock', true );
 
 		return array(
 			'deleted'  => 0,
@@ -3944,7 +3944,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	}
 
 	do {
-		$batch = bb_draft_get_rows_batch( $cursor, 200, true );
+		$batch = bboss_draft_get_rows_batch( $cursor, 200, true );
 
 		// A failed batch is not an empty one: continuing would move the cursor
 		// past rows this pass never read, so they would never be examined again.
@@ -3967,14 +3967,14 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 
 		foreach ( $batch['rows'] as $row ) {
 			$user_id = (int) $row['user_id'];
-			$value   = bb_draft_safe_unserialize( $row['meta_value'] );
+			$value   = bboss_draft_safe_unserialize( $row['meta_value'] );
 
 			if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
 				if ( ! is_array( $value ) || empty( $value ) ) {
 					// A legacy-empty array() row (old publish paths) holds no member
 					// content and is collected immediately; a corrupt row ages from
 					// the epoch like any unstamped legacy row.
-					if ( ( is_array( $value ) || $epoch < $cutoff ) && bb_draft_dispose( $user_id, $row['meta_key'], '', is_multisite() ) ) {
+					if ( ( is_array( $value ) || $epoch < $cutoff ) && bboss_draft_dispose( $user_id, $row['meta_key'], '', is_multisite() ) ) {
 						++$deleted;
 					}
 				} else {
@@ -4002,7 +4002,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 					if ( ! empty( $expired_inner_keys ) ) {
 						// The batch value can be minutes old by now: a key the
 						// member re-saved since is no longer expired (V30).
-						$fresh_row          = bb_draft_fresh_value( $user_id, $row['meta_key'] );
+						$fresh_row          = bboss_draft_fresh_value( $user_id, $row['meta_key'] );
 						$expired_inner_keys = array_values(
 							array_filter(
 								$expired_inner_keys,
@@ -4018,7 +4018,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 						);
 					}
 
-					$deleted += bb_draft_dispose_forum_inner_keys( $user_id, $expired_inner_keys, is_multisite() );
+					$deleted += bboss_draft_dispose_forum_inner_keys( $user_id, $expired_inner_keys, is_multisite() );
 				}
 			} else {
 				$saved_at = ( is_array( $value ) && isset( $value['_draft_saved_at'] ) ) ? (int) $value['_draft_saved_at'] : $epoch;
@@ -4026,10 +4026,10 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 				if ( $saved_at < $cutoff ) {
 					// Re-check on a fresh read: the batch value can be minutes old,
 					// and a draft the member re-saved since is no longer expired (V30).
-					$fresh_value    = bb_draft_fresh_value( $user_id, $row['meta_key'] );
+					$fresh_value    = bboss_draft_fresh_value( $user_id, $row['meta_key'] );
 					$fresh_saved_at = ( is_array( $fresh_value ) && isset( $fresh_value['_draft_saved_at'] ) ) ? (int) $fresh_value['_draft_saved_at'] : $epoch;
 
-					if ( null !== $fresh_value && $fresh_saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'], '', is_multisite() ) ) {
+					if ( null !== $fresh_value && $fresh_saved_at < $cutoff && bboss_draft_dispose( $user_id, $row['meta_key'], '', is_multisite() ) ) {
 						++$deleted;
 					}
 				}
@@ -4090,7 +4090,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// Released only after the cursor is settled, so a run starting the instant
 	// this one returns cannot read a half-updated cursor.
 	delete_site_transient( 'bb_draft_cleanup_lock' );
-	bb_draft_release_lock( 'bb_draft_maintenance_lock', true );
+	bboss_draft_release_lock( 'bb_draft_maintenance_lock', true );
 
 	return array(
 		'deleted'  => $deleted,
@@ -4111,7 +4111,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  * protected. Only a corrupt (non-array) row is disposed wholesale.
  *
  * Decides everything in memory and writes ONCE. Routing each inner drop
- * through {@see bb_draft_dispose()} meant a full-row read plus a full-row
+ * through {@see bboss_draft_dispose()} meant a full-row read plus a full-row
  * write per drop, and the trim loop re-serialized the whole row on every
  * iteration - O(n·B) on rows that are megabytes wide by definition. On a
  * 5MB row with 40 inner drafts that was ~200MB of serialization and 40
@@ -4127,10 +4127,10 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  *                                        postmeta (H2). Default false.
  * @return int Number of inner drafts acted on - disposed plus salvaged.
  */
-function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
+function bboss_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
 	$user_id  = (int) $user_id;
 	$disposed = 0;
-	$row      = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	$row      = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 	$read_row = $row;
 
 	if ( empty( $row ) ) {
@@ -4138,10 +4138,10 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	}
 
 	if ( ! is_array( $row ) ) {
-		return bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', '', $defer_attachment_release ) ? 1 : 0;
+		return bboss_draft_dispose( $user_id, 'bb_user_topic_reply_draft', '', $defer_attachment_release ) ? 1 : 0;
 	}
 
-	$max_size = bb_draft_max_size();
+	$max_size = bboss_draft_max_size();
 	$removed  = array();
 	$salvaged = 0;
 
@@ -4157,7 +4157,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 			// one-draft-per-row path in bb_drafts_oneshot_batch(): an inner
 			// draft that only broke the cap because of a poster keeps its text
 			// instead of being dropped (Q6).
-			$shed       = bb_draft_shed_preview_frames( $inner_draft );
+			$shed       = bboss_draft_shed_preview_frames( $inner_draft );
 			$shed_bytes = strlen( maybe_serialize( $shed ) );
 
 			if ( $shed_bytes <= $max_size ) {
@@ -4185,7 +4185,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	// PLUS its serialized key, so both are subtracted: counting only the entry
 	// leaves the tracked width above the truth and over-evicts the member's
 	// drafts (17 too many on a 1000-entry row, measured).
-	$total_cap = bb_draft_user_total_max_size();
+	$total_cap = bboss_draft_user_total_max_size();
 	$row_bytes = strlen( maybe_serialize( $row ) );
 	$trimmed   = array();
 
@@ -4194,7 +4194,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	// drafts over the per-draft cap.
 	if ( $row_bytes > $total_cap ) {
 		foreach ( $row as $inner_key => $inner_draft ) {
-			$shed = bb_draft_shed_preview_frames( $inner_draft );
+			$shed = bboss_draft_shed_preview_frames( $inner_draft );
 
 			if ( maybe_serialize( $shed ) !== maybe_serialize( $inner_draft ) ) {
 				$row[ $inner_key ]            = $shed;
@@ -4240,7 +4240,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 
 			$trimmed[ $inner_key ] = $row[ $inner_key ];
 			$entry_bytes           = isset( $sizes[ $inner_key ] ) ? $sizes[ $inner_key ] : strlen( maybe_serialize( $row[ $inner_key ] ) );
-			$row_bytes            -= $entry_bytes + bb_draft_serialized_key_bytes( $inner_key );
+			$row_bytes            -= $entry_bytes + bboss_draft_serialized_key_bytes( $inner_key );
 
 			unset( $row[ $inner_key ] );
 			++$disposed;
@@ -4256,7 +4256,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 
 	// A live save since the read already passed the caps, and writing this
 	// row back would replace it with older text.
-	if ( ! bb_draft_row_unchanged( $user_id, 'bb_user_topic_reply_draft', $read_row ) ) {
+	if ( ! bboss_draft_row_unchanged( $user_id, 'bb_user_topic_reply_draft', $read_row ) ) {
 		return 0;
 	}
 
@@ -4272,20 +4272,20 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	// so a fatal between the two cannot lose those drafts. A row left
 	// unwritten still holds them, which settles their hold
 	// ({@see bb_draft_drop_settled_evicted()}).
-	bb_draft_hold_evicted( $user_id, $held );
+	bboss_draft_hold_evicted( $user_id, $held );
 
 	if ( empty( $row ) ) {
-		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
+		bboss_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
 	} else {
 		// wp_slash(): $row was read from storage and is UNSLASHED, and
 		// update_metadata() unslashes once more before storing. Writing it back
 		// untouched strips a backslash layer from every string in the row -
 		// including the \uXXXX escapes in the attachment lists of the very
 		// inner drafts this heal exists to preserve (R2).
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 	}
 
-	bb_draft_flush_user_meta_sizes( $user_id );
+	bboss_draft_flush_user_meta_sizes( $user_id );
 
 	// The removed drafts are held (above) for the member's next visit; keep
 	// their files protected too, as {@see bb_draft_enforce_user_budget()}
@@ -4306,7 +4306,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 
 		// Deferring means healing from the root-only one-shot, where the IDs
 		// may name another blog's attachments on multisite (H2).
-		bb_draft_protect_evicted_attachments( array_values( $held ), $user_id, $defer_attachment_release );
+		bboss_draft_protect_evicted_attachments( array_values( $held ), $user_id, $defer_attachment_release );
 	}
 
 	// Nothing is released here: every removed draft is held, so its files are
@@ -4329,7 +4329,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
  * 1. A cursor-advanced scan over the draft rows disposes rows individually larger
  *    than the per-draft cap - the Memcached-poisoning rows this ticket is
  *    about. The aggregated forum row is healed at inner-draft granularity
- *    instead of being disposed wholesale ({@see bb_draft_heal_forum_row()}).
+ *    instead of being disposed wholesale ({@see bboss_draft_heal_forum_row()}).
  * 2. One indexed SQL aggregate then finds users whose COMBINED drafts
  *    exceed the per-user budget (ten 90KB legacy drafts poison the cache
  *    as surely as one 1MB row); each is healed by oldest-first eviction in
@@ -4337,7 +4337,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
  *    path's total-meta refusal - the users this pass exists for are
  *    exactly the ones over that refusal threshold. A third-party draft_*
  *    key inflating a SUM only causes a no-op heal call, because the healer
- *    re-measures with {@see bb_draft_is_draft_meta_key()} before evicting.
+ *    re-measures with {@see bboss_draft_is_draft_meta_key()} before evicting.
  *
  * Self-reschedules on the `bb_draft_oneshot` single event until both
  * stages complete, then records the durable `bb_draft_oneshot_done` option
@@ -4350,14 +4350,14 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
  * @return array { @type int $healed @type bool $complete }
  */
-function bb_drafts_oneshot_batch( $time_budget = 10 ) {
+function bboss_drafts_oneshot_batch( $time_budget = 10 ) {
 	global $wpdb;
 
 	$time_budget = (int) $time_budget;
 	$started_at  = time();
 	$healed      = 0;
 	$complete    = true;
-	$max_size    = bb_draft_max_size();
+	$max_size    = bboss_draft_max_size();
 
 	// Defensive re-arm. WordPress core deletes a single-event cron entry from
 	// storage BEFORE it invokes the callback, so a fatal (OOM inside a
@@ -4367,7 +4367,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// cancel it at the end if this slice finishes. Time-limited (cron) slices
 	// only; the WP-CLI drain ($time_budget 0) loops to completion itself.
 	if ( 0 < $time_budget && ! get_site_option( 'bb_draft_oneshot_done' ) ) {
-		bb_draft_oneshot_schedule( 2 * MINUTE_IN_SECONDS );
+		bboss_draft_oneshot_schedule( 2 * MINUTE_IN_SECONDS );
 	}
 
 	// Serialize overlapping triggers. Two concurrent admin requests in the
@@ -4386,7 +4386,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// same cross-check in bb_drafts_delete_expired().
 	// See bb_drafts_delete_expired(): the two reads are what the other party
 	// observes, and the shared gate is what actually decides a winner.
-	if ( get_site_transient( 'bb_draft_oneshot_lock' ) || get_site_transient( 'bb_draft_cleanup_lock' ) || ! bb_draft_acquire_lock( 'bb_draft_maintenance_lock', 5 * MINUTE_IN_SECONDS, true ) ) {
+	if ( get_site_transient( 'bb_draft_oneshot_lock' ) || get_site_transient( 'bb_draft_cleanup_lock' ) || ! bboss_draft_acquire_lock( 'bb_draft_maintenance_lock', 5 * MINUTE_IN_SECONDS, true ) ) {
 		return array(
 			'healed'   => 0,
 			'complete' => false,
@@ -4411,7 +4411,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 		$cursor = (int) $state['cursor'];
 
 		do {
-			$batch = bb_draft_get_rows_batch( $cursor, 200, false );
+			$batch = bboss_draft_get_rows_batch( $cursor, 200, false );
 
 			// Same rule as the expiry pass: stop rather than advance the cursor
 			// over rows that were never read. $complete = false persists the
@@ -4435,15 +4435,15 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 				if ( $row_bytes > $max_size ) {
 					if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
-						$healed += bb_draft_heal_forum_row( $row_user, is_multisite() );
-					} elseif ( bb_draft_salvage_oversized_draft( $row_user, $row['meta_key'] ) ) {
+						$healed += bboss_draft_heal_forum_row( $row_user, is_multisite() );
+					} elseif ( bboss_draft_salvage_oversized_draft( $row_user, $row['meta_key'] ) ) {
 						// Shedding the poster frame was enough - the member keeps
 						// their text. Tried BEFORE disposal because a one-draft row
 						// has nothing to evict, so disposal is total: it destroyed
 						// unpublished text to reclaim space the poster alone was
 						// using (Q6).
 						++$healed;
-					} elseif ( bb_draft_hold_oversized_draft( $row_user, $row['meta_key'] ) ) {
+					} elseif ( bboss_draft_hold_oversized_draft( $row_user, $row['meta_key'] ) ) {
 						// Still over the cap: removed from usermeta but held for
 						// the member's next visit, with its files protected.
 						++$healed;
@@ -4535,7 +4535,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// (small) user list is persisted rather than per-user byte totals, keeping
 	// the state option bounded on sites with many draft holders.
 	if ( $complete && ! is_array( $state['heavy_users'] ) && ! empty( $state['scan_done'] ) ) {
-		$key_sql = bb_draft_meta_key_sql();
+		$key_sql = bboss_draft_meta_key_sql();
 
 		if ( empty( $key_sql['invertible'] ) ) {
 			// Same reasoning as the scan: without an invertible key wrap the
@@ -4543,7 +4543,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 			$heavy_users = array();
 		} else {
 			$aggregate_values   = $key_sql['values'];
-			$aggregate_values[] = bb_draft_user_total_max_size();
+			$aggregate_values[] = bboss_draft_user_total_max_size();
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-time healing aggregate; $key_sql['where'] carries only placeholders.
 			$heavy_users = $wpdb->get_col(
@@ -4582,16 +4582,16 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 			// drafts first, the way stage 1 does for a single oversized draft.
 			// Evicting first lost whole drafts when removing their images alone
 			// would have brought the member under the budget.
-			$healed += bb_draft_shed_user_drafts( $heavy_user_id );
+			$healed += bboss_draft_shed_user_drafts( $heavy_user_id );
 
-			$budget_result = bb_draft_enforce_user_budget( $heavy_user_id, '', 0, 'heal' );
+			$budget_result = bboss_draft_enforce_user_budget( $heavy_user_id, '', 0, 'heal' );
 			$healed       += count( $budget_result['evicted'] );
 
 			// No browser is open during an upgrade to take the hand-back, so hold
 			// the evicted drafts. The composer for each key finds the held entry
 			// and hands it back on the member's next visit, as after a live
 			// eviction whose response was lost.
-			bb_draft_hold_evicted( $heavy_user_id, $budget_result['entries'] );
+			bboss_draft_hold_evicted( $heavy_user_id, $budget_result['entries'] );
 
 			// Stage 2 is unbudgeted under WP-CLI exactly as stage 1 is, and it
 			// evicts rows network-wide, so it needs the same per-iteration lock
@@ -4612,15 +4612,15 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 		delete_site_option( 'bb_draft_oneshot_state' );
 
 		// Nothing left to resume - cancel the defensive continuation (on root).
-		bb_draft_oneshot_unschedule();
+		bboss_draft_oneshot_unschedule();
 	} else {
-		bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
+		bboss_draft_oneshot_schedule( MINUTE_IN_SECONDS );
 	}
 
 	// Released after the state and the schedule are settled, so a run starting
 	// the instant this one returns cannot read half-updated state.
 	delete_site_transient( 'bb_draft_oneshot_lock' );
-	bb_draft_release_lock( 'bb_draft_maintenance_lock', true );
+	bboss_draft_release_lock( 'bb_draft_maintenance_lock', true );
 
 	return array(
 		'healed'   => $healed,
@@ -4634,7 +4634,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
  *
  * The one-shot heals network-GLOBAL draft usermeta and tracks its progress in
  * network-global site options, so it must run once network-wide. It is triggered
- * by bp_version_updater() on whichever blog's admin loads first after the
+ * by bboss_version_updater() on whichever blog's admin loads first after the
  * DB-version bump, but WP-Cron events live in the PER-BLOG cron table - so
  * scheduling on the current blog can strand the continuation on a low-traffic
  * subsite's cron where it never fires, while the version stays bumped so nothing
@@ -4647,11 +4647,11 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
  * @param int $delay Seconds from now to run.
  * @return void
  */
-function bb_draft_oneshot_schedule( $delay ) {
+function bboss_draft_oneshot_schedule( $delay ) {
 	$switched = false;
 
-	if ( is_multisite() && ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
+	if ( is_multisite() && ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
 		$switched = true;
 	}
 
@@ -4667,18 +4667,18 @@ function bb_draft_oneshot_schedule( $delay ) {
 /**
  * Cancel the root-blog one-shot healing continuation.
  *
- * Companion to {@see bb_draft_oneshot_schedule()} - the event lives on the root
+ * Companion to {@see bboss_draft_oneshot_schedule()} - the event lives on the root
  * blog's cron table, so it must be looked up and cleared there too (L10).
  *
  * @since BuddyBoss 3.7.1
  *
  * @return void
  */
-function bb_draft_oneshot_unschedule() {
+function bboss_draft_oneshot_unschedule() {
 	$switched = false;
 
-	if ( is_multisite() && ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
+	if ( is_multisite() && ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
 		$switched = true;
 	}
 
@@ -4740,14 +4740,14 @@ function bb_draft_oneshot_unschedule() {
  * @param int $timeout Lock lifetime in seconds.
  * @return bool True when this caller now holds the lock.
  */
-function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
-	return bb_draft_acquire_lock( 'bb_draft_stamp_sweep_lock', $timeout );
+function bboss_draft_acquire_stamp_sweep_lock( $timeout ) {
+	return bboss_draft_acquire_lock( 'bb_draft_stamp_sweep_lock', $timeout );
 }
 
 /**
  * Acquire a draft-maintenance lock, atomically where that is possible.
  *
- * The generic form of {@see bb_draft_acquire_stamp_sweep_lock()}, which now
+ * The generic form of {@see bboss_draft_acquire_stamp_sweep_lock()}, which now
  * delegates here. Three sweeps need the same primitive and two of them need it
  * NETWORK-scoped, so the scope is a parameter rather than three near-copies:
  *
@@ -4769,7 +4769,7 @@ function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
  *                        Default false (per blog).
  * @return bool True when this caller now holds the lock.
  */
-function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
+function bboss_draft_acquire_lock( $key, $timeout, $network = false ) {
 	$timeout = (int) $timeout;
 	$group   = $network ? 'site-transient' : 'transient';
 
@@ -4792,7 +4792,7 @@ function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
 }
 
 /**
- * Release a lock taken with {@see bb_draft_acquire_lock()}.
+ * Release a lock taken with {@see bboss_draft_acquire_lock()}.
  *
  * Deliberately a named counterpart rather than a bare delete at each exit: a
  * lock released on some return paths and not others is held until its TTL, which
@@ -4804,7 +4804,7 @@ function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
  * @param bool   $network Whether the lock was taken network-wide. Default false.
  * @return void
  */
-function bb_draft_release_lock( $key, $network = false ) {
+function bboss_draft_release_lock( $key, $network = false ) {
 	if ( $network ) {
 		delete_site_transient( $key );
 	} else {
@@ -4822,7 +4822,7 @@ function bb_draft_release_lock( $key, $network = false ) {
  *
  * @since BuddyBoss 3.7.1
  */
-const BB_DRAFT_PENDING_REFERENCE_CAP = 5000;
+const BBOSS_DRAFT_PENDING_REFERENCE_CAP = 5000;
 
 /**
  * Maximum attachment IDs the shared referenced-set cache will store.
@@ -4842,7 +4842,7 @@ const BB_DRAFT_PENDING_REFERENCE_CAP = 5000;
  *
  * @since BuddyBoss 3.7.1
  */
-const BB_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
+const BBOSS_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
 
 /**
  * Whether a network-wide reference scan is currently running.
@@ -4859,7 +4859,7 @@ const BB_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
  *
  * @return bool True while a scan is in progress.
  */
-function bb_draft_reference_scan_is_active() {
+function bboss_draft_reference_scan_is_active() {
 	return (bool) get_site_transient( 'bb_draft_reference_scan_active' );
 }
 
@@ -4882,8 +4882,8 @@ function bb_draft_reference_scan_is_active() {
  * @param int[] $attachment_ids Attachment IDs the just-written draft keeps.
  * @return void
  */
-function bb_draft_record_pending_reference_ids( $attachment_ids ) {
-	if ( empty( $attachment_ids ) || ! is_array( $attachment_ids ) || ! bb_draft_reference_scan_is_active() ) {
+function bboss_draft_record_pending_reference_ids( $attachment_ids ) {
+	if ( empty( $attachment_ids ) || ! is_array( $attachment_ids ) || ! bboss_draft_reference_scan_is_active() ) {
 		return;
 	}
 
@@ -4922,7 +4922,7 @@ function bb_draft_record_pending_reference_ids( $attachment_ids ) {
 	 *
 	 * @param int $cap Maximum IDs. Default BB_DRAFT_PENDING_REFERENCE_CAP.
 	 */
-	$pending_cap = (int) apply_filters( 'bb_draft_pending_reference_cap', BB_DRAFT_PENDING_REFERENCE_CAP );
+	$pending_cap = (int) apply_filters( 'bb_draft_pending_reference_cap', BBOSS_DRAFT_PENDING_REFERENCE_CAP );
 
 	if ( 0 < $pending_cap && count( $ids ) > $pending_cap ) {
 		// Cannot prove the union is complete any more, so say so rather than
@@ -4943,14 +4943,14 @@ function bb_draft_record_pending_reference_ids( $attachment_ids ) {
  *
  * The returned token identifies THIS window. Because the reset above destroys
  * whatever a still-running sweep had recorded, a caller must hold on to the
- * token and re-check it ({@see bb_draft_reference_scan_token()}) before trusting
+ * token and re-check it ({@see bboss_draft_reference_scan_token()}) before trusting
  * the ledger - otherwise it cannot tell its own window from a replacement.
  *
  * @since BuddyBoss 3.7.1
  *
  * @return string Token identifying the window that was just opened.
  */
-function bb_draft_reference_scan_begin() {
+function bboss_draft_reference_scan_begin() {
 	$token = uniqid( 'bbdrs', true );
 
 	delete_site_option( 'bb_draft_pending_reference_ids' );
@@ -4964,20 +4964,20 @@ function bb_draft_reference_scan_begin() {
  *
  * The window used to be a bare `1`, which made it impossible to tell "my window
  * is still open" from "my window closed and somebody else opened a new one".
- * Both of those look identical to {@see bb_draft_reference_scan_is_active()},
+ * Both of those look identical to {@see bboss_draft_reference_scan_is_active()},
  * and they have opposite consequences: in the second case the ledger the sweep
  * is about to trust was reset by the other run, so it is no longer a record of
  * everything added since THIS scan started.
  *
  * A sweep therefore keeps the token it was handed by
- * {@see bb_draft_reference_scan_begin()} and re-checks it before it trusts the
+ * {@see bboss_draft_reference_scan_begin()} and re-checks it before it trusts the
  * ledger. Anything other than an exact match means abstain.
  *
  * @since BuddyBoss 3.7.1
  *
  * @return string The open window's token, or '' when no window is open.
  */
-function bb_draft_reference_scan_token() {
+function bboss_draft_reference_scan_token() {
 	$token = get_site_transient( 'bb_draft_reference_scan_active' );
 
 	return is_string( $token ) ? $token : '';
@@ -4990,7 +4990,7 @@ function bb_draft_reference_scan_token() {
  * `begin()`. The scan it protects is deliberately unbudgeted, and
  * `wp bb drafts cleanup` removes the bound from the release drain as well, so a
  * run on a large community can outlive its own window. Nothing detected that:
- * once the transient expired, {@see bb_draft_record_pending_reference_ids()}
+ * once the transient expired, {@see bboss_draft_record_pending_reference_ids()}
  * silently stopped recording, the ledger read back empty with
  * `overflow => false`, and the sweep could not tell "nothing was added" from
  * "I stopped listening" - so it released stamps for attachments a live draft
@@ -5005,8 +5005,8 @@ function bb_draft_reference_scan_token() {
  * @param string $token The token this caller received from `begin()`.
  * @return bool True when the window is still this caller's and was extended.
  */
-function bb_draft_reference_scan_refresh( $token ) {
-	if ( '' === (string) $token || bb_draft_reference_scan_token() !== (string) $token ) {
+function bboss_draft_reference_scan_refresh( $token ) {
+	if ( '' === (string) $token || bboss_draft_reference_scan_token() !== (string) $token ) {
 		return false;
 	}
 
@@ -5026,7 +5026,7 @@ function bb_draft_reference_scan_refresh( $token ) {
  *
  * @return array{ids:int[],overflow:bool} Recorded IDs, and whether the cap was hit.
  */
-function bb_draft_peek_pending_reference_ids() {
+function bboss_draft_peek_pending_reference_ids() {
 	$ledger = get_site_option( 'bb_draft_pending_reference_ids', array() );
 
 	if ( ! is_array( $ledger ) ) {
@@ -5048,20 +5048,20 @@ function bb_draft_peek_pending_reference_ids() {
  * @since BuddyBoss 3.7.1
  *
  * @param string $token Optional. The token this caller received from
- *                      {@see bb_draft_reference_scan_begin()}. When given, the
+ *                      {@see bboss_draft_reference_scan_begin()}. When given, the
  *                      window is closed only if it is still that window; a run
  *                      that has already lost ownership tears down nothing.
  *                      Default '' (close whatever is open).
  * @return array{ids:int[],overflow:bool} Recorded IDs, and whether the cap was hit.
  */
-function bb_draft_reference_scan_end( $token = '' ) {
+function bboss_draft_reference_scan_end( $token = '' ) {
 	// Close only a window this caller still owns. The window and the ledger are
 	// network-global, so a stalled run reaching its teardown after another run
 	// has opened a fresh window would otherwise delete the successor's ledger -
 	// and an empty ledger reads exactly like "nothing was added", which is the
 	// failure this whole mechanism exists to prevent. Callers that pass no token
 	// keep the old unconditional behaviour.
-	if ( '' !== (string) $token && bb_draft_reference_scan_token() !== (string) $token ) {
+	if ( '' !== (string) $token && bboss_draft_reference_scan_token() !== (string) $token ) {
 		return array(
 			'ids'      => array(),
 			'overflow' => false,
@@ -5091,7 +5091,7 @@ function bb_draft_reference_scan_end( $token = '' ) {
  *
  * The sweep reads this twice - once before it gathers anything, once before it
  * commits - and abstains if the two differ. Both reads and the write in
- * {@see bb_draft_invalidate_referenced_cache()} must therefore agree about where
+ * {@see bboss_draft_invalidate_referenced_cache()} must therefore agree about where
  * the token lives, so the read is centralised here rather than repeated at each
  * site. Tests assert the token's DURABILITY through this accessor for the same
  * reason: a test that hard-coded the storage call would keep passing if the
@@ -5102,7 +5102,7 @@ function bb_draft_reference_scan_end( $token = '' ) {
  *
  * @return string The current token, or '' when no invalidation has been recorded.
  */
-function bb_draft_get_referenced_cache_token() {
+function bboss_draft_get_referenced_cache_token() {
 	return (string) get_site_option( 'bb_draft_referenced_stamp_ids_token', '' );
 }
 
@@ -5189,7 +5189,7 @@ function bb_draft_get_referenced_cache_token() {
  *                                        (invalidate unconditionally).
  * @return void
  */
-function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
+function bboss_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
 	if ( is_array( $kept_attachment_ids ) ) {
 		$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
 
@@ -5216,8 +5216,8 @@ function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
 	// finish between the two and miss this reference. No-ops unless a scan is
 	// actually in flight ({@see bb_draft_record_pending_reference_ids()}).
 	if ( is_array( $kept_attachment_ids ) ) {
-		bb_draft_record_pending_reference_ids( $kept_attachment_ids );
-	} elseif ( bb_draft_reference_scan_is_active() ) {
+		bboss_draft_record_pending_reference_ids( $kept_attachment_ids );
+	} elseif ( bboss_draft_reference_scan_is_active() ) {
 		// A caller that cannot enumerate what it kept has told us something
 		// changed without telling us what. The union below is only a provable
 		// superset when every concurrent addition was recorded, so an unenumerated
@@ -5257,7 +5257,7 @@ function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
  *                     budget, or a batch query failed / declined. Callers MUST
  *                     treat false as "unknown", never as "nothing referenced".
  */
-function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
+function bboss_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
 	$referenced  = array();
 	$cursor      = 0;
 	$time_budget = (int) $time_budget;
@@ -5279,7 +5279,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 	// wrongly freed - so a run that cannot finish the scan inside its budget
 	// returns false and the caller releases nothing this time (M3 HIGH).
 	do {
-		$batch = bb_draft_get_rows_batch( $cursor, $batch_size, true );
+		$batch = bboss_draft_get_rows_batch( $cursor, $batch_size, true );
 
 		// Both are "not authoritative", and for the release decision they mean the
 		// same thing: this scan cannot prove what is referenced, so nothing may be
@@ -5291,7 +5291,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 		}
 
 		foreach ( $batch['rows'] as $row ) {
-			$value = bb_draft_safe_unserialize( $row['meta_value'] );
+			$value = bboss_draft_safe_unserialize( $row['meta_value'] );
 
 			if ( ! is_array( $value ) ) {
 				$cursor = (int) $row['umeta_id'];
@@ -5300,12 +5300,12 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 
 			if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
 				foreach ( $value as $inner_draft ) {
-					foreach ( bb_draft_collect_attachment_ids( $inner_draft ) as $attachment_id ) {
+					foreach ( bboss_draft_collect_attachment_ids( $inner_draft ) as $attachment_id ) {
 						$referenced[ (int) $attachment_id ] = true;
 					}
 				}
 			} else {
-				foreach ( bb_draft_collect_attachment_ids( $value ) as $attachment_id ) {
+				foreach ( bboss_draft_collect_attachment_ids( $value ) as $attachment_id ) {
 					$referenced[ (int) $attachment_id ] = true;
 				}
 			}
@@ -5333,7 +5333,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 	// Held evicted drafts are referenced too: the member gets them back on
 	// the next visit. On multisite the upgrade heal cannot mark their files
 	// from the root blog, so this is what keeps those files during the hold.
-	$held_ids = bb_drafts_collect_held_attachment_ids();
+	$held_ids = bboss_drafts_collect_held_attachment_ids();
 
 	if ( false === $held_ids ) {
 		return false;
@@ -5353,7 +5353,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
  *
  * @return int[]|false Attachment IDs, or false when the holds could not be read.
  */
-function bb_drafts_collect_held_attachment_ids() {
+function bboss_drafts_collect_held_attachment_ids() {
 	global $wpdb;
 
 	$like = $wpdb->esc_like( 'bb_draft_evicted_' ) . '%';
@@ -5371,19 +5371,19 @@ function bb_drafts_collect_held_attachment_ids() {
 		return false;
 	}
 
-	$cutoff = time() - bb_draft_evicted_hold_seconds();
-	$ids    = bb_draft_get_evicted_attachment_ledger_ids();
+	$cutoff = time() - bboss_draft_evicted_hold_seconds();
+	$ids    = bboss_draft_get_evicted_attachment_ledger_ids();
 
 	foreach ( (array) $names as $name ) {
 		if ( ! preg_match( '/^bb_draft_evicted_(\d+)(_overflow)?$/', $name, $match ) ) {
 			continue;
 		}
 
-		$held_drafts = empty( $match[2] ) ? bb_draft_get_evicted_hold( (int) $match[1] ) : bb_draft_get_evicted_overflow( (int) $match[1], true );
+		$held_drafts = empty( $match[2] ) ? bboss_draft_get_evicted_hold( (int) $match[1] ) : bboss_draft_get_evicted_overflow( (int) $match[1], true );
 
 		foreach ( $held_drafts as $held ) {
 			if ( is_array( $held ) && ! empty( $held['entry'] ) && isset( $held['at'] ) && (int) $held['at'] >= $cutoff ) {
-				$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $held['entry'] ) );
+				$ids = array_merge( $ids, bboss_draft_collect_attachment_ids( $held['entry'] ) );
 			}
 		}
 
@@ -5441,7 +5441,7 @@ function bb_drafts_collect_held_attachment_ids() {
  * is still built from network-global usermeta, so it is a global superset for
  * any one blog: a cross-blog attachment-ID collision can only wrongly KEEP a
  * stamp (a leak), never wrongly release an in-use file. Expiry being disabled
- * ({@see bb_draft_retention_days()} = 0) switches this off too.
+ * ({@see bboss_draft_retention_days()} = 0) switches this off too.
  *
  * @since BuddyBoss 3.7.1
  *
@@ -5461,13 +5461,13 @@ function bb_drafts_collect_held_attachment_ids() {
  *                             or 'candidate_query_failed'.
  * }
  */
-function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
+function bboss_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	global $wpdb;
 
 	$time_budget = (int) $time_budget;
 	$started_at  = time();
 
-	$retention_seconds = bb_draft_retention_seconds();
+	$retention_seconds = bboss_draft_retention_seconds();
 
 	// Expiry off means "keep drafts forever", so their attachments must keep
 	// their protection forever too.
@@ -5483,7 +5483,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// Acquired in ONE atomic step where the backend allows it - the previous
 	// check-then-set let both runs read "free" and proceed
 	// ({@see bb_draft_acquire_stamp_sweep_lock()}).
-	if ( ! bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ) ) {
+	if ( ! bboss_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ) ) {
 		return array(
 			'released' => 0,
 			'complete' => false,
@@ -5519,9 +5519,9 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	//
 	// So re-arm on this blog rather than waiting a full day. This is the pattern
 	// bb_drafts_delete_expired() already uses on a lock collision.
-	if ( ! bb_draft_acquire_lock( 'bb_draft_reference_scan_lock', 30 * MINUTE_IN_SECONDS, true ) ) {
+	if ( ! bboss_draft_acquire_lock( 'bb_draft_reference_scan_lock', 30 * MINUTE_IN_SECONDS, true ) ) {
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
-		bb_draft_reschedule_stamp_sweep();
+		bboss_draft_reschedule_stamp_sweep();
 
 		return array(
 			'released'  => 0,
@@ -5577,7 +5577,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// ledger re-checks it first: a window that expired, or that another run
 	// replaced, means the ledger is no longer a record of everything added since
 	// this scan started, and the only safe response is to abstain.
-	$scan_token = bb_draft_reference_scan_begin();
+	$scan_token = bboss_draft_reference_scan_begin();
 
 	$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
 
@@ -5592,13 +5592,13 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// the ledger then reads back empty and indistinguishable from "nothing
 		// was added". Refresh all three together or the sweep can go blind
 		// halfway through and never know.
-		$referenced = bb_drafts_collect_referenced_attachment_ids(
+		$referenced = bboss_drafts_collect_referenced_attachment_ids(
 			0,
 			$started_at,
 			function () use ( $scan_token ) {
 				set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 				set_site_transient( 'bb_draft_reference_scan_lock', 1, 30 * MINUTE_IN_SECONDS );
-				bb_draft_reference_scan_refresh( $scan_token );
+				bboss_draft_reference_scan_refresh( $scan_token );
 			}
 		);
 
@@ -5608,10 +5608,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// drafts reference nothing" have opposite consequences, and conflating
 		// them releases every stamp on the site (BLOCKER-2).
 		if ( false === $referenced ) {
-			bb_draft_reference_scan_end( $scan_token );
-			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
+			bboss_draft_reference_scan_end( $scan_token );
+			bboss_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
-			bb_draft_reschedule_stamp_sweep();
+			bboss_draft_reschedule_stamp_sweep();
 
 			return array(
 				'released'  => 0,
@@ -5640,11 +5640,11 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// window another run replaced. Both read back as an empty ledger with
 		// overflow => false, i.e. exactly like "nothing was added". Check the
 		// window is still ours before believing it.
-		if ( ! bb_draft_reference_scan_refresh( $scan_token ) ) {
-			bb_draft_reference_scan_end( $scan_token );
-			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
+		if ( ! bboss_draft_reference_scan_refresh( $scan_token ) ) {
+			bboss_draft_reference_scan_end( $scan_token );
+			bboss_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
-			bb_draft_reschedule_stamp_sweep();
+			bboss_draft_reschedule_stamp_sweep();
 
 			return array(
 				'released'  => 0,
@@ -5661,9 +5661,9 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// cache could never warm, which is precisely the site the cache exists
 		// for. Read across the narrow peek-to-write gap instead, which is the
 		// only window the union below does not already cover.
-		$reference_token = bb_draft_get_referenced_cache_token();
+		$reference_token = bboss_draft_get_referenced_cache_token();
 
-		$pending = bb_draft_peek_pending_reference_ids();
+		$pending = bboss_draft_peek_pending_reference_ids();
 
 		foreach ( $pending['ids'] as $pending_id ) {
 			$referenced[ (int) $pending_id ] = true;
@@ -5673,10 +5673,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// the window that the ledger stopped recording, so it is no longer a
 		// provable superset. Fall back to the old conservative behaviour.
 		if ( $pending['overflow'] ) {
-			bb_draft_reference_scan_end( $scan_token );
-			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
+			bboss_draft_reference_scan_end( $scan_token );
+			bboss_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
-			bb_draft_reschedule_stamp_sweep();
+			bboss_draft_reschedule_stamp_sweep();
 
 			return array(
 				'released'  => 0,
@@ -5710,7 +5710,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		 *
 		 * @param int $max_ids Maximum IDs. Default BB_DRAFT_REFERENCED_CACHE_MAX_IDS.
 		 */
-		$referenced_max = (int) apply_filters( 'bb_draft_referenced_cache_max_ids', BB_DRAFT_REFERENCED_CACHE_MAX_IDS );
+		$referenced_max = (int) apply_filters( 'bb_draft_referenced_cache_max_ids', BBOSS_DRAFT_REFERENCED_CACHE_MAX_IDS );
 
 		// Two independent reasons to use the set and then throw it away.
 		//
@@ -5734,7 +5734,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 			);
 		}
 
-		if ( $referenced_fits && bb_draft_get_referenced_cache_token() === $reference_token ) {
+		if ( $referenced_fits && bboss_draft_get_referenced_cache_token() === $reference_token ) {
 			set_site_transient( 'bb_draft_referenced_stamp_ids', $referenced, $referenced_ttl );
 		}
 	}
@@ -5781,7 +5781,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// batch against the result. Breaking out here (the previous behaviour)
 		// meant an ordinary save mid-drain ended the run, which on a busy site
 		// is most runs - the same livelock as the scan, one level down.
-		if ( ! bb_draft_reference_scan_refresh( $scan_token ) ) {
+		if ( ! bboss_draft_reference_scan_refresh( $scan_token ) ) {
 			$complete       = false;
 			$abstained      = true;
 			$abstain_reason = 'scan_window_lost';
@@ -5789,7 +5789,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 			break;
 		}
 
-		$batch_pending = bb_draft_peek_pending_reference_ids();
+		$batch_pending = bboss_draft_peek_pending_reference_ids();
 
 		foreach ( $batch_pending['ids'] as $batch_pending_id ) {
 			$referenced[ (int) $batch_pending_id ] = true;
@@ -5923,8 +5923,8 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// Close the recording window: the release decisions are made, so anything
 	// written from here is the NEXT run's concern and the ledger must not carry
 	// it over and grow.
-	bb_draft_reference_scan_end( $scan_token );
-	bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
+	bboss_draft_reference_scan_end( $scan_token );
+	bboss_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 
 	// An abstention here means this blog's candidates were not judged, so re-arm
 	// rather than leaving them for the next 24-hour slot. A run that DID judge
@@ -5932,7 +5932,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// day gets its full set of retries rather than whatever an earlier collision
 	// left over.
 	if ( $abstained ) {
-		bb_draft_reschedule_stamp_sweep();
+		bboss_draft_reschedule_stamp_sweep();
 	} else {
 		delete_transient( 'bb_draft_stamp_sweep_retries' );
 	}
@@ -6002,7 +6002,7 @@ add_action( 'bb_draft_stamp_release_retry', 'bb_drafts_release_orphaned_draft_st
  *
  * @return void
  */
-function bb_draft_reschedule_stamp_sweep() {
+function bboss_draft_reschedule_stamp_sweep() {
 	// Per blog, deliberately: the release loop this re-arms is per blog, and so
 	// is its cursor.
 	//
@@ -6047,7 +6047,7 @@ function bb_draft_reschedule_stamp_sweep() {
 /**
  * Schedule the daily draft cleanup events.
  *
- * Scheduled directly (the polls add-on precedent): bp_core_schedule_cron()
+ * Scheduled directly (the polls add-on precedent): bboss_core_schedule_cron()
  * queues its wp_schedule_event() on the same bp_init priority that is
  * already running, which can silently skip scheduling.
  *
@@ -6067,14 +6067,14 @@ function bb_draft_reschedule_stamp_sweep() {
  *
  * @return void
  */
-function bb_drafts_schedule_cleanup() {
+function bboss_drafts_schedule_cleanup() {
 	// Per-site: the orphan-stamp release sweep touches per-blog attachment tables.
 	if ( ! wp_next_scheduled( 'bb_draft_stamp_release_hook' ) ) {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_24hours', 'bb_draft_stamp_release_hook' );
 	}
 
 	// Root-only: the usermeta expiry sweep is network-global.
-	if ( is_multisite() && ! bp_is_root_blog() ) {
+	if ( is_multisite() && ! bboss_is_root_blog() ) {
 		return;
 	}
 
@@ -6097,7 +6097,7 @@ add_action( 'bp_init', 'bb_drafts_schedule_cleanup' );
  *
  * @return void
  */
-function bb_drafts_unschedule_cleanup() {
+function bboss_drafts_unschedule_cleanup() {
 	wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
 	wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
 }
@@ -6129,7 +6129,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$last_id      = 0;
 
 				do {
-					$batch   = bb_draft_get_rows_batch( $last_id, 500, false );
+					$batch   = bboss_draft_get_rows_batch( $last_id, 500, false );
 					$last_id = $batch['last_id'];
 
 					// Reporting a partial count as if it were the total is its own
@@ -6147,7 +6147,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 					foreach ( $batch['rows'] as $row ) {
 						$total_rows++;
-						if ( (int) $row['bytes'] > bb_draft_max_size() ) {
+						if ( (int) $row['bytes'] > bboss_draft_max_size() ) {
 							$oversized++;
 						}
 					}
@@ -6162,7 +6162,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 			// Drain fully regardless of size - the docblock promises completion.
 			do {
-				$oneshot = bb_drafts_oneshot_batch( 0 );
+				$oneshot = bboss_drafts_oneshot_batch( 0 );
 
 				// Another sweep holds the lock - do not spin. Same handling the
 				// expiry drain below uses.
@@ -6189,7 +6189,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			} while ( empty( $oneshot['complete'] ) );
 
 			do {
-				$expired = bb_drafts_delete_expired( 0 );
+				$expired = bboss_drafts_delete_expired( 0 );
 
 				if ( ! empty( $expired['locked'] ) ) {
 					WP_CLI::warning( 'Expiry pass skipped: another sweep holds the lock. Re-run once it finishes.' );
@@ -6211,7 +6211,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$stamp_max_abstentions = 3;
 
 			do {
-				$stamp_pass = bb_drafts_release_orphaned_draft_stamps( 0 );
+				$stamp_pass = bboss_drafts_release_orphaned_draft_stamps( 0 );
 
 				if ( ! empty( $stamp_pass['locked'] ) ) {
 					WP_CLI::warning( 'Orphan-stamp sweep skipped: another sweep holds the lock. Re-run once it finishes.' );

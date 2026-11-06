@@ -49,7 +49,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					the_post_thumbnail( apply_filters( 'mpcs_course_thumbnail_size', 'mpcs-course-thumbnail' ), array( 'class' => 'img-responsive' ) );
 				else :
 					?>
-					<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+					<img src="<?php echo esc_url( bboss()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
 				<?php endif; ?>
 			</a>
 		</div>
@@ -74,11 +74,11 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					<div class="bb-rl-course-author">
 						<?php
 						$user_id    = get_the_author_meta( 'ID' );
-						$author_url = bp_core_get_user_domain( $user_id );
+						$author_url = bboss_core_get_user_domain( $user_id );
 						?>
 						<a href="<?php echo esc_url( $author_url ); ?>" class="item-avatar bb-rl-author-avatar">
 							<?php
-							echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
+							echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 								array(
 									'item_id' => $user_id,
 									'html' => true,
@@ -88,7 +88,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 						</a>
 						<span class="bb-rl-author-name">
 							<?php
-							$author_name = bp_core_get_user_displayname( $user_id );
+							$author_name = bboss_core_get_user_displayname( $user_id );
 							// translators: %s is the author name.
 							printf( esc_html__( 'By %s', 'buddyboss' ), '<a href="' . esc_url( $author_url ) . '">' . esc_html( $author_name ) . '</a>' );
 							?>
@@ -137,7 +137,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 	<div class="bb-rl-course-card-popup">
 		<div class="bb-rl-course-timestamp">
 			<?php
-			$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
+			$course_update_date = BBoss_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
 			// translators: %s is the updated date.
 			printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $course_update_date ) );
 			?>
@@ -156,11 +156,11 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			<h4><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></h4>
 			<?php
 			$author_id   = get_the_author_meta( 'ID' );
-			$author_name = bp_core_get_user_displayname( $user_id );
+			$author_name = bboss_core_get_user_displayname( $user_id );
 			?>
 			<span class="bb-rl-author-avatar">
 				<?php
-				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
+				echo bboss_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 					array(
 						'item_id' => $user_id,
 						'html' => true,

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Single message class.
  */
-class BP_Messages_Message {
+class BBoss_Messages_Message {
 
 	/**
 	 * ID of the message.
@@ -90,8 +90,8 @@ class BP_Messages_Message {
 	 * @param int|null $id Optional. ID of the message.
 	 */
 	public function __construct( $id = null ) {
-		$this->date_sent = bp_core_current_time();
-		$this->sender_id = bp_loggedin_user_id();
+		$this->date_sent = bboss_core_current_time();
+		$this->sender_id = bboss_loggedin_user_id();
 
 		if ( ! empty( $id ) ) {
 			$this->populate( $id );
@@ -131,7 +131,7 @@ class BP_Messages_Message {
 	public function send() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->sender_id    = apply_filters( 'messages_message_sender_id_before_save', $this->sender_id, $this->id );
 		$this->thread_id    = apply_filters( 'messages_message_thread_id_before_save', $this->thread_id, $this->id );
@@ -149,7 +149,7 @@ class BP_Messages_Message {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
+		 * @param BBoss_Messages_Message $this Current instance of the message item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'messages_message_before_save', array( &$this ) );
 
@@ -197,7 +197,7 @@ class BP_Messages_Message {
 			 *
 			 * @since BuddyBoss 2.1.4
 			 *
-			 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
+			 * @param BBoss_Messages_Message $this Current instance of the message item being saved. Passed by reference.
 			 */
 			do_action_ref_array( 'messages_message_new_thread_save', array( &$this ) );
 
@@ -213,11 +213,11 @@ class BP_Messages_Message {
 			}
 		}
 
-		messages_remove_callback_values();
+		bboss_messages_remove_callback_values();
 
 		// Removed message meta while sending a new message.
 		if ( ! empty( $this->id ) && ! is_wp_error( $this->id ) ) {
-			bp_messages_delete_meta( $this->id );
+			bboss_messages_delete_meta( $this->id );
 		}
 
 		/**
@@ -225,7 +225,7 @@ class BP_Messages_Message {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
+		 * @param BBoss_Messages_Message $this Current instance of the message item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'messages_message_after_save', array( &$this ) );
 
@@ -239,7 +239,7 @@ class BP_Messages_Message {
 	 */
 	public function get_recipients() {
 
-		$results = BP_Messages_Thread::get(
+		$results = BBoss_Messages_Thread::get(
 			array(
 				'per_page'        => - 1,
 				'include_threads' => array( $this->thread_id ),
@@ -279,7 +279,7 @@ class BP_Messages_Message {
 			$rec_un_count = count( $recipient_usernames );
 
 			for ( $i = 0, $count = $rec_un_count; $i < $count; ++ $i ) {
-				if ( $rid = bp_core_get_userid( trim( $recipient_usernames[ $i ] ) ) ) {
+				if ( $rid = bboss_core_get_userid( trim( $recipient_usernames[ $i ] ) ) ) {
 					$recipient_ids[] = $rid;
 				}
 			}
@@ -308,7 +308,7 @@ class BP_Messages_Message {
 		$query = self::get(
 			array(
 				'fields'          => 'ids',
-				'user_id'         => bp_loggedin_user_id(),
+				'user_id'         => bboss_loggedin_user_id(),
 				'include_threads' => array( $thread_id ),
 				'page'            => 1,
 				'per_page'        => 1,
@@ -371,7 +371,7 @@ class BP_Messages_Message {
 	public static function delete_user_message( $user_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Get the message ids in order to delete their metas.
 		$messages = self::get(
@@ -408,10 +408,10 @@ class BP_Messages_Message {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok;
 			// bp_messages_delete_meta( $message_id );
-			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
-			bp_messages_update_meta( $message_id, '_gif_data', '' );
-			bp_messages_update_meta( $message_id, 'bp_media_ids', '' );
-			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+			bboss_messages_update_meta( $message_id, '_gif_raw_data', '' );
+			bboss_messages_update_meta( $message_id, '_gif_data', '' );
+			bboss_messages_update_meta( $message_id, 'bp_media_ids', '' );
+			bboss_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
 		}
 
 		// unread thread message.
@@ -422,11 +422,11 @@ class BP_Messages_Message {
 		}
 
 		// Delete the thread of user.
-		if ( bp_has_message_threads( array( 'user_id' => $user_id ) ) ) {
-			while ( bp_message_threads() ) :
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				messages_delete_thread( $thread_id, $user_id );
+		if ( bboss_has_message_threads( array( 'user_id' => $user_id ) ) ) {
+			while ( bboss_message_threads() ) :
+				bboss_message_thread();
+				$thread_id = bboss_get_message_thread_id();
+				bboss_messages_delete_thread( $thread_id, $user_id );
 			endwhile;
 		}
 
@@ -447,7 +447,7 @@ class BP_Messages_Message {
 	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// add the sender into the recipient list and order by id ascending
 		$recipient_ids[] = $sender;
@@ -455,7 +455,7 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+		$results    = BBoss_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'ids',
 				'having_sql' => $having_sql,
@@ -469,7 +469,7 @@ class BP_Messages_Message {
 		}
 
 		$thread_id           = current( $results['threads'] );
-		$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender );
+		$is_active_recipient = BBoss_Messages_Thread::is_thread_recipient( $thread_id, $sender );
 		if ( ! $is_active_recipient ) {
 			return null;
 		}
@@ -497,7 +497,7 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results = BP_Messages_Thread::get_threads_for_user(
+		$results = BBoss_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'      => 'select',
 				'having_sql'  => $having_sql,
@@ -529,7 +529,7 @@ class BP_Messages_Message {
 	 * @type int    $user_id           Optional. If provided, results will be limited to messages of which the specified user is a sender.
 	 *                                 Default: null.
 	 * @type array  $meta_query        Optional. An array of meta_query conditions. See {@link WP_Meta_Query::queries} for description.
-	 * @type array  $date_query        Optional. An array of meta_query conditions. See {@link BP_Date_Query::queries} for description.
+	 * @type array  $date_query        Optional. An array of meta_query conditions. See {@link BBoss_Date_Query::queries} for description.
 	 * @type array  $include           Optional. Array of message IDs. Results will include the listed messages.
 	 *                                 Default: false.
 	 * @type array  $exclude           Optional. Array of message IDs. Results will exclude the listed messages.
@@ -545,7 +545,7 @@ class BP_Messages_Message {
 	 * @type bool   $update_meta_cache Whether to pre-fetch messagemeta for the returned messages.
 	 *                                 Default: true.
 	 * @type string $fields            Which fields to return. Specify 'ids' to fetch a list of IDs.
-	 *                                 Default: 'all' (return BP_Messages_Message objects).
+	 *                                 Default: 'all' (return BBoss_Messages_Message objects).
 	 * @type string $group_by          Which fields to group by. Specify 'id' to group messages by IDs.
 	 * @type string $subject           Specific results with not matching the subject.
 	 * @type int    $count_total       Total count of all messages matching non-paginated query params.
@@ -557,7 +557,7 @@ class BP_Messages_Message {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$defaults = array(
 			'orderby'           => 'date_sent',
@@ -581,7 +581,7 @@ class BP_Messages_Message {
 			'is_deleted'        => true,
 		);
 
-		$r = bp_parse_args( $args, $defaults, 'bp_messages_message_get' );
+		$r = bboss_parse_args( $args, $defaults, 'bp_messages_message_get' );
 
 		$sql = array(
 			'select'     => 'SELECT DISTINCT m.id',
@@ -675,7 +675,7 @@ class BP_Messages_Message {
 		$orderby = $r['orderby'];
 
 		// Sanitize 'order'.
-		$order = bp_esc_sql_order( $order );
+		$order = bboss_esc_sql_order( $order );
 
 		/**
 		 * Filters the converted 'orderby' term.
@@ -732,11 +732,11 @@ class BP_Messages_Message {
 		 */
 		$paged_messages_sql = apply_filters( 'bp_messages_message_get_paged_sql', $paged_messages_sql, $sql, $r );
 
-		$cached = bp_core_get_incremented_cache( $paged_messages_sql, 'bp_messages' );
+		$cached = bboss_core_get_incremented_cache( $paged_messages_sql, 'bp_messages' );
 
 		if ( false === $cached ) {
 			$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			bp_core_set_incremented_cache( $paged_messages_sql, 'bp_messages', $paged_message_ids );
+			bboss_core_set_incremented_cache( $paged_messages_sql, 'bp_messages', $paged_message_ids );
 		} else {
 			$paged_message_ids = $cached;
 		}
@@ -749,11 +749,11 @@ class BP_Messages_Message {
 		} elseif ( ! empty( $paged_message_ids ) ) {
 			$message_ids_sql             = implode( ',', array_map( 'intval', $paged_message_ids ) );
 			$message_data_objects_sql    = "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})";
-			$message_data_objects_cached = bp_core_get_incremented_cache( $message_data_objects_sql, 'bp_messages' );
+			$message_data_objects_cached = bboss_core_get_incremented_cache( $message_data_objects_sql, 'bp_messages' );
 
 			if ( false === $message_data_objects_cached ) {
 				$message_data_objects = $wpdb->get_results( $message_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $message_data_objects_sql is the literal built just above: table name from buddypress(), ids intval()'d.
-				bp_core_set_incremented_cache( $message_data_objects_sql, 'bp_messages', $message_data_objects );
+				bboss_core_set_incremented_cache( $message_data_objects_sql, 'bp_messages', $message_data_objects );
 			} else {
 				$message_data_objects = $message_data_objects_cached;
 			}
@@ -786,11 +786,11 @@ class BP_Messages_Message {
 			 */
 			$total_messages_sql = apply_filters( 'bp_messages_message_get_total_sql', $total_messages_sql, $sql, $r );
 
-			$total_messages_sql_cached = bp_core_get_incremented_cache( $total_messages_sql, 'bp_messages' );
+			$total_messages_sql_cached = bboss_core_get_incremented_cache( $total_messages_sql, 'bp_messages' );
 
 			if ( false === $total_messages_sql_cached ) {
 				$total_messages = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-				bp_core_set_incremented_cache( $total_messages_sql, 'bp_messages', $total_messages );
+				bboss_core_set_incremented_cache( $total_messages_sql, 'bp_messages', $total_messages );
 			} else {
 				$total_messages = $total_messages_sql_cached;
 			}
@@ -802,7 +802,7 @@ class BP_Messages_Message {
 	}
 
 	/**
-	 * Get the SQL for the 'meta_query' param in BP_Messages_Message::get()
+	 * Get the SQL for the 'meta_query' param in BBoss_Messages_Message::get()
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses.
@@ -826,7 +826,7 @@ class BP_Messages_Message {
 			$message_meta_query = new WP_Meta_Query( $meta_query );
 
 			// WP_Meta_Query expects the table name at.
-			$wpdb->messagemeta = buddypress()->messages->table_name_meta;
+			$wpdb->messagemeta = bboss()->messages->table_name_meta;
 
 			$meta_sql           = $message_meta_query->get_sql( 'message', 'm', 'id' );
 			$sql_array['join']  = $meta_sql['join'];
@@ -837,11 +837,11 @@ class BP_Messages_Message {
 	}
 
 	/**
-	 * Get the SQL for the 'date_query' param in BP_Messages_Message::get().
+	 * Get the SQL for the 'date_query' param in BBoss_Messages_Message::get().
 	 *
-	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
+	 * We use BBoss_Date_Query, which extends WP_Date_Query, to do the heavy lifting
 	 * of parsing the date_query array and creating the necessary SQL clauses.
-	 * However, since BP_Messages_Message::get() builds its SQL differently than
+	 * However, since BBoss_Messages_Message::get() builds its SQL differently than
 	 * WP_Query, we have to alter the return value (stripping the leading AND
 	 * keyword from the query).
 	 *
@@ -857,7 +857,7 @@ class BP_Messages_Message {
 
 		// Date query.
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
-			$date_query = new BP_Date_Query( $date_query, 'date_sent' );
+			$date_query = new BBoss_Date_Query( $date_query, 'date_sent' );
 			$sql        = preg_replace( '/^\sAND/', '', $date_query->get_sql() );
 		}
 

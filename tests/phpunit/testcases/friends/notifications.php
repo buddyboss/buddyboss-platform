@@ -27,7 +27,7 @@ class BP_Tests_Friends_Notifications extends BP_UnitTestcase {
 	 */
 	public function test_friends_format_notifications_bp_friends_multiple_friendship_accepted_notification_filter() {
 		add_filter( 'bp_friends_multiple_friendship_accepted_notification', array( $this, 'notification_filter_callback' ) );
-		$n = friends_format_notifications( 'friendship_accepted', $this->friend, 0, 5 );
+		$n = bboss_friends_format_notifications( 'friendship_accepted', $this->friend, 0, 5 );
 		remove_filter( 'bp_friends_multiple_friendship_accepted_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_friends_multiple_friendship_accepted_notification', $this->filter_fired );
@@ -38,7 +38,7 @@ class BP_Tests_Friends_Notifications extends BP_UnitTestcase {
 	 */
 	public function test_friends_format_notifications_bp_friends_single_friendship_accepted_notification_filter() {
 		add_filter( 'bp_friends_single_friendship_accepted_notification', array( $this, 'notification_filter_callback' ) );
-		$n = friends_format_notifications( 'friendship_accepted', $this->friend, 0, 1 );
+		$n = bboss_friends_format_notifications( 'friendship_accepted', $this->friend, 0, 1 );
 		remove_filter( 'bp_friends_single_friendship_accepted_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_friends_single_friendship_accepted_notification', $this->filter_fired );
@@ -49,7 +49,7 @@ class BP_Tests_Friends_Notifications extends BP_UnitTestcase {
 	 */
 	public function test_friends_format_notifications_bp_friends_multiple_friendship_request_notification_filter() {
 		add_filter( 'bp_friends_multiple_friendship_request_notification', array( $this, 'notification_filter_callback' ) );
-		$n = friends_format_notifications( 'friendship_request', $this->friend, 0, 5 );
+		$n = bboss_friends_format_notifications( 'friendship_request', $this->friend, 0, 5 );
 		remove_filter( 'bp_friends_multiple_friendship_request_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_friends_multiple_friendship_request_notification', $this->filter_fired );
@@ -60,7 +60,7 @@ class BP_Tests_Friends_Notifications extends BP_UnitTestcase {
 	 */
 	public function test_friends_format_notifications_bp_friends_single_friendship_request_notification_filter() {
 		add_filter( 'bp_friends_single_friendship_request_notification', array( $this, 'notification_filter_callback' ) );
-		$n = friends_format_notifications( 'friendship_request', $this->friend, 0, 1 );
+		$n = bboss_friends_format_notifications( 'friendship_request', $this->friend, 0, 1 );
 		remove_filter( 'bp_friends_single_friendship_request_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_friends_single_friendship_request_notification', $this->filter_fired );

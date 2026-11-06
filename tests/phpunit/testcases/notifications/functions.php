@@ -22,7 +22,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		$count = bp_notifications_get_unread_notification_count( $u );
+		$count = bboss_notifications_get_unread_notification_count( $u );
 
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
@@ -53,13 +53,13 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		$count = bp_notifications_get_unread_notification_count( $u );
+		$count = bboss_notifications_get_unread_notification_count( $u );
 
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
 		// delete
-		BP_Notifications_Notification::delete( array( 'id' => $n1, ) );
+		BBoss_Notifications_Notification::delete( array( 'id' => $n1, ) );
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
 		$this->assertFalse( wp_cache_get( $u, 'bp_notifications_unread_count' ) );
@@ -81,13 +81,13 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		$count = bp_notifications_get_unread_notification_count( $u );
+		$count = bboss_notifications_get_unread_notification_count( $u );
 
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
 		// mark all notifications by user as read
-		BP_Notifications_Notification::update(
+		BBoss_Notifications_Notification::update(
 			array( 'is_new'  => false ),
 			array( 'user_id' => $u    )
 		);
@@ -112,13 +112,13 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		$count = bp_notifications_get_unread_notification_count( $u );
+		$count = bboss_notifications_get_unread_notification_count( $u );
 
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
 		// mark one notification as read
-		BP_Notifications_Notification::update(
+		BBoss_Notifications_Notification::update(
 			array( 'is_new' => false ),
 			array( 'id'     => $n1   )
 		);
@@ -144,18 +144,18 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// Add cache for each notification.
-		bp_notifications_update_meta( $n1, 'meta', 'data' );
-		bp_notifications_update_meta( $n1, 'data', 'meta' );
-		bp_notifications_update_meta( $n2, 'meta', 'human' );
+		bboss_notifications_update_meta( $n1, 'meta', 'data' );
+		bboss_notifications_update_meta( $n1, 'data', 'meta' );
+		bboss_notifications_update_meta( $n2, 'meta', 'human' );
 
 		// Prime cache.
-		bp_notifications_get_meta( $n1, 'meta' );
+		bboss_notifications_get_meta( $n1, 'meta' );
 
 		// Ensure an empty cache for second notification.
 		wp_cache_delete( $n2, 'notification_meta' );
 
 		// Update notification meta cache.
-		bp_notifications_update_meta_cache( array( $n1, $n2 ) );
+		bboss_notifications_update_meta_cache( array( $n1, $n2 ) );
 
 		$expected = array(
 			$n1 => array(
@@ -195,7 +195,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 
 		self::factory()->notification->create( $args );
 
-		$this->assertFalse( bp_notifications_add_notification( $args ) );
+		$this->assertFalse( bboss_notifications_add_notification( $args ) );
 	}
 
 	/**
@@ -214,7 +214,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 
 		$args['allow_duplicate'] = true;
 
-		$this->assertNotEmpty( bp_notifications_add_notification( $args ) );
+		$this->assertNotEmpty( bboss_notifications_add_notification( $args ) );
 	}
 
 	/**
@@ -235,13 +235,13 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// prime cache
-		bp_notifications_get_unread_notification_count( $u2 );
+		bboss_notifications_get_unread_notification_count( $u2 );
 
 		// mark the created notification as read
-		bp_notifications_mark_notifications_by_item_id( $u2, 99, 'messages', 'new_message', $u1 );
+		bboss_notifications_mark_notifications_by_item_id( $u2, 99, 'messages', 'new_message', $u1 );
 
 		// now grab the updated notification count
-		$n = bp_notifications_get_unread_notification_count( $u2 );
+		$n = bboss_notifications_get_unread_notification_count( $u2 );
 
 		// assert
 		$this->assertEquals( 0, $n );
@@ -283,13 +283,13 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// now fetch only activity notifications
-		bp_has_notifications( array(
+		bboss_has_notifications( array(
 			'component_name' => 'activity',
 			'user_id'        => $u2
 		) );
 
 		// assert
-		$this->assertEquals( 2, buddypress()->notifications->query_loop->total_notification_count );
+		$this->assertEquals( 2, bboss()->notifications->query_loop->total_notification_count );
 	}
 
 	/**
@@ -336,8 +336,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		global $wpdb, $bp;
 
 		/**
-		 * Can't use BP_Notifications_Notification::get(), because class::parse_args,
-		 * checks against bp_notifications_get_registered_components()
+		 * Can't use BBoss_Notifications_Notification::get(), because class::parse_args,
+		 * checks against bboss_notifications_get_registered_components()
 		 * and if component is disabled it will be ignored.
 		 */
 		$query = $wpdb->prepare( "SELECT id FROM {$bp->notifications->table_name} WHERE user_id = %d and is_new = 1", $u );
@@ -368,10 +368,10 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// Override activity notification callback so we can test integrity.
-		buddypress()->activity->notification_callback = array( $this, 'dummy_notification_callback' );
+		bboss()->activity->notification_callback = array( $this, 'dummy_notification_callback' );
 
 		// Fetch notifications with string format.
-		bp_notifications_get_notifications_for_user( $u, 'string' );
+		bboss_notifications_get_notifications_for_user( $u, 'string' );
 
 		// Assert!
 		// @todo When we cast all numeric strings as integers, this needs to be changed.
@@ -386,14 +386,14 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		$this->assertEquals( $expected, $this->n_args );
 
 		// Fetch notifications with object format this time.
-		bp_notifications_get_notifications_for_user( $u, 'object' );
+		bboss_notifications_get_notifications_for_user( $u, 'object' );
 
 		// Assert!
 		$expected['format'] = 'array';
 		$this->assertEquals( $expected, $this->n_args );
 
 		// Reset!
-		buddypress()->activity->notification_callback = 'bp_activity_format_notifications';
+		bboss()->activity->notification_callback = 'bp_activity_format_notifications';
 		unset( $this->n_args );
 	}
 
@@ -419,7 +419,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		// Prime cache.
-		$found = bp_notifications_get_grouped_notifications_for_user( $u );
+		$found = bboss_notifications_get_grouped_notifications_for_user( $u );
 		$this->assertEquals( 1, $found[0]->total_count );
 
 		$n2 = self::factory()->notification->create( array(
@@ -429,7 +429,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 			'user_id'           => $u,
 		) );
 
-		$found = bp_notifications_get_grouped_notifications_for_user( $u );
+		$found = bboss_notifications_get_grouped_notifications_for_user( $u );
 		$this->assertEquals( 2, $found[0]->total_count );
 	}
 }

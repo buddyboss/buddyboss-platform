@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Posts' ) ) :
+if ( ! class_exists( 'BBoss_Search_Posts' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search posts class
 	 */
-	class Bp_Search_Posts extends Bp_Search_Type {
+	class BBoss_Search_Posts extends BBoss_Search_Type {
 		/**
 		 * Post type.
 		 *
@@ -89,12 +89,12 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$tax         = array();
 
 			// Get the search words from the search string.
-			$search_term_array = bb_search_get_search_keywords_by_term( $search_term, $this->pt_name );
+			$search_term_array = bboss_search_get_search_keywords_by_term( $search_term, $this->pt_name );
 
 			// Get taxonomy.
 			$taxonomies = get_object_taxonomies( $this->pt_name );
 			foreach ( $taxonomies as $taxonomy ) {
-				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->pt_name ) ) {
+				if ( bboss_is_search_post_type_taxonomy_enable( $taxonomy, $this->pt_name ) ) {
 					$tax[] = $taxonomy;
 				}
 			}
@@ -128,7 +128,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			}
 
 			// Meta query.
-			if ( bp_is_search_post_type_meta_enable( $this->pt_name ) ) {
+			if ( bboss_is_search_post_type_meta_enable( $this->pt_name ) ) {
 				$where .= $this->parse_search_meta_query( $search_term_array );
 			}
 
@@ -204,7 +204,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 						'id'    => get_the_ID(),
 						'type'  => $this->search_type,
 						'title' => get_the_title(),
-						'html'  => bp_search_buffer_template_part( 'loop/post', $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/post', $template_type, false ),
 					);
 
 					$this->search_results['items'][ get_the_ID() ] = $result;

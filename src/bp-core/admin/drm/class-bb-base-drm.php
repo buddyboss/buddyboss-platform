@@ -279,7 +279,7 @@ abstract class BB_Base_DRM {
 		}
 
 		// Default values for optional keys.
-		$support_link = isset( $drm_info['support_link'] ) ? $drm_info['support_link'] : bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$support_link = isset( $drm_info['support_link'] ) ? $drm_info['support_link'] : bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate Your License', 'buddyboss' );
 
 		// Generate unique notice ID for dismissal (only for warnings).
@@ -482,9 +482,9 @@ abstract class BB_Base_DRM {
 
 		// Determine icon based on severity.
 		if ( BB_DRM_Helper::DRM_LOCKED === $drm_status || BB_DRM_Helper::DRM_HIGH === $drm_status ) {
-			$icon_url = buddypress()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
+			$icon_url = bboss()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
 		} else {
-			$icon_url = buddypress()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
+			$icon_url = bboss()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
 		}
 
 		$notifications = new BB_Notifications();

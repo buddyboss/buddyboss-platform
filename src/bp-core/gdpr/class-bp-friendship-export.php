@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Friendship_Export class
+ * Export API: BBoss_Friendship_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Friendship_Export
+ * Class BBoss_Friendship_Export
  */
-final class BP_Friendship_Export extends BP_Export {
+final class BBoss_Friendship_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -24,7 +24,7 @@ final class BP_Friendship_Export extends BP_Export {
 
 		if ( null === $instance ) {
 
-			$instance = new BP_Friendship_Export();
+			$instance = new BBoss_Friendship_Export();
 			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss' ) );
 		}
 
@@ -81,7 +81,7 @@ final class BP_Friendship_Export extends BP_Export {
 					'name'  => __( 'Connection Name', 'buddyboss' ),
 					// Resolve for the data subject ($user) so a last name the connection has
 					// hidden by profile-field visibility is not exported in the raw column.
-					'value' => bp_core_get_user_displayname( $friend_user_id, $user->ID ),
+					'value' => bboss_core_get_user_displayname( $friend_user_id, $user->ID ),
 				),
 				array(
 					'name'  => __( 'Sent Created (GMT)', 'buddyboss' ),
@@ -134,7 +134,7 @@ final class BP_Friendship_Export extends BP_Export {
 		$items_removed  = true;
 		$items_retained = false;
 
-		friends_remove_data( $user->ID );
+		bboss_friends_remove_data( $user->ID );
 
 		$done = true;
 

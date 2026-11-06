@@ -25,8 +25,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool True when the plugin is active for this site.
  */
-function bb_two_factor_plugin_is_active() {
-	$basename = bb_two_factor_plugin_basename();
+function bboss_two_factor_plugin_is_active() {
+	$basename = bboss_two_factor_plugin_basename();
 	$plugins  = (array) get_option( 'active_plugins', array() );
 
 	if ( in_array( $basename, $plugins, true ) ) {
@@ -52,7 +52,7 @@ function bb_two_factor_plugin_is_active() {
  *
  * @return string Version string, or an empty string when the plugin is absent.
  */
-function bb_two_factor_plugin_version() {
+function bboss_two_factor_plugin_version() {
 	return defined( 'TWO_FACTOR_VERSION' ) ? (string) TWO_FACTOR_VERSION : '';
 }
 
@@ -66,18 +66,18 @@ function bb_two_factor_plugin_version() {
  *
  * @return bool True when the integration can safely call into the plugin.
  */
-function bb_two_factor_is_supported() {
-	if ( ! bb_two_factor_plugin_is_active() || ! class_exists( 'Two_Factor_Core' ) ) {
+function bboss_two_factor_is_supported() {
+	if ( ! bboss_two_factor_plugin_is_active() || ! class_exists( 'Two_Factor_Core' ) ) {
 		return false;
 	}
 
-	$version = bb_two_factor_plugin_version();
+	$version = bboss_two_factor_plugin_version();
 
 	if ( '' === $version ) {
 		return false;
 	}
 
-	return version_compare( $version, bb_two_factor_min_plugin_version(), '>=' );
+	return version_compare( $version, bboss_two_factor_min_plugin_version(), '>=' );
 }
 
 /**
@@ -85,15 +85,15 @@ function bb_two_factor_is_supported() {
  *
  * Reads `bb-active-features` directly rather than going through the Feature
  * Registry: this runs at bp_include, before feature discovery, where
- * BB_Feature_Registry::bb_is_feature_active() returns false for a feature it has
+ * BBoss_Feature_Registry::bb_is_feature_active() returns false for a feature it has
  * not registered yet. An absent key means on, matching reCAPTCHA and Reactions.
  *
  * @since BuddyBoss 3.6.0
  *
  * @return bool True when the feature is enabled.
  */
-function bb_two_factor_feature_is_on() {
-	$active_features = bp_get_option( 'bb-active-features', array() );
+function bboss_two_factor_feature_is_on() {
+	$active_features = bboss_get_option( 'bb-active-features', array() );
 
 	if ( ! is_array( $active_features ) || ! array_key_exists( 'two-factor', $active_features ) ) {
 		$is_on = true;
@@ -114,7 +114,7 @@ function bb_two_factor_feature_is_on() {
 /**
  * The guard every consumer of this integration uses.
  *
- * Never use bp_is_active( 'two-factor' ) or bb_add_action_if_active() instead:
+ * Never use bp_is_active( 'two-factor' ) or bboss_add_action_if_active() instead:
  * both read `bp-active-components`, which the Integration Bridge writes only
  * after the first admin toggle, so a fresh install would read as off.
  *
@@ -122,8 +122,8 @@ function bb_two_factor_feature_is_on() {
  *
  * @return bool True when the integration should do anything at all.
  */
-function bb_two_factor_is_active() {
-	return bb_two_factor_is_supported() && bb_two_factor_feature_is_on();
+function bboss_two_factor_is_active() {
+	return bboss_two_factor_is_supported() && bboss_two_factor_feature_is_on();
 }
 
 /**
@@ -134,13 +134,13 @@ function bb_two_factor_is_active() {
  * @param int $user_id Optional. Defaults to the displayed user, then the logged-in user.
  * @return string
  */
-function bb_two_factor_get_settings_url( $user_id = 0 ) {
+function bboss_two_factor_get_settings_url( $user_id = 0 ) {
 	if ( $user_id ) {
-		$domain = bp_core_get_user_domain( $user_id );
-	} elseif ( bp_displayed_user_domain() ) {
-		$domain = bp_displayed_user_domain();
+		$domain = bboss_core_get_user_domain( $user_id );
+	} elseif ( bboss_displayed_user_domain() ) {
+		$domain = bboss_displayed_user_domain();
 	} else {
-		$domain = bp_loggedin_user_domain();
+		$domain = bboss_loggedin_user_domain();
 	}
 
 	// An unresolved member would otherwise produce a relative path.
@@ -148,7 +148,7 @@ function bb_two_factor_get_settings_url( $user_id = 0 ) {
 		return '';
 	}
 
-	return trailingslashit( $domain . bp_get_settings_slug() . '/security' );
+	return trailingslashit( $domain . bboss_get_settings_slug() . '/security' );
 }
 
 /**
@@ -165,8 +165,8 @@ function bb_two_factor_get_settings_url( $user_id = 0 ) {
  * @param int $user_id Member ID.
  * @return WP_Error|false The plugin's error, or false when the configuration resolves.
  */
-function bb_two_factor_get_broken_config( $user_id ) {
-	if ( ! bb_two_factor_is_active() ) {
+function bboss_two_factor_get_broken_config( $user_id ) {
+	if ( ! bboss_two_factor_is_active() ) {
 		return false;
 	}
 
@@ -195,8 +195,8 @@ function bb_two_factor_get_broken_config( $user_id ) {
  *                        the signature matches the plugin's own method.
  * @return bool
  */
-function bb_two_factor_current_user_can_manage( $context = 'display' ) {
-	if ( ! is_user_logged_in() || ! bb_two_factor_is_active() ) {
+function bboss_two_factor_current_user_can_manage( $context = 'display' ) {
+	if ( ! is_user_logged_in() || ! bboss_two_factor_is_active() ) {
 		return false;
 	}
 
@@ -208,7 +208,7 @@ function bb_two_factor_current_user_can_manage( $context = 'display' ) {
 		return true;
 	}
 
-	if ( version_compare( bb_two_factor_plugin_version(), '0.17.0', '>=' ) ) {
+	if ( version_compare( bboss_two_factor_plugin_version(), '0.17.0', '>=' ) ) {
 		return (bool) Two_Factor_Core::current_user_can_update_two_factor_options( $context );
 	}
 
@@ -245,7 +245,7 @@ function bb_two_factor_current_user_can_manage( $context = 'display' ) {
  *
  * @return string[] Provider class names, e.g. 'Two_Factor_Backup_Codes'.
  */
-function bb_two_factor_get_recovery_providers() {
+function bboss_two_factor_get_recovery_providers() {
 
 	/**
 	 * Filters which two-factor providers count as a recovery method.
@@ -283,7 +283,7 @@ function bb_two_factor_get_recovery_providers() {
  * @param string[] $provider_ids Provider class names that would be enabled.
  * @return true|WP_Error True when the set may be enabled.
  */
-function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
+function bboss_two_factor_check_recovery_method( $user_id, $provider_ids ) {
 
 	/**
 	 * Filters whether a recovery method is required before a primary method can be enabled.
@@ -305,7 +305,7 @@ function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
 
 	$provider_ids = array_filter( array_map( 'strval', (array) $provider_ids ) );
 	$enabled      = array_intersect_key( $supported, array_flip( $provider_ids ) );
-	$recovery_ids = bb_two_factor_get_recovery_providers();
+	$recovery_ids = bboss_two_factor_get_recovery_providers();
 	$primary      = array_diff_key( $enabled, array_flip( $recovery_ids ) );
 
 	if ( empty( $primary ) ) {
@@ -367,14 +367,14 @@ function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
  * @param int $user_id Member being saved.
  * @return true|WP_Error True when the submission may be saved.
  */
-function bb_two_factor_validate_recovery_method( $user_id ) {
+function bboss_two_factor_validate_recovery_method( $user_id ) {
 	$field = Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY;
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Both nonces are verified by bb_two_factor_settings_save() before this runs.
 	$input = isset( $_POST[ $field ] ) && is_array( $_POST[ $field ] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST[ $field ] ) ) : array();
 
 	// The plugin prints an empty placeholder input so the field always posts; it is dropped by the check.
-	return bb_two_factor_check_recovery_method( $user_id, $input );
+	return bboss_two_factor_check_recovery_method( $user_id, $input );
 }
 
 /**
@@ -384,10 +384,10 @@ function bb_two_factor_validate_recovery_method( $user_id ) {
  *
  * @return WP_Error
  */
-function bb_two_factor_drain_errors() {
+function bboss_two_factor_drain_errors() {
 	$errors = new WP_Error();
 
-	if ( bb_two_factor_is_active() ) {
+	if ( bboss_two_factor_is_active() ) {
 		Two_Factor_Core::action_user_profile_update_errors( $errors );
 	}
 
@@ -409,7 +409,7 @@ function bb_two_factor_drain_errors() {
  * @param string $return_url Where revalidation should return to.
  * @return string
  */
-function bb_two_factor_set_revalidate_return( $html, $return_url ) {
+function bboss_two_factor_set_revalidate_return( $html, $return_url ) {
 	if ( '' === $return_url || false === strpos( $html, 'action=revalidate_2fa' ) ) {
 		return $html;
 	}
@@ -442,7 +442,7 @@ function bb_two_factor_set_revalidate_return( $html, $return_url ) {
  * @param string $domain      Text domain.
  * @return string
  */
-function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
+function bboss_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
 	if ( 'two-factor' !== $domain ) {
 		return $translation;
 	}
@@ -465,12 +465,12 @@ function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
  *
  * @param WP_User $user The member.
  */
-function bb_two_factor_render_options( $user ) {
-	if ( ! bb_two_factor_is_active() || ! ( $user instanceof WP_User ) ) {
+function bboss_two_factor_render_options( $user ) {
+	if ( ! bboss_two_factor_is_active() || ! ( $user instanceof WP_User ) ) {
 		return;
 	}
 
-	if ( bb_two_factor_get_broken_config( $user->ID ) ) {
+	if ( bboss_two_factor_get_broken_config( $user->ID ) ) {
 		return;
 	}
 
@@ -483,7 +483,7 @@ function bb_two_factor_render_options( $user ) {
 	remove_filter( 'gettext', 'bb_two_factor_filter_plugin_strings', 10 );
 
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup is produced and escaped by Two_Factor_Core.
-	echo bb_two_factor_set_revalidate_return( $html, bb_two_factor_get_settings_url( $user->ID ) );
+	echo bboss_two_factor_set_revalidate_return( $html, bboss_two_factor_get_settings_url( $user->ID ) );
 }
 
 /**
@@ -494,15 +494,15 @@ function bb_two_factor_render_options( $user ) {
  * the section through members/single/plugins.php.
  *
  * Restricted to the viewer's own profile, which under View As is the member the
- * admin switched to. bp_core_can_edit_settings() is not used: it also admits
+ * admin switched to. bboss_core_can_edit_settings() is not used: it also admits
  * admins to another member's settings, where this section would render the
  * admin's own two-factor. The sub-nav already enforces this; repeating it here
  * keeps the guarantee local to the markup that exposes the settings.
  *
  * @since BuddyBoss 3.6.0
  */
-function bb_two_factor_render_section() {
-	if ( ! bb_two_factor_is_active() || ! bp_is_my_profile() ) {
+function bboss_two_factor_render_section() {
+	if ( ! bboss_two_factor_is_active() || ! bboss_is_my_profile() ) {
 		return;
 	}
 
@@ -512,7 +512,7 @@ function bb_two_factor_render_section() {
 		return;
 	}
 
-	$broken = bb_two_factor_get_broken_config( $user->ID );
+	$broken = bboss_two_factor_get_broken_config( $user->ID );
 
 	if ( $broken ) {
 		printf(
@@ -525,11 +525,11 @@ function bb_two_factor_render_section() {
 	?>
 	<p class="info security-info"><?php esc_html_e( 'Add a second step to your sign-in so a stolen password is not enough to reach your account.', 'buddyboss' ); ?></p>
 
-	<form action="<?php echo esc_url( bb_two_factor_get_settings_url() ); ?>" method="post" class="standard-form bb-two-factor-form" id="settings-form">
+	<form action="<?php echo esc_url( bboss_two_factor_get_settings_url() ); ?>" method="post" class="standard-form bb-two-factor-form" id="settings-form">
 
-		<?php bb_two_factor_render_options( $user ); ?>
+		<?php bboss_two_factor_render_options( $user ); ?>
 
-		<?php bp_nouveau_submit_button( 'bb-two-factor-settings' ); ?>
+		<?php bboss_nouveau_submit_button( 'bb-two-factor-settings' ); ?>
 
 	</form>
 	<?php

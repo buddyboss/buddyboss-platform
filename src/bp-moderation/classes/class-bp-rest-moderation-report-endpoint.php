@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Moderation_Report_Endpoint class
+ * BP REST: BBoss_REST_Moderation_Report_Endpoint class
  *
  * @package BuddyBoss
  *
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -22,8 +22,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->moderation->id . '/report';
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->moderation->id . '/report';
 	}
 
 	/**
@@ -86,8 +86,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
 				// Translate default categories for current locale.
-				if ( function_exists( 'bp_moderation_maybe_translate_report_term' ) ) {
-					$reports_term = bp_moderation_maybe_translate_report_term( $reports_term );
+				if ( function_exists( 'bboss_moderation_maybe_translate_report_term' ) ) {
+					$reports_term = bboss_moderation_maybe_translate_report_term( $reports_term );
 				}
 
 				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
@@ -134,7 +134,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		);
 
 		// Exclude block member types from report.
-		$content_types = bp_moderation_content_types();
+		$content_types = bboss_moderation_content_types();
 		if ( array_key_exists( 'user', $content_types ) ) {
 			unset( $content_types['user'] );
 		}
@@ -264,7 +264,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 		$args = apply_filters( 'bp_rest_moderation_report_pre_insert_value', $args, $request );
 
-		$sub_items     = bp_moderation_get_sub_items( $args['content_id'], $args['content_type'] );
+		$sub_items     = bboss_moderation_get_sub_items( $args['content_id'], $args['content_type'] );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $args['content_id'];
 		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $args['content_type'];
 
@@ -278,8 +278,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
-			$message = ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) ?
+		if ( bboss_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
+			$message = ( BBoss_Moderation_Members::$moderation_type_report === $item_sub_type ) ?
 			__( 'You have already reported this Member.', 'buddyboss' ) :
 			__( 'Sorry, Already reported this item.', 'buddyboss' );
 			return new WP_Error(
@@ -294,11 +294,11 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$args['content_id']   = $item_sub_id;
 		$args['content_type'] = $item_sub_type;
 
-		if ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) {
+		if ( BBoss_Moderation_Members::$moderation_type_report === $item_sub_type ) {
 			$args['user_report'] = 1;
 		}
 
-		$report = bp_moderation_add( $args );
+		$report = bboss_moderation_add( $args );
 
 		if ( empty( $report->id ) || empty( $report->report_id ) ) {
 			return new WP_Error(
@@ -317,7 +317,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after the moderation report item is created via the REST API.
 		 *
-		 * @param BP_Moderation    $report   The created moderation report.
+		 * @param BBoss_Moderation    $report   The created moderation report.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
@@ -351,7 +351,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 			$content_type = $request['item_type'];
 
-			if ( ! bp_moderation_user_can( (int) $request['item_id'], $content_type ) ) {
+			if ( ! bboss_moderation_user_can( (int) $request['item_id'], $content_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_item',
 					__( 'Sorry, you are not allowed to report this item.', 'buddyboss' ),
@@ -376,7 +376,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares moderation data for return as an object.
 	 *
-	 * @param BP_Moderation   $report     The Moderation object.
+	 * @param BBoss_Moderation   $report     The Moderation object.
 	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -411,7 +411,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BP_Moderation    $report   The Moderation object.
+		 * @param BBoss_Moderation    $report   The Moderation object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -421,7 +421,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param BP_Moderation   $report  The Moderation object.
+	 * @param BBoss_Moderation   $report  The Moderation object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array
@@ -431,22 +431,22 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$report_links  = $this->prepare_report_link( $report->item_id, $report->item_type );
 		$request_links = $this->prepare_report_link( $request['item_id'], $request['item_type'] );
 
-		if ( 'media' === $request['item_type'] && bp_is_active( 'activity' ) ) {
-			$media = new BP_Media( $request['item_id'] );
+		if ( 'media' === $request['item_type'] && bboss_is_active( 'activity' ) ) {
+			$media = new BBoss_Media( $request['item_id'] );
 			if ( ! empty( $media->activity_id ) ) {
-				$report_links = $this->prepare_report_link( $media->activity_id, BP_Suspend_Activity::$type );
+				$report_links = $this->prepare_report_link( $media->activity_id, BBoss_Suspend_Activity::$type );
 			}
-		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'document' ) && bp_is_active( 'activity' ) ) {
+		} elseif ( 'document' === $request['item_type'] && bboss_is_active( 'document' ) && bboss_is_active( 'activity' ) ) {
 			$document = new BP_Document( $request['item_id'] );
 			if ( ! empty( $document->activity_id ) ) {
-				$report_links = $this->prepare_report_link( $document->activity_id, BP_Suspend_Activity::$type );
+				$report_links = $this->prepare_report_link( $document->activity_id, BBoss_Suspend_Activity::$type );
 			}
-		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
+		} elseif ( 'video' === $request['item_type'] && bboss_is_active( 'video' ) && bboss_is_active( 'activity' ) ) {
 			$video = new BP_Video( $request['item_id'] );
 			if ( ! empty( $video->activity_id ) ) {
-				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
+				$report_links = $this->prepare_report_link( $video->activity_id, BBoss_Suspend_Activity::$type );
 			}
-		} elseif ( BP_Moderation_Members::$moderation_type_report === $request['item_type'] ) {
+		} elseif ( BBoss_Moderation_Members::$moderation_type_report === $request['item_type'] ) {
 			$report_links = $this->prepare_report_link( $request['item_id'], $request['item_type'] );
 		}
 
@@ -456,7 +456,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array         $links  The prepared links of the REST response.
-		 * @param BP_Moderation $report The Moderation object.
+		 * @param BBoss_Moderation $report The Moderation object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -479,77 +479,77 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		}
 
 		switch ( $item_type ) {
-			case BP_Suspend_Activity::$type:
-			case BP_Suspend_Activity_Comment::$type:
+			case BBoss_Suspend_Activity::$type:
+			case BBoss_Suspend_Activity_Comment::$type:
 				$links['activity'] = array(
-					'href'       => rest_url( '/' . $this->namespace . '/' . buddypress()->activity->id . '/' . $item_id ),
+					'href'       => rest_url( '/' . $this->namespace . '/' . bboss()->activity->id . '/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Group::$type:
+			case BBoss_Suspend_Group::$type:
 				$links['group'] = array(
-					'href'       => rest_url( '/' . $this->namespace . '/' . buddypress()->groups->id . '/' . $item_id ),
+					'href'       => rest_url( '/' . $this->namespace . '/' . bboss()->groups->id . '/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Forum::$type:
+			case BBoss_Suspend_Forum::$type:
 				$links['forum'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/forums/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Forum_Topic::$type:
+			case BBoss_Suspend_Forum_Topic::$type:
 				$links['topic'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/topics/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Forum_Reply::$type:
+			case BBoss_Suspend_Forum_Reply::$type:
 				$links['reply'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/reply/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Media::$type:
+			case BBoss_Suspend_Media::$type:
 				$links['media'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/media/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Album::$type:
+			case BBoss_Suspend_Album::$type:
 				$links['albums'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/media/albums/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Document::$type:
+			case BBoss_Suspend_Document::$type:
 				$links['document'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/document/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Folder::$type:
+			case BBoss_Suspend_Folder::$type:
 				$links['folder'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/document/folder/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Video::$type:
+			case BBoss_Suspend_Video::$type:
 				$links['video'] = array(
 					'href'       => rest_url( '/' . $this->namespace . '/video/' . $item_id ),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Moderation_Members::$moderation_type_report:
+			case BBoss_Moderation_Members::$moderation_type_report:
 				$links['member'] = array(
 					'href'       => add_query_arg(
 						array( 'username_visible' => 1 ),
-						rest_url( bp_rest_get_user_url( $item_id ) )
+						rest_url( bboss_rest_get_user_url( $item_id ) )
 					),
 					'embeddable' => true,
 				);
 				break;
-			case BP_Suspend_Comment::$type:
+			case BBoss_Suspend_Comment::$type:
 				$links['comment'] = array(
 					'href'       => rest_url( '/wp/v2/comments/' . $item_id ),
 					'embeddable' => true,
@@ -613,7 +613,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			);
 
 			// Exclude block member types from report.
-			$content_types = bp_moderation_content_types();
+			$content_types = bboss_moderation_content_types();
 			if ( array_key_exists( 'user', $content_types ) ) {
 				unset( $content_types['user'] );
 			}
@@ -795,3 +795,11 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Moderation_Report_Endpoint', false ) || interface_exists( 'BBoss_REST_Moderation_Report_Endpoint', false ) || trait_exists( 'BBoss_REST_Moderation_Report_Endpoint', false ) ) && ! class_exists( 'BP_REST_Moderation_Report_Endpoint', false ) && ! interface_exists( 'BP_REST_Moderation_Report_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Moderation_Report_Endpoint', 'BP_REST_Moderation_Report_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

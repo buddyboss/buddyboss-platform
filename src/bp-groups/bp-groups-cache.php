@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Slurp up metadata for a set of groups.
  *
- * This function is called in two places in the BP_Groups_Group class:
+ * This function is called in two places in the BBoss_Groups_Group class:
  *   - in the populate() method, when single group objects are populated
  *   - in the get() method, when multiple groups are queried
  *
@@ -29,8 +29,8 @@ defined( 'ABSPATH' ) || exit;
  *                                         comma-separated list or array of
  *                                         group ids.
  */
-function bp_groups_update_meta_cache( $group_ids = false ) {
-	$bp = buddypress();
+function bboss_groups_update_meta_cache( $group_ids = false ) {
+	$bp = bboss();
 
 	$cache_args = array(
 		'object_ids'       => $group_ids,
@@ -41,7 +41,7 @@ function bp_groups_update_meta_cache( $group_ids = false ) {
 		'cache_key_prefix' => 'bp_groups_groupmeta',
 	);
 
-	bp_update_meta_cache( $cache_args );
+	bboss_update_meta_cache( $cache_args );
 }
 
 /**
@@ -51,7 +51,7 @@ function bp_groups_update_meta_cache( $group_ids = false ) {
  *
  * @param int $group_id Not used.
  */
-function groups_clear_group_object_cache( $group_id ) {
+function bboss_groups_clear_group_object_cache( $group_id ) {
 	wp_cache_delete( 'bp_total_group_count', 'bp' );
 	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
 	wp_cache_delete( 'bp_get_moderator_total_group_count', 'bp_groups' );
@@ -69,7 +69,7 @@ add_action( 'groups_create_group_step_complete', 'groups_clear_group_object_cach
  *
  * @param int $group_id The group being edited.
  */
-function bp_groups_delete_group_cache( $group_id = 0 ) {
+function bboss_groups_delete_group_cache( $group_id = 0 ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_group_slug_by_id_' . $group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
@@ -89,7 +89,7 @@ add_action( 'groups_settings_updated', 'bp_groups_delete_group_cache' );
  * @param int $meta_id Meta ID.
  * @param int $group_id Group ID.
  */
-function bp_groups_delete_group_cache_on_metadata_change( $meta_id, $group_id ) {
+function bboss_groups_delete_group_cache_on_metadata_change( $meta_id, $group_id ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_group_slug_by_id_' . $group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
@@ -105,11 +105,11 @@ add_action( 'added_group_meta', 'bp_groups_delete_group_cache_on_metadata_change
  * @since BuddyPress 1.6.0
  *
  * @param int             $group_id  ID of the group.
- * @param BP_Groups_Group $group_obj Group object.
+ * @param BBoss_Groups_Group $group_obj Group object.
  */
-function bp_groups_clear_group_creator_cache( $group_id, $group_obj ) {
+function bboss_groups_clear_group_creator_cache( $group_id, $group_obj ) {
 	// Clears the 'total groups' for this user.
-	groups_clear_group_user_object_cache( $group_obj->id, $group_obj->creator_id );
+	bboss_groups_clear_group_user_object_cache( $group_obj->id, $group_obj->creator_id );
 }
 add_action( 'groups_created_group', 'bp_groups_clear_group_creator_cache', 10, 2 );
 
@@ -118,13 +118,13 @@ add_action( 'groups_created_group', 'bp_groups_clear_group_creator_cache', 10, 2
  *
  * @since BuddyPress 1.6.0
  *
- * @param BP_Groups_Group $group_obj Group object.
+ * @param BBoss_Groups_Group $group_obj Group object.
  * @param array           $user_ids  User IDs who were in this group.
  */
-function bp_groups_clear_group_members_caches( $group_obj, $user_ids ) {
+function bboss_groups_clear_group_members_caches( $group_obj, $user_ids ) {
 	// Clears the 'total groups' cache for each member in a group.
 	foreach ( (array) $user_ids as $user_id ) {
-		groups_clear_group_user_object_cache( $group_obj->id, $user_id );
+		bboss_groups_clear_group_user_object_cache( $group_obj->id, $user_id );
 	}
 }
 add_action( 'bp_groups_delete_group', 'bp_groups_clear_group_members_caches', 10, 2 );
@@ -139,7 +139,7 @@ add_action( 'bp_groups_delete_group', 'bp_groups_clear_group_members_caches', 10
  * @param int $user_id  The user ID.
  * @param int $group_id The Group ID.
  */
-function bp_groups_clear_invite_count_for_user( $user_id, $group_id = 0 ) {
+function bboss_groups_clear_invite_count_for_user( $user_id, $group_id = 0 ) {
 	wp_cache_delete( $user_id, 'bp_group_invite_count' );
 
 	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
@@ -165,8 +165,8 @@ add_action( 'groups_delete_invite', 'bp_groups_clear_invite_count_for_user' );
  * @param int $group_id The group ID. Not used in this function.
  * @param int $user_id  The user ID.
  */
-function bp_groups_clear_invite_count_on_uninvite( $group_id, $user_id ) {
-	bp_groups_clear_invite_count_for_user( $user_id );
+function bboss_groups_clear_invite_count_on_uninvite( $group_id, $user_id ) {
+	bboss_groups_clear_invite_count_for_user( $user_id );
 }
 add_action( 'groups_uninvite_user', 'bp_groups_clear_invite_count_on_uninvite', 10, 2 );
 
@@ -178,9 +178,9 @@ add_action( 'groups_uninvite_user', 'bp_groups_clear_invite_count_on_uninvite', 
  * @param int   $group_id      The group ID. Not used in this function.
  * @param array $invited_users Array of invited user IDs.
  */
-function bp_groups_clear_invite_count_on_send( $group_id, $invited_users ) {
+function bboss_groups_clear_invite_count_on_send( $group_id, $invited_users ) {
 	foreach ( $invited_users as $user_id ) {
-		bp_groups_clear_invite_count_for_user( $user_id );
+		bboss_groups_clear_invite_count_for_user( $user_id );
 	}
 }
 add_action( 'groups_send_invites', 'bp_groups_clear_invite_count_on_send', 10, 2 );
@@ -193,7 +193,7 @@ add_action( 'groups_send_invites', 'bp_groups_clear_invite_count_on_send', 10, 2
  * @param int $group_id The group ID. Not used in this function.
  * @param int $user_id  The user ID.
  */
-function groups_clear_group_user_object_cache( $group_id, $user_id ) {
+function bboss_groups_clear_group_user_object_cache( $group_id, $user_id ) {
 	wp_cache_delete( 'bp_total_groups_for_user_' . $user_id, 'bp' );
 
 	wp_cache_delete( 'bp_get_total_group_count', 'bp_groups' );
@@ -217,7 +217,7 @@ add_action( 'groups_remove_member', 'groups_clear_group_user_object_cache', 10, 
  *
  * @param int $group_id The group ID.
  */
-function groups_clear_group_administrator_cache( $group_id ) {
+function bboss_groups_clear_group_administrator_cache( $group_id ) {
 	wp_cache_delete( $group_id, 'bp_group_admins' );
 	wp_cache_delete( $group_id, 'bp_group_mods' );
 }
@@ -229,14 +229,14 @@ add_action( 'groups_delete_group', 'groups_clear_group_administrator_cache' );
  * Clear group administrator and moderator cache when a group member is saved.
  *
  * This accounts for situations where group admins or mods are added manually
- * using {@link BP_Groups_Member::save()}.  Usually via a plugin.
+ * using {@link BBoss_Groups_Member::save()}.  Usually via a plugin.
  *
  * @since BuddyPress 2.1.0
  *
- * @param BP_Groups_Member $member Member object.
+ * @param BBoss_Groups_Member $member Member object.
  */
-function groups_clear_group_administrator_cache_on_member_save( BP_Groups_Member $member ) {
-	groups_clear_group_administrator_cache( $member->group_id );
+function bboss_groups_clear_group_administrator_cache_on_member_save( BBoss_Groups_Member $member ) {
+	bboss_groups_clear_group_administrator_cache( $member->group_id );
 
 	wp_cache_delete( 'bp_group_has_members_' . $member->group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_group_has_membership_requests_' . $member->group_id, 'bp_groups' );
@@ -253,8 +253,8 @@ add_action( 'groups_member_after_save', 'groups_clear_group_administrator_cache_
  * @param int $user_id  User ID.
  * @param int $group_id Group ID.
  */
-function bp_groups_clear_group_administrator_cache_on_member_delete( $user_id, $group_id ) {
-	groups_clear_group_administrator_cache( $group_id );
+function bboss_groups_clear_group_administrator_cache_on_member_delete( $user_id, $group_id ) {
+	bboss_groups_clear_group_administrator_cache( $group_id );
 
 	wp_cache_delete( 'bp_group_has_members_' . $group_id, 'bp_groups' );
 	wp_cache_delete( 'bp_group_has_membership_requests_' . $group_id, 'bp_groups' );
@@ -271,7 +271,7 @@ add_action( 'bp_groups_member_after_delete', 'bp_groups_clear_group_administrato
  *
  * @param int $group_id The group ID.
  */
-function groups_clear_group_type_cache( $group_id = 0 ) {
+function bboss_groups_clear_group_type_cache( $group_id = 0 ) {
 	wp_cache_delete( $group_id, 'bp_groups_group_type' );
 }
 add_action( 'groups_delete_group', 'groups_clear_group_type_cache' );
@@ -281,9 +281,9 @@ add_action( 'groups_delete_group', 'groups_clear_group_type_cache' );
  *
  * @since BuddyPress 2.6.0
  *
- * @param BP_Groups_Member $member BP Groups Member instance.
+ * @param BBoss_Groups_Member $member BP Groups Member instance.
  */
-function bp_groups_clear_user_group_cache_on_membership_save( BP_Groups_Member $member ) {
+function bboss_groups_clear_user_group_cache_on_membership_save( BBoss_Groups_Member $member ) {
 	wp_cache_delete( $member->user_id, 'bp_groups_memberships_for_user' );
 	if ( ! empty( $member->id ) ) {
 		wp_cache_delete( $member->id, 'bp_groups_memberships' );
@@ -300,9 +300,9 @@ add_action( 'groups_member_before_remove', 'bp_groups_clear_user_group_cache_on_
  * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
- * @param BP_Invitation object $invitation Characteristics of the invitation just saved.
+ * @param BBoss_Invitation object $invitation Characteristics of the invitation just saved.
  */
-function bp_groups_clear_user_group_cache_on_invitation_save( BP_Invitation $invitation ) {
+function bboss_groups_clear_user_group_cache_on_invitation_save( BBoss_Invitation $invitation ) {
 	if ( sanitize_key( 'BP_Groups_Invitation_Manager' ) !== $invitation->class ) {
 		return;
 	}
@@ -320,9 +320,9 @@ add_action( 'bp_invitation_after_save', 'bp_groups_clear_user_group_cache_on_inv
  *
  * @param array $args Associative array of columns/values describing invitations about to be deleted.
  */
-function bp_groups_clear_user_group_cache_on_invitation_change( $args ) {
+function bboss_groups_clear_user_group_cache_on_invitation_change( $args ) {
 	$args['fields' ] = 'ids';
-	$affected_invitation_ids = groups_get_invites( $args );
+	$affected_invitation_ids = bboss_groups_get_invites( $args );
 	foreach ( $affected_invitation_ids as $invitation_id ) {
 		wp_cache_delete( $invitation_id, 'bp_groups_invitations_as_memberships' );
 	}
@@ -338,10 +338,10 @@ add_action( 'bp_invitation_before_update', 'bp_groups_clear_user_group_cache_on_
  * @param int $user_id  Current user ID.
  * @param int $group_id Current group ID.
  */
-function bp_groups_clear_user_group_cache_on_other_events( $user_id, $group_id ) {
+function bboss_groups_clear_user_group_cache_on_other_events( $user_id, $group_id ) {
 	wp_cache_delete( $user_id, 'bp_groups_memberships_for_user' );
 
-	$membership = new BP_Groups_Member( $user_id, $group_id );
+	$membership = new BBoss_Groups_Member( $user_id, $group_id );
 	wp_cache_delete( $membership->id, 'bp_groups_memberships' );
 }
 add_action( 'bp_groups_member_before_delete', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
@@ -359,8 +359,8 @@ add_action( 'bp_groups_member_before_delete', 'bp_groups_clear_user_group_cache_
  *
  * @return bool True on success, false on failure.
  */
-function bp_groups_reset_cache_incrementor() {
-	return bp_core_reset_incrementor( 'bp_groups' );
+function bboss_groups_reset_cache_incrementor() {
+	return bboss_core_reset_incrementor( 'bp_groups' );
 }
 add_action( 'groups_group_after_save', 'bp_groups_reset_cache_incrementor' );
 add_action( 'bp_groups_delete_group', 'bp_groups_reset_cache_incrementor' );
@@ -382,10 +382,10 @@ add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
  * @param string $taxonomy  Taxonomy slug.
  * @return bool True on success, false on failure.
  */
-function bp_groups_reset_cache_incrementor_on_group_term_change( $object_id, $terms, $tt_ids, $taxonomy ) {
+function bboss_groups_reset_cache_incrementor_on_group_term_change( $object_id, $terms, $tt_ids, $taxonomy ) {
 	$tax_object = get_taxonomy( $taxonomy );
 	if ( $tax_object && in_array( 'bp_group', $tax_object->object_type, true ) ) {
-		return bp_groups_reset_cache_incrementor();
+		return bboss_groups_reset_cache_incrementor();
 	}
 
 	return false;
@@ -405,10 +405,10 @@ add_action( 'bp_set_object_terms', 'bp_groups_reset_cache_incrementor_on_group_t
  * @param string $taxonomy  Taxonomy slug.
  * @return bool True on success, false on failure.
  */
-function bp_groups_reset_cache_incrementor_on_group_term_remove( $object_id, $terms, $taxonomy ) {
+function bboss_groups_reset_cache_incrementor_on_group_term_remove( $object_id, $terms, $taxonomy ) {
 	$tax_object = get_taxonomy( $taxonomy );
 	if ( $tax_object && in_array( 'bp_group', $tax_object->object_type, true ) ) {
-		return bp_groups_reset_cache_incrementor();
+		return bboss_groups_reset_cache_incrementor();
 	}
 
 	return false;
@@ -444,13 +444,13 @@ add_action( 'groups_group_avatar_updated', 'bp_core_clear_cache' );
  *
  * @param int $post_id post ID.
  */
-function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
+function bboss_groups_clear_group_type_cache_before_delete( $post_id ) {
 	global $wpdb;
 
 	$post = get_post( $post_id );
 
 	// Return if post is not 'bp-group-type' type.
-	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+	if ( bboss_groups_get_group_type_post_type() !== $post->post_type ) {
 		return;
 	}
 
@@ -471,8 +471,8 @@ add_action( 'before_delete_post', 'bb_groups_clear_group_type_cache_before_delet
  *
  * @return bool True on success, false on failure.
  */
-function bb_groups_member_reset_cache_incrementor() {
-	return bp_core_reset_incrementor( 'bp_groups_member' );
+function bboss_groups_member_reset_cache_incrementor() {
+	return bboss_core_reset_incrementor( 'bp_groups_member' );
 }
 add_action( 'groups_member_after_save', 'bb_groups_member_reset_cache_incrementor' );
 add_action( 'bp_groups_member_after_delete', 'bb_groups_member_reset_cache_incrementor' );
@@ -503,7 +503,7 @@ add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
  * @param int       $user_id  ID of the user the meta belongs to. Unused.
  * @param string    $meta_key Meta key being written.
  */
-function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $meta_key = '' ) {
+function bboss_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $meta_key = '' ) {
 	if ( '' === $meta_key ) {
 		return;
 	}
@@ -522,7 +522,7 @@ function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $m
 		'_bp_nouveau_restrict_invites_to_friends' !== $meta_key &&
 		(
 			! has_filter( 'bp_get_user_meta_key' ) ||
-			bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) !== $meta_key
+			bboss_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) !== $meta_key
 		)
 	) {
 		return;
@@ -530,7 +530,7 @@ function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $m
 
 	// Resetting the incrementor retires the id list, the over-ceiling verdicts (one per
 	// filtered ceiling) and any in-flight rebuild's write target in a single operation.
-	bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
+	bboss_core_reset_incrementor( 'bb_nouveau_group_invites' );
 }
 add_action( 'added_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
 add_action( 'updated_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );

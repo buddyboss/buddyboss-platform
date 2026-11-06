@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return If Forums is not active
  */
-function bbp_setup_akismet() {
+function bboss_bbp_setup_akismet() {
 
 	// Bail if no akismet
 	if ( ! defined( 'AKISMET_VERSION' ) ) {
@@ -27,13 +27,13 @@ function bbp_setup_akismet() {
 	}
 
 	// Bail if Akismet is turned off
-	if ( ! bbp_is_akismet_active() ) {
+	if ( ! bboss_bbp_is_akismet_active() ) {
 		return;
 	}
 
 	// Include the Akismet Component
-	require bbpress()->includes_dir . 'extend/akismet.php';
+	require bboss_forums()->includes_dir . 'extend/akismet.php';
 
 	// Instantiate Akismet for Forums
-	bbpress()->extend->akismet = new BBP_Akismet();
+	bboss_forums()->extend->akismet = new BBoss_BBP_Akismet();
 }

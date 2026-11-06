@@ -116,7 +116,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	/**
 	 * Any Media Album.
 	 *
-	 * @param BP_Media_Album $album Media Album object.
+	 * @param BBoss_Media_Album $album Media Album object.
 	 */
 	public function event_bp_media_album_after_save( $album ) {
 		if ( ! empty( $album->id ) ) {
@@ -140,7 +140,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	/**
 	 * Any Media Photos add
 	 *
-	 * @param BP_Media $media Media object.
+	 * @param BBoss_Media $media Media object.
 	 */
 	public function event_bp_media_add( $media ) {
 		if ( ! empty( $media->album_id ) ) {
@@ -151,7 +151,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	/**
 	 * Any Media Photos after save
 	 *
-	 * @param BP_Media $media Current instance of media item being saved. Passed by reference.
+	 * @param BBoss_Media $media Current instance of media item being saved. Passed by reference.
 	 */
 	public function event_bp_media_after_save( $media ) {
 		if ( ! empty( $media->album_id ) ) {
@@ -249,7 +249,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	/**
 	 * Fires after the current group item has been saved.
 	 *
-	 * @param BP_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
+	 * @param BBoss_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
 	 */
 	public function event_groups_group_after_save( $group ) {
 		if ( ! empty( $group->id ) ) {
@@ -322,7 +322,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	/**
 	 * Update cache for media album when member blocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bp_moderation_after_save( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -339,7 +339,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	/**
 	 * Update cache for media album when member unblocked.
 	 *
-	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 * @param BBoss_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
 	 */
 	public function event_bb_moderation_after_delete( $bp_moderation ) {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
@@ -437,7 +437,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	private function get_album_ids_by_user_id( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->media->table_name_albums} WHERE user_id = %d", $user_id );
 
@@ -454,7 +454,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	private function get_album_ids_by_group_id( $group_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT id FROM {$bp->media->table_name_albums} WHERE group_id = %d", $group_id );
 
@@ -471,7 +471,7 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	private function get_album_id_by_media_id( $media_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT album_id FROM {$bp->media->table_name} WHERE id = %d", $media_id );
 

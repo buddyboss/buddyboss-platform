@@ -282,7 +282,7 @@ class BB_DRM_Registry {
 			/* translators: %1$s: plugin name, %2$s: license page URL */
 			__( '%1$s features are currently disabled. Please <a href="%2$s">activate your license</a> to restore functionality.', 'buddyboss' ),
 			$plugin_name,
-			bp_get_admin_url( 'admin.php?page=buddyboss-license' )
+			bboss_get_admin_url( 'admin.php?page=buddyboss-license' )
 		);
 	}
 
@@ -488,7 +488,7 @@ class BB_DRM_Registry {
 			$addons
 		);
 
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$activation_link = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 
 		// Build heading and message based on status and count.
 		// Headings match BuddyBoss DRM Messaging.pdf specification.
@@ -696,9 +696,9 @@ class BB_DRM_Registry {
 
 			// Determine icon based on severity.
 			if ( BB_DRM_Helper::DRM_LOCKED === $drm_status || BB_DRM_Helper::DRM_HIGH === $drm_status ) {
-				$icon_url = buddypress()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
+				$icon_url = bboss()->plugin_url . 'bp-core/images/dh-icon.png'; // Red.
 			} else {
-				$icon_url = buddypress()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
+				$icon_url = bboss()->plugin_url . 'bp-core/images/dl-icon.png'; // Yellow.
 			}
 
 			// Build title and content based on DRM status.
@@ -781,7 +781,7 @@ class BB_DRM_Registry {
 					'buttons' => array(
 						'main' => array(
 							'text'   => __( 'Activate Your License', 'buddyboss' ),
-							'url'    => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+							'url'    => bboss_get_admin_url( 'admin.php?page=buddyboss-license' ),
 							'target' => '_self',
 						),
 					),
@@ -903,7 +903,7 @@ class BB_DRM_Registry {
 		}
 
 		// Build email HTML.
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$activation_link = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 		$email_html      = $this->get_consolidated_email_html(
 			array(
 				'heading'         => $heading,
@@ -1137,7 +1137,7 @@ class BB_DRM_Registry {
 		$addons      = $grouped['locked'];
 		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
 
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$activation_link = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 		$account_link    = 'https://www.buddyboss.com/my-account/';
 		$support_link    = 'https://www.buddyboss.com/support/';
 		$pricing_link    = 'https://www.buddyboss.com/pricing/';
@@ -1183,7 +1183,7 @@ class BB_DRM_Registry {
 		$addons      = $grouped['high'];
 		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
 
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$activation_link = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 		$account_link    = 'https://www.buddyboss.com/my-account/';
 		$support_link    = 'https://www.buddyboss.com/support/';
 
@@ -1226,7 +1226,7 @@ class BB_DRM_Registry {
 		$addons      = $grouped['medium'];
 		$addon_names = wp_list_pluck( $addons, 'plugin_name' );
 
-		$activation_link = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+		$activation_link = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 		$account_link    = 'https://www.buddyboss.com/my-account/';
 		$support_link    = 'https://www.buddyboss.com/support/';
 

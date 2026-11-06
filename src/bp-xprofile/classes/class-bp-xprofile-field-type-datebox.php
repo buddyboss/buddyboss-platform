@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Datebox extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the datebox field type.
@@ -32,11 +32,11 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		$this->do_settings_section = true;
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Datebox class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Datebox class.
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_Datebox $this Current instance of
+		 * @param BBoss_XProfile_Field_Type_Datebox $this Current instance of
 		 *                                             the field type datebox.
 		 */
 		do_action( 'bp_xprofile_field_type_datebox', $this );
@@ -45,7 +45,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
@@ -61,44 +61,44 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 			$user_id = (int) $raw_properties['user_id'];
 			unset( $raw_properties['user_id'] );
 		} else {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
-		$day_r = bp_parse_args(
+		$day_r = bboss_parse_args(
 			$raw_properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name() . '_day',
-				'name' => bp_get_the_profile_field_input_name() . '_day',
+				'id'   => bboss_get_the_profile_field_input_name() . '_day',
+				'name' => bboss_get_the_profile_field_input_name() . '_day',
 			)
 		);
 
-		$month_r = bp_parse_args(
+		$month_r = bboss_parse_args(
 			$raw_properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name() . '_month',
-				'name' => bp_get_the_profile_field_input_name() . '_month',
+				'id'   => bboss_get_the_profile_field_input_name() . '_month',
+				'name' => bboss_get_the_profile_field_input_name() . '_month',
 			)
 		);
 
-		$year_r = bp_parse_args(
+		$year_r = bboss_parse_args(
 			$raw_properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name() . '_year',
-				'name' => bp_get_the_profile_field_input_name() . '_year',
+				'id'   => bboss_get_the_profile_field_input_name() . '_year',
+				'name' => bboss_get_the_profile_field_input_name() . '_year',
 			)
 		); ?>
 
 			<legend>
-				<?php bp_the_profile_field_name(); ?>
-				<?php if ( bp_is_register_page() ) : ?>
-					<?php bp_the_profile_field_optional_label(); ?>
+				<?php bboss_the_profile_field_name(); ?>
+				<?php if ( bboss_is_register_page() ) : ?>
+					<?php bboss_the_profile_field_optional_label(); ?>
 				<?php else : ?>
-					<?php bp_the_profile_field_required_label(); ?>
+					<?php bboss_the_profile_field_required_label(); ?>
 				<?php endif; ?>
 			</legend>
 
-			<?php if ( bp_get_the_profile_field_description() ) : ?>
-				<p class="description" tabindex="0"><?php bp_the_profile_field_description(); ?></p>
+			<?php if ( bboss_get_the_profile_field_description() ) : ?>
+				<p class="description" tabindex="0"><?php bboss_the_profile_field_description(); ?></p>
 			<?php endif; ?>
 
 			<div class="input-options datebox-selects">
@@ -115,17 +115,17 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				 *
 				 * @since BuddyPress 1.8.0
 				 */
-				do_action( bp_get_the_profile_field_errors_action() );
+				do_action( bboss_get_the_profile_field_errors_action() );
 				?>
 
-				<label for="<?php bp_the_profile_field_input_name(); ?>_day" class="xprofile-field-label">
+				<label for="<?php bboss_the_profile_field_input_name(); ?>_day" class="xprofile-field-label">
 																	 <?php
 																		esc_html_e( 'Day', 'buddyboss' );
 																		?>
 				</label>
 				<select <?php echo $this->get_edit_field_html_elements( $day_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 					<?php
-					bp_the_profile_field_options(
+					bboss_the_profile_field_options(
 						array(
 							'type'    => 'day',
 							'user_id' => $user_id,
@@ -134,14 +134,14 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 					?>
 				</select>
 
-				<label for="<?php bp_the_profile_field_input_name(); ?>_month" class="xprofile-field-label">
+				<label for="<?php bboss_the_profile_field_input_name(); ?>_month" class="xprofile-field-label">
 																	 <?php
 																		esc_html_e( 'Month', 'buddyboss' );
 																		?>
 				</label>
 				<select <?php echo $this->get_edit_field_html_elements( $month_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 					<?php
-					bp_the_profile_field_options(
+					bboss_the_profile_field_options(
 						array(
 							'type'    => 'month',
 							'user_id' => $user_id,
@@ -150,14 +150,14 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 					?>
 				</select>
 
-				<label for="<?php bp_the_profile_field_input_name(); ?>_year" class="xprofile-field-label">
+				<label for="<?php bboss_the_profile_field_input_name(); ?>_year" class="xprofile-field-label">
 																	 <?php
 																		esc_html_e( 'Year', 'buddyboss' );
 																		?>
 				</label>
 				<select <?php echo $this->get_edit_field_html_elements( $year_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 					<?php
-					bp_the_profile_field_options(
+					bboss_the_profile_field_options(
 						array(
 							'type'    => 'year',
 							'user_id' => $user_id,
@@ -177,18 +177,18 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 * BuddyPress considers a field's "options" to be, for example, the items in a selectbox.
 	 * These are stored separately in the database, and their templating is handled separately.
 	 *
-	 * This templating is separate from {@link BP_XProfile_Field_Type::edit_field_html()} because
+	 * This templating is separate from {@link BBoss_XProfile_Field_Type::edit_field_html()} because
 	 * it's also used in the wp-admin screens when creating new fields, and for backwards compatibility.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
-	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
+	 * @param array $args Optional. The arguments passed to {@link bboss_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {
 
-		$date       = BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] );
+		$date       = BBoss_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] );
 		$day        = 0;
 		$month      = 0;
 		$year       = 0;
@@ -305,7 +305,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
@@ -313,56 +313,56 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 */
 	public function admin_field_html( array $raw_properties = array() ) {
 
-		$day_r = bp_parse_args(
+		$day_r = bboss_parse_args(
 			$raw_properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name() . '_day',
-				'name' => bp_get_the_profile_field_input_name() . '_day',
+				'id'   => bboss_get_the_profile_field_input_name() . '_day',
+				'name' => bboss_get_the_profile_field_input_name() . '_day',
 			)
 		);
 
-		$month_r = bp_parse_args(
+		$month_r = bboss_parse_args(
 			$raw_properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name() . '_month',
-				'name' => bp_get_the_profile_field_input_name() . '_month',
+				'id'   => bboss_get_the_profile_field_input_name() . '_month',
+				'name' => bboss_get_the_profile_field_input_name() . '_month',
 			)
 		);
 
-		$year_r = bp_parse_args(
+		$year_r = bboss_parse_args(
 			$raw_properties,
 			array(
-				'id'   => bp_get_the_profile_field_input_name() . '_year',
-				'name' => bp_get_the_profile_field_input_name() . '_year',
+				'id'   => bboss_get_the_profile_field_input_name() . '_year',
+				'name' => bboss_get_the_profile_field_input_name() . '_year',
 			)
 		);
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>_day" class="xprofile-field-label">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>_day" class="xprofile-field-label">
 															 <?php
 																esc_html_e( 'Day', 'buddyboss' );
 																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $day_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
-			<?php bp_the_profile_field_options( array( 'type' => 'day' ) ); ?>
+			<?php bboss_the_profile_field_options( array( 'type' => 'day' ) ); ?>
 		</select>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>_month" class="xprofile-field-label">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>_month" class="xprofile-field-label">
 															 <?php
 																esc_html_e( 'Month', 'buddyboss' );
 																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $month_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
-			<?php bp_the_profile_field_options( array( 'type' => 'month' ) ); ?>
+			<?php bboss_the_profile_field_options( array( 'type' => 'month' ) ); ?>
 		</select>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>_year" class="xprofile-field-label">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>_year" class="xprofile-field-label">
 															 <?php
 																esc_html_e( 'Year', 'buddyboss' );
 																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $year_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
-			<?php bp_the_profile_field_options( array( 'type' => 'year' ) ); ?>
+			<?php bboss_the_profile_field_options( array( 'type' => 'year' ) ); ?>
 		</select>
 
 		<?php
@@ -389,7 +389,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 		$settings = array();
 		foreach ( $defaults as $key => $value ) {
-			$saved = bp_xprofile_get_meta( $field_id, 'field', $key, true );
+			$saved = bboss_xprofile_get_meta( $field_id, 'field', $key, true );
 
 			if ( $saved ) {
 				$settings[ $key ] = $saved;
@@ -475,7 +475,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		$saved_settings = self::validate_settings( $saved_settings );
 
 		foreach ( $saved_settings as $setting_key => $setting_value ) {
-			bp_xprofile_update_meta( $field_id, 'field', $setting_key, $setting_value );
+			bboss_xprofile_update_meta( $field_id, 'field', $setting_key, $setting_value );
 		}
 
 		return true;
@@ -486,12 +486,12 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 2.7.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {
-		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = '' ) {
+		$type = array_search( get_class( $this ), bboss_xprofile_get_field_types() );
 
 		if ( false === $type ) {
 			return;
@@ -645,7 +645,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 * @param string     $field_value The date value, as saved in the database. Typically, this is a MySQL-formatted
 	 *                                date string (Y-m-d H:i:s).
 	 * @param string|int $field_id    Optional. ID of the field.
-	 * @return string Date formatted by bp_format_time().
+	 * @return string Date formatted by bboss_format_time().
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
 		if ( ! $field_value ) {
@@ -661,7 +661,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 		switch ( $settings['date_format'] ) {
 			case 'elapsed':
-				$formatted = bp_core_time_since( $field_value );
+				$formatted = bboss_core_time_since( $field_value );
 				break;
 
 			case 'custom':

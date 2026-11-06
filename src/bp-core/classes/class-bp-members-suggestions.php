@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.1.0
  */
-class BP_Members_Suggestions extends BP_Suggestions {
+class BBoss_Members_Suggestions extends BBoss_Suggestions {
 
 	/**
 	 * Default arguments for this suggestions service.
@@ -54,12 +54,12 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                  $args Array of arguments for the member suggestions.
-		 * @param BP_Members_Suggestions $this Current BP_Members_Suggestions instance.
+		 * @param BBoss_Members_Suggestions $this Current BBoss_Members_Suggestions instance.
 		 */
 		$this->args = apply_filters( 'bp_members_suggestions_args', $this->args, $this );
 
 		// Check for invalid or missing mandatory parameters.
-		if ( $this->args['only_friends'] && ( ! bp_is_active( 'friends' ) || ! is_user_logged_in() ) ) {
+		if ( $this->args['only_friends'] && ( ! bboss_is_active( 'friends' ) || ! is_user_logged_in() ) ) {
 			return new WP_Error( 'missing_requirement' );
 		}
 
@@ -69,7 +69,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param bool|WP_Error          $value Results of validation check.
-		 * @param BP_Members_Suggestions $this  Current BP_Members_Suggestions instance.
+		 * @param BBoss_Members_Suggestions $this  Current BBoss_Members_Suggestions instance.
 		 */
 		return apply_filters( 'bp_members_suggestions_validate_args', parent::validate(), $this );
 	}
@@ -110,27 +110,27 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                  $user_query Array of query arguments.
-		 * @param BP_Members_Suggestions $this       Current BP_Members_Suggestions instance.
+		 * @param BBoss_Members_Suggestions $this       Current BBoss_Members_Suggestions instance.
 		 */
 		$user_query = apply_filters( 'bp_members_suggestions_query_args', $user_query, $this );
 		if ( is_wp_error( $user_query ) ) {
 			return $user_query;
 		}
 
-		$user_query = new BP_User_Query( $user_query );
+		$user_query = new BBoss_User_Query( $user_query );
 		$results    = array();
 
 		foreach ( $user_query->results as $user ) {
 			$result                = new stdClass();
-			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
+			$result->ID            = bboss_activity_get_user_mentionname( $user->ID );
 			$result->user_nicename = $user->user_nicename;
-			$result->image         = bp_core_fetch_avatar(
+			$result->image         = bboss_core_fetch_avatar(
 				array(
 					'html'    => false,
 					'item_id' => $user->ID,
 				)
 			);
-			$result->name          = bp_core_get_user_displayname( $user->ID );
+			$result->name          = bboss_core_get_user_displayname( $user->ID );
 			$result->user_id       = $user->ID;
 
 			if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
@@ -150,7 +150,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                  $results Array of users to suggest.
-		 * @param BP_Members_Suggestions $this    Current BP_Members_Suggestions instance.
+		 * @param BBoss_Members_Suggestions $this    Current BBoss_Members_Suggestions instance.
 		 */
 		return apply_filters( 'bp_members_suggestions_get_suggestions', $results, $this );
 	}

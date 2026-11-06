@@ -22,13 +22,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_settings_register_notifications_feature() {
+function bboss_admin_settings_register_notifications_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'notifications',
 		array(
 			'label'              => __( 'Notifications', 'buddyboss' ),
@@ -41,7 +41,7 @@ function bb_admin_settings_register_notifications_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'notifications' );
+				return bboss_is_active( 'notifications' );
 			},
 			'settings_route'     => '/settings/notifications',
 			'order'              => 130,
@@ -50,7 +50,7 @@ function bb_admin_settings_register_notifications_feature() {
 
 	// When notifications is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on notification functions that aren't loaded.
-	if ( ! bp_is_active( 'notifications' ) ) {
+	if ( ! bboss_is_active( 'notifications' ) ) {
 		return;
 	}
 
@@ -66,7 +66,7 @@ function bb_admin_settings_register_notifications_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Notification Types (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'notifications',
 		'notification_types',
 		array(
@@ -75,7 +75,7 @@ function bb_admin_settings_register_notifications_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-bell-simple',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -90,7 +90,7 @@ function bb_admin_settings_register_notifications_feature() {
 	);
 
 	// Side Panel 2: On-screen Notifications.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'notifications',
 		'on_screen_notifications',
 		array(
@@ -99,7 +99,7 @@ function bb_admin_settings_register_notifications_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-desktop',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -113,7 +113,7 @@ function bb_admin_settings_register_notifications_feature() {
 	);
 
 	// Side Panel 3: Web Push Notifications.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'notifications',
 		'onesignal',
 		array(
@@ -122,7 +122,7 @@ function bb_admin_settings_register_notifications_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-browser',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -140,13 +140,13 @@ function bb_admin_settings_register_notifications_feature() {
 	// =========================================================================
 
 	// Panel 1: Notification Types.
-	bb_notifications_register_types_panel_fields();
+	bboss_notifications_register_types_panel_fields();
 
 	// Panel 2: On-screen Notifications.
-	bb_notifications_register_on_screen_panel_fields();
+	bboss_notifications_register_on_screen_panel_fields();
 
 	// Panel 3: Web Push Notifications.
-	bb_notifications_register_web_push_panel_fields();
+	bboss_notifications_register_web_push_panel_fields();
 
 	/**
 	 * Fires after all Notifications settings panels are registered.

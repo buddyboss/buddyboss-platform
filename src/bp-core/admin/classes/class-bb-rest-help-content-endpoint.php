@@ -54,13 +54,13 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_REST_Help_Content_Endpoint
+ * Class BBoss_REST_Help_Content_Endpoint
  *
  * Read-only proxy for buddyboss.com Knowledge Base endpoints.
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Help_Content_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Default upstream base URL.
@@ -93,7 +93,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 *
 	 * Both legacy per-id transients (`bb_help_content_<id>`) and new
 	 * per-URL md5 transients (`bb_help_content_<md5>`) share this prefix
-	 * so the existing `bb_clear_help_content_transients()` flush sweeps
+	 * so the existing `bboss_clear_help_content_transients()` flush sweeps
 	 * both layouts in one query.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -127,8 +127,8 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
-		if ( function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' ) ) {
-			$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		if ( function_exists( 'bboss_rest_namespace' ) && function_exists( 'bboss_rest_version' ) ) {
+			$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		} else {
 			$this->namespace = 'bb/v1';
 		}
@@ -177,7 +177,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * The Help slider and Documentation modal are rendered only in the
 	 * WP-admin Settings 2.0 React app, so we gate on `manage_options` —
 	 * the same capability that already protects every Settings 2.0 AJAX
-	 * endpoint (see BB_Admin_Settings_Ajax::bb_verify_request).
+	 * endpoint (see BBoss_Admin_Settings_Ajax::bb_verify_request).
 	 *
 	 * Note on auth: REST requests are considered authenticated only when
 	 * the WP-Admin cookie is presented AND the `X-WP-Nonce: wp_rest`
@@ -402,7 +402,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			'timeout'     => 8,
 			'redirection' => 3,
 			// Identify ourselves so buddyboss.com can debug bad requests.
-			'user-agent'  => 'BuddyBoss-Platform-Help-Proxy/' . ( defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
+			'user-agent'  => 'BuddyBoss-Platform-Help-Proxy/' . ( defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
 			'headers'     => array(
 				'Accept' => 'application/json',
 			),

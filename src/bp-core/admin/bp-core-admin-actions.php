@@ -9,7 +9,7 @@
  * There are a few common places that additional actions can currently be found.
  *
  *  - BuddyPress: In {@link BuddyPress::setup_actions()} in BuddyPress.php
- *  - Admin: More in {@link bp_Admin::setup_actions()} in admin.php
+ *  - Admin: More in {@link BBoss_Admin::setup_actions()} in admin.php
  *
  * @package BuddyBoss\Admin
  * @since BuddyPress 2.3.0
@@ -80,7 +80,7 @@ add_action( 'bp_admin_init', 'bb_redirect_legacy_settings_to_settings_2', 1 );
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_force_redirect_bare_bp_settings() {
+function bboss_force_redirect_bare_bp_settings() {
 	if ( ! is_admin() ) {
 		return;
 	}
@@ -91,7 +91,7 @@ function bb_force_redirect_bare_bp_settings() {
 	$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
 	if ( 'bp-settings' === $page && empty( $tab ) ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings' ) );
 		exit;
 	}
 }
@@ -107,7 +107,7 @@ add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
  *
  * @return array Map of old tab slug => feature ID string OR array( 'tab' => ..., 'panel' => ... ).
  */
-function bb_get_legacy_settings_tabs_mapping() {
+function bboss_get_legacy_settings_tabs_mapping() {
 	$legacy_tabs_mapping = array(
 		'bp-reactions'     => 'reactions',
 		'bp-activity'      => 'activity',
@@ -150,7 +150,7 @@ function bb_get_legacy_settings_tabs_mapping() {
  * @param string|array $mapping Mapping entry: feature-id string or [ 'tab' => ..., 'panel' => ... ].
  * @return string URL with tab (and panel) query args applied.
  */
-function bb_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
+function bboss_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
 	if ( is_array( $mapping ) ) {
 		if ( ! empty( $mapping['tab'] ) ) {
 			$target = add_query_arg( 'tab', $mapping['tab'], $target );
@@ -181,7 +181,7 @@ function bb_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
  *
  * Covers two legacy slugs that were removed in Settings 2.0:
  *  - `bp-settings`     → `bb-settings`, with tab normalization via
- *    `bb_get_legacy_settings_tabs_mapping()` (e.g. `bp-activity` → `activity`).
+ *    `bboss_get_legacy_settings_tabs_mapping()` (e.g. `bp-activity` → `activity`).
  *  - `bp-integrations` → `bb-settings` with best-effort tab mapping via
  *    the `bb_legacy_integration_tabs_mapping` filter (Pro populates it
  *    with Zoom/OneSignal/etc. tab redirects).
@@ -196,7 +196,7 @@ function bb_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_redirect_bp_settings_before_permission_check() {
+function bboss_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
@@ -218,7 +218,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 		'bp-profile-setup' => 'admin.php?page=bb-settings&tab=members&panel=profile_fields',
 	);
 	if ( isset( $retired_pages[ $page ] ) ) {
-		$target = bp_get_admin_url( $retired_pages[ $page ] );
+		$target = bboss_get_admin_url( $retired_pages[ $page ] );
 
 		// Preserve any non-routing query args (deep-link flags, etc.).
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
@@ -246,7 +246,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	 * call). Same 403-prevention rationale as the map above.
 	 */
 	if ( 'bp-pages' === $page ) {
-		$bp_pages_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
+		$bp_pages_target = bboss_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
 
 		// Preserve any non-routing query args (e.g. `download_mu_file`,
 		// Pro / third-party deep-link flags). Same treatment as the
@@ -281,7 +281,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	 * `admin_init`-priority hook can intercept.
 	 */
 	if ( 'bb-readylaunch' === $page ) {
-		$rl_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance' );
+		$rl_target = bboss_get_admin_url( 'admin.php?page=bb-settings&tab=appearance' );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 		$reserved = array( 'page', 'tab', 'panel' );
@@ -365,7 +365,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	 */
 	if ( 'bp-member-type-import' === $page ) {
 		wp_safe_redirect(
-			bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' )
+			bboss_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' )
 		);
 		exit;
 	}
@@ -381,7 +381,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	 * @since BuddyBoss 3.1.0
 	 */
 	if ( 'bbp-converter' === $page ) {
-		$converter_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
+		$converter_target = bboss_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
 
 		// Preserve any non-routing query args (deep-link flags, etc.).
 		$reserved_qs = array( 'page', 'tab', 'panel' );
@@ -413,7 +413,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	 * @since BuddyBoss 3.1.0
 	 */
 	if ( in_array( $page, array( 'bp-repair-community', 'bbp-repair' ), true ) ) {
-		$tools_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+		$tools_target = bboss_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
 
 		// Preserve any non-routing query args (deep-link flags, etc.).
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
@@ -442,7 +442,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
-	$target = bp_get_admin_url( 'admin.php?page=bb-settings' );
+	$target = bboss_get_admin_url( 'admin.php?page=bb-settings' );
 
 	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
 		/**
@@ -458,7 +458,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 		$legacy_integration_tabs = apply_filters( 'bb_legacy_integration_tabs_mapping', array() );
 
 		if ( isset( $legacy_integration_tabs[ $tab ] ) ) {
-			$target = bb_apply_legacy_tab_mapping_to_url( $target, $legacy_integration_tabs[ $tab ] );
+			$target = bboss_apply_legacy_tab_mapping_to_url( $target, $legacy_integration_tabs[ $tab ] );
 		}
 	} elseif ( 'bp-settings' === $page && ! empty( $tab ) ) {
 		/*
@@ -467,10 +467,10 @@ function bb_redirect_bp_settings_before_permission_check() {
 		 * Settings 2.0 route. The post-redirect handler can't do it: once the
 		 * URL is already ?page=bb-settings it no longer matches its own guard.
 		 */
-		$legacy_tabs_mapping = bb_get_legacy_settings_tabs_mapping();
+		$legacy_tabs_mapping = bboss_get_legacy_settings_tabs_mapping();
 
 		if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
-			$target = bb_apply_legacy_tab_mapping_to_url( $target, $legacy_tabs_mapping[ $tab ] );
+			$target = bboss_apply_legacy_tab_mapping_to_url( $target, $legacy_tabs_mapping[ $tab ] );
 		} else {
 			/*
 			 * Unknown tab — preserve as-is so Pro / third-party add-ons that
@@ -533,10 +533,10 @@ add_action( 'edit_user_profile_update', 'bb_validate_restricted_email_on_profile
  * @param int    $site_id ID of the site being installed to.
  * @param array  $meta    Metadata to use with the site creation.
  */
-function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+function bboss_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 
 	// Bail if plugin is not network activated.
-	if ( ! is_plugin_active_for_network( buddypress()->basename ) ) {
+	if ( ! is_plugin_active_for_network( bboss()->basename ) ) {
 		return;
 	}
 
@@ -568,7 +568,7 @@ function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_admin_init() {
+function bboss_admin_init() {
 
 	/**
 	 * Fires inside the bp_admin_init function.
@@ -583,7 +583,7 @@ function bp_admin_init() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_admin_menu() {
+function bboss_admin_menu() {
 
 	/**
 	 * Fires inside the bp_admin_menu function.
@@ -598,7 +598,7 @@ function bp_admin_menu() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_admin_head() {
+function bboss_admin_head() {
 
 	/**
 	 * Fires inside the bp_admin_head function.
@@ -613,7 +613,7 @@ function bp_admin_head() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_admin_notices() {
+function bboss_admin_notices() {
 
 	/**
 	 * Fires inside the bp_admin_notices function.
@@ -631,7 +631,7 @@ function bp_admin_notices() {
  * @param string $hook_suffix The current admin page, passed to
  *                            'admin_enqueue_scripts'.
  */
-function bp_admin_enqueue_scripts( $hook_suffix = '' ) {
+function bboss_admin_enqueue_scripts( $hook_suffix = '' ) {
 
 	/**
 	 * Fires inside the bp_admin_enqueue_scripts function.
@@ -648,7 +648,7 @@ function bp_admin_enqueue_scripts( $hook_suffix = '' ) {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_register_importers() {
+function bboss_register_importers() {
 
 	/**
 	 * Fires inside the bp_register_importers function.
@@ -665,7 +665,7 @@ function bp_register_importers() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_register_admin_style() {
+function bboss_register_admin_style() {
 
 	/**
 	 * Fires inside the bp_register_admin_style function.
@@ -680,7 +680,7 @@ function bp_register_admin_style() {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_register_admin_settings() {
+function bboss_register_admin_settings() {
 
 	/**
 	 * Fires inside the bp_register_admin_settings function.
@@ -695,7 +695,7 @@ function bp_register_admin_settings() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_register_admin_integrations() {
+function bboss_register_admin_integrations() {
 
 	/**
 	 * Fires inside the bp_register_admin_integrations function.
@@ -714,7 +714,7 @@ function bp_register_admin_integrations() {
  * @param bool   $update updating user or adding user.
  * @param object $user   user data.
  */
-function bb_check_user_nickname( &$errors, $update, &$user ) {
+function bboss_check_user_nickname( &$errors, $update, &$user ) {
 	global $wpdb;
 
 	// Check user unique identifier exist.
@@ -770,10 +770,10 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
  *
  * @return object
  */
-function bb_validate_restricted_email_on_registration( $errors, $update, $user ) {
+function bboss_validate_restricted_email_on_registration( $errors, $update, $user ) {
 
 	// Check if email address allowed.
-	if ( ! bb_is_allowed_register_email_address( $user->user_email ) ) {
+	if ( ! bboss_is_allowed_register_email_address( $user->user_email ) ) {
 		if ( $update ) {
 			$old_user_data = get_userdata( $user->ID );
 
@@ -801,7 +801,7 @@ function bb_validate_restricted_email_on_registration( $errors, $update, $user )
  *
  * @param int $user_id User ID.
  */
-function bb_validate_restricted_email_on_profile_update( $user_id ) {
+function bboss_validate_restricted_email_on_profile_update( $user_id ) {
 
 	if (
 		! empty( $_REQUEST['email'] ) && // phpcs:ignore
@@ -821,7 +821,7 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
 		if (
 			$old_user_data &&
 			$old_user_data->user_email !== $email &&
-			! bb_is_allowed_register_email_address( $email )
+			! bboss_is_allowed_register_email_address( $email )
 		) {
 
 			// Prevent email updates and related email.
@@ -836,7 +836,7 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
  *
  * @since BuddyBoss 2.4.40
  */
-function bb_core_settings_saved_notice() {
+function bboss_core_settings_saved_notice() {
 
 	// Only handle notices on BuddyBoss pages.
 	if ( ! isset( $_GET['page'] ) ) {
@@ -884,7 +884,7 @@ add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
  *
  * @return void
  */
-function bb_render_admin_header() {
+function bboss_render_admin_header() {
 	$screen = get_current_screen();
 
 	if (
@@ -921,16 +921,16 @@ function bb_render_admin_header() {
 			(
 				'buddyboss_fonts' === $screen->post_type ||
 				'bp_ps_form' === $screen->post_type ||
-				( function_exists( 'bp_groups_get_group_type_post_type' ) && bp_groups_get_group_type_post_type() === $screen->post_type ) ||
-				( function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $screen->post_type ) ||
-				( function_exists( 'bbp_get_forum_post_type' ) && bbp_get_forum_post_type() === $screen->post_type ) ||
-				( function_exists( 'bbp_get_topic_post_type' ) && bbp_get_topic_post_type() === $screen->post_type ) ||
-				( function_exists( 'bbp_get_reply_post_type' ) && bbp_get_reply_post_type() === $screen->post_type )
+				( function_exists( 'bboss_groups_get_group_type_post_type' ) && bboss_groups_get_group_type_post_type() === $screen->post_type ) ||
+				( function_exists( 'bboss_get_member_type_post_type' ) && bboss_get_member_type_post_type() === $screen->post_type ) ||
+				( function_exists( 'bboss_bbp_get_forum_post_type' ) && bboss_bbp_get_forum_post_type() === $screen->post_type ) ||
+				( function_exists( 'bboss_bbp_get_topic_post_type' ) && bboss_bbp_get_topic_post_type() === $screen->post_type ) ||
+				( function_exists( 'bboss_bbp_get_reply_post_type' ) && bboss_bbp_get_reply_post_type() === $screen->post_type )
 			)
 		) || (
 			! empty( $screen->taxonomy ) &&
 			(
-				( function_exists( 'bbp_get_topic_tag_tax_id' ) && bbp_get_topic_tag_tax_id() === $screen->taxonomy )
+				( function_exists( 'bboss_bbp_get_topic_tag_tax_id' ) && bboss_bbp_get_topic_tag_tax_id() === $screen->taxonomy )
 			)
 		)
 	) {
@@ -950,7 +950,7 @@ add_action( 'in_admin_header', 'bb_render_admin_header', 999 );
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_redirect_legacy_settings_to_settings_2() {
+function bboss_redirect_legacy_settings_to_settings_2() {
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Redirect only, no data modification.
 	$page      = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	$tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
@@ -965,7 +965,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 * ?page=bp-settings hit with no tab.
 	 */
 	if ( 'bp-settings' === $page && empty( $tab ) ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings' ) );
 		exit;
 	}
 
@@ -974,7 +974,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 * CPT redirects, etc.). Skip when Settings 2.0 is not loaded so we don't
 	 * redirect into a non-existent page.
 	 */
-	if ( ! function_exists( 'bb_register_feature' ) ) {
+	if ( ! function_exists( 'bboss_register_feature' ) ) {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		return;
 	}
@@ -995,10 +995,10 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 * duplicate calls within this ~230-line function: groups 3x, members 3x,
 	 * forums 2x, invites 2x. Same value within the request — no stale-read risk.
 	 */
-	$groups_active  = bp_is_active( 'groups' );
-	$members_active = bp_is_active( 'members' );
-	$forums_active  = bp_is_active( 'forums' );
-	$invites_active = bp_is_active( 'invites' );
+	$groups_active  = bboss_is_active( 'groups' );
+	$members_active = bboss_is_active( 'members' );
+	$forums_active  = bboss_is_active( 'forums' );
+	$invites_active = bboss_is_active( 'invites' );
 
 	if ( $post_id > 0 && 'edit' === $action ) {
 		$edit_post_type = get_post_type( $post_id );
@@ -1014,23 +1014,23 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		$cpt_redirects = array();
 
 		// Emails CPT — part of bp-core, always available alongside Settings 2.0.
-		if ( function_exists( 'bp_get_email_post_type' ) ) {
-			$cpt_redirects[ bp_get_email_post_type() ] = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
+		if ( function_exists( 'bboss_get_email_post_type' ) ) {
+			$cpt_redirects[ bboss_get_email_post_type() ] = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
 		}
 
 		// Invites CPT — requires the invites component.
-		if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) ) {
-			$cpt_redirects[ bp_get_invite_post_type() ] = 'admin.php?page=bb-settings&tab=invites&panel=invites_list';
+		if ( $invites_active && function_exists( 'bboss_get_invite_post_type' ) ) {
+			$cpt_redirects[ bboss_get_invite_post_type() ] = 'admin.php?page=bb-settings&tab=invites&panel=invites_list';
 		}
 
 		// Group Types CPT — requires the groups component.
-		if ( $groups_active && function_exists( 'bp_groups_get_group_type_post_type' ) ) {
-			$cpt_redirects[ bp_groups_get_group_type_post_type() ] = 'admin.php?page=bb-settings&tab=groups&panel=group_types';
+		if ( $groups_active && function_exists( 'bboss_groups_get_group_type_post_type' ) ) {
+			$cpt_redirects[ bboss_groups_get_group_type_post_type() ] = 'admin.php?page=bb-settings&tab=groups&panel=group_types';
 		}
 
 		// Profile (member) Types CPT — requires the members component.
-		if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) ) {
-			$cpt_redirects[ bp_get_member_type_post_type() ] = 'admin.php?page=bb-settings&tab=members&panel=profile_types';
+		if ( $members_active && function_exists( 'bboss_get_member_type_post_type' ) ) {
+			$cpt_redirects[ bboss_get_member_type_post_type() ] = 'admin.php?page=bb-settings&tab=members&panel=profile_types';
 		}
 
 		// Forum CPTs (only when forums component is active).
@@ -1053,7 +1053,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		$cpt_redirects = apply_filters( 'bb_legacy_cpt_edit_redirects', $cpt_redirects );
 
 		if ( $edit_post_type && isset( $cpt_redirects[ $edit_post_type ] ) ) {
-			wp_safe_redirect( bp_get_admin_url( $cpt_redirects[ $edit_post_type ] ) );
+			wp_safe_redirect( bboss_get_admin_url( $cpt_redirects[ $edit_post_type ] ) );
 			exit;
 		}
 	}
@@ -1064,19 +1064,19 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 * not registered and we'd redirect into a 404'd settings tab.
 	 */
 	if ( 'bp-group-type' === $post_type && $groups_active ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=group_types' ) );
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=group_types' ) );
 		exit;
 	}
 
 	// Redirect legacy Groups admin page (admin.php?page=bp-groups).
 	if ( 'bp-groups' === $page && $groups_active ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' ) );
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' ) );
 		exit;
 	}
 
 	// Redirect legacy Profile Fields admin page (admin.php?page=bp-profile-setup).
-	if ( 'bp-profile-setup' === $page && bp_is_active( 'xprofile' ) ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ) );
+	if ( 'bp-profile-setup' === $page && bboss_is_active( 'xprofile' ) ) {
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ) );
 		exit;
 	}
 
@@ -1085,14 +1085,14 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 * `bp_get_member_type_post_type()` is loaded by the members component;
 	 * guard the call so a deactivated members component doesn't fatal here.
 	 */
-	if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $post_type ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_types' ) );
+	if ( $members_active && function_exists( 'bboss_get_member_type_post_type' ) && bboss_get_member_type_post_type() === $post_type ) {
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_types' ) );
 		exit;
 	}
 
 	// Redirect legacy Profile Search CPT page (edit.php?post_type=bp_ps_form).
 	if ( 'bp_ps_form' === $post_type ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_search' ) );
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_search' ) );
 		exit;
 	}
 
@@ -1101,22 +1101,22 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		// Check taxonomy first — edit-tags.php passes both taxonomy and post_type params.
 		$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '';
 		if ( 'topic-tag' === $taxonomy ) {
-			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussion_tags' ) );
+			wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussion_tags' ) );
 			exit;
 		}
 
 		if ( 'forum' === $post_type ) {
-			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=all_forums' ) );
+			wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=all_forums' ) );
 			exit;
 		}
 
 		if ( 'topic' === $post_type ) {
-			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussions' ) );
+			wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussions' ) );
 			exit;
 		}
 
 		if ( 'reply' === $post_type ) {
-			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=replies' ) );
+			wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=replies' ) );
 			exit;
 		}
 	}
@@ -1127,14 +1127,14 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 * the invites component removes the target Settings 2.0 panel, so without
 	 * the active check we'd redirect into a 404'd settings tab.
 	 */
-	if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
+	if ( $invites_active && function_exists( 'bboss_get_invite_post_type' ) && bboss_get_invite_post_type() === $post_type ) {
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
 		exit;
 	}
 
 	// Redirect legacy Email Templates CPT page (edit.php?post_type=bp-email).
-	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $post_type ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=emails&panel=all_emails' ) );
+	if ( function_exists( 'bboss_get_email_post_type' ) && bboss_get_email_post_type() === $post_type ) {
+		wp_safe_redirect( bboss_get_admin_url( 'admin.php?page=bb-settings&tab=emails&panel=all_emails' ) );
 		exit;
 	}
 
@@ -1164,7 +1164,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 
 		if ( isset( $legacy_integration_tabs[ $tab ] ) ) {
 			$mapping  = $legacy_integration_tabs[ $tab ];
-			$redirect = bp_get_admin_url( 'admin.php?page=bb-settings' );
+			$redirect = bboss_get_admin_url( 'admin.php?page=bb-settings' );
 
 			if ( is_array( $mapping ) ) {
 				$redirect = add_query_arg( 'tab', $mapping['tab'], $redirect );
@@ -1193,11 +1193,11 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		return;
 	}
 
-	$legacy_tabs_mapping = bb_get_legacy_settings_tabs_mapping();
+	$legacy_tabs_mapping = bboss_get_legacy_settings_tabs_mapping();
 
 	if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
-		$redirect = bb_apply_legacy_tab_mapping_to_url(
-			bp_get_admin_url( 'admin.php?page=bb-settings' ),
+		$redirect = bboss_apply_legacy_tab_mapping_to_url(
+			bboss_get_admin_url( 'admin.php?page=bb-settings' ),
 			$legacy_tabs_mapping[ $tab ]
 		);
 

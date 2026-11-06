@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_members_screen_display_profile() {
+function bboss_members_screen_display_profile() {
 
 	/**
 	 * Fires right before the loading of the Member profile screen template file.
@@ -30,5 +30,5 @@ function bp_members_screen_display_profile() {
 	 *
 	 * @param string $template Path to the Member template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_members_screen_display_profile', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bp_members_screen_display_profile', 'members/single/home' ) );
 }

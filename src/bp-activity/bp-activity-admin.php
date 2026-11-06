@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_activity_add_admin_menu() {
+function bboss_activity_add_admin_menu() {
 	global $submenu;
 
 	// Register the menu item pointing directly to the React Settings 2.0 page.
-	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'activity', 'all_activities' )
+	$settings_url = function_exists( 'bboss_get_feature_settings_url' )
+		? bboss_get_feature_settings_url( 'activity', 'all_activities' )
 		: admin_url( 'admin.php?page=bb-settings&tab=activity&panel=all_activities' );
 
 	$submenu['buddyboss-platform'][] = array(
@@ -31,7 +31,7 @@ function bp_activity_add_admin_menu() {
 		$settings_url,
 	);
 }
-add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu', 65 );
+add_action( bboss_core_admin_hook(), 'bp_activity_add_admin_menu', 65 );
 
 /**
  * Get flattened array of all registered activity actions.
@@ -42,11 +42,11 @@ add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu', 65 );
  *
  * @return array $actions
  */
-function bp_activity_admin_get_activity_actions() {
+function bboss_activity_admin_get_activity_actions() {
 	$actions = array();
 
 	// Walk through the registered actions, and build an array of actions/values.
-	foreach ( bp_activity_get_actions() as $action ) {
+	foreach ( bboss_activity_get_actions() as $action ) {
 		$action = array_values( (array) $action );
 
 		for ( $i = 0, $i_count = count( $action ); $i < $i_count; $i++ ) {

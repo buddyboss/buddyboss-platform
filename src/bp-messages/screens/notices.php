@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return false|null False on failure.
  */
-function messages_screen_notices() {
+function bboss_messages_screen_notices() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -37,5 +37,5 @@ function messages_screen_notices() {
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
-	bp_core_load_template( apply_filters( 'messages_template_notices', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'messages_template_notices', 'members/single/home' ) );
 }

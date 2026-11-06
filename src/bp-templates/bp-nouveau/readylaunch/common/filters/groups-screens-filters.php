@@ -6,7 +6,7 @@
  * providing options to sort by date, alphabetical, and other criteria.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,7 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+$avail_sorting_options = bboss_get_enabled_activity_sorting_options();
 arsort( $avail_sorting_options );
 $default_selected = key( $avail_sorting_options );
 if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
@@ -27,7 +27,7 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 }
 
 // ReadyLaunch uses Title Case (default labels) for sorting.
-$sorting_labels = bb_get_activity_sorting_options_labels();
+$sorting_labels = bboss_get_activity_sorting_options_labels();
 ?>
 <i class="bb-rl-loader"></i>
 <div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>

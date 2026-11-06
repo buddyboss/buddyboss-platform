@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_forums_after_save_settings( $feature_id, $settings, $saved ) {
+function bboss_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'forums' !== $feature_id ) {
 		return;
 	}

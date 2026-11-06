@@ -20,9 +20,9 @@ add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); /
  *
  * @return mixed
  **/
-function bp_search_override_wp_native_results( $template ) {
+function bboss_search_override_wp_native_results( $template ) {
 
-	if ( bp_search_is_search() ) { // if search page.
+	if ( bboss_search_is_search() ) { // if search page.
 
 		$live_template_names = array(
 			'buddyboss-global-search.php',
@@ -57,10 +57,10 @@ add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); 
  *
  * @return mixed
  **/
-function bp_search_result_page_dummy_post_load( $template ) {
+function bboss_search_result_page_dummy_post_load( $template ) {
 	global $wp_query;
 
-	if ( ! bp_search_is_search() ) { // cancel if not search page.
+	if ( ! bboss_search_is_search() ) { // cancel if not search page.
 		return $template;
 	}
 
@@ -119,9 +119,9 @@ add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
  *
  * @return mixed
  **/
-function bp_search_clear_native_search_query( $query ) {
+function bboss_search_clear_native_search_query( $query ) {
 
-	if ( bp_search_is_search() ) {
+	if ( bboss_search_is_search() ) {
 
 		remove_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' ); // only do first time
 
@@ -139,7 +139,7 @@ function bp_search_clear_native_search_query( $query ) {
  *
  * @return mixed
  **/
-function bp_search_filter_bp_before_has_groups_parse_args( $args ) {
+function bboss_search_filter_bp_before_has_groups_parse_args( $args ) {
 
 	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) {
 		$args['type'] = '';

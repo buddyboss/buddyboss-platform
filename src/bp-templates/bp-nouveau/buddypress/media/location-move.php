@@ -12,7 +12,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_album_id = bp_get_album_id();
+$bp_album_id = bboss_get_album_id();
 $bp_album_id = ! empty( $bp_album_id ) ? $bp_album_id : 0;
 ?>
 <div class="bb-dropdown-wrap">

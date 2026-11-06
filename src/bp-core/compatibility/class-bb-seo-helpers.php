@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
+if ( ! class_exists( 'BBoss_SEO_Helpers' ) ) {
 
 	/**
-	 * BB_SEO_Helpers Class
+	 * BBoss_SEO_Helpers Class
 	 *
 	 * SEO plugins build their own output - the document title, Open Graph tags and the JSON-LD
 	 * graph - and they resolve a member's name by reading the WP_User object's `display_name`
@@ -63,7 +63,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 	 *
 	 * @since BuddyBoss 3.5.0
 	 */
-	class BB_SEO_Helpers {
+	class BBoss_SEO_Helpers {
 
 		/**
 		 * The single instance of the class.
@@ -85,7 +85,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * of a whole collection, each item written by a different author.
 		 *
 		 * Keyed by member, VIEWER and display-name format - the same key the memo this wraps uses
-		 * (bb_core_get_redacted_core_author_name()). The entry is viewer-dependent: an administrator
+		 * (bboss_core_get_redacted_core_author_name()). The entry is viewer-dependent: an administrator
 		 * sees every name part and produces an empty entry, and under a user-id-only key that empty
 		 * entry then answered for a guest, handing the unredacted name to the JSON-LD graph and the
 		 * author meta tag. One request really can resolve for more than one viewer or format -
@@ -99,7 +99,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		private $name_map = array();
 
 		/**
-		 * BB_SEO_Helpers constructor.
+		 * BBoss_SEO_Helpers constructor.
 		 *
 		 * @since BuddyBoss 3.5.0
 		 */
@@ -112,7 +112,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 *
 		 * @since BuddyBoss 3.5.0
 		 *
-		 * @return BB_SEO_Helpers
+		 * @return BBoss_SEO_Helpers
 		 */
 		public static function instance() {
 
@@ -284,7 +284,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 				return $name;
 			}
 
-			return bb_core_replace_names( $name, $map );
+			return bboss_core_replace_names( $name, $map );
 		}
 
 		/**
@@ -320,7 +320,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * The walk is not limited to name keys - a member's name is redacted wherever it appears,
 		 * a headline or a description included - so the replacement matches whole words only. An
 		 * unbounded substitution rewrote the middle of unrelated ones: a member called "Ann" turned
-		 * "Annapolis Anniversary" into "A.apolis A.iversary". See bb_core_replace_names().
+		 * "Annapolis Anniversary" into "A.apolis A.iversary". See bboss_core_replace_names().
 		 *
 		 * @since BuddyBoss 3.5.0
 		 *
@@ -361,7 +361,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 				return $value;
 			}
 
-			return bb_core_replace_names( $value, $map );
+			return bboss_core_replace_names( $value, $map );
 		}
 
 		/**
@@ -401,8 +401,8 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 			// resolve_user_ids_from_context() returns non-empty and wins. Asking it first therefore
 			// silently mapped the wrong member on exactly the pages this class exists for: the
 			// profile OG tags, the Person graph piece and the breadcrumb.
-			if ( function_exists( 'bp_is_user' ) && bp_is_user() ) {
-				$displayed_user_id = (int) bp_displayed_user_id();
+			if ( function_exists( 'bboss_is_user' ) && bboss_is_user() ) {
+				$displayed_user_id = (int) bboss_displayed_user_id();
 
 				if ( $displayed_user_id ) {
 					// Exactly one subject, and return - the directory post's author must not join it.
@@ -507,7 +507,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 			$map = array();
 
 			// Resolved once per call rather than per member: neither can change inside the loop.
-			$viewer_key = bb_core_get_viewer_user_id() . ':' . bp_core_display_name_format();
+			$viewer_key = bboss_core_get_viewer_user_id() . ':' . bboss_core_display_name_format();
 
 			foreach ( array_unique( array_filter( array_map( 'intval', (array) $user_ids ) ) ) as $user_id ) {
 
@@ -536,7 +536,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 			// The raw wp_users row. get_userdata() resolves to the same value, but wraps the row in
 			// a WP_User whose construction also loads and maps the member's capabilities - work
 			// nothing here reads, and this method runs once per member in get_name_map()'s loop.
-			$user_data = BP_Core_User::get_core_userdata( $user_id );
+			$user_data = BBoss_Core_User::get_core_userdata( $user_id );
 
 			if ( empty( $user_data ) ) {
 				return array();
@@ -550,7 +550,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 				return array();
 			}
 
-			$redacted = bb_core_get_redacted_core_author_name( $user_id );
+			$redacted = bboss_core_get_redacted_core_author_name( $user_id );
 
 			if ( null === $redacted || $redacted === $raw ) {
 				return array();

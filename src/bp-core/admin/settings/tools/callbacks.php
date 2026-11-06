@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool True when both Mothership helper classes are loaded.
  */
-function bb_tools_mothership_available() {
+function bboss_tools_mothership_available() {
 	return class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 }
@@ -40,7 +40,7 @@ function bb_tools_mothership_available() {
  *
  * @return bool True when the Mothership connector reports an active license.
  */
-function bb_tools_is_license_active() {
+function bboss_tools_is_license_active() {
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
 		return false;
 	}
@@ -57,7 +57,7 @@ function bb_tools_is_license_active() {
  *
  * @return string Admin URL for the license activation screen.
  */
-function bb_tools_get_license_url() {
+function bboss_tools_get_license_url() {
 	// Empty in builds without the BuddyBoss licence screen (the wordpress.org edition).
 	$url = '';
 	// @bbwt-com-start mothership-hub
@@ -81,7 +81,7 @@ function bb_tools_get_license_url() {
  *
  * @return void
  */
-function bb_tools_ajax_check_plugin_state() {
+function bboss_tools_ajax_check_plugin_state() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
@@ -106,11 +106,11 @@ function bb_tools_ajax_check_plugin_state() {
 	// Not installed: if the Mothership license layer is present but the license
 	// is inactive, the addon cannot be pulled from the BuddyBoss add-on server —
 	// surface a license-activation CTA instead of a dead "Install Now" button.
-	if ( bb_tools_mothership_available() && ! bb_tools_is_license_active() ) {
+	if ( bboss_tools_mothership_available() && ! bboss_tools_is_license_active() ) {
 		wp_send_json_success(
 			array(
 				'state'       => 'needs-license',
-				'license_url' => bb_tools_get_license_url(),
+				'license_url' => bboss_tools_get_license_url(),
 			)
 		);
 	}
@@ -136,7 +136,7 @@ add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bb_tools_ajax_check_plugin_s
  *
  * @return void
  */
-function bb_tools_ajax_activate_plugin() {
+function bboss_tools_ajax_activate_plugin() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
@@ -181,7 +181,7 @@ add_action( 'wp_ajax_bb_tools_activate_plugin', 'bb_tools_ajax_activate_plugin' 
  *
  * @return void
  */
-function bb_tools_ajax_install_plugin() {
+function bboss_tools_ajax_install_plugin() {
 	if ( ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
@@ -194,15 +194,15 @@ function bb_tools_ajax_install_plugin() {
 
 	$download_url = '';
 
-	if ( bb_tools_mothership_available() ) {
+	if ( bboss_tools_mothership_available() ) {
 
 		// License-gated path: the addon is not on wordpress.org, so a valid,
 		// activated license is required to fetch it from the add-on server.
-		if ( ! bb_tools_is_license_active() ) {
+		if ( ! bboss_tools_is_license_active() ) {
 			wp_send_json_error(
 				array(
 					'message'     => __( 'Please activate your BuddyBoss license to install this add-on.', 'buddyboss' ),
-					'license_url' => bb_tools_get_license_url(),
+					'license_url' => bboss_tools_get_license_url(),
 				)
 			);
 		}
@@ -214,7 +214,7 @@ function bb_tools_ajax_install_plugin() {
 			wp_send_json_error(
 				array(
 					'message'     => __( 'The BuddyBoss Tools add-on is not available under your current license.', 'buddyboss' ),
-					'license_url' => bb_tools_get_license_url(),
+					'license_url' => bboss_tools_get_license_url(),
 				)
 			);
 		}

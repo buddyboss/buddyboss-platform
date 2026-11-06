@@ -6,7 +6,7 @@
  * with media attachments, GIF support, and member selection functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,7 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_loggedin_user_id = bp_loggedin_user_id();
+$bp_loggedin_user_id = bboss_loggedin_user_id();
 $args                = array(
 	'page'                => 1,
 	'per_page'            => 12,
@@ -22,12 +22,12 @@ $args                = array(
 	'exclude_admins_mods' => false,
 );
 
-$group_members   = groups_get_group_members( $args );
+$group_members   = bboss_groups_get_group_members( $args );
 $group_id        = 0;
-$is_media_active = bp_is_active( 'media' );
-$extensions      = ( $is_media_active && bp_is_active( 'document' ) && function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : false;
-if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
-	$group_id = bp_get_current_group_id();
+$is_media_active = bboss_is_active( 'media' );
+$extensions      = ( $is_media_active && bboss_is_active( 'document' ) && function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : false;
+if ( bboss_is_active( 'groups' ) && bboss_is_group_single() ) {
+	$group_id = bboss_get_current_group_id();
 }
 ?>
 
@@ -92,7 +92,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							</div>
 							<?php
 						endif;
-						if ( $is_media_active && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( $bp_loggedin_user_id, $group_id ) || bp_is_activity_directory() ) ) :
+						if ( $is_media_active && bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled() && ( bb_video_user_can_upload( $bp_loggedin_user_id, $group_id ) || bboss_is_activity_directory() ) ) :
 							?>
 							<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 							<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>
@@ -161,7 +161,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 						?>
 						">
 						<?php
-						if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+						if ( $is_media_active && bboss_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item bb-rl-post-media media-support group-message-media-support">
 								<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
@@ -172,7 +172,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 						endif;
 
 						$video_extensions = ( function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : '';
-						if ( $is_media_active && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+						if ( $is_media_active && ! empty( $video_extensions ) && bboss_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item bb-rl-post-video video-support">
 								<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
@@ -182,7 +182,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<?php
 						endif;
 
-						if ( $is_media_active && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+						if ( $is_media_active && bboss_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item bb-rl-post-media document-support group-message-document-support">
 								<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
@@ -192,7 +192,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<?php
 						endif;
 
-						if ( $is_media_active && bb_media_gif_picker_available() && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+						if ( $is_media_active && bboss_media_gif_picker_available() && bboss_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item bb-rl-post-gif">
 								<div class="gif-media-search">
@@ -227,7 +227,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<?php
 						endif;
 
-						if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+						if ( $is_media_active && bboss_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="bb-rl-separator"></div>
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>

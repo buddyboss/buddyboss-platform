@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Members extends BP_Moderation_Abstract {
+class BBoss_Moderation_Members extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -31,7 +31,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public static $moderation_type_report = 'user_report';
 
 	/**
-	 * BP_Moderation_Members constructor.
+	 * BBoss_Moderation_Members constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -55,7 +55,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		if ( ! bboss_is_moderation_member_blocking_enable( 0 ) ) {
 			return;
 		}
 
@@ -94,7 +94,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function get_permalink( $member_id ) {
-		return add_query_arg( array( 'modbypass' => 1 ), bp_core_get_user_domain( $member_id ) );
+		return add_query_arg( array( 'modbypass' => 1 ), bboss_core_get_user_domain( $member_id ) );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
 
-		if ( bb_is_moderation_member_reporting_enable() ) {
+		if ( bboss_is_moderation_member_reporting_enable() ) {
 			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss' );
 		}
 
@@ -147,12 +147,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		if (
 			(
-				function_exists( 'bp_is_group_members' ) &&
-				bp_is_group_members()
+				function_exists( 'bboss_is_group_members' ) &&
+				bboss_is_group_members()
 			) ||
 			(
-				function_exists( 'bp_get_group_current_admin_tab' ) &&
-				'manage-members' === bp_get_group_current_admin_tab()
+				function_exists( 'bboss_get_group_current_admin_tab' ) &&
+				'manage-members' === bboss_get_group_current_admin_tab()
 			) ||
 			(
 				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
@@ -170,7 +170,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( true === $blocked_user_query ) {
-			$where['moderation_blocked_by_where'] = "( u.{$column_name} NOT IN (" . bb_moderation_get_blocked_by_sql() . ') )';
+			$where['moderation_blocked_by_where'] = "( u.{$column_name} NOT IN (" . bboss_moderation_get_blocked_by_sql() . ') )';
 		}
 
 		return $where;
@@ -202,16 +202,16 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function restrict_member_profile() {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 		if (
-			! bp_is_single_activity() &&
+			! bboss_is_single_activity() &&
 			(
-				bp_moderation_is_user_blocked( $user_id ) ||
-				bb_moderation_is_user_blocked_by( $user_id )
+				bboss_moderation_is_user_blocked( $user_id ) ||
+				bboss_moderation_is_user_blocked_by( $user_id )
 			)
 		) {
-			buddypress()->displayed_user->id = 0;
-			bp_do_404();
+			bboss()->displayed_user->id = 0;
+			bboss_do_404();
 
 			return;
 		}
@@ -233,7 +233,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		// Alowed to view single group activity.
 		if (
-			bp_is_single_activity() &&
+			bboss_is_single_activity() &&
 			! wp_doing_ajax()
 		) {
 			return $domain;
@@ -241,10 +241,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		if (
 			empty( $username_visible ) &&
-			! bp_moderation_is_user_suspended( $user_id ) &&
+			! bboss_moderation_is_user_suspended( $user_id ) &&
 			(
-				bp_moderation_is_user_blocked( $user_id ) ||
-				bb_moderation_is_user_blocked_by( $user_id )
+				bboss_moderation_is_user_blocked( $user_id ) ||
+				bboss_moderation_is_user_blocked_by( $user_id )
 			)
 		) {
 			return ''; // To allow to make this function working bp_core_get_userlink() which update using below function.
@@ -266,8 +266,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function bp_core_get_userlink( $value, $user_id ) {
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
-			return '<a>' . bp_core_get_user_displayname( $user_id ) . '</a>';
+		if ( empty( $username_visible ) && ( bboss_moderation_is_user_blocked( $user_id ) || bboss_moderation_is_user_blocked_by( $user_id ) ) ) {
+			return '<a>' . bboss_core_get_user_displayname( $user_id ) . '</a>';
 		}
 
 		return $value;
@@ -284,7 +284,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_meta( $value, $user_id ) {
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+		if ( bboss_moderation_is_user_blocked( $user_id ) ) {
 			return '';
 		}
 
@@ -304,21 +304,21 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function get_the_author_name( $value, $user_id ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
-		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
+		if ( ! empty( $username_visible ) || ( bboss_is_my_profile() && 'blocked-members' === bboss_current_action() ) ) {
 			return $value;
 		}
 
 		$user = get_userdata( $user_id );
 
 		if ( empty( $user ) || ! empty( $user->deleted ) ) {
-			return bb_moderation_is_deleted_label();
+			return bboss_moderation_is_deleted_label();
 		}
 
-		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
-			if ( bp_moderation_is_user_blocked( $user_id ) ) {
-				return bb_moderation_has_blocked_label( $value, $user_id );
-			} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
-				return bb_moderation_is_blocked_label( $value, $user_id );
+		if ( ! bboss_moderation_is_user_suspended( $user_id ) ) {
+			if ( bboss_moderation_is_user_blocked( $user_id ) ) {
+				return bboss_moderation_has_blocked_label( $value, $user_id );
+			} elseif ( bboss_moderation_is_user_blocked_by( $user_id ) ) {
+				return bboss_moderation_is_blocked_label( $value, $user_id );
 			}
 		}
 
@@ -362,10 +362,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			$retval = bb_moderation_has_blocked_avatar( $retval, $user->ID, $args );
-		} elseif ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
+		if ( bboss_moderation_is_user_blocked( $user->ID ) ) {
+			$retval = bboss_moderation_has_blocked_avatar( $retval, $user->ID, $args );
+		} elseif ( bboss_moderation_is_user_blocked_by( $user->ID ) ) {
+			$retval = bboss_moderation_is_blocked_avatar( $user->ID, $args );
 		}
 
 		/**
@@ -399,10 +399,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
-				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = bb_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
-				} elseif ( bb_moderation_is_user_blocked_by( $item_id ) ) {
-					$avatar_url = bb_moderation_is_blocked_avatar( $item_id, $params );
+				if ( bboss_moderation_is_user_blocked( $item_id ) ) {
+					$avatar_url = bboss_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
+				} elseif ( bboss_moderation_is_user_blocked_by( $item_id ) ) {
+					$avatar_url = bboss_moderation_is_blocked_avatar( $item_id, $params );
 				}
 			}
 		}
@@ -447,10 +447,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.3.50
 	 *
-	 * @param BP_Activity_Activity $activity Activity object.
+	 * @param BBoss_Activity_Activity $activity Activity object.
 	 */
 	public function bb_activity_before_permalink_redirect_url( $activity ) {
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bboss_is_active( 'groups' ) && bboss()->groups->id === $activity->component ) {
 			remove_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 		}
 	}
@@ -460,10 +460,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.3.50
 	 *
-	 * @param BP_Activity_Activity $activity Activity object.
+	 * @param BBoss_Activity_Activity $activity Activity object.
 	 */
 	public function bb_activity_after_permalink_redirect_url( $activity ) {
-		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bboss_is_active( 'groups' ) && bboss()->groups->id === $activity->component ) {
 			add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
 		}
 	}
@@ -479,10 +479,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return array|string Return the member actions.
 	 */
 	public function bb_member_directories_remove_profile_actions( $buttons, $user_id ) {
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+		if ( bboss_moderation_is_user_blocked( $user_id ) ) {
 			$buttons['primary']   = '';
 			$buttons['secondary'] = '';
-		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+		} elseif ( bboss_moderation_is_user_blocked_by( $user_id ) ) {
 			$buttons['primary']   = '';
 			$buttons['secondary'] = '';
 		}
@@ -502,7 +502,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return array|string Return the member actions.
 	 */
 	public function bb_remove_member_type_name_string( $string, $member_type, $user_id ) {
-		if ( bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if ( bboss_moderation_is_user_blocked_by( $user_id ) ) {
 			$string = '';
 		}
 

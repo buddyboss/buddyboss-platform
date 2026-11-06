@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.9.0
  */
 #[\AllowDynamicProperties]
-class BP_Notifications_Template {
+class BBoss_Notifications_Template {
 
 	/**
 	 * The loop iterator.
@@ -142,26 +142,26 @@ class BP_Notifications_Template {
 	/**
 	 * Constructor method.
 	 *
-	 * @see bp_has_notifications() For information on the array format.
+	 * @see bboss_has_notifications() For information on the array format.
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $args {
-	 *     An array of arguments. See {@link bp_has_notifications()}
+	 *     An array of arguments. See {@link bboss_has_notifications()}
 	 *     for more details.
 	 * }
 	 */
 	public function __construct( $args = array() ) {
 
 		// Parse arguments.
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'id'                => false,
 				'user_id'           => 0,
 				'item_id'           => false,
 				'secondary_item_id' => false,
-				'component_name'    => bp_notifications_get_registered_components(),
+				'component_name'    => bboss_notifications_get_registered_components(),
 				'component_action'  => false,
 				'excluded_action'   => false,
 				'is_new'            => true,
@@ -187,8 +187,8 @@ class BP_Notifications_Template {
 
 		// Setup variables.
 		$this->pag_arg      = sanitize_key( $r['page_arg'] );
-		$this->pag_page     = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num      = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page     = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num      = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 		$this->user_id      = $r['user_id'];
 		$this->is_new       = $r['is_new'];
 		$this->search_terms = $r['search_terms'];
@@ -213,8 +213,8 @@ class BP_Notifications_Template {
 		);
 
 		// Setup the notifications to loop through.
-		$this->notifications            = BP_Notifications_Notification::get( $this->query_vars );
-		$this->total_notification_count = BP_Notifications_Notification::get_total_count( $this->query_vars );
+		$this->notifications            = BBoss_Notifications_Notification::get( $this->query_vars );
+		$this->total_notification_count = BBoss_Notifications_Notification::get_total_count( $this->query_vars );
 
 		if ( empty( $this->notifications ) ) {
 			$this->notification_count       = 0;
@@ -257,7 +257,7 @@ class BP_Notifications_Template {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see bp_has_notifications()
+	 * @see bboss_has_notifications()
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
@@ -337,13 +337,13 @@ class BP_Notifications_Template {
 	/**
 	 * Set up the current notification inside the loop.
 	 *
-	 * Used by {@link bp_the_notification()} to set up the current
+	 * Used by {@link bboss_the_notification()} to set up the current
 	 * notification data while looping, so that template tags used during
 	 * that iteration make reference to the current notification.
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see bp_the_notification()
+	 * @see bboss_the_notification()
 	 */
 	public function the_notification() {
 		$this->in_the_loop  = true;

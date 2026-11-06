@@ -25,14 +25,14 @@ class BP_RankMath_Title implements IPaper {
 	 * @return string
 	 */
 	public function title( $title = '' ) {
-		if ( bp_is_user() && bp_is_current_component( 'xprofile' ) ) {
-			$custom_title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
+		if ( bboss_is_user() && bboss_is_current_component( 'xprofile' ) ) {
+			$custom_title = get_user_meta( bboss_displayed_user_id(), 'first_name', true );
 			if ( empty( $custom_title ) ) {
-				$custom_title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
+				$custom_title = get_user_meta( bboss_displayed_user_id(), 'nickname', true );
 			}
 		} else {
-			$action       = bp_current_action();
-			$custom_title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : get_the_title();
+			$action       = bboss_current_action();
+			$custom_title = isset( bboss()->groups->current_group->name ) ? bboss()->groups->current_group->name : get_the_title();
 			if ( 'admin' === $action ) {
 				$action = esc_html__( 'Manage', 'buddyboss' );
 			}
@@ -42,7 +42,7 @@ class BP_RankMath_Title implements IPaper {
 			}
 
 			if ( isset( $action ) && ! empty( $action ) ) {
-				$custom_title = ucfirst( $action ) . ' - ' . ( ! empty( $title ) ? $title : $custom_title . ' - ' . bp_get_site_name() );
+				$custom_title = ucfirst( $action ) . ' - ' . ( ! empty( $title ) ? $title : $custom_title . ' - ' . bboss_get_site_name() );
 			}
 		}
 
@@ -55,7 +55,7 @@ class BP_RankMath_Title implements IPaper {
 	 * @return string
 	 */
 	public function description() {
-		return isset( buddypress()->groups->current_group->description ) ? buddypress()->groups->current_group->description : '';
+		return isset( bboss()->groups->current_group->description ) ? bboss()->groups->current_group->description : '';
 	}
 
 	/**
@@ -101,15 +101,15 @@ class BP_RankMath_Title implements IPaper {
  */
 function bp_helper_rankmath_group_page_support( $title ) {
 
-	if ( bp_is_current_component( 'activate' ) || bp_is_current_component( 'register' ) ) {
+	if ( bboss_is_current_component( 'activate' ) || bboss_is_current_component( 'register' ) ) {
 		return;
 	}
 
 	if (
-		bp_is_active( 'groups' ) &&
+		bboss_is_active( 'groups' ) &&
 		(
-			! empty( buddypress()->groups->current_group ) ||
-			bp_is_current_component( 'groups' )
+			! empty( bboss()->groups->current_group ) ||
+			bboss_is_current_component( 'groups' )
 		)
 	) {
 		$group_page = new BP_RankMath_Title();

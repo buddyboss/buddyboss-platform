@@ -12,11 +12,11 @@ defined( 'ABSPATH' ) || exit;
 /** Loader ********************************************************************/
 
 /**
- * bp_setup_root_components()
+ * bboss_setup_root_components()
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_setup_root_components() {
+function bboss_setup_root_components() {
 	do_action( 'bp_setup_root_components' );
 }
 add_action( 'bp_init', 'bp_setup_root_components', 6 );
@@ -24,7 +24,7 @@ add_action( 'bp_init', 'bp_setup_root_components', 6 );
 /** WP Abstraction ************************************************************/
 
 /**
- * bp_core_is_multisite()
+ * bboss_core_is_multisite()
  *
  * This function originally served as a wrapper when WordPress and WordPress MU were separate entities.
  * Use is_multisite() instead.
@@ -34,7 +34,7 @@ add_action( 'bp_init', 'bp_setup_root_components', 6 );
  *
  * @return bool
  */
-function bp_core_is_multisite() {
+function bboss_core_is_multisite() {
 	_deprecated_function( __FUNCTION__, '1.5', 'is_multisite()' );
 	return is_multisite();
 }
@@ -50,7 +50,7 @@ function bp_core_is_multisite() {
  * @return bool True if not multisite or $blog_id is main site
  * @since BuddyPress 1.2.6
  */
-function bp_core_is_main_site( $blog_id = '' ) {
+function bboss_core_is_main_site( $blog_id = '' ) {
 	_deprecated_function( __FUNCTION__, '1.5', 'is_main_site()' );
 	return is_main_site( $blog_id );
 }
@@ -82,7 +82,7 @@ if ( ! function_exists( 'is_site_admin' ) ) {
  *
  * @return string
  */
-function bp_core_add_admin_menu_page( $args = '' ) {
+function bboss_core_add_admin_menu_page( $args = '' ) {
 	global $_registered_pages, $admin_page_hooks, $menu;
 
 	_deprecated_function( __FUNCTION__, '1.5', 'Use add_menu_page()' );
@@ -97,7 +97,7 @@ function bp_core_add_admin_menu_page( $args = '' ) {
 		'position'     => 100,
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	$file     = plugin_basename( $file );
@@ -127,26 +127,26 @@ function bp_core_add_admin_menu_page( $args = '' ) {
 /** Activity ******************************************************************/
 
 /**
- * bp_is_activity_permalink()
+ * bboss_is_activity_permalink()
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_is_activity_permalink() {
+function bboss_is_activity_permalink() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_single_activity' );
-	bp_is_single_activity();
+	bboss_is_single_activity();
 }
 
 /** Core **********************************************************************/
 
 /**
- * bp_core_get_wp_profile()
+ * bboss_core_get_wp_profile()
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_core_get_wp_profile() {
+function bboss_core_get_wp_profile() {
 	_deprecated_function( __FUNCTION__, '1.5' );
 
-	$ud = get_userdata( bp_displayed_user_id() ); ?>
+	$ud = get_userdata( bboss_displayed_user_id() ); ?>
 
 <div class="bp-widget wp-profile">
 	<h4><?php esc_html_e( 'My Profile', 'buddyboss' ); ?></h4>
@@ -214,14 +214,14 @@ function bp_core_get_wp_profile() {
 }
 
 /**
- * bp_is_home()
+ * bboss_is_home()
  *
  * @deprecated BuddyPress 1.5.0
- * @deprecated Use bp_is_my_profile()
+ * @deprecated Use bboss_is_my_profile()
  */
-function bp_is_home() {
+function bboss_is_home() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_my_profile' );
-	return bp_is_my_profile();
+	return bboss_is_my_profile();
 }
 
 /**
@@ -231,7 +231,7 @@ function bp_is_home() {
  * @deprecated Use is_front_page()
  * @return bool
  */
-function bp_is_front_page() {
+function bboss_is_front_page() {
 	_deprecated_function( __FUNCTION__, '1.5', 'is_front_page()' );
 	return is_front_page();
 }
@@ -243,31 +243,31 @@ function bp_is_front_page() {
  * @deprecated Use bp_is_component_front_page( 'activity' )
  * @return bool
  */
-function bp_is_activity_front_page() {
+function bboss_is_activity_front_page() {
 	_deprecated_function( __FUNCTION__, '1.5', "bp_is_component_front_page( 'activity' )" );
-	return bp_is_component_front_page( 'activity' );
+	return bboss_is_component_front_page( 'activity' );
 }
 
 /**
- * bp_is_member()
+ * bboss_is_member()
  *
  * @deprecated BuddyPress 1.5.0
- * @deprecated use bp_is_user()
+ * @deprecated use bboss_is_user()
  */
-function bp_is_member() {
+function bboss_is_member() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_user' );
-	return bp_is_user();
+	return bboss_is_user();
 }
 
 /**
- * bp_loggedinuser_link()
+ * bboss_loggedinuser_link()
  *
  * @deprecated BuddyPress 1.5.0
- * @deprecated use bp_loggedin_user_link()
+ * @deprecated use bboss_loggedin_user_link()
  */
-function bp_loggedinuser_link() {
+function bboss_loggedinuser_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_loggedin_user_link' );
-	bp_loggedin_user_link();
+	bboss_loggedin_user_link();
 }
 
 /**
@@ -277,20 +277,20 @@ function bp_loggedinuser_link() {
  * @deprecated BuddyPress 1.5.0
  * @return bool
  */
-function bp_search_form_enabled() {
+function bboss_search_form_enabled() {
 	_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
 	return apply_filters( 'bp_search_form_enabled', true );
 }
 
 /**
- * Template tag version of bp_get_page_title()
+ * Template tag version of bboss_get_page_title()
  *
  * @deprecated BuddyPress 1.5.0
  * @deprecated Use wp_title()
  * @since BuddyPress 1.0.0
  */
-function bp_page_title() {
-	echo esc_html( bp_get_page_title() );
+function bboss_page_title() {
+	echo esc_html( bboss_get_page_title() );
 }
 	/**
 	 * Prior to BuddyPress 1.5, this was used to generate the page's <title> text.
@@ -302,7 +302,7 @@ function bp_page_title() {
 	 *
 	 * @return string
 	 */
-function bp_get_page_title() {
+function bboss_get_page_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_title()' );
 	$title = wp_title( '|', false, 'right' ) . get_bloginfo( 'name', 'display' );
 
@@ -319,10 +319,10 @@ function bp_get_page_title() {
  * @deprecated Use wp_logout_url()
  * @since BuddyPress 1.0.0
  */
-function bp_log_out_link() {
+function bboss_log_out_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_logout_url()' );
 
-	$logout_link = '<a href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss' ) . '</a>';
+	$logout_link = '<a href="' . wp_logout_url( bboss_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss' ) . '</a>';
 	echo wp_kses_post( apply_filters( 'bp_logout_link', $logout_link ) );
 }
 
@@ -330,9 +330,9 @@ function bp_log_out_link() {
  * Send an email and a BP notification on receipt of an @-mention in a group
  *
  * @deprecated BuddyPress 1.5.0
- * @deprecated Deprecated in favor of the more general bp_activity_at_message_notification()
+ * @deprecated Deprecated in favor of the more general bboss_activity_at_message_notification()
  */
-function groups_at_message_notification( $content, $poster_user_id, $group_id, $activity_id ) {
+function bboss_groups_at_message_notification( $content, $poster_user_id, $group_id, $activity_id ) {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_activity_at_message_notification()' );
 
 	/* Scan for @username strings in an activity update. Notify each user. */
@@ -344,34 +344,34 @@ function groups_at_message_notification( $content, $poster_user_id, $group_id, $
 		return false;
 	}
 
-	$group = new BP_Groups_Group( $group_id );
+	$group = new BBoss_Groups_Group( $group_id );
 
 	foreach ( (array) $usernames as $username ) {
-		if ( ! $receiver_user_id = bp_core_get_userid( $username ) ) {
+		if ( ! $receiver_user_id = bboss_core_get_userid( $username ) ) {
 			continue;
 		}
 
 		/* Check the user is a member of the group before sending the update. */
-		if ( ! groups_is_user_member( $receiver_user_id, $group_id ) ) {
+		if ( ! bboss_groups_is_user_member( $receiver_user_id, $group_id ) ) {
 			continue;
 		}
 
 		// Now email the user with the contents of the message (if they have enabled email notifications)
-		if ( 'no' != bp_get_user_meta( $receiver_user_id, 'notification_activity_new_mention', true ) ) {
-			$poster_name = bp_core_get_user_displayname( $poster_user_id );
+		if ( 'no' != bboss_get_user_meta( $receiver_user_id, 'notification_activity_new_mention', true ) ) {
+			$poster_name = bboss_core_get_user_displayname( $poster_user_id );
 
-			$message_link  = bp_activity_get_permalink( $activity_id );
-			$settings_slug = function_exists( 'bp_get_settings_slug' ) ? bp_get_settings_slug() : 'settings';
-			$settings_link = bp_core_get_user_domain( $receiver_user_id ) . $settings_slug . '/notifications/';
+			$message_link  = bboss_activity_get_permalink( $activity_id );
+			$settings_slug = function_exists( 'bboss_get_settings_slug' ) ? bboss_get_settings_slug() : 'settings';
+			$settings_link = bboss_core_get_user_domain( $receiver_user_id ) . $settings_slug . '/notifications/';
 
 			$poster_name = stripslashes( $poster_name );
-			$content     = bp_groups_filter_kses( stripslashes( $content ) );
+			$content     = bboss_groups_filter_kses( stripslashes( $content ) );
 
 			// Set up and send the message
-			$ud      = bp_core_get_core_userdata( $receiver_user_id );
+			$ud      = bboss_core_get_core_userdata( $receiver_user_id );
 			$to      = $ud->user_email;
 			/* translators: 1: member display name, 2: group name. */
-			$subject = bp_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss' ), $poster_name, $group->name ) ) );
+			$subject = bboss_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss' ), $poster_name, $group->name ) ) );
 
 			$message = sprintf(
 				/* translators: 1: member display name, 2: group name, 3: message excerpt, 4: link to the activity, 5: link to the notification settings. */
@@ -411,19 +411,19 @@ To view and respond to the message, log in and visit: %4$s
  *
  * @return mixed
  */
-function bp_core_delete_notifications_for_user_by_type( $user_id, $component_name, $component_action ) {
+function bboss_core_delete_notifications_for_user_by_type( $user_id, $component_name, $component_action ) {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_core_delete_notifications_by_type()' );
-	return BP_Core_Notification::delete_for_user_by_type( $user_id, $component_name, $component_action );
+	return BBoss_Core_Notification::delete_for_user_by_type( $user_id, $component_name, $component_action );
 }
 
 /**
- * bp_core_delete_notifications_for_user_by_item_id()
+ * bboss_core_delete_notifications_for_user_by_item_id()
  *
  * @return mixed
  */
-function bp_core_delete_notifications_for_user_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false ) {
+function bboss_core_delete_notifications_for_user_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id = false ) {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_core_delete_notifications_by_item_id()' );
-	return BP_Core_Notification::delete_for_user_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id );
+	return BBoss_Core_Notification::delete_for_user_by_item_id( $user_id, $item_id, $component_name, $component_action, $secondary_item_id );
 }
 
 /**
@@ -431,13 +431,13 @@ function bp_core_delete_notifications_for_user_by_item_id( $user_id, $item_id, $
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_search_form() {
+function bboss_search_form() {
 	_deprecated_function( __FUNCTION__, '1.1', 'No longer required.' );
 
 	$form = '
-		<form action="' . bp_search_form_action() . '" method="post" id="search-form">
+		<form action="' . bboss_search_form_action() . '" method="post" id="search-form">
 			<input type="text" id="search-terms" name="search-terms" value="" />
-			' . bp_search_form_type_select() . '
+			' . bboss_search_form_type_select() . '
 
 			<input type="submit" name="search-submit" id="search-submit" value="' . __( 'Search', 'buddyboss' ) . '" />
 			' . wp_nonce_field( 'bp_search_form' ) . '
@@ -452,43 +452,43 @@ function bp_search_form() {
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_is_profile_edit() {
+function bboss_is_profile_edit() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_user_profile_edit()' );
-	return bp_is_user_profile_edit();
+	return bboss_is_user_profile_edit();
 }
 
 /**
- * bp_is_change_avatar()
+ * bboss_is_change_avatar()
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_is_change_avatar() {
+function bboss_is_change_avatar() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_user_change_avatar()' );
-	return bp_is_user_change_avatar();
+	return bboss_is_user_change_avatar();
 }
 
 /**
- * bp_is_friend_requests()
+ * bboss_is_friend_requests()
  *
  * @deprecated BuddyPress 1.5.0
  */
-function bp_is_friend_requests() {
+function bboss_is_friend_requests() {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_user_friend_requests()' );
-	return bp_is_user_friend_requests();
+	return bboss_is_user_friend_requests();
 }
 
 /**
  * Checks to see if a component's URL should be in the root, not under a member page:
  * eg: http://example.com/groups/the-group NOT http://example.com/members/andy/groups/the-group
- * You should be using bp_is_root_component().
+ * You should be using bboss_is_root_component().
  *
  * @deprecated BuddyPress 1.5.0
- * @deprecated bp_is_root_component()
+ * @deprecated bboss_is_root_component()
  * @return bool True if root component, else false.
  */
-function bp_core_is_root_component( $component_name ) {
+function bboss_core_is_root_component( $component_name ) {
 	_deprecated_function( __FUNCTION__, '1.5', 'bp_is_root_component()' );
-	return bp_is_root_component( $component_name );
+	return bboss_is_root_component( $component_name );
 }
 
 /** Theme *********************************************************************/
@@ -500,8 +500,8 @@ function bp_core_is_root_component( $component_name ) {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.5.0
  */
-function bp_dtheme_deprecated() {
-	if ( ! function_exists( 'bp_dtheme_wp_pages_filter' ) ) :
+function bboss_dtheme_deprecated() {
+	if ( ! function_exists( 'bboss_dtheme_wp_pages_filter' ) ) :
 		/**
 		 * In BuddyPress 1.2.x, this function filtered the dropdown on the
 		 * Settings > Reading screen for selecting the page to show on front to
@@ -514,13 +514,13 @@ function bp_dtheme_deprecated() {
 		 * @see wp_dropdown_pages()
 		 * @since BuddyPress 1.2.0
 		 */
-		function bp_dtheme_wp_pages_filter( $page_html ) {
+		function bboss_dtheme_wp_pages_filter( $page_html ) {
 			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
 			return $page_html;
 		}
 	endif;
 
-	if ( ! function_exists( 'bp_dtheme_page_on_front_update' ) ) :
+	if ( ! function_exists( 'bboss_dtheme_page_on_front_update' ) ) :
 		/**
 		 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity feed setting.
 		 * As of 1.5.x, it is no longer required.
@@ -532,9 +532,9 @@ function bp_dtheme_deprecated() {
 		 * @return false|string
 		 * @since BuddyPress 1.2.0
 		 */
-		function bp_dtheme_page_on_front_update( $oldvalue, $newvalue ) {
+		function bboss_dtheme_page_on_front_update( $oldvalue, $newvalue ) {
 			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
-			if ( ! is_admin() || ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( ! is_admin() || ! bboss_current_user_can( 'bp_moderate' ) ) {
 				return false;
 			}
 
@@ -542,7 +542,7 @@ function bp_dtheme_deprecated() {
 		}
 	endif;
 
-	if ( ! function_exists( 'bp_dtheme_page_on_front_template' ) ) :
+	if ( ! function_exists( 'bboss_dtheme_page_on_front_template' ) ) :
 		/**
 		 * In BuddyPress 1.2.x, this function loaded the activity feed template if the front page display settings allow.
 		 * As of 1.5.x, it is no longer required.
@@ -553,13 +553,13 @@ function bp_dtheme_deprecated() {
 		 * @return string
 		 * @since BuddyPress 1.2.0
 		 */
-		function bp_dtheme_page_on_front_template( $template ) {
+		function bboss_dtheme_page_on_front_template( $template ) {
 			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
 			return $template;
 		}
 	endif;
 
-	if ( ! function_exists( 'bp_dtheme_fix_get_posts_on_activity_front' ) ) :
+	if ( ! function_exists( 'bboss_dtheme_fix_get_posts_on_activity_front' ) ) :
 		/**
 		 * In BuddyPress 1.2.x, this forced the page ID as a string to stop the get_posts query from kicking up a fuss.
 		 * As of 1.5.x, it is no longer required.
@@ -568,12 +568,12 @@ function bp_dtheme_deprecated() {
 		 * @deprecated No longer required.
 		 * @since BuddyPress 1.2.0
 		 */
-		function bp_dtheme_fix_get_posts_on_activity_front() {
+		function bboss_dtheme_fix_get_posts_on_activity_front() {
 			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
 		}
 	endif;
 
-	if ( ! function_exists( 'bp_dtheme_fix_the_posts_on_activity_front' ) ) :
+	if ( ! function_exists( 'bboss_dtheme_fix_the_posts_on_activity_front' ) ) :
 		/**
 		 * In BuddyPress 1.2.x, this was used as part of the code that set the activity feed to be on the front page.
 		 * As of 1.5.x, it is no longer required.
@@ -584,13 +584,13 @@ function bp_dtheme_deprecated() {
 		 * @return array
 		 * @since BuddyPress 1.2.5
 		 */
-		function bp_dtheme_fix_the_posts_on_activity_front( $posts ) {
+		function bboss_dtheme_fix_the_posts_on_activity_front( $posts ) {
 			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
 			return $posts;
 		}
 	endif;
 
-	if ( ! function_exists( 'bp_dtheme_add_blog_comments_js' ) ) :
+	if ( ! function_exists( 'bboss_dtheme_add_blog_comments_js' ) ) :
 		/**
 		 * In BuddyPress 1.2.x, this added the JavaScript needed for blog comment replies.
 		 * As of 1.5.x, we recommend that you enqueue the comment-reply JavaScript in your theme's header.php.
@@ -599,9 +599,9 @@ function bp_dtheme_deprecated() {
 		 * @deprecated Enqueue the comment-reply script in your theme's header.php.
 		 * @since BuddyPress 1.2.0
 		 */
-		function bp_dtheme_add_blog_comments_js() {
+		function bboss_dtheme_add_blog_comments_js() {
 			_deprecated_function( __FUNCTION__, '1.5', "Enqueue the comment-reply script in your theme's header.php." );
-			if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) ) {
+			if ( is_singular() && bboss_is_blog_page() && get_option( 'thread_comments' ) ) {
 				wp_enqueue_script( 'comment-reply' );
 			}
 		}
@@ -612,12 +612,12 @@ add_action( 'after_setup_theme', 'bp_dtheme_deprecated', 15 );
 /**
  * In BP 1.5, the Settings functions were moved out of the Core and Members
  * components, and moved into a new Settings component. This function is no
- * longer needed as the nav structure is set up by the {@link BP_Component} class.
+ * longer needed as the nav structure is set up by the {@link BBoss_Component} class.
  *
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_add_settings_nav() {
+function bboss_core_add_settings_nav() {
 	_deprecated_function( __FUNCTION__, '1.5' );
 }
 
@@ -630,7 +630,7 @@ function bp_core_add_settings_nav() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_general_settings() {
+function bboss_core_screen_general_settings() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -643,7 +643,7 @@ function bp_core_screen_general_settings() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_general_settings_title() {
+function bboss_core_screen_general_settings_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -656,7 +656,7 @@ function bp_core_screen_general_settings_title() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_general_settings_content() {
+function bboss_core_screen_general_settings_content() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -669,7 +669,7 @@ function bp_core_screen_general_settings_content() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_notification_settings() {
+function bboss_core_screen_notification_settings() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -682,7 +682,7 @@ function bp_core_screen_notification_settings() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_notification_settings_title() {
+function bboss_core_screen_notification_settings_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -695,7 +695,7 @@ function bp_core_screen_notification_settings_title() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_notification_settings_content() {
+function bboss_core_screen_notification_settings_content() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -708,7 +708,7 @@ function bp_core_screen_notification_settings_content() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_delete_account() {
+function bboss_core_screen_delete_account() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -721,7 +721,7 @@ function bp_core_screen_delete_account() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_delete_account_title() {
+function bboss_core_screen_delete_account_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }
 
@@ -734,6 +734,6 @@ function bp_core_screen_delete_account_title() {
  * @deprecated BuddyPress 1.5.0
  * @since BuddyPress 1.6.0
  */
-function bp_core_screen_delete_account_content() {
+function bboss_core_screen_delete_account_content() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
 }

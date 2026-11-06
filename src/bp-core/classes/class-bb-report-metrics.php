@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Report_Metrics' ) ) {
+if ( ! class_exists( 'BBoss_Report_Metrics' ) ) {
 
 	/**
 	 * BuddyBoss Report Metrics Collection object.
 	 *
 	 * @since BuddyBoss 2.9.30
 	 */
-	class BB_Report_Metrics {
+	class BBoss_Report_Metrics {
 
 		/**
 		 * The single instance of the class.
@@ -204,7 +204,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
-		 * @return BB_Report_Metrics|null
+		 * @return BBoss_Report_Metrics|null
 		 */
 		public static function instance() {
 			if ( null === self::$instance ) {

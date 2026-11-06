@@ -1,6 +1,6 @@
 <?php
 /**
- * BP_Bbp_Gdpr_Topics base class
+ * BBoss_Bbp_Gdpr_Topics base class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,14 +10,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Bbp_Gdpr_Topics
+ * Class BBoss_Bbp_Gdpr_Topics
  */
-class BP_Bbp_Gdpr_Topics {
+class BBoss_Bbp_Gdpr_Topics {
 
 	public $post_type = 'topic';
 
 	/**
-	 * BP_Bbp_Gdpr_Topics constructor.
+	 * BBoss_Bbp_Gdpr_Topics constructor.
 	 */
 	public function __construct() {
 

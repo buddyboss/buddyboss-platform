@@ -17,14 +17,14 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BBP_Admin' ) ) :
+if ( ! class_exists( 'BBoss_BBP_Admin' ) ) :
 	/**
 	 * Loads Forums plugin admin area
 	 *
 	 * @since bbPress (r2464)
 	 */
 	#[\AllowDynamicProperties]
-	class BBP_Admin {
+	class BBoss_BBP_Admin {
 
 		/** Directory *************************************************************/
 
@@ -76,9 +76,9 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 *
 		 * @since bbPress (r2515)
 		 *
-		 * @uses BBP_Admin::setup_globals() Setup the globals needed
-		 * @uses BBP_Admin::includes() Include the required files
-		 * @uses BBP_Admin::setup_actions() Setup the hooks and actions
+		 * @uses BBoss_BBP_Admin::setup_globals() Setup the globals needed
+		 * @uses BBoss_BBP_Admin::includes() Include the required files
+		 * @uses BBoss_BBP_Admin::setup_actions() Setup the hooks and actions
 		 */
 		public function __construct() {
 			$this->setup_globals();
@@ -93,7 +93,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @access private
 		 */
 		private function setup_globals() {
-			$bbp              = bbpress();
+			$bbp              = bboss_forums();
 			$this->admin_dir  = trailingslashit( $bbp->includes_dir . 'admin' ); // Admin path
 			$this->admin_url  = trailingslashit( $bbp->includes_url . 'admin' ); // Admin url
 			$this->images_url = trailingslashit( $this->admin_url . 'images' ); // Admin images URL
@@ -130,7 +130,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		private function setup_actions() {
 
 			// Bail to prevent interfering with the deactivation process
-			if ( bbp_is_deactivation() ) {
+			if ( bboss_bbp_is_deactivation() ) {
 				return;
 			}
 
@@ -181,8 +181,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function bbp_remove_comments_discussion_meta_boxes() {
-			remove_meta_box( 'commentstatusdiv', bbp_get_reply_post_type(), 'normal' );
-			remove_meta_box( 'commentsdiv', bbp_get_reply_post_type(), 'normal' );
+			remove_meta_box( 'commentstatusdiv', bboss_bbp_get_reply_post_type(), 'normal' );
+			remove_meta_box( 'commentsdiv', bboss_bbp_get_reply_post_type(), 'normal' );
 		}
 
 		/**
@@ -202,7 +202,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// ?page=bbp-repair and ?page=bbp-converter both redirect to the
 			// Settings 2.0 Tools tab via bb_redirect_bp_settings_before_permission_check().
 			// Bail if plugin is not network activated
-			if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
+			if ( ! is_plugin_active_for_network( bboss_forums()->basename ) ) {
 				return;
 			}
 
@@ -225,7 +225,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		public function network_admin_menus() {
 
 			// Bail if plugin is not network activated
-			if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
+			if ( ! is_plugin_active_for_network( bboss_forums()->basename ) ) {
 				return;
 			}
 
@@ -246,11 +246,11 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @return type
 		 */
 		public static function new_install() {
-			if ( ! bbp_is_install() ) {
+			if ( ! bboss_bbp_is_install() ) {
 				return;
 			}
 
-			bbp_create_initial_content();
+			bboss_bbp_create_initial_content();
 		}
 
 		/**
@@ -274,8 +274,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 				// BuddyBoss
 				case 'bbp_settings_buddypress':
-					if ( ( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) && defined( 'BP_PLATFORM_VERSION' ) && bp_is_root_blog() ) && is_super_admin() ) {
-						$caps = array( bbpress()->admin->minimum_capability );
+					if ( ( is_plugin_active( 'buddyboss-platform/bp-loader.php' ) && defined( 'BBOSS_PLATFORM_VERSION' ) && bboss_is_root_blog() ) && is_super_admin() ) {
+						$caps = array( bboss_forums()->admin->minimum_capability );
 					} else {
 						$caps = array( 'do_not_allow' );
 					}
@@ -285,7 +285,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				// Akismet
 				case 'bbp_settings_akismet':
 					if ( ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) && is_super_admin() ) {
-						$caps = array( bbpress()->admin->minimum_capability );
+						$caps = array( bboss_forums()->admin->minimum_capability );
 					} else {
 						$caps = array( 'do_not_allow' );
 					}
@@ -307,7 +307,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				case 'bbp_settings_user_slugs': // Settings - User slugs
 				case 'bbp_settings_per_page': // Settings - Per page
 				case 'bbp_settings_per_rss_page': // Settings - Per RSS page
-					$caps = array( bbpress()->admin->minimum_capability );
+					$caps = array( bboss_forums()->admin->minimum_capability );
 					break;
 			}
 
@@ -376,7 +376,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		public static function modify_plugin_action_links( $links, $file ) {
 
 			// Return normal links if not Forums
-			if ( plugin_basename( bbpress()->file ) !== $file ) {
+			if ( plugin_basename( bboss_forums()->file ) !== $file ) {
 				return $links;
 			}
 
@@ -405,7 +405,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @uses wp_add_dashboard_widget() To add the dashboard widget
 		 */
 		public static function dashboard_widget_right_now() {
-			wp_add_dashboard_widget( 'bbp-dashboard-right-now', __( 'Right Now in Forums', 'buddyboss' ), 'bbp_dashboard_widget_right_now' );
+			wp_add_dashboard_widget( 'bbp-dashboard-right-now', __( 'Right Now in Forums', 'buddyboss' ), 'bboss_bbp_dashboard_widget_right_now' );
 		}
 
 		/**
@@ -422,7 +422,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						'parent' => 'wp-logo',
 						'id'     => 'bbp-about',
 						'title'  => esc_html__( 'About BuddyBoss', 'buddyboss' ),
-						'href'   => esc_url( bp_get_admin_url( '?hello=buddyboss' ) ),
+						'href'   => esc_url( bboss_get_admin_url( '?hello=buddyboss' ) ),
 					)
 				);
 			}
@@ -435,7 +435,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 */
 		public function enqueue_styles() {
 			// Skip legacy bbPress admin CSS on Settings 2.0 page — React UI has its own styles.
-			if ( function_exists( 'bb_register_feature' ) ) {
+			if ( function_exists( 'bboss_register_feature' ) ) {
 				$screen = get_current_screen();
 				if ( ! empty( $screen->id ) && false !== strpos( $screen->id, 'bb-settings' ) ) {
 					return;
@@ -490,7 +490,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				'bbp-admin-css',
 				$this->styles_url . 'admin.min.css',
 				array( 'dashicons' ),
-				bp_get_version()
+				bboss_get_version()
 			);
 
 			// Mint
@@ -569,7 +569,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				switch ( $action ) {
 					case 'bbp-update':
 						// Run the full updater
-						bbp_version_updater();
+						bboss_bbp_version_updater();
 						?>
 
 						<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
@@ -605,7 +605,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @uses wp_remote_get()
 		 */
 		public static function network_update_screen() {
-			$bbp_db = bbp_db();
+			$bbp_db = bboss_bbp_db();
 
 			// Get action
 			$action = isset( $_GET['action'] ) ? $_GET['action'] : '';
@@ -669,11 +669,11 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							// Switch to the new blog
 							switch_to_blog( $details['blog_id'] );
 
-							$basename = bbpress()->basename;
+							$basename = bboss_forums()->basename;
 
 							// Run the updater on this site
 							if ( is_plugin_active_for_network( $basename ) || is_plugin_active( $basename ) ) {
-								bbp_version_updater();
+								bboss_bbp_version_updater();
 							}
 
 							// restore original blog
@@ -735,10 +735,10 @@ endif; // class_exists check
  *
  * @since bbPress (r2596)
  *
- * @uses BBP_Admin
+ * @uses BBoss_BBP_Admin
  */
-function bbp_admin() {
-	bbpress()->admin = new BBP_Admin();
+function bboss_bbp_admin() {
+	bboss_forums()->admin = new BBoss_BBP_Admin();
 	// BBP_Converter retired from Platform in BuddyBoss 3.1.0; the moved
 	// orchestrator lives in buddyboss-tools. Any code still referencing
 	// bbpress()->admin->converter will see null — third-party callers should

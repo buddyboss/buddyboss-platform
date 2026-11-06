@@ -20,20 +20,20 @@ get_header(); ?>
 		the_post();
 		?>
 
-		<?php if ( bbp_user_can_view_forum() ) : ?>
+		<?php if ( bboss_bbp_user_can_view_forum() ) : ?>
 
-			<div id="forum-<?php bbp_forum_id(); ?>" class="bbp-forum-content">
-				<h1 class="entry-title"><?php bbp_forum_title(); ?></h1>
+			<div id="forum-<?php bboss_bbp_forum_id(); ?>" class="bbp-forum-content">
+				<h1 class="entry-title"><?php bboss_bbp_forum_title(); ?></h1>
 				<div class="entry-content">
 
-					<?php bbp_get_template_part( 'content', 'single-forum' ); ?>
+					<?php bboss_bbp_get_template_part( 'content', 'single-forum' ); ?>
 
 				</div>
-			</div><!-- #forum-<?php bbp_forum_id(); ?> -->
+			</div><!-- #forum-<?php bboss_bbp_forum_id(); ?> -->
 
 		<?php else : // Forum exists, user no access ?>
 
-			<?php bbp_get_template_part( 'feedback', 'no-access' ); ?>
+			<?php bboss_bbp_get_template_part( 'feedback', 'no-access' ); ?>
 
 		<?php endif; ?>
 

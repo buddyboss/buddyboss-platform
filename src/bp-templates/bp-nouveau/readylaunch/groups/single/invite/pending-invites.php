@@ -6,7 +6,7 @@
  * and member management interface for reviewing sent invites.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Group invites', 'buddyboss' ); ?></h2>
 	</div>
 	<?php
-	bp_get_template_part( 'groups/single/parts/invite-subnav' );
+	bboss_get_template_part( 'groups/single/parts/invite-subnav' );
 	?>
 	<div id="group-invites-container" class="bb-rl-group-invites-container bb-rl-group-invites-container--pending-invites">
 		<div class="group-invites-column">
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="group-invites-search subnav-search clearfix" role="search">
 						<div class="bp-search">
 							<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form search-form-has-reset" data-bp-search="group-invites">
-								<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss' ), false ); ?></label>
+								<label for="group_invites_search" class="bp-screen-reader-text"><?php bboss_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss' ), false ); ?></label>
 								<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search members', 'buddyboss' ); ?>"/>
 								<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit search-form_submit">
 									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bb-subnav-filters-container bb-subnav-filters-search">
 	<?php
-	if ( ( bp_is_activity_directory() || bp_is_user_activity() ) && bb_is_activity_search_enabled() ) {
+	if ( ( bboss_is_activity_directory() || bboss_is_user_activity() ) && bboss_is_activity_search_enabled() ) {
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>
@@ -25,17 +25,17 @@ defined( 'ABSPATH' ) || exit;
 	?>
 	<div class="subnav-filters filters no-ajax subnav-filters-modal" id="subnav-filters">
 		<?php
-		$bp_current_component = bp_current_component();
+		$bp_current_component = bboss_current_component();
 		if (
 			'friends' !== $bp_current_component &&
 			(
 				'members' !== $bp_current_component ||
-				bp_disable_advanced_profile_search()
+				bboss_disable_advanced_profile_search()
 			)
 		) {
 			?>
 			<div class="subnav-search clearfix">
-				<?php bp_nouveau_search_form(); ?>
+				<?php bboss_nouveau_search_form(); ?>
 			</div>
 			<?php
 		}
@@ -46,9 +46,9 @@ defined( 'ABSPATH' ) || exit;
 				'groups' === $bp_current_component ||
 				'friends' === $bp_current_component
 			) &&
-			! bp_is_current_action( 'requests' )
+			! bboss_is_current_action( 'requests' )
 		) {
-			bp_get_template_part( 'common/filters/grid-filters' );
+			bboss_get_template_part( 'common/filters/grid-filters' );
 		}
 
 		if (
@@ -56,48 +56,48 @@ defined( 'ABSPATH' ) || exit;
 				'members' === $bp_current_component ||
 				'groups' === $bp_current_component ) ||
 				(
-					bp_is_user() &&
+					bboss_is_user() &&
 					(
-						! bp_is_current_action( 'requests' ) &&
-						! bp_is_current_action( 'mutual' )
+						! bboss_is_current_action( 'requests' ) &&
+						! bboss_is_current_action( 'mutual' )
 					)
 				)
 		) {
-			bp_get_template_part( 'common/filters/directory-filters' );
+			bboss_get_template_part( 'common/filters/directory-filters' );
 		}
 
 		if (
 			'members' === $bp_current_component ||
 			(
 				'friends' === $bp_current_component &&
-				'my-friends' === bp_current_action()
+				'my-friends' === bboss_current_action()
 			)
 		) {
-			bp_get_template_part( 'common/filters/member-filters' );
+			bboss_get_template_part( 'common/filters/member-filters' );
 		}
 
 		if ( 'groups' === $bp_current_component ) {
-			bp_get_template_part( 'common/filters/group-filters' );
+			bboss_get_template_part( 'common/filters/group-filters' );
 		}
 		?>
 	</div><!-- search & filters -->
 </div>
 <?php
-if ( bp_is_activity_directory() || bp_is_user_activity() ) {
+if ( bboss_is_activity_directory() || bboss_is_user_activity() ) {
 
 	// Timeline filters.
-	if ( bp_is_user_activity() ) {
-		$activity_filters            = bb_get_enabled_activity_timeline_filter_options();
-		$filters_labels              = bb_get_activity_timeline_filter_options_labels();
-		$filters_labels_show_context = bb_get_activity_timeline_filter_options_labels( 'show_context' );
+	if ( bboss_is_user_activity() ) {
+		$activity_filters            = bboss_get_enabled_activity_timeline_filter_options();
+		$filters_labels              = bboss_get_activity_timeline_filter_options_labels();
+		$filters_labels_show_context = bboss_get_activity_timeline_filter_options_labels( 'show_context' );
 	} else {
-		$activity_filters            = bb_get_enabled_activity_filter_options();
-		$filters_labels              = bb_get_activity_filter_options_labels();
-		$filters_labels_show_context = bb_get_activity_filter_options_labels( 'show_context' );
+		$activity_filters            = bboss_get_enabled_activity_filter_options();
+		$filters_labels              = bboss_get_activity_filter_options_labels();
+		$filters_labels_show_context = bboss_get_activity_filter_options_labels( 'show_context' );
 	}
 
 	// Allow valid options only.
-	$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+	$activity_filters = bboss_filter_activity_filter_scope_keys( $activity_filters );
 
 	arsort( $activity_filters );
 	$default_selected = key( $activity_filters );
@@ -114,7 +114,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			if (
 				empty( $is_enabled ) ||
 				empty( $filters_labels[ $key ] ) ||
-				( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
+				( bboss_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
 			) {
 				continue;
 			}
@@ -159,7 +159,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 
 	<?php
 	unset( $activity_filters_list_html, $activity_filters_count, $labels_only_class, $filters_labels_show_context, $default_show_context_label );
-	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+	$avail_sorting_options = bboss_get_enabled_activity_sorting_options();
 	arsort( $avail_sorting_options );
 	$default_selected = key( $avail_sorting_options );
 	if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
@@ -171,8 +171,8 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		}
 	}
 
-	$sorting_labels            = bb_get_activity_sorting_options_labels();
-	$sorting_labels_by_context = bb_get_activity_sorting_options_labels( 'by_context' );
+	$sorting_labels            = bboss_get_activity_sorting_options_labels();
+	$sorting_labels_by_context = bboss_get_activity_sorting_options_labels( 'by_context' );
 
 	// Get the default by context label.
 	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : ( isset( $sorting_labels[ $default_selected ] ) ? $sorting_labels[ $default_selected ] : '' );

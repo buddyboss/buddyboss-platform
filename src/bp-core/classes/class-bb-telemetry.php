@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Telemetry' ) ) {
+if ( ! class_exists( 'BBoss_Telemetry' ) ) {
 
 	/**
 	 * BuddyBoss Telemetry object.
 	 *
 	 * @since BuddyBoss 2.7.40
 	 */
-	class BB_Telemetry {
+	class BBoss_Telemetry {
 
 		/**
 		 * The single instance of the class.
@@ -49,7 +49,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 *
 		 * @since BuddyBoss 2.7.40
 		 *
-		 * @return BB_Telemetry|null
+		 * @return BBoss_Telemetry|null
 		 */
 		public static function instance() {
 			if ( null === self::$instance ) {
@@ -79,7 +79,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 *
 			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
 			 */
-			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
+			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
 
 			/*
 			 * Builds without "complete" reporting (the WordPress.org edition) keep
@@ -95,7 +95,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			if ( $bb_telemetry_opt_in_only ) {
 				add_filter( 'option_bb_advanced_telemetry_reporting', array( __CLASS__, 'bb_telemetry_opt_in_mode' ) );
 
-				$bb_telemetry_saved_mode   = bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
+				$bb_telemetry_saved_mode   = bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
 				self::$bb_telemetry_option = ( 'anonymous' === $bb_telemetry_saved_mode && 'disable' !== self::$bb_telemetry_option ) ? 'anonymous' : 'disable';
 			}
 
@@ -109,9 +109,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Schedule the single event in next 10 minute.
-			if ( ! bp_get_option( 'bb_telemetry_report_single_cron_event_scheduled', 0 ) && ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
+			if ( ! bboss_get_option( 'bb_telemetry_report_single_cron_event_scheduled', 0 ) && ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
 				wp_schedule_single_event( time() + ( 10 * MINUTE_IN_SECONDS ), 'bb_telemetry_report_single_cron_event' );
-				bp_update_option( 'bb_telemetry_report_single_cron_event_scheduled', 1 );
+				bboss_update_option( 'bb_telemetry_report_single_cron_event_scheduled', 1 );
 			}
 
 			$this->setup_actions();
@@ -206,11 +206,11 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		public function bb_uuid() {
 			$uuid_key = 'bb-telemetry-uuid';
-			$uuid     = bp_get_option( $uuid_key );
+			$uuid     = bboss_get_option( $uuid_key );
 
 			if ( empty( $uuid ) ) {
 				$uuid = md5( uniqid() . site_url() );
-				bp_update_option( $uuid_key, $uuid );
+				bboss_update_option( $uuid_key, $uuid );
 			}
 
 			unset( $uuid_key );
@@ -482,7 +482,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * }
 		 */
 		public function bb_get_delivery_status() {
-			$status = bp_get_option( 'bb_telemetry_delivery', array() );
+			$status = bboss_get_option( 'bb_telemetry_delivery', array() );
 
 			return wp_parse_args(
 				is_array( $status ) ? $status : array(),
@@ -510,7 +510,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$now = gmdate( 'Y-m-d H:i:s' );
-			bp_update_option(
+			bboss_update_option(
 				'bb_telemetry_delivery',
 				array(
 					'last_attempt'         => $now,
@@ -539,7 +539,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$status['consecutive_failures'] = (int) $status['consecutive_failures'] + 1;
 			$status['last_error']           = substr( (string) $error_message, 0, 200 );
 
-			bp_update_option( 'bb_telemetry_delivery', $status );
+			bboss_update_option( 'bb_telemetry_delivery', $status );
 
 			$retry_delays = array(
 				1 => HOUR_IN_SECONDS,
@@ -572,8 +572,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$report_metrics_file = __DIR__ . '/class-bb-report-metrics.php';
 			if ( file_exists( $report_metrics_file ) ) {
 				require_once $report_metrics_file;
-				if ( class_exists( 'BB_Report_Metrics' ) ) {
-					$bb_telemetry_data['bb_report_metrics'] = BB_Report_Metrics::collect();
+				if ( class_exists( 'BBoss_Report_Metrics' ) ) {
+					$bb_telemetry_data['bb_report_metrics'] = BBoss_Report_Metrics::collect();
 				}
 			}
 
@@ -685,17 +685,17 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			);
 
 			// Added those options that are not available in the option table.
-			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
+			$bb_telemetry_data['bb_platform_version'] = BBOSS_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
 			$bb_telemetry_data['bb_license']          = $this->bb_get_license_data();
 			$bb_telemetry_data['bb_drm']              = $this->bb_get_drm_data();
 
 			if (
-				function_exists( 'bb_topics_manager_instance' ) &&
-				function_exists( 'bb_is_enabled_activity_topics' ) &&
-				bb_is_enabled_activity_topics()
+				function_exists( 'bboss_topics_manager_instance' ) &&
+				function_exists( 'bboss_is_enabled_activity_topics' ) &&
+				bboss_is_enabled_activity_topics()
 			) {
-				$global_activity_topics_count = bb_topics_manager_instance()->bb_get_topics(
+				$global_activity_topics_count = bboss_topics_manager_instance()->bb_get_topics(
 					array(
 						'item_type'   => 'activity',
 						'item_id'     => 0,
@@ -709,8 +709,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Pass active or inactive components.
-			$components          = bp_core_get_components();
-			$active_components   = bp_get_option( 'bp-active-components' );
+			$components          = bboss_core_get_components();
+			$active_components   = bboss_get_option( 'bp-active-components' );
 			$inactive_components = array_diff( array_keys( $components ), array_keys( $active_components ) );
 			if ( ! empty( $inactive_components ) ) {
 				foreach ( $inactive_components as $component ) {
@@ -720,7 +720,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_telemetry_data['bp-active-components'] = $active_components;
 
 			// Fetch options from the database using parameterized query.
-			$bp_prefix    = bp_core_get_table_prefix();
+			$bp_prefix    = bboss_core_get_table_prefix();
 			$sanitized    = array_map( 'sanitize_key', $bb_platform_db_options );
 			$placeholders = implode( ', ', array_fill( 0, count( $sanitized ), '%s' ) );
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table prefix is safe; placeholders are parameterized.
@@ -754,7 +754,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
-			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
+			$bb_telemetry_data['tools_usage'] = bboss_get_tool_usage();
 
 			/**
 			 * Filters the telemetry platform data.
@@ -811,7 +811,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$include_key = ( 'complete' === self::$bb_telemetry_option );
 			// @bbwt-com-end telemetry-complete
 
-			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
+			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'BBOSS_PLATFORM_EDITION' ) ? BBOSS_PLATFORM_EDITION : '' );
 			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
 
 			/*
@@ -1236,7 +1236,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'bb-recaptcha' => false,
 			);
 
-			if ( function_exists( 'bb_recaptcha_site_key' ) && ! empty( bb_recaptcha_site_key() ) ) {
+			if ( function_exists( 'bboss_recaptcha_site_key' ) && ! empty( bboss_recaptcha_site_key() ) ) {
 				$active_integrations['bb-recaptcha'] = true;
 			}
 
@@ -1272,7 +1272,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_telemetry_admin_notice() {
 
 			// Check if the notice has already been dismissed.
-			if ( bp_get_option( 'bb_telemetry_notice_dismissed', 0 ) ) {
+			if ( bboss_get_option( 'bb_telemetry_notice_dismissed', 0 ) ) {
 				return; // Do not display the notice if it's been dismissed.
 			}
 			// URL for the telemetry settings page.
@@ -1337,14 +1337,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ) );
 			}
 
-			$bb_telemetry_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+			$bb_telemetry_nonce = bboss_filter_input_string( INPUT_POST, 'nonce' );
 
 			// Nonce check.
 			if ( empty( $bb_telemetry_nonce ) || ! wp_verify_nonce( $bb_telemetry_nonce, 'bb-telemetry-notice-nonce' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
 			}
 
-			bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+			bboss_update_option( 'bb_telemetry_notice_dismissed', 1 );
 			wp_send_json_success();
 		}
 	}

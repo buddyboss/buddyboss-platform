@@ -17,19 +17,19 @@ defined( 'ABSPATH' ) || exit;
 		<h2 class="screen-heading forum-replies-screen"><?php esc_html_e( 'Forum Replies Created', 'buddyboss' ); ?></h2>
 		<div class="bbp-user-section">
 
-			<?php if ( bbp_get_user_replies_created() ) : ?>
+			<?php if ( bboss_bbp_get_user_replies_created() ) : ?>
 
-				<?php bbp_get_template_part( 'pagination', 'replies' ); ?>
+				<?php bboss_bbp_get_template_part( 'pagination', 'replies' ); ?>
 
-				<?php bbp_get_template_part( 'loop', 'replies' ); ?>
+				<?php bboss_bbp_get_template_part( 'loop', 'replies' ); ?>
 
-				<?php bbp_get_template_part( 'pagination', 'replies' ); ?>
+				<?php bboss_bbp_get_template_part( 'pagination', 'replies' ); ?>
 
 			<?php else : ?>
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss' ); ?></p>
+					<p><?php bboss_bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss' ); ?></p>
 				</aside>
 
 			<?php endif; ?>

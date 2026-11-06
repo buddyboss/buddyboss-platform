@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Sanitized layout format value.
  */
-function bb_groups_sanitize_layout_format( $value ) {
+function bboss_groups_sanitize_layout_format( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'list_grid', 'grid', 'list' );
 
@@ -44,7 +44,7 @@ function bb_groups_sanitize_layout_format( $value ) {
  *
  * @return string Sanitized default format value.
  */
-function bb_groups_sanitize_default_format( $value ) {
+function bboss_groups_sanitize_default_format( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'grid', 'list' );
 
@@ -66,7 +66,7 @@ function bb_groups_sanitize_default_format( $value ) {
  *
  * @return string Sanitized avatar type value.
  */
-function bb_groups_sanitize_avatar_type( $value ) {
+function bboss_groups_sanitize_avatar_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'buddyboss', 'group-name', 'custom' );
 
@@ -88,7 +88,7 @@ function bb_groups_sanitize_avatar_type( $value ) {
  *
  * @return string Sanitized cover type value.
  */
-function bb_groups_sanitize_cover_type( $value ) {
+function bboss_groups_sanitize_cover_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'buddyboss', 'none', 'custom' );
 
@@ -110,7 +110,7 @@ function bb_groups_sanitize_cover_type( $value ) {
  *
  * @return string Sanitized header style value.
  */
-function bb_groups_sanitize_header_style( $value ) {
+function bboss_groups_sanitize_header_style( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'left', 'centered' );
 
@@ -132,7 +132,7 @@ function bb_groups_sanitize_header_style( $value ) {
  *
  * @return string Sanitized grid style value.
  */
-function bb_groups_sanitize_grid_style( $value ) {
+function bboss_groups_sanitize_grid_style( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'left', 'centered' );
 
@@ -154,7 +154,7 @@ function bb_groups_sanitize_grid_style( $value ) {
  *
  * @return array Sanitized array of element_slug => 0|1.
  */
-function bb_groups_sanitize_toggle_list( $value ) {
+function bboss_groups_sanitize_toggle_list( $value ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -180,7 +180,7 @@ function bb_groups_sanitize_toggle_list( $value ) {
  *
  * @return string Sanitized cover width value.
  */
-function bb_groups_sanitize_cover_width( $value ) {
+function bboss_groups_sanitize_cover_width( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'default', 'full' );
 
@@ -202,7 +202,7 @@ function bb_groups_sanitize_cover_width( $value ) {
  *
  * @return string Sanitized cover height value.
  */
-function bb_groups_sanitize_cover_height( $value ) {
+function bboss_groups_sanitize_cover_height( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'small', 'large' );
 
@@ -225,7 +225,7 @@ function bb_groups_sanitize_cover_height( $value ) {
  *
  * @return array Sanitized array of slug => 0|1.
  */
-function bb_sanitize_group_nav_order( $value ) {
+function bboss_sanitize_group_nav_order( $value ) {
 	if ( is_string( $value ) ) {
 		$value = json_decode( $value, true );
 	}
@@ -261,7 +261,7 @@ function bb_sanitize_group_nav_order( $value ) {
  *
  * @return array Modified field data.
  */
-function bb_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
+function bboss_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_id ) {
 	if ( 'groups' !== $feature_id || 'bp-default-group-cover-type' !== ( $field_data['name'] ?? '' ) ) {
 		return $field_data;
 	}
@@ -270,7 +270,7 @@ function bb_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_
 		// Cover dimensions drive both the help-text recommendation and the
 		// React `<CoverCropModal>` aspect ratio. Read AT FIELD-FORMAT TIME so
 		// theme compat (loaded later than registration) is available.
-		$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions( 'groups' );
+		$cover_dimensions = bboss_attachments_get_default_custom_cover_image_dimensions( 'groups' );
 
 		if ( empty( $field_data['upload_config']['help_text'] ) ) {
 			$field_data['upload_config']['help_text'] = sprintf(
@@ -312,7 +312,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_groups_enrich_cover_uploa
  *
  * @return array Modified field data.
  */
-function bb_groups_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
+function bboss_groups_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
 	if ( 'groups' !== $feature_id || 'bp-default-group-avatar-type' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
 		return $field_data;
 	}
@@ -321,8 +321,8 @@ function bb_groups_enrich_avatar_upload_help_text( $field_data, $field, $feature
 		$field_data['upload_config']['help_text'] = sprintf(
 			/* translators: 1: width in pixels, 2: height in pixels. */
 			__( 'Upload a default avatar image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ),
-			absint( bp_core_avatar_full_width() ),
-			absint( bp_core_avatar_full_height() )
+			absint( bboss_core_avatar_full_width() ),
+			absint( bboss_core_avatar_full_height() )
 		);
 	}
 
@@ -356,7 +356,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_groups_enrich_avatar_uplo
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
  */
-function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
+function bboss_groups_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
 	if ( 'groups' !== $feature_id ) {
 		return;
 	}
@@ -369,44 +369,44 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 		return;
 	}
 
-	$pre_save_state = bb_groups_get_pre_save_state();
+	$pre_save_state = bboss_groups_get_pre_save_state();
 
 	// --- Avatar type validation ---
 	if ( $has_avatar ) {
-		$avatar_type = bb_get_default_group_avatar_type();
+		$avatar_type = bboss_get_default_group_avatar_type();
 
 		// Revert only when they had Custom and then removed the image. Do not revert when they
 		// just selected Custom (so Save keeps Custom and Upload Custom Avatar section stays visible).
 		if ( 'custom' === $avatar_type ) {
-			$custom_avatar = function_exists( 'bb_get_default_custom_upload_group_avatar' )
-				? bb_get_default_custom_upload_group_avatar()
+			$custom_avatar = function_exists( 'bboss_get_default_custom_upload_group_avatar' )
+				? bboss_get_default_custom_upload_group_avatar()
 				: '';
 			$prev_type     = ! empty( $pre_save_state['default_group_avatar_type'] ) ? $pre_save_state['default_group_avatar_type'] : 'buddyboss';
 
 			if ( empty( $custom_avatar ) && 'custom' === $prev_type ) {
-				bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+				bboss_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 			}
 		}
 
 		// If 'group-name' but no image editor available, revert.
 		if ( 'group-name' === $avatar_type && empty( _wp_image_editor_choose() ) ) {
-			bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+			bboss_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 		}
 	}
 
 	// --- Cover type validation ---
 	if ( $has_cover ) {
-		$cover_type = bb_get_default_group_cover_type();
+		$cover_type = bboss_get_default_group_cover_type();
 
 		// Revert only when they had Custom and then removed the image.
 		if ( 'custom' === $cover_type ) {
-			$custom_cover = function_exists( 'bb_get_default_custom_upload_group_cover' )
-				? bb_get_default_custom_upload_group_cover()
+			$custom_cover = function_exists( 'bboss_get_default_custom_upload_group_cover' )
+				? bboss_get_default_custom_upload_group_cover()
 				: '';
 			$prev_type    = ! empty( $pre_save_state['default_group_cover_type'] ) ? $pre_save_state['default_group_cover_type'] : 'buddyboss';
 
 			if ( empty( $custom_cover ) && 'custom' === $prev_type ) {
-				bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+				bboss_update_option( 'bp-default-group-cover-type', 'buddyboss' );
 			}
 		}
 	}
@@ -417,7 +417,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_validate_image_se
 /**
  * Sync reverted image setting values into the save response.
  *
- * After bb_groups_validate_image_settings_after_save() may revert avatar/cover
+ * After bboss_groups_validate_image_settings_after_save() may revert avatar/cover
  * type values (e.g., 'custom' -> 'buddyboss' when no image exists), this filter
  * updates only the affected keys in the response so React stays in sync.
  *
@@ -430,7 +430,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_validate_image_se
  *
  * @return array Modified response data.
  */
-function bb_groups_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
+function bboss_groups_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
 	if ( 'groups' !== $feature_id ) {
 		return $response_data;
 	}
@@ -440,7 +440,7 @@ function bb_groups_sync_reverted_image_values( $response_data, $feature_id, $set
 
 	foreach ( $revertable_keys as $key ) {
 		if ( isset( $saved[ $key ] ) ) {
-			$actual = bp_get_option( $key, $saved[ $key ] );
+			$actual = bboss_get_option( $key, $saved[ $key ] );
 			if ( $actual !== $saved[ $key ] ) {
 				$response_data['saved'][ $key ] = $actual;
 			}
@@ -464,7 +464,7 @@ add_filter( 'bb_admin_save_feature_settings_response', 'bb_groups_sync_reverted_
  *
  * @return array The stored pre-save state, or empty array if not yet captured.
  */
-function bb_groups_get_pre_save_state( $state = null ) {
+function bboss_groups_get_pre_save_state( $state = null ) {
 	static $stored = null;
 
 	if ( null !== $state ) {
@@ -488,17 +488,17 @@ function bb_groups_get_pre_save_state( $state = null ) {
  * @param string $feature_id Feature ID being saved.
  * @param array  $settings   Full submitted settings.
  */
-function bb_groups_capture_pre_save_state( $feature_id, $settings ) {
+function bboss_groups_capture_pre_save_state( $feature_id, $settings ) {
 	if ( 'groups' !== $feature_id ) {
 		return;
 	}
 
 	// Store the pre-save state for restrict invites and image types.
-	bb_groups_get_pre_save_state(
+	bboss_groups_get_pre_save_state(
 		array(
-			'restrict_invites'          => bp_enable_group_restrict_invites(),
-			'default_group_avatar_type' => bb_get_default_group_avatar_type(),
-			'default_group_cover_type'  => bb_get_default_group_cover_type(),
+			'restrict_invites'          => bboss_enable_group_restrict_invites(),
+			'default_group_avatar_type' => bboss_get_default_group_avatar_type(),
+			'default_group_cover_type'  => bboss_get_default_group_cover_type(),
 		)
 	);
 }
@@ -518,7 +518,7 @@ add_action( 'bb_admin_settings_before_save_feature', 'bb_groups_capture_pre_save
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
  */
-function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $saved ) {
+function bboss_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $saved ) {
 	if ( 'groups' !== $feature_id ) {
 		return;
 	}
@@ -529,17 +529,17 @@ function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $save
 	}
 
 	// Get pre-save state captured by bb_groups_capture_pre_save_state().
-	$pre_save_state          = bb_groups_get_pre_save_state();
+	$pre_save_state          = bboss_groups_get_pre_save_state();
 	$restrict_invites_before = ! empty( $pre_save_state['restrict_invites'] ) ? $pre_save_state['restrict_invites'] : false;
 
 	// Check: hierarchies ON, restrict invites was OFF, now ON.
 	if (
-		true === bp_enable_group_hierarchies() &&
+		true === bboss_enable_group_hierarchies() &&
 		empty( $restrict_invites_before ) &&
-		true === (bool) bp_enable_group_restrict_invites()
+		true === (bool) bboss_enable_group_restrict_invites()
 	) {
-		if ( function_exists( 'bb_groups_migrate_subgroup_member' ) ) {
-			bb_groups_migrate_subgroup_member();
+		if ( function_exists( 'bboss_groups_migrate_subgroup_member' ) ) {
+			bboss_groups_migrate_subgroup_member();
 		}
 	}
 }

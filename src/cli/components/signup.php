@@ -52,7 +52,7 @@ class Signup extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'user-login'     => '',
@@ -79,7 +79,7 @@ class Signup extends BuddypressCommand {
 		$signup_args['user_email']     = $user_email;
 		$signup_args['activation_key'] = $r['activation-key'];
 
-		$id = \BP_Signup::add( $signup_args );
+		$id = \BBoss_Signup::add( $signup_args );
 
 		// Silent it before it errors.
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'silent' ) ) {
@@ -176,7 +176,7 @@ class Signup extends BuddypressCommand {
 			array( $signup_id ),
 			$assoc_args,
 			function( $signup_id ) {
-				if ( \BP_Signup::delete( array( $signup_id ) ) ) {
+				if ( \BBoss_Signup::delete( array( $signup_id ) ) ) {
 					return array( 'success', 'Signup deleted.' );
 				} else {
 					return array( 'error', 'Could not delete signup.' );
@@ -200,7 +200,7 @@ class Signup extends BuddypressCommand {
 	 */
 	public function activate( $args, $assoc_args ) {
 		$signup  = $this->get_signup_by_identifier( $args[0], $assoc_args );
-		$user_id = bp_core_activate_signup( $signup->activation_key );
+		$user_id = bboss_core_activate_signup( $signup->activation_key );
 
 		if ( is_wp_error( $user_id ) ) {
 			WP_CLI::error( sprintf( 'Signup not activated: %s', $user_id->get_error_message() ) );
@@ -232,7 +232,7 @@ class Signup extends BuddypressCommand {
 		$notify = WP_CLI\Utils\make_progress_bar( 'Generating signups', $assoc_args['count'] );
 
 		// Use the email API to get a valid "from" domain.
-		$email_domain = new \BP_Email( '' );
+		$email_domain = new \BBoss_Email( '' );
 		$email_domain = $email_domain->get_from()->get_address();
 		$random_login = wp_generate_password( 12, false ); // Generate random user login.
 
@@ -269,7 +269,7 @@ class Signup extends BuddypressCommand {
 	 */
 	public function resend( $args, $assoc_args ) {
 		$signup = $this->get_signup_by_identifier( $args[0], $assoc_args );
-		$send   = \BP_Signup::resend( array( $signup->signup_id ) );
+		$send   = \BBoss_Signup::resend( array( $signup->signup_id ) );
 
 		// Add feedback message.
 		if ( empty( $send['errors'] ) ) {
@@ -314,7 +314,7 @@ class Signup extends BuddypressCommand {
 	 */
 	public function _list( $_, $assoc_args ) {
 		$formatter  = $this->get_formatter( $assoc_args );
-		$assoc_args = bp_parse_args(
+		$assoc_args = bboss_parse_args(
 			$assoc_args,
 			array(
 				'number' => 20,
@@ -326,7 +326,7 @@ class Signup extends BuddypressCommand {
 			$assoc_args['fields'] = 'ids';
 		}
 
-		$signups = \BP_Signup::get( $assoc_args );
+		$signups = \BBoss_Signup::get( $assoc_args );
 
 		if ( empty( $signups['signups'] ) ) {
 			WP_CLI::error( 'No signups found.' );
@@ -372,7 +372,7 @@ class Signup extends BuddypressCommand {
 			}
 		}
 
-		$signups = \BP_Signup::get( $signup_args );
+		$signups = \BBoss_Signup::get( $signup_args );
 		$signup  = null;
 
 		if ( ! empty( $signups['signups'] ) ) {

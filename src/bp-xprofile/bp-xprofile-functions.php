@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Fetch a set of field groups, populated with fields and field data.
  *
- * Procedural wrapper for BP_XProfile_Group::get() method.
+ * Procedural wrapper for BBoss_XProfile_Group::get() method.
  *
  * @since BuddyPress 2.1.0
  *
- * @param array $args See {@link BP_XProfile_Group::get()} for description of arguments.
+ * @param array $args See {@link BBoss_XProfile_Group::get()} for description of arguments.
  * @return array $groups
  */
-function bp_xprofile_get_groups( $args = array() ) {
+function bboss_xprofile_get_groups( $args = array() ) {
 
 	/**
 	 * For repeaters, automatically set the parameter value
@@ -38,14 +38,14 @@ function bp_xprofile_get_groups( $args = array() ) {
 		$repeater_show_main_fields_only = true;
 
 		// If on a user profile
-		if ( 'profile' == bp_current_component() ) {
+		if ( 'profile' == bboss_current_component() ) {
 			$repeater_show_main_fields_only = false;
 		}
 
 		$args['repeater_show_main_fields_only'] = apply_filters( 'bp_xprofile_get_groups_repeater_show_main_fields_only', $repeater_show_main_fields_only );
 	}
 
-	$groups = BP_XProfile_Group::get( $args );
+	$groups = BBoss_XProfile_Group::get( $args );
 
 	/**
 	 * Filters a set of field groups, populated with fields and field data.
@@ -73,10 +73,10 @@ function bp_xprofile_get_groups( $args = array() ) {
  * }
  * @return boolean
  */
-function xprofile_insert_field_group( $args = '' ) {
+function bboss_xprofile_insert_field_group( $args = '' ) {
 
 	// Parse the arguments.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'field_group_id' => false,
@@ -93,7 +93,7 @@ function xprofile_insert_field_group( $args = '' ) {
 	}
 
 	// Create new field group object, maybe using an existing ID.
-	$field_group              = new BP_XProfile_Group( $r['field_group_id'] );
+	$field_group              = new BBoss_XProfile_Group( $r['field_group_id'] );
 	$field_group->name        = $r['name'];
 	$field_group->description = $r['description'];
 	$field_group->can_delete  = $r['can_delete'];
@@ -107,12 +107,12 @@ function xprofile_insert_field_group( $args = '' ) {
  * @since BuddyPress 1.0.0
  *
  * @param int $field_group_id Field group ID to fetch.
- * @return false|BP_XProfile_Group
+ * @return false|BBoss_XProfile_Group
  */
-function xprofile_get_field_group( $field_group_id = 0 ) {
+function bboss_xprofile_get_field_group( $field_group_id = 0 ) {
 
 	// Try to get a specific field group by ID.
-	$field_group = new BP_XProfile_Group( $field_group_id );
+	$field_group = new BBoss_XProfile_Group( $field_group_id );
 
 	// Bail if group was not found.
 	if ( empty( $field_group->id ) ) {
@@ -131,10 +131,10 @@ function xprofile_get_field_group( $field_group_id = 0 ) {
  * @param int $field_group_id Field group ID to delete.
  * @return boolean
  */
-function xprofile_delete_field_group( $field_group_id = 0 ) {
+function bboss_xprofile_delete_field_group( $field_group_id = 0 ) {
 
 	// Try to get a specific field group by ID.
-	$field_group = xprofile_get_field_group( $field_group_id );
+	$field_group = bboss_xprofile_get_field_group( $field_group_id );
 
 	// Bail if group was not found.
 	if ( false === $field_group ) {
@@ -154,8 +154,8 @@ function xprofile_delete_field_group( $field_group_id = 0 ) {
  * @param int $position       Field group position to update to.
  * @return boolean
  */
-function xprofile_update_field_group_position( $field_group_id = 0, $position = 0 ) {
-	return BP_XProfile_Group::update_position( $field_group_id, $position );
+function bboss_xprofile_update_field_group_position( $field_group_id = 0, $position = 0 ) {
+	return BBoss_XProfile_Group::update_position( $field_group_id, $position );
 }
 
 /*** Field Management *********************************************************/
@@ -167,24 +167,24 @@ function xprofile_update_field_group_position( $field_group_id = 0, $position = 
  *
  * @return array Key/value pairs (field type => class name).
  */
-function bp_xprofile_get_field_types() {
+function bboss_xprofile_get_field_types() {
 	$fields = array(
-		'biography'      => 'BB_XProfile_Field_Type_Biography',
-		'checkbox'       => 'BP_XProfile_Field_Type_Checkbox',
-		'datebox'        => 'BP_XProfile_Field_Type_Datebox',
-		'multiselectbox' => 'BP_XProfile_Field_Type_Multiselectbox',
-		'number'         => 'BP_XProfile_Field_Type_Number',
-		'url'            => 'BP_XProfile_Field_Type_URL',
-		'radio'          => 'BP_XProfile_Field_Type_Radiobutton',
-		'selectbox'      => 'BP_XProfile_Field_Type_Selectbox',
-		'textarea'       => 'BP_XProfile_Field_Type_Textarea',
-		'textbox'        => 'BP_XProfile_Field_Type_Textbox',
-		'telephone'      => 'BP_XProfile_Field_Type_Telephone',
-		'gender'         => 'BP_XProfile_Field_Type_Gender',
-		'socialnetworks' => 'BP_XProfile_Field_Type_Social_Networks',
+		'biography'      => 'BBoss_XProfile_Field_Type_Biography',
+		'checkbox'       => 'BBoss_XProfile_Field_Type_Checkbox',
+		'datebox'        => 'BBoss_XProfile_Field_Type_Datebox',
+		'multiselectbox' => 'BBoss_XProfile_Field_Type_Multiselectbox',
+		'number'         => 'BBoss_XProfile_Field_Type_Number',
+		'url'            => 'BBoss_XProfile_Field_Type_URL',
+		'radio'          => 'BBoss_XProfile_Field_Type_Radiobutton',
+		'selectbox'      => 'BBoss_XProfile_Field_Type_Selectbox',
+		'textarea'       => 'BBoss_XProfile_Field_Type_Textarea',
+		'textbox'        => 'BBoss_XProfile_Field_Type_Textbox',
+		'telephone'      => 'BBoss_XProfile_Field_Type_Telephone',
+		'gender'         => 'BBoss_XProfile_Field_Type_Gender',
+		'socialnetworks' => 'BBoss_XProfile_Field_Type_Social_Networks',
 	);
 
-	if ( function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() ) {
+	if ( function_exists( 'bboss_member_type_enable_disable' ) && true === bboss_member_type_enable_disable() ) {
 		$fields['membertypes'] = 'BP_XProfile_Field_Type_Member_Types';
 	}
 
@@ -205,13 +205,13 @@ function bp_xprofile_get_field_types() {
  *
  * @since BuddyPress 2.0.0
  *
- * @param string $type Type of profile field to create. See {@link bp_xprofile_get_field_types()} for default core values.
- * @return object $value If field type unknown, returns BP_XProfile_Field_Type_Textarea.
- *                       Otherwise returns an instance of the relevant child class of BP_XProfile_Field_Type.
+ * @param string $type Type of profile field to create. See {@link bboss_xprofile_get_field_types()} for default core values.
+ * @return object $value If field type unknown, returns BBoss_XProfile_Field_Type_Textarea.
+ *                       Otherwise returns an instance of the relevant child class of BBoss_XProfile_Field_Type.
  */
-function bp_xprofile_create_field_type( $type ) {
+function bboss_xprofile_create_field_type( $type ) {
 
-	$field = bp_xprofile_get_field_types();
+	$field = bboss_xprofile_get_field_types();
 	$class = isset( $field[ $type ] ) ? $field[ $type ] : '';
 
 	/**
@@ -220,7 +220,7 @@ function bp_xprofile_create_field_type( $type ) {
 	if ( $class && class_exists( $class ) ) {
 		return new $class();
 	} else {
-		return new BP_XProfile_Field_Type_Placeholder();
+		return new BBoss_XProfile_Field_Type_Placeholder();
 	}
 }
 
@@ -252,9 +252,9 @@ function bp_xprofile_create_field_type( $type ) {
  * }
  * @return bool|int False on failure, ID of new field on success.
  */
-function xprofile_insert_field( $args = '' ) {
+function bboss_xprofile_insert_field( $args = '' ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'field_id'          => null,
@@ -278,15 +278,15 @@ function xprofile_insert_field( $args = '' ) {
 	}
 
 	// Check this is a non-empty, valid field type.
-	if ( ! in_array( $r['type'], (array) buddypress()->profile->field_types ) ) {
+	if ( ! in_array( $r['type'], (array) bboss()->profile->field_types ) ) {
 		return false;
 	}
 
 	// Instantiate a new field object.
 	if ( ! empty( $r['field_id'] ) ) {
-		$field = xprofile_get_field( $r['field_id'] );
+		$field = bboss_xprofile_get_field( $r['field_id'] );
 	} else {
-		$field = new BP_XProfile_Field();
+		$field = new BBoss_XProfile_Field();
 	}
 
 	$field->group_id = $r['field_group_id'];
@@ -321,16 +321,16 @@ function xprofile_insert_field( $args = '' ) {
  *                             true, but no `$user_id` is provided, defaults to
  *                             logged-in user ID.
  * @param bool       $get_data Whether to fetch data for the specified `$user_id`.
- * @return BP_XProfile_Field|null Field object if found, otherwise null.
+ * @return BBoss_XProfile_Field|null Field object if found, otherwise null.
  */
-function xprofile_get_field( $field, $user_id = null, $get_data = true ) {
-	if ( $field instanceof BP_XProfile_Field ) {
+function bboss_xprofile_get_field( $field, $user_id = null, $get_data = true ) {
+	if ( $field instanceof BBoss_XProfile_Field ) {
 		$_field = $field;
 	} elseif ( is_object( $field ) ) {
-		$_field = new BP_XProfile_Field();
+		$_field = new BBoss_XProfile_Field();
 		$_field->fill_data( $field );
 	} else {
-		$_field = BP_XProfile_Field::get_instance( $field, $user_id, $get_data );
+		$_field = BBoss_XProfile_Field::get_instance( $field, $user_id, $get_data );
 	}
 
 	if ( ! $_field ) {
@@ -348,8 +348,8 @@ function xprofile_get_field( $field, $user_id = null, $get_data = true ) {
  * @param int|object $field_id ID of the field or object representing field data.
  * @return bool Whether or not the field was deleted.
  */
-function xprofile_delete_field( $field_id ) {
-	$field = new BP_XProfile_Field( $field_id );
+function bboss_xprofile_delete_field( $field_id ) {
+	$field = new BBoss_XProfile_Field( $field_id );
 	return $field->delete();
 }
 
@@ -370,10 +370,10 @@ function xprofile_delete_field( $field_id ) {
  *                             comma-separated string; 'array' if you want an array.
  * @return mixed The profile field data.
  */
-function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' ) {
+function bboss_xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' ) {
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
 	if ( empty( $user_id ) ) {
@@ -383,14 +383,14 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 	if ( is_numeric( $field ) ) {
 		$field_id = $field;
 	} else {
-		$field_id = xprofile_get_field_id_from_name( $field );
+		$field_id = bboss_xprofile_get_field_id_from_name( $field );
 	}
 
 	if ( empty( $field_id ) ) {
 		return false;
 	}
 
-	$values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $field_id, $user_id ) ); // Object injection guard.
+	$values = bboss_xprofile_safe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $field_id, $user_id ) ); // Object injection guard.
 
 	if ( is_array( $values ) ) {
 		$data = array();
@@ -430,21 +430,21 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
  * @param bool       $is_required Whether or not the field is required.
  * @return bool True on success, false on failure.
  */
-function xprofile_set_field_data( $field, $user_id, $value, $is_required = false ) {
+function bboss_xprofile_set_field_data( $field, $user_id, $value, $is_required = false ) {
 
 	if ( is_numeric( $field ) ) {
 		$field_id = $field;
 	} else {
-		$field_id = xprofile_get_field_id_from_name( $field );
+		$field_id = bboss_xprofile_get_field_id_from_name( $field );
 	}
 
 	if ( empty( $field_id ) ) {
 		return false;
 	}
 
-	$field          = xprofile_get_field( $field_id );
-	$field_type     = BP_XProfile_Field::get_type( $field_id );
-	$field_type_obj = bp_xprofile_create_field_type( $field_type );
+	$field          = bboss_xprofile_get_field( $field_id );
+	$field_type     = BBoss_XProfile_Field::get_type( $field_id );
+	$field_type_obj = bboss_xprofile_create_field_type( $field_type );
 
 	/**
 	 * Filter the raw submitted profile field value.
@@ -454,9 +454,9 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	 *
 	 * @since BuddyPress 2.1.0
 	 *
-	 * @param mixed                  $value          Value passed to xprofile_set_field_data().
-	 * @param BP_XProfile_Field      $field          Field object.
-	 * @param BP_XProfile_Field_Type $field_type_obj Field type object.
+	 * @param mixed                  $value          Value passed to bboss_xprofile_set_field_data().
+	 * @param BBoss_XProfile_Field      $field          Field object.
+	 * @param BBoss_XProfile_Field_Type $field_type_obj Field type object.
 	 */
 	$value = apply_filters( 'bp_xprofile_set_field_data_pre_validate', $value, $field, $field_type_obj );
 
@@ -478,7 +478,7 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	// If the value is empty, then delete any field data that exists, unless the field is of a type
 	// where null values are semantically meaningful.
 	if ( empty( $value ) && ! is_integer( $value ) && $value !== '0' && ! $field_type_obj->accepts_null_value ) {
-		xprofile_delete_field_data( $field_id, $user_id );
+		bboss_xprofile_delete_field_data( $field_id, $user_id );
 		return true;
 	}
 
@@ -492,7 +492,7 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 		return false;
 	}
 
-	$field           = new BP_XProfile_ProfileData();
+	$field           = new BBoss_XProfile_ProfileData();
 	$field->field_id = $field_id;
 	$field->user_id  = $user_id;
 
@@ -512,19 +512,19 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
  * @param string $visibility_level What the visibity setting should be.
  * @return bool True on success
  */
-function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visibility_level = '' ) {
+function bboss_xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visibility_level = '' ) {
 	if ( empty( $field_id ) || empty( $user_id ) || empty( $visibility_level ) ) {
 		return false;
 	}
 
 	// Check against a whitelist.
-	$allowed_values = bp_xprofile_get_visibility_levels();
+	$allowed_values = bboss_xprofile_get_visibility_levels();
 	if ( ! array_key_exists( $visibility_level, $allowed_values ) ) {
 		return false;
 	}
 
 	// Stored in an array in usermeta.
-	$current_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+	$current_visibility_levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 	if ( ! $current_visibility_levels ) {
 		$current_visibility_levels = array();
@@ -533,11 +533,11 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
 	$current_visibility_levels[ $field_id ] = $visibility_level;
 
 	// Save into separate visibility table.
-	$field_visibility        = new BB_XProfile_Visibility( $field_id, $user_id );
+	$field_visibility        = new BBoss_XProfile_Visibility( $field_id, $user_id );
 	$field_visibility->value = $visibility_level;
 	$field_visibility->save();
 
-	return bp_update_user_meta( $user_id, 'bp_xprofile_visibility_levels', $current_visibility_levels );
+	return bboss_update_user_meta( $user_id, 'bp_xprofile_visibility_levels', $current_visibility_levels );
 }
 
 /**
@@ -549,7 +549,7 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
  * @param int $user_id The ID of the user to whom the data belongs.
  * @return string
  */
-function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
+function bboss_xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
 	$current_level = '';
 
 	if ( empty( $field_id ) || empty( $user_id ) ) {
@@ -557,17 +557,17 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
 	}
 
 	// Use the user's stored level, unless custom visibility is disabled.
-	$field = xprofile_get_field( $field_id );
+	$field = bboss_xprofile_get_field( $field_id );
 	if ( isset( $field->allow_custom_visibility ) && 'disabled' === $field->allow_custom_visibility ) {
 		$current_level = $field->default_visibility;
 	} else {
 
 		// Check if data available in the visibility table.
-		$field_visibility = new BB_XProfile_Visibility( $field_id, $user_id );
+		$field_visibility = new BBoss_XProfile_Visibility( $field_id, $user_id );
 		if ( ! empty( $field_visibility->id ) ) {
 			$current_level = $field_visibility->value;
 		} else {
-			$current_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+			$current_levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 			$current_level  = isset( $current_levels[ $field_id ] ) ? $current_levels[ $field_id ] : '';
 		}
 
@@ -590,13 +590,13 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
  * @param int    $user_id User ID to delete field from.
  * @return bool Whether or not the field was deleted.
  */
-function xprofile_delete_field_data( $field = '', $user_id = 0 ) {
+function bboss_xprofile_delete_field_data( $field = '', $user_id = 0 ) {
 
 	// Get the field ID.
 	if ( is_numeric( $field ) ) {
 		$field_id = (int) $field;
 	} else {
-		$field_id = xprofile_get_field_id_from_name( $field );
+		$field_id = bboss_xprofile_get_field_id_from_name( $field );
 	}
 
 	// Bail if field or user ID are empty.
@@ -605,7 +605,7 @@ function xprofile_delete_field_data( $field = '', $user_id = 0 ) {
 	}
 
 	// Get the profile field data to delete.
-	$field = new BP_XProfile_ProfileData( $field_id, $user_id );
+	$field = new BBoss_XProfile_ProfileData( $field_id, $user_id );
 
 	// Delete the field data.
 	return $field->delete();
@@ -619,8 +619,8 @@ function xprofile_delete_field_data( $field = '', $user_id = 0 ) {
  * @param int $field_id ID of the field to check for.
  * @return bool Whether or not field is required.
  */
-function xprofile_check_is_required_field( $field_id ) {
-	$field  = new BP_XProfile_Field( $field_id );
+function bboss_xprofile_check_is_required_field( $field_id ) {
+	$field  = new BBoss_XProfile_Field( $field_id );
 	$retval = false;
 
 	if ( isset( $field->is_required ) ) {
@@ -647,8 +647,8 @@ function xprofile_validate_field( $field_id, $value, $UserId ) {
  * @param string $field_name The name of the field to get the ID for.
  * @return int|null $field_id on success, false on failure.
  */
-function xprofile_get_field_id_from_name( $field_name ) {
-	return BP_XProfile_Field::get_id_from_name( $field_name );
+function bboss_xprofile_get_field_id_from_name( $field_name ) {
+	return BBoss_XProfile_Field::get_id_from_name( $field_name );
 }
 
 /**
@@ -665,14 +665,14 @@ function xprofile_get_field_id_from_name( $field_name ) {
  *                               Defaults to true.
  * @return string|bool The fetched random data for the user, or false if no data or no match.
  */
-function xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) {
-	$field_data = BP_XProfile_ProfileData::get_random( $user_id, $exclude_fullname );
+function bboss_xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) {
+	$field_data = BBoss_XProfile_ProfileData::get_random( $user_id, $exclude_fullname );
 
 	if ( empty( $field_data ) ) {
 		return false;
 	}
 
-	$field_data[0]->value = xprofile_format_profile_field( $field_data[0]->type, $field_data[0]->value );
+	$field_data[0]->value = bboss_xprofile_format_profile_field( $field_data[0]->type, $field_data[0]->value );
 
 	if ( empty( $field_data[0]->value ) ) {
 		return false;
@@ -697,20 +697,20 @@ function xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) 
  * @param string $field_value The actual value.
  * @return string|bool The formatted value, or false if value is empty.
  */
-function xprofile_format_profile_field( $field_type, $field_value ) {
+function bboss_xprofile_format_profile_field( $field_type, $field_value ) {
 
 	if ( empty( $field_value ) ) {
 		return false;
 	}
 
-	$field_value = bp_unserialize_profile_field( $field_value );
+	$field_value = bboss_unserialize_profile_field( $field_value );
 
 	if ( 'datebox' != $field_type ) {
 		$content     = $field_value;
 		$field_value = str_replace( ']]>', ']]&gt;', $content );
 	}
 
-	return xprofile_filter_format_field_value_by_type( stripslashes_deep( $field_value ), $field_type );
+	return bboss_xprofile_filter_format_field_value_by_type( stripslashes_deep( $field_value ), $field_type );
 }
 
 /**
@@ -723,20 +723,20 @@ function xprofile_format_profile_field( $field_type, $field_value ) {
  * @param int $field_group_id Group ID for group the field is in.
  * @return bool
  */
-function xprofile_update_field_position( $field_id, $position, $field_group_id ) {
-	return BP_XProfile_Field::update_position( $field_id, $position, $field_group_id );
+function bboss_xprofile_update_field_position( $field_id, $position, $field_group_id ) {
+	return BBoss_XProfile_Field::update_position( $field_id, $position, $field_group_id );
 }
 
 /**
  * Replace the displayed and logged-in users fullnames with the xprofile name.
  *
  * The Members component uses the raw WP display_name to set the value of
- * buddypress()->loggedin_user->fullname and buddypress()->displayed_user->fullname.
+ * bboss()->loggedin_user->fullname and bboss()->displayed_user->fullname.
  * That stored value always holds the member's full name, while what a given viewer
  * may see depends on xprofile field visibility (e.g. a last name hidden from
- * logged-out visitors). Resolving through bp_core_get_user_displayname() applies
+ * logged-out visitors). Resolving through bboss_core_get_user_displayname() applies
  * the current viewer's visibility, so template tags such as
- * bp_get_displayed_user_fullname() (RSS <link> titles, feed titles, avatar alt text,
+ * bboss_get_displayed_user_fullname() (RSS <link> titles, feed titles, avatar alt text,
  * theme-compat post title, oEmbed header) never expose a hidden last name.
  * It also keeps the names correct when profile sync is disabled and display_name
  * diverges from the xprofile fields.
@@ -749,19 +749,19 @@ function xprofile_update_field_position( $field_id, $position, $field_group_id )
  *                              so the resolved names respect the current viewer's field visibility.
  * @since BuddyBoss 3.7.0 Skipped until the BuddyBoss tables are installed.
  */
-function xprofile_override_user_fullnames() {
+function bboss_xprofile_override_user_fullnames() {
 	// On the first request after activation the tables do not exist yet: they are
 	// created later in the same request, on bp_admin_init. Keep the WP display names.
-	if ( bp_is_install() ) {
+	if ( bboss_is_install() ) {
 		return;
 	}
 
-	if ( bp_loggedin_user_id() ) {
-		buddypress()->loggedin_user->fullname = bp_core_get_user_displayname( bp_loggedin_user_id() );
+	if ( bboss_loggedin_user_id() ) {
+		bboss()->loggedin_user->fullname = bboss_core_get_user_displayname( bboss_loggedin_user_id() );
 	}
 
-	if ( bp_displayed_user_id() ) {
-		buddypress()->displayed_user->fullname = bp_core_get_user_displayname( bp_displayed_user_id() );
+	if ( bboss_displayed_user_id() ) {
+		bboss()->displayed_user->fullname = bboss_core_get_user_displayname( bboss_displayed_user_id() );
 	}
 }
 add_action( 'bp_setup_globals', 'xprofile_override_user_fullnames', 100 );
@@ -777,11 +777,11 @@ add_action( 'bp_setup_globals', 'xprofile_override_user_fullnames', 100 );
  * @param int    $user_id   The user ID. Optional.
  * @return array Array containing the path, URL, and other helpful settings.
  */
-function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
+function bboss_xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 
 	// Use displayed user if no user ID was passed.
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
 	// Failsafe against accidentally nooped $directory parameter.
@@ -789,9 +789,9 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 		$directory = 'avatars';
 	}
 
-	$path      = bp_core_avatar_upload_path() . '/' . $directory . '/' . $user_id;
+	$path      = bboss_core_avatar_upload_path() . '/' . $directory . '/' . $user_id;
 	$newbdir   = $path;
-	$newurl    = bp_core_avatar_url() . '/' . $directory . '/' . $user_id;
+	$newurl    = bboss_core_avatar_url() . '/' . $directory . '/' . $user_id;
 	$newburl   = $newurl;
 	$newsubdir = '/' . $directory . '/' . $user_id;
 
@@ -816,15 +816,15 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 }
 
 /**
- * When search_terms are passed to BP_User_Query, search against xprofile fields.
+ * When search_terms are passed to BBoss_User_Query, search against xprofile fields.
  *
  * @since BuddyPress 2.0.0
  *
  * @param array         $sql   Clauses in the user_id SQL query.
- * @param BP_User_Query $query User query object.
+ * @param BBoss_User_Query $query User query object.
  * @return array
  */
-function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
+function bboss_xprofile_bp_user_query_search( $sql, BBoss_User_Query $query ) {
 	global $wpdb;
 
 	if ( empty( $query->query_vars['search_terms'] ) || empty( $sql['where']['search'] ) ) {
@@ -833,9 +833,9 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	static $cache = array();
 
-	$bp = buddypress();
+	$bp = bboss();
 
-	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
+	$search_terms_clean = bboss_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 
 	// The cached SQL embeds a viewer-dependent ID list (matches are filtered by profile-field
 	// visibility below), so the viewer is part of the key - and so is the Display Name Format, which
@@ -843,7 +843,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 	// hides site-wide. Both bp_core_display_name_format() and the `pre_option_bp-display-name-format`
 	// option filter are filterable, so one request can legitimately see more than one format; a key
 	// that omits it serves whichever context asked second the first one's answer.
-	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table . '_' . bb_core_get_viewer_user_id() . '_' . bp_core_display_name_format() );
+	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table . '_' . bboss_core_get_viewer_user_id() . '_' . bboss_core_display_name_format() );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
@@ -885,7 +885,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 			)
 		);
 
-		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
+		$matched_user_ids = bboss_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
@@ -894,7 +894,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		// Built from whichever of "who survived" and "who was removed" is smaller - this leg and
 		// the display_name leg it is OR'd with were each spelling out the whole match set, which is
 		// what made one member search a single 824 KB statement.
-		$search_profile = bb_core_get_search_match_clause(
+		$search_profile = bboss_core_get_search_match_clause(
 			"u.{$query->uid_name}",
 			$unfiltered_user_ids,
 			$matched_user_ids,
@@ -918,15 +918,15 @@ add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10,
  * @param int $user_id ID of the user to sync.
  * @return bool
  */
-function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
+function bboss_xprofile_sync_wp_profile_legacy( $user_id = 0, $field_id = null ) {
 
 	// Bail if profile syncing is disabled.
-	if ( bp_disable_profile_sync() ) {
+	if ( bboss_disable_profile_sync() ) {
 		return true;
 	}
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	if ( empty( $user_id ) ) {
@@ -934,26 +934,26 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 	}
 
 	// Get First, Last and Nickname field id from DB.
-	$firstname_id = bp_xprofile_firstname_field_id();
-	$lastname_id  = bp_xprofile_lastname_field_id();
-	$nickname_id  = bp_xprofile_nickname_field_id();
+	$firstname_id = bboss_xprofile_firstname_field_id();
+	$lastname_id  = bboss_xprofile_lastname_field_id();
+	$nickname_id  = bboss_xprofile_nickname_field_id();
 
 	if ( ! $field_id || $field_id == $firstname_id ) {
-		$firstname = xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id );
-		bp_update_user_meta( $user_id, 'first_name', $firstname );
+		$firstname = bboss_xprofile_get_field_data( bboss_xprofile_firstname_field_id(), $user_id );
+		bboss_update_user_meta( $user_id, 'first_name', $firstname );
 	}
 
 	if ( ! $field_id || $field_id == $lastname_id ) {
-		$lastname = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
-		bp_update_user_meta( $user_id, 'last_name', $lastname );
+		$lastname = bboss_xprofile_get_field_data( bboss_xprofile_lastname_field_id(), $user_id );
+		bboss_update_user_meta( $user_id, 'last_name', $lastname );
 	}
 
 	if ( ! $field_id || $field_id == $nickname_id ) {
-		$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user_id );
-		bp_update_user_meta( $user_id, 'nickname', $nickname );
+		$nickname = bboss_xprofile_get_field_data( bboss_xprofile_nickname_field_id(), $user_id );
+		bboss_update_user_meta( $user_id, 'nickname', $nickname );
 	}
 
-	bp_xprofile_update_display_name( $user_id );
+	bboss_xprofile_update_display_name( $user_id );
 }
 add_action( 'bp_core_signup_user', 'xprofile_sync_wp_profile' );
 add_action( 'bp_core_activated_user', 'xprofile_sync_wp_profile' );
@@ -963,11 +963,11 @@ add_action( 'bp_core_activated_user', 'xprofile_sync_wp_profile' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_update_display_name( $user_id ) {
+function bboss_xprofile_update_display_name( $user_id ) {
 	wp_update_user(
 		array(
 			'ID'           => $user_id,
-			'display_name' => bp_core_get_user_displayname( $user_id, $user_id ), // Passing the same $user_id as the current user_id.
+			'display_name' => bboss_core_get_user_displayname( $user_id, $user_id ), // Passing the same $user_id as the current user_id.
 		)
 	);
 }
@@ -981,9 +981,9 @@ function bp_xprofile_update_display_name( $user_id ) {
  *
  * @param int $user_id The ID of the deleted user.
  */
-function xprofile_remove_data( $user_id ) {
-	BP_XProfile_ProfileData::delete_data_for_user( $user_id );
-	BB_XProfile_Visibility::delete_data_for_user( $user_id );
+function bboss_xprofile_remove_data( $user_id ) {
+	BBoss_XProfile_ProfileData::delete_data_for_user( $user_id );
+	BBoss_XProfile_Visibility::delete_data_for_user( $user_id );
 }
 add_action( 'wpmu_delete_user', 'xprofile_remove_data' );
 add_action( 'delete_user', 'xprofile_remove_data' );
@@ -1008,7 +1008,7 @@ add_action( 'bp_make_spam_user', 'xprofile_remove_data' );
  *                                 Default: false.
  * @return bool True on success, false on failure.
  */
-function bp_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $meta_value = false, $delete_all = false ) {
+function bboss_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $meta_value = false, $delete_all = false ) {
 	global $wpdb;
 
 	// Sanitize object type.
@@ -1059,7 +1059,7 @@ function bp_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $
  *                            specified. Default: true.
  * @return mixed Meta value if found. False on failure.
  */
-function bp_xprofile_get_meta( $object_id, $object_type, $meta_key = '', $single = true ) {
+function bboss_xprofile_get_meta( $object_id, $object_type, $meta_key = '', $single = true ) {
 	// Sanitize object type.
 	if ( ! in_array( $object_type, array( 'group', 'field', 'data' ) ) ) {
 		return false;
@@ -1090,7 +1090,7 @@ function bp_xprofile_get_meta( $object_id, $object_type, $meta_key = '', $single
  *                  metadata, returns true. On successful creation of new metadata,
  *                  returns the integer ID of the new metadata row.
  */
-function bp_xprofile_update_meta( $object_id, $object_type, $meta_key, $meta_value, $prev_value = '' ) {
+function bboss_xprofile_update_meta( $object_id, $object_type, $meta_key, $meta_value, $prev_value = '' ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	add_filter( 'query', 'bp_xprofile_filter_meta_query' );
 	$retval = update_metadata( 'xprofile_' . $object_type, $object_id, $meta_key, $meta_value, $prev_value );
@@ -1115,7 +1115,7 @@ function bp_xprofile_update_meta( $object_id, $object_type, $meta_key, $meta_val
  *                            Default false.
  * @return int|bool The meta ID on successful update, false on failure.
  */
-function bp_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value, $unique = false ) {
+function bboss_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	add_filter( 'query', 'bp_xprofile_filter_meta_query' );
 	$retval = add_metadata( 'xprofile_' . $object_type, $object_id, $meta_key, $meta_value, $unique );
@@ -1135,8 +1135,8 @@ function bp_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value,
  * @param string $meta_value     Meta value to update to.
  * @return bool|int
  */
-function bp_xprofile_update_fieldgroup_meta( $field_group_id, $meta_key, $meta_value ) {
-	return bp_xprofile_update_meta( $field_group_id, 'group', $meta_key, $meta_value );
+function bboss_xprofile_update_fieldgroup_meta( $field_group_id, $meta_key, $meta_value ) {
+	return bboss_xprofile_update_meta( $field_group_id, 'group', $meta_key, $meta_value );
 }
 
 /**
@@ -1149,8 +1149,8 @@ function bp_xprofile_update_fieldgroup_meta( $field_group_id, $meta_key, $meta_v
  * @param string $meta_value Meta value to update to.
  * @return bool|int
  */
-function bp_xprofile_update_field_meta( $field_id, $meta_key, $meta_value ) {
-	return bp_xprofile_update_meta( $field_id, 'field', $meta_key, $meta_value );
+function bboss_xprofile_update_field_meta( $field_id, $meta_key, $meta_value ) {
+	return bboss_xprofile_update_meta( $field_id, 'field', $meta_key, $meta_value );
 }
 
 /**
@@ -1163,8 +1163,8 @@ function bp_xprofile_update_field_meta( $field_id, $meta_key, $meta_value ) {
  * @param string $meta_value    Meta value to update to.
  * @return bool|int
  */
-function bp_xprofile_update_fielddata_meta( $field_data_id, $meta_key, $meta_value ) {
-	return bp_xprofile_update_meta( $field_data_id, 'data', $meta_key, $meta_value );
+function bboss_xprofile_update_fielddata_meta( $field_data_id, $meta_key, $meta_value ) {
+	return bboss_xprofile_update_meta( $field_data_id, 'data', $meta_key, $meta_value );
 }
 
 /**
@@ -1174,19 +1174,19 @@ function bp_xprofile_update_fielddata_meta( $field_data_id, $meta_key, $meta_val
  *
  * @return int Field ID.
  */
-function bp_xprofile_fullname_field_id() {
+function bboss_xprofile_fullname_field_id() {
 	$id = wp_cache_get( 'fullname_field_id', 'bp_xprofile' );
 
 	if ( false === $id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( isset( $bp->profile->table_name_fields ) ) {
-			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bboss_xprofile_fullname_field_name() ) ) );
 		} else {
-			$table = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-			$id    = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+			$table = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
+			$id    = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE name = %s", addslashes( bboss_xprofile_fullname_field_name() ) ) );
 		}
 
 		wp_cache_set( 'fullname_field_id', $id, 'bp_xprofile' );
@@ -1200,13 +1200,13 @@ function bp_xprofile_fullname_field_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_base_group_id( $defalut = 1, $get_option = true ) {
+function bboss_xprofile_base_group_id( $defalut = 1, $get_option = true ) {
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-base-group-id' );
 	}
 
 	if ( empty( $field_id ) && $get_option ) {
-		$field_id = bp_get_option( 'bp-xprofile-base-group-id', $defalut );
+		$field_id = bboss_get_option( 'bp-xprofile-base-group-id', $defalut );
 	}
 
 	return (int) apply_filters( 'bp_xprofile_base_group_id', $field_id );
@@ -1217,7 +1217,7 @@ function bp_xprofile_base_group_id( $defalut = 1, $get_option = true ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
+function bboss_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
 	$field_id = 0;
 
 	if ( is_multisite() ) {
@@ -1225,7 +1225,7 @@ function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
 	}
 
 	if ( empty( $field_id ) && $get_option ) {
-		$field_id = bp_get_option( 'bp-xprofile-firstname-field-id', $defalut );
+		$field_id = bboss_get_option( 'bp-xprofile-firstname-field-id', $defalut );
 	}
 
 	return (int) apply_filters( 'bp_xprofile_firstname_field_id', $field_id );
@@ -1236,7 +1236,7 @@ function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
+function bboss_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
 	$field_id = 0;
 
 	if ( is_multisite() ) {
@@ -1244,7 +1244,7 @@ function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
 	}
 
 	if ( empty( $field_id ) && $get_option ) {
-		$field_id = bp_get_option( 'bp-xprofile-lastname-field-id', $defalut );
+		$field_id = bboss_get_option( 'bp-xprofile-lastname-field-id', $defalut );
 	}
 
 	return (int) apply_filters( 'bp_xprofile_lastname_field_id', $field_id );
@@ -1255,7 +1255,7 @@ function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true ) {
+function bboss_xprofile_nickname_field_id( $no_fallback = false, $get_option = true ) {
 	$field_id = 0;
 
 	if ( is_multisite() ) {
@@ -1263,11 +1263,11 @@ function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true
 	}
 
 	if ( empty( $field_id ) && $get_option ) {
-		$field_id = bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
+		$field_id = bboss_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
 	}
 
 	// Set nickname field id to 0(zero) if first name and nickname both are same.
-	$first_name_id = bp_xprofile_firstname_field_id();
+	$first_name_id = bboss_xprofile_firstname_field_id();
 	if ( $first_name_id === (int) $field_id ) {
 		$field_id = 0;
 	}
@@ -1282,16 +1282,16 @@ function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true
  *
  * @return string The field name.
  */
-function bp_xprofile_fullname_field_name() {
-	$field_name = BP_XPROFILE_FULLNAME_FIELD_NAME;
+function bboss_xprofile_fullname_field_name() {
+	$field_name = BBOSS_XPROFILE_FULLNAME_FIELD_NAME;
 
 	/**
 	 * Get the nickname field if is set
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	if ( $nickname_field_id = bp_xprofile_nickname_field_id( true ) ) {
-		$field_name = xprofile_get_field( $nickname_field_id )->name;
+	if ( $nickname_field_id = bboss_xprofile_nickname_field_id( true ) ) {
+		$field_name = bboss_xprofile_get_field( $nickname_field_id )->name;
 	}
 
 	/**
@@ -1314,15 +1314,15 @@ function bp_xprofile_fullname_field_name() {
  * @param int|null $field_id Optional. Default current field ID.
  * @return bool
  */
-function bp_xprofile_is_richtext_enabled_for_field( $field_id = null ) {
+function bboss_xprofile_is_richtext_enabled_for_field( $field_id = null ) {
 	if ( ! $field_id ) {
-		$field_id = bp_get_the_profile_field_id();
+		$field_id = bboss_get_the_profile_field_id();
 	}
 
-	$field = xprofile_get_field( $field_id );
+	$field = bboss_xprofile_get_field( $field_id );
 
 	$enabled = false;
-	if ( $field instanceof BP_XProfile_Field ) {
+	if ( $field instanceof BBoss_XProfile_Field ) {
 		$enabled = (bool) $field->type_obj->supports_richtext;
 	}
 
@@ -1344,7 +1344,7 @@ function bp_xprofile_is_richtext_enabled_for_field( $field_id = null ) {
  *
  * @return array
  */
-function bp_xprofile_get_visibility_levels() {
+function bboss_xprofile_get_visibility_levels() {
 
 	/**
 	 * Filters the visibility levels out of the $bp global.
@@ -1353,7 +1353,7 @@ function bp_xprofile_get_visibility_levels() {
 	 *
 	 * @param array $visibility_levels Array of visibility levels.
 	 */
-	return apply_filters( 'bp_xprofile_get_visibility_levels', buddypress()->profile->visibility_levels );
+	return apply_filters( 'bp_xprofile_get_visibility_levels', bboss()->profile->visibility_levels );
 }
 
 /**
@@ -1366,18 +1366,18 @@ function bp_xprofile_get_visibility_levels() {
  *
  * @since BuddyPress 1.6.0
  *
- * @see BP_XProfile_Group::get()
+ * @see BBoss_XProfile_Group::get()
  *   or if you have added your own custom levels.
  *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
  * @param int $current_user_id   The id of the user viewing the profile. 0 resolves the viewer from
- *                               the current request; bb_core_guest_viewer_id() forces the public,
+ *                               the current request; bboss_core_guest_viewer_id() forces the public,
  *                               logged-out view.
  * @return array An array of field ids that should be excluded from the profile query
  */
-function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
+function bboss_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
 	if ( ! $displayed_user_id ) {
-		$displayed_user_id = bp_displayed_user_id();
+		$displayed_user_id = bboss_displayed_user_id();
 	}
 
 	if ( ! $displayed_user_id ) {
@@ -1385,12 +1385,12 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 	}
 
 	if ( ! $current_user_id ) {
-		$current_user_id = bp_loggedin_user_id();
+		$current_user_id = bboss_loggedin_user_id();
 	}
 
 	// @todo - This is where you'd swap out for current_user_can() checks
-	$hidden_levels = bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id, $current_user_id );
-	$hidden_fields = bp_xprofile_get_fields_by_visibility_levels( $displayed_user_id, $hidden_levels );
+	$hidden_levels = bboss_xprofile_get_hidden_field_types_for_user( $displayed_user_id, $current_user_id );
+	$hidden_fields = bboss_xprofile_get_fields_by_visibility_levels( $displayed_user_id, $hidden_levels );
 
 	/**
 	 * Filters the ids of fields that are hidden for this displayed/loggedin user pair.
@@ -1399,7 +1399,7 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
-	 * @param int   $current_user_id   ID of the current user. Can be bb_core_guest_viewer_id() (-1),
+	 * @param int   $current_user_id   ID of the current user. Can be bboss_core_guest_viewer_id() (-1),
 	 *                                 an explicit "anonymous visitor" viewer used when the audience
 	 *                                 is provably not a member. Test for a logged-out viewer with
 	 *                                 that helper as well as with `empty()`, or a guest resolution
@@ -1413,26 +1413,26 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
  *
  * Field visibility is determined based on the relationship between the
  * logged-in user, the displayed user, and the visibility setting for the
- * current field. (See bp_xprofile_get_hidden_fields_for_user().) This
+ * current field. (See bboss_xprofile_get_hidden_fields_for_user().) This
  * utility function speeds up this matching by fetching the visibility levels
  * that should be hidden for the current user pair.
  *
  * @since BuddyPress 1.8.2
  *
- * @see bp_xprofile_get_hidden_fields_for_user()
+ * @see bboss_xprofile_get_hidden_fields_for_user()
  *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
  * @param int $current_user_id   The id of the user viewing the profile. 0 resolves the viewer from
- *                               the current request; bb_core_guest_viewer_id() forces the public,
+ *                               the current request; bboss_core_guest_viewer_id() forces the public,
  *                               logged-out view.
  * @return array An array of visibility levels hidden to the current user.
  */
-function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
+function bboss_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
 
 	// An explicit anonymous viewer - see bb_core_guest_viewer_id(). Checked before the
 	// "logged in" branch because the sentinel is a non-empty ID and would otherwise be treated
 	// as a member, and before bp_user_can() because it is not a real user row.
-	if ( bb_core_guest_viewer_id() === (int) $current_user_id ) {
+	if ( bboss_core_guest_viewer_id() === (int) $current_user_id ) {
 		$hidden_levels = array( 'friends', 'loggedin', 'adminsonly' );
 
 		// Current user is logged in.
@@ -1444,9 +1444,9 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 		// for a specific data subject's view: using the actor there would treat the admin as able to
 		// see everyone's hidden fields and defeat the redaction. Keep bp_current_user_can() (with its
 		// BP-specific filters) for the common viewer==actor path so nothing else changes.
-		$viewer_can_moderate = ( bp_loggedin_user_id() === (int) $current_user_id )
-			? bp_current_user_can( 'bp_moderate' )
-			: bp_user_can( (int) $current_user_id, 'bp_moderate' );
+		$viewer_can_moderate = ( bboss_loggedin_user_id() === (int) $current_user_id )
+			? bboss_current_user_can( 'bp_moderate' )
+			: bboss_user_can( (int) $current_user_id, 'bp_moderate' );
 
 		// Nothing's private when viewing your own profile, or when the
 		// current user is an admin.
@@ -1454,7 +1454,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
-		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( (int) $displayed_user_id, (int) $current_user_id ) ) {
+		} elseif ( bboss_is_active( 'friends' ) && bboss_friends_check_friendship( (int) $displayed_user_id, (int) $current_user_id ) ) {
 			$hidden_levels = array( 'adminsonly' );
 
 			// Current user is logged in but not friends, so exclude friends-only.
@@ -1474,7 +1474,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
-	 * @param int   $current_user_id   ID of the current user. Can be bb_core_guest_viewer_id() (-1),
+	 * @param int   $current_user_id   ID of the current user. Can be bboss_core_guest_viewer_id() (-1),
 	 *                                 an explicit "anonymous visitor" viewer used when the audience
 	 *                                 is provably not a member. Test for a logged-out viewer with
 	 *                                 that helper as well as with `empty()`, or a guest resolution
@@ -1488,7 +1488,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
  *
  * @since BuddyPress 1.6.0
  *
- * @see bp_xprofile_get_hidden_fields_for_user()
+ * @see bboss_xprofile_get_hidden_fields_for_user()
  *
  * @param int   $user_id The id of the profile owner.
  * @param array $levels  An array of visibility levels ('public', 'friends', 'loggedin', 'adminsonly' etc) to be
@@ -1496,17 +1496,17 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
  *
  * @return array $field_ids The fields that match the requested visibility levels for the given user.
  */
-function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array() ) {
+function bboss_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array() ) {
 	if ( ! is_array( $levels ) ) {
 		$levels = (array) $levels;
 	}
 
-	$default_visibility_levels = BP_XProfile_Group::fetch_default_visibility_levels();
+	$default_visibility_levels = BBoss_XProfile_Group::fetch_default_visibility_levels();
 
-	if ( BB_XProfile_Visibility::user_data_exists( $user_id ) ) {
+	if ( BBoss_XProfile_Visibility::user_data_exists( $user_id ) ) {
 
 		// Get the field ids based on visibility.
-		$field_ids = BB_XProfile_Visibility::get_user_field_ids_by_visibility_levels( $user_id, $levels );
+		$field_ids = BBoss_XProfile_Visibility::get_user_field_ids_by_visibility_levels( $user_id, $levels );
 
 		// Parse the user-provided visibility levels with the default levels, which may take precedence.
 		foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
@@ -1535,7 +1535,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 
 	} else {
 
-		$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$user_visibility_levels = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
 			$user_visibility_levels = array();
 		}
@@ -1566,7 +1566,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	// Never allow the Nickname field to be excluded.
-	$nickname_field_id = bp_xprofile_nickname_field_id();
+	$nickname_field_id = bboss_xprofile_nickname_field_id();
 	if ( in_array( $nickname_field_id, $field_ids ) ) {
 		$key = array_search( $nickname_field_id, $field_ids );
 		unset( $field_ids[ $key ] );
@@ -1581,11 +1581,11 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
  * The search-visibility filters have to decide, per matched member, whether the field their hit
  * came from is one this viewer may see. Resolving that is the expensive part, and it is only ever
  * interesting for a member who has actually restricted something: where nothing on the profile
- * carries a level this viewer is denied, bp_xprofile_get_hidden_fields_for_user() returns an empty
+ * carries a level this viewer is denied, bboss_xprofile_get_hidden_fields_for_user() returns an empty
  * list and the member is kept. Spending the candidate budget on the rest - and DROPPING whatever
  * sorted past it - discarded search results that no privacy rule applied to.
  *
- * "Could be hidden" follows bp_xprofile_get_fields_by_visibility_levels() exactly, because that is
+ * "Could be hidden" follows bboss_xprofile_get_fields_by_visibility_levels() exactly, because that is
  * what the keep-test will ask. It has two branches and they treat a field's own default visibility
  * very differently:
  *
@@ -1624,12 +1624,12 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
  *                            must fail closed, and must not read this as a narrowing or as a reason
  *                            to serve a truncated set.
  */
-function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() ) {
+function bboss_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() ) {
 	global $wpdb;
 
 	$user_ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $user_ids ) ) ) );
 
-	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) || ! class_exists( 'BB_XProfile_Visibility' ) ) {
+	if ( empty( $user_ids ) || ! bboss_is_active( 'xprofile' ) || ! class_exists( 'BBoss_XProfile_Visibility' ) ) {
 		return null;
 	}
 
@@ -1647,14 +1647,14 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 				array_unique(
 					array_merge(
 						array( 'friends', 'loggedin', 'adminsonly' ),
-						array_map( 'strval', (array) bp_xprofile_get_hidden_field_types_for_user( 0, bb_core_guest_viewer_id() ) )
+						array_map( 'strval', (array) bboss_xprofile_get_hidden_field_types_for_user( 0, bboss_core_guest_viewer_id() ) )
 					)
 				)
 			)
 		);
 	}
 
-	$table = BB_XProfile_Visibility::get_visibility_table_name();
+	$table = BBoss_XProfile_Visibility::get_visibility_table_name();
 
 	if ( empty( $table ) ) {
 		return false;
@@ -1665,7 +1665,7 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 	// changed default is picked up without a second memo to invalidate.
 	$default_reaches_unset_fields = false;
 
-	foreach ( (array) BP_XProfile_Group::fetch_default_visibility_levels() as $defaults ) {
+	foreach ( (array) BBoss_XProfile_Group::fetch_default_visibility_levels() as $defaults ) {
 		if ( ! isset( $defaults['default'] ) || ! in_array( $defaults['default'], $levels, true ) ) {
 			continue;
 		}
@@ -1705,7 +1705,7 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 	// A probe that FAILED is the opposite case and reports null: the table may be there and full of
 	// restricting rows, so carrying on as if it were absent would narrow this set with rows that
 	// were never read. Fail closed instead, the same way a failed read of the table itself does.
-	$visibility_table_exists = BB_XProfile_Visibility::visibility_table_exists();
+	$visibility_table_exists = BBoss_XProfile_Visibility::visibility_table_exists();
 
 	if ( is_null( $visibility_table_exists ) ) {
 		return false;
@@ -1803,7 +1803,7 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 				update_meta_cache( 'user', $prime_chunk );
 
 				foreach ( $prime_chunk as $user_id ) {
-					$stored = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+					$stored = bboss_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 					if ( is_array( $stored ) && array_intersect( $levels, array_map( 'strval', array_values( $stored ) ) ) ) {
 						$candidates[ $user_id ] = true;
@@ -1817,10 +1817,10 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 }
 
 /**
- * Prime the caches bp_xprofile_get_hidden_fields_for_user() reads, for a batch of users.
+ * Prime the caches bboss_xprofile_get_hidden_fields_for_user() reads, for a batch of users.
  *
  * Resolving one member's hidden fields costs up to three uncached reads: the
- * BB_XProfile_Visibility::user_data_exists() probe, the field-ids lookup for the viewer's hidden
+ * BBoss_XProfile_Visibility::user_data_exists() probe, the field-ids lookup for the viewer's hidden
  * level set, and - for members with no visibility row - the `bp_xprofile_visibility_levels` user
  * meta. Anything that resolves visibility once per row (a member loop, an activity stream, a
  * member search re-testing its matches) therefore pays that per member. This fills all three for
@@ -1837,15 +1837,15 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
  * @param int   $viewer_id Optional. Viewer the visibility will be evaluated for. Defaults to the
  *                         current viewer, which is what the per-user calls will use.
  */
-function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) {
+function bboss_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) {
 	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
 
-	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) || ! class_exists( 'BB_XProfile_Visibility' ) ) {
+	if ( empty( $user_ids ) || ! bboss_is_active( 'xprofile' ) || ! class_exists( 'BBoss_XProfile_Visibility' ) ) {
 		return;
 	}
 
 	if ( empty( $viewer_id ) ) {
-		$viewer_id = bb_core_get_viewer_user_id();
+		$viewer_id = bboss_core_get_viewer_user_id();
 	}
 
 	// Chunked, because both reads below build an `IN ( … )` list and an object-cache fill in
@@ -1856,7 +1856,7 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
 	foreach ( array_chunk( $user_ids, 1000 ) as $prime_chunk ) {
 		// (a) The "does this member have any visibility row at all" probe, which decides which of
 		// the two branches below bp_xprofile_get_fields_by_visibility_levels() takes.
-		BB_XProfile_Visibility::prime_user_data_exists_cache( $prime_chunk );
+		BBoss_XProfile_Visibility::prime_user_data_exists_cache( $prime_chunk );
 
 		// (b) The user-meta branch, taken by every member who has no visibility row - on a
 		// community that has never used custom visibility that is ALL of them. update_meta_cache()
@@ -1869,7 +1869,7 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
 	// site that filters those levels still gets keys that match what the loop will ask for.
 	$by_levels = array();
 	foreach ( $user_ids as $user_id ) {
-		$levels = (array) bp_xprofile_get_hidden_field_types_for_user( $user_id, $viewer_id );
+		$levels = (array) bboss_xprofile_get_hidden_field_types_for_user( $user_id, $viewer_id );
 
 		if ( empty( $levels ) ) {
 			// Self or a moderator: the getter returns before it queries.
@@ -1885,7 +1885,7 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
 		// custom visibility every member shares one level set, so $grouped_ids is the whole match
 		// set and this built the single largest statement of the three.
 		foreach ( array_chunk( $grouped_ids, 1000 ) as $level_chunk ) {
-			BB_XProfile_Visibility::prime_field_ids_cache( $level_chunk, explode( ',', $levels ) );
+			BBoss_XProfile_Visibility::prime_field_ids_cache( $level_chunk, explode( ',', $levels ) );
 		}
 	}
 }
@@ -1899,7 +1899,7 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
  * @return void This function only changes the global $_POST that should contain
  *              the datebox data.
  */
-function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
+function bboss_xprofile_maybe_format_datebox_post_data( $field_id ) {
 	if ( ! isset( $_POST[ 'field_' . $field_id ] ) ) {
 		if ( ! empty( $_POST[ 'field_' . $field_id . '_day' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_month' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_year' ] ) ) {
 			// Concatenate the values.
@@ -1925,13 +1925,13 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
  * @param int|string $user_id ID of the user to get @-mention name for.
  * @return string $mentionname User name appropriate for @-mentions.
  */
-function bp_activity_get_user_mentionname( $user_id ) {
+function bboss_activity_get_user_mentionname( $user_id ) {
 	$mentionname = '';
 
-	$userdata = bp_core_get_core_userdata( $user_id );
+	$userdata = bboss_core_get_core_userdata( $user_id );
 
 	if ( $userdata ) {
-		if ( bp_is_username_compatibility_mode() ) {
+		if ( bboss_is_username_compatibility_mode() ) {
 			$mentionname = str_replace( ' ', '-', $userdata->user_login );
 		} else {
 			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
@@ -1946,7 +1946,7 @@ function bp_activity_get_user_mentionname( $user_id ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_at_mention_default_options() {
+function bboss_at_mention_default_options() {
 	return apply_filters(
 		'bp_at_mention_js_options',
 		array(
@@ -1965,7 +1965,7 @@ function bp_at_mention_default_options() {
  *
  * @return array
  */
-function bp_xprofile_social_network_provider() {
+function bboss_xprofile_social_network_provider() {
 
 	$options = array();
 
@@ -2114,7 +2114,7 @@ function bp_xprofile_social_network_provider() {
  * @return string
  * @since BuddyBoss 1.0.0
  */
-function bp_get_user_social_networks_urls( $user_id = null ) {
+function bboss_get_user_social_networks_urls( $user_id = null ) {
 
 	global $wpdb;
 	global $bp;
@@ -2123,20 +2123,20 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	$social_networks_id    = $social_networks_field->id;
 	$social_networks_text  = $social_networks_field->name;
 
-	$is_enabled_header_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+	$is_enabled_header_social_networks  = bboss_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bboss_enabled_member_social_networks' ) && bboss_enabled_member_social_networks();
 
 	$html = '';
 
 	$original_option_values = array();
 
-	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
+	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bboss_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
-		$providers = bp_xprofile_social_network_provider();
+		$providers = bboss_xprofile_social_network_provider();
 
-		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
+		$original_option_values = bboss_xprofile_safe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
 
-		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
+		$social_settings_field   = bboss_xprofile_get_field( $social_networks_id, $user_id );
 		$social_settings_options = $social_settings_field->get_children();
 
 		if (
@@ -2152,7 +2152,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 			$is_more_link = count( array_filter( $original_option_values ) ) > 3;
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
-					$key = bp_social_network_search_key( $key, $providers );
+					$key = bboss_social_network_search_key( $key, $providers );
 
 					if ( $is_more_link && 2 === $i ) {
 						$html .= '<span class="social-more-link social"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_html__( 'See all', 'buddyboss' ) . '" href="#social-networks-popup" class="show-action-popup"><i class="bb-icon-rf bb-icon-ellipsis-h"></i></a></span>';
@@ -2177,7 +2177,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 										<div class="bb-action-popup-content">';
 										foreach ( $original_option_values as $key => $original_option_value ) {
 											if ( '' !== $original_option_value ) {
-												$key   = bp_social_network_search_key( $key, $providers );
+												$key   = bboss_social_network_search_key( $key, $providers );
 												$html .= '<span class="social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icon-rf bb-icon-brand-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '"></i></a></span>';
 											}
 										}
@@ -2191,16 +2191,16 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	}
 
 	if ( $html !== '' ) {
-		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
+		$level = bboss_xprofile_get_field_visibility_level( $social_networks_id, bboss_displayed_user_id() );
 
-		if ( bp_displayed_user_id() === bp_loggedin_user_id() ) {
+		if ( bboss_displayed_user_id() === bboss_loggedin_user_id() ) {
 			$html = '<div class="social-networks-wrap">' . $html . '</div>';
 		} elseif ( 'public' === $level ) {
 			$html = '<div class="social-networks-wrap">' . $html . '</div>';
 		} elseif ( 'loggedin' === $level && is_user_logged_in() ) {
 			$html = '<div class="social-networks-wrap">' . $html . '</div>';
 		} elseif ( 'friends' === $level && is_user_logged_in() ) {
-			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
+			$member_friend_status = bboss_friends_check_friendship_status( bboss_loggedin_user_id(), bboss_displayed_user_id() );
 
 			if ( 'is_friend' === $member_friend_status ) {
 				$html = '<div class="social-networks-wrap">' . $html . '</div>';
@@ -2220,7 +2220,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
  *
  * @return bool
  */
-function bp_check_member_type_field_have_options() {
+function bboss_check_member_type_field_have_options() {
 
 	$arr = array();
 
@@ -2232,7 +2232,7 @@ function bp_check_member_type_field_have_options() {
 		$posts = new \WP_Query(
 			array(
 				'posts_per_page' => - 1,
-				'post_type'      => bp_get_member_type_post_type(),
+				'post_type'      => bboss_get_member_type_post_type(),
 				'orderby'        => 'title',
 				'order'          => 'ASC',
 			)
@@ -2266,7 +2266,7 @@ function bp_check_member_type_field_have_options() {
  *
  * @return string
  */
-function bp_xprofile_get_member_display_name( $user_id = null ) {
+function bboss_xprofile_get_member_display_name( $user_id = null ) {
 	static $cache;
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
@@ -2287,69 +2287,69 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 		return false;
 	}
 
-	$format = bp_core_display_name_format();
+	$format = bboss_core_display_name_format();
 
 	$display_name = '';
 
 	switch ( $format ) {
 		case 'first_name':
 			// Get First Name Field Id.
-			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$first_name_id = (int) bboss_get_option( 'bp-xprofile-firstname-field-id' );
 
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$display_name = bboss_xprofile_get_field_data( $first_name_id, $user_id );
 
 			if ( '' === $display_name ) {
 				$display_name = get_user_meta( $user_id, 'first_name', true );
 				if ( empty( $display_name ) ) {
 					$display_name = get_user_meta( $user_id, 'nickname', true );
 				}
-				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
-					xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+				if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
+					bboss_xprofile_set_field_data( $first_name_id, $user_id, $display_name );
 				}
 			}
 
 			// Get Nick Name Field Id.
-			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
+			$nickname_id = (int) bboss_get_option( 'bp-xprofile-nickname-field-id' );
+			$nick_name   = bboss_xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $nick_name ) ) {
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+				$invalid  = bboss_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
 
 				// or use the user_nicename
 				if ( ! $nickname || $invalid ) {
 					$nickname = ( isset( $user->user_nicename ) ) ? $user->user_nicename : '';
 				}
-				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
-					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
+					bboss_xprofile_set_field_data( $nickname_id, $user_id, $nickname );
 				}
 			}
 
 			break;
 		case 'first_last_name':
 			// Get First Name Field Id.
-			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$first_name_id = (int) bboss_get_option( 'bp-xprofile-firstname-field-id' );
 			// Get Last Name Field Id.
-			$last_name_id      = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
-			$result_first_name = xprofile_get_field_data( $first_name_id, $user_id );
-			$result_last_name  = xprofile_get_field_data( $last_name_id, $user_id );
+			$last_name_id      = (int) bboss_get_option( 'bp-xprofile-lastname-field-id' );
+			$result_first_name = bboss_xprofile_get_field_data( $first_name_id, $user_id );
+			$result_last_name  = bboss_xprofile_get_field_data( $last_name_id, $user_id );
 
 			if ( '' === $result_first_name ) {
 				$result_first_name = get_user_meta( $user_id, 'first_name', true );
 				if ( empty( $result_first_name ) ) {
 					$result_first_name = get_user_meta( $user_id, 'nickname', true );
 				}
-				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
-					xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+				if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
+					bboss_xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
 				}
 			}
 
 			if ( '' === $result_last_name ) {
 				$result_last_name = get_user_meta( $user_id, 'last_name', true );
-				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
-					xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+				if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
+					bboss_xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
 				}
 			}
 
@@ -2364,42 +2364,42 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			);
 
 			// Get Nick Name Field Id.
-			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
+			$nickname_id = (int) bboss_get_option( 'bp-xprofile-nickname-field-id' );
+			$nick_name   = bboss_xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $nick_name ) ) {
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+				$invalid  = bboss_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
 
 				// or use the user_nicename
 				if ( ! $nickname || $invalid ) {
 					$nickname = $user->user_nicename;
 				}
-				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
-					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
+					bboss_xprofile_set_field_data( $nickname_id, $user_id, $nickname );
 				}
 			}
 
 			break;
 		case 'nickname':
 			// Get Nick Name Field Id.
-			$nickname_id  = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$display_name = xprofile_get_field_data( $nickname_id, $user_id );
+			$nickname_id  = (int) bboss_get_option( 'bp-xprofile-nickname-field-id' );
+			$display_name = bboss_xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $display_name ) ) {
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+				$invalid  = bboss_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
 
 				// or use the user_nicename
 				if ( ! $nickname || $invalid ) {
 					$nickname = $user->user_nicename;
 				}
-				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
-					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
+					bboss_xprofile_set_field_data( $nickname_id, $user_id, $nickname );
 				}
 				$display_name = $nickname;
 
@@ -2414,7 +2414,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 	// suspended answer stand in for the next legitimate call in the same request and silently skip
 	// the repair that call would have performed. The value itself is identical either way - only
 	// the persistence differs - so not caching costs one resolution, never correctness.
-	if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+	if ( ! bboss_xprofile_is_display_name_self_heal_suspended() ) {
 		$cache[ $cache_key ] = $name;
 	}
 
@@ -2422,11 +2422,11 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 }
 
 /**
- * Whether bp_xprofile_get_member_display_name() must resolve without repairing stored fields.
+ * Whether bboss_xprofile_get_member_display_name() must resolve without repairing stored fields.
  *
  * It is a self-healing resolver: when a name field has no
  * stored value it back-fills it from the WordPress user meta, and an empty back-fill value makes
- * xprofile_set_field_data() DELETE the row. That is correct on a profile view - the member is
+ * bboss_xprofile_set_field_data() DELETE the row. That is correct on a profile view - the member is
  * present and the repair is a side effect of showing them their own data - but the same resolver
  * is reached from member search, which re-tests other members' names to decide whether a match is
  * visible. A search is a read: one GET would otherwise issue one destructive write per re-tested
@@ -2435,7 +2435,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
  * Suspension changes nothing about the value returned; it only stops the repair being persisted,
  * so the next request that legitimately resolves that member still performs it.
  *
- * Nested like bb_core_is_resolving_user_displayname(): callers raise it with `true`, lower it with
+ * Nested like bboss_core_is_resolving_user_displayname(): callers raise it with `true`, lower it with
  * `false` in a `finally`, and read it with no argument.
  *
  * @since BuddyBoss 3.5.0
@@ -2444,7 +2444,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
  *                           suspension, null (default) to only read the current state.
  * @return bool Whether the self-heal is currently suspended.
  */
-function bb_xprofile_is_display_name_self_heal_suspended( $suspend = null ) {
+function bboss_xprofile_is_display_name_self_heal_suspended( $suspend = null ) {
 	static $depth = 0;
 
 	if ( true === $suspend ) {
@@ -2465,7 +2465,7 @@ function bb_xprofile_is_display_name_self_heal_suspended( $suspend = null ) {
  *
  * @return void
  */
-function bp_xprofile_sync_bp_profile( $user_id ) {
+function bboss_xprofile_sync_bp_profile( $user_id ) {
 
 	if ( empty( $user_id ) ) {
 		return;
@@ -2475,53 +2475,53 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 	$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 	if ( isset( $user->first_name ) ) {
-		$firstname_field_id = bp_xprofile_firstname_field_id();
-		xprofile_set_field_data( $firstname_field_id, $user->ID, $user->first_name );
+		$firstname_field_id = bboss_xprofile_firstname_field_id();
+		bboss_xprofile_set_field_data( $firstname_field_id, $user->ID, $user->first_name );
 
 		// Check if firstname field visibility level is not set.
 		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $firstname_field_id ] ) ) {
-			$visibility         = xprofile_get_field_visibility_level( $firstname_field_id, $user_id );
-			xprofile_set_field_visibility_level( $firstname_field_id, $user_id, $visibility );
+			$visibility         = bboss_xprofile_get_field_visibility_level( $firstname_field_id, $user_id );
+			bboss_xprofile_set_field_visibility_level( $firstname_field_id, $user_id, $visibility );
 		}
 	}
 
 	if ( isset( $user->last_name ) ) {
-		$lastname_field_id  = bp_xprofile_lastname_field_id();
-		xprofile_set_field_data( $lastname_field_id, $user->ID, $user->last_name );
+		$lastname_field_id  = bboss_xprofile_lastname_field_id();
+		bboss_xprofile_set_field_data( $lastname_field_id, $user->ID, $user->last_name );
 
 		// Check if lastname field visibility level is not set.
 		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $lastname_field_id ] ) ) {
-			$visibility         = xprofile_get_field_visibility_level( $lastname_field_id, $user_id );
-			xprofile_set_field_visibility_level( $lastname_field_id, $user_id, $visibility );
+			$visibility         = bboss_xprofile_get_field_visibility_level( $lastname_field_id, $user_id );
+			bboss_xprofile_set_field_visibility_level( $lastname_field_id, $user_id, $visibility );
 		}
 	}
 
 	if ( isset( $user->nickname ) ) {
-		$nickname_field_id  = bp_xprofile_nickname_field_id();
-		xprofile_set_field_data( $nickname_field_id, $user->ID, $user->nickname );
+		$nickname_field_id  = bboss_xprofile_nickname_field_id();
+		bboss_xprofile_set_field_data( $nickname_field_id, $user->ID, $user->nickname );
 
 		// Check if nickname field visibility level is not set.
 		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $nickname_field_id ] ) ) {
-			$visibility         = xprofile_get_field_visibility_level( $nickname_field_id, $user_id );
-			xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
+			$visibility         = bboss_xprofile_get_field_visibility_level( $nickname_field_id, $user_id );
+			bboss_xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
 		}
 	}
 
-	$bio_field_id = bb_xprofile_bio_field_id();
+	$bio_field_id = bboss_xprofile_bio_field_id();
 
 	if ( $bio_field_id && isset( $user->description ) ) {
 
 		// Guard against the reverse sync writing straight back to user meta.
-		bb_xprofile_bio_syncing( true );
+		bboss_xprofile_bio_syncing( true );
 
-		xprofile_set_field_data( $bio_field_id, $user->ID, $user->description );
+		bboss_xprofile_set_field_data( $bio_field_id, $user->ID, $user->description );
 
-		bb_xprofile_bio_syncing( false );
+		bboss_xprofile_bio_syncing( false );
 
 		// Check if bio field visibility level is not set.
 		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $bio_field_id ] ) ) {
-			$visibility = xprofile_get_field_visibility_level( $bio_field_id, $user_id );
-			xprofile_set_field_visibility_level( $bio_field_id, $user_id, $visibility );
+			$visibility = bboss_xprofile_get_field_visibility_level( $bio_field_id, $user_id );
+			bboss_xprofile_set_field_visibility_level( $bio_field_id, $user_id, $visibility );
 		}
 	}
 }
@@ -2538,13 +2538,13 @@ add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
  *
  * @return int Field ID, or 0 when no Bio field exists.
  */
-function bb_xprofile_bio_field_id() {
+function bboss_xprofile_bio_field_id() {
 	global $wpdb;
 
 	$field_id = wp_cache_get( 'bb_xprofile_bio_field_id', 'bp_xprofile' );
 
 	if ( false === $field_id ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Result is cached below.
 		$field_id = (int) $wpdb->get_var(
@@ -2575,7 +2575,7 @@ function bb_xprofile_bio_field_id() {
  * user meta from the xProfile side could re-enter the WordPress side (and vice
  * versa) and overwrite a value mid-flight.
  *
- * Tracked as a depth counter rather than a boolean. `bp_xprofile_sync_bp_profile()`
+ * Tracked as a depth counter rather than a boolean. `bboss_xprofile_sync_bp_profile()`
  * raises the guard without first checking it, so with a plain boolean a nested
  * sync — a third-party callback on an xProfile save hook calling `wp_update_user()`,
  * for instance — would lower it on the way out while the outer sync was still
@@ -2590,7 +2590,7 @@ function bb_xprofile_bio_field_id() {
  *
  * @return bool True while any sync is in progress.
  */
-function bb_xprofile_bio_syncing( $syncing = null ) {
+function bboss_xprofile_bio_syncing( $syncing = null ) {
 	static $depth = 0;
 
 	if ( null !== $syncing ) {
@@ -2612,7 +2612,7 @@ function bb_xprofile_bio_syncing( $syncing = null ) {
  * Hooked to `xprofile_data_after_save` rather than `xprofile_updated_profile`
  * so that every write path is covered: the front-end profile edit form, the
  * wp-admin Extended Profile metabox, the REST API, and direct calls to
- * `xprofile_set_field_data()`.
+ * `bboss_xprofile_set_field_data()`.
  *
  * No length validation is applied. WordPress renders Biographical Info as a
  * plain textarea with no maximum length, so a bio saved from wp-admin must
@@ -2620,21 +2620,21 @@ function bb_xprofile_bio_syncing( $syncing = null ) {
  *
  * @since BuddyBoss 3.3.0
  *
- * @param BP_XProfile_ProfileData $data Profile data object that was just saved.
+ * @param BBoss_XProfile_ProfileData $data Profile data object that was just saved.
  *
  * @return void
  */
-function bb_xprofile_sync_wp_bio( $data ) {
+function bboss_xprofile_sync_wp_bio( $data ) {
 
-	if ( bb_xprofile_bio_syncing() ) {
+	if ( bboss_xprofile_bio_syncing() ) {
 		return;
 	}
 
-	if ( ! $data instanceof BP_XProfile_ProfileData || empty( $data->user_id ) ) {
+	if ( ! $data instanceof BBoss_XProfile_ProfileData || empty( $data->user_id ) ) {
 		return;
 	}
 
-	$bio_field_id = bb_xprofile_bio_field_id();
+	$bio_field_id = bboss_xprofile_bio_field_id();
 
 	if ( ! $bio_field_id || (int) $data->field_id !== $bio_field_id ) {
 		return;
@@ -2661,24 +2661,24 @@ function bb_xprofile_sync_wp_bio( $data ) {
 	 */
 	$value = wp_slash( wp_kses( wp_unslash( $data->value ), 'user_description' ) );
 
-	bb_xprofile_bio_syncing( true );
+	bboss_xprofile_bio_syncing( true );
 
 	update_user_meta( (int) $data->user_id, 'description', $value );
 
-	bb_xprofile_bio_syncing( false );
+	bboss_xprofile_bio_syncing( false );
 }
 add_action( 'xprofile_data_after_save', 'bb_xprofile_sync_wp_bio', 10, 1 );
 
 /**
  * Clear the WordPress "Biographical Info" field when the Bio field is emptied.
  *
- * `xprofile_set_field_data()` deletes the row instead of saving it when a field
+ * `bboss_xprofile_set_field_data()` deletes the row instead of saving it when a field
  * is submitted empty, so an emptied Bio never reaches `xprofile_data_after_save`.
  * Without this, clearing a bio on the profile would leave the old text in user
  * meta — and still showing in the blog author box.
  *
  * Hooked to `xprofile_data_before_delete` rather than `..._after_delete`, because
- * `BP_XProfile_ProfileData::delete()` returns early when the DELETE affects no rows
+ * `BBoss_XProfile_ProfileData::delete()` returns early when the DELETE affects no rows
  * and never reaches the after hook. That zero-row case is not an edge case here: a
  * pre-existing member has a WordPress bio and no xProfile row at all, so the first
  * time they clear the field there is nothing to delete, the after hook never fires,
@@ -2687,21 +2687,21 @@ add_action( 'xprofile_data_after_save', 'bb_xprofile_sync_wp_bio', 10, 1 );
  *
  * @since BuddyBoss 3.3.0
  *
- * @param BP_XProfile_ProfileData $data Profile data object about to be deleted.
+ * @param BBoss_XProfile_ProfileData $data Profile data object about to be deleted.
  *
  * @return void
  */
-function bb_xprofile_clear_wp_bio( $data ) {
+function bboss_xprofile_clear_wp_bio( $data ) {
 
-	if ( bb_xprofile_bio_syncing() ) {
+	if ( bboss_xprofile_bio_syncing() ) {
 		return;
 	}
 
-	if ( ! $data instanceof BP_XProfile_ProfileData || empty( $data->user_id ) ) {
+	if ( ! $data instanceof BBoss_XProfile_ProfileData || empty( $data->user_id ) ) {
 		return;
 	}
 
-	$bio_field_id = bb_xprofile_bio_field_id();
+	$bio_field_id = bboss_xprofile_bio_field_id();
 
 	if ( ! $bio_field_id || (int) $data->field_id !== $bio_field_id ) {
 		return;
@@ -2728,11 +2728,11 @@ function bb_xprofile_clear_wp_bio( $data ) {
 		return;
 	}
 
-	bb_xprofile_bio_syncing( true );
+	bboss_xprofile_bio_syncing( true );
 
 	update_user_meta( (int) $data->user_id, 'description', '' );
 
-	bb_xprofile_bio_syncing( false );
+	bboss_xprofile_bio_syncing( false );
 }
 add_action( 'xprofile_data_before_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
 
@@ -2743,8 +2743,8 @@ add_action( 'xprofile_data_before_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
  * user, so the fallback below has to work the user out from the loop globals.
  *
  * Order matters. `$profile_template->user_id` is authoritative whenever a loop is
- * running. `bp_displayed_user_id()` is the fallback for callers that apply the value
- * filters without a loop — chiefly `BP_REST_XProfile_Fields_Endpoint`, which wraps
+ * running. `bboss_displayed_user_id()` is the fallback for callers that apply the value
+ * filters without a loop — chiefly `BBoss_REST_XProfile_Fields_Endpoint`, which wraps
  * its `apply_filters( 'bp_get_the_profile_field_value', ... )` in a
  * `bp_displayed_user_id` filter set to the requested user for exactly this reason.
  * Do not drop that fallback: without it the Bio field renders escaped over REST.
@@ -2759,15 +2759,15 @@ add_action( 'xprofile_data_before_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
  *
  * @return int User ID, or 0 when it cannot be determined.
  */
-function bb_xprofile_bio_loop_user_id() {
+function bboss_xprofile_bio_loop_user_id() {
 	global $profile_template;
 
 	if ( isset( $profile_template->user_id ) && ! empty( $profile_template->user_id ) ) {
 		return (int) $profile_template->user_id;
 	}
 
-	if ( function_exists( 'bp_displayed_user_id' ) && bp_displayed_user_id() ) {
-		return (int) bp_displayed_user_id();
+	if ( function_exists( 'bboss_displayed_user_id' ) && bboss_displayed_user_id() ) {
+		return (int) bboss_displayed_user_id();
 	}
 
 	return 0;
@@ -2785,7 +2785,7 @@ function bb_xprofile_bio_loop_user_id() {
  *
  * It also passes `current_filter()` as the kses *context*, and an unrecognized context
  * falls back to the basic `$allowedtags` global — which drops the `a[rel]` and
- * `a[target]` that `xprofile_filter_kses()` explicitly permits. Naming the
+ * `a[target]` that `bboss_xprofile_filter_kses()` explicitly permits. Naming the
  * `user_description` context keeps the Bio field aligned with both WordPress's
  * Biographical Info and xProfile's own filtering.
  *
@@ -2795,7 +2795,7 @@ function bb_xprofile_bio_loop_user_id() {
  *
  * @return mixed Filtered value; non-strings are returned untouched.
  */
-function bb_xprofile_bio_kses( $value ) {
+function bboss_xprofile_bio_kses( $value ) {
 
 	if ( ! is_string( $value ) || '' === $value ) {
 		return $value;
@@ -2826,14 +2826,14 @@ function bb_xprofile_bio_kses( $value ) {
  *
  * @return mixed Field value, or the WordPress bio when the field is empty.
  */
-function bb_xprofile_bio_value_fallback( $value, $field_id, $user_id = 0 ) {
+function bboss_xprofile_bio_value_fallback( $value, $field_id, $user_id = 0 ) {
 
 	// Only fill in when nothing is stored; never override a real value.
 	if ( ! empty( $value ) || empty( $user_id ) ) {
 		return $value;
 	}
 
-	$bio_field_id = bb_xprofile_bio_field_id();
+	$bio_field_id = bboss_xprofile_bio_field_id();
 
 	if ( ! $bio_field_id || (int) $field_id !== $bio_field_id ) {
 		return $value;
@@ -2852,7 +2852,7 @@ function bb_xprofile_bio_value_fallback( $value, $field_id, $user_id = 0 ) {
 	 * and an importer, WP-CLI, or another plugin writing that meta directly never
 	 * passes through `pre_user_description`.
 	 */
-	return bb_xprofile_bio_kses( $description );
+	return bboss_xprofile_bio_kses( $description );
 }
 add_filter( 'xprofile_get_field_data', 'bb_xprofile_bio_value_fallback', 10, 3 );
 
@@ -2870,13 +2870,13 @@ add_filter( 'xprofile_get_field_data', 'bb_xprofile_bio_value_fallback', 10, 3 )
  *
  * @return mixed Field value, or the WordPress bio when the field is empty.
  */
-function bb_xprofile_bio_template_value_fallback( $value, $type, $field_id = 0 ) {
+function bboss_xprofile_bio_template_value_fallback( $value, $type, $field_id = 0 ) {
 
 	if ( 'biography' !== $type || ! empty( $value ) ) {
 		return $value;
 	}
 
-	return bb_xprofile_bio_value_fallback( $value, $field_id, bb_xprofile_bio_loop_user_id() );
+	return bboss_xprofile_bio_value_fallback( $value, $field_id, bboss_xprofile_bio_loop_user_id() );
 }
 add_filter( 'bp_get_the_profile_field_edit_value', 'bb_xprofile_bio_template_value_fallback', 0, 3 );
 add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fallback', 0, 3 );
@@ -2884,7 +2884,7 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fa
 /**
  * Render the Bio field's HTML instead of escaping it.
  *
- * `bp_xprofile_escape_field_data()` runs `esc_html()` on any field whose type does
+ * `bboss_xprofile_escape_field_data()` runs `esc_html()` on any field whose type does
  * not support richtext, and the Bio field deliberately does not — it mirrors the
  * plain textarea WordPress uses for Biographical Info. WordPress, however, stores
  * that value kses-filtered and renders it as HTML (the blog author box does), so
@@ -2902,7 +2902,7 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fa
  *
  * @return mixed Field value with the allowed HTML intact.
  */
-function bb_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
+function bboss_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
 
 	if ( 'biography' !== $type ) {
 		return $value;
@@ -2922,19 +2922,19 @@ function bb_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
 		return $value;
 	}
 
-	$user_id = bb_xprofile_bio_loop_user_id();
+	$user_id = bboss_xprofile_bio_loop_user_id();
 
 	if ( empty( $user_id ) ) {
 		return $value;
 	}
 
-	$raw = xprofile_get_field_data( $field_id, $user_id );
+	$raw = bboss_xprofile_get_field_data( $field_id, $user_id );
 
 	if ( ! is_string( $raw ) || '' === $raw ) {
 		return $value;
 	}
 
-	$value = nl2br( bb_xprofile_bio_kses( $raw ) );
+	$value = nl2br( bboss_xprofile_bio_kses( $raw ) );
 
 	return str_replace( array( "\r\n", "\r", "\n" ), '', $value );
 }
@@ -2951,7 +2951,7 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_render_allowed_ht
  * Keep the Bio field in the profile loop when only WordPress holds the value.
  *
  * Profile view screens run the loop with `hide_empty_fields` on, and that check
- * happens against the raw data rows inside `BP_XProfile_Group::get()` — before
+ * happens against the raw data rows inside `BBoss_XProfile_Group::get()` — before
  * any value filter can act. A member whose bio lives only in user meta would
  * therefore have the Bio field dropped from the loop entirely, and the
  * read-through fallback would never get the chance to fill it in.
@@ -2964,11 +2964,11 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_render_allowed_ht
  * only the former is passed the loop's resolved arguments. A field's absence from
  * a group is ambiguous on its own: it can mean "no data row was ever written", but
  * it equally means "excluded by `exclude_fields`" or "hidden from this viewer by
- * visibility settings". `BP_XProfile_Group::get()` enforces visibility as a SQL
+ * visibility settings". `BBoss_XProfile_Group::get()` enforces visibility as a SQL
  * `NOT IN` before the fields array exists, and the comment on that code explicitly
  * warns against overriding it via `exclude_fields`. Restoring on presence alone
  * would do exactly that — leaking a bio the member had restricted, and undoing the
- * deliberate wp-admin exclusion in `bb_xprofile_exclude_bio_field_from_user_admin()`.
+ * deliberate wp-admin exclusion in `bboss_xprofile_exclude_bio_field_from_user_admin()`.
  * So every reason the field might legitimately be absent is checked here first.
  *
  * @since BuddyBoss 3.3.0
@@ -2978,13 +2978,13 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_render_allowed_ht
  *
  * @return array Groups, with the Bio field restored when applicable.
  */
-function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
+function bboss_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 
 	if ( empty( $groups ) || ! is_array( $args ) ) {
 		return $groups;
 	}
 
-	$bio_field_id = bb_xprofile_bio_field_id();
+	$bio_field_id = bboss_xprofile_bio_field_id();
 
 	if ( ! $bio_field_id ) {
 		return $groups;
@@ -3019,7 +3019,7 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 	 * pre-existing member until they re-save their profile, that is the default
 	 * state, not an edge case.
 	 */
-	$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $user_id );
+	$hidden_fields = bboss_xprofile_get_hidden_fields_for_user( $user_id );
 
 	if ( ! empty( $hidden_fields ) && in_array( $bio_field_id, wp_parse_id_list( $hidden_fields ), true ) ) {
 		return $groups;
@@ -3033,21 +3033,21 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 	 * Mirrors the same conditions core applies, so a Bio field restricted to profile
 	 * types the member does not have stays out of their loop.
 	 */
-	if ( bp_get_member_types() ) {
+	if ( bboss_get_member_types() ) {
 		$member_type_arg = isset( $args['member_type'] ) ? $args['member_type'] : false;
 
 		if ( $user_id || false !== $member_type_arg ) {
 			$member_types = $member_type_arg;
 
 			if ( $user_id ) {
-				$member_types = bp_get_member_type( $user_id, false );
+				$member_types = bboss_get_member_type( $user_id, false );
 
 				if ( empty( $member_types ) ) {
 					$member_types = array( 'null' );
 				}
 			}
 
-			$allowed_fields = BP_XProfile_Field::get_fields_for_member_type( $member_types );
+			$allowed_fields = BBoss_XProfile_Field::get_fields_for_member_type( $member_types );
 
 			if ( ! in_array( $bio_field_id, wp_parse_id_list( array_keys( (array) $allowed_fields ) ), true ) ) {
 				return $groups;
@@ -3061,7 +3061,7 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 		return $groups;
 	}
 
-	$bio_field = xprofile_get_field( $bio_field_id, null, false );
+	$bio_field = bboss_xprofile_get_field( $bio_field_id, null, false );
 
 	if ( empty( $bio_field ) ) {
 		return $groups;
@@ -3077,7 +3077,7 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 	 * already reached that state — there is no migration, so the guard is what keeps
 	 * the duplicate off those profiles permanently.
 	 */
-	if ( bb_xprofile_is_repeater_group( $bio_field->group_id ) ) {
+	if ( bboss_xprofile_is_repeater_group( $bio_field->group_id ) ) {
 		return $groups;
 	}
 
@@ -3102,7 +3102,7 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 
 		$restored->data        = new stdClass();
 		$restored->data->id    = 0;
-		$restored->data->value = bb_xprofile_bio_kses( $description );
+		$restored->data->value = bboss_xprofile_bio_kses( $description );
 
 		$group->fields[] = $restored;
 
@@ -3124,23 +3124,23 @@ add_filter( 'bp_xprofile_get_groups', 'bb_xprofile_bio_restore_in_profile_groups
 /**
  * Supply the WordPress bio to profile data objects that have no stored row.
  *
- * The REST API (and any other consumer that builds a `BP_XProfile_ProfileData`
+ * The REST API (and any other consumer that builds a `BBoss_XProfile_ProfileData`
  * object directly) reads `$data->value` rather than going through
- * `xprofile_get_field_data()`, so it needs the fallback applied at the source.
+ * `bboss_xprofile_get_field_data()`, so it needs the fallback applied at the source.
  *
  * @since BuddyBoss 3.3.0
  *
- * @param BP_XProfile_ProfileData $data Profile data object that was just populated.
+ * @param BBoss_XProfile_ProfileData $data Profile data object that was just populated.
  *
  * @return void
  */
-function bb_xprofile_bio_populate_fallback( $data ) {
+function bboss_xprofile_bio_populate_fallback( $data ) {
 
-	if ( ! $data instanceof BP_XProfile_ProfileData || ! empty( $data->value ) || empty( $data->user_id ) ) {
+	if ( ! $data instanceof BBoss_XProfile_ProfileData || ! empty( $data->value ) || empty( $data->user_id ) ) {
 		return;
 	}
 
-	$bio_field_id = bb_xprofile_bio_field_id();
+	$bio_field_id = bboss_xprofile_bio_field_id();
 
 	if ( ! $bio_field_id || (int) $data->field_id !== $bio_field_id ) {
 		return;
@@ -3157,7 +3157,7 @@ function bb_xprofile_bio_populate_fallback( $data ) {
 	 * straight off the object, so this is the only place the fallback value can be
 	 * filtered before a client sees it.
 	 */
-	$data->value = bb_xprofile_bio_kses( $description );
+	$data->value = bboss_xprofile_bio_kses( $description );
 }
 add_action( 'bp_xprofile_data_after_populate', 'bb_xprofile_bio_populate_fallback', 10, 1 );
 
@@ -3168,7 +3168,7 @@ add_action( 'bp_xprofile_data_after_populate', 'bb_xprofile_bio_populate_fallbac
  *
  * @return void
  */
-function bb_xprofile_clear_bio_field_id_cache() {
+function bboss_xprofile_clear_bio_field_id_cache() {
 	wp_cache_delete( 'bb_xprofile_bio_field_id', 'bp_xprofile' );
 }
 add_action( 'xprofile_fields_saved_field', 'bb_xprofile_clear_bio_field_id_cache' );
@@ -3188,7 +3188,7 @@ add_action( 'xprofile_field_after_save', 'bb_xprofile_clear_bio_field_id_cache' 
  *
  * @return void
  */
-function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+function bboss_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
 	if ( ! empty( $errors ) ) {
 		return;
@@ -3197,24 +3197,24 @@ function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old
 	foreach ( $new_values as $field_id => $new_value ) {
 
 		// Get First, Last and Nickname field id from DB.
-		$firstname_id = bp_xprofile_firstname_field_id();
-		$lastname_id  = bp_xprofile_lastname_field_id();
-		$nickname_id  = bp_xprofile_nickname_field_id();
+		$firstname_id = bboss_xprofile_firstname_field_id();
+		$lastname_id  = bboss_xprofile_lastname_field_id();
+		$nickname_id  = bboss_xprofile_nickname_field_id();
 
 		if ( ! $field_id || $field_id == $firstname_id ) {
-			bp_update_user_meta( $user_id, 'first_name', $new_value['value'] );
+			bboss_update_user_meta( $user_id, 'first_name', $new_value['value'] );
 		}
 
 		if ( ! $field_id || $field_id == $lastname_id ) {
-			bp_update_user_meta( $user_id, 'last_name', $new_value['value'] );
+			bboss_update_user_meta( $user_id, 'last_name', $new_value['value'] );
 		}
 
 		if ( ! $field_id || $field_id == $nickname_id ) {
-			bp_update_user_meta( $user_id, 'nickname', $new_value['value'] );
+			bboss_update_user_meta( $user_id, 'nickname', $new_value['value'] );
 		}
 	}
 
-	bp_xprofile_update_display_name( $user_id );
+	bboss_xprofile_update_display_name( $user_id );
 }
 add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
 
@@ -3228,7 +3228,7 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
+function bboss_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
 
 	$user_id        = get_current_user_id();
 	$transient_name = $key . $user_id . $widget_id;
@@ -3250,10 +3250,10 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  *
  * @since BuddyBoss 1.5.3
  */
-function bp_xprofile_get_user_profile_progress_data( $settings ) {
+function bboss_xprofile_get_user_profile_progress_data( $settings ) {
 
 	$user_progress         = array();
-	$user_progress_options = bp_xprofile_get_selected_options_user_progress( $settings );
+	$user_progress_options = bboss_xprofile_get_selected_options_user_progress( $settings );
 
 	// Do not proceed if no fields found based on settings.
 	if ( isset( $user_progress_options['total_fields'] ) && $user_progress_options['total_fields'] <= 0 ) {
@@ -3261,7 +3261,7 @@ function bp_xprofile_get_user_profile_progress_data( $settings ) {
 	}
 
 	// Format User Progress array to pass on to the template.
-	$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_options );
+	$user_progress = bboss_xprofile_get_user_progress_formatted( $user_progress_options );
 
 	return $user_progress;
 }
@@ -3276,7 +3276,7 @@ function bp_xprofile_get_user_profile_progress_data( $settings ) {
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
+function bboss_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 	if ( empty( $group_ids ) ) {
 		$group_ids = array();
@@ -3291,12 +3291,12 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 	/* Profile Photo */
 
 	// check if profile photo option still enabled.
-	$is_profile_photo_disabled = bp_disable_avatar_uploads();
+	$is_profile_photo_disabled = bboss_disable_avatar_uploads();
 	if ( ! $is_profile_photo_disabled && in_array( 'profile_photo', $photo_types ) ) {
 
 		++ $grand_total_fields;
 
-		$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user_id ) ) ? 1 : 0;
+		$is_profile_photo_uploaded = ( bboss_get_user_has_avatar( $user_id ) ) ? 1 : 0;
 
 		if ( $is_profile_photo_uploaded ) {
 			++ $grand_completed_fields;
@@ -3304,7 +3304,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 			// check if profile gravatar option enabled.
 			// blank setting will remove gravatar also
-			if ( bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' ) ) {
+			if ( bboss_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' ) ) {
 
 				/**
 				 * There is not any direct way to check gravatar set for user.
@@ -3330,12 +3330,12 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 	/* Cover Photo */
 
 	// check if cover photo option still enabled.
-	$is_cover_photo_disabled = bp_disable_cover_image_uploads();
+	$is_cover_photo_disabled = bboss_disable_cover_image_uploads();
 	if ( ! $is_cover_photo_disabled && in_array( 'cover_photo', $photo_types ) ) {
 
 		++ $grand_total_fields;
 
-		$is_cover_photo_uploaded = ( bp_attachments_get_user_has_cover_image( $user_id ) ) ? 1 : 0;
+		$is_cover_photo_uploaded = ( bboss_attachments_get_user_has_cover_image( $user_id ) ) ? 1 : 0;
 
 		if ( $is_cover_photo_uploaded ) {
 			++ $grand_completed_fields;
@@ -3351,7 +3351,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 	/* Groups Fields */
 
 	// Get Groups and Group fields with Loggedin user data.
-	$profile_groups = bp_xprofile_get_groups(
+	$profile_groups = bboss_xprofile_get_groups(
 		array(
 			'fetch_fields'                   => true,
 			'fetch_field_data'               => true,
@@ -3377,7 +3377,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 		}
 
 		// Check if Current Group is repeater if YES then get number of fields inside current group.
-		$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
+		$is_group_repeater_str = bboss_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
 		$is_group_repeater     = ( 'on' === $is_group_repeater_str ) ? true : false;
 
 		/* Loop through all the fields and check if fields completed or not. */
@@ -3389,7 +3389,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 			 * Added support for display name format support from platform.
 			 * Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 			 */
-			if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $group_single_field->id ) ) {
+			if ( function_exists( 'bboss_core_hide_display_name_field' ) && true === bboss_core_hide_display_name_field( $group_single_field->id ) ) {
 				continue;
 			}
 
@@ -3398,7 +3398,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 				// If field not a "clone number 1" then stop. That means proceed with the first set of fields and restrict others.
 				$field_id     = $group_single_field->id;
-				$clone_number = bp_xprofile_get_meta( $field_id, 'field', '_clone_number', true );
+				$clone_number = bboss_xprofile_get_meta( $field_id, 'field', '_clone_number', true );
 				if ( $clone_number > 1 ) {
 					continue;
 				}
@@ -3406,7 +3406,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 			// For Social networks field check child field is completed or not
 			if  ( 'socialnetworks' == $group_single_field->type ){
-				$field_data_value = bb_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
+				$field_data_value = bboss_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
 				$children = $group_single_field->type_obj->field_obj->get_children();
 				foreach ( $children as $child ){
 					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
@@ -3415,7 +3415,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 					++ $group_total_fields;
 				}
 			} else{
-				$field_data_value = bb_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
+				$field_data_value = bboss_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
 
 				if ( ! empty( $field_data_value ) ) {
 					++ $group_completed_fields;
@@ -3458,12 +3458,12 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
+function bboss_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 	/* Groups */
 
-	$loggedin_user_domain = bp_loggedin_user_domain();
-	$profile_slug         = bp_get_profile_slug();
+	$loggedin_user_domain = bboss_loggedin_user_domain();
+	$profile_slug         = bboss_get_profile_slug();
 
 	// Calculate Total Progress percentage.
 	// Default to 0% when there are no total fields to prevent division by zero errors.
@@ -3547,9 +3547,9 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
  *
  * @param int $user_id User ID.
  */
-function bp_xprofile_reset_cover_image_position( $user_id ) {
+function bboss_xprofile_reset_cover_image_position( $user_id ) {
 	if ( ! empty( (int) $user_id ) ) {
-		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
+		bboss_delete_user_meta( (int) $user_id, 'bp_cover_position' );
 	}
 }
 add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
@@ -3565,7 +3565,7 @@ add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_posit
  *
  * @return bool|array
  */
-function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
+function bboss_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 	global $wpdb, $bp;
 
 	$bp_table = $bp->profile->table_name_data;
@@ -3596,7 +3596,7 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
  *
  * @return bool True if enabled the social networks otherwise false.
  */
-function bb_enabled_member_social_networks() {
+function bboss_enabled_member_social_networks() {
 	static $social_networks_id = '';
 
 	if ( '' === $social_networks_id ) {
@@ -3617,17 +3617,17 @@ function bb_enabled_member_social_networks() {
  *
  * @return array
  */
-function bb_get_user_social_networks_field_value( $user_id = null ) {
+function bboss_get_user_social_networks_field_value( $user_id = null ) {
 	global $wpdb, $bp;
 
 	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	$original_option_values = array();
 
-	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
+	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bboss_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
-		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
+		$original_option_values = bboss_xprofile_safe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
 	}
 
 	return $original_option_values;
@@ -3640,13 +3640,13 @@ function bb_get_user_social_networks_field_value( $user_id = null ) {
  *
  * @param int $field_id ID of the field.
  *
- * @return BP_XProfile_Field_Type|null Field Type object if found, otherwise null.
+ * @return BBoss_XProfile_Field_Type|null Field Type object if found, otherwise null.
  */
-function bb_xprofile_get_field_type( $field_id ) {
+function bboss_xprofile_get_field_type( $field_id ) {
 	$field_type = null;
-	$field      = xprofile_get_field( $field_id, null, false );
+	$field      = bboss_xprofile_get_field( $field_id, null, false );
 
-	if ( $field instanceof BP_XProfile_Field ) {
+	if ( $field instanceof BBoss_XProfile_Field ) {
 		$field_type = $field->type_obj;
 	}
 
@@ -3660,20 +3660,20 @@ function bb_xprofile_get_field_type( $field_id ) {
  *
  * @return void
  */
-function bb_xprofile_update_social_network_fields() {
+function bboss_xprofile_update_social_network_fields() {
 	global $wpdb, $bb_background_updater;
 
 	/**
 	 * Check the google+ was setup or not in social network field.
 	 */
-	$table_name      = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+	$table_name      = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 	$social_networks = $wpdb->get_col( "SELECT id FROM {$table_name} a WHERE type = 'socialnetworks'" ); //phpcs:ignore
 	if (
 		! empty( $social_networks ) &&
 		! is_wp_error( $social_networks )
 	) {
 		foreach ( $social_networks as $network_field_id ) {
-			$field = xprofile_get_field( $network_field_id );
+			$field = bboss_xprofile_get_field( $network_field_id );
 			if ( ! empty( $field->id ) ) {
 				$field_name      = 'google';
 				$sql             = $wpdb->prepare( "SELECT id from {$table_name} WHERE parent_id = %d AND name = %s", $field->id, $field_name ); // phpcs:ignore
@@ -3688,7 +3688,7 @@ function bb_xprofile_update_social_network_fields() {
 							'group'    => 'bb_remove_google_plus_fields',
 							'data_id'  => $network_field_id,
 							'priority' => 5,
-							'callback' => 'bb_remove_google_plus_fields',
+							'callback' => 'bboss_remove_google_plus_fields',
 							'args'     => array( $network_field_id, $field_name ),
 						)
 					);
@@ -3711,13 +3711,13 @@ function bb_xprofile_update_social_network_fields() {
  *
  * @return void
  */
-function bb_remove_google_plus_fields( $field_id, $field_name ) {
+function bboss_remove_google_plus_fields( $field_id, $field_name ) {
 	global $wpdb, $bb_background_updater;
 	if ( empty( $field_name ) || empty( $field_id ) ) {
 		return;
 	}
 
-	$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$table_name = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 	$user_ids   = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$table_name} WHERE field_id = %d and value like %s limit 0, 20", $field_id, '%' . $wpdb->esc_like( $field_name ) . '%' ) ); // phpcs:ignore
 
 	if (
@@ -3725,8 +3725,8 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 		! is_wp_error( $user_ids )
 	) {
 		foreach ( $user_ids as $user_id ) {
-			$field_data = new BP_XProfile_ProfileData( $field_id, $user_id );
-			$data_value = bb_xprofile_safe_unserialize( $field_data->value ); // Object injection guard.
+			$field_data = new BBoss_XProfile_ProfileData( $field_id, $user_id );
+			$data_value = bboss_xprofile_safe_unserialize( $field_data->value ); // Object injection guard.
 			if ( ! empty( $data_value ) && isset( $data_value[ $field_name ] ) ) {
 				$field_value = $data_value[ $field_name ];
 				unset( $data_value[ $field_name ] );
@@ -3742,7 +3742,7 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 				'group'    => 'bb_remove_google_plus_fields',
 				'data_id'  => $field_id,
 				'priority' => 5,
-				'callback' => 'bb_remove_google_plus_fields',
+				'callback' => 'bboss_remove_google_plus_fields',
 				'args'     => array( $field_id, $field_name ),
 			)
 		);
@@ -3761,7 +3761,7 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
  *
  * @return bool
  */
-function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = array() ) {
+function bboss_xprofile_save_fields( $posted_field_ids = array(), $is_required = array() ) {
 	$errors = false;
 
 	// Now we've checked for required fields, lets save the values.
@@ -3771,7 +3771,7 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 		// bb_xprofile_can_change_field_visibility() resolves the capability from
 		// allow_custom_visibility field meta. Prime the whole set in one query so the gate
 		// does not issue a meta lookup per posted field on a cold cache.
-		bp_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+		bboss_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
 
 		foreach ( (array) $posted_field_ids as $field_id ) {
 
@@ -3784,8 +3784,8 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 			// passed to the filter and used to determine
 			// whether an activity item should be posted.
 			$old_values[ $field_id ] = array(
-				'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
-				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
+				'value'      => bboss_xprofile_get_field_data( $field_id, bboss_displayed_user_id() ),
+				'visibility' => bboss_xprofile_get_field_visibility_level( $field_id, bboss_displayed_user_id() ),
 			);
 
 			// Update the field data and visibility level. Locked fields (enforced visibility or
@@ -3801,19 +3801,19 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 			// (the nickname field happens to be excluded downstream; first name is not).
 			// Gating every writer stops new values; the one-time cleanup for existing ones is
 			// tracked separately. See PROD-10323 section 13f.
-			if ( bb_xprofile_can_change_field_visibility( $field_id ) ) {
-				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			if ( bboss_xprofile_can_change_field_visibility( $field_id ) ) {
+				bboss_xprofile_set_field_visibility_level( $field_id, bboss_displayed_user_id(), $visibility_level );
 			}
-			$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, ( $is_required[ $field_id ] ?? false ) );
+			$field_updated = bboss_xprofile_set_field_data( $field_id, bboss_displayed_user_id(), $value, ( $is_required[ $field_id ] ?? false ) );
 
 			// We need to pass post value here.
 			// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
 			$new_values[ $field_id ] = array(
 				'value'      => $value,
-				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
+				'visibility' => bboss_xprofile_get_field_visibility_level( $field_id, bboss_displayed_user_id() ),
 			);
 
-			$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
+			$value = bboss_xprofile_get_field_data( $field_id, bboss_displayed_user_id() );
 
 			if ( ! $field_updated ) {
 				$errors = true;
@@ -3843,7 +3843,7 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 	 * @param array $old_values       Array of original values before updated.
 	 * @param array $new_values       Array of newly saved values after update.
 	 */
-	do_action( 'xprofile_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
+	do_action( 'xprofile_updated_profile', bboss_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
 
 	return $errors;
 }
@@ -3858,11 +3858,11 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
  *
  * @return void|array
  */
-function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
+function bboss_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	global $wpdb, $bb_background_updater;
 
 	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
-	$bp   = buddypress();
+	$bp   = bboss();
 	$args = array(
 		'number' => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
 		'paged'  => $page,
@@ -3898,24 +3898,24 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		if ( ! empty( $visibility_levels ) ) {
 			$default_field_ids = array(
-				bp_xprofile_firstname_field_id(),
-				bp_xprofile_lastname_field_id(),
-				bp_xprofile_nickname_field_id(),
+				bboss_xprofile_firstname_field_id(),
+				bboss_xprofile_lastname_field_id(),
+				bboss_xprofile_nickname_field_id(),
 			);
 
 			foreach ( $default_field_ids as $default_field_id ) {
 				if ( empty( $visibility_levels[ $default_field_id ] ) ) {
-					$visibility_level = xprofile_get_field_visibility_level( $default_field_id, $user_id );
-					xprofile_set_field_visibility_level( $default_field_id, $user_id, $visibility_level );
+					$visibility_level = bboss_xprofile_get_field_visibility_level( $default_field_id, $user_id );
+					bboss_xprofile_set_field_visibility_level( $default_field_id, $user_id, $visibility_level );
 				}
 			}
 		} else {
 			// Get all profile field data for the user and set the visibility levels.
-			$profile_data = BP_XProfile_ProfileData::get_all_for_user( $user_id );
+			$profile_data = BBoss_XProfile_ProfileData::get_all_for_user( $user_id );
 			foreach ( $profile_data as $field_name => $field_data ) {
 				if ( ! empty( $field_data ) && ! empty( $field_data['field_id'] ) ) {
-					$visibility_level = xprofile_get_field_visibility_level( $field_data['field_id'], $user_id );
-					xprofile_set_field_visibility_level( $field_data['field_id'], $user_id, $visibility_level );
+					$visibility_level = bboss_xprofile_get_field_visibility_level( $field_data['field_id'], $user_id );
+					bboss_xprofile_set_field_visibility_level( $field_data['field_id'], $user_id, $visibility_level );
 				}
 			}
 		}
@@ -3947,7 +3947,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 				}
 			}
 
-			$current_time = bp_core_current_time();
+			$current_time = bboss_core_current_time();
 			foreach ( $visibility_levels as $field_id => $level ) {
 				if ( isset( $existing_entries[ $field_id ] ) ) {
 					if ( $existing_entries[ $field_id ]->value !== $level ) {
@@ -3997,8 +3997,8 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	// This batch wrote visibility rows directly (bypassing BB_XProfile_Visibility's own
 	// invalidation), so clear the per-request field-ids memo in case a read for a migrated user
 	// runs later in the same request.
-	if ( class_exists( 'BB_XProfile_Visibility' ) ) {
-		BB_XProfile_Visibility::flush_field_ids_cache();
+	if ( class_exists( 'BBoss_XProfile_Visibility' ) ) {
+		BBoss_XProfile_Visibility::flush_field_ids_cache();
 	}
 
 	// If running in the background, schedule the next batch.
@@ -4008,7 +4008,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 				'type'     => 'migrate_xprofile_visibility',
 				'group'    => 'bb_migrate_xprofile_visibility',
 				'priority' => 3,
-				'callback' => 'bb_migrate_xprofile_visibility',
+				'callback' => 'bboss_migrate_xprofile_visibility',
 				'args'     => array( true, $page + 1 ),
 			)
 		);
@@ -4023,7 +4023,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		$records_updated = sprintf(
 		/* translators: total users */
 			_n( '%s user visibility data migrated successfully', '%s users visibility data migrated successfully', $total, 'buddyboss' ),
-			bp_core_number_format( $total )
+			bboss_core_number_format( $total )
 		);
 
 		return array(
@@ -4034,7 +4034,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	}
 }
 
-if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
+if ( ! function_exists( 'bboss_xprofile_safe_unserialize' ) ) {
 
 	/**
 	 * Safely unserialize an xProfile field value that originates from, or may
@@ -4061,7 +4061,7 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
 	 *
 	 * @return mixed Unserialized value with objects disallowed, or the original value when not serialized.
 	 */
-	function bb_xprofile_safe_unserialize( $value ) {
+	function bboss_xprofile_safe_unserialize( $value ) {
 		if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
 			return $value;
 		}
@@ -4080,13 +4080,13 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
  *   by the `bp_xprofile_change_field_visibility` capability, which is read from the
  *   profile-loop globals. Save handlers run outside that loop, so the globals are set for
  *   the duration of the check and restored afterwards.
- * - `bp_core_hide_display_name_field()`, which hides a name component from every form
+ * - `bboss_core_hide_display_name_field()`, which hides a name component from every form
  *   depending on the display-name format. The capability does not cover the same fields as
  *   this one, so both are consulted - see the inline note below.
  *
  * Despite the name, the answer is a property of the *field*, not of the acting user: the
- * only user-dependent branch in `bp_xprofile_map_meta_caps()` compares `$profile_user_id`
- * with `bp_displayed_user_id()`, and with no cap args passed those are the same value, so
+ * only user-dependent branch in `bboss_xprofile_map_meta_caps()` compares `$profile_user_id`
+ * with `bboss_displayed_user_id()`, and with no cap args passed those are the same value, so
  * it never fires. Do not rely on this returning true for administrators or moderators -
  * a locked field is locked for everyone, which is what the renderers already do.
  *
@@ -4099,14 +4099,14 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
  *
  * @return bool True when the field's visibility level may be written.
  */
-function bb_xprofile_can_change_field_visibility( $field_id ) {
+function bboss_xprofile_can_change_field_visibility( $field_id ) {
 	$field_id = (int) $field_id;
 	if ( empty( $field_id ) ) {
 		return false;
 	}
 
-	$field_object = xprofile_get_field( $field_id, null, false );
-	if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+	$field_object = bboss_xprofile_get_field( $field_id, null, false );
+	if ( ! $field_object instanceof BBoss_XProfile_Field || empty( $field_object->id ) ) {
 		return false;
 	}
 
@@ -4117,7 +4117,7 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
 	// field under the nickname format. Both are site rules that stop the control being
 	// rendered, so a writer must honour the union or a crafted POST reaches a field that no
 	// screen offers.
-	if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field_id ) ) {
+	if ( function_exists( 'bboss_core_hide_display_name_field' ) && true === bboss_core_hide_display_name_field( $field_id ) ) {
 		return false;
 	}
 
@@ -4131,7 +4131,7 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
 	$GLOBALS['profile_template']->in_the_loop = true;
 	$GLOBALS['field']                         = $field_object;
 
-	$can_change = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
+	$can_change = bboss_current_user_can( 'bp_xprofile_change_field_visibility' );
 
 	if ( $had_template ) {
 		$GLOBALS['profile_template'] = $template_backup;
@@ -4160,7 +4160,7 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
  *
  * @return int Default candidate limit.
  */
-function bb_xprofile_default_search_candidate_limit() {
+function bboss_xprofile_default_search_candidate_limit() {
 	return 500;
 }
 
@@ -4172,34 +4172,34 @@ function bb_xprofile_default_search_candidate_limit() {
  * Format half are resolved in different places; when only the first one asked, a moderator searching
  * under a format hide had their own match dropped by the half that never checked.
  *
- * The guest sentinel is not a real user row, so it never reaches bp_user_can().
+ * The guest sentinel is not a real user row, so it never reaches bboss_user_can().
  *
  * @since BuddyBoss 3.5.0
  *
  * @param int $viewer_id Viewer the visibility is evaluated for.
  * @return bool True when no name part can be hidden from this viewer.
  */
-function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
+function bboss_xprofile_search_viewer_sees_every_name( $viewer_id ) {
 	$viewer_id = (int) $viewer_id;
 
 	if ( empty( $viewer_id ) ) {
 		return false;
 	}
 
-	if ( bb_core_guest_viewer_id() === $viewer_id ) {
+	if ( bboss_core_guest_viewer_id() === $viewer_id ) {
 		return false;
 	}
 
-	return (bool) bp_user_can( $viewer_id, 'bp_moderate' );
+	return (bool) bboss_user_can( $viewer_id, 'bp_moderate' );
 }
 
 /**
  * Users whose name-search match lies only in a name part hidden from the viewer.
  *
- * BP_User_Query resolves `search_terms` with `SELECT ID FROM wp_users WHERE display_name LIKE ...`.
+ * BBoss_User_Query resolves `search_terms` with `SELECT ID FROM wp_users WHERE display_name LIKE ...`.
  * The `display_name` column always stores the member's full name, so under the "First Name & Last
  * Name" format it contains the surname even when that field's visibility hides it. The row itself
- * is never rendered — bp_core_get_user_displayname() redacts the name before output — but the
+ * is never rendered — bboss_core_get_user_displayname() redacts the name before output — but the
  * *match* is the disclosure: searching a guessed surname and getting exactly one member back
  * confirms it. A directory that hides a surname must not answer questions about it either.
  *
@@ -4209,7 +4209,7 @@ function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
  * community where nobody restricts a name field, neither produces anything and this costs one
  * indexed query. (The third source - a name field the Display Name Format hides site-wide - is a
  * property of the match set rather than of a member, and lives in
- * bb_xprofile_filter_user_search_matches() where the match set is.)
+ * bboss_xprofile_filter_user_search_matches() where the match set is.)
  *
  * Both sources re-test in PHP, because the field they turn on can be restricted for
  * an individual member and only a per-viewer resolution can answer that. That work is bounded by
@@ -4220,8 +4220,8 @@ function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
  * while every other match is served untouched. Only a read this cannot resolve withholds the
  * caller's whole leg, because there the candidate set itself is unknown.
  *
- * The re-test is also read-only. It runs with bb_xprofile_is_display_name_self_heal_suspended()
- * raised, so a search never persists the name-field repair bp_xprofile_get_member_display_name()
+ * The re-test is also read-only. It runs with bboss_xprofile_is_display_name_self_heal_suspended()
+ * raised, so a search never persists the name-field repair bboss_xprofile_get_member_display_name()
  * performs for a member who is actually being viewed.
  *
  * Removal is decided by re-running the *same* LIKE pattern against the name this viewer would
@@ -4230,7 +4230,7 @@ function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
  * is dropped.
  *
  * This is the per-member half of that rule, and it is deliberately answered WITHOUT a match set.
- * Both producers that need it - BP_User_Query and the site-wide search engine - previously handed
+ * Both producers that need it - BBoss_User_Query and the site-wide search engine - previously handed
  * their matches in so the sets could be intersected, which made the cost of resolving a handful of
  * restricted members proportional to how many people the term matched: reading 70,000 matched IDs
  * into PHP to discover that 13 members on the whole install have restricted a name field costs
@@ -4251,30 +4251,30 @@ function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
  *                     could not be established: the caller must then withhold its display_name leg
  *                     entirely rather than serve part of it.
  */
-function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id = null ) {
+function bboss_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id = null ) {
 	global $wpdb;
 
 	$like_patterns = array_filter( (array) $like_patterns );
 
-	if ( empty( $like_patterns ) || ! bp_is_active( 'xprofile' ) ) {
+	if ( empty( $like_patterns ) || ! bboss_is_active( 'xprofile' ) ) {
 		return array();
 	}
 
 	if ( is_null( $viewer_id ) ) {
-		$viewer_id = bb_core_get_viewer_user_id();
+		$viewer_id = bboss_core_get_viewer_user_id();
 	}
 	$viewer_id = (int) $viewer_id;
 
-	if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+	if ( bboss_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
 		return array();
 	}
 
 	$name_field_ids = array_unique(
 		array_filter(
 			array(
-				(int) bp_xprofile_firstname_field_id(),
-				(int) bp_xprofile_lastname_field_id(),
-				(int) bp_xprofile_nickname_field_id(),
+				(int) bboss_xprofile_firstname_field_id(),
+				(int) bboss_xprofile_lastname_field_id(),
+				(int) bboss_xprofile_nickname_field_id(),
 			)
 		)
 	);
@@ -4292,7 +4292,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	// 'loggedin' from the hidden set, under-protecting a "Logged-in Users only" name field for an
 	// audience that is provably not logged in. Checked the same way, and for the same reason, as
 	// bp_xprofile_get_hidden_field_types_for_user().
-	$is_guest_viewer = ( bb_core_guest_viewer_id() === $viewer_id );
+	$is_guest_viewer = ( bboss_core_guest_viewer_id() === $viewer_id );
 
 	$hidden_levels = ( $viewer_id && ! $is_guest_viewer )
 		? array( 'friends', 'adminsonly' )
@@ -4308,13 +4308,13 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 			array_unique(
 				array_merge(
 					$hidden_levels,
-					array_map( 'strval', (array) bp_xprofile_get_hidden_field_types_for_user( 0, $viewer_id ) )
+					array_map( 'strval', (array) bboss_xprofile_get_hidden_field_types_for_user( 0, $viewer_id ) )
 				)
 			)
 		)
 	);
 
-	$bp            = buddypress();
+	$bp            = bboss();
 	$candidate_ids = array();
 	$field_ids_sql = implode( ',', $name_field_ids );
 
@@ -4346,14 +4346,14 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	// A probe that could not answer reports null, and that is NOT the same case: the table may hold
 	// every restricting row on the install. Treating it as absent skips source (1) altogether and
 	// serves the members it exists to suppress, so withhold this leg instead.
-	$visibility_table_exists = BB_XProfile_Visibility::visibility_table_exists();
+	$visibility_table_exists = BBoss_XProfile_Visibility::visibility_table_exists();
 
 	if ( is_null( $visibility_table_exists ) ) {
 		return false;
 	}
 
 	if ( $visibility_table_exists ) {
-		$table_name_visibility = BB_XProfile_Visibility::get_visibility_table_name();
+		$table_name_visibility = BBoss_XProfile_Visibility::get_visibility_table_name();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
 		$restricted = $wpdb->get_col(
@@ -4385,7 +4385,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	// members have no per-user row, so step (1) cannot see them; bound the set by the members whose
 	// stored value for that field is what the term matched.
 	foreach ( $name_field_ids as $field_id ) {
-		$default_visibility = bp_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
+		$default_visibility = bboss_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
 
 		if ( empty( $default_visibility ) || ! in_array( $default_visibility, $hidden_levels, true ) ) {
 			continue;
@@ -4419,7 +4419,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 		}
 	}
 
-	$display_name_format = bp_core_display_name_format();
+	$display_name_format = bboss_core_display_name_format();
 
 	/**
 	 * Filters how many matches ONE PASS of a search may re-resolve in PHP before it stops.
@@ -4448,7 +4448,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	 * @param string $display_name_format Active Display Name Format.
 	 * @param int    $viewer_id           Viewer the visibility is evaluated for.
 	 */
-	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bb_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bboss_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
 
 	$candidate_ids = array_unique( $candidate_ids );
 
@@ -4467,7 +4467,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	// narrowed away. null means the narrowing does not apply - the default is forced community-wide
 	// through 'disabled' custom visibility - and the whole candidate set stays in play. false means
 	// a read failed, which is the one answer that cannot be worked around: withhold this leg.
-	$possible_hidden = bb_xprofile_filter_possible_hidden_users( $candidate_ids, $hidden_levels );
+	$possible_hidden = bboss_xprofile_filter_possible_hidden_users( $candidate_ids, $hidden_levels );
 
 	if ( false === $possible_hidden ) {
 		return false;
@@ -4534,8 +4534,8 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 
 	if ( ! empty( $candidate_ids ) ) {
 		// Resolving a name is several cached reads; prime them for the whole candidate set at once.
-		if ( function_exists( 'bb_core_prime_user_displayname_caches' ) ) {
-			bb_core_prime_user_displayname_caches( $candidate_ids, $viewer_id );
+		if ( function_exists( 'bboss_core_prime_user_displayname_caches' ) ) {
+			bboss_core_prime_user_displayname_caches( $candidate_ids, $viewer_id );
 		}
 
 		// A search is a read. bp_core_get_user_displayname() reaches
@@ -4545,11 +4545,11 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 		// duration of the loop; the resolved value is unchanged, only the persistence is skipped.
 		// try/finally because leaving the suspension raised would silence the repair for the rest
 		// of the request.
-		bb_xprofile_is_display_name_self_heal_suspended( true );
+		bboss_xprofile_is_display_name_self_heal_suspended( true );
 
 		try {
 			foreach ( $candidate_ids as $candidate_id ) {
-				$visible_name = bp_core_get_user_displayname( $candidate_id, $viewer_id );
+				$visible_name = bboss_core_get_user_displayname( $candidate_id, $viewer_id );
 
 				if ( ! is_string( $visible_name ) ) {
 					$visible_name = '';
@@ -4561,8 +4561,8 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 					// LIKE pattern, while the resolved name is plain text. Test both forms so a name
 					// containing an entity-encodable character is not dropped by that asymmetry alone.
 					if (
-						bb_core_sql_like_match( $pattern, $visible_name )
-						|| bb_core_sql_like_match( $pattern, wp_kses_normalize_entities( $visible_name ) )
+						bboss_core_sql_like_match( $pattern, $visible_name )
+						|| bboss_core_sql_like_match( $pattern, wp_kses_normalize_entities( $visible_name ) )
 					) {
 						$still_matches = true;
 						break;
@@ -4574,7 +4574,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 				}
 			}
 		} finally {
-			bb_xprofile_is_display_name_self_heal_suspended( false );
+			bboss_xprofile_is_display_name_self_heal_suspended( false );
 		}
 	}
 
@@ -4585,14 +4585,14 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
  * Remove users from a name search whose only match is a name part hidden from the viewer.
  *
  * The rule, and why a directory that hides a surname must not answer questions about it either, is
- * documented on bb_xprofile_get_hidden_name_search_user_ids(), which resolves the per-member half
+ * documented on bboss_xprofile_get_hidden_name_search_user_ids(), which resolves the per-member half
  * of it. This applies that answer to one producer's match set and adds the one source that is a
  * property of the match set rather than of a member: the site-wide Display Name Format hide.
  *
  * (3) The Display Name Format can leave a name field out of the visible name for EVERY member at
  * once, independently of any visibility level: under "First Name" the surname is not part of the
  * name at all, and under "Nickname" neither the surname nor the first name is.
- * bp_core_get_user_displayname() already honours that hide - it appends the Last Name field to the
+ * bboss_core_get_user_displayname() already honours that hide - it appends the Last Name field to the
  * hidden-field list - so the rendered name is redacted while the match, without this, still answers
  * the question.
  *
@@ -4602,9 +4602,9 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
  * write). Resolving a name for every matched member - before pagination, on an anonymous request -
  * is an unbounded amount of work; on this install a one-word term matching 70,000 members exhausted
  * 512 MB. So it is answered in SQL, and completely: since the visible name is ASSEMBLED from the
- * fields rather than subtracted out of the drifted column (bb_core_build_visible_display_name()),
+ * fields rather than subtracted out of the drifted column (bboss_core_build_visible_display_name()),
  * every value the resolver can return under these formats lives in a column
- * bb_xprofile_get_format_visible_name_matches() compares. A match in none of them cannot be in the
+ * bboss_xprofile_get_format_visible_name_matches() compares. A match in none of them cannot be in the
  * name this viewer is shown.
  *
  * @since BuddyBoss 3.5.0
@@ -4615,29 +4615,29 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
  *                                current viewer.
  * @return array $matched_user_ids without the users whose match is not visible to the viewer. Empty
  *               when the visibility answer could not be resolved - see the false return on
- *               bb_xprofile_get_hidden_name_search_user_ids() - because the only alternatives there
+ *               bboss_xprofile_get_hidden_name_search_user_ids() - because the only alternatives there
  *               are serving unverified matches or serving an arbitrary part of them.
  */
-function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patterns, $viewer_id = null ) {
+function bboss_xprofile_filter_user_search_matches( $matched_user_ids, $like_patterns, $viewer_id = null ) {
 	$matched_user_ids = array_filter( array_map( 'intval', (array) $matched_user_ids ) );
 	$like_patterns    = array_filter( (array) $like_patterns );
 
-	if ( empty( $matched_user_ids ) || empty( $like_patterns ) || ! bp_is_active( 'xprofile' ) ) {
+	if ( empty( $matched_user_ids ) || empty( $like_patterns ) || ! bboss_is_active( 'xprofile' ) ) {
 		return array_values( $matched_user_ids );
 	}
 
 	if ( is_null( $viewer_id ) ) {
-		$viewer_id = bb_core_get_viewer_user_id();
+		$viewer_id = bboss_core_get_viewer_user_id();
 	}
 	$viewer_id = (int) $viewer_id;
 
 	// Asked here as well as inside the per-member resolver: the format source below is a second,
 	// independent half of the same rule, and a moderator must be exempt from both.
-	if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+	if ( bboss_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
 		return array_values( $matched_user_ids );
 	}
 
-	$hidden_ids = bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id );
+	$hidden_ids = bboss_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id );
 
 	if ( false === $hidden_ids ) {
 		return array();
@@ -4647,10 +4647,10 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	// means nothing is hidden from this viewer, never that the answer was cut short.
 	$remove_ids = array_intersect( $hidden_ids, $matched_user_ids );
 
-	$display_name_format = bp_core_display_name_format();
+	$display_name_format = bboss_core_display_name_format();
 
 	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
-		$explained_ids = bb_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns );
+		$explained_ids = bboss_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns );
 
 		// A failed read is not "nothing is visible". Treated as an empty set it would drop every
 		// match, which reads as a complete, private answer and is neither. Withhold the leg the same
@@ -4673,23 +4673,23 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 /**
  * User IDs whose search match lies in a name source the Display Name Format still shows.
  *
- * Answers, in SQL, the question bb_xprofile_filter_user_search_matches() would otherwise answer by
+ * Answers, in SQL, the question bboss_xprofile_filter_user_search_matches() would otherwise answer by
  * resolving a display name for every matched member.
  *
  * The answer is COMPLETE, which is what lets the caller drop everything this does not return.
- * bb_core_build_visible_display_name() assembles the visible name out of stored values rather than
+ * bboss_core_build_visible_display_name() assembles the visible name out of stored values rather than
  * subtracting a hidden part from the derived `display_name` column, so under these two formats the
  * resolved name is always one of exactly five stored things: the profile field the format shows and
  * the WordPress user meta that field falls back to, the Nickname profile field and the `nickname`
  * user meta it falls back to, and user_nicename, the last resort. Each is a column, so each is
- * compared - by bb_xprofile_get_format_visible_name_sql(), whose subquery this simply reads the
+ * compared - by bboss_xprofile_get_format_visible_name_sql(), whose subquery this simply reads the
  * IDs out of, so that the site-wide search engine (which applies the same subquery as an IN ()
  * inside its own SQL rather than materialising this list) cannot drift from this answer. A match
  * in none of those columns is provably not in the name this viewer is shown.
  *
  * Complete, but not indiscriminate: the five are a FALLBACK CHAIN, and a later link is only the
  * visible name for a member whose every earlier link is empty. The subquery gates them that way
- * (see bb_xprofile_get_format_visible_name_sources()), because admitting a later link
+ * (see bboss_xprofile_get_format_visible_name_sources()), because admitting a later link
  * unconditionally is how a `user_nicename` of `john-smith` came to prove that a member shown only
  * `John` matched a search for `Smith`.
  *
@@ -4715,7 +4715,7 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
  *                     is NOT an empty answer: the caller drops everything this does not return, so
  *                     it must withhold its leg rather than read a failure as "nothing is visible".
  */
-function bb_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns ) {
+function bboss_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns ) {
 	global $wpdb;
 
 	$like_patterns = array_values( array_filter( (array) $like_patterns ) );
@@ -4728,7 +4728,7 @@ function bb_xprofile_get_format_visible_name_matches( $display_name_format, $lik
 	// `ID IN ( ... )` inside its own SQL. Sharing the query rather than only the source list is
 	// what keeps the member directory and the search engine from answering the same question
 	// differently, which is the whole failure mode this area exists to prevent.
-	$subquery = bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_patterns );
+	$subquery = bboss_xprofile_get_format_visible_name_sql( $display_name_format, $like_patterns );
 
 	if ( '' === $subquery['sql'] ) {
 		return array();
@@ -4760,22 +4760,22 @@ function bb_xprofile_get_format_visible_name_matches( $display_name_format, $lik
  * The stored sources a Display Name Format still shows.
  *
  * One definition of "which columns can hold the name this viewer is shown", consumed both by
- * bb_xprofile_get_format_visible_name_matches(), which turns it into a set of user IDs, and by
- * bb_xprofile_get_format_visible_name_sql(), which turns it into a WHERE predicate for a producer
+ * bboss_xprofile_get_format_visible_name_matches(), which turns it into a set of user IDs, and by
+ * bboss_xprofile_get_format_visible_name_sql(), which turns it into a WHERE predicate for a producer
  * that must not read its match set into PHP. The two shapes exist because the callers differ; the
  * rule must not, or the member directory and the site-wide search would answer the same question
  * differently - which is the defect this whole area exists to close.
  *
  * Returned as an ORDERED FALLBACK CHAIN, not a flat list, because that is what the resolver is. A
  * later group is only ever the visible name for a member whose every earlier group is empty:
- * bb_core_build_visible_display_name() returns the shown name part when it has a value and reaches
- * bb_core_get_name_fallback_label() only when it does not, and that label tries the Nickname field,
+ * bboss_core_build_visible_display_name() returns the shown name part when it has a value and reaches
+ * bboss_core_get_name_fallback_label() only when it does not, and that label tries the Nickname field,
  * then the `nickname` user meta, then `user_nicename`, stopping at the first non-empty one.
  *
  * Treating a later group as an unconditional source is the leak this shape exists to close. Under
  * "First Name", WordPress derives `user_nicename` from sanitize_title( display_name ) at
  * registration - so `John Smith` becomes `john-smith` by default, and switching the format never
- * rewrites it (bb_members_handle_display_name_format_change() touches field meta only). Admitted
+ * rewrites it (bboss_members_handle_display_name_format_change() touches field meta only). Admitted
  * unconditionally, a `user_nicename` match said "the term is in the name this viewer is shown" for
  * a member shown only `John`, which let an anonymous visitor confirm a withheld surname by
  * searching it. The same held for the Nickname field and the `nickname` meta, which under "First
@@ -4800,14 +4800,14 @@ function bb_xprofile_get_format_visible_name_matches( $display_name_format, $lik
  *               }
  *               A group is a source only for members whose every preceding group is empty.
  */
-function bb_xprofile_get_format_visible_name_sources( $display_name_format ) {
+function bboss_xprofile_get_format_visible_name_sources( $display_name_format ) {
 	$chain = array();
 
 	// The name part the format shows outright. Under "Nickname" there is none - neither name field
 	// is part of the visible name - so the chain starts at the nickname.
 	if ( 'nickname' !== $display_name_format ) {
 		$chain[] = array(
-			'field_ids' => array_values( array_filter( array( (int) bp_xprofile_firstname_field_id() ) ) ),
+			'field_ids' => array_values( array_filter( array( (int) bboss_xprofile_firstname_field_id() ) ) ),
 			'meta_keys' => array( 'first_name' ),
 			'columns'   => array(),
 		);
@@ -4817,7 +4817,7 @@ function bb_xprofile_get_format_visible_name_sources( $display_name_format ) {
 	// it falls back to. One group, because bb_core_get_name_field_value() reads them in that order
 	// and returns the first non-empty of the pair.
 	$chain[] = array(
-		'field_ids' => array_values( array_filter( array( (int) bp_xprofile_nickname_field_id() ) ) ),
+		'field_ids' => array_values( array_filter( array( (int) bboss_xprofile_nickname_field_id() ) ) ),
 		'meta_keys' => array( 'nickname' ),
 		'columns'   => array(),
 	);
@@ -4834,14 +4834,14 @@ function bb_xprofile_get_format_visible_name_sources( $display_name_format ) {
 }
 
 /**
- * The same answer as bb_xprofile_get_format_visible_name_matches(), as a SQL subquery.
+ * The same answer as bboss_xprofile_get_format_visible_name_matches(), as a SQL subquery.
  *
  * A producer that assembles its own SQL against wp_users - the site-wide search engine - cannot use
  * the ID list: under a format hide the explained set is as large as the match set, so materialising
  * it would put a 70,000-element IN () list into the query, which is the cost the ID-list shape
  * exists to avoid everywhere else. This returns the same rule as a subquery yielding `user_id`,
- * built from the same sources (bb_xprofile_get_format_visible_name_sources()), with nothing read
- * into PHP. bb_xprofile_get_format_visible_name_matches() is itself implemented on top of it, so
+ * built from the same sources (bboss_xprofile_get_format_visible_name_sources()), with nothing read
+ * into PHP. bboss_xprofile_get_format_visible_name_matches() is itself implemented on top of it, so
  * the two shapes cannot drift: there is one query, applied two ways.
  *
  * Deliberately UNCORRELATED, and deliberately without an "outer id column" parameter. An earlier
@@ -4873,7 +4873,7 @@ function bb_xprofile_get_format_visible_name_sources( $display_name_format ) {
  *     @type array  $values Values to bind, in placeholder order.
  * }
  */
-function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_patterns ) {
+function bboss_xprofile_get_format_visible_name_sql( $display_name_format, $like_patterns ) {
 	global $wpdb;
 
 	$empty = array(
@@ -4883,12 +4883,12 @@ function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_pa
 
 	$like_patterns = array_values( array_filter( (array) $like_patterns ) );
 
-	if ( empty( $like_patterns ) || ! bp_is_active( 'xprofile' ) ) {
+	if ( empty( $like_patterns ) || ! bboss_is_active( 'xprofile' ) ) {
 		return $empty;
 	}
 
-	$bp    = buddypress();
-	$chain = bb_xprofile_get_format_visible_name_sources( $display_name_format );
+	$bp    = bboss();
+	$chain = bboss_xprofile_get_format_visible_name_sources( $display_name_format );
 
 	$selects = array();
 	$values  = array();
@@ -5015,7 +5015,7 @@ function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_pa
  *
  * Two things this corrects over the per-row checks it replaces:
  *
- * - the visibility test is `bp_xprofile_get_hidden_fields_for_user()`, the same predicate the
+ * - the visibility test is `bboss_xprofile_get_hidden_fields_for_user()`, the same predicate the
  *   profile screens and the REST endpoints use, so the `loggedin` level is honoured (a logged-out
  *   visitor could previously search a "Members only" field) and so is any site filter on that hook.
  *   The previous code only recognised `adminsonly` and `friends`, and gated them on the
@@ -5027,7 +5027,7 @@ function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_pa
  * one-word term on a large community can be the whole member table, and this runs before
  * pagination on a request an anonymous visitor can issue. Two things keep that bounded. The
  * per-member visibility reads are primed for the whole set in a handful of queries
- * (bb_xprofile_prime_hidden_fields_for_users()), and the set that still has to be decided after the
+ * (bboss_xprofile_prime_hidden_fields_for_users()), and the set that still has to be decided after the
  * narrowing is capped by `bb_xprofile_user_search_visibility_candidate_limit` - the same budget the
  * display-name producer uses, with the same answer past it: the members who could not be decided
  * are withheld, and only those. Serving an arbitrary part of them would decide the results by
@@ -5042,7 +5042,7 @@ function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_pa
  *                                 current viewer.
  * @return array Filtered $matched_user_ids.
  */
-function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data, $viewer_id = null ) {
+function bboss_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data, $viewer_id = null ) {
 	$matched_user_ids = array_filter( array_map( 'intval', (array) $matched_user_ids ) );
 
 	if ( empty( $matched_user_ids ) || empty( $matched_user_data ) ) {
@@ -5050,7 +5050,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	}
 
 	if ( is_null( $viewer_id ) ) {
-		$viewer_id = bb_core_get_viewer_user_id();
+		$viewer_id = bboss_core_get_viewer_user_id();
 	}
 	$viewer_id = (int) $viewer_id;
 
@@ -5059,7 +5059,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	// same viewer and must not disagree about who a guest is - and a rule written out twice is a
 	// rule that can drift. The helper also keeps the guest sentinel away from bp_user_can(), which
 	// has no user row to read for it.
-	if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+	if ( bboss_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
 		return $matched_user_ids;
 	}
 
@@ -5070,7 +5070,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	// the hit confirms the very name part the format suppresses. This mirrors the same source in
 	// bb_xprofile_filter_user_search_matches(): one rule, two filters, and they must agree.
 	$format_hidden_field_ids = array();
-	$display_name_format     = bp_core_display_name_format();
+	$display_name_format     = bboss_core_display_name_format();
 
 	// Gated on bp_core_hide_display_name_field(), which is the predicate that decides whether the
 	// FIELD is withheld rather than whether the name part is in the display name. They are not the
@@ -5083,15 +5083,15 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	// $enabled_fields['lastname'] branch). Members who additionally restricted the field for this
 	// viewer are still caught by the visibility list merged in below.
 	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
-		$format_last_name_field_id = (int) bp_xprofile_lastname_field_id();
-		if ( $format_last_name_field_id > 0 && bp_core_hide_display_name_field( $format_last_name_field_id ) ) {
+		$format_last_name_field_id = (int) bboss_xprofile_lastname_field_id();
+		if ( $format_last_name_field_id > 0 && bboss_core_hide_display_name_field( $format_last_name_field_id ) ) {
 			$format_hidden_field_ids[] = $format_last_name_field_id;
 		}
 
 		// Under "Nickname" the visible name is the nickname alone, so the first name is out too.
 		if ( 'nickname' === $display_name_format ) {
-			$format_first_name_field_id = (int) bp_xprofile_firstname_field_id();
-			if ( $format_first_name_field_id > 0 && bp_core_hide_display_name_field( $format_first_name_field_id ) ) {
+			$format_first_name_field_id = (int) bboss_xprofile_firstname_field_id();
+			if ( $format_first_name_field_id > 0 && bboss_core_hide_display_name_field( $format_first_name_field_id ) ) {
 				$format_hidden_field_ids[] = $format_first_name_field_id;
 			}
 		}
@@ -5115,7 +5115,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	}
 
 	/** This filter is documented in bp-xprofile/bp-xprofile-functions.php */
-	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bb_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bboss_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
 
 	$remove_ids = array();
 
@@ -5135,7 +5135,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	// comparison it was unable to verify. Culling to the budget instead, which is what an
 	// undifferentiated null did, turned one transient read failure into a 90% result cull:
 	// 5,000 matches in, 500 out, and 4,500 of the dropped members had nothing hidden.
-	$possible_hidden = bb_xprofile_filter_possible_hidden_users( array_keys( $fields_by_user ) );
+	$possible_hidden = bboss_xprofile_filter_possible_hidden_users( array_keys( $fields_by_user ) );
 
 	if ( false === $possible_hidden ) {
 		return array();
@@ -5191,10 +5191,10 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 
 	// Resolving a member's hidden fields is up to three uncached reads; fill them for the whole
 	// set at once so the loop below is array lookups rather than queries per matched row.
-	bb_xprofile_prime_hidden_fields_for_users( array_keys( $fields_by_user ), $viewer_id );
+	bboss_xprofile_prime_hidden_fields_for_users( array_keys( $fields_by_user ), $viewer_id );
 
 	foreach ( $fields_by_user as $user_id => $field_ids ) {
-		$hidden_fields = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) );
+		$hidden_fields = array_map( 'intval', (array) bboss_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) );
 
 		if ( ! empty( $format_hidden_field_ids ) ) {
 			$hidden_fields = array_unique( array_merge( $hidden_fields, $format_hidden_field_ids ) );
@@ -5218,3 +5218,18 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 
 	return array_values( array_diff( $matched_user_ids, $remove_ids ) );
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( function_exists( 'bboss_xprofile_safe_unserialize' ) && ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_xprofile_safe_unserialize()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_xprofile_safe_unserialize() instead.
+	 */
+	function bb_xprofile_safe_unserialize( $value ) {
+		return bboss_xprofile_safe_unserialize( $value );
+	}
+}
+// @bbwt-com-end compat-layer

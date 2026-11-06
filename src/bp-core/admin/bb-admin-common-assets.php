@@ -24,9 +24,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_register_admin_common_assets() {
-	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/common/build';
-	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/common/build';
+function bboss_register_admin_common_assets() {
+	$build_dir = bboss()->plugin_dir . 'bp-core/admin/bb-settings/common/build';
+	$build_url = bboss()->plugin_url . 'bp-core/admin/bb-settings/common/build';
 
 	$asset_file = $build_dir . '/index.asset.php';
 	$asset      = file_exists( $asset_file )

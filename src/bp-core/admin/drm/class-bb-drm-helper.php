@@ -631,7 +631,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss features. Please activate your license to continue using them.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Notice', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p>',
 					$simple_message,
@@ -653,7 +653,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( 'An active license is required to use BuddyBoss features. Without activation, these features will stop working.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Warning', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p>',
 					$simple_message,
@@ -675,7 +675,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( 'Your BuddyBoss features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p>',
 					$simple_message,
@@ -697,7 +697,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( ' The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p><p>%s</p>',
 					$simple_message,
@@ -756,7 +756,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss Launch/Scale features. Please activate your license to continue using them.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Notice', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p>',
 					$simple_message,
@@ -778,7 +778,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( 'An active license is required to use BuddyBoss Launch/Scale features. Without activation, these features will stop working.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Warning', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p>',
 					$simple_message,
@@ -800,7 +800,7 @@ class BB_DRM_Helper {
 				$simple_message    = __( 'Your BuddyBoss Launch/Scale features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss' );
 				$help_message      = __( 'Activate Your License', 'buddyboss' );
 				$label             = __( 'Critical', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p>',
 					$simple_message,
@@ -821,7 +821,7 @@ class BB_DRM_Helper {
 				$heading           = __( 'BuddyBoss Launch/Scale: Features Disabled', 'buddyboss' );
 				$color             = 'dc3232'; // Red.
 				$simple_message    = __( 'The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss' );
-				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+				$activation_link   = bboss_get_admin_url( 'admin.php?page=buddyboss-license' );
 				$message           = sprintf(
 					'<p>%s</p><p>%s</p><p>%s</p>',
 					$simple_message,

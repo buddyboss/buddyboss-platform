@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_screen_my_activity() {
+function bboss_activity_screen_my_activity() {
 
 	/**
 	 * Fires right before the loading of the "My Activity" screen template file.
@@ -30,5 +30,5 @@ function bp_activity_screen_my_activity() {
 	 *
 	 * @param string $template Path to the activity template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_activity_template_my_activity', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bp_activity_template_my_activity', 'members/single/home' ) );
 }

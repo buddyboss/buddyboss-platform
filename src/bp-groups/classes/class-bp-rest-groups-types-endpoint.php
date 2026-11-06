@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Groups_Types_Endpoint class
+ * BP REST: BBoss_REST_Groups_Types_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -23,8 +23,8 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->groups->id . '/types';
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->groups->id . '/types';
 	}
 
 	/**
@@ -65,7 +65,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 */
 	public function get_items( $request ) {
-		$registered_types = bp_groups_get_group_types( array(), 'objects' );
+		$registered_types = bboss_groups_get_group_types( array(), 'objects' );
 
 		$retval = array();
 		if ( ! empty( $registered_types ) ) {
@@ -103,7 +103,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -113,7 +113,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( function_exists( 'bp_disable_group_type_creation' ) && false === bp_disable_group_type_creation() ) {
+		if ( function_exists( 'bboss_disable_group_type_creation' ) && false === bboss_disable_group_type_creation() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Group Type is disabled from setting.', 'buddyboss' ),
@@ -161,7 +161,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		// Get the edit schema.
 		$schema  = $this->get_item_schema();
 		$schema  = $schema['properties'];
-		$post_id = function_exists( 'bp_group_get_group_type_id' ) ? bp_group_get_group_type_id( $data['name'] ) : 0;
+		$post_id = function_exists( 'bboss_group_get_group_type_id' ) ? bboss_group_get_group_type_id( $data['name'] ) : 0;
 
 		// Define default visibility property.
 		if ( isset( $schema['enable_filter'] ) ) {
@@ -201,7 +201,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( isset( $schema['member_type_group_invites'] ) ) {
-			$member_types              = bp_get_member_types( array(), 'names' );
+			$member_types              = bboss_get_member_types( array(), 'names' );
 			$raw_invites               = ! empty( $post_id ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ) : '';
 			$get_selected_member_types = is_array( $raw_invites ) ? $raw_invites : array();
 			$member_types_invite       = array();
@@ -217,7 +217,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( isset( $schema['member_type_join'] ) ) {
-			$member_types              = bp_get_member_types( array(), 'names' );
+			$member_types              = bboss_get_member_types( array(), 'names' );
 			$raw_join                  = ! empty( $post_id ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ) : '';
 			$get_selected_member_types = is_array( $raw_join ) ? $raw_join : array();
 			$member_types_join         = array();
@@ -245,7 +245,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		}
 
 		// Group type's label background and text color.
-		$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $data['name'] ) : '';
+		$label_color_data = function_exists( 'bboss_get_group_type_label_colors' ) ? bboss_get_group_type_label_colors( $data['name'] ) : '';
 		if ( ! empty( $label_color_data ) && isset( $schema['label_colors'] ) ) {
 			$data['label_colors'] = $label_color_data;
 		}
@@ -429,3 +429,11 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Groups_Types_Endpoint', false ) || interface_exists( 'BBoss_REST_Groups_Types_Endpoint', false ) || trait_exists( 'BBoss_REST_Groups_Types_Endpoint', false ) ) && ! class_exists( 'BP_REST_Groups_Types_Endpoint', false ) && ! interface_exists( 'BP_REST_Groups_Types_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Groups_Types_Endpoint', 'BP_REST_Groups_Types_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

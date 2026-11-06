@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  *
- * @todo We should probably do something similar to BP_Component::start().
+ * @todo We should probably do something similar to BBoss_Component::start().
  * @todo If this is only intended to be extended, it should be abstract.
  *
  * @param array $properties {
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *     @type string $url     Base URL of the theme.
  * }
  */
-class BP_Theme_Compat {
+class BBoss_Theme_Compat {
 
 	/**
 	 * Template package properties, as passed to the constructor.
@@ -47,7 +47,7 @@ class BP_Theme_Compat {
 	 *
 	 * @since BuddyPress 1.7.0
 	 *
-	 * @param array $properties Array of properties for BP_Theme_Compat.
+	 * @param array $properties Array of properties for BBoss_Theme_Compat.
 	 */
 	public function __construct( array $properties = array() ) {
 		$this->_data = $properties;
@@ -62,7 +62,7 @@ class BP_Theme_Compat {
 	 */
 	protected function start() {
 		// Sanity check.
-		if ( ! bp_use_theme_compat_with_current_theme() ) {
+		if ( ! bboss_use_theme_compat_with_current_theme() ) {
 			return;
 		}
 

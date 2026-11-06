@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Attachments_Blog_Avatar_Endpoint class
+ * BP REST: BBoss_REST_Attachments_Blog_Avatar_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,16 +13,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 
-	use BP_REST_Attachments;
+	use BBoss_REST_Attachments;
 
 	/**
-	 * Reuse some parts of the BP_REST_Blogs_Endpoint class.
+	 * Reuse some parts of the BBoss_REST_Blogs_Endpoint class.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_REST_Blogs_Endpoint
+	 * @var BBoss_REST_Blogs_Endpoint
 	 */
 	protected $blogs_endpoint;
 
@@ -32,7 +32,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Blogs_Blog
+	 * @var BBoss_Blogs_Blog
 	 */
 	protected $blog;
 
@@ -42,9 +42,9 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace      = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base      = buddypress()->blogs->id;
-		$this->blogs_endpoint = new BP_REST_Blogs_Endpoint();
+		$this->namespace      = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base      = bboss()->blogs->id;
+		$this->blogs_endpoint = new BBoss_REST_Blogs_Endpoint();
 	}
 
 	/**
@@ -97,7 +97,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 
 		$args = array();
 		foreach ( array( 'full', 'thumb' ) as $type ) {
-			$args[ $type ] = bp_get_blog_avatar(
+			$args[ $type ] = bboss_get_blog_avatar(
 				array(
 					'type'          => $type,
 					'blog_id'       => $request['id'],
@@ -166,7 +166,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! buddypress()->avatar->show_avatars ) {
+		if ( true === $retval && ! bboss()->avatar->show_avatars ) {
 			$retval = new WP_Error(
 				'bp_rest_attachments_blog_avatar_disabled',
 				__( 'Sorry, blog avatar is disabled.', 'buddyboss' ),
@@ -303,3 +303,11 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_attachments_blog_avatar_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Attachments_Blog_Avatar_Endpoint', false ) || interface_exists( 'BBoss_REST_Attachments_Blog_Avatar_Endpoint', false ) || trait_exists( 'BBoss_REST_Attachments_Blog_Avatar_Endpoint', false ) ) && ! class_exists( 'BP_REST_Attachments_Blog_Avatar_Endpoint', false ) && ! interface_exists( 'BP_REST_Attachments_Blog_Avatar_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Attachments_Blog_Avatar_Endpoint', 'BP_REST_Attachments_Blog_Avatar_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

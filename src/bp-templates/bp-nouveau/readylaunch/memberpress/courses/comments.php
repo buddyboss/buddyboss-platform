@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
 	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss' ); ?></h4>
 
 	<?php
-	if ( function_exists( 'bp_core_get_user_domain' ) ) {
-		$user_link = bp_core_get_user_domain( get_current_user_id() );
+	if ( function_exists( 'bboss_core_get_user_domain' ) ) {
+		$user_link = bboss_core_get_user_domain( get_current_user_id() );
 	} else {
 		$user_link = get_author_posts_url( get_current_user_id() );
 	}
@@ -47,8 +47,8 @@ defined( 'ABSPATH' ) || exit;
 		<ol class="comment-list">
 			<?php
 			$bb_rl_mpcs_helper = null;
-			if ( class_exists( 'BB_Readylaunch_Memberpress_Courses_Helper' ) ) {
-				$bb_rl_mpcs_helper = BB_Readylaunch_Memberpress_Courses_Helper::instance();
+			if ( class_exists( 'BBoss_Readylaunch_Memberpress_Courses_Helper' ) ) {
+				$bb_rl_mpcs_helper = BBoss_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
 
 			$comments_args = array(

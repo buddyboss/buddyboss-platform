@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @subpackage Widgets
  */
-class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
+class BBoss_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 	public $widget_id     = false;
 
@@ -44,7 +44,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 
 		// do not do anything if user isn't logged in OR IF user is viewing other members profile.
-		if ( ! is_user_logged_in() || ( bp_is_user() && ! bp_is_my_profile() ) ) {
+		if ( ! is_user_logged_in() || ( bboss_is_user() && ! bboss_is_my_profile() ) ) {
 			return;
 		}
 
@@ -56,7 +56,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$settings                       = array();
 		$settings['profile_groups']     = $profile_groups_selected;
 		$settings['profile_photo_type'] = $profile_phototype_selected;
-		$user_progress                  = bp_xprofile_get_user_profile_progress_data( $settings );
+		$user_progress                  = bboss_xprofile_get_user_profile_progress_data( $settings );
 
 		// IF nothing selected then return and nothing to display.
 		if ( empty( $profile_groups_selected ) && empty( $profile_phototype_selected ) ) {
@@ -83,9 +83,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		// Widget Content
 
 		// Globalize the Profile Completion widget arguments. Used in the template called below.
-		$bp_nouveau                                           = bp_nouveau();
+		$bp_nouveau                                           = bboss_nouveau();
 		$bp_nouveau->xprofile->profile_completion_widget_para = $user_progress;
-		bp_get_template_part( 'members/single/profile/widget' );
+		bboss_get_template_part( 'members/single/profile/widget' );
 		$bp_nouveau->xprofile->profile_completion_widget_para = array();
 
 		/**
@@ -122,14 +122,14 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function form( $instance ) {
 
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 				(array) $instance,
 				array(
 						'title' => __( 'Complete Your Profile', 'buddyboss' ),
 				)
 		);
 
-		$steps_options            = bp_core_profile_completion_steps_options();
+		$steps_options            = bboss_core_profile_completion_steps_options();
 		$profile_groups            = $steps_options['profile_groups'];
 		$photos_enabled_arr        = array();
 		$widget_enabled_arr        = array();

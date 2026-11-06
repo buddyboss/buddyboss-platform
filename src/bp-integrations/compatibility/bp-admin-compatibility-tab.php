@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.5
  */
-class BP_Compatibility_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+class BBoss_Compatibility_Admin_Integration_Tab extends BBoss_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {

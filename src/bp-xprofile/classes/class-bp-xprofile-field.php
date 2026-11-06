@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_XProfile_Field {
+class BBoss_XProfile_Field {
 
 	/**
 	 * Field ID.
@@ -158,7 +158,7 @@ class BP_XProfile_Field {
 	 * Field type option.
 	 *
 	 * @since BuddyPress 2.0.0
-	 * @var BP_XProfile_Field_Type Field type object used for validation.
+	 * @var BBoss_XProfile_Field_Type Field type object used for validation.
 	 */
 	public $type_obj = null;
 
@@ -166,7 +166,7 @@ class BP_XProfile_Field {
 	 * Field data for user ID.
 	 *
 	 * @since BuddyPress 2.0.0
-	 * @var BP_XProfile_ProfileData Field data for user ID.
+	 * @var BBoss_XProfile_ProfileData Field data for user ID.
 	 */
 	public $data;
 
@@ -194,7 +194,7 @@ class BP_XProfile_Field {
 
 			// Initialise the type obj to prevent fatals when creating new profile fields.
 		} else {
-			$this->type_obj            = bp_xprofile_create_field_type( 'textbox' );
+			$this->type_obj            = bboss_xprofile_create_field_type( 'textbox' );
 			$this->type_obj->field_obj = $this;
 		}
 	}
@@ -220,12 +220,12 @@ class BP_XProfile_Field {
 
 		$field = wp_cache_get( $id, 'bp_xprofile_fields' );
 		if ( false === $field ) {
-			$bp = buddypress();
+			$bp = bboss();
 
 			if ( isset( $bp->profile->table_name_fields ) ) {
 				$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $id ) );
 			} else {
-				$table = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+				$table = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 				$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
 			}
 
@@ -244,7 +244,7 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Retrieve a `BP_XProfile_Field` instance.
+	 * Retrieve a `BBoss_XProfile_Field` instance.
 	 *
 	 * @since BuddyPress 2.4.0
 	 * @since BuddyPress 2.8.0 Added `$user_id` and `$get_data` parameters.
@@ -258,7 +258,7 @@ class BP_XProfile_Field {
 	 *                           logged-in user ID.
 	 * @param bool     $get_data Whether to fetch data for the specified `$user_id`.
 	 *
-	 * @return BP_XProfile_Field|false Field object if found, otherwise false.
+	 * @return BBoss_XProfile_Field|false Field object if found, otherwise false.
 	 */
 	public static function get_instance( $field_id, $user_id = null, $get_data = true ) {
 		global $wpdb;
@@ -276,7 +276,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param array|object $args Array or object representing the `BP_XProfile_Field` properties.
+	 * @param array|object $args Array or object representing the `BBoss_XProfile_Field` properties.
 	 *                           Generally, this is a row from the fields database table.
 	 */
 	public function fill_data( $args ) {
@@ -309,7 +309,7 @@ class BP_XProfile_Field {
 		}
 
 		// Create the field type and store a reference back to this object.
-		$this->type_obj            = bp_xprofile_create_field_type( $this->type );
+		$this->type_obj            = bboss_xprofile_create_field_type( $this->type );
 		$this->type_obj->field_obj = $this;
 	}
 
@@ -383,24 +383,24 @@ class BP_XProfile_Field {
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
-		 * @param BP_XProfile_Field $this Current instance of the field being deleted. Passed by reference.
+		 * @param BBoss_XProfile_Field $this Current instance of the field being deleted. Passed by reference.
 		 * @param bool $delete_data Whether or not to delete data.
 		 */
 		do_action_ref_array( 'xprofile_field_before_delete', array( &$this, $delete_data ) );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE id = %d OR parent_id = %d", $this->id, $this->id ) ) ) {
 			return false;
 		}
 
 		// Delete all metadata for this field.
-		bp_xprofile_delete_meta( $this->id, 'field' );
+		bboss_xprofile_delete_meta( $this->id, 'field' );
 
 		// Delete the data in the DB for this field.
 		if ( true === $delete_data ) {
-			BP_XProfile_ProfileData::delete_for_field( $this->id );
-			BB_XProfile_Visibility::delete_for_field( $this->id );
+			BBoss_XProfile_ProfileData::delete_for_field( $this->id );
+			BBoss_XProfile_Visibility::delete_for_field( $this->id );
 		}
 
 		/**
@@ -408,7 +408,7 @@ class BP_XProfile_Field {
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
-		 * @param BP_XProfile_Field $this Current instance of the field being deleted. Passed by reference.
+		 * @param BBoss_XProfile_Field $this Current instance of the field being deleted. Passed by reference.
 		 * @param bool $delete_data Whether or not to delete data.
 		 */
 		do_action_ref_array( 'xprofile_field_after_delete', array( &$this, $delete_data ) );
@@ -430,7 +430,7 @@ class BP_XProfile_Field {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->group_id     = apply_filters( 'xprofile_field_group_id_before_save', $this->group_id, $this->id );
 		$this->parent_id    = apply_filters( 'xprofile_field_parent_id_before_save', $this->parent_id, $this->id );
@@ -442,7 +442,7 @@ class BP_XProfile_Field {
 		$this->field_order  = apply_filters( 'xprofile_field_field_order_before_save', $this->field_order, $this->id );
 		$this->option_order = apply_filters( 'xprofile_field_option_order_before_save', $this->option_order, $this->id );
 		$this->can_delete   = apply_filters( 'xprofile_field_can_delete_before_save', $this->can_delete, $this->id );
-		$this->type_obj     = bp_xprofile_create_field_type( $this->type );
+		$this->type_obj     = bboss_xprofile_create_field_type( $this->type );
 
 		/**
 		 * Fires before the current field instance gets saved.
@@ -451,7 +451,7 @@ class BP_XProfile_Field {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_XProfile_Field $this Current instance of the field being saved.
+		 * @param BBoss_XProfile_Field $this Current instance of the field being saved.
 		 */
 		do_action_ref_array( 'xprofile_field_before_save', array( $this ) );
 
@@ -468,7 +468,7 @@ class BP_XProfile_Field {
 		 * cleaning the set up; refusing those saves too would freeze the field on
 		 * exactly the sites that need to fix it.
 		 */
-		if ( 'biography' === $this->type && bb_xprofile_is_repeater_group( $this->group_id ) ) {
+		if ( 'biography' === $this->type && bboss_xprofile_is_repeater_group( $this->group_id ) ) {
 			$previous_group_id = 0;
 
 			if ( ! $is_new_field ) {
@@ -543,7 +543,7 @@ class BP_XProfile_Field {
 				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $post_option Submitted option value.
-				 * @param BP_XProfile_Field $type Current field type being saved for.
+				 * @param BBoss_XProfile_Field $type Current field type being saved for.
 				 */
 				$options = apply_filters( 'xprofile_field_options_before_save', $post_option, $this->type );
 
@@ -553,7 +553,7 @@ class BP_XProfile_Field {
 				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $post_default Default option value.
-				 * @param BP_XProfile_Field $type Current field type being saved for.
+				 * @param BBoss_XProfile_Field $type Current field type being saved for.
 				 */
 				$defaults = apply_filters( 'xprofile_field_default_before_save', $post_default, $this->type );
 
@@ -588,12 +588,12 @@ class BP_XProfile_Field {
 			 *
 			 * @since BuddyPress 1.0.0
 			 *
-			 * @param BP_XProfile_Field $this Current instance of the field being saved.
+			 * @param BBoss_XProfile_Field $this Current instance of the field being saved.
 			 */
 			do_action_ref_array( 'xprofile_field_after_save', array( $this ) );
 
 			// Recreate type_obj in case someone changed $this->type via a filter.
-			$this->type_obj            = bp_xprofile_create_field_type( $this->type );
+			$this->type_obj            = bboss_xprofile_create_field_type( $this->type );
 			$this->type_obj->field_obj = $this;
 
 			return $this->id;
@@ -609,10 +609,10 @@ class BP_XProfile_Field {
 	 *
 	 * @param int $user_id ID of the user to get field data for.
 	 *
-	 * @return BP_XProfile_ProfileData
+	 * @return BBoss_XProfile_ProfileData
 	 */
 	public function get_field_data( $user_id = 0 ) {
-		return new BP_XProfile_ProfileData( $this->id, $user_id );
+		return new BBoss_XProfile_ProfileData( $this->id, $user_id );
 	}
 
 	/**
@@ -651,7 +651,7 @@ class BP_XProfile_Field {
 			$parent_id = $this->id;
 		}
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id . '_' . $for_editing . '_' . $this->order_by;
 		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
 			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sort_sql is one of three constant ORDER BY clauses chosen by code; table name from buddypress().
@@ -669,7 +669,7 @@ class BP_XProfile_Field {
 		 *
 		 * @param object $children Found children for a field.
 		 * @param bool $for_editing Whether or not the field is for editing.
-		 * @param BP_XProfile_Field $this Field object
+		 * @param BBoss_XProfile_Field $this Field object
 		 */
 		return apply_filters( 'bp_xprofile_field_get_children', $children, $for_editing, $this );
 	}
@@ -684,7 +684,7 @@ class BP_XProfile_Field {
 	public function delete_children() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE parent_id = %d", $this->id ) );
 	}
@@ -705,7 +705,7 @@ class BP_XProfile_Field {
 			return $this->member_types;
 		}
 
-		$raw_types = bp_xprofile_get_meta( $this->id, 'field', 'member_type', false );
+		$raw_types = bboss_xprofile_get_meta( $this->id, 'field', 'member_type', false );
 
 		// If `$raw_types` is not an array, it probably means this is a new field (id=0).
 		if ( ! is_array( $raw_types ) ) {
@@ -715,7 +715,7 @@ class BP_XProfile_Field {
 		// If '_none' is found in the array, it overrides all types.
 		$types = array();
 		if ( ! in_array( '_none', $raw_types ) ) {
-			$registered_types = bp_get_member_types();
+			$registered_types = bboss_get_member_types();
 
 			// Eliminate invalid profile types saved in the database.
 			foreach ( $raw_types as $raw_type ) {
@@ -740,7 +740,7 @@ class BP_XProfile_Field {
 		 * @since BuddyPress 2.4.0
 		 *
 		 * @param array $types profile types.
-		 * @param BP_XProfile_Field $field Field object.
+		 * @param BBoss_XProfile_Field $field Field object.
 		 */
 		$this->member_types = apply_filters( 'bp_xprofile_field_member_types', $types, $this );
 
@@ -764,21 +764,21 @@ class BP_XProfile_Field {
 		$types = array();
 		foreach ( $member_types as $member_type ) {
 			// 'null' is a special case - it represents users without a type.
-			if ( 'null' === $member_type || bp_get_member_type_object( $member_type ) ) {
+			if ( 'null' === $member_type || bboss_get_member_type_object( $member_type ) ) {
 				$types[] = $member_type;
 			}
 		}
 
 		// When `$append` is false, delete all existing types before adding new ones.
 		if ( ! $append ) {
-			bp_xprofile_delete_meta( $this->id, 'field', 'member_type' );
+			bboss_xprofile_delete_meta( $this->id, 'field', 'member_type' );
 
 			/*
 			 * We interpret an empty array as disassociating the field from all types. This is
 			 * represented internally with the '_none' flag.
 			 */
 			if ( empty( $types ) ) {
-				bp_xprofile_add_meta( $this->id, 'field', 'member_type', '_none' );
+				bboss_xprofile_add_meta( $this->id, 'field', 'member_type', '_none' );
 			}
 		}
 
@@ -788,7 +788,7 @@ class BP_XProfile_Field {
 		 * list of types passed to the method is the same as the list of registered types,
 		 * plus the 'null' pseudo-type.
 		 */
-		$_rtypes  = bp_get_member_types();
+		$_rtypes  = bboss_get_member_types();
 		$rtypes   = array_values( $_rtypes );
 		$rtypes[] = 'null';
 
@@ -799,7 +799,7 @@ class BP_XProfile_Field {
 		if ( $types !== $rtypes ) {
 			// Save new types.
 			foreach ( $types as $type ) {
-				bp_xprofile_add_meta( $this->id, 'field', 'member_type', $type );
+				bboss_xprofile_add_meta( $this->id, 'field', 'member_type', $type );
 			}
 		}
 
@@ -811,7 +811,7 @@ class BP_XProfile_Field {
 		 *
 		 * @since BuddyPress 2.4.0
 		 *
-		 * @param BP_XProfile_Field $this Field object.
+		 * @param BBoss_XProfile_Field $this Field object.
 		 */
 		do_action( 'bp_xprofile_field_set_member_type', $this );
 
@@ -835,7 +835,7 @@ class BP_XProfile_Field {
 		}
 
 		// Return an empty string if no profile types are registered.
-		$all_types = bp_get_member_types();
+		$all_types = bboss_get_member_types();
 		if ( empty( $all_types ) ) {
 			return '';
 		}
@@ -857,7 +857,7 @@ class BP_XProfile_Field {
 					$has_null = true;
 					continue;
 				} else {
-					$mt_obj               = bp_get_member_type_object( $member_type );
+					$mt_obj               = bboss_get_member_type_object( $member_type );
 					$member_type_labels[] = $mt_obj->labels['name'];
 				}
 			}
@@ -893,7 +893,7 @@ class BP_XProfile_Field {
 	 */
 	public function get_default_visibility() {
 		if ( ! isset( $this->default_visibility ) ) {
-			$this->default_visibility = bp_xprofile_get_meta( $this->id, 'field', 'default_visibility' );
+			$this->default_visibility = bboss_xprofile_get_meta( $this->id, 'field', 'default_visibility' );
 
 			if ( ! $this->default_visibility ) {
 				$this->default_visibility = 'public';
@@ -916,7 +916,7 @@ class BP_XProfile_Field {
 	 */
 	public function get_allow_custom_visibility() {
 		if ( ! isset( $this->allow_custom_visibility ) ) {
-			$allow_custom_visibility = bp_xprofile_get_meta( $this->id, 'field', 'allow_custom_visibility' );
+			$allow_custom_visibility = bboss_xprofile_get_meta( $this->id, 'field', 'allow_custom_visibility' );
 
 			if ( 'disabled' === $allow_custom_visibility ) {
 				$this->allow_custom_visibility = 'disabled';
@@ -939,7 +939,7 @@ class BP_XProfile_Field {
 	 */
 	public function get_alternate_name() {
 		if ( ! isset( $this->alternate_name ) ) {
-			$this->alternate_name = bp_xprofile_get_meta( $this->id, 'field', 'alternate_name' );
+			$this->alternate_name = bboss_xprofile_get_meta( $this->id, 'field', 'alternate_name' );
 		}
 
 		return $this->alternate_name;
@@ -985,7 +985,7 @@ class BP_XProfile_Field {
 		$type      = wp_cache_get( $cache_key, 'bp_xprofile' );
 
 		if ( false === $type ) {
-			$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$table_name = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
 			$type       = $wpdb->get_var( $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id ) );
 			wp_cache_set( $cache_key, $type, 'bp_xprofile' );
 		}
@@ -1012,7 +1012,7 @@ class BP_XProfile_Field {
 	public static function delete_for_group( $group_id = 0 ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Bail if no group ID.
 		if ( empty( $group_id ) ) {
@@ -1056,16 +1056,16 @@ class BP_XProfile_Field {
 	public static function get_id_from_name( $field_name = '' ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( empty( $bp->profile->table_name_fields ) || empty( $field_name ) ) {
 			return false;
 		}
 
-		$id = bp_core_get_incremented_cache( $field_name, 'bp_xprofile_fields_by_name' );
+		$id = bboss_core_get_incremented_cache( $field_name, 'bp_xprofile_fields_by_name' );
 		if ( false === $id ) {
 			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s AND parent_id = 0", $field_name ) );
-			bp_core_set_incremented_cache( $field_name, 'bp_xprofile_fields_by_name', $id );
+			bboss_core_set_incremented_cache( $field_name, 'bp_xprofile_fields_by_name', $id );
 		}
 
 		return is_numeric( $id ) ? (int) $id : $id;
@@ -1093,7 +1093,7 @@ class BP_XProfile_Field {
 		}
 
 		// Get table name and field parent.
-		$table_name = buddypress()->profile->table_name_fields;
+		$table_name = bboss()->profile->table_name_fields;
 		$parent     = $wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET field_order = %d, group_id = %d WHERE id = %d", $position, $field_group_id, $field_id ) );
 
 		// Update $field_id with new $position and $field_group_id.
@@ -1140,7 +1140,7 @@ class BP_XProfile_Field {
 			$member_types = array( $member_types );
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Pull up all recorded field profile type data.
 		$mt_meta = wp_cache_get( 'field_member_types', 'bp_xprofile' );
@@ -1163,7 +1163,7 @@ class BP_XProfile_Field {
 		}
 
 		// Add temp null member type before add field to register page from the $member_types array.
-		if ( bp_is_register_page() ) {
+		if ( bboss_is_register_page() ) {
 			$member_types[] = 'null';
 		}
 
@@ -1178,7 +1178,7 @@ class BP_XProfile_Field {
 		}
 
 		// Remove temp null member type after add field to register page from the $member_types array.
-		if ( bp_is_register_page() ) {
+		if ( bboss_is_register_page() ) {
 			unset( $member_types['null'] );
 		}
 
@@ -1194,7 +1194,7 @@ class BP_XProfile_Field {
 			}
 
 			// Append the 'null' pseudo-type.
-			$all_member_types   = bp_get_member_types();
+			$all_member_types   = bboss_get_member_types();
 			$all_member_types   = array_values( $all_member_types );
 			$all_member_types[] = 'null';
 
@@ -1240,7 +1240,7 @@ class BP_XProfile_Field {
 		}
 
 		// Check that field is of valid type.
-		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) {
+		if ( ! in_array( $_POST['fieldtype'], array_keys( bboss_xprofile_get_field_types() ), true ) ) {
 			/* translators: %s: field type (wrapped in <code>). */
 			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_attr( $_POST['fieldtype'] ) . '</code>' );
 
@@ -1248,7 +1248,7 @@ class BP_XProfile_Field {
 		}
 
 		// Get field type so we can check for and lavidate any field options.
-		$field_type = bp_xprofile_create_field_type( $_POST['fieldtype'] );
+		$field_type = bboss_xprofile_create_field_type( $_POST['fieldtype'] );
 
 		// Field type requires options.
 		if ( true === $field_type->supports_options ) {
@@ -1305,8 +1305,8 @@ class BP_XProfile_Field {
 	 * Populates the items for radio buttons, checkboxes, and dropdown boxes.
 	 */
 	public function render_admin_form_children() {
-		foreach ( array_keys( bp_xprofile_get_field_types() ) as $field_type ) {
-			$type_obj = bp_xprofile_create_field_type( $field_type );
+		foreach ( array_keys( bboss_xprofile_get_field_types() ) as $field_type ) {
+			$type_obj = bboss_xprofile_create_field_type( $field_type );
 			$type_obj->admin_new_field_html( $this );
 		}
 	}
@@ -1324,7 +1324,7 @@ class BP_XProfile_Field {
 		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'Settings 2.0 ProfileFieldModal' );
 
 		// Users Admin URL
-		$users_url = bp_get_admin_url( 'admin.php' );
+		$users_url = bboss_get_admin_url( 'admin.php' );
 
 		// Add New
 		if ( empty( $this->id ) ) {
@@ -1368,10 +1368,10 @@ class BP_XProfile_Field {
 
 		<div class="wrap">
 			<?php
-			$users_tab = count( bp_core_get_users_admin_tabs() );
+			$users_tab = count( bboss_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
+				<h2 class="nav-tab-wrapper"><?php bboss_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
 																			<?php
 			}
 			?>
@@ -1446,7 +1446,7 @@ class BP_XProfile_Field {
 							 *
 							 * @since BuddyPress 2.2.0
 							 *
-							 * @param BP_XProfile_Field $this Current XProfile field.
+							 * @param BBoss_XProfile_Field $this Current XProfile field.
 							 */
 							do_action( 'xprofile_field_after_sidebarbox', $this );
 							?>
@@ -1462,7 +1462,7 @@ class BP_XProfile_Field {
 							 *
 							 * @since BuddyPress 2.3.0
 							 *
-							 * @param BP_XProfile_Field $this Current XProfile field.
+							 * @param BBoss_XProfile_Field $this Current XProfile field.
 							 */
 							do_action( 'xprofile_field_before_contentbox', $this );
 
@@ -1477,7 +1477,7 @@ class BP_XProfile_Field {
 							 *
 							 * @since BuddyPress 2.2.0
 							 *
-							 * @param BP_XProfile_Field $this Current XProfile field.
+							 * @param BBoss_XProfile_Field $this Current XProfile field.
 							 */
 							do_action( 'xprofile_field_after_contentbox', $this );
 							?>
@@ -1501,7 +1501,7 @@ class BP_XProfile_Field {
 	private function submit_metabox( $button_text = '' ) {
 
 		// Setup the URL for deleting
-		$users_url  = bp_get_admin_url( 'admin.php' );
+		$users_url  = bboss_get_admin_url( 'admin.php' );
 		$cancel_url = add_query_arg(
 			array(
 				'page' => 'bp-profile-setup',
@@ -1514,7 +1514,7 @@ class BP_XProfile_Field {
 		 *
 		 * @since BuddyPress 2.1.0
 		 *
-		 * @param BP_XProfile_Field $this Current XProfile field.
+		 * @param BBoss_XProfile_Field $this Current XProfile field.
 		 */
 		do_action( 'xprofile_field_before_submitbox', $this );
 		?>
@@ -1532,7 +1532,7 @@ class BP_XProfile_Field {
 						 *
 						 * @since BuddyPress 2.1.0
 						 *
-						 * @param BP_XProfile_Field $this Current XProfile field.
+						 * @param BBoss_XProfile_Field $this Current XProfile field.
 						 */
 						do_action( 'xprofile_field_submitbox_start', $this );
 						?>
@@ -1569,7 +1569,7 @@ class BP_XProfile_Field {
 		 *
 		 * @since BuddyPress 2.1.0
 		 *
-		 * @param BP_XProfile_Field $this Current XProfile field.
+		 * @param BBoss_XProfile_Field $this Current XProfile field.
 		 */
 		do_action( 'xprofile_field_after_submitbox', $this );
 	}
@@ -1642,12 +1642,12 @@ class BP_XProfile_Field {
 		}
 
 		// Bail when no profile types are registered.
-		if ( ! $member_types = bp_get_member_types( array(), 'objects' ) ) {
+		if ( ! $member_types = bboss_get_member_types( array(), 'objects' ) ) {
 			return;
 		}
 
 		// Remove the Profile Type Metabox for the Profile Type Field.
-		if ( $this->id === bp_get_xprofile_member_type_field_id() ) {
+		if ( $this->id === bboss_get_xprofile_member_type_field_id() ) {
 			return;
 		}
 
@@ -1708,9 +1708,9 @@ class BP_XProfile_Field {
 		// Remove visibility settings for display field
 		if ( ! empty( $this->id ) ) {
 
-			$first_name_id        = bp_xprofile_firstname_field_id();
-			$nick_name_id         = bp_xprofile_nickname_field_id();
-			$display_name_format = bp_core_display_name_format();
+			$first_name_id        = bboss_xprofile_firstname_field_id();
+			$nick_name_id         = bboss_xprofile_nickname_field_id();
+			$display_name_format = bboss_core_display_name_format();
 
 			if ( $this->id === $nick_name_id ) {
 				return;
@@ -1730,7 +1730,7 @@ class BP_XProfile_Field {
 				<div>
 					<select name="default-visibility" id="default-visibility">
 
-						<?php foreach ( bp_xprofile_get_visibility_levels() as $level ) : ?>
+						<?php foreach ( bboss_xprofile_get_visibility_levels() as $level ) : ?>
 
 							<option value="<?php echo esc_attr( $level['id'] ); ?>" <?php selected( $this->get_default_visibility(), $level['id'] ); ?>>
 								<?php echo esc_html( $level['label'] ); ?>
@@ -1809,7 +1809,7 @@ class BP_XProfile_Field {
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<select name="fieldtype" id="fieldtype" onchange="show_options(this.value)">
 
-					<?php bp_xprofile_admin_form_field_types( $this->type ); ?>
+					<?php bboss_xprofile_admin_form_field_types( $this->type ); ?>
 
 				</select>
 
@@ -1868,11 +1868,11 @@ class BP_XProfile_Field {
 		}
 
 		$synced_fields = array(
-			bp_xprofile_nickname_field_id(),
+			bboss_xprofile_nickname_field_id(),
 		);
 
-		if (  'first_last_name' === bp_core_display_name_format() || 'first_name' === bp_core_display_name_format() ) {
-			$synced_fields[] = bp_xprofile_firstname_field_id();
+		if (  'first_last_name' === bboss_core_display_name_format() || 'first_name' === bboss_core_display_name_format() ) {
+			$synced_fields[] = bboss_xprofile_firstname_field_id();
 		}
 
 		// Compare & return.

@@ -5,7 +5,7 @@
  * This template handles displaying member notifications in a loop.
  *
  * @since      BuddyBoss 2.9.00
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @package    BuddyBoss\Template
  * @version    1.0.0
  */
@@ -13,7 +13,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
+if ( bboss_has_notifications( bboss_ajax_querystring( 'notifications' ) ) ) {
 
 	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page']; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( $is_first_page ) {
@@ -22,17 +22,17 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 		<ul class="notification-list bb-nouveau-list bs-item-list list-view bb-rl-list">
 		<?php
 	}
-	$notifications_template    = buddypress()->notifications->query_loop;
+	$notifications_template    = bboss()->notifications->query_loop;
 	$total_notification_count  = $notifications_template->total_notification_count;
 	$current_page              = $notifications_template->pag_page;
 	$notifications_per_page    = $notifications_template->pag_num;
 	$notifications_page_arg    = $notifications_template->pag_arg;
 	$notifications_total_pages = ceil( $total_notification_count / $notifications_per_page );
 
-	while ( bp_the_notifications() ) :
-		bp_the_notification();
-		$bp                     = buddypress();
-		$bp_the_notification_id = bp_get_the_notification_id();
+	while ( bboss_the_notifications() ) :
+		bboss_the_notification();
+		$bp                     = bboss();
+		$bp_the_notification_id = bboss_get_the_notification_id();
 		$readonly               = isset( $bp->notifications->query_loop->notification->readonly )
 			? $bp->notifications->query_loop->notification->readonly
 			: false;
@@ -50,11 +50,11 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 				</span>
 			</div>
 			<div class="notification-avatar">
-				<?php bb_notification_avatar(); ?>
+				<?php bboss_notification_avatar(); ?>
 			</div>
 			<div class="notification-content">
-				<span><?php bp_the_notification_description(); ?></span>
-				<span class="posted"><?php bp_the_notification_time_since(); ?></span>
+				<span><?php bboss_the_notification_description(); ?></span>
+				<span class="posted"><?php bboss_the_notification_time_since(); ?></span>
 			</div>
 			<div class="actions">
 				<div class="bb-rl-more_dropdown-wrap">
@@ -65,7 +65,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 						<i class="bb-icons-rl-dots-three"></i>
 					</a>
 					<div class="bb_rl_more_dropdown">
-						<?php bp_the_notification_action_links(); ?>
+						<?php bboss_the_notification_action_links(); ?>
 					</div>
 				</div>
 			</div>
@@ -73,7 +73,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 		<?php
 	endwhile;
 	if ( $notifications_total_pages > $current_page ) {
-		$notifications_url = bp_get_notifications_permalink();
+		$notifications_url = bboss_get_notifications_permalink();
 		$next_page         = $current_page + 1;
 		$next_page_url     = add_query_arg(
 			$notifications_page_arg,
@@ -102,5 +102,5 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 		<?php
 	}
 } else {
-	bp_nouveau_user_feedback( 'member-notifications-none' );
+	bboss_nouveau_user_feedback( 'member-notifications-none' );
 }

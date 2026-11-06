@@ -6,7 +6,7 @@
  * with header, navigation, and content sections.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,51 +14,51 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( bp_is_group_subgroups() ) {
+if ( bboss_is_group_subgroups() ) {
 	ob_start();
-	bp_nouveau_group_template_part();
+	bboss_nouveau_group_template_part();
 	$template_content = ob_get_contents();
 	ob_end_clean();
 }
 
-if ( bp_has_groups() ) {
-	while ( bp_groups() ) :
-		bp_the_group();
+if ( bboss_has_groups() ) {
+	while ( bboss_groups() ) :
+		bboss_the_group();
 		?>
-		<div class="bb-rl-groups-single-wrapper" data-bp-item-id="<?php echo esc_attr( bp_get_current_group_id() ); ?>" data-bp-item-component="<?php echo esc_attr( bp_current_component() ); ?>">
+		<div class="bb-rl-groups-single-wrapper" data-bp-item-id="<?php echo esc_attr( bboss_get_current_group_id() ); ?>" data-bp-item-component="<?php echo esc_attr( bboss_current_component() ); ?>">
 
 			<div class="bb-rl-secondary-header flex flex-column">
-				<div class="bb-rl-group-info-wrap flex items-start justify-between <?php echo esc_attr( BB_Readylaunch::bb_is_group_admin() ? 'bb-rl-no-border' : '' ); ?>">
+				<div class="bb-rl-group-info-wrap flex items-start justify-between <?php echo esc_attr( BBoss_Readylaunch::bb_is_group_admin() ? 'bb-rl-no-border' : '' ); ?>">
 					<div class="bb-rl-group-info flex items-center">
 						<?php
-						if ( BB_Readylaunch::bb_is_group_admin() ) {
-							echo '<a href="' . esc_url( bp_get_group_permalink() ) . '" class="bb-rl-group-link"><i class="bb-icons-rl-arrow-left"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Back', 'buddyboss' ) . '</span></a>';
+						if ( BBoss_Readylaunch::bb_is_group_admin() ) {
+							echo '<a href="' . esc_url( bboss_get_group_permalink() ) . '" class="bb-rl-group-link"><i class="bb-icons-rl-arrow-left"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Back', 'buddyboss' ) . '</span></a>';
 						}
 
-						if ( ! bp_disable_group_avatar_uploads() ) :
-							$group_link       = bp_get_group_permalink();
+						if ( ! bboss_disable_group_avatar_uploads() ) :
+							$group_link       = bboss_get_group_permalink();
 							$admin_link       = trailingslashit( $group_link . 'admin' );
 							$group_avatar     = trailingslashit( $admin_link . 'group-avatar' );
-							$tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
+							$tooltip_position = bboss_disable_group_cover_image_uploads() ? 'down' : 'up';
 							?>
 							<div id="bb-rl-item-header-avatar">
-								<?php bp_group_avatar(); ?>
+								<?php bboss_group_avatar(); ?>
 							</div><!-- #item-header-avatar -->
 						<?php endif; ?>
-						<h2 class="bb-rl-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
+						<h2 class="bb-rl-group-title"><?php echo wp_kses_post( bboss_get_group_name() ); ?></h2>
 					</div>
 
 					<?php
-					if ( ! BB_Readylaunch::bb_is_group_admin() ) {
+					if ( ! BBoss_Readylaunch::bb_is_group_admin() ) {
 						?>
 							<div class="bb-rl-group-extra-info" >
 								<?php
 									add_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
-									bb_groups_members();
+									bboss_groups_members();
 									remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
 
 									add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_rl_group_buttons', 99, 1 );
-									bb_group_single_header_actions();
+									bboss_group_single_header_actions();
 									remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_rl_group_buttons', 99, 1 );
 								?>
 
@@ -98,38 +98,38 @@ if ( bp_has_groups() ) {
 			<div class="bb-rl-group-section">
 				<?php
 				if (
-					bp_group_use_cover_image_header() &&
-					function_exists( 'bp_attachments_get_group_has_cover_image' ) &&
-					bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) &&
-					! BB_Readylaunch::bb_is_group_admin()
+					bboss_group_use_cover_image_header() &&
+					function_exists( 'bboss_attachments_get_group_has_cover_image' ) &&
+					bboss_attachments_get_group_has_cover_image( bboss_get_current_group_id() ) &&
+					! BBoss_Readylaunch::bb_is_group_admin()
 				) {
-					bp_get_template_part( 'groups/single/cover-image-header' );
+					bboss_get_template_part( 'groups/single/cover-image-header' );
 				}
 				?>
 				<div class="bb-rl-group-details bb-rl-details-entry">
 					<div class="bb-rl-content-wrapper">
 
 						<div class="bb-rl-primary-container">
-							<?php if ( ! BB_Readylaunch::bb_is_group_admin() ) { ?>
+							<?php if ( ! BBoss_Readylaunch::bb_is_group_admin() ) { ?>
 								<div class="bb-rl-secondary-header flex flex-column">
-									<?php bp_get_template_part( 'groups/single/parts/item-nav' ); ?>
+									<?php bboss_get_template_part( 'groups/single/parts/item-nav' ); ?>
 								</div>
 							<?php } ?>
 							<div id="item-body" class="item-body">
 								<?php
-								if ( bp_is_group_subgroups() ) {
+								if ( bboss_is_group_subgroups() ) {
 								echo $template_content; // phpcs:ignore
 								} else {
-									bp_nouveau_group_template_part();
+									bboss_nouveau_group_template_part();
 								}
 								?>
 							</div><!-- #item-body -->
 						</div>
 
-						<?php if ( ! BB_Readylaunch::bb_is_group_admin() ) { ?>
+						<?php if ( ! BBoss_Readylaunch::bb_is_group_admin() ) { ?>
 							<div class="bb-rl-secondary-container">
 								<?php
-									bp_get_template_part( 'sidebar/right-sidebar' );
+									bboss_get_template_part( 'sidebar/right-sidebar' );
 								?>
 							</div>
 						<?php } ?>
@@ -139,7 +139,7 @@ if ( bp_has_groups() ) {
 
 			</div>
 		<?php
-		bp_nouveau_group_hook( 'after', 'home_content' );
+		bboss_nouveau_group_hook( 'after', 'home_content' );
 
 	endwhile;
 }

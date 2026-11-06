@@ -31,8 +31,8 @@ defined( 'ABSPATH' ) || exit;
 
 					<?php
 					if (
-						( bp_is_group() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_group_id() ) ) ||
-						( ( bp_is_my_profile() || bp_is_user_media() ) && bb_user_can_create_media() )
+						( bboss_is_group() && groups_can_user_manage_media( bboss_loggedin_user_id(), bboss_get_group_id() ) ) ||
+						( ( bboss_is_my_profile() || bboss_is_user_media() ) && bboss_user_can_create_media() )
 					) {
 						?>
 						<div class="bb-field-wrap">
@@ -71,11 +71,11 @@ defined( 'ABSPATH' ) || exit;
 					<?php } ?>
 
 					<footer class="bb-model-footer">
-						<?php if ( ! bp_is_group() ) : ?>
+						<?php if ( ! bboss_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">
 								<select id="bb-album-privacy">
 									<?php
-									foreach ( bp_media_get_visibility_levels() as $k => $option ) {
+									foreach ( bboss_media_get_visibility_levels() as $k => $option ) {
 										?>
 										<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
 										<?php

@@ -5,7 +5,7 @@
  * The template for search results for products.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -28,7 +28,7 @@ $product_thumb = get_the_post_thumbnail_url();
 					<?php
 				} else {
 					?>
-					<i class="bb-icon-f <?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+					<i class="bb-icon-f <?php echo esc_attr( bboss_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
 					<?php
 				}
 				?>

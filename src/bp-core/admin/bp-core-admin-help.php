@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_help_main_page() {
+function bboss_core_admin_help_main_page() {
 
 	?>
 	<div class="bp-help-main-menu-wrap" id="bp-help-main-menu-wrap" style="display:none" ></div>
@@ -45,11 +45,11 @@ function bp_core_admin_help_main_page() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_help() {
+function bboss_core_admin_help() {
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
-			<?php bp_core_admin_tabs( __( 'Help', 'buddyboss' ) ); ?>
+			<?php bboss_core_admin_tabs( __( 'Help', 'buddyboss' ) ); ?>
 		</h2>
 	</div>
 	<div class="wrap">
@@ -61,7 +61,7 @@ function bp_core_admin_help() {
 
 	<div class="wp-list-table widefat bp-help-card-grid">
 		<?php
-		bp_core_admin_help_main_page();
+		bboss_core_admin_help_main_page();
 		?>
 	</div>
 	<?php
@@ -72,6 +72,6 @@ function bp_core_admin_help() {
  *
  * @return string
  */
-function bp_core_admin_help_get_article_value() {
+function bboss_core_admin_help_get_article_value() {
 	return isset( $_REQUEST['article'] ) ? $_REQUEST['article'] : '';
 }

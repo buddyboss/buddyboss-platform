@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * The Recent Networkwide Posts widget.
  */
-class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
+class BBoss_Blogs_Recent_Posts_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -42,7 +42,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 			: __( 'Recent Networkwide Posts', 'buddyboss' );
 
 		if ( ! empty( $instance['link_title'] ) ) {
-			$title = '<a href="' . bp_get_blogs_directory_permalink() . '">' . esc_html( $title ) . '</a>';
+			$title = '<a href="' . bboss_get_blogs_directory_permalink() . '">' . esc_html( $title ) . '</a>';
 		}
 
 		/**
@@ -82,22 +82,22 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 
 		?>
 
-		<?php if ( bp_has_activities( $args ) ) : ?>
+		<?php if ( bboss_has_activities( $args ) ) : ?>
 
 			<ul id="blog-post-list" class="activity-list item-list">
 
 				<?php
-				while ( bp_activities() ) :
-					bp_the_activity();
+				while ( bboss_activities() ) :
+					bboss_the_activity();
 					?>
 
 					<li>
 						<div class="activity-content" style="margin: 0">
-							<div class="activity-header"><?php bp_activity_action(); ?></div>
+							<div class="activity-header"><?php bboss_activity_action(); ?></div>
 
-							<?php if ( bp_get_activity_content_body() ) : ?>
+							<?php if ( bboss_get_activity_content_body() ) : ?>
 
-								<div class="activity-inner"><?php bp_activity_content_body(); ?></div>
+								<div class="activity-inner"><?php bboss_activity_content_body(); ?></div>
 
 							<?php endif; ?>
 
@@ -147,7 +147,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 * @return void
 	 */
 	public function form( $instance ) {
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 			(array) $instance,
 			array(
 				'title'      => __( 'Recent Networkwide Posts', 'buddyboss' ),

@@ -4,7 +4,7 @@
  *
  * @package    BuddyBoss\Template
  * @since      BuddyBoss 2.9.00
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @version    1.0.0
  */
 

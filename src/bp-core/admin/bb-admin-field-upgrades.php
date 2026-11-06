@@ -39,8 +39,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Transient key.
  */
-function bb_field_upgrades_transient_key() {
-	$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+function bboss_field_upgrades_transient_key() {
+	$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	return 'bb_field_upgrades_data_v_' . md5( $version );
 }
 
@@ -56,8 +56,8 @@ function bb_field_upgrades_transient_key() {
  *
  * @return array|false Decoded catalog data with 'items' key, or false when unavailable.
  */
-function bb_get_field_upgrades_data() {
-	$data = get_transient( bb_field_upgrades_transient_key() );
+function bboss_get_field_upgrades_data() {
+	$data = get_transient( bboss_field_upgrades_transient_key() );
 
 	if ( false !== $data ) {
 		return $data;
@@ -66,7 +66,7 @@ function bb_get_field_upgrades_data() {
 	// Cache miss. Prefer the stale catalog (keeps the AJAX path non-blocking);
 	// meanwhile schedule an async refresh for the next request.
 	$stale = get_option( 'bb_field_upgrades_data_stale', false );
-	bb_schedule_field_upgrades_refresh();
+	bboss_schedule_field_upgrades_refresh();
 
 	if ( is_array( $stale ) && ! empty( $stale['items'] ) ) {
 		return $stale;
@@ -76,7 +76,7 @@ function bb_get_field_upgrades_data() {
 	// a synchronous fetch here the admin would see no upgrade modals until
 	// WP-Cron fires. Do one blocking fetch so the modals render immediately;
 	// subsequent requests stay fast via the transient + stale path above.
-	return bb_refresh_field_upgrades_data();
+	return bboss_refresh_field_upgrades_data();
 }
 
 /**
@@ -87,7 +87,7 @@ function bb_get_field_upgrades_data() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_schedule_field_upgrades_refresh() {
+function bboss_schedule_field_upgrades_refresh() {
 	if ( ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 		return;
 	}
@@ -113,7 +113,7 @@ function bb_schedule_field_upgrades_refresh() {
  *
  * @return array|false Fetched data on success, false on any failure.
  */
-function bb_refresh_field_upgrades_data() {
+function bboss_refresh_field_upgrades_data() {
 	delete_transient( 'bb_field_upgrades_fetching' );
 
 	/**
@@ -140,7 +140,7 @@ function bb_refresh_field_upgrades_data() {
 		return false;
 	}
 
-	set_transient( bb_field_upgrades_transient_key(), $parsed, 6 * HOUR_IN_SECONDS );
+	set_transient( bboss_field_upgrades_transient_key(), $parsed, 6 * HOUR_IN_SECONDS );
 	update_option( 'bb_field_upgrades_data_stale', $parsed, false );
 
 	return $parsed;
@@ -155,7 +155,7 @@ add_action( 'bb_field_upgrades_daily_refresh', 'bb_refresh_field_upgrades_data' 
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_schedule_field_upgrades_daily_refresh() {
+function bboss_schedule_field_upgrades_daily_refresh() {
 	if ( ! wp_next_scheduled( 'bb_field_upgrades_daily_refresh' ) ) {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'bb_field_upgrades_daily_refresh' );
 	}
@@ -185,7 +185,7 @@ add_action( 'admin_init', 'bb_schedule_field_upgrades_daily_refresh' );
  * @param string $field_name Field name (option key). Empty when resolving for a section header.
  * @return array|null Matching catalog entry, or null when nothing matches.
  */
-function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = '', $field_name = '' ) {
+function bboss_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = '', $field_name = '' ) {
 	static $index = null;
 
 	if ( empty( $feature_id ) ) {
@@ -194,7 +194,7 @@ function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = ''
 
 	if ( null === $index ) {
 		$index = array();
-		$data  = bb_get_field_upgrades_data();
+		$data  = bboss_get_field_upgrades_data();
 
 		if ( ! empty( $data['items'] ) && is_array( $data['items'] ) ) {
 			foreach ( $data['items'] as $item ) {
@@ -315,7 +315,7 @@ function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = ''
  * @param string $url Raw video URL from the catalog.
  * @return array|null { type: 'youtube'|'vimeo'|'mp4', url: string } or null on no match.
  */
-function bb_detect_upgrade_video_provider( $url ) {
+function bboss_detect_upgrade_video_provider( $url ) {
 	if ( empty( $url ) || ! is_string( $url ) ) {
 		return null;
 	}
@@ -401,9 +401,9 @@ function bb_detect_upgrade_video_provider( $url ) {
  * @return array { type: '', url: '', poster: '' } shape; type is one of
  *               'youtube'|'vimeo'|'mp4'|'image'|'' (empty when nothing set).
  */
-function bb_admin_build_upgrade_media( $video_url, $image_url ) {
+function bboss_admin_build_upgrade_media( $video_url, $image_url ) {
 	$image_url = esc_url_raw( $image_url );
-	$video     = bb_detect_upgrade_video_provider( $video_url );
+	$video     = bboss_detect_upgrade_video_provider( $video_url );
 
 	if ( null !== $video ) {
 		return array(
@@ -444,12 +444,12 @@ function bb_admin_build_upgrade_media( $video_url, $image_url ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param array  $entry         Resolved catalog entry from `bb_get_field_upgrade_for()`.
+ * @param array  $entry         Resolved catalog entry from `bboss_get_field_upgrade_for()`.
  * @param string $fallback_label Label to use when the catalog entry omits one
  *                               (e.g. the field's own label).
  * @return array Modal payload safe for inclusion in the AJAX response.
  */
-function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
+function bboss_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 	if ( ! is_array( $entry ) ) {
 		return array();
 	}
@@ -459,7 +459,7 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 	// names winning, so a caller cannot silently get an empty modal by reaching for the
 	// wrong set — the failure mode is invisible, because every missing key falls through
 	// to a benign default and the dialog renders blank rather than erroring.
-	$media = bb_admin_build_upgrade_media(
+	$media = bboss_admin_build_upgrade_media(
 		$entry['upgrade_video_url'] ?? $entry['video_url'] ?? '',
 		$entry['upgrade_image_url'] ?? $entry['image_url'] ?? ''
 	);
@@ -491,7 +491,7 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_reset_field_upgrades_index() {
+function bboss_reset_field_upgrades_index() {
 	// Re-invoke the resolver with sentinel arguments to force a rebuild
 	// path on next call. The cleanest way is a dedicated reset wrapper
 	// that owns the static — but PHP's static scoping means we have to
@@ -499,7 +499,7 @@ function bb_reset_field_upgrades_index() {
 	// transient + stale option here so the next call rebuilds from disk
 	// or remote, and rely on the static rebuilding on the next request
 	// boundary (admin AJAX requests are short-lived).
-	delete_transient( bb_field_upgrades_transient_key() );
+	delete_transient( bboss_field_upgrades_transient_key() );
 }
 
 /**
@@ -519,14 +519,14 @@ function bb_reset_field_upgrades_index() {
  * refresh visibly slow (3-4s blocking S3 round-trip on the WP-Admin path).
  *
  * The manual `?bb_clear_placeholder_cache=1` trigger does NOT call this
- * function for stale-deletion — see `bb_flush_field_upgrades_cache_full()`
+ * function for stale-deletion — see `bboss_flush_field_upgrades_cache_full()`
  * below for the truly-need-fresh-now case (license change, manual flush).
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_flush_field_upgrades_cache() {
-	delete_transient( bb_field_upgrades_transient_key() );
-	bb_schedule_field_upgrades_refresh();
+function bboss_flush_field_upgrades_cache() {
+	delete_transient( bboss_field_upgrades_transient_key() );
+	bboss_schedule_field_upgrades_refresh();
 }
 // Hook into the canonical Settings 2.0 cache flusher so every existing
 // trigger (plugin activation, manual `?bb_clear_placeholder_cache=1`,
@@ -538,15 +538,15 @@ add_action( 'bb_feature_caches_flushed', 'bb_flush_field_upgrades_cache' );
  *
  * Use this when the catalog content itself may have changed semantically
  * (license tier change, manual admin trigger). For plugin lifecycle
- * events use the lighter `bb_flush_field_upgrades_cache()` which keeps
+ * events use the lighter `bboss_flush_field_upgrades_cache()` which keeps
  * the stale option around for instant AJAX serving.
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_flush_field_upgrades_cache_full() {
-	delete_transient( bb_field_upgrades_transient_key() );
+function bboss_flush_field_upgrades_cache_full() {
+	delete_transient( bboss_field_upgrades_transient_key() );
 	delete_option( 'bb_field_upgrades_data_stale' );
-	bb_schedule_field_upgrades_refresh();
+	bboss_schedule_field_upgrades_refresh();
 }
 
 /**
@@ -558,15 +558,15 @@ function bb_flush_field_upgrades_cache_full() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_register_field_upgrades_license_hooks() {
+function bboss_register_field_upgrades_license_hooks() {
 	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {
 		return;
 	}
 
 	// Network-wide when Platform is network-activated.
 	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
-	if ( empty( $plugin_id ) && defined( 'PLATFORM_EDITION' ) ) {
-		$plugin_id = PLATFORM_EDITION;
+	if ( empty( $plugin_id ) && defined( 'BBOSS_PLATFORM_EDITION' ) ) {
+		$plugin_id = BBOSS_PLATFORM_EDITION;
 	}
 
 	if ( ! empty( $plugin_id ) ) {

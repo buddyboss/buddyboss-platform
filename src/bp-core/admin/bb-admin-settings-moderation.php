@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return int[] Array of administrator user IDs.
  */
-function bb_moderation_get_admin_user_ids() {
+function bboss_moderation_get_admin_user_ids() {
 	static $admins = null;
 
 	if ( null === $admins ) {
@@ -47,14 +47,14 @@ function bb_moderation_get_admin_user_ids() {
  * avatars with a generic placeholder for suspended users. In admin panels,
  * administrators need to see the actual user data.
  *
- * Shared between BB_Admin_Flagged_Members_Ajax and BB_Admin_Reported_Content_Ajax.
+ * Shared between BBoss_Admin_Flagged_Members_Ajax and BBoss_Admin_Reported_Content_Ajax.
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_moderation_bypass_suspend_filters() {
+function bboss_moderation_bypass_suspend_filters() {
 	global $moderation_suspend;
 
-	if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
+	if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BBoss_Suspend_Member ) {
 		return;
 	}
 
@@ -81,14 +81,14 @@ function bb_moderation_bypass_suspend_filters() {
 /**
  * Restore suspension filters after admin data fetch.
  *
- * Shared between BB_Admin_Flagged_Members_Ajax and BB_Admin_Reported_Content_Ajax.
+ * Shared between BBoss_Admin_Flagged_Members_Ajax and BBoss_Admin_Reported_Content_Ajax.
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_moderation_restore_suspend_filters() {
+function bboss_moderation_restore_suspend_filters() {
 	global $moderation_suspend;
 
-	if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
+	if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BBoss_Suspend_Member ) {
 		return;
 	}
 
@@ -120,13 +120,13 @@ function bb_moderation_restore_suspend_filters() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_moderation_feature() {
+function bboss_admin_settings_register_moderation_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'moderation',
 		array(
 			'label'              => __( 'Moderation', 'buddyboss' ),
@@ -139,7 +139,7 @@ function bb_admin_settings_register_moderation_feature() {
 			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => function () {
-				return bp_is_active( 'moderation' );
+				return bboss_is_active( 'moderation' );
 			},
 			'settings_route'     => '/settings/moderation',
 			'order'              => 40,
@@ -175,7 +175,7 @@ function bb_admin_settings_register_moderation_feature() {
 
 	// When moderation is disabled, only the feature card is needed (so admin can re-enable).
 	// Side panels, sections, and fields depend on moderation functions that aren't loaded.
-	if ( ! bp_is_active( 'moderation' ) ) {
+	if ( ! bboss_is_active( 'moderation' ) ) {
 		return;
 	}
 
@@ -189,7 +189,7 @@ function bb_admin_settings_register_moderation_feature() {
 	// =========================================================================
 
 	// Side Panel 1: Member Moderation (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'moderation',
 		'member_moderation',
 		array(
@@ -198,7 +198,7 @@ function bb_admin_settings_register_moderation_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-minus',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -213,7 +213,7 @@ function bb_admin_settings_register_moderation_feature() {
 	);
 
 	// Side Panel 2: Content Reporting.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'moderation',
 		'content_reporting',
 		array(
@@ -222,7 +222,7 @@ function bb_admin_settings_register_moderation_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-flag',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -236,7 +236,7 @@ function bb_admin_settings_register_moderation_feature() {
 	);
 
 	// Side Panel 3: Reporting Categories.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'moderation',
 		'reporting_categories',
 		array(
@@ -250,7 +250,7 @@ function bb_admin_settings_register_moderation_feature() {
 	);
 
 	// Side Panel: Flagged Members (custom panel screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'moderation',
 		'flagged_members',
 		array(
@@ -265,7 +265,7 @@ function bb_admin_settings_register_moderation_feature() {
 	);
 
 	// Side Panel: Reported Content (custom panel screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'moderation',
 		'reported_content',
 		array(
@@ -300,10 +300,10 @@ function bb_admin_settings_register_moderation_feature() {
 	// =========================================================================
 
 	// Panel 1: Member Moderation.
-	bb_moderation_register_member_moderation_fields();
+	bboss_moderation_register_member_moderation_fields();
 
 	// Panel 2: Content Reporting.
-	bb_moderation_register_content_reporting_fields();
+	bboss_moderation_register_content_reporting_fields();
 
 	/**
 	 * Fires after all Moderation settings panels are registered.

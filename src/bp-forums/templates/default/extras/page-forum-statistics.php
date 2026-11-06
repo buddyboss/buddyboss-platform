@@ -28,25 +28,25 @@ get_header(); ?>
 
 				<div id="bbpress-forums">
 
-					<?php bbp_get_template_part( 'content', 'statistics' ); ?>
+					<?php bboss_bbp_get_template_part( 'content', 'statistics' ); ?>
 
 					<?php do_action( 'bbp_before_popular_topics' ); ?>
 
-					<?php bbp_set_query_name( 'bbp_popular_topics' ); ?>
+					<?php bboss_bbp_set_query_name( 'bbp_popular_topics' ); ?>
 
-					<?php if ( bbp_view_query( 'popular' ) ) : ?>
+					<?php if ( bboss_bbp_view_query( 'popular' ) ) : ?>
 
 						<h2 class="entry-title"><?php esc_html_e( 'Popular Discussions', 'buddyboss' ); ?></h2>
 
-						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 
-						<?php bbp_get_template_part( 'loop', 'topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'loop', 'topics' ); ?>
 
-						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+						<?php bboss_bbp_get_template_part( 'pagination', 'topics' ); ?>
 
 					<?php endif; ?>
 
-					<?php bbp_reset_query_name(); ?>
+					<?php bboss_bbp_reset_query_name(); ?>
 
 					<?php do_action( 'bbp_after_popular_topics' ); ?>
 

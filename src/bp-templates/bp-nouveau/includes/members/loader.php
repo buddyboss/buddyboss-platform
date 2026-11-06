@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Members {
+class BBoss_Nouveau_Members {
 	/**
 	 * Constructor
 	 *
@@ -58,7 +58,7 @@ class BP_Nouveau_Members {
 		$ajax_actions = array(
 			array(
 				'members_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => true,
 				),
 			),
@@ -117,7 +117,7 @@ class BP_Nouveau_Members {
 		$this->is_user_home_sidebar = true;
 
 		// Add needed filters.
-		bp_nouveau_members_add_home_widget_filters();
+		bboss_nouveau_members_add_home_widget_filters();
 	}
 
 	/**
@@ -136,7 +136,7 @@ class BP_Nouveau_Members {
 		$this->is_user_home_sidebar = false;
 
 		// Remove no more needed filters.
-		bp_nouveau_members_remove_home_widget_filters();
+		bboss_nouveau_members_remove_home_widget_filters();
 	}
 }
 
@@ -145,11 +145,11 @@ class BP_Nouveau_Members {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_members( $bp_nouveau = null ) {
+function bboss_nouveau_members( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->members = new BP_Nouveau_Members();
+	$bp_nouveau->members = new BBoss_Nouveau_Members();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_members', 5, 1 );

@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Retrieve sitewide activity
  *
- * You should use bp_activity_get() instead
+ * You should use bboss_activity_get() instead
  *
  * @since BuddyPress 1.0.0
  * @deprecated BuddyPress 1.2.0
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return object $activity The activity/activities object
  */
-function bp_activity_get_sitewide( $args = '' ) {
+function bboss_activity_get_sitewide( $args = '' ) {
 	_deprecated_function( __FUNCTION__, '1.2', 'bp_activity_get()' );
 
 	$defaults = array(
@@ -46,9 +46,9 @@ function bp_activity_get_sitewide( $args = '' ) {
 		'filter'           => array(),
 	);
 
-	$args = bp_parse_args( $args, $defaults );
+	$args = bboss_parse_args( $args, $defaults );
 
-	return apply_filters( 'bp_activity_get_sitewide', BP_Activity_Activity::get( $args ), $r );
+	return apply_filters( 'bp_activity_get_sitewide', BBoss_Activity_Activity::get( $args ), $r );
 }
 
 

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.9.0
  */
 #[\AllowDynamicProperties]
-class BP_Notifications_Notification {
+class BBoss_Notifications_Notification {
 
 	/**
 	 * The notification ID.
@@ -152,7 +152,7 @@ class BP_Notifications_Notification {
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_Notifications_Notification $value Current instance of the notification item being saved. Passed by reference.
+		 * @param BBoss_Notifications_Notification $value Current instance of the notification item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_notification_before_save', array( &$this ) );
 
@@ -184,7 +184,7 @@ class BP_Notifications_Notification {
 				$this->id = $wpdb->insert_id;
 
 				// Set the notification type.
-				bp_notifications_update_meta( $this->id, 'is_modern', ! bb_enabled_legacy_email_preference() );
+				bboss_notifications_update_meta( $this->id, 'is_modern', ! bboss_enabled_legacy_email_preference() );
 
 				$this->inserted = true;
 			}
@@ -196,7 +196,7 @@ class BP_Notifications_Notification {
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_Notifications_Notification $value Current instance of the notification item being saved.
+		 * @param BBoss_Notifications_Notification $value Current instance of the notification item being saved.
 		 *                                             Passed by reference.
 		 */
 		do_action_ref_array( 'bp_notification_after_save', array( &$this ) );
@@ -216,7 +216,7 @@ class BP_Notifications_Notification {
 	public function populate() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Look for a notification.
 		$notification = wp_cache_get( $this->id, 'bp_notifications' );
@@ -235,7 +235,7 @@ class BP_Notifications_Notification {
 			$this->component_action  = $notification->component_action;
 			$this->date_notified     = $notification->date_notified;
 			$this->is_new            = (int) $notification->is_new;
-			$this->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $notification ) : false;
+			$this->readonly          = function_exists( 'bboss_notification_is_read_only' ) ? bboss_notification_is_read_only( $notification ) : false;
 		}
 	}
 
@@ -262,7 +262,7 @@ class BP_Notifications_Notification {
 	 */
 	protected static function _insert( $data = array(), $data_format = array() ) {
 		global $wpdb;
-		return $wpdb->insert( buddypress()->notifications->table_name, $data, $data_format );
+		return $wpdb->insert( bboss()->notifications->table_name, $data, $data_format );
 	}
 
 	/**
@@ -284,7 +284,7 @@ class BP_Notifications_Notification {
 	 */
 	protected static function _update( $data = array(), $where = array(), $data_format = array(), $where_format = array() ) {
 		global $wpdb;
-		return $wpdb->update( buddypress()->notifications->table_name, $data, $where, $data_format, $where_format );
+		return $wpdb->update( bboss()->notifications->table_name, $data, $where, $data_format, $where_format );
 	}
 
 	/**
@@ -303,14 +303,14 @@ class BP_Notifications_Notification {
 	protected static function _delete( $where = array(), $where_format = array() ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$where_sql = self::get_where_sql( $where );
 
 		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $notifications ) ) {
 			foreach ( $notifications as $notification ) {
-				bp_notifications_delete_meta( $notification->id );
+				bboss_notifications_delete_meta( $notification->id );
 			}
 		}
 
@@ -320,12 +320,12 @@ class BP_Notifications_Notification {
 	/**
 	 * Assemble the WHERE clause of a get() SQL statement.
 	 *
-	 * Used by BP_Notifications_Notification::get() to create its WHERE
+	 * Used by BBoss_Notifications_Notification::get() to create its WHERE
 	 * clause.
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @param array  $args           See {@link BP_Notifications_Notification::get()}
+	 * @param array  $args           See {@link BBoss_Notifications_Notification::get()}
 	 *                               for more details.
 	 * @param string $select_sql     SQL SELECT fragment.
 	 * @param string $from_sql       SQL FROM fragment.
@@ -423,7 +423,7 @@ class BP_Notifications_Notification {
 
 		// The search_terms.
 		if ( ! empty( $args['search_terms'] ) ) {
-			$search_terms_like                = '%' . bp_esc_like( $args['search_terms'] ) . '%';
+			$search_terms_like                = '%' . bboss_esc_like( $args['search_terms'] ) . '%';
 			$where_conditions['search_terms'] = $wpdb->prepare( '( component_name LIKE %s OR component_action LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
@@ -462,12 +462,12 @@ class BP_Notifications_Notification {
 	/**
 	 * Assemble the ORDER BY clause of a get() SQL statement.
 	 *
-	 * Used by BP_Notifications_Notification::get() to create its ORDER BY
+	 * Used by BBoss_Notifications_Notification::get() to create its ORDER BY
 	 * clause.
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @param array $args See {@link BP_Notifications_Notification::get()}
+	 * @param array $args See {@link BBoss_Notifications_Notification::get()}
 	 *                    for more details.
 	 * @return string ORDER BY clause.
 	 */
@@ -517,11 +517,11 @@ class BP_Notifications_Notification {
 	/**
 	 * Assemble the LIMIT clause of a get() SQL statement.
 	 *
-	 * Used by BP_Notifications_Notification::get() to create its LIMIT clause.
+	 * Used by BBoss_Notifications_Notification::get() to create its LIMIT clause.
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @param array $args See {@link BP_Notifications_Notification::get()}
+	 * @param array $args See {@link BBoss_Notifications_Notification::get()}
 	 *                    for more details.
 	 * @return string $retval LIMIT clause.
 	 */
@@ -579,7 +579,7 @@ class BP_Notifications_Notification {
 	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $args Associative array of filter arguments.
-	 *                    See {@BP_Notifications_Notification::get()}
+	 *                    See {@BBoss_Notifications_Notification::get()}
 	 *                    for a breakdown.
 	 * @return array Associative array of 'data' and 'format' args.
 	 */
@@ -649,7 +649,7 @@ class BP_Notifications_Notification {
 	public static function check_access( $user_id, $notification_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$cache_key = 'bp_notifications_check_access_' . $user_id . '_' . $notification_id;
 		$record    = wp_cache_get( $cache_key, 'bp_notifications' );
@@ -670,16 +670,16 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return bp_parse_args(
+		return bboss_parse_args(
 			$args,
 			array(
 				'id'                => false,
 				'user_id'           => false,
 				'item_id'           => false,
 				'secondary_item_id' => false,
-				'component_name'    => bp_notifications_get_registered_components(),
+				'component_name'    => bboss_notifications_get_registered_components(),
 				'component_action'  => false,
-				'excluded_action'   => bb_notification_excluded_component_actions(),
+				'excluded_action'   => bboss_notification_excluded_component_actions(),
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -745,7 +745,7 @@ class BP_Notifications_Notification {
 		$r = self::parse_args( $args );
 
 		// Get BuddyPress.
-		$bp = buddypress();
+		$bp = bboss();
 
 		// METADATA.
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
@@ -830,12 +830,12 @@ class BP_Notifications_Notification {
 				$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
 				$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
 				$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
-				$results[ $key ]->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $results[ $key ] ) : false;
+				$results[ $key ]->readonly          = function_exists( 'bboss_notification_is_read_only' ) ? bboss_notification_is_read_only( $results[ $key ] ) : false;
 			}
 
 			// Update meta cache.
 			if ( true === $r['update_meta_cache'] ) {
-				bp_notifications_update_meta_cache( wp_list_pluck( $results, 'id' ) );
+				bboss_notifications_update_meta_cache( wp_list_pluck( $results, 'id' ) );
 			}
 		}
 
@@ -847,9 +847,9 @@ class BP_Notifications_Notification {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Notifications_Notification::get() for a description of arguments.
+	 * @see BBoss_Notifications_Notification::get() for a description of arguments.
 	 *
-	 * @param array $args See {@link BP_Notifications_Notification::get()}.
+	 * @param array $args See {@link BBoss_Notifications_Notification::get()}.
 	 * @return int Count of located items.
 	 */
 	public static function get_total_count( $args ) {
@@ -859,7 +859,7 @@ class BP_Notifications_Notification {
 		$r = self::parse_args( $args );
 
 		// Load BuddyPress.
-		$bp = buddypress();
+		$bp = bboss();
 
 		// METADATA.
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
@@ -920,11 +920,11 @@ class BP_Notifications_Notification {
 	}
 
 	/**
-	 * Get the SQL for the 'meta_query' param in BP_Notifications_Notification::get().
+	 * Get the SQL for the 'meta_query' param in BBoss_Notifications_Notification::get().
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses. However,
-	 * since BP_Notifications_Notification::get() builds its SQL differently than
+	 * since BBoss_Notifications_Notification::get() builds its SQL differently than
 	 * WP_Query, we have to alter the return value (stripping the leading
 	 * AND keyword from the 'where' clause).
 	 *
@@ -948,7 +948,7 @@ class BP_Notifications_Notification {
 		}
 
 		// WP_Meta_Query expects the table name at $wpdb->notificationmeta.
-		$GLOBALS['wpdb']->notificationmeta = buddypress()->notifications->table_name_meta;
+		$GLOBALS['wpdb']->notificationmeta = bboss()->notifications->table_name_meta;
 
 		$n_meta_query = new WP_Meta_Query( $meta_query );
 		$meta_sql     = $n_meta_query->get_sql( 'notification', 'n', 'id' );
@@ -961,9 +961,9 @@ class BP_Notifications_Notification {
 	}
 
 	/**
-	 * Get the SQL for the 'date_query' param in BP_Notifications_Notification::get().
+	 * Get the SQL for the 'date_query' param in BBoss_Notifications_Notification::get().
 	 *
-	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
+	 * We use BBoss_Date_Query, which extends WP_Date_Query, to do the heavy lifting
 	 * of parsing the date_query array and creating the necessary SQL clauses.
 	 *
 	 * @since BuddyPress 2.3.0
@@ -973,7 +973,7 @@ class BP_Notifications_Notification {
 	 * @return string
 	 */
 	public static function get_date_query_sql( $date_query = array() ) {
-		return BP_Date_Query::get_where_sql( $date_query, 'n.date_notified' );
+		return BBoss_Date_Query::get_where_sql( $date_query, 'n.date_notified' );
 	}
 
 	/**
@@ -981,7 +981,7 @@ class BP_Notifications_Notification {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Notifications_Notification::get() for a description of
+	 * @see BBoss_Notifications_Notification::get() for a description of
 	 *      accepted update/where arguments.
 	 *
 	 * @param array $update_args Associative array of fields to update,
@@ -1001,8 +1001,8 @@ class BP_Notifications_Notification {
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param array $update_args See BP_Notifications_Notification::update().
-		 * @param array $where_args  See BP_Notifications_Notification::update().
+		 * @param array $update_args See BBoss_Notifications_Notification::update().
+		 * @param array $where_args  See BBoss_Notifications_Notification::update().
 		 */
 		do_action( 'bp_notification_before_update', $update_args, $where_args );
 
@@ -1019,7 +1019,7 @@ class BP_Notifications_Notification {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Notifications_Notification::get() for a description of
+	 * @see BBoss_Notifications_Notification::get() for a description of
 	 *      accepted update/where arguments.
 	 *
 	 * @param array $args Associative array of columns/values, to determine
@@ -1033,7 +1033,7 @@ class BP_Notifications_Notification {
 
 		$where = self::get_query_clauses( $args );
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$where_sql = self::get_where_sql( $where['data'] );
 		$notifications = $wpdb->get_results( "SELECT * FROM {$bp->notifications->table_name} {$where_sql}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
@@ -1073,7 +1073,7 @@ class BP_Notifications_Notification {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Notifications_Notification::delete() for explanation of
+	 * @see BBoss_Notifications_Notification::delete() for explanation of
 	 *      return value.
 	 *
 	 * @param int $id ID of the notification item to be deleted.
@@ -1167,10 +1167,10 @@ class BP_Notifications_Notification {
 	 * }
 	 */
 	public static function get_current_notifications_for_user( $args = array() ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
-				'user_id'      => bp_loggedin_user_id(),
+				'user_id'      => bboss_loggedin_user_id(),
 				'is_new'       => true,
 				'page'         => 1,
 				'per_page'     => 25,
@@ -1327,9 +1327,9 @@ class BP_Notifications_Notification {
 	 *
 	 * Multiple notifications of the same type (those that share the same component_name
 	 * and component_action) are collapsed for formatting as "You have 5 pending
-	 * connection requests", etc. See bp_notifications_get_notifications_for_user().
+	 * connection requests", etc. See bboss_notifications_get_notifications_for_user().
 	 * For a full-fidelity list of user notifications, use
-	 * bp_notifications_get_all_notifications_for_user().
+	 * bboss_notifications_get_all_notifications_for_user().
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
@@ -1340,7 +1340,7 @@ class BP_Notifications_Notification {
 		global $wpdb;
 
 		// Load BuddyPress.
-		$bp = buddypress();
+		$bp = bboss();
 
 		// SELECT.
 		$select_sql = 'SELECT id, user_id, item_id, secondary_item_id, component_name, component_action, date_notified, is_new, COUNT(id) as total_count ';
@@ -1353,7 +1353,7 @@ class BP_Notifications_Notification {
 			array(
 				'user_id'        => $user_id,
 				'is_new'         => 1,
-				'component_name' => bp_notifications_get_registered_components(),
+				'component_name' => bboss_notifications_get_registered_components(),
 			),
 			$select_sql,
 			$from_sql

@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // No logged in users
-bbp_logged_in_redirect();
+bboss_bbp_logged_in_redirect();
 
 // Begin Template
 get_header(); ?>
@@ -32,9 +32,9 @@ get_header(); ?>
 
 				<div id="bbpress-forums">
 
-					<?php bbp_breadcrumb(); ?>
+					<?php bboss_bbp_breadcrumb(); ?>
 
-					<?php bbp_get_template_part( 'form', 'user-lost-pass' ); ?>
+					<?php bboss_bbp_get_template_part( 'form', 'user-lost-pass' ); ?>
 
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Friends_Endpoint class
+ * BP REST: BBoss_REST_Friends_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Friends_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Friends_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Allow batch.
@@ -31,8 +31,8 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->friends->id;
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->friends->id;
 	}
 
 	/**
@@ -187,7 +187,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		}
 
 		// Actually, query it.
-		$friendships = BP_Friends_Friendship::get_friendships( $user->ID, $args );
+		$friendships = BBoss_Friends_Friendship::get_friendships( $user->ID, $args );
 
 		$retval = array();
 		foreach ( (array) $friendships as $friendship ) {
@@ -197,7 +197,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, count( $friendships ), $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, count( $friendships ), $args['per_page'] );
 
 		/**
 		 * Fires after friendships are fetched via the REST API.
@@ -285,7 +285,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires before a friendship is retrieved via the REST API.
 		 *
-		 * @param BP_Friends_Friendship $friendship The friendship object.
+		 * @param BBoss_Friends_Friendship $friendship The friendship object.
 		 * @param WP_REST_Response      $response   The response data.
 		 * @param WP_REST_Request       $request    The request sent to the API.
 		 *
@@ -363,7 +363,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		}
 
 		// Check if users are friends or if there is a friendship request.
-		if ( 'not_friends' !== friends_check_friendship_status( $initiator_id->ID, $friend_id->ID ) ) {
+		if ( 'not_friends' !== bboss_friends_check_friendship_status( $initiator_id->ID, $friend_id->ID ) ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
 				__( 'Those users are already friends or have sent friendship request(s) recently.', 'buddyboss' ),
@@ -373,10 +373,10 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$is_moderator = bp_current_user_can( 'bp_moderate' );
+		$is_moderator = bboss_current_user_can( 'bp_moderate' );
 
 		// Only admins can create friendship requests for other people.
-		if ( ! in_array( bp_loggedin_user_id(), array( $initiator_id->ID, $friend_id->ID ), true ) && ! $is_moderator ) {
+		if ( ! in_array( bboss_loggedin_user_id(), array( $initiator_id->ID, $friend_id->ID ), true ) && ! $is_moderator ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
 				__( 'You are not allowed to perform this action.', 'buddyboss' ),
@@ -393,7 +393,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		}
 
 		// Adding friendship.
-		if ( ! friends_add_friend( $initiator_id->ID, $friend_id->ID, $request['force'] ) ) {
+		if ( ! bboss_friends_add_friend( $initiator_id->ID, $friend_id->ID, $request['force'] ) ) {
 			return new WP_Error(
 				'bp_rest_friends_create_item_failed',
 				__( 'There was a problem sending the connection request.', 'buddyboss' ),
@@ -405,7 +405,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 
 		// Get friendship.
 		$friendship = $this->get_friendship_object(
-			BP_Friends_Friendship::get_friendship_id( $initiator_id->ID, $friend_id->ID )
+			BBoss_Friends_Friendship::get_friendship_id( $initiator_id->ID, $friend_id->ID )
 		);
 
 		if ( ! $friendship || empty( $friendship->id ) ) {
@@ -427,7 +427,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a friendship is created via the REST API.
 		 *
-		 * @param BP_Friends_Friendship $friendship The friendship object.
+		 * @param BBoss_Friends_Friendship $friendship The friendship object.
 		 * @param WP_REST_Response      $retval     The response data.
 		 * @param WP_REST_Request       $request    The request sent to the API.
 		 *
@@ -493,7 +493,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		}
 
 		// Accept friendship.
-		if ( ! friends_accept_friendship( $friendship->id ) ) {
+		if ( ! bboss_friends_accept_friendship( $friendship->id ) ) {
 			return new WP_Error(
 				'bp_rest_friends_cannot_update_item',
 				__( 'Could not accept friendship.', 'buddyboss' ),
@@ -515,7 +515,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a friendship is updated via the REST API.
 		 *
-		 * @param BP_Friends_Friendship $friendship Friendship object.
+		 * @param BBoss_Friends_Friendship $friendship Friendship object.
 		 * @param WP_REST_Response      $response   The response data.
 		 * @param WP_REST_Request       $request    The request sent to the API.
 		 *
@@ -589,16 +589,16 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$user_id   = bp_loggedin_user_id();
+		$user_id   = bboss_loggedin_user_id();
 		$friend_id = $request['friend_id'];
 
-		$friendship_id = BP_Friends_Friendship::get_friendship_id( $user_id, $friend_id );
+		$friendship_id = BBoss_Friends_Friendship::get_friendship_id( $user_id, $friend_id );
 		$friendship    = $this->get_friendship_object( $friendship_id );
 		$previous      = $this->prepare_item_for_response( $friendship, $request );
 
 		if (
-			'is_friend' === BP_Friends_Friendship::check_is_friend( $user_id, $friend_id )
-			&& friends_remove_friend( $user_id, $friend_id )
+			'is_friend' === BBoss_Friends_Friendship::check_is_friend( $user_id, $friend_id )
+			&& bboss_friends_remove_friend( $user_id, $friend_id )
 		) {
 			$status = true;
 		} else {
@@ -623,7 +623,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a friendship is deleted via the REST API.
 		 *
-		 * @param BP_Friends_Friendship $friendship Friendship object.
+		 * @param BBoss_Friends_Friendship $friendship Friendship object.
 		 * @param WP_REST_Response      $response   The response data.
 		 * @param WP_REST_Request       $request    The request sent to the API.
 		 *
@@ -688,7 +688,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$user_id  = bp_loggedin_user_id();
+		$user_id  = bboss_loggedin_user_id();
 		$previous = $this->prepare_item_for_response( $friendship, $request );
 
 		/**
@@ -698,13 +698,13 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		 * This is the user who requested the friendship, and is doing the withdrawing.
 		 */
 		if ( $user_id === $friendship->initiator_user_id ) {
-			$deleted = friends_withdraw_friendship( $friendship->initiator_user_id, $friendship->friend_user_id );
+			$deleted = bboss_friends_withdraw_friendship( $friendship->initiator_user_id, $friendship->friend_user_id );
 		} else {
 			/**
 			 * Otherwise, this change is being initiated by the user, friend,
 			 * who received the friendship reject.
 			 */
-			$deleted = friends_reject_friendship( $friendship->id );
+			$deleted = bboss_friends_reject_friendship( $friendship->id );
 		}
 
 		if ( ! $deleted ) {
@@ -729,7 +729,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a friendship is deleted via the REST API.
 		 *
-		 * @param BP_Friends_Friendship $friendship Friendship object.
+		 * @param BBoss_Friends_Friendship $friendship Friendship object.
 		 * @param WP_REST_Response      $response   The response data.
 		 * @param WP_REST_Request       $request    The request sent to the API.
 		 *
@@ -765,7 +765,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares friendship data to return as an object.
 	 *
-	 * @param BP_Friends_Friendship $friendship Friendship object.
+	 * @param BBoss_Friends_Friendship $friendship Friendship object.
 	 * @param WP_REST_Request       $request    Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -777,7 +777,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 			'initiator_id' => $friendship->initiator_user_id,
 			'friend_id'    => $friendship->friend_user_id,
 			'is_confirmed' => (bool) $friendship->is_confirmed,
-			'date_created' => bp_rest_prepare_date_response( $friendship->date_created ),
+			'date_created' => bboss_rest_prepare_date_response( $friendship->date_created ),
 		);
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -790,7 +790,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response      $response   Response generated by the request.
 		 * @param WP_REST_Request       $request    Request used to generate the response.
-		 * @param BP_Friends_Friendship $friendship The friendship object.
+		 * @param BBoss_Friends_Friendship $friendship The friendship object.
 		 *
 		 * @since 0.1.0
 		 */
@@ -802,11 +802,11 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param int $friendship_id Friendship ID.
 	 *
-	 * @return BP_Friends_Friendship
+	 * @return BBoss_Friends_Friendship
 	 * @since 0.1.0
 	 */
 	public function get_friendship_object( $friendship_id ) {
-		return new BP_Friends_Friendship( $friendship_id );
+		return new BBoss_Friends_Friendship( $friendship_id );
 	}
 
 	/**
@@ -927,7 +927,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 
 		$params['user_id'] = array(
 			'description'       => __( 'ID of the user whose friends are being retrieved.', 'buddyboss' ),
-			'default'           => bp_loggedin_user_id(),
+			'default'           => bboss_loggedin_user_id(),
 			'type'              => 'integer',
 			'required'          => true,
 			'sanitize_callback' => 'absint',
@@ -992,3 +992,11 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_friends_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Friends_Endpoint', false ) || interface_exists( 'BBoss_REST_Friends_Endpoint', false ) || trait_exists( 'BBoss_REST_Friends_Endpoint', false ) ) && ! class_exists( 'BP_REST_Friends_Endpoint', false ) && ! interface_exists( 'BP_REST_Friends_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Friends_Endpoint', 'BP_REST_Friends_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

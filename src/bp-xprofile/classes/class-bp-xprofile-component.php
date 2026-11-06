@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 #[\AllowDynamicProperties]
-class BP_XProfile_Component extends BP_Component {
+class BBoss_XProfile_Component extends BBoss_Component {
 
 	/**
 	 * Profile field types.
@@ -31,7 +31,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * The acceptable visibility levels for xprofile fields.
 	 *
-	 * @see bp_xprofile_get_visibility_levels()
+	 * @see bboss_xprofile_get_visibility_levels()
 	 *
 	 * @since BuddyPress 1.6.0
 	 * @var array
@@ -47,7 +47,7 @@ class BP_XProfile_Component extends BP_Component {
 		parent::start(
 			'xprofile',
 			'Profile Fields',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 20,
 			)
@@ -76,13 +76,13 @@ class BP_XProfile_Component extends BP_Component {
 		);
 
 		// Conditional includes.
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$includes[] = 'activity';
 		}
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$includes[] = 'notifications';
 		}
-		if ( bp_is_active( 'settings' ) ) {
+		if ( bboss_is_active( 'settings' ) ) {
 			$includes[] = 'settings';
 		}
 		if ( is_admin() ) {
@@ -106,29 +106,29 @@ class BP_XProfile_Component extends BP_Component {
 		}
 
 		// Bail if not on a user page.
-		if ( ! bp_is_user() ) {
+		if ( ! bboss_is_user() ) {
 			return;
 		}
 
 		// User nav.
-		if ( bp_is_profile_component() ) {
+		if ( bboss_is_profile_component() ) {
 			require $this->path . 'bp-xprofile/screens/public.php';
 
 			// Action - Delete avatar.
-			if ( is_user_logged_in() && bp_is_user_change_avatar() && bp_is_action_variable( 'delete-avatar', 0 ) ) {
+			if ( is_user_logged_in() && bboss_is_user_change_avatar() && bboss_is_action_variable( 'delete-avatar', 0 ) ) {
 				require $this->path . 'bp-xprofile/actions/delete-avatar.php';
 			}
 
 			// Sub-nav items.
 			if ( is_user_logged_in() &&
-				in_array( bp_current_action(), array( 'edit', 'change-avatar', 'change-cover-image' ), true )
+				in_array( bboss_current_action(), array( 'edit', 'change-avatar', 'change-cover-image' ), true )
 			) {
-				require $this->path . 'bp-xprofile/screens/' . bp_current_action() . '.php';
+				require $this->path . 'bp-xprofile/screens/' . bboss_current_action() . '.php';
 			}
 		}
 
 		// Settings.
-		if ( is_user_logged_in() && bp_is_user_settings_profile() ) {
+		if ( is_user_logged_in() && bboss_is_user_settings_profile() ) {
 			require $this->path . 'bp-xprofile/screens/settings-profile.php';
 		}
 	}
@@ -144,22 +144,22 @@ class BP_XProfile_Component extends BP_Component {
 	 * @param array $args Array of globals to set up.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_XPROFILE_SLUG' ) ) {
-			define( 'BP_XPROFILE_SLUG', 'profile' );
+		if ( ! defined( 'BBOSS_XPROFILE_SLUG' ) ) {
+			define( 'BBOSS_XPROFILE_SLUG', 'profile' );
 		}
 
 		// Assign the base group and fullname field names to constants
 		// to use in SQL statements.
 		// Defined conditionally to accommodate unit tests.
-		if ( ! defined( 'BP_XPROFILE_BASE_GROUP_NAME' ) ) {
-			define( 'BP_XPROFILE_BASE_GROUP_NAME', stripslashes( bp_core_get_root_option( 'avatar_default' ) ) );
+		if ( ! defined( 'BBOSS_XPROFILE_BASE_GROUP_NAME' ) ) {
+			define( 'BBOSS_XPROFILE_BASE_GROUP_NAME', stripslashes( bboss_core_get_root_option( 'avatar_default' ) ) );
 		}
 
-		if ( ! defined( 'BP_XPROFILE_FULLNAME_FIELD_NAME' ) ) {
-			define( 'BP_XPROFILE_FULLNAME_FIELD_NAME', stripslashes( bp_core_get_root_option( 'bp-xprofile-fullname-field-name' ) ) );
+		if ( ! defined( 'BBOSS_XPROFILE_FULLNAME_FIELD_NAME' ) ) {
+			define( 'BBOSS_XPROFILE_FULLNAME_FIELD_NAME', stripslashes( bboss_core_get_root_option( 'bp-xprofile-fullname-field-name' ) ) );
 		}
 
 		/**
@@ -169,7 +169,7 @@ class BP_XProfile_Component extends BP_Component {
 		 *
 		 * @param array $value Array of IDs for the supported field types.
 		 */
-		$this->field_types = apply_filters( 'xprofile_field_types', array_keys( bp_xprofile_get_field_types() ) );
+		$this->field_types = apply_filters( 'xprofile_field_types', array_keys( bboss_xprofile_get_field_types() ) );
 
 		// 'option' is a special case. It is not a top-level field, so
 		// does not have an associated BP_XProfile_Field_Type class,
@@ -188,7 +188,7 @@ class BP_XProfile_Component extends BP_Component {
 			),
 		);
 
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 			$this->visibility_levels['friends'] = array(
 				'id'    => 'friends',
 				'label' => __( 'My Connections', 'buddyboss' ),
@@ -216,9 +216,9 @@ class BP_XProfile_Component extends BP_Component {
 		);
 
 		$globals = array(
-			'slug'                  => BP_XPROFILE_SLUG,
+			'slug'                  => BBOSS_XPROFILE_SLUG,
 			'has_directory'         => false,
-			'notification_callback' => 'xprofile_format_notifications',
+			'notification_callback' => 'bboss_xprofile_format_notifications',
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
@@ -239,16 +239,16 @@ class BP_XProfile_Component extends BP_Component {
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
-		$access       = bp_core_can_edit_settings();
-		$slug         = bp_get_profile_slug();
+		$access       = bboss_core_can_edit_settings();
+		$slug         = bboss_get_profile_slug();
 		$profile_link = trailingslashit( $user_domain . $slug );
 
 		// Add 'Profile' to the main navigation.
@@ -256,7 +256,7 @@ class BP_XProfile_Component extends BP_Component {
 			'name'                => __( 'Profile', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 20,
-			'screen_function'     => 'xprofile_screen_display_profile',
+			'screen_function'     => 'bboss_xprofile_screen_display_profile',
 			'default_subnav_slug' => 'public',
 			'item_css_id'         => $this->id,
 		);
@@ -267,7 +267,7 @@ class BP_XProfile_Component extends BP_Component {
 			'slug'            => 'public',
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'xprofile_screen_display_profile',
+			'screen_function' => 'bboss_xprofile_screen_display_profile',
 			'position'        => 10,
 		);
 
@@ -277,32 +277,32 @@ class BP_XProfile_Component extends BP_Component {
 			'slug'            => 'edit',
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'xprofile_screen_edit_profile',
+			'screen_function' => 'bboss_xprofile_screen_edit_profile',
 			'position'        => 20,
 			'user_has_access' => $access,
 		);
 
 		// Change Avatar.
-		if ( buddypress()->avatar->show_avatars && ! bp_disable_avatar_uploads() ) {
+		if ( bboss()->avatar->show_avatars && ! bboss_disable_avatar_uploads() ) {
 			$sub_nav[] = array(
 				'name'            => __( 'Profile Photo', 'buddyboss' ),
 				'slug'            => 'change-avatar',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'xprofile_screen_change_avatar',
+				'screen_function' => 'bboss_xprofile_screen_change_avatar',
 				'position'        => 30,
 				'user_has_access' => $access,
 			);
 		}
 
 		// Change cover photo.
-		if ( bp_displayed_user_use_cover_image_header() ) {
+		if ( bboss_displayed_user_use_cover_image_header() ) {
 			$sub_nav[] = array(
 				'name'            => __( 'Cover Photo', 'buddyboss' ),
 				'slug'            => 'change-cover-image',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'xprofile_screen_change_cover_image',
+				'screen_function' => 'bboss_xprofile_screen_change_cover_image',
 				'position'        => 40,
 				'user_has_access' => $access,
 			);
@@ -319,36 +319,36 @@ class BP_XProfile_Component extends BP_Component {
 	 * Set up the Settings > Profile nav item.
 	 *
 	 * Loaded in a separate method because the Settings component may not
-	 * be loaded in time for BP_XProfile_Component::setup_nav().
+	 * be loaded in time for BBoss_XProfile_Component::setup_nav().
 	 *
 	 * @since BuddyPress 2.1.0
 	 */
 	public function setup_settings_nav() {
-		if ( ! bp_is_active( 'settings' ) ) {
+		if ( ! bboss_is_active( 'settings' ) ) {
 			return;
 		}
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
 		// Get the settings slug.
-		$settings_slug = bp_get_settings_slug();
+		$settings_slug = bboss_get_settings_slug();
 
-		bp_core_new_subnav_item(
+		bboss_core_new_subnav_item(
 			array(
 				'name'            => __( 'Privacy', 'buddyboss' ),
 				'slug'            => 'profile',
 				'parent_url'      => trailingslashit( $user_domain . $settings_slug ),
 				'parent_slug'     => $settings_slug,
-				'screen_function' => 'bp_xprofile_screen_settings',
+				'screen_function' => 'bboss_xprofile_screen_settings',
 				'position'        => 30,
-				'user_has_access' => bp_core_can_edit_settings(),
+				'user_has_access' => bboss_core_can_edit_settings(),
 			),
 			'members'
 		);
@@ -367,11 +367,11 @@ class BP_XProfile_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Profile link.
-			$profile_link = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() );
+			$profile_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_profile_slug() );
 
 			// Add the "Profile" sub menu.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Profile', 'buddyboss' ),
 				'href'   => $profile_link,
@@ -396,7 +396,7 @@ class BP_XProfile_Component extends BP_Component {
 			);
 
 			// Edit Avatar.
-			if ( ! bp_disable_avatar_uploads() && buddypress()->avatar->show_avatars ) {
+			if ( ! bboss_disable_avatar_uploads() && bboss()->avatar->show_avatars ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
@@ -406,7 +406,7 @@ class BP_XProfile_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_displayed_user_use_cover_image_header() ) {
+			if ( bboss_displayed_user_use_cover_image_header() ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-cover-image',
@@ -436,21 +436,21 @@ class BP_XProfile_Component extends BP_Component {
 	 */
 	public function setup_title() {
 
-		if ( bp_is_profile_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_profile_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() ) {
+			if ( bboss_is_my_profile() ) {
 				$bp->bp_options_title = __( 'My Profile', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
-						'item_id' => bp_displayed_user_id(),
+						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
-				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 			}
 		}
 
@@ -495,12 +495,12 @@ class BP_XProfile_Component extends BP_Component {
 	public function setup_settings_admin_nav( $wp_admin_nav ) {
 
 		// Setup the logged in user variables.
-		$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+		$settings_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_settings_slug() );
 
 		// Add the "Profile" subnav item.
 		$wp_admin_nav[] = array(
-			'parent'   => 'my-account-' . buddypress()->settings->id,
-			'id'       => 'my-account-' . buddypress()->settings->id . '-profile',
+			'parent'   => 'my-account-' . bboss()->settings->id,
+			'id'       => 'my-account-' . bboss()->settings->id . '-profile',
 			'title'    => __( 'Privacy', 'buddyboss' ),
 			'href'     => trailingslashit( $settings_link . 'profile' ),
 			'position' => 30,
@@ -512,19 +512,19 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array(
-			'BP_REST_XProfile_Fields_Endpoint',
-			'BP_REST_XProfile_Field_Groups_Endpoint',
-			'BP_REST_XProfile_Data_Endpoint',
-			'BP_REST_XProfile_Update_Endpoint',
-			'BP_REST_XProfile_Repeater_Endpoint',
-			'BP_REST_XProfile_Search_Form_Fields_Endpoint',
-			'BP_REST_XProfile_Types_Endpoint',
+			'BBoss_REST_XProfile_Fields_Endpoint',
+			'BBoss_REST_XProfile_Field_Groups_Endpoint',
+			'BBoss_REST_XProfile_Data_Endpoint',
+			'BBoss_REST_XProfile_Update_Endpoint',
+			'BBoss_REST_XProfile_Repeater_Endpoint',
+			'BBoss_REST_XProfile_Search_Form_Fields_Endpoint',
+			'BBoss_REST_XProfile_Types_Endpoint',
 		) );
 	}
 
@@ -533,7 +533,7 @@ class BP_XProfile_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

@@ -13,23 +13,23 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_escaped_form_data47( $version ) {
+function bboss_ps_escaped_form_data47( $version ) {
 	list ( $form, $location ) = bp_ps_template_args();
 
-	$meta   = bp_ps_meta( $form );
-	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
+	$meta   = bboss_ps_meta( $form );
+	$fields = bboss_ps_parse_request( bboss_ps_get_request( 'form', $form ) );
 	wp_register_script(
 		'bp-ps-template',
-		buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
+		bboss()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
 		array(),
-		bp_get_version()
+		bboss_get_version()
 	);
 
 	$F            = new stdClass();
 	$F->id        = $form;
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
-	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
+	$F->unique_id = bboss_ps_unique_id( 'form_' . $form );
 	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 	$F->page      = wp_parse_url( $request_uri, PHP_URL_PATH );
 
@@ -46,7 +46,7 @@ function bp_ps_escaped_form_data47( $version ) {
 
 	$F->action = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
-	if ( defined( 'DOING_AJAX' ) ) {
+	if ( defined( 'BBOSS_DOING_AJAX' ) ) {
 		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$F->action    = wp_parse_url( $http_referer, PHP_URL_PATH );
 	}
@@ -61,7 +61,7 @@ function bp_ps_escaped_form_data47( $version ) {
 
 		$f    = $fields[ $code ];
 		$mode = $meta['field_mode'][ $k ];
-		if ( ! bp_ps_Fields::set_display( $f, $mode ) ) {
+		if ( ! BBoss_ps_Fields::set_display( $f, $mode ) ) {
 			continue;
 		}
 
@@ -69,7 +69,7 @@ function bp_ps_escaped_form_data47( $version ) {
 		$custom_label = $meta['field_label'][ $k ];
 		if ( ! empty( $custom_label ) ) {
 			$f->label    = $custom_label;
-			$F->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
+			$F->fields[] = bboss_ps_set_hidden_field( $f->code . '_label', $f->label );
 		}
 
 		$custom_desc = $meta['field_desc'][ $k ];
@@ -134,9 +134,9 @@ function bp_ps_escaped_form_data47( $version ) {
 		$f->values = (array) $f->value;
 
 		$f->html_name  = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;
-		$f->unique_id  = bp_ps_unique_id( $f->html_name );
+		$f->unique_id  = bboss_ps_unique_id( $f->html_name );
 		$f->mode       = $mode;
-		$f->full_label = bp_ps_full_label( $f );
+		$f->full_label = bboss_ps_full_label( $f );
 
 		/**
 		 * @todo add title/description
@@ -148,7 +148,7 @@ function bp_ps_escaped_form_data47( $version ) {
 		$F->fields[] = $f;
 	}
 
-	$F->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
+	$F->fields[] = bboss_ps_set_hidden_field( BBOSS_PS_FORM, $form );
 	/**
 	 * @todo add title/description
 	 *
@@ -184,21 +184,21 @@ function bp_ps_escaped_form_data47( $version ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_escaped_filters_data47() {
+function bboss_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
 	$F         = new stdClass();
 	$action    = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
-	$action    = add_query_arg( BP_PS_FORM, 'clear', $action );
+	$action    = add_query_arg( BBOSS_PS_FORM, 'clear', $action );
 	$F->action = $full ? esc_url( $action ) : '';
 	$F->fields = array();
 
-	$fields = bp_ps_parse_request( $request );
+	$fields = bboss_ps_parse_request( $request );
 	foreach ( $fields as $f ) {
 		if ( ! isset( $f->filter ) ) {
 			continue;
 		}
-		if ( ! bp_ps_Fields::set_display( $f, $f->filter ) ) {
+		if ( ! BBoss_ps_Fields::set_display( $f, $f->filter ) ) {
 			continue;
 		}
 
@@ -225,7 +225,7 @@ function bp_ps_escaped_filters_data47() {
 	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_ps_before_filters', $F );
-	usort( $F->fields, 'bp_ps_sort_fields' );
+	usort( $F->fields, 'bboss_ps_sort_fields' );
 
 	foreach ( $F->fields as $f ) {
 		$f->label = esc_attr( $f->label );
@@ -249,7 +249,7 @@ function bp_ps_escaped_filters_data47() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_full_label( $f ) {
+function bboss_ps_full_label( $f ) {
 	$labels = array(
 		/* translators: 1: field label. */
 		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss' ),
@@ -284,7 +284,7 @@ function bp_ps_full_label( $f ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_print_filter( $f ) {
+function bboss_ps_print_filter( $f ) {
 	if ( ! empty( $f->options ) ) {
 		$values = array();
 		foreach ( $f->options as $key => $label ) {
@@ -391,7 +391,7 @@ function bp_ps_print_filter( $f ) {
  *
  * @param object $f Profile search field (location field, 'distance' display).
  */
-function bp_ps_autocomplete_script( $f ) {
+function bboss_ps_autocomplete_script( $f ) {
 	$script_handle = ! empty( $f->script_handle ) ? $f->script_handle : '';
 	if ( '' !== $script_handle ) {
 		wp_enqueue_script( $script_handle );
@@ -485,7 +485,7 @@ function bp_ps_address_{fn}(position) {
 		$deps[] = $script_handle;
 	}
 	$handle = 'bp-ps-autocomplete-' . $js_suffix;
-	wp_register_script( $handle, false, $deps, bp_get_version(), true );
+	wp_register_script( $handle, false, $deps, bboss_get_version(), true );
 	wp_enqueue_script( $handle );
 	wp_add_inline_script( $handle, $inline_js );
 }
@@ -495,7 +495,7 @@ function bp_ps_address_{fn}(position) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_unique_id( $id ) {
+function bboss_ps_unique_id( $id ) {
 	static $k = array();
 
 	$k[ $id ] = isset( $k[ $id ] ) ? $k[ $id ] + 1 : 0;

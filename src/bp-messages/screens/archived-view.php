@@ -17,47 +17,47 @@ defined( 'ABSPATH' ) || exit;
 function messages_screen_archived() {
 
 	// Bail if not viewing a single message.
-	if ( ! bp_is_messages_component() || 'view' !== bp_action_variable( 0 ) ) {
+	if ( ! bboss_is_messages_component() || 'view' !== bboss_action_variable( 0 ) ) {
 		return false;
 	}
 
-	$thread_id   = (int) bp_action_variable( 1 );
+	$thread_id   = (int) bboss_action_variable( 1 );
 	$is_redirect = false;
 
-	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) || ! messages_is_valid_archived_thread( $thread_id ) ) {
+	if ( empty( $thread_id ) || ! bboss_messages_is_valid_thread( $thread_id ) || ! messages_is_valid_archived_thread( $thread_id ) ) {
 		$is_redirect = true;
 	}
 
 	// No access.
-	if ( ! $is_redirect && ( ! messages_check_thread_access( $thread_id ) || ! bp_is_my_profile() ) ) {
+	if ( ! $is_redirect && ( ! bboss_messages_check_thread_access( $thread_id ) || ! bboss_is_my_profile() ) ) {
 		// If not logged in, prompt for login.
 		if ( ! is_user_logged_in() ) {
-			bp_core_no_access();
+			bboss_core_no_access();
 			return;
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
+			bboss_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
 			$is_redirect = true;
 		}
 	}
 
 	// Group threads cannot be opened while "Group Messages" is disabled: leave with a notice, as for other unavailable threads.
 	// Straight to the latest other archived thread (or the archived list), where the archived list would send the member on.
-	if ( ! $is_redirect && bb_messages_is_disabled_group_thread( $thread_id ) ) {
-		$redirect = bb_messages_get_disabled_group_thread_redirect_url( $thread_id, true );
+	if ( ! $is_redirect && bboss_messages_is_disabled_group_thread( $thread_id ) ) {
+		$redirect = bboss_messages_get_disabled_group_thread_redirect_url( $thread_id, true );
 
-		bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
-		bp_core_redirect( $redirect );
+		bboss_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+		bboss_core_redirect( $redirect );
 	}
 
 	if ( $is_redirect ) {
 		// check if user has archived threads or not, if yes then redirect to latest archived thread.
-		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&thread_type=archived' ) ) {
+		if ( bboss_has_message_threads( bboss_ajax_querystring( 'messages' ) . '&thread_type=archived' ) ) {
 			$new_thread_id = 0;
-			while ( bp_message_threads() ) :
-				bp_message_thread();
-				$new_thread_id = bp_get_message_thread_id();
+			while ( bboss_message_threads() ) :
+				bboss_message_thread();
+				$new_thread_id = bboss_get_message_thread_id();
 				if ( $thread_id !== $new_thread_id ) {
 					break;
 				}
@@ -65,12 +65,12 @@ function messages_screen_archived() {
 
 			if ( $new_thread_id ) {
 				// reset error and redirect to archived thread.
-				bp_core_add_message( '', 'error' );
-				wp_safe_redirect( bb_get_message_archived_thread_view_link( $new_thread_id ) );
+				bboss_core_add_message( '', 'error' );
+				wp_safe_redirect( bboss_get_message_archived_thread_view_link( $new_thread_id ) );
 				exit;
 			}
 		} else {
-			bp_core_redirect( trailingslashit( bb_get_messages_archived_url() ) );
+			bboss_core_redirect( trailingslashit( bboss_get_messages_archived_url() ) );
 		}
 	}
 
@@ -88,6 +88,6 @@ function messages_screen_archived() {
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */
-	bp_core_load_template( apply_filters( 'messages_template_archived', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'messages_template_archived', 'members/single/home' ) );
 }
 add_action( 'bp_screens', 'messages_screen_archived' );

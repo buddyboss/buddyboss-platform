@@ -10,7 +10,7 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		buddypress()->groups->types = array();
+		bboss()->groups->types = array();
 	}
 
 	public static function wpSetUpBeforeClass( $f ) {
@@ -25,15 +25,15 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	}
 
 	public function test_groups_register_type_should_fail_for_existing_group_type() {
-		bp_groups_register_group_type( 'foo' );
-		$this->assertWPError( bp_groups_register_group_type( 'foo' ) );
+		bboss_groups_register_group_type( 'foo' );
+		$this->assertWPError( bboss_groups_register_group_type( 'foo' ) );
 	}
 
 	/**
 	 * @dataProvider illegal_names
 	 */
 	public function test_illegal_names( $name ) {
-		$this->assertWPError( bp_groups_register_group_type( $name ) );
+		$this->assertWPError( bboss_groups_register_group_type( $name ) );
 	}
 
 	public function illegal_names() {
@@ -48,24 +48,24 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 		$key = 'F//oo% -Bar';
 		$sanitized_key = 'foo-bar';
 
-		$object = bp_groups_register_group_type( $key );
+		$object = bboss_groups_register_group_type( $key );
 		$this->assertSame( $sanitized_key, $object->name );
 	}
 
 	public function test_groups_register_type_should_store_group_type_string_as_name_property() {
-		$object = bp_groups_register_group_type( 'foo' );
+		$object = bboss_groups_register_group_type( 'foo' );
 		$this->assertSame( 'foo', $object->name );
 	}
 
 	public function test_groups_register_type_should_fill_missing_labels_with_ucfirst_group_type() {
-		$object = bp_groups_register_group_type( 'foo' );
+		$object = bboss_groups_register_group_type( 'foo' );
 		foreach ( $object->labels as $label ) {
 			$this->assertSame( 'Foo', $label );
 		}
 	}
 
 	public function test_groups_register_type_should_respect_custom_name_labels() {
-		$object = bp_groups_register_group_type( 'foo', array(
+		$object = bboss_groups_register_group_type( 'foo', array(
 			'labels' => array(
 				'name' => 'Bar',
 			),
@@ -76,7 +76,7 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	}
 
 	public function test_groups_register_type_should_respect_custom_singular_name_labels() {
-		$object = bp_groups_register_group_type( 'foo', array(
+		$object = bboss_groups_register_group_type( 'foo', array(
 			'labels' => array(
 				'singular_name' => 'Bar',
 			),
@@ -87,135 +87,135 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	}
 
 	public function test_groups_get_type_object_should_return_null_for_non_existing_group_type() {
-		$this->assertSame( null, bp_groups_get_group_type_object( 'foo' ) );
+		$this->assertSame( null, bboss_groups_get_group_type_object( 'foo' ) );
 	}
 
 	public function test_groups_get_type_object_should_return_type_object() {
-		bp_groups_register_group_type( 'foo' );
-		$this->assertInternalType( 'object', bp_groups_register_group_type( 'foo' ) );
+		bboss_groups_register_group_type( 'foo' );
+		$this->assertInternalType( 'object', bboss_groups_register_group_type( 'foo' ) );
 	}
 
 	public function test_groups_set_type_should_return_false_for_invalid_group_type() {
-		$this->assertFalse( bp_groups_set_group_type( 1, 'foo' ) );
+		$this->assertFalse( bboss_groups_set_group_type( 1, 'foo' ) );
 	}
 
 	public function test_groups_set_type_success() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'foo' );
 
-		$this->assertNotEmpty( bp_groups_set_group_type( $g, 'foo' ) );
+		$this->assertNotEmpty( bboss_groups_set_group_type( $g, 'foo' ) );
 	}
 
 	public function test_groups_set_type_should_remove_type_when_passing_an_empty_value() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_set_group_type( $g, 'foo' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_set_group_type( $g, 'foo' );
 
 		// Make sure group type is set.
-		$this->assertSame( 'foo', bp_groups_get_group_type( $g ) );
+		$this->assertSame( 'foo', bboss_groups_get_group_type( $g ) );
 
-		$this->assertSame( array(), bp_groups_set_group_type( $g, '' ) );
-		$this->assertFalse( bp_groups_get_group_type( $g ) );
+		$this->assertSame( array(), bboss_groups_set_group_type( $g, '' ) );
+		$this->assertFalse( bboss_groups_get_group_type( $g ) );
 	}
 
 	public function test_groups_get_type_with_default_value_for_single() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
-		bp_groups_set_group_type( $g, 'bar', true );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
+		bboss_groups_set_group_type( $g, 'bar', true );
 
-		$this->assertSame( 'foo', bp_groups_get_group_type( $g ) );
+		$this->assertSame( 'foo', bboss_groups_get_group_type( $g ) );
 	}
 
 	public function test_groups_get_type_with_single_true() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
-		bp_groups_set_group_type( $g, 'bar', true );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
+		bboss_groups_set_group_type( $g, 'bar', true );
 
-		$this->assertSame( 'foo', bp_groups_get_group_type( $g, true ) );
+		$this->assertSame( 'foo', bboss_groups_get_group_type( $g, true ) );
 	}
 
 	public function test_groups_get_type_with_single_false() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
-		bp_groups_set_group_type( $g, 'bar', true );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
+		bboss_groups_set_group_type( $g, 'bar', true );
 
-		$this->assertEqualSets( array( 'foo', 'bar' ), bp_groups_get_group_type( $g, false ) );
+		$this->assertEqualSets( array( 'foo', 'bar' ), bboss_groups_get_group_type( $g, false ) );
 	}
 
 	public function test_groups_get_type_should_return_false_when_no_value_is_found() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'foo' );
 
-		$this->assertFalse( bp_groups_get_group_type( $g ) );
+		$this->assertFalse( bboss_groups_get_group_type( $g ) );
 	}
 
 	public function test_groups_remove_type_should_return_false_when_group_type_is_empty() {
-		$this->assertFalse( bp_groups_remove_group_type( 9, '' ) );
+		$this->assertFalse( bboss_groups_remove_group_type( 9, '' ) );
 	}
 
 	public function test_groups_remove_type_should_return_false_when_group_type_is_invalid() {
-		$this->assertFalse( bp_groups_remove_group_type( 9, 'foo' ) );
+		$this->assertFalse( bboss_groups_remove_group_type( 9, 'foo' ) );
 	}
 
 	public function test_groups_remove_type_should_return_false_when_group_is_not_of_provided_type() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
 
-		$this->assertFalse( bp_groups_remove_group_type( $g, 'bar' ) );
-		$this->assertEquals( array( 'foo' ), bp_groups_get_group_type( $g, false ) );
+		$this->assertFalse( bboss_groups_remove_group_type( $g, 'bar' ) );
+		$this->assertEquals( array( 'foo' ), bboss_groups_get_group_type( $g, false ) );
 	}
 
 	public function tests_groups_remove_type_should_return_true_on_successful_deletion() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
-		bp_groups_set_group_type( $g, 'bar', true );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
+		bboss_groups_set_group_type( $g, 'bar', true );
 
-		$this->assertTrue( bp_groups_remove_group_type( $g, 'foo' ) );
-		$this->assertEquals( array( 'bar' ), bp_groups_get_group_type( $g, false ) );
+		$this->assertTrue( bboss_groups_remove_group_type( $g, 'foo' ) );
+		$this->assertEquals( array( 'bar' ), bboss_groups_get_group_type( $g, false ) );
 	}
 
 	public function test_groups_has_type_should_return_false_when_group_type_is_empty() {
-		$this->assertFalse( bp_groups_has_group_type( 9, '' ) );
+		$this->assertFalse( bboss_groups_has_group_type( 9, '' ) );
 	}
 
 	public function test_groups_has_type_should_return_false_when_group_type_is_invalid() {
-		$this->assertFalse( bp_groups_has_group_type( 9, 'foo' ) );
+		$this->assertFalse( bboss_groups_has_group_type( 9, 'foo' ) );
 	}
 
 	public function test_groups_has_type_should_return_false_when_group_id_is_empty() {
-		bp_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'foo' );
 
-		$this->assertFalse( bp_groups_has_group_type( '', 'foo' ) );
+		$this->assertFalse( bboss_groups_has_group_type( '', 'foo' ) );
 	}
 
 	public function test_groups_has_type_should_return_false_when_group_is_not_of_provided_type() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
 
-		$this->assertFalse( bp_groups_has_group_type( $g, 'bar' ) );
+		$this->assertFalse( bboss_groups_has_group_type( $g, 'bar' ) );
 	}
 
 	public function test_groups_has_type_should_return_true_on_success() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
-		bp_groups_set_group_type( $g, 'foo' );
-		bp_groups_set_group_type( $g, 'bar', true );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
+		bboss_groups_set_group_type( $g, 'foo' );
+		bboss_groups_set_group_type( $g, 'bar', true );
 
-		$this->assertTrue( bp_groups_has_group_type( $g, 'foo' ) );
-		$this->assertEqualSets( array( 'bar', 'foo' ), bp_groups_get_group_type( $g, false ) );
+		$this->assertTrue( bboss_groups_has_group_type( $g, 'foo' ) );
+		$this->assertEqualSets( array( 'bar', 'foo' ), bboss_groups_get_group_type( $g, false ) );
 	}
 
 	/**
@@ -223,43 +223,43 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 */
 	public function test_groups_get_type_should_hit_cache() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_set_group_type( $g, 'foo' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_set_group_type( $g, 'foo' );
 
 		global $wpdb;
 
 		// Initial query. Should hit DB.
-		bp_groups_get_group_type( $g );
+		bboss_groups_get_group_type( $g );
 		$num_queries = $wpdb->num_queries;
 
 		// Next query should hit cache
-		bp_groups_get_group_type( $g );
+		bboss_groups_get_group_type( $g );
 		$this->assertSame( $num_queries, $wpdb->num_queries );
 	}
 
 	public function test_bp_groups_get_group_types_filter() {
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
 
-		$types = bp_groups_get_group_types( array( 'name' => 'bar' ) );
+		$types = bboss_groups_get_group_types( array( 'name' => 'bar' ) );
 
 		$this->assertEqualSets( array( 'bar' ), $types );
 	}
 
 	public function test_groups_get_type_should_not_return_unregistered_types() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_set_group_type( $g, 'foo' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_set_group_type( $g, 'foo' );
 
 		// Directly set a type that hasn't been registered.
-		bp_set_object_terms( $g, 'ugh', 'bp_group_type', true );
+		bboss_set_object_terms( $g, 'ugh', 'bp_group_type', true );
 
-		$type = bp_groups_get_group_type( $g, false );
+		$type = bboss_groups_get_group_type( $g, false );
 		$this->assertEquals( array( 'foo' ), $type );
 	}
 
 	public function test_bp_groups_register_group_type_show_in_list_true_when_show_in_create_screen_true() {
-		$object = bp_groups_register_group_type( 'foo', array(
+		$object = bboss_groups_register_group_type( 'foo', array(
 			'show_in_create_screen' => true,
 		) );
 
@@ -267,7 +267,7 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	}
 
 	public function test_bp_groups_register_group_type_show_in_list_false_when_show_in_create_screen_false() {
-		$object = bp_groups_register_group_type( 'foo', array(
+		$object = bboss_groups_register_group_type( 'foo', array(
 			'show_in_create_screen' => false,
 		) );
 
@@ -275,7 +275,7 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	}
 
 	public function test_bp_groups_register_group_type_show_in_list_false_and_show_in_create_screen_true() {
-		$object = bp_groups_register_group_type( 'foo', array(
+		$object = bboss_groups_register_group_type( 'foo', array(
 			'show_in_create_screen' => true,
 			'show_in_list' => false,
 		) );
@@ -285,27 +285,27 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 
 	public function test_bp_groups_set_group_type_should_remove_types_when_passing_an_empty_value() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_set_group_type( $g, 'foo' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_set_group_type( $g, 'foo' );
 
 		// Make sure it's set up.
-		$this->assertSame( 'foo', bp_groups_get_group_type( $g ) );
+		$this->assertSame( 'foo', bboss_groups_get_group_type( $g ) );
 
-		$this->assertSame( array(), bp_groups_set_group_type( $g, '' ) );
-		$this->assertFalse( bp_groups_get_group_type( $g ) );
+		$this->assertSame( array(), bboss_groups_set_group_type( $g, '' ) );
+		$this->assertFalse( bboss_groups_get_group_type( $g ) );
 	}
 
 	public function test_bp_groups_set_group_type_should_set_multiple_types_when_passing_array_of_types() {
 		$g = self::factory()->group->create( array( 'creator_id' => self::$u1 ) );
-		bp_groups_register_group_type( 'foo' );
-		bp_groups_register_group_type( 'bar' );
+		bboss_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'bar' );
 
 		// Set multiple group types.
 		$types = array( 'foo', 'bar' );
-		bp_groups_set_group_type( $g, $types );
+		bboss_groups_set_group_type( $g, $types );
 
 		// Assert!
-		$this->assertEqualSets( $types, bp_groups_get_group_type( $g, false ) );
+		$this->assertEqualSets( $types, bboss_groups_get_group_type( $g, false ) );
 	}
 
 	/**
@@ -314,9 +314,9 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_returns_registered_key() {
-		bp_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'foo' );
 
-		$this->assertSame( 'foo', bb_group_type_shortcode_resolve_key( 'foo' ) );
+		$this->assertSame( 'foo', bboss_group_type_shortcode_resolve_key( 'foo' ) );
 	}
 
 	/**
@@ -325,9 +325,9 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_slugifies_input_to_registered_key() {
-		bp_groups_register_group_type( 'foo-bar' );
+		bboss_groups_register_group_type( 'foo-bar' );
 
-		$this->assertSame( 'foo-bar', bb_group_type_shortcode_resolve_key( 'Foo Bar' ) );
+		$this->assertSame( 'foo-bar', bboss_group_type_shortcode_resolve_key( 'Foo Bar' ) );
 	}
 
 	/**
@@ -337,10 +337,10 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_resolves_post_id_to_key() {
-		$post_id = self::factory()->post->create( array( 'post_type' => bp_groups_get_group_type_post_type() ) );
+		$post_id = self::factory()->post->create( array( 'post_type' => bboss_groups_get_group_type_post_type() ) );
 		update_post_meta( $post_id, '_bp_group_type_key', 'clubs' );
 
-		$this->assertSame( 'clubs', bb_group_type_shortcode_resolve_key( $post_id ) );
+		$this->assertSame( 'clubs', bboss_group_type_shortcode_resolve_key( $post_id ) );
 	}
 
 	/**
@@ -350,9 +350,9 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_prefers_registered_numeric_key_over_post_id() {
-		bp_groups_register_group_type( '123' );
+		bboss_groups_register_group_type( '123' );
 
-		$this->assertSame( '123', bb_group_type_shortcode_resolve_key( '123' ) );
+		$this->assertSame( '123', bboss_group_type_shortcode_resolve_key( '123' ) );
 	}
 
 	/**
@@ -361,7 +361,7 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_returns_empty_string_for_empty_input() {
-		$this->assertSame( '', bb_group_type_shortcode_resolve_key( '' ) );
+		$this->assertSame( '', bboss_group_type_shortcode_resolve_key( '' ) );
 	}
 
 	/**
@@ -371,7 +371,7 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_passes_through_unresolvable_value() {
-		$this->assertSame( 'does-not-exist', bb_group_type_shortcode_resolve_key( 'Does Not Exist' ) );
+		$this->assertSame( 'does-not-exist', bboss_group_type_shortcode_resolve_key( 'Does Not Exist' ) );
 	}
 
 	/**
@@ -380,14 +380,14 @@ class BP_Tests_Groups_Types extends BP_UnitTestCase {
 	 * @group bb_group_type_shortcode_resolve_key
 	 */
 	public function test_shortcode_resolve_key_is_filterable() {
-		bp_groups_register_group_type( 'foo' );
+		bboss_groups_register_group_type( 'foo' );
 
 		$callback = function () {
 			return 'filtered-key';
 		};
 		add_filter( 'bb_group_type_shortcode_resolve_key', $callback );
 
-		$resolved = bb_group_type_shortcode_resolve_key( 'foo' );
+		$resolved = bboss_group_type_shortcode_resolve_key( 'foo' );
 
 		remove_filter( 'bb_group_type_shortcode_resolve_key', $callback );
 

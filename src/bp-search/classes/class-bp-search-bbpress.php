@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
+if ( ! class_exists( 'BBoss_Search_bbPress' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbPress class
 	 */
-	abstract class Bp_Search_bbPress extends Bp_Search_Type {
+	abstract class BBoss_Search_bbPress extends BBoss_Search_Type {
 		public $type;
 
 		function sql( $search_term, $only_totalrow_count = false ) {
@@ -76,11 +76,11 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 			$user_group_ids     = array();
 			$excluded_group_ids = array();
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$current_user_id = get_current_user_id();
 
 				// Get user's group memberships.
-				$user_groups    = bp_get_user_groups(
+				$user_groups    = bboss_get_user_groups(
 					$current_user_id,
 					array(
 						'is_admin' => null,
@@ -94,7 +94,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 
 				if ( null === $restricted_groups_cache ) {
 					// Get all private and hidden groups.
-					$restricted_groups       = groups_get_groups(
+					$restricted_groups       = bboss_groups_get_groups(
 						array(
 							'fields'   => 'ids',
 							'status'   => array( 'private', 'hidden' ),
@@ -152,7 +152,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 						'id'    => $post_id,
 						'type'  => $this->type,
 						'title' => get_the_title(),
-						'html'  => bp_search_buffer_template_part( 'loop/' . $this->type, $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/' . $this->type, $template_type, false ),
 					);
 
 					$this->search_results['items'][ $post_id ] = $result_item;
@@ -166,7 +166,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 		 *
 		 * @since BuddyBoss 1.6.3
 		 *
-		 * @uses bbp_get_forum_post_type() Get forum post type.
+		 * @uses bboss_bbp_get_forum_post_type() Get forum post type.
 		 *
 		 * @param int $forum_id Forum ID to get nested child forum ids for.
 		 *
@@ -176,7 +176,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 			static $bp_nested_child_forum_ids = array();
 			global $wpdb;
 
-			$cache_key = 'nested_child_forum_ids_' . bbp_get_forum_post_type() . '_' . $forum_id;
+			$cache_key = 'nested_child_forum_ids_' . bboss_bbp_get_forum_post_type() . '_' . $forum_id;
 			if ( ! isset( $bp_nested_child_forum_ids[ $cache_key ] ) ) {
 				// SQL query for getting all nested child forum id from parent forum id.
 				$sql = "SELECT ID
@@ -186,7 +186,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				AND   LENGTH( @pvv := CONCAT(@pv, ',', ID ) )";
 
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-				$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bbp_get_forum_post_type(), $forum_id, $forum_id ) );
+				$child_forum_ids = $wpdb->get_col( $wpdb->prepare( $sql, bboss_bbp_get_forum_post_type(), $forum_id, $forum_id ) );
 
 				$bp_nested_child_forum_ids[ $cache_key ] = $child_forum_ids;
 			} else {

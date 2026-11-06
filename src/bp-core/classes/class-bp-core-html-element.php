@@ -11,7 +11,7 @@
  *
  * @since BuddyPress 2.7.0
  */
-class BP_Core_HTML_Element {
+class BBoss_Core_HTML_Element {
 	/**
 	 * Open tag for an element.
 	 *

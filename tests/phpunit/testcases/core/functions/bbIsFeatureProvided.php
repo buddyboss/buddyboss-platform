@@ -7,14 +7,14 @@
 class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 
 	public function test_unknown_feature_is_not_provided() {
-		$this->assertFalse( bb_is_feature_provided( 'does-not-exist' ) );
+		$this->assertFalse( bboss_is_feature_provided( 'does-not-exist' ) );
 	}
 
 	public function test_polls_not_provided_when_no_real_provider() {
 		// Base test env loads Platform only — the moved BB_Polls class is absent,
 		// so polls must read as NOT provided even though a shim may define bb_load_polls().
 		$this->assertFalse( class_exists( 'BB_Polls' ), 'precondition: add-on not loaded in test env' );
-		$this->assertFalse( bb_is_feature_provided( 'polls' ) );
+		$this->assertFalse( bboss_is_feature_provided( 'polls' ) );
 	}
 
 	/**
@@ -29,7 +29,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 			eval( 'function bb_load_polls() { return null; }' );
 		}
 		$this->assertFalse( class_exists( 'BB_Polls' ) );
-		$this->assertFalse( bb_is_feature_provided( 'polls' ), 'shim must not be treated as a real provider' );
+		$this->assertFalse( bboss_is_feature_provided( 'polls' ), 'shim must not be treated as a real provider' );
 	}
 
 	/**
@@ -42,14 +42,14 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 		if ( ! class_exists( 'BB_Polls' ) ) {
 			eval( 'class BB_Polls {}' ); // stand-in for the add-on / legacy Pro class
 		}
-		$this->assertTrue( bb_is_feature_provided( 'polls' ) );
+		$this->assertTrue( bboss_is_feature_provided( 'polls' ) );
 	}
 
 	public function test_pinned_posts_stub_is_not_a_provider() {
 		// Platform ships bb_activity_pin_unpin_post() as a stub that advertises
 		// bb_activity_pin_unpin_post_is_stub(); with the stub present, pinned must read NOT provided.
-		if ( function_exists( 'bb_activity_pin_unpin_post' ) && function_exists( 'bb_activity_pin_unpin_post_is_stub' ) ) {
-			$this->assertFalse( bb_is_feature_provided( 'pinned_posts' ) );
+		if ( function_exists( 'bboss_activity_pin_unpin_post' ) && function_exists( 'bboss_activity_pin_unpin_post_is_stub' ) ) {
+			$this->assertFalse( bboss_is_feature_provided( 'pinned_posts' ) );
 		} else {
 			$this->markTestSkipped( 'pinned-posts stub not loaded in this env' );
 		}
@@ -62,7 +62,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	 * `bb_load_polls()` (Pro's deprecation shim) returns null, and the formatter used
 	 * to chain `->bb_get_poll( $poll_id )` straight off that null return, producing
 	 * "Call to a member function bb_get_poll() on null". The public method that reaches
-	 * this line is BP_Activity_Notification::bb_render_activity_following_post_notification().
+	 * this line is BBoss_Activity_Notification::bb_render_activity_following_post_notification().
 	 *
 	 * @since BuddyBoss 3.5.0
 	 *
@@ -77,9 +77,9 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 
 		$user_id     = self::factory()->user->create();
 		$activity_id = self::factory()->activity->create( array( 'user_id' => $user_id ) );
-		bp_activity_update_meta( $activity_id, 'bb_poll_id', 999999 ); // A poll id with no provider.
+		bboss_activity_update_meta( $activity_id, 'bb_poll_id', 999999 ); // A poll id with no provider.
 
-		$notification_id = bp_notifications_add_notification(
+		$notification_id = bboss_notifications_add_notification(
 			array(
 				'user_id'           => $user_id,
 				'item_id'           => $activity_id,
@@ -93,7 +93,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 
 		// Call the real notification formatter that reaches the poll-fetch line — must
 		// return a string, not fatal.
-		$notification_instance = new BP_Activity_Notification();
+		$notification_instance = new BBoss_Activity_Notification();
 		$content               = $notification_instance->bb_render_activity_following_post_notification(
 			'',
 			$activity_id,
@@ -110,7 +110,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	/**
 	 * Task 5 regression test for PROD-10225.
 	 *
-	 * `bb_get_reaction_mode()` downgrades a saved 'emotions' mode to 'likes' for
+	 * `bboss_get_reaction_mode()` downgrades a saved 'emotions' mode to 'likes' for
 	 * display when no emotion-layer provider is available. Before this fix, its
 	 * third availability branch was `function_exists( 'bbp_pro_is_license_valid' )
 	 * && bbp_pro_is_license_valid()` — a stale proxy after PROD-10191, since a
@@ -131,11 +131,11 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 		$this->assertFalse( class_exists( 'BB_Reactions' ), 'precondition: add-on not loaded in test env' );
 		$this->assertFalse( function_exists( 'bp_register_reaction' ), 'precondition: legacy-Pro reactions marker absent' );
 
-		bp_update_option( 'bb_reaction_mode', 'emotions' );
+		bboss_update_option( 'bb_reaction_mode', 'emotions' );
 
-		$this->assertSame( 'likes', bb_get_reaction_mode(), 'a licensed Pro with no reactions provider must not report emotions as available' );
+		$this->assertSame( 'likes', bboss_get_reaction_mode(), 'a licensed Pro with no reactions provider must not report emotions as available' );
 
-		bp_delete_option( 'bb_reaction_mode' );
+		bboss_delete_option( 'bb_reaction_mode' );
 	}
 
 	/**
@@ -157,11 +157,11 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 		}
 		$this->assertFalse( class_exists( 'BB_Reactions' ), 'precondition: add-on not loaded in test env' );
 
-		bp_update_option( 'bb_reaction_mode', 'emotions' );
+		bboss_update_option( 'bb_reaction_mode', 'emotions' );
 
-		$this->assertSame( 'emotions', bb_get_reaction_mode(), 'legacy Pro with the reactions marker and a valid license must still be treated as a provider' );
+		$this->assertSame( 'emotions', bboss_get_reaction_mode(), 'legacy Pro with the reactions marker and a valid license must still be treated as a provider' );
 
-		bp_delete_option( 'bb_reaction_mode' );
+		bboss_delete_option( 'bb_reaction_mode' );
 	}
 
 	/*
@@ -187,7 +187,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	/**
 	 * Task 6 regression test for PROD-10225 (finding S-1).
 	 *
-	 * `bb_get_reaction_button_settings()`'s guard required
+	 * `bboss_get_reaction_button_settings()`'s guard required
 	 * `function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid()` —
 	 * a Pro-only function the BuddyBoss Addons plugin does not provide. On an
 	 * add-on-only site (BB_Reactions loaded, emotions enabled, no Platform Pro
@@ -208,8 +208,8 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 			eval( 'class BB_Reactions {}' ); // Stand-in for the add-on's loaded reactions class.
 		}
 
-		bp_update_option( 'bb_reaction_mode', 'emotions' );
-		bp_update_option(
+		bboss_update_option( 'bb_reaction_mode', 'emotions' );
+		bboss_update_option(
 			'bb_reactions_button',
 			array(
 				'icon' => 'heart',
@@ -217,10 +217,10 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 			)
 		);
 
-		$settings = bb_get_reaction_button_settings();
+		$settings = bboss_get_reaction_button_settings();
 
-		bp_delete_option( 'bb_reaction_mode' );
-		bp_delete_option( 'bb_reactions_button' );
+		bboss_delete_option( 'bb_reaction_mode' );
+		bboss_delete_option( 'bb_reactions_button' );
 
 		$this->assertSame( 'heart', $settings['icon'], 'add-on-only site must get the admin-configured icon, not the "thumbs-up" default' );
 		$this->assertSame( 'Love it', $settings['text'], 'add-on-only site must get the admin-configured text, not the "Like" default' );

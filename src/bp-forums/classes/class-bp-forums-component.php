@@ -26,7 +26,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 	 * @since bbPress (r3552)
 	 */
 	#[\AllowDynamicProperties]
-	class BP_Forums_Component extends BP_Component {
+	class BBoss_Forums_Component extends BBoss_Component {
 
 		/**
 		 * Start the forums component creation process
@@ -37,7 +37,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			parent::start(
 				'forums',
 				'Forums',
-				buddypress()->plugin_dir
+				bboss()->plugin_dir
 			);
 			// $this->includes();
 			// $this->setup_globals();
@@ -61,17 +61,17 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			$includes[] = 'members.php';
 
 			// BuddyBoss Notfications Extension functions
-			if ( bp_is_active( 'notifications' ) ) {
+			if ( bboss_is_active( 'notifications' ) ) {
 				$includes[] = 'notifications.php';
 			}
 
 			// BuddyBoss Activity Extension class
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				$includes[] = 'activity.php';
 			}
 
 			// BuddyBoss Group Extension class
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$includes[] = 'groups.php';
 			}
 
@@ -87,23 +87,23 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 * @since bbPress (r3552)
 		 */
 		public function setup_globals( $args = array() ) {
-			$bp = buddypress();
+			$bp = bboss();
 
 			// Define the parent forum ID
-			if ( ! defined( 'BP_FORUMS_PARENT_FORUM_ID' ) ) {
-				define( 'BP_FORUMS_PARENT_FORUM_ID', 1 );
+			if ( ! defined( 'BBOSS_FORUMS_PARENT_FORUM_ID' ) ) {
+				define( 'BBOSS_FORUMS_PARENT_FORUM_ID', 1 );
 			}
 
 			// Define a slug, if necessary
-			if ( ! defined( 'BP_FORUMS_SLUG' ) ) {
-				define( 'BP_FORUMS_SLUG', $this->id );
+			if ( ! defined( 'BBOSS_FORUMS_SLUG' ) ) {
+				define( 'BBOSS_FORUMS_SLUG', $this->id );
 			}
 
 			// All arguments for forums component
 			$args = array(
-				'path'          => BP_PLUGIN_DIR,
-				'slug'          => BP_FORUMS_SLUG,
-				'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BP_FORUMS_SLUG,
+				'path'          => BBOSS_PLUGIN_DIR,
+				'slug'          => BBOSS_FORUMS_SLUG,
+				'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BBOSS_FORUMS_SLUG,
 				'has_directory' => false,
 				'search_string' => __( 'Search Forums&hellip;', 'buddyboss' ),
 			);
@@ -142,27 +142,27 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		public function setup_components() {
 
 			// Always load the members component
-			bbpress()->extend->buddypress->members = new BBP_BuddyPress_Members();
+			bboss_forums()->extend->buddypress->members = new BBoss_BBP_BuddyPress_Members();
 
 			// Create new activity class
-			if ( bp_is_active( 'activity' ) ) {
-				bbpress()->extend->buddypress->activity = new BBP_BuddyPress_Activity();
+			if ( bboss_is_active( 'activity' ) ) {
+				bboss_forums()->extend->buddypress->activity = new BBoss_BBP_BuddyPress_Activity();
 			}
 
 			// Register the group extension only if groups are active
-			if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) ) {
+			if ( bboss_bbp_is_group_forums_active() && bboss_is_active( 'groups' ) ) {
 
 				/**
 				 * need to remove this hooks before group extension because
 				 * it was checking for access to that post before wp handles the post id assign
 				 */
-				if ( bp_is_group() ) {
+				if ( bboss_is_group() ) {
 					remove_action( 'bbp_template_redirect', 'bbp_check_forum_edit', 10 );
 					remove_action( 'bbp_template_redirect', 'bbp_check_topic_edit', 10 );
 					remove_action( 'bbp_template_redirect', 'bbp_check_reply_edit', 10 );
 				}
 
-				bp_register_group_extension( 'BBP_Forums_Group_Extension' );
+				bboss_register_group_extension( 'BBoss_BBP_Forums_Group_Extension' );
 			}
 		}
 
@@ -184,7 +184,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 			// Stop if there is no user displayed or logged in
-			if ( ! is_user_logged_in() && ! bp_displayed_user_id() ) {
+			if ( ! is_user_logged_in() && ! bboss_displayed_user_id() ) {
 				return;
 			}
 
@@ -196,16 +196,16 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				'name'                => __( 'Forums', 'buddyboss' ),
 				'slug'                => $this->slug,
 				'position'            => 80,
-				'screen_function'     => 'bbp_member_forums_screen_topics',
-				'default_subnav_slug' => bbp_get_topic_archive_slug(),
+				'screen_function'     => 'bboss_bbp_member_forums_screen_topics',
+				'default_subnav_slug' => bboss_bbp_get_topic_archive_slug(),
 				'item_css_id'         => $this->id,
 			);
 
 			// Determine user to use
-			if ( bp_displayed_user_id() ) {
-				$user_domain = bp_displayed_user_domain();
-			} elseif ( bp_loggedin_user_domain() ) {
-				$user_domain = bp_loggedin_user_domain();
+			if ( bboss_displayed_user_id() ) {
+				$user_domain = bboss_displayed_user_domain();
+			} elseif ( bboss_loggedin_user_domain() ) {
+				$user_domain = bboss_loggedin_user_domain();
 			} else {
 				return;
 			}
@@ -215,34 +215,34 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Topics started
 			$sub_nav[] = array(
-				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Discussions', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) ),
-				'slug'            => bbp_get_topic_archive_slug(),
+				'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Discussions', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) ),
+				'slug'            => bboss_bbp_get_topic_archive_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
-				'screen_function' => 'bbp_member_forums_screen_topics',
+				'screen_function' => 'bboss_bbp_member_forums_screen_topics',
 				'position'        => 20,
 				'item_css_id'     => 'topics',
 			);
 
 			// Replies to topics
 			$sub_nav[] = array(
-				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Replies', 'buddyboss' ) : __( 'Replies', 'buddyboss' ) ),
-				'slug'            => bbp_get_reply_archive_slug(),
+				'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Replies', 'buddyboss' ) : __( 'Replies', 'buddyboss' ) ),
+				'slug'            => bboss_bbp_get_reply_archive_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
-				'screen_function' => 'bbp_member_forums_screen_replies',
+				'screen_function' => 'bboss_bbp_member_forums_screen_replies',
 				'position'        => 40,
 				'item_css_id'     => 'replies',
 			);
 
-			if ( bbp_is_favorites_active() ) {
+			if ( bboss_bbp_is_favorites_active() ) {
 				// Favorite topics
 				$sub_nav[] = array(
-					'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
-					'slug'            => bbp_get_user_favorites_slug(),
+					'name'            => ( bboss_loggedin_user_id() === bboss_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
+					'slug'            => bboss_bbp_get_user_favorites_slug(),
 					'parent_url'      => $forums_link,
 					'parent_slug'     => $this->slug,
-					'screen_function' => 'bbp_member_forums_screen_favorites',
+					'screen_function' => 'bboss_bbp_member_forums_screen_favorites',
 					'position'        => 60,
 					'item_css_id'     => 'favorites',
 				);
@@ -262,12 +262,12 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			if ( is_user_logged_in() ) {
 
 				// Setup the logged in user variables
-				$user_domain = bp_loggedin_user_domain();
+				$user_domain = bboss_loggedin_user_domain();
 				$forums_link = trailingslashit( $user_domain . $this->slug );
 
 				// Add the "My Account" sub menus
 				$wp_admin_nav[] = array(
-					'parent' => buddypress()->my_account_menu_id,
+					'parent' => bboss()->my_account_menu_id,
 					'id'     => 'my-account-' . $this->id,
 					'title'  => __( 'Forums', 'buddyboss' ),
 					'href'   => trailingslashit( $forums_link ),
@@ -278,7 +278,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'parent' => 'my-account-' . $this->id,
 					'id'     => 'my-account-' . $this->id . '-topics',
 					'title'  => __( 'My Discussions', 'buddyboss' ),
-					'href'   => trailingslashit( $forums_link . bbp_get_topic_archive_slug() ),
+					'href'   => trailingslashit( $forums_link . bboss_bbp_get_topic_archive_slug() ),
 				);
 
 				// Replies
@@ -286,7 +286,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'parent' => 'my-account-' . $this->id,
 					'id'     => 'my-account-' . $this->id . '-replies',
 					'title'  => __( 'My Replies', 'buddyboss' ),
-					'href'   => trailingslashit( $forums_link . bbp_get_reply_archive_slug() ),
+					'href'   => trailingslashit( $forums_link . bboss_bbp_get_reply_archive_slug() ),
 				);
 
 				// Favorites
@@ -294,7 +294,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'parent' => 'my-account-' . $this->id,
 					'id'     => 'my-account-' . $this->id . '-favorites',
 					'title'  => __( 'My Favorites', 'buddyboss' ),
-					'href'   => trailingslashit( $forums_link . bbp_get_user_favorites_slug() ),
+					'href'   => trailingslashit( $forums_link . bboss_bbp_get_user_favorites_slug() ),
 				);
 			}
 
@@ -307,20 +307,20 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 * @since bbPress (r3552)
 		 */
 		public function setup_title() {
-			$bp = buddypress();
+			$bp = bboss();
 
 			// Adjust title based on view
-			if ( bp_is_forums_component() ) {
-				if ( bp_is_my_profile() ) {
+			if ( bboss_is_forums_component() ) {
+				if ( bboss_is_my_profile() ) {
 					$bp->bp_options_title = __( 'Forums', 'buddyboss' );
-				} elseif ( bp_is_user() ) {
-					$bp->bp_options_avatar = bp_core_fetch_avatar(
+				} elseif ( bboss_is_user() ) {
+					$bp->bp_options_avatar = bboss_core_fetch_avatar(
 						array(
-							'item_id' => bp_displayed_user_id(),
+							'item_id' => bboss_displayed_user_id(),
 							'type'    => 'thumb',
 						)
 					);
-					$bp->bp_options_title  = bp_get_displayed_user_fullname();
+					$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 				}
 			}
 
@@ -330,13 +330,13 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		/**
 		 * Init the BuddyBoss REST API.
 		 *
-		 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+		 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 		 *
 		 * @since BuddyBoss 1.3.5
 		 */
 		public function rest_api_init( $controllers = array() ) {
 
-			$path = buddypress()->plugin_dir . 'bp-forums/classes/class-bp-rest-bbp-walker-reply.php';
+			$path = bboss()->plugin_dir . 'bp-forums/classes/class-bp-rest-bbp-walker-reply.php';
 
 			if ( file_exists( $path ) ) {
 				require_once $path;
@@ -344,12 +344,12 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			parent::rest_api_init(
 				array(
-					'BP_REST_Forums_Endpoint',
-					'BP_REST_Topics_Endpoint',
-					'BP_REST_Topics_Actions_Endpoint',
-					'BP_REST_Reply_Endpoint',
-					'BP_REST_Reply_Actions_Endpoint',
-					'BB_REST_Forums_Link_Preview_Endpoint',
+					'BBoss_REST_Forums_Endpoint',
+					'BBoss_REST_Topics_Endpoint',
+					'BBoss_REST_Topics_Actions_Endpoint',
+					'BBoss_REST_Reply_Endpoint',
+					'BBoss_REST_Reply_Actions_Endpoint',
+					'BBoss_REST_Forums_Link_Preview_Endpoint',
 				)
 			);
 		}
@@ -366,42 +366,42 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			$sep = apply_filters( 'document_title_separator', '-' );
 
-			if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) && bp_is_group() ) {
+			if ( bboss_bbp_is_group_forums_active() && bboss_is_active( 'groups' ) && bboss_is_group() ) {
 
-				$group = groups_get_current_group();
+				$group = bboss_groups_get_current_group();
 
-				if ( ! empty( $group ) && bp_is_current_action( get_option( '_bbp_forum_slug', 'forum' ) ) && function_exists( 'bbpress' ) ) {
+				if ( ! empty( $group ) && bboss_is_current_action( get_option( '_bbp_forum_slug', 'forum' ) ) && function_exists( 'bboss_forums' ) ) {
 
-					if ( bp_is_action_variable( get_option( '_bbp_topic_slug', 'discussion' ), 0 ) && bp_action_variable( 1 ) ) {
+					if ( bboss_is_action_variable( get_option( '_bbp_topic_slug', 'discussion' ), 0 ) && bboss_action_variable( 1 ) ) {
 
 						// get the topic as post.
 						$topics = get_posts(
 							array(
-								'name'      => bp_action_variable( 1 ),
-								'post_type' => bbp_get_topic_post_type(),
+								'name'      => bboss_action_variable( 1 ),
+								'post_type' => bboss_bbp_get_topic_post_type(),
 								'per_page'  => 1,
 							)
 						);
 
 						if ( ! empty( $topics ) ) {
-							return esc_html( bbp_get_topic_title( $topics[0]->ID ) ) . ' ' . $sep . ' ' . esc_html( $group->name ) . ' ' . $sep . ' ' . bp_get_site_name();
+							return esc_html( bboss_bbp_get_topic_title( $topics[0]->ID ) ) . ' ' . $sep . ' ' . esc_html( $group->name ) . ' ' . $sep . ' ' . bboss_get_site_name();
 						}
 					}
 				}
-			} elseif ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) && get_option( '_bbp_forum_slug', 'forum' ) === buddypress()->current_action || bbp_is_single_topic() || bp_current_action() === get_option( '_bbp_forum_slug' ) ) {
+			} elseif ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'forums' ) && get_option( '_bbp_forum_slug', 'forum' ) === bboss()->current_action || bboss_bbp_is_single_topic() || bboss_current_action() === get_option( '_bbp_forum_slug' ) ) {
 
 				$topic = get_queried_object();
 
-				if ( bbp_is_single_topic() && ! empty( $topic ) && isset( $topic->ID ) && ! empty( $topic->ID ) ) {
+				if ( bboss_bbp_is_single_topic() && ! empty( $topic ) && isset( $topic->ID ) && ! empty( $topic->ID ) ) {
 
-					$forum_id = bbp_get_topic_forum_id( $topic->ID );
+					$forum_id = bboss_bbp_get_topic_forum_id( $topic->ID );
 
 					if ( ! empty( $forum_id ) && $topic->ID !== $forum_id ) {
 
-						$forum_title = bbp_get_forum_title( $forum_id );
+						$forum_title = bboss_bbp_get_forum_title( $forum_id );
 
 						if ( ! empty( $forum_title ) ) {
-							return esc_html( bbp_get_topic_title( $topic->ID ) ) . ' ' . $sep . ' ' . esc_html( $forum_title ) . ' ' . $sep . ' ' . bp_get_site_name();
+							return esc_html( bboss_bbp_get_topic_title( $topic->ID ) ) . ' ' . $sep . ' ' . esc_html( $forum_title ) . ' ' . $sep . ' ' . bboss_get_site_name();
 						}
 					}
 				}
@@ -417,10 +417,10 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 */
 		public function bb_forums_admin_bar_menu() {
 			global $wp_admin_bar;
-			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && ! bp_is_group_forum_topic() ) {
+			if ( bboss_is_single_item() && bboss_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bboss_current_action() && ! bboss_is_group_forum_topic() ) {
 				$args  = array(
 					'name'        => get_query_var( 'name' ),
-					'post_type'   => bbp_get_forum_post_type(),
+					'post_type'   => bboss_bbp_get_forum_post_type(),
 					'numberposts' => 1,
 				);
 				$forum = get_posts( $args );
@@ -429,14 +429,14 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				}
 				$forum_id = isset( $forum[0] ) && isset( $forum[0]->ID ) ? $forum[0]->ID : '';
 			} else {
-				if ( is_single() && bbp_is_single_forum() ) {
-					$forum_id = bbp_get_forum_id();
+				if ( is_single() && bboss_bbp_is_single_forum() ) {
+					$forum_id = bboss_bbp_get_forum_id();
 				}
 			}
-			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && bp_is_group_forum_topic() ) {
+			if ( bboss_is_single_item() && bboss_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bboss_current_action() && bboss_is_group_forum_topic() ) {
 				$args  = array(
-					'name'        => bp_action_variable( 1 ),
-					'post_type'   => bbp_get_topic_post_type(),
+					'name'        => bboss_action_variable( 1 ),
+					'post_type'   => bboss_bbp_get_topic_post_type(),
 					'numberposts' => 1,
 					'post_status' => array( 'publish', 'trash', 'closed', 'spam' ),
 				);
@@ -446,8 +446,8 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				}
 				$topic_id = isset( $topic[0] ) && isset( $topic[0]->ID ) ? $topic[0]->ID : '';
 			} else {
-				if ( is_single() && bbp_is_single_topic() ) {
-					$topic_id = bbp_get_topic_id();
+				if ( is_single() && bboss_bbp_is_single_topic() ) {
+					$topic_id = bboss_bbp_get_topic_id();
 				}
 			}
 			if ( ! empty( $forum_id ) ) {
@@ -466,14 +466,14 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					array(
 						'title' => esc_html__( 'Edit Discussion', 'buddyboss' ),
 						'id'    => $menu_id,
-						'href'  => bbp_get_topic_edit_url( $topic_id ),
+						'href'  => bboss_bbp_get_topic_edit_url( $topic_id ),
 					)
 				);
-				if ( ! bbp_is_topic_trash( $topic_id ) && ! bbp_is_topic_spam( $topic_id ) ) {
+				if ( ! bboss_bbp_is_topic_trash( $topic_id ) && ! bboss_bbp_is_topic_spam( $topic_id ) ) {
 					$wp_admin_bar->add_menu(
 						array(
 							'parent' => $menu_id,
-							'title'  => ! bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss' ) : esc_html__( 'Close Discussion', 'buddyboss' ),
+							'title'  => ! bboss_bbp_is_topic_open( $topic_id ) ? esc_html__( 'Open Discussion', 'buddyboss' ) : esc_html__( 'Close Discussion', 'buddyboss' ),
 							'id'     => 'open-' . $menu_id,
 							'href'   => wp_nonce_url(
 								add_query_arg(
@@ -496,31 +496,31 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 							array(
 								'action' => 'merge',
 							),
-							bbp_get_topic_edit_url( $topic_id )
+							bboss_bbp_get_topic_edit_url( $topic_id )
 						),
 					)
 				);
-				if ( ! bbp_is_topic_spam( $topic_id ) ) {
-					if ( bbp_is_topic_trash( $topic_id ) || EMPTY_TRASH_DAYS ) {
+				if ( ! bboss_bbp_is_topic_spam( $topic_id ) ) {
+					if ( bboss_bbp_is_topic_trash( $topic_id ) || EMPTY_TRASH_DAYS ) {
 						$wp_admin_bar->add_menu(
 							array(
 								'parent' => $menu_id,
-								'title'  => bbp_is_topic_trash( $topic_id ) ? esc_html__( 'Restore from Trash', 'buddyboss' ) : esc_html__( 'Move to Trash', 'buddyboss' ),
+								'title'  => bboss_bbp_is_topic_trash( $topic_id ) ? esc_html__( 'Restore from Trash', 'buddyboss' ) : esc_html__( 'Move to Trash', 'buddyboss' ),
 								'id'     => 'trash-' . $menu_id,
 								'href'   => wp_nonce_url(
 									add_query_arg(
 										array(
 											'action'     => 'bbp_toggle_topic_trash',
-											'sub_action' => bbp_is_topic_trash( $topic_id ) ? 'untrash' : 'trash',
+											'sub_action' => bboss_bbp_is_topic_trash( $topic_id ) ? 'untrash' : 'trash',
 											'topic_id'   => $topic_id,
 										)
 									),
-									bbp_is_topic_trash( $topic_id ) ? 'untrash-' . bbp_get_topic_post_type() . '_' . $topic_id : 'trash-' . bbp_get_topic_post_type() . '_' . $topic_id
+									bboss_bbp_is_topic_trash( $topic_id ) ? 'untrash-' . bboss_bbp_get_topic_post_type() . '_' . $topic_id : 'trash-' . bboss_bbp_get_topic_post_type() . '_' . $topic_id
 								),
 							)
 						);
 					}
-					if ( bbp_is_topic_trash( $topic_id ) || ! EMPTY_TRASH_DAYS ) {
+					if ( bboss_bbp_is_topic_trash( $topic_id ) || ! EMPTY_TRASH_DAYS ) {
 						$wp_admin_bar->add_menu(
 							array(
 								'parent' => $menu_id,
@@ -534,17 +534,17 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 											'topic_id'   => $topic_id,
 										)
 									),
-									'delete-' . bbp_get_topic_post_type() . '_' . $topic_id
+									'delete-' . bboss_bbp_get_topic_post_type() . '_' . $topic_id
 								),
 							)
 						);
 					}
 				}
-				if ( ! bbp_is_topic_trash( $topic_id ) ) {
+				if ( ! bboss_bbp_is_topic_trash( $topic_id ) ) {
 					$wp_admin_bar->add_menu(
 						array(
 							'parent' => $menu_id,
-							'title'  => bbp_is_topic_spam( $topic_id ) ? esc_html__( 'Mark as Unspam', 'buddyboss' ) : esc_html__( 'Mark as Spam', 'buddyboss' ),
+							'title'  => bboss_bbp_is_topic_spam( $topic_id ) ? esc_html__( 'Mark as Unspam', 'buddyboss' ) : esc_html__( 'Mark as Spam', 'buddyboss' ),
 							'id'     => 'spam-' . $menu_id,
 							'href'   => wp_nonce_url(
 								add_query_arg(
@@ -584,7 +584,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 *
 		 * @since BuddyBoss 2.9.00
 		 *
-		 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+		 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 		 */
 		public function blocks_init( $blocks = array() ) {
 			parent::blocks_init( array() );

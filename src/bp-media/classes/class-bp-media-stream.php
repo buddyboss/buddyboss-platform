@@ -12,9 +12,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Media Stream.
  *
- * Class BP_Media_Stream
+ * Class BBoss_Media_Stream
  */
-class BP_Media_Stream {
+class BBoss_Media_Stream {
 
 	/**
 	 * Media file path.
@@ -66,7 +66,7 @@ class BP_Media_Stream {
 	private $size = 0;
 
 	/**
-	 * BP_Media_Stream constructor.
+	 * BBoss_Media_Stream constructor.
 	 *
 	 * @param string $file_path     File path.
 	 * @param int    $attachment_id Attachment ID.

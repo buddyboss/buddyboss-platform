@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @subpackage Widgets
  */
-class BB_Core_Follow_My_Network_Widget extends WP_Widget {
+class BBoss_Core_Follow_My_Network_Widget extends WP_Widget {
 
 	/**
 	 * Default maximum number of users to display in the widget.
@@ -61,12 +61,12 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 
 		// Do not do anything if the user isn't logged in.
-		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
+		if ( ! is_user_logged_in() || ! bboss_is_activity_follow_active() ) {
 			return;
 		}
 
 		// Parse widget settings with defaults.
-		$settings = bp_parse_args(
+		$settings = bboss_parse_args(
 			$instance,
 			array(
 				'max_users'      => self::DEFAULT_MAX_USERS,
@@ -74,13 +74,13 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			)
 		);
 
-		$id     = bp_displayed_user_id();
+		$id     = bboss_displayed_user_id();
 		$filter = false;
 
 		if ( ! $id ) {
 			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
 			add_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
-			$id     = bp_displayed_user_id();
+			$id     = bboss_displayed_user_id();
 			$filter = true;
 
 			// If $id still blank then return.
@@ -89,7 +89,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			}
 		}
 
-		$total_counts    = bp_total_follow_counts( array( 'user_id' => $id ) );
+		$total_counts    = bboss_total_follow_counts( array( 'user_id' => $id ) );
 		$follower_count  = isset( $total_counts['followers'] ) ? $total_counts['followers'] : 0;
 		$following_count = isset( $total_counts['following'] ) ? $total_counts['following'] : 0;
 
@@ -98,7 +98,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			return false;
 		}
 
-		$ids = 0 !== $follower_count ? bp_get_followers(
+		$ids = 0 !== $follower_count ? bboss_get_followers(
 			array(
 				'user_id'  => $id,
 				'page'     => 1,
@@ -114,7 +114,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		$see_all_query_string = '?bb-rl-scope=followers';
 
 		$instance['title'] = (
-			bp_loggedin_user_id() === bp_displayed_user_id()
+			bboss_loggedin_user_id() === bboss_displayed_user_id()
 			? __( 'My Network', 'buddyboss' )
 			/* translators: %s is the user's display name */
 			: sprintf( __( "%s's Network", 'buddyboss' ), $this->get_user_display_name( $id ) )
@@ -125,7 +125,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			remove_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
 		}
 
-		$members_dir_url = esc_url( bp_get_members_directory_permalink() );
+		$members_dir_url = esc_url( bboss_get_members_directory_permalink() );
 
 		do_action( 'bb_before_my_network_widget' );
 
@@ -135,7 +135,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			<h2 class="widget-title">
 				<a href="<?php echo esc_url( $members_dir_url ); ?>">
 					<?php
-					if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
+					if ( bboss_loggedin_user_id() === bboss_displayed_user_id() ) {
 						esc_html_e( 'My Network', 'buddyboss' );
 					} else {
 						/* translators: %s is the user's display name */
@@ -180,10 +180,10 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			foreach ( $ids as $member_id ) {
 				?>
 				<div class="item-avatar">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+					<a href="<?php echo esc_url( bboss_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_core_get_user_displayname( $member_id ) ); ?>"<?php echo bboss_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						echo wp_kses_post(
-							bp_core_fetch_avatar(
+							bboss_core_fetch_avatar(
 								array(
 									'item_id' => $member_id,
 									'type'    => 'thumb',
@@ -195,7 +195,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 						);
 						?>
 					</a>
-					<?php bb_user_presence_html( $member_id ); ?>
+					<?php bboss_user_presence_html( $member_id ); ?>
 				</div>
 				<?php
 			}
@@ -233,7 +233,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	 */
 	public function set_display_user( $id ) {
 		if ( ! $id ) {
-			$id = bp_loggedin_user_id();
+			$id = bboss_loggedin_user_id();
 		}
 		return $id;
 	}
@@ -253,13 +253,13 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			return;
 		}
 
-		$format = bp_core_display_name_format();
+		$format = bboss_core_display_name_format();
 
 		if ( 'first_name' === $format || 'first_last_name' === $format ) {
-			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name  = xprofile_get_field_data( $first_name_id, $user_id );
+			$first_name_id = (int) bboss_get_option( 'bp-xprofile-firstname-field-id' );
+			$display_name  = bboss_xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
-			$display_name = bp_core_get_user_displayname( $user_id );
+			$display_name = bboss_core_get_user_displayname( $user_id );
 		}
 
 		return apply_filters( 'bp_core_widget_user_display_name', $display_name, $user_id );
@@ -289,13 +289,13 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				break;
 		}
 
-		$id     = bp_displayed_user_id();
+		$id     = bboss_displayed_user_id();
 		$filter = false;
 
 		if ( ! $id ) {
 			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
 			add_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
-			$id     = bp_displayed_user_id();
+			$id     = bboss_displayed_user_id();
 			$filter = true;
 
 			// If $id still blank then return.
@@ -305,7 +305,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		}
 
 		if ( 'following' === $type ) {
-			$ids = bp_get_following(
+			$ids = bboss_get_following(
 				array(
 					'user_id'  => $id,
 					'page'     => 1,
@@ -313,7 +313,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				)
 			);
 		} else {
-			$ids = bp_get_followers(
+			$ids = bboss_get_followers(
 				array(
 					'user_id'  => $id,
 					'page'     => 1,
@@ -340,10 +340,10 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			foreach ( $ids as $member_id ) {
 				?>
 				<div class="item-avatar">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+					<a href="<?php echo esc_url( bboss_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_core_get_user_displayname( $member_id ) ); ?>"<?php echo bboss_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						echo wp_kses_post(
-							bp_core_fetch_avatar(
+							bboss_core_fetch_avatar(
 								array(
 									'item_id' => $member_id,
 									'type'    => 'thumb',
@@ -355,7 +355,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 						);
 						?>
 					</a>
-					<?php bb_user_presence_html( $member_id ); ?>
+					<?php bboss_user_presence_html( $member_id ); ?>
 				</div>
 				<?php
 			}
@@ -378,7 +378,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 	 * @since BuddyBoss 2.9.00
 	 */
 	public static function enqueue_scripts() {
-		$min = bp_core_get_minified_asset_suffix();
-		wp_enqueue_script( 'bb_rl_my_network_widget_js', buddypress()->plugin_url . "bp-core/js/bb-rl-my-network-widget{$min}.js", array( 'jquery', 'wp-ajax-response' ), bp_get_version(), true );
+		$min = bboss_core_get_minified_asset_suffix();
+		wp_enqueue_script( 'bb_rl_my_network_widget_js', bboss()->plugin_url . "bp-core/js/bb-rl-my-network-widget{$min}.js", array( 'jquery', 'wp-ajax-response' ), bboss_get_version(), true );
 	}
 }

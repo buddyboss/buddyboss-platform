@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array An associative array of nav items.
  */
-function bp_nouveau_get_members_directory_nav_items() {
+function bboss_nouveau_get_members_directory_nav_items() {
 	$nav_items = array();
 
 	$nav_items['all'] = array(
 		'component' => 'members',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'selected' ),
-		'link'      => bp_get_members_directory_permalink(),
+		'link'      => bboss_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
 		'position'  => 5,
 		'count'     => false,
@@ -31,12 +31,12 @@ function bp_nouveau_get_members_directory_nav_items() {
 
 	if ( is_user_logged_in() ) {
 		// If friends component is active and the user has friends
-		if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+		if ( bboss_is_active( 'friends' ) && bboss_get_total_friend_count( bboss_loggedin_user_id() ) ) {
 			$nav_items['personal'] = array(
 				'component' => 'members',
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
-				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
+				'link'      => bboss_loggedin_user_domain() . bboss_get_friends_slug() . '/my-friends/',
 				'text'      => __( 'My Connections', 'buddyboss' ),
 				'position'  => 15,
 				'count'     => false,
@@ -44,15 +44,15 @@ function bp_nouveau_get_members_directory_nav_items() {
 		}
 
 		// If follow component is active and the user is following
-		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-			$counts = bp_total_follow_counts();
+		if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
+			$counts = bboss_total_follow_counts();
 
 			if ( ! empty( $counts['following'] ) ) {
 				$nav_items['following'] = array(
 					'component' => 'members',
 					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array(),
-					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
+					'link'      => bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/my-following/',
 					'text'      => __( 'Following', 'buddyboss' ),
 					'position'  => 16,
 					'count'     => false,
@@ -65,7 +65,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'component' => 'members',
 					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array(),
-					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-followers/',
+					'link'      => bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/my-followers/',
 					'text'      => __( 'Followers', 'buddyboss' ),
 					'count'     => false,
 					'position'  => 16,
@@ -75,7 +75,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 	}
 
 	// Check for the deprecated hook :
-	$extra_nav_items = bp_nouveau_parse_hooked_dir_nav( 'bp_members_directory_member_types', 'members', 20 );
+	$extra_nav_items = bboss_nouveau_parse_hooked_dir_nav( 'bp_members_directory_member_types', 'members', 20 );
 	if ( ! empty( $extra_nav_items ) ) {
 		$nav_items = array_merge( $nav_items, $extra_nav_items );
 	}
@@ -99,14 +99,14 @@ function bp_nouveau_get_members_directory_nav_items() {
  *
  * @return array the filters
  */
-function bp_nouveau_get_members_filters( $context = '' ) {
+function bboss_nouveau_get_members_filters( $context = '' ) {
 	if ( 'group' !== $context ) {
 		$filters = array(
 			'active' => __( 'Recently Active', 'buddyboss' ),
 			'newest' => __( 'Newest Members', 'buddyboss' ),
 		);
 
-		if ( bp_is_active( 'xprofile' ) ) {
+		if ( bboss_is_active( 'xprofile' ) ) {
 			$filters['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
 		}
 
@@ -121,7 +121,7 @@ function bp_nouveau_get_members_filters( $context = '' ) {
 			'first_joined' => __( 'Oldest', 'buddyboss' ),
 		);
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$filters['group_activity'] = __( 'Group Activity', 'buddyboss' );
 		}
 
@@ -139,7 +139,7 @@ function bp_nouveau_get_members_filters( $context = '' ) {
 	 */
 	$filters = apply_filters( 'bp_nouveau_get_members_filters', $filters, $context );
 
-	return bp_nouveau_parse_hooked_options( $action, $filters );
+	return bboss_nouveau_parse_hooked_options( $action, $filters );
 }
 
 /**
@@ -151,12 +151,12 @@ function bp_nouveau_get_members_filters( $context = '' ) {
  *
  * @return array An empty array to stop the button creation process.
  */
-function bp_nouveau_members_catch_button_args( $button = array() ) {
+function bboss_nouveau_members_catch_button_args( $button = array() ) {
 	/*
 	 * Globalize the arguments so that we can use it
 	 * in bp_nouveau_get_member_header_buttons().
 	 */
-	bp_nouveau()->members->button_args = $button;
+	bboss_nouveau()->members->button_args = $button;
 
 	// return an empty array to stop the button creation process
 	return array();
@@ -170,7 +170,7 @@ function bp_nouveau_members_catch_button_args( $button = array() ) {
  *
  * @return string|false HTML Output if hooked. False otherwise.
  */
-function bp_nouveau_get_hooked_member_meta() {
+function bboss_nouveau_get_hooked_member_meta() {
 	ob_start();
 
 	if ( ! empty( $GLOBALS['members_template'] ) ) {
@@ -213,14 +213,14 @@ function bp_nouveau_get_hooked_member_meta() {
  * @param array $wp_admin_nav
  * @return void
  */
-function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
-    if ( !bp_loggedin_user_id() ) {
+function bboss_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
+    if ( !bboss_loggedin_user_id() ) {
         return false;
     }
 
-	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+	if ( bboss_nouveau_get_appearance_settings( 'user_front_page' ) ) {
 
-		$page_ids = bp_core_get_directory_page_ids();
+		$page_ids = bboss_core_get_directory_page_ids();
 
 		$profile_dashboard   = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
 
@@ -229,7 +229,7 @@ function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
 
 			// Add main Dashboard menu.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-front',
 				'title'  => __( 'Dashboard', 'buddyboss' ),
 				'href'   => $dashboard_link,
@@ -264,9 +264,9 @@ function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
  *
  * @return string The located template.
  */
-function bp_nouveau_member_locate_template_part( $template = '' ) {
-	$displayed_user = bp_get_displayed_user();
-	$bp_nouveau     = bp_nouveau();
+function bboss_nouveau_member_locate_template_part( $template = '' ) {
+	$displayed_user = bboss_get_displayed_user();
+	$bp_nouveau     = bboss_nouveau();
 
 	if ( ! $template || empty( $displayed_user->id ) ) {
 		return '';
@@ -285,8 +285,8 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
 		 * Make sure to register your member
 		 * type using the hook 'bp_register_member_types'
 		 */
-		if ( bp_get_member_types() ) {
-			$displayed_user_member_type = bp_get_member_type( $displayed_user->id );
+		if ( bboss_get_member_types() ) {
+			$displayed_user_member_type = bboss_get_member_type( $displayed_user->id );
 			if ( ! $displayed_user_member_type ) {
 				$displayed_user_member_type = 'none';
 			}
@@ -312,7 +312,7 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
 	 *
 	 * @param array $templates Array of found templates.
 	 */
-	return bp_locate_template( apply_filters( 'bp_nouveau_member_locate_template_part', $templates ), false, true );
+	return bboss_locate_template( apply_filters( 'bp_nouveau_member_locate_template_part', $templates ), false, true );
 }
 
 /**
@@ -324,8 +324,8 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
  *
  * @return string HTML output.
  */
-function bp_nouveau_member_get_template_part( $template = '' ) {
-	$located = bp_nouveau_member_locate_template_part( $template );
+function bboss_nouveau_member_get_template_part( $template = '' ) {
+	$located = bboss_nouveau_member_locate_template_part( $template );
 
 	if ( false !== $located ) {
 		$slug = str_replace( '.php', '', $located );
@@ -354,8 +354,8 @@ function bp_nouveau_member_get_template_part( $template = '' ) {
  *
  * @return bool True if in the group's home sidebar. False otherwise.
  */
-function bp_nouveau_member_is_home_widgets() {
-	return ( true === bp_nouveau()->members->is_user_home_sidebar );
+function bboss_nouveau_member_is_home_widgets() {
+	return ( true === bboss_nouveau()->members->is_user_home_sidebar );
 }
 
 /**
@@ -367,9 +367,9 @@ function bp_nouveau_member_is_home_widgets() {
  *
  * @return array The Activities Template arguments.
  */
-function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
+function bboss_nouveau_member_activity_widget_overrides( $args = array() ) {
 	return array_merge( $args, array(
-		'user_id' => bp_displayed_user_id(),
+		'user_id' => bboss_displayed_user_id(),
 	) );
 }
 
@@ -382,9 +382,9 @@ function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
  *
  * @return array The Groups Template arguments.
  */
-function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
+function bboss_nouveau_member_groups_widget_overrides( $args = array() ) {
 	return array_merge( $args, array(
-		'user_id' => bp_displayed_user_id(),
+		'user_id' => bboss_displayed_user_id(),
 	) );
 }
 
@@ -397,14 +397,14 @@ function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
  *
  * @return array The Members Template arguments.
  */
-function bp_nouveau_member_members_widget_overrides( $args = array() ) {
+function bboss_nouveau_member_members_widget_overrides( $args = array() ) {
 	// Do nothing for the friends widget
-	if ( ! empty( $args['user_id'] ) && (int) $args['user_id'] === (int) bp_displayed_user_id() ) {
+	if ( ! empty( $args['user_id'] ) && (int) $args['user_id'] === (int) bboss_displayed_user_id() ) {
 		return $args;
 	}
 
 	return array_merge( $args, array(
-		'include' => bp_displayed_user_id(),
+		'include' => bboss_displayed_user_id(),
 	) );
 }
 
@@ -413,7 +413,7 @@ function bp_nouveau_member_members_widget_overrides( $args = array() ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_members_add_home_widget_filters() {
+function bboss_nouveau_members_add_home_widget_filters() {
 	add_filter( 'bp_nouveau_activity_widget_query', 'bp_nouveau_member_activity_widget_overrides', 10, 1 );
 	add_filter( 'bp_before_has_groups_parse_args', 'bp_nouveau_member_groups_widget_overrides', 10, 1 );
 	add_filter( 'bp_before_has_members_parse_args', 'bp_nouveau_member_members_widget_overrides', 10, 1 );
@@ -431,7 +431,7 @@ function bp_nouveau_members_add_home_widget_filters() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_members_remove_home_widget_filters() {
+function bboss_nouveau_members_remove_home_widget_filters() {
 	remove_filter( 'bp_nouveau_activity_widget_query', 'bp_nouveau_member_activity_widget_overrides', 10, 1 );
 	remove_filter( 'bp_before_has_groups_parse_args', 'bp_nouveau_member_groups_widget_overrides', 10, 1 );
 	remove_filter( 'bp_before_has_members_parse_args', 'bp_nouveau_member_members_widget_overrides', 10, 1 );
@@ -453,7 +453,7 @@ function bp_nouveau_members_remove_home_widget_filters() {
  *
  * @return array The list of WP Profile fields
  */
-function bp_nouveau_get_wp_profile_fields( $user = null ) {
+function bboss_nouveau_get_wp_profile_fields( $user = null ) {
 	/**
 	 * Filters the contact methods to be included in the WP Profile fields for a specific user.
 	 *
@@ -482,12 +482,12 @@ function bp_nouveau_get_wp_profile_fields( $user = null ) {
  *
  * @return array The Members single item primary nav ordered.
  */
-function bp_nouveau_member_customizer_nav() {
+function bboss_nouveau_member_customizer_nav() {
 
-	$nav = buddypress()->members->nav;
+	$nav = bboss()->members->nav;
 
 	// Eventually reset the order.
-	bp_nouveau_set_nav_item_order( $nav, bp_nouveau_get_appearance_settings( 'user_nav_order' ) );
+	bboss_nouveau_set_nav_item_order( $nav, bboss_nouveau_get_appearance_settings( 'user_nav_order' ) );
 
 	return $nav->get_primary();
 }
@@ -497,12 +497,12 @@ function bp_nouveau_member_customizer_nav() {
  *
  * @since BuddyBoss 2.2.6
  */
-function bp_nouveau_member_enqueue_scripts() {
-	if ( ! bp_is_user_settings() ) {
+function bboss_nouveau_member_enqueue_scripts() {
+	if ( ! bboss_is_user_settings() ) {
 		return;
 	}
 
-	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+	if ( bboss_is_user_settings_notifications() && bboss_action_variables() && 'subscriptions' === bboss_action_variable( 0 ) ) {
 		wp_enqueue_script( 'bb-subscriptions' );
 
 		/**
@@ -522,7 +522,7 @@ function bp_nouveau_member_enqueue_scripts() {
 		);
 
 		foreach ( $template_parts as $template_part ) {
-			bp_get_template_part( 'common/js-templates/members/settings/' . $template_part );
+			bboss_get_template_part( 'common/js-templates/members/settings/' . $template_part );
 		}
 	}
 }
@@ -536,7 +536,7 @@ function bp_nouveau_member_enqueue_scripts() {
  *
  * @return array The same array with the specific messages scripts.
  */
-function bp_nouveau_member_register_scripts( $scripts = array() ) {
+function bboss_nouveau_member_register_scripts( $scripts = array() ) {
 	if ( ! isset( $scripts['bp-nouveau'] ) ) {
 		return $scripts;
 	}
@@ -562,20 +562,20 @@ function bp_nouveau_member_register_scripts( $scripts = array() ) {
  *
  * @return array         The same array with specific strings for the messages UI if needed.
  */
-function bp_nouveau_member_localize_scripts( $params = array() ) {
-	if ( ! bp_is_user_settings() && ! function_exists( 'bp_is_groups_component' ) ) {
+function bboss_nouveau_member_localize_scripts( $params = array() ) {
+	if ( ! bboss_is_user_settings() && ! function_exists( 'bboss_is_groups_component' ) ) {
 		return $params;
 	}
 
 	if (
 		(
-			bp_is_user_settings_notifications() &&
-			bp_action_variables() &&
-			'subscriptions' === bp_action_variable( 0 )
+			bboss_is_user_settings_notifications() &&
+			bboss_action_variables() &&
+			'subscriptions' === bboss_action_variable( 0 )
 		) ||
 		(
-			bp_is_groups_component() &&
-			bp_is_group()
+			bboss_is_groups_component() &&
+			bboss_is_group()
 		)
 	) {
 		$params['subscriptions'] = array(

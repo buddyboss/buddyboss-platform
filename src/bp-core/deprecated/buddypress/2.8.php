@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function bp_core_admin_is_running_php53_or_greater() {
+function bboss_core_admin_is_running_php53_or_greater() {
 	_deprecated_function( __FUNCTION__, '2.8' );
 	return version_compare( PHP_VERSION, '5.3', '>=' );
 }
@@ -31,12 +31,12 @@ function bp_core_admin_is_running_php53_or_greater() {
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
  */
-function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
-	if ( bp_core_admin_is_running_php53_or_greater() ) {
+function bboss_core_admin_maybe_disable_update_row_for_php53_requirement() {
+	if ( bboss_core_admin_is_running_php53_or_greater() ) {
 		return;
 	}
 
-	$loader = basename( constant( 'BP_PLUGIN_DIR' ) ) . '/bp-loader.php';
+	$loader = basename( constant( 'BBOSS_PLUGIN_DIR' ) ) . '/bp-loader.php';
 
 	remove_action( "after_plugin_row_{$loader}", 'wp_plugin_update_row', 10 );
 	add_action( "after_plugin_row_{$loader}", 'bp_core_admin_php52_plugin_row', 10, 2 );
@@ -50,8 +50,8 @@ function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
  */
-function bp_core_admin_maybe_remove_from_update_core() {
-	if ( bp_core_admin_is_running_php53_or_greater() ) {
+function bboss_core_admin_maybe_remove_from_update_core() {
+	if ( bboss_core_admin_is_running_php53_or_greater() ) {
 		return;
 	}
 
@@ -73,10 +73,10 @@ function bp_core_admin_maybe_remove_from_update_core() {
  * @param  object $retval Object of plugin update data.
  * @return object
  */
-function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
+function bboss_core_admin_remove_buddypress_from_update_transient( $retval ) {
 	_deprecated_function( __FUNCTION__, '2.8' );
 
-	$loader = basename( constant( 'BP_PLUGIN_DIR' ) ) . '/bp-loader.php';
+	$loader = basename( constant( 'BBOSS_PLUGIN_DIR' ) ) . '/bp-loader.php';
 
 	// Remove BP from update plugins list.
 	if ( isset( $retval->response[ $loader ] ) ) {
@@ -102,7 +102,7 @@ function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
  * @param array  $plugin_data Data about the BuddyPress plugin, as returned by the
  *                            plugins API.
  */
-function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
+function bboss_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	_deprecated_function( __FUNCTION__, '2.8' );
 
 	if ( is_multisite() && ! is_network_admin() ) {
@@ -171,7 +171,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
  */
-function bp_core_admin_php53_admin_notice() {
+function bboss_core_admin_php53_admin_notice() {
 	_deprecated_function( __FUNCTION__, '2.8' );
 
 	// If not on the Plugins page, stop now.
@@ -183,23 +183,23 @@ function bp_core_admin_php53_admin_notice() {
 		return;
 	}
 
-	if ( bp_core_admin_is_running_php53_or_greater() ) {
+	if ( bboss_core_admin_is_running_php53_or_greater() ) {
 		return;
 	}
 
 	$notice_id = 'bp28-php53';
-	if ( bp_get_option( "bp-dismissed-notice-$notice_id" ) ) {
+	if ( bboss_get_option( "bp-dismissed-notice-$notice_id" ) ) {
 		return;
 	}
 
-	$bp  = buddypress();
-	$min = bp_core_get_minified_asset_suffix();
+	$bp  = bboss();
+	$min = bboss_core_get_minified_asset_suffix();
 
 	wp_enqueue_script(
 		'bp-dismissible-admin-notices',
 		"{$bp->plugin_url}bp-core/admin/js/dismissible-admin-notices{$min}.js",
 		array( 'jquery' ),
-		bp_get_version(),
+		bboss_get_version(),
 		true
 	);
 	?>

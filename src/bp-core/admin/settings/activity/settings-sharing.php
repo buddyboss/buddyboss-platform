@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Translated section title.
  */
-function bb_activity_sharing_section_title() {
+function bboss_activity_sharing_section_title() {
 	return __( 'Activity Sharing', 'buddyboss' );
 }
 
@@ -34,14 +34,14 @@ function bb_activity_sharing_section_title() {
  * Activity Sharing help article ID.
  *
  * Single source of truth for the section's help_url. Mirrors
- * `bb_activity_sharing_section_title()` so the help link can be updated
+ * `bboss_activity_sharing_section_title()` so the help link can be updated
  * in one place.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return string Help article ID.
  */
-function bb_activity_sharing_section_help_article() {
+function bboss_activity_sharing_section_help_article() {
 	return '637448';
 }
 
@@ -52,18 +52,18 @@ function bb_activity_sharing_section_help_article() {
  * active. State-specific extensions (e.g. the UPGRADE LAUNCH badge when Sharing
  * is not installed) are layered on top via the
  * `bb_activity_sharing_section_args` filter — see
- * `bb_activity_sharing_get_section_args()` and
- * `bb_activity_sharing_add_pro_badge_when_no_sharing()` below.
+ * `bboss_activity_sharing_get_section_args()` and
+ * `bboss_activity_sharing_add_pro_badge_when_no_sharing()` below.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Section args (title, order, help_url).
  */
-function bb_activity_sharing_section_base_args() {
+function bboss_activity_sharing_section_base_args() {
 	return array(
-		'title'    => bb_activity_sharing_section_title(),
+		'title'    => bboss_activity_sharing_section_title(),
 		'order'    => 10,
-		'help_url' => bb_activity_sharing_section_help_article(),
+		'help_url' => bboss_activity_sharing_section_help_article(),
 	);
 }
 
@@ -73,7 +73,7 @@ function bb_activity_sharing_section_base_args() {
  * Plugins that need to mutate the Activity Sharing section attributes (add a
  * `pro_notice` badge, change `status`, override `description`, etc.) should
  * hook the `bb_activity_sharing_section_args` filter rather than calling
- * `bb_register_feature_section()` a second time. Re-registering the same
+ * `bboss_register_feature_section()` a second time. Re-registering the same
  * section ID without `merge => true` would trigger the registry's
  * duplicate-detection auto-suffix path (`activity_sharing_1`) and render
  * two sections in the panel.
@@ -83,14 +83,14 @@ function bb_activity_sharing_section_base_args() {
  * that only resolve at AJAX time — Sharing's license-lock state being the
  * only known case, because Sharing's DRM-addon registration races with
  * Platform's panel hook on `plugins_loaded@10` — use a follow-up
- * `bb_register_feature_section()` call with `merge => true`. See
- * `bb_activity_register_sharing_pro_placeholder_fields()`.
+ * `bboss_register_feature_section()` call with `merge => true`. See
+ * `bboss_activity_register_sharing_pro_placeholder_fields()`.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Section args after filter.
  */
-function bb_activity_sharing_get_section_args() {
+function bboss_activity_sharing_get_section_args() {
 	/**
 	 * Filter the Activity Sharing section args.
 	 *
@@ -109,7 +109,7 @@ function bb_activity_sharing_get_section_args() {
 	 *     @type string $help_url Help article ID.
 	 * }
 	 */
-	return apply_filters( 'bb_activity_sharing_section_args', bb_activity_sharing_section_base_args() );
+	return apply_filters( 'bb_activity_sharing_section_args', bboss_activity_sharing_section_base_args() );
 }
 
 /**
@@ -118,7 +118,7 @@ function bb_activity_sharing_get_section_args() {
  *
  * Detection here is reliable at boot — `class_exists` does not depend on DRM
  * registration ordering. The "license-locked" runtime state (state 2) is
- * handled separately by `bb_activity_register_sharing_pro_placeholder_fields()`
+ * handled separately by `bboss_activity_register_sharing_pro_placeholder_fields()`
  * via a `merge => true` follow-up registration at AJAX time, when license
  * state is settled.
  *
@@ -127,7 +127,7 @@ function bb_activity_sharing_get_section_args() {
  * @param array $args Default section args.
  * @return array Possibly-modified section args.
  */
-function bb_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
+function bboss_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
 	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Activity_Settings' )
 		&& method_exists( '\\BuddyBoss\\Sharing\\Admin\\Activity_Settings', 'bb_sh_register_sharing_settings' );
 	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
@@ -156,14 +156,14 @@ add_filter( 'bb_activity_sharing_section_args', 'bb_activity_sharing_add_pro_bad
  * Register the Activity Sharing panel section + state-appropriate fields.
  *
  * Section is registered once via filtered args (single source of truth — see
- * `bb_activity_sharing_get_section_args()`). Field registration branches on
+ * `bboss_activity_sharing_get_section_args()`). Field registration branches on
  * the four possible states:
  *
  *   1. NEW Sharing — Sharing's `bb_admin_settings_before_get_feature` hook
  *      registers the real fields at AJAX time. Platform registers nothing
  *      here beyond the section shell.
  *   2. NEW Sharing + license locked — Same as state 1 at boot. Sharing's
- *      lazy hook calls `bb_activity_register_sharing_pro_placeholder_fields()`
+ *      lazy hook calls `bboss_activity_register_sharing_pro_placeholder_fields()`
  *      at AJAX time, which adds the UPGRADE LAUNCH badge via merge mode and
  *      registers placeholder fields.
  *   3. OLD Sharing — main plugin class exists but predates Settings 2.0.
@@ -178,18 +178,18 @@ add_filter( 'bb_activity_sharing_section_args', 'bb_activity_sharing_add_pro_bad
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_activity_register_sharing_panel_fields() {
+function bboss_activity_register_sharing_panel_fields() {
 
 	// Single section registration — args go through the
 	// `bb_activity_sharing_section_args` filter, which is the canonical
 	// extension point for mutating section attributes from this or any
 	// other plugin. State-appropriate badges (e.g. UPGRADE LAUNCH when Sharing
 	// is absent) are added via filter callbacks, not by re-registering.
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'activity',
 		'activity_sharing',
 		'activity_sharing',
-		bb_activity_sharing_get_section_args()
+		bboss_activity_sharing_get_section_args()
 	);
 
 	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Activity_Settings' )
@@ -203,7 +203,7 @@ function bb_activity_register_sharing_panel_fields() {
 
 	if ( $has_old_sharing ) {
 		// State 3 — OLD Sharing: show Update Required notice.
-		bb_register_feature_field(
+		bboss_register_feature_field(
 			'activity',
 			'activity_sharing',
 			'activity_sharing',
@@ -225,7 +225,7 @@ function bb_activity_register_sharing_panel_fields() {
 
 	// State 4 — Sharing NOT installed: section already carries the UPGRADE LAUNCH
 	// badge from the filter callback above. Register the placeholder fields.
-	bb_activity_register_sharing_pro_placeholder_fields();
+	bboss_activity_register_sharing_pro_placeholder_fields();
 }
 
 /**
@@ -258,7 +258,7 @@ function bb_activity_register_sharing_panel_fields() {
  *   The `bb_activity_sharing_section_args` filter handles boot-time state
  *   (no Sharing installed → add badge). Runtime state changes that resolve
  *   only at AJAX time are exactly what the registry's `merge => true`
- *   contract is designed for — see `BB_Feature_Registry::bb_register_section()`
+ *   contract is designed for — see `BBoss_Feature_Registry::bb_register_section()`
  *   lines 540-595. Without merge the second registration auto-suffixes to
  *   `activity_sharing_1` and renders a phantom second section.
  *
@@ -269,7 +269,7 @@ function bb_activity_register_sharing_panel_fields() {
  *
  * @return void
  */
-function bb_activity_register_sharing_pro_placeholder_fields() {
+function bboss_activity_register_sharing_pro_placeholder_fields() {
 
 	$feature_id = 'activity';
 	$panel_id   = 'activity_sharing';
@@ -309,7 +309,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	// @bbwt-com-start pricing-links
 	$pro_notice_section_url = 'https://www.buddyboss.com/pricing/';
 	// @bbwt-com-end pricing-links
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -384,14 +384,14 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			);
 		}
 
-		bb_register_feature_field( $feature_id, $panel_id, $section_id, $args );
+		bboss_register_feature_field( $feature_id, $panel_id, $section_id, $args );
 	}
 
 	// Share as Link toggle + its share-platforms picker share the same
 	// `group.key` so the row-separator line between them drops (per Figma —
 	// the platform cards visually belong to the "Share as Link" row, not
 	// a standalone row of their own).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,
@@ -416,7 +416,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	);
 
 	// Share-platforms picker (Messenger / Facebook / X / LinkedIn / WhatsApp).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		$feature_id,
 		$panel_id,
 		$section_id,

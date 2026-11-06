@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Forums_Endpoint class
+ * BP REST: BBoss_REST_Forums_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Forums_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Forums_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Group object.
@@ -35,7 +35,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'forums';
 	}
 
@@ -134,11 +134,11 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$args = array(
 			'post_parent'    => ( ! empty( $request['parent'] ) ? $request['parent'] : 0 ),
-			'post_status'    => ( ! empty( $request['status'] ) ? $request['status'] : bbp_get_public_status_id() ),
+			'post_status'    => ( ! empty( $request['status'] ) ? $request['status'] : bboss_bbp_get_public_status_id() ),
 			'orderby'        => ( ! empty( $request['orderby'] ) ? $request['orderby'] : 'menu_order title' ),
 			'order'          => ( ! empty( $request['order'] ) ? $request['order'] : 'asc' ),
 			'paged'          => ( ! empty( $request['page'] ) ? $request['page'] : '' ),
-			'posts_per_page' => ( ! empty( $request['per_page'] ) ? $request['per_page'] : bbp_get_forums_per_page() ),
+			'posts_per_page' => ( ! empty( $request['per_page'] ) ? $request['per_page'] : bboss_bbp_get_forums_per_page() ),
 		);
 
 		if ( ! empty( $request['search'] ) ) {
@@ -200,19 +200,19 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_forums_get_items_query_args', $args, $request );
 
-		$bbp_f = bbp_parse_args(
+		$bbp_f = bboss_bbp_parse_args(
 			$args,
 			array(
-				'post_type'           => bbp_get_forum_post_type(),
+				'post_type'           => bboss_bbp_get_forum_post_type(),
 				'ignore_sticky_posts' => true,
 			),
 			'has_forums'
 		);
 
 		if ( isset( $request['subscriptions'] ) && ! empty( $request['subscriptions'] ) ) {
-			$user_id = (int) ( isset( $args['author'] ) && ! empty( $args['author'] ) ) ? $args['author'] : bbp_get_current_user_id();
+			$user_id = (int) ( isset( $args['author'] ) && ! empty( $args['author'] ) ) ? $args['author'] : bboss_bbp_get_current_user_id();
 
-			$subscriptions = bbp_get_user_subscribed_forum_ids( $user_id );
+			$subscriptions = bboss_bbp_get_user_subscribed_forum_ids( $user_id );
 			if ( ! empty( $subscriptions ) ) {
 				$bbp_f['post__in'] = $subscriptions;
 				if ( isset( $args['author'] ) ) {
@@ -236,7 +236,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $forums_query->found_posts, $args['posts_per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $forums_query->found_posts, $args['posts_per_page'] );
 
 		/**
 		 * Fires after a list of forums is fetched via the REST API.
@@ -263,7 +263,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -302,7 +302,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 
-		$forum = bbp_get_forum( $request['id'] );
+		$forum = bboss_bbp_get_forum( $request['id'] );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $forum, $request )
@@ -335,7 +335,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -345,7 +345,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$forum = bbp_get_forum( $request['id'] );
+		$forum = bboss_bbp_get_forum( $request['id'] );
 
 		if ( true === $retval && empty( $forum->ID ) ) {
 			$retval = new WP_Error(
@@ -412,19 +412,19 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the forum.
 	 */
 	public function update_item( $request ) {
-		$forum = bbp_get_forum( $request['id'] );
+		$forum = bboss_bbp_get_forum( $request['id'] );
 
-		$user_id = bbp_get_user_id( 0, true, true );
+		$user_id = bboss_bbp_get_user_id( 0, true, true );
 
 		$success = false;
 		$action  = '';
 
-		$is_subscription = bbp_is_user_subscribed( $user_id, $forum->ID );
+		$is_subscription = bboss_bbp_is_user_subscribed( $user_id, $forum->ID );
 		if ( true === $is_subscription ) {
-			$success = bbp_remove_user_subscription( $user_id, $forum->ID );
+			$success = bboss_bbp_remove_user_subscription( $user_id, $forum->ID );
 			$action  = 'unsubscribe';
 		} elseif ( false === $is_subscription ) {
-			$success = (bool) bbp_add_user_subscription( $user_id, $forum->ID );
+			$success = (bool) bboss_bbp_add_user_subscription( $user_id, $forum->ID );
 			$action  = 'subscribe';
 		}
 
@@ -472,9 +472,9 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		if ( is_user_logged_in() ) {
 			$retval = true;
-			$forum  = bbp_get_forum( $request->get_param( 'id' ) );
+			$forum  = bboss_bbp_get_forum( $request->get_param( 'id' ) );
 
-			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
+			if ( ! bboss_is_enabled_subscription( 'forum' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Subscription was disabled.', 'buddyboss' ),
@@ -496,7 +496,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			$user_id = bbp_get_user_id( 0, true, true );
+			$user_id = bboss_bbp_get_user_id( 0, true, true );
 
 			if ( true === $retval && ! current_user_can( 'edit_user', $user_id ) ) {
 				$retval = new WP_Error(
@@ -546,7 +546,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'password'           => $forum->post_password,
 			'slug'               => $forum->post_name,
 			'status'             => $forum->post_status,
-			'link'               => bbp_get_forum_permalink( $forum->ID ),
+			'link'               => bboss_bbp_get_forum_permalink( $forum->ID ),
 			'author'             => (int) $forum->post_author,
 			'parent'             => (int) $forum->post_parent,
 			'menu_order'         => (int) $forum->menu_order,
@@ -558,25 +558,25 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'last_reply_id'      => (int) get_post_meta( $forum->ID, '_bbp_last_reply_id', true ),
 			'last_active_author' => $this->get_forum_last_active_author_id( $forum->ID ),
 			'last_active_time'   => $this->get_forum_last_active_time( $forum->ID ),
-			'is_closed'          => bbp_is_forum_closed( $forum->ID ),
-			'is_forum_category'  => bbp_is_forum_category( $forum->ID ),
+			'is_closed'          => bboss_bbp_is_forum_closed( $forum->ID ),
+			'is_forum_category'  => bboss_bbp_is_forum_category( $forum->ID ),
 		);
 
 		$data['featured_media']['full'] = (string) (
-			function_exists( 'bbp_get_forum_thumbnail_src' )
-			? bbp_get_forum_thumbnail_src( $forum->ID, 'full', 'full' )
+			function_exists( 'bboss_bbp_get_forum_thumbnail_src' )
+			? bboss_bbp_get_forum_thumbnail_src( $forum->ID, 'full', 'full' )
 			: get_the_post_thumbnail_url( $forum->ID, 'full' )
 		);
 
 		$data['featured_media']['thumb'] = (string) (
-			function_exists( 'bbp_get_forum_thumbnail_src' )
-			? bbp_get_forum_thumbnail_src( $forum->ID, 'thumbnail', 'large' )
+			function_exists( 'bboss_bbp_get_forum_thumbnail_src' )
+			? bboss_bbp_get_forum_thumbnail_src( $forum->ID, 'thumbnail', 'large' )
 			: get_the_post_thumbnail_url( $forum->ID, 'thumbnail' )
 		);
 
 		$data['title'] = array(
 			'raw'      => $forum->post_title,
-			'rendered' => bbp_get_forum_title( $forum->ID ),
+			'rendered' => bboss_bbp_get_forum_title( $forum->ID ),
 		);
 
 		/* Prepare content */
@@ -601,9 +601,9 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$data['group'] = (
 			(
-				function_exists( 'bbp_is_forum_group_forum' )
-				&& bbp_is_forum_group_forum( $forum->ID )
-				&& function_exists( 'groups_get_group' )
+				function_exists( 'bboss_bbp_is_forum_group_forum' )
+				&& bboss_bbp_is_forum_group_forum( $forum->ID )
+				&& function_exists( 'bboss_groups_get_group' )
 			)
 			? $this->bp_rest_get_group( $forum->ID )
 			: ''
@@ -613,8 +613,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$this->group = $data['group'];
 		}
 
-		if ( class_exists( 'BBP_Forums_Group_Extension' ) ) {
-			$group_forum_extention = new BBP_Forums_Group_Extension();
+		if ( class_exists( 'BBoss_BBP_Forums_Group_Extension' ) ) {
+			$group_forum_extention = new BBoss_BBP_Forums_Group_Extension();
 			// Allow group member to view private/hidden forums.
 			add_filter( 'bbp_map_meta_caps', array( $group_forum_extention, 'map_group_forum_meta_caps' ), 10, 4 );
 
@@ -928,7 +928,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params                        = parent::get_collection_params();
 		$params['context']['default']  = 'view';
-		$params['per_page']['default'] = ( function_exists( 'bbp_get_forums_per_page' ) ? bbp_get_forums_per_page() : get_option( '_bbp_forums_per_page', 15 ) );
+		$params['per_page']['default'] = ( function_exists( 'bboss_bbp_get_forums_per_page' ) ? bboss_bbp_get_forums_per_page() : get_option( '_bbp_forums_per_page', 15 ) );
 
 		$params['author'] = array(
 			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss' ),
@@ -999,7 +999,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					'include',
 				),
 			),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
@@ -1011,7 +1011,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				'type' => 'string',
 				'enum' => array( 'publish', 'private', 'hidden' ),
 			),
-			'sanitize_callback' => 'bp_rest_sanitize_string_list',
+			'sanitize_callback' => 'bboss_rest_sanitize_string_list',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
@@ -1105,16 +1105,16 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				'href' => rest_url( $base ),
 			),
 			'user'       => array(
-				'href'       => rest_url( bp_rest_get_user_url( $post->post_author ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $post->post_author ) ),
 				'embeddable' => true,
 			),
 		);
 
 		if (
-			function_exists( 'bbp_is_forum_group_forum' )
-			&& function_exists( 'bb_get_child_forum_group_ids' )
-			&& function_exists( 'groups_get_group' )
-			&& ! empty( bb_get_child_forum_group_ids( $post->ID ) )
+			function_exists( 'bboss_bbp_is_forum_group_forum' )
+			&& function_exists( 'bboss_get_child_forum_group_ids' )
+			&& function_exists( 'bboss_groups_get_group' )
+			&& ! empty( bboss_get_child_forum_group_ids( $post->ID ) )
 		) {
 			$group          = $this->bp_rest_get_group( $post->ID );
 			$links['group'] = array(
@@ -1149,7 +1149,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$last_id = get_post_meta( $forum_id, '_bbp_last_active_id', true );
 		if ( ! empty( $last_id ) ) {
-			$post = bbp_get_forum( $last_id );
+			$post = bboss_bbp_get_forum( $last_id );
 
 			return ( ! empty( $post ) && ! empty( $post->post_author ) ) ? $post->post_author : 0;
 		}
@@ -1167,11 +1167,11 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_forum_last_active_time( $forum_id ) {
 		$last_active = get_post_meta( $forum_id, '_bbp_last_active_time', true );
 		if ( empty( $last_active ) ) {
-			$reply_id = bbp_get_forum_last_reply_id( $forum_id );
+			$reply_id = bboss_bbp_get_forum_last_reply_id( $forum_id );
 			if ( ! empty( $reply_id ) ) {
 				$last_active = get_post_field( 'post_date', $reply_id );
 			} else {
-				$topic_id = bbp_get_forum_last_topic_id( $forum_id );
+				$topic_id = bboss_bbp_get_forum_last_topic_id( $forum_id );
 				if ( ! empty( $topic_id ) ) {
 					$last_active = $this->bbp_rest_get_topic_last_active_time( $topic_id );
 				} else {
@@ -1191,12 +1191,12 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @return mixed|void
 	 */
 	public function bbp_rest_get_topic_last_active_time( $topic_id = 0 ) {
-		$topic_id = bbp_get_topic_id( $topic_id );
+		$topic_id = bboss_bbp_get_topic_id( $topic_id );
 
 		// Try to get the most accurate freshness time possible.
 		$last_active = get_post_meta( $topic_id, '_bbp_last_active_time', true );
 		if ( empty( $last_active ) ) {
-			$reply_id = bbp_get_topic_last_reply_id( $topic_id );
+			$reply_id = bboss_bbp_get_topic_last_reply_id( $topic_id );
 			if ( ! empty( $reply_id ) ) {
 				$last_active = get_post_field( 'post_date', $reply_id );
 			} else {
@@ -1220,14 +1220,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		$forum_id = (int) $forum_id;
-		$user_id  = bbp_get_user_id( 0, true, true );
+		$user_id  = bboss_bbp_get_user_id( 0, true, true );
 
 		$state = array(
 			'subscribed' => false,
 		);
 
-		if ( bb_is_enabled_subscription( 'forum' ) && current_user_can( 'edit_user', $user_id ) ) {
-			$state['subscribed'] = bbp_is_user_subscribed( $user_id, $forum_id );
+		if ( bboss_is_enabled_subscription( 'forum' ) && current_user_can( 'edit_user', $user_id ) ) {
+			$state['subscribed'] = bboss_bbp_is_user_subscribed( $user_id, $forum_id );
 		}
 
 		return $state;
@@ -1245,17 +1245,17 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$forum = bbp_get_forum( bbp_get_forum_id( (int) $forum_id ) );
+		$forum = bboss_bbp_get_forum( bboss_bbp_get_forum_id( (int) $forum_id ) );
 
 		return array(
 			'show_topics'   => $this->can_access_content( $forum_id ),
 			'show_subforum' => $this->can_access_content( $forum_id ),
 			'create_topic'  => (
 				! empty( $forum )
-				&& ! bbp_is_forum_category()
-				&& ( bbp_current_user_can_publish_topics() || bbp_current_user_can_access_anonymous_user_form() )
+				&& ! bboss_bbp_is_forum_category()
+				&& ( bboss_bbp_current_user_can_publish_topics() || bboss_bbp_current_user_can_access_anonymous_user_form() )
 				&& $this->can_access_content( $forum_id, true )
-				&& ( ! bbp_is_user_keymaster() ? bbp_is_forum_open( (int) $forum_id ) : true )
+				&& ( ! bboss_bbp_is_user_keymaster() ? bboss_bbp_is_forum_open( (int) $forum_id ) : true )
 			),
 		);
 	}
@@ -1271,30 +1271,30 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function can_access_content( $forum_id, $create = false ) {
 
 		if (
-			function_exists( 'bbp_is_forum_group_forum' )
-			&& bbp_is_forum_group_forum( $forum_id )
+			function_exists( 'bboss_bbp_is_forum_group_forum' )
+			&& bboss_bbp_is_forum_group_forum( $forum_id )
 		) {
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 			$user_id   = get_current_user_id();
 			$flag      = false;
 			if ( ! empty( $group_ids ) ) {
 				foreach ( $group_ids as $group_id ) {
 
-					if ( function_exists( 'bp_is_active' ) && bp_is_active( 'groups' ) ) {
+					if ( function_exists( 'bboss_is_active' ) && bboss_is_active( 'groups' ) ) {
 
 						// if we checking access for showing forums, topic and replies then we need to check group is public or not.
 						if ( ! $create ) {
-							$group = groups_get_group( $group_id );
+							$group = bboss_groups_get_group( $group_id );
 							if ( 'public' === $group->status ) {
 								$flag = true;
 							}
 						}
 
 						if (
-							groups_is_user_member( $user_id, $group_id )
-							|| groups_is_user_mod( $user_id, $group_id )
-							|| groups_is_user_admin( $user_id, $group_id )
-							|| bbp_is_user_keymaster( $user_id )
+							bboss_groups_is_user_member( $user_id, $group_id )
+							|| bboss_groups_is_user_mod( $user_id, $group_id )
+							|| bboss_groups_is_user_admin( $user_id, $group_id )
+							|| bboss_bbp_is_user_keymaster( $user_id )
 						) {
 							$flag = true;
 						}
@@ -1306,7 +1306,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		} elseif (
 			empty( $forum_id )
-			|| ! bbp_user_can_view_forum(
+			|| ! bboss_bbp_user_can_view_forum(
 				array(
 					'forum_id' => $forum_id,
 				)
@@ -1326,7 +1326,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @return array|void
 	 */
 	public function get_sub_forums( $args ) {
-		$sub_forums = bbp_forum_get_subforums( $args );
+		$sub_forums = bboss_bbp_forum_get_subforums( $args );
 
 		if ( empty( $sub_forums ) ) {
 			return;
@@ -1337,21 +1337,21 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$retval[] = array(
 				'id'    => $sub_forum->ID,
 				'slug'  => $sub_forum->post_name,
-				'title' => bbp_get_forum_title( $sub_forum->ID ),
+				'title' => bboss_bbp_get_forum_title( $sub_forum->ID ),
 				'count' => array(
-					'topic' => bbp_get_forum_topic_count( $sub_forum->ID ),
-					'reply' => bbp_get_forum_reply_count( $sub_forum->ID ),
+					'topic' => bboss_bbp_get_forum_topic_count( $sub_forum->ID ),
+					'reply' => bboss_bbp_get_forum_reply_count( $sub_forum->ID ),
 				),
-				'link'  => bbp_get_forum_permalink( $sub_forum->ID ),
+				'link'  => bboss_bbp_get_forum_permalink( $sub_forum->ID ),
 				'group' => (
 					(
-						function_exists( 'bbp_is_forum_group_forum' )
-						&& bbp_is_forum_group_forum( $sub_forum->ID )
-						&& function_exists( 'groups_get_group' )
+						function_exists( 'bboss_bbp_is_forum_group_forum' )
+						&& bboss_bbp_is_forum_group_forum( $sub_forum->ID )
+						&& function_exists( 'bboss_groups_get_group' )
 					)
 					? (
-						bbp_get_forum_group_ids( $sub_forum->ID )
-						? groups_get_group( current( bbp_get_forum_group_ids( $sub_forum->ID ) ) )
+						bboss_bbp_get_forum_group_ids( $sub_forum->ID )
+						? bboss_groups_get_group( current( bboss_bbp_get_forum_group_ids( $sub_forum->ID ) ) )
 						: ''
 					)
 					: ''
@@ -1367,25 +1367,25 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param int $forum_id ID of the forum.
 	 *
-	 * @return BP_Groups_Group|string
+	 * @return BBoss_Groups_Group|string
 	 */
 	public function bp_rest_get_group( $forum_id ) {
 		if ( empty( $forum_id ) ) {
 			return '';
 		}
 
-		if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
-			$group_ids = bb_get_child_forum_group_ids( $forum_id );
+		if ( function_exists( 'bboss_get_child_forum_group_ids' ) ) {
+			$group_ids = bboss_get_child_forum_group_ids( $forum_id );
 		} else {
-			$group_ids = bbp_get_forum_group_ids( $forum_id );
+			$group_ids = bboss_bbp_get_forum_group_ids( $forum_id );
 		}
 
 		if ( ! empty( $group_ids ) ) {
-			$group              = groups_get_group( current( $group_ids ) );
+			$group              = bboss_groups_get_group( current( $group_ids ) );
 			$group->avatar_urls = array();
-			if ( ! bp_disable_group_avatar_uploads() ) {
+			if ( ! bboss_disable_group_avatar_uploads() ) {
 				$group->avatar_urls = array(
-					'thumb' => bp_core_fetch_avatar(
+					'thumb' => bboss_core_fetch_avatar(
 						array(
 							'html'    => false,
 							'object'  => 'group',
@@ -1393,7 +1393,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 							'type'    => 'thumb',
 						)
 					),
-					'full'  => bp_core_fetch_avatar(
+					'full'  => bboss_core_fetch_avatar(
 						array(
 							'html'    => false,
 							'object'  => 'group',
@@ -1439,9 +1439,9 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			case 'read_hidden_forums':
 			case 'read_private_forums':
 				if (
-					groups_is_user_member( $user_id, $this->group->id ) ||
-					groups_is_user_mod( $user_id, $this->group->id ) ||
-					groups_is_user_admin( $user_id, $this->group->id )
+					bboss_groups_is_user_member( $user_id, $this->group->id ) ||
+					bboss_groups_is_user_mod( $user_id, $this->group->id ) ||
+					bboss_groups_is_user_admin( $user_id, $this->group->id )
 				) {
 					$caps = array( 'participate' );
 				}
@@ -1455,8 +1455,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			case 'edit_others_replies':
 			case 'edit_others_topics':
 				if (
-					groups_is_user_mod( $user_id, $this->group->id ) ||
-					groups_is_user_admin( $user_id, $this->group->id )
+					bboss_groups_is_user_mod( $user_id, $this->group->id ) ||
+					bboss_groups_is_user_admin( $user_id, $this->group->id )
 				) {
 					$caps = array( 'participate' );
 				}
@@ -1465,7 +1465,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			// If user is a group admin, allow them to delete topics and replies.
 			case 'delete_topic':
 			case 'delete_reply':
-				if ( groups_is_user_admin( $user_id, $this->group->id ) ) {
+				if ( bboss_groups_is_user_admin( $user_id, $this->group->id ) ) {
 					$caps = array( 'participate' );
 				}
 				break;
@@ -1496,8 +1496,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			groups_is_user_mod( $user_id, $this->group->id ) ||
-			groups_is_user_admin( $user_id, $this->group->id )
+			bboss_groups_is_user_mod( $user_id, $this->group->id ) ||
+			bboss_groups_is_user_admin( $user_id, $this->group->id )
 		) {
 			return array( 'participate' );
 		}
@@ -1531,7 +1531,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 *
 	 * Topics and replies saved outside the frontend form (wp-admin, imports, scripts, or before link
 	 * previews existed) carry no `_link_embed` meta. The web then embeds the first embeddable URL in
-	 * the content (see bbp_topic_content_autoembed_paragraph()), so the API does the same here.
+	 * the content (see bboss_bbp_topic_content_autoembed_paragraph()), so the API does the same here.
 	 *
 	 * @since BuddyBoss 3.6.2
 	 *
@@ -1562,7 +1562,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		// The web scans the content after bbp_make_clickable(), which keeps trailing punctuation out of the URL.
-		if ( ! preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', bbp_make_clickable( $content ), $embed_urls ) ) {
+		if ( ! preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', bboss_bbp_make_clickable( $content ), $embed_urls ) ) {
 			return array();
 		}
 
@@ -1582,7 +1582,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			}
 
 			// bp_core_parse_url() caches the oEmbed response in a transient.
-			$embed_data = bp_core_parse_url( $url );
+			$embed_data = bboss_core_parse_url( $url );
 
 			if ( ! empty( $embed_data['wp_embed'] ) && ! empty( $embed_data['description'] ) ) {
 				return array(
@@ -1610,3 +1610,11 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bbp_sanitize_search_request', $retval, $term );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Forums_Endpoint', false ) || interface_exists( 'BBoss_REST_Forums_Endpoint', false ) || trait_exists( 'BBoss_REST_Forums_Endpoint', false ) ) && ! class_exists( 'BP_REST_Forums_Endpoint', false ) && ! interface_exists( 'BP_REST_Forums_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Forums_Endpoint', 'BP_REST_Forums_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

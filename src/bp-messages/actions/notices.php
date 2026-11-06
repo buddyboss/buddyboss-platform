@@ -12,19 +12,19 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Handle editing of sitewide notices.
  *
- * @since BuddyPress 2.4.0 This function was split from messages_screen_notices(). See #6505.
+ * @since BuddyPress 2.4.0 This function was split from bboss_messages_screen_notices(). See #6505.
  *
  * @return boolean
  */
-function bp_messages_action_edit_notice() {
+function bboss_messages_action_edit_notice() {
 
 	// Bail if not viewing a single notice URL.
-	if ( ! bp_is_messages_component() || ! bp_is_current_action( 'notices' ) ) {
+	if ( ! bboss_is_messages_component() || ! bboss_is_current_action( 'notices' ) ) {
 		return false;
 	}
 
 	// Get the notice ID (1|2|3).
-	$notice_id = bp_action_variable( 1 );
+	$notice_id = bboss_action_variable( 1 );
 
 	// Bail if notice ID is not numeric.
 	if ( empty( $notice_id ) || ! is_numeric( $notice_id ) ) {
@@ -32,18 +32,18 @@ function bp_messages_action_edit_notice() {
 	}
 
 	// Bail if the current user doesn't have administrator privileges.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
 	// Get the action (deactivate|activate|delete).
-	$action = sanitize_key( bp_action_variable( 0 ) );
+	$action = sanitize_key( bboss_action_variable( 0 ) );
 
 	// Check the nonce.
 	check_admin_referer( "messages_{$action}_notice" );
 
 	// Get the notice from database.
-	$notice   = new BP_Messages_Notice( $notice_id );
+	$notice   = new BBoss_Messages_Notice( $notice_id );
 	$success  = false;
 	$feedback = '';
 
@@ -84,13 +84,13 @@ function bp_messages_action_edit_notice() {
 			: 'error';
 
 		// Add feedback message.
-		bp_core_add_message( $feedback, $type );
+		bboss_core_add_message( $feedback, $type );
 	}
 
 	// Redirect.
-	$member_notices = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+	$member_notices = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
 	$redirect_to    = trailingslashit( $member_notices . 'notices' );
 
-	bp_core_redirect( $redirect_to );
+	bboss_core_redirect( $redirect_to );
 }
 add_action( 'bp_actions', 'bp_messages_action_edit_notice' );

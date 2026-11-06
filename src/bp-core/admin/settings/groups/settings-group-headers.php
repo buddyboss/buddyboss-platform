@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_headers_panel_fields() {
+function bboss_groups_register_headers_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Headers
@@ -26,7 +26,7 @@ function bb_groups_register_headers_panel_fields() {
 	// "UPGRADE LAUNCH" badge in the section header so the gated state is
 	// visible at the section level, not only per-row.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_headers',
 		'group_headers',
@@ -35,7 +35,7 @@ function bb_groups_register_headers_panel_fields() {
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636138',
-			'pro_notice'  => bb_admin_settings_get_pro_notice(
+			'pro_notice'  => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'group_headers',
 					'context' => 'section',
@@ -45,7 +45,7 @@ function bb_groups_register_headers_panel_fields() {
 	);
 
 	// FIELD: Header Style (Pro only, image_radio).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_headers',
 		'group_headers',
@@ -55,7 +55,7 @@ function bb_groups_register_headers_panel_fields() {
 			'type'              => 'image_radio',
 			'description'       => __( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ),
 			'default'           => function_exists( 'bb_get_group_header_style' ) ? bb_get_group_header_style() : 'left',
-			'sanitize_callback' => 'bb_groups_sanitize_header_style',
+			'sanitize_callback' => 'bboss_groups_sanitize_header_style',
 			'options'           => array(
 				array(
 					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
@@ -74,7 +74,7 @@ function bb_groups_register_headers_panel_fields() {
 	);
 
 	// FIELD: Elements (Pro only, toggle_list).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_headers',
 		'group_headers',
@@ -84,7 +84,7 @@ function bb_groups_register_headers_panel_fields() {
 			'type'              => 'toggle_list',
 			'description'       => __( 'Select which elements to show in your group headers.', 'buddyboss' ),
 			'default'           => array(),
-			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
+			'sanitize_callback' => 'bboss_groups_sanitize_toggle_list',
 			'options'           => array(
 				array(
 					'label' => __( 'Group Type', 'buddyboss' ),

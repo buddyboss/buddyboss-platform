@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Sanitized telemetry mode.
  */
-function bb_advanced_sanitize_telemetry_reporting( $value ) {
+function bboss_advanced_sanitize_telemetry_reporting( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'anonymous', 'disable' );
 	// @bbwt-com-start telemetry-complete
@@ -41,10 +41,10 @@ function bb_advanced_sanitize_telemetry_reporting( $value ) {
  *
  * @return string Sanitized activity load type.
  */
-function bb_advanced_sanitize_activity_load_type( $value ) {
+function bboss_advanced_sanitize_activity_load_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array_keys(
-		bp_parse_args(
+		bboss_parse_args(
 			apply_filters( 'bb_performance_activity_autoload', array() ),
 			array(
 				'infinite'  => __( 'Infinite Scroll', 'buddyboss' ),
@@ -70,7 +70,7 @@ function bb_advanced_sanitize_activity_load_type( $value ) {
  *
  * @return void
  */
-function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function bboss_advanced_capture_telemetry_before_save( $feature_id, $settings ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	unset( $settings );
 
 	if ( 'advanced' !== $feature_id ) {
@@ -78,7 +78,7 @@ function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) { /
 	}
 
 	// Capture old value before the save loop overwrites it.
-	bb_advanced_get_pre_save_telemetry( bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
+	bboss_advanced_get_pre_save_telemetry( bboss_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
 }
 add_action( 'bb_admin_settings_before_save_feature', 'bb_advanced_capture_telemetry_before_save', 10, 2 );
 
@@ -100,7 +100,7 @@ add_action( 'bb_admin_settings_before_save_feature', 'bb_advanced_capture_teleme
  *
  * @return string|null The stored telemetry value or null if unset.
  */
-function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
+function bboss_advanced_get_pre_save_telemetry( $set_value = null ) {
 	static $old_value = null;
 
 	if ( false === $set_value ) {
@@ -128,7 +128,7 @@ function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
  *
  * @return void
  */
-function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
+function bboss_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
 	if ( 'advanced' !== $feature_id ) {
 		return;
 	}
@@ -138,11 +138,11 @@ function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
 	}
 
 	$new_value = $saved['bb_advanced_telemetry_reporting'];
-	$old_value = bb_advanced_get_pre_save_telemetry();
+	$old_value = bboss_advanced_get_pre_save_telemetry();
 
 	// Clear the static immediately so a follow-up save in the same request
 	// does not re-use a stale value if its before-save capture is bypassed.
-	bb_advanced_get_pre_save_telemetry( false );
+	bboss_advanced_get_pre_save_telemetry( false );
 
 	// If the before-save capture did not run (e.g. direct REST save or unusual hook
 	// priority), there is no reliable old value to compare against. Skip the
@@ -153,17 +153,17 @@ function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
 	}
 
 	// Dismiss telemetry notice since the user has made an explicit choice.
-	bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+	bboss_update_option( 'bb_telemetry_notice_dismissed', 1 );
 	// @bbwt-com-start telemetry-complete
 
 	// Send immediate telemetry report when switching TO "complete" mode.
-	if ( 'complete' === $new_value && class_exists( 'BB_Telemetry' ) ) {
+	if ( 'complete' === $new_value && class_exists( 'BBoss_Telemetry' ) ) {
 		// Clear single scheduled cron.
 		if ( wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
 			wp_clear_scheduled_hook( 'bb_telemetry_report_single_cron_event' );
 		}
 
-		$bb_telemetry = BB_Telemetry::instance();
+		$bb_telemetry = BBoss_Telemetry::instance();
 		$bb_telemetry->bb_send_telemetry_report_to_analytics();
 	}
 	// @bbwt-com-end telemetry-complete
@@ -181,6 +181,6 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_handle_telemetr
  *
  * @return string Sanitized value.
  */
-function bb_advanced_sanitize_public_content( $value ) {
+function bboss_advanced_sanitize_public_content( $value ) {
 	return wp_strip_all_tags( stripslashes( $value ) );
 }

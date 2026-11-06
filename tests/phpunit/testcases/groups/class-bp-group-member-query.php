@@ -1,13 +1,13 @@
 <?php
 /**
  * @group groups
- * @group BP_Group_Member_Query
+ * @group BBoss_Group_Member_Query
  */
 class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 
 	/**
 	 * Make sure that a manual 'include' param is parsed correctly with
-	 * BP_Group_Member_Query's limiting of the query to group members
+	 * BBoss_Group_Member_Query's limiting of the query to group members
 	 */
 	public function test_with_include() {
 		$g = self::factory()->group->create();
@@ -19,7 +19,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u1, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 100 ) ) );
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 
-		$query = new BP_Group_Member_Query( array(
+		$query = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'include' => array( $u2 ),
 		) );
@@ -40,16 +40,16 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query = new BP_Group_Member_Query( array(
+		$query = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 		) );
 
-		$expected = new BP_Group_Member_Query( array(
+		$expected = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'member' ),
 		) );
@@ -68,12 +68,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'member' ),
 		) );
@@ -93,12 +93,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'mod' ),
 		) );
@@ -120,12 +120,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'admin' ),
 		) );
@@ -145,12 +145,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'member', 'mod' ),
 		) );
@@ -172,12 +172,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'member', 'admin' ),
 		) );
@@ -199,12 +199,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'mod', 'admin' ),
 		) );
@@ -226,12 +226,12 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'member', 'mod', 'admin' ),
 		) );
@@ -255,14 +255,14 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u3, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 		$this->add_user_to_group( $u4, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
-		$m3 = new BP_Groups_Member( $u3, $g );
+		$m3 = new BBoss_Groups_Member( $u3, $g );
 		$m3->ban();
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'member', 'mod', 'admin', 'banned' ),
 		) );
@@ -283,10 +283,10 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$this->add_user_to_group( $u1, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 100 ) ) );
 		$this->add_user_to_group( $u2, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 200 ) ) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->ban();
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'banned' ),
 		) );
@@ -302,7 +302,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 
 		$this->add_user_to_group( $u1, $g, array( 'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 100 ) ) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'group_role' => array( 'mod' ),
 		) );
@@ -327,7 +327,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'is_confirmed' => 1,
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 		) );
 
@@ -352,7 +352,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 100 ),
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'last_joined',
 		) );
@@ -378,7 +378,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 100 ),
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'first_joined',
 		) );
@@ -396,7 +396,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 		$u3 = self::factory()->user->create();
-		$c = buddypress()->groups->id;
+		$c = bboss()->groups->id;
 		$time = time();
 
 		$this->add_user_to_group( $u1, $g, array(
@@ -436,23 +436,23 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		) );
 
 		// Deactivate activity component
-		$activity_active = isset( buddypress()->active_components['activity'] );
+		$activity_active = isset( bboss()->active_components['activity'] );
 		if ( $activity_active ) {
-			unset( buddypress()->active_components['activity'] );
+			unset( bboss()->active_components['activity'] );
 		}
 
-		$query_members1 = new BP_Group_Member_Query( array(
+		$query_members1 = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'group_activity',
 		) );
 
-		$query_members2 = new BP_Group_Member_Query( array(
+		$query_members2 = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'last_joined',
 		) );
 
 		if ( $activity_active ) {
-			buddypress()->active_components['activity'] = '1';
+			bboss()->active_components['activity'] = '1';
 		}
 
 		$this->assertSame( wp_list_pluck( $query_members2->results, 'ID' ), wp_list_pluck( $query_members1->results, 'ID' ) );
@@ -467,7 +467,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 		$u3 = self::factory()->user->create();
-		$c = buddypress()->groups->id;
+		$c = bboss()->groups->id;
 		$time = time();
 
 		$this->add_user_to_group( $u1, $g, array(
@@ -506,7 +506,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'recorded_time' => gmdate( 'Y-m-d H:i:s', $time - 100 ),
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'group_activity',
 		) );
@@ -522,7 +522,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 	public function test_get_with_type_group_activity_no_dupes() {
 		$g = self::factory()->group->create();
 		$u1 = self::factory()->user->create();
-		$c = buddypress()->groups->id;
+		$c = bboss()->groups->id;
 		$time = time();
 
 		$this->add_user_to_group( $u1, $g, array(
@@ -545,7 +545,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'recorded_time' => gmdate( 'Y-m-d H:i:s', $time - 200 ),
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'group_activity',
 		) );
@@ -581,7 +581,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'date_modified' => gmdate( 'Y-m-d H:i:s', $time - 300 ),
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'type' => 'alphabetical',
 		) );
@@ -611,7 +611,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'invite_sent' => 1,
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'is_confirmed' => false,
 			'invite_sent' => true,
@@ -642,7 +642,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'invite_sent' => 1,
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'is_confirmed' => false,
 			'invite_sent' => false,
@@ -671,7 +671,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'inviter_id' => 1,
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'inviter_id' => false,
 		) );
@@ -711,7 +711,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'inviter_id' => 2,
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'inviter_id' => array( 2, 6 ),
 		) );
@@ -751,7 +751,7 @@ class BP_Tests_BP_Group_Member_Query_TestCases extends BP_UnitTestCase {
 			'inviter_id' => 2,
 		) );
 
-		$query_members = new BP_Group_Member_Query( array(
+		$query_members = new BBoss_Group_Member_Query( array(
 			'group_id' => $g,
 			'inviter_id' => 'any',
 		) );

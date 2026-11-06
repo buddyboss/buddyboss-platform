@@ -8,12 +8,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_Folders' ) ) :
+if ( ! class_exists( 'BBoss_Search_Folders' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search folder class
 	 */
-	class Bp_Search_Folders extends Bp_Search_Type {
+	class BBoss_Search_Folders extends BBoss_Search_Type {
 		private $type = 'folders';
 
 		/**
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 		 *
 		 * @since BuddyBoss 1.4.0
 		 *
-		 * @return object Bp_Search_Folders
+		 * @return object BBoss_Search_Folders
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication.
@@ -30,7 +30,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 
 			// Only run these methods if they haven't been run previously.
 			if ( null === $instance ) {
-				$instance = new Bp_Search_Folders();
+				$instance = new BBoss_Search_Folders();
 			}
 
 			// Always return the instance.
@@ -51,10 +51,10 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			global $wpdb, $bp;
 
 			$user_groups = array();
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 
 				// Fetch public groups.
-				$public_groups = groups_get_groups(
+				$public_groups = bboss_groups_get_groups(
 					array(
 						'fields'   => 'ids',
 						'status'   => 'public',
@@ -69,7 +69,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 
 				$user_groups = array();
 				if ( is_user_logged_in() ) {
-					$groups = groups_get_user_groups( bp_loggedin_user_id() );
+					$groups = bboss_groups_get_user_groups( bboss_loggedin_user_id() );
 					if ( ! empty( $groups['groups'] ) ) {
 						$user_groups = $groups['groups'];
 					} else {
@@ -81,14 +81,14 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			}
 
 			$friends = array();
-			if ( bp_is_active( 'friends' ) && is_user_logged_in() ) {
+			if ( bboss_is_active( 'friends' ) && is_user_logged_in() ) {
 
 				// Determine friends of user.
-				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				$friends = bboss_friends_get_friend_user_ids( bboss_loggedin_user_id() );
 				if ( empty( $friends ) ) {
 					$friends = array( 0 );
 				}
-				array_push( $friends, bp_loggedin_user_id() );
+				array_push( $friends, bboss_loggedin_user_id() );
 			}
 
 			$sql['select'] = 'SELECT';
@@ -123,11 +123,11 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			if ( ! empty( $user_groups ) ) {
 				$visibility_sql[] = $wpdb->prepare( '( f.group_id IN ( ' . implode( ', ', array_fill( 0, count( $user_groups ), '%d' ) ) . " ) AND f.privacy = 'grouponly' )", $user_groups );
 			}
-			if ( bp_is_active( 'friends' ) && ! empty( $friends ) ) {
+			if ( bboss_is_active( 'friends' ) && ! empty( $friends ) ) {
 				$visibility_sql[] = $wpdb->prepare( '( f.user_id IN ( ' . implode( ', ', array_fill( 0, count( $friends ), '%d' ) ) . " ) AND f.privacy = 'friends' )", $friends );
 			}
 			if ( is_user_logged_in() ) {
-				$visibility_sql[] = $wpdb->prepare( "( f.user_id = %d AND f.privacy = 'onlyme' )", bp_loggedin_user_id() );
+				$visibility_sql[] = $wpdb->prepare( "( f.user_id = %d AND f.privacy = 'onlyme' )", bboss_loggedin_user_id() );
 			}
 
 			$where_conditions   = array( '1=1' );
@@ -183,7 +183,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 						'id'    => bp_get_folder_folder_id(),
 						'type'  => $this->type,
 						'title' => bp_get_folder_title(),
-						'html'  => bp_search_buffer_template_part( 'loop/folder', $template_type, false ),
+						'html'  => bboss_search_buffer_template_part( 'loop/folder', $template_type, false ),
 					);
 
 					$this->search_results['items'][ bp_get_folder_folder_id() ] = $result;

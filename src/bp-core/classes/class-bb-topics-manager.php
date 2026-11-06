@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since BuddyBoss 2.8.80
  */
-class BB_Topics_Manager {
+class BBoss_Topics_Manager {
 
 	/**
 	 * Instance of this class.
@@ -90,7 +90,7 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss 2.8.80
 	 *
-	 * @return BB_Topics_Manager The singleton instance.
+	 * @return BBoss_Topics_Manager The singleton instance.
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -108,7 +108,7 @@ class BB_Topics_Manager {
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$prefix     = bp_core_get_table_prefix();
+		$prefix     = bboss_core_get_table_prefix();
 
 		$this->topics_table             = $prefix . 'bb_topics';
 		$this->topic_rel_table          = $prefix . 'bb_topic_relationships';
@@ -143,15 +143,15 @@ class BB_Topics_Manager {
 			return;
 		}
 
-		$bp  = buddypress();
-		$min = bp_core_get_minified_asset_suffix();
+		$bp  = bboss();
+		$min = bboss_core_get_minified_asset_suffix();
 		wp_enqueue_script(
 			'bb-topics-manager',
 			$bp->plugin_url . "bp-core/js/bb-topics-manager{$min}.js",
 			array(
 				'jquery',
 			),
-			bp_get_version(),
+			bboss_get_version(),
 			true
 		);
 
@@ -168,7 +168,7 @@ class BB_Topics_Manager {
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
 				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
-				'can_reorder_topics'           => $this->bb_can_update_topics_order( bp_is_active( 'groups' ) && bp_is_group() ? bp_get_current_group_id() : 0, bp_is_active( 'groups' ) && bp_is_group() ? 'groups' : 'activity' ),
+				'can_reorder_topics'           => $this->bb_can_update_topics_order( bboss_is_active( 'groups' ) && bboss_is_group() ? bboss_get_current_group_id() : 0, bboss_is_active( 'groups' ) && bboss_is_group() ? 'groups' : 'activity' ),
 				'topics_limit'                 => $this->bb_topics_limit(),
 			)
 		);
@@ -179,7 +179,7 @@ class BB_Topics_Manager {
 		);
 
 		// Add the JS templates for topics.
-		bp_get_template_part( 'common/js-templates/bb-topic-lists' );
+		bboss_get_template_part( 'common/js-templates/bb-topic-lists' );
 	}
 
 	/**
@@ -306,17 +306,17 @@ class BB_Topics_Manager {
 	 * @return bool True if the current user can manage the topics, false otherwise.
 	 */
 	private function bb_current_user_can_manage_topics( $item_type, $item_id, $topic_ids = array() ) {
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
 		if (
 			'groups' !== $item_type ||
 			empty( $item_id ) ||
-			! bp_is_active( 'groups' ) ||
+			! bboss_is_active( 'groups' ) ||
 			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 			! bb_is_enabled_group_activity_topics() ||
-			! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+			! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 		) {
 			return false;
 		}
@@ -378,7 +378,7 @@ class BB_Topics_Manager {
 
 		// Only store a known permission key. A label such as "All group members" would lock members out of the topic.
 		if ( 'activity' === $item_type ) {
-			$permission_types = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type() : array();
+			$permission_types = function_exists( 'bboss_activity_topics_manager_instance' ) ? bboss_activity_topics_manager_instance()->bb_activity_topic_permission_type() : array();
 		} else {
 			$permission_types = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type() : array();
 		}
@@ -398,7 +398,7 @@ class BB_Topics_Manager {
 		}
 
 		// Only site moderators may set a slug. Everyone else gets the slug of the topic name, as REST does.
-		if ( empty( $slug ) || ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( empty( $slug ) || ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$slug = sanitize_title( $name );
 		}
 		if ( empty( $slug ) ) {
@@ -415,7 +415,7 @@ class BB_Topics_Manager {
 		$previous_topic = ! empty( $previous_topic_id ) ? $this->bb_get_topic_by( 'id', $previous_topic_id ) : null;
 		if (
 			'groups' === $item_type &&
-			! bp_current_user_can( 'bp_moderate' ) &&
+			! bboss_current_user_can( 'bp_moderate' ) &&
 			function_exists( 'bb_get_group_activity_topic_options' ) &&
 			'only_from_activity_topics' === bb_get_group_activity_topic_options() &&
 			! ( $previous_topic && $previous_topic->slug === $slug )
@@ -488,7 +488,7 @@ class BB_Topics_Manager {
 		}
 
 		if ( 'activity' === $item_type ) {
-			$permission_type = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $permission_type ) : array();
+			$permission_type = function_exists( 'bboss_activity_topics_manager_instance' ) ? bboss_activity_topics_manager_instance()->bb_activity_topic_permission_type( $permission_type ) : array();
 		} else {
 			$permission_type = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type( $permission_type ) : array();
 		}
@@ -524,7 +524,7 @@ class BB_Topics_Manager {
 	 * @return bool|WP_Error|object Topic ID on success, WP_Error on failure.
 	 */
 	public function bb_add_topic( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'name'       => '',
@@ -652,8 +652,8 @@ class BB_Topics_Manager {
 				)
 			);
 
-			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-				bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
+			if ( function_exists( 'bboss_activity_topics_manager_instance' ) ) {
+				bboss_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
 					array(
 						'topic_id'    => $topic_id,
 						'previous_id' => $r['topic_id'],
@@ -714,7 +714,7 @@ class BB_Topics_Manager {
 	 * @return object|bool|WP_Error Topic object on success, WP_Error on failure.
 	 */
 	public function bb_update_topic( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'id'              => 0,
@@ -832,8 +832,8 @@ class BB_Topics_Manager {
 						)
 					);
 
-					if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-						$get_previous_activity_relationship = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
+					if ( function_exists( 'bboss_activity_topics_manager_instance' ) ) {
+						$get_previous_activity_relationship = bboss_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
 							array(
 								'topic_id'  => $previous_topic_id,
 								'item_id'   => $item_id,
@@ -842,7 +842,7 @@ class BB_Topics_Manager {
 							)
 						);
 						if ( ! empty( $get_previous_activity_relationship ) ) {
-							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
+							bboss_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
 								array(
 									'topic_id'    => $new_topic_id,
 									'previous_id' => $previous_topic_id,
@@ -965,18 +965,18 @@ class BB_Topics_Manager {
 	 * @return int|bool|WP_Error The number of rows inserted on success, false on failure, WP_Error on error.
 	 */
 	public function bb_add_topic_relationship( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id'        => 0,
 				'permission_type' => 'anyone',
 				'item_id'         => 0,
 				'item_type'       => 'activity',
-				'user_id'         => bp_loggedin_user_id(),
+				'user_id'         => bboss_loggedin_user_id(),
 				'permission_data' => null,
 				'menu_order'      => 0,
-				'date_created'    => bp_core_current_time(),
-				'date_updated'    => bp_core_current_time(),
+				'date_created'    => bboss_core_current_time(),
+				'date_updated'    => bboss_core_current_time(),
 				'error_type'      => 'bool',
 			),
 			'bb_add_topic_relationship'
@@ -1090,7 +1090,7 @@ class BB_Topics_Manager {
 	 * @return bool|WP_Error
 	 */
 	public function bb_update_topic_relationship( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id'        => 0,
@@ -1293,7 +1293,7 @@ class BB_Topics_Manager {
 	 * @return array Array of topic objects.
 	 */
 	public function bb_get_topics( $args = array() ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id'        => 0,
@@ -1338,7 +1338,7 @@ class BB_Topics_Manager {
 		$where_conditions = array();
 
 		// Sorting.
-		$sort = bp_esc_sql_order( $r['order'] );
+		$sort = bboss_esc_sql_order( $r['order'] );
 		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
@@ -1516,10 +1516,10 @@ class BB_Topics_Manager {
 		$cache_key = 'bb_topics_query_' . md5( maybe_serialize( $r ) );
 
 		// Get cached results.
-		$cached = bp_core_get_incremented_cache( $cache_key, self::$topic_cache_group );
+		$cached = bboss_core_get_incremented_cache( $cache_key, self::$topic_cache_group );
 		if ( false === $cached ) {
 			$topic_ids = $this->wpdb->get_col( $topic_sql ); // phpcs:ignore
-			bp_core_set_incremented_cache( $cache_key, self::$topic_cache_group, $topic_ids );
+			bboss_core_set_incremented_cache( $cache_key, self::$topic_cache_group, $topic_ids );
 		} else {
 			$topic_ids = $cached;
 		}
@@ -1528,7 +1528,7 @@ class BB_Topics_Manager {
 			// We only want the IDs.
 			$topic_data = wp_parse_id_list( $topic_ids );
 		} else {
-			$uncached_ids = bp_get_non_cached_ids( $topic_ids, self::$topic_cache_group );
+			$uncached_ids = bboss_get_non_cached_ids( $topic_ids, self::$topic_cache_group );
 			if ( ! empty( $uncached_ids ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
@@ -1601,10 +1601,10 @@ class BB_Topics_Manager {
 			);
 
 			$total_cache_key = 'bb_topics_count_' . md5( maybe_serialize( $r ) );
-			$cached          = bp_core_get_incremented_cache( $total_cache_key, self::$topic_cache_group );
+			$cached          = bboss_core_get_incremented_cache( $total_cache_key, self::$topic_cache_group );
 			if ( false === $cached ) {
 				$total_activity_topics = $this->wpdb->get_var( $total_activity_topic_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				bp_core_set_incremented_cache( $total_cache_key, self::$topic_cache_group, $total_activity_topics );
+				bboss_core_set_incremented_cache( $total_cache_key, self::$topic_cache_group, $total_activity_topics );
 			} else {
 				$total_activity_topics = $cached;
 			}
@@ -1690,7 +1690,7 @@ class BB_Topics_Manager {
 	 * @return object The topic data.
 	 */
 	public function bb_get_topic( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id' => 0,
@@ -1786,7 +1786,7 @@ class BB_Topics_Manager {
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public function bb_delete_topic( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id'  => 0,
@@ -1846,8 +1846,8 @@ class BB_Topics_Manager {
 			 */
 			do_action( 'bb_topic_relationship_after_deleted', $relationships_ids, $topic_id );
 
-			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship( $r );
+			if ( function_exists( 'bboss_activity_topics_manager_instance' ) ) {
+				bboss_activity_topics_manager_instance()->bb_delete_activity_topic_relationship( $r );
 			}
 		}
 
@@ -2002,7 +2002,7 @@ class BB_Topics_Manager {
 	 * }
 	 */
 	public function bb_migrate_topic( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'topic_id'     => 0,
@@ -2124,7 +2124,7 @@ class BB_Topics_Manager {
 		}
 
 		$migrated_activity_ids = array();
-		$topics_instance       = bb_activity_topics_manager_instance();
+		$topics_instance       = bboss_activity_topics_manager_instance();
 		if ( $topics_instance ) {
 			$migrated_activity_ids = $topics_instance->bb_get_activity_topic_relationship(
 				array(
@@ -2203,7 +2203,7 @@ class BB_Topics_Manager {
 	 * @return bool
 	 */
 	public function bb_can_update_topics_order( $item_id = 0, $item_type = 'activity' ) {
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
@@ -2212,10 +2212,10 @@ class BB_Topics_Manager {
 			'groups' === $item_type &&
 			$item_id > 0 &&
 			is_user_logged_in() &&
-			bp_is_active( 'groups' ) &&
+			bboss_is_active( 'groups' ) &&
 			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			bb_is_enabled_group_activity_topics() &&
-			groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+			bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 		) {
 			return true;
 		}
@@ -2263,7 +2263,7 @@ class BB_Topics_Manager {
 		}
 
 		// Invalidate topics cache so ordering changes are reflected immediately.
-		bp_core_reset_incrementor( self::$topic_cache_group );
+		bboss_core_reset_incrementor( self::$topic_cache_group );
 
 		/**
 		 * Fires after the topic order of one list was written, also when a write failed part way.
@@ -2359,8 +2359,8 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_load_topics_scripts() {
-		$is_enabled_activity = bp_is_active( 'activity' );
-		$is_enabled_groups   = bp_is_active( 'groups' );
+		$is_enabled_activity = bboss_is_active( 'activity' );
+		$is_enabled_groups   = bboss_is_active( 'groups' );
 		return (
 			! $is_enabled_activity || // Activity component is not active.
 			(
@@ -2369,16 +2369,16 @@ class BB_Topics_Manager {
 					// If the groups component is active.
 					(
 						$is_enabled_groups &&
-						! bp_is_activity_directory() &&
-						! bp_is_group_admin_page() &&
-						! bp_is_group_create() &&
-						! bp_is_group_activity() &&
-						! bp_is_user_activity()
+						! bboss_is_activity_directory() &&
+						! bboss_is_group_admin_page() &&
+						! bboss_is_group_create() &&
+						! bboss_is_group_activity() &&
+						! bboss_is_user_activity()
 					) ||
 					// If the groups component is not active.
 					(
 						! $is_enabled_groups &&
-						! bp_is_activity_directory()
+						! bboss_is_activity_directory()
 					)
 				)
 			)
@@ -2432,7 +2432,7 @@ class BB_Topics_Manager {
 	 * @return bool True on success, false on failure.
 	 */
 	public function bb_add_topic_history( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'item_id'        => 0,
@@ -2470,7 +2470,7 @@ class BB_Topics_Manager {
 				'new_topic_id'   => absint( $r['new_topic_id'] ),
 				'new_topic_slug' => sanitize_title( $r['new_topic_slug'] ),
 				'action'         => sanitize_text_field( $r['action'] ),
-				'date_created'   => bp_core_current_time(),
+				'date_created'   => bboss_core_current_time(),
 			),
 			array( '%d', '%s', '%d', '%s', '%d', '%s', '%s', '%s' )
 		);
@@ -2512,7 +2512,7 @@ class BB_Topics_Manager {
 	 * @return string|false The redirected topic slug if found, false otherwise.
 	 */
 	public function bb_get_redirected_topic_slug( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'old_slug'  => '',
@@ -2596,9 +2596,9 @@ class BB_Topics_Manager {
 		$args = array(
 			'slug' => $bb_topic,
 		);
-		if ( function_exists( 'bp_is_group' ) && bp_is_group() ) {
+		if ( function_exists( 'bboss_is_group' ) && bboss_is_group() ) {
 			$args['item_type'] = 'groups';
-			$args['item_id']   = bp_get_current_group_id();
+			$args['item_id']   = bboss_get_current_group_id();
 		} else {
 			$args['item_type'] = 'activity';
 			$args['item_id']   = 0;
@@ -2687,7 +2687,7 @@ class BB_Topics_Manager {
 	 * @return array The topic history.
 	 */
 	public function bb_get_topic_history( $args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'new_topic_slug' => '',

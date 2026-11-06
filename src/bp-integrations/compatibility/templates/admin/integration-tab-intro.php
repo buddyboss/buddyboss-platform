@@ -4,7 +4,7 @@
 	<div class="bp-admin-card section-bp_compatibility-integration">
 		<h2>
 			<?php
-			$meta_icon = bb_admin_icons( 'bp_compatibility-integration' );
+			$meta_icon = bboss_admin_icons( 'bp_compatibility-integration' );
 			if ( ! empty( $meta_icon ) ) {
 				echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 			}
@@ -24,7 +24,7 @@
 				'page' => 'bp-integrations',
 				'tab'  => 'bp-compatibility',
 			),
-			bp_get_admin_url( 'admin.php' )
+			bboss_get_admin_url( 'admin.php' )
 		);
 		?>
 
@@ -38,7 +38,7 @@
 			ob_start();
 
 			// all the add_settings_field callbacks is displayed here
-			bp_core_compatibility_do_settings_sections( 'buddypress' );
+			bboss_core_compatibility_do_settings_sections( 'buddypress' );
 
 			$output = ob_get_contents();
 			ob_clean();

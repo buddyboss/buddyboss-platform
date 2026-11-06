@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array
  */
-function bp_admin_repair_list() {
+function bboss_admin_repair_list() {
 	$repair_list = array();
 
 	// Members:
@@ -61,7 +61,7 @@ function bp_admin_repair_list() {
 
 	// Connections:
 	// - user friend count.
-	if ( bp_is_active( 'friends' ) ) {
+	if ( bboss_is_active( 'friends' ) ) {
 		$repair_list[0] = array(
 			'bp-user-friends',
 			esc_html__( 'Repair total connections count for each member', 'buddyboss' ),
@@ -70,7 +70,7 @@ function bp_admin_repair_list() {
 	}
 
 	// Group repair actions.
-	if ( bp_is_active( 'groups' ) ) {
+	if ( bboss_is_active( 'groups' ) ) {
 
 		// User group count.
 		$repair_list[10] = array(
@@ -89,7 +89,7 @@ function bp_admin_repair_list() {
 
 	// Blogs:
 	// - user blog count.
-	if ( bp_is_active( 'blogs' ) ) {
+	if ( bboss_is_active( 'blogs' ) ) {
 		$repair_list[90] = array(
 			'bp-blog-records',
 			esc_html__( 'Repopulate site tracking records', 'buddyboss' ),
@@ -115,9 +115,9 @@ function bp_admin_repair_list() {
 	);
 
 	// Check whether member type is enabled.
-	if ( true === bp_member_type_enable_disable() ) {
-		$member_types      = bp_get_active_member_types();
-		$existing_selected = bp_member_type_default_on_registration();
+	if ( true === bboss_member_type_enable_disable() ) {
+		$member_types      = bboss_get_active_member_types();
+		$existing_selected = bboss_member_type_default_on_registration();
 		if ( isset( $member_types ) && ! empty( $member_types ) && '' !== $existing_selected ) {
 			// - Assign default member type.
 			$repair_list[101] = array(
@@ -129,7 +129,7 @@ function bp_admin_repair_list() {
 	}
 
 	// Update user activity favorites data (only when Reactions feature is enabled).
-	if ( bp_is_active( 'activity' ) && function_exists( 'bb_is_reactions_feature_enabled' ) && bb_is_reactions_feature_enabled() ) {
+	if ( bboss_is_active( 'activity' ) && function_exists( 'bboss_is_reactions_feature_enabled' ) && bboss_is_reactions_feature_enabled() ) {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
 			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss' ),
@@ -153,7 +153,7 @@ function bp_admin_repair_list() {
 	);
 
 	// Activity topics: drop relationship rows left behind by activities deleted before PROD-10670.
-	if ( bp_is_active( 'activity' ) && function_exists( 'bb_activity_topics_manager_instance' ) ) {
+	if ( bboss_is_active( 'activity' ) && function_exists( 'bboss_activity_topics_manager_instance' ) ) {
 		$repair_list[113] = array(
 			'bp-activity-topic-relationships',
 			esc_html__( 'Remove activity topic relationships whose activity no longer exists', 'buddyboss' ),
@@ -180,10 +180,10 @@ function bp_admin_repair_list() {
  *
  * @return array
  */
-function bp_admin_repair_friend_count() {
+function bboss_admin_repair_friend_count() {
 	global $wpdb;
 
-	if ( ! bp_is_active( 'friends' ) ) {
+	if ( ! bboss_is_active( 'friends' ) ) {
 		return;
 	}
 
@@ -196,7 +196,7 @@ function bp_admin_repair_friend_count() {
 		return array( 1, sprintf( $statement, $result ) );
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Walk through all users on the site.
 	$total_users = $wpdb->get_row( "SELECT count(ID) as c FROM {$wpdb->users}" )->c;
@@ -213,12 +213,12 @@ function bp_admin_repair_friend_count() {
 			// filter them here.
 			foreach ( $friendships as $friendship ) {
 				if ( ! isset( $updated[ $friendship->initiator_user_id ] ) ) {
-					BP_Friends_Friendship::total_friend_count( $friendship->initiator_user_id );
+					BBoss_Friends_Friendship::total_friend_count( $friendship->initiator_user_id );
 					$updated[ $friendship->initiator_user_id ] = 1;
 				}
 
 				if ( ! isset( $updated[ $friendship->friend_user_id ] ) ) {
-					BP_Friends_Friendship::total_friend_count( $friendship->friend_user_id );
+					BBoss_Friends_Friendship::total_friend_count( $friendship->friend_user_id );
 					$updated[ $friendship->friend_user_id ] = 1;
 				}
 			}
@@ -242,10 +242,10 @@ function bp_admin_repair_friend_count() {
  *
  * @return array
  */
-function bp_admin_repair_group_count() {
+function bboss_admin_repair_group_count() {
 	global $wpdb;
 
-	if ( ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
@@ -258,7 +258,7 @@ function bp_admin_repair_group_count() {
 		return array( 1, sprintf( $statement, $result ) );
 	}
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Walk through all users on the site.
 	$total_users = $wpdb->get_row( "SELECT count(ID) as c FROM {$wpdb->users}" )->c;
@@ -271,7 +271,7 @@ function bp_admin_repair_group_count() {
 			$users = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 1 AND is_banned = 0 AND user_id > %d AND user_id <= %d", $offset, $offset + $per_query ) );
 
 			foreach ( $users as $user ) {
-				BP_Groups_Member::refresh_total_group_count_for_user( $user );
+				BBoss_Groups_Member::refresh_total_group_count_for_user( $user );
 			}
 
 			$offset += $per_query;
@@ -293,7 +293,7 @@ function bp_admin_repair_group_count() {
  *
  * @return array
  */
-function bp_admin_repair_blog_records() {
+function bboss_admin_repair_blog_records() {
 
 	// Description of this tool, displayed to the user.
 	/* translators: %s: the result of the action performed by the repair tool. */
@@ -306,8 +306,8 @@ function bp_admin_repair_blog_records() {
 	$repair = false;
 
 	// Run function if blogs component is active.
-	if ( bp_is_active( 'blogs' ) ) {
-		$repair = bp_blogs_record_existing_blogs();
+	if ( bboss_is_active( 'blogs' ) ) {
+		$repair = bboss_blogs_record_existing_blogs();
 	}
 
 	// Setup success/fail messaging.
@@ -327,11 +327,11 @@ function bp_admin_repair_blog_records() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_admin_repair_count_members() {
+function bboss_admin_repair_count_members() {
 	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total members count &hellip; %s', 'buddyboss' );
 	delete_transient( 'bp_active_member_count' );
-	bp_core_get_active_member_count();
+	bboss_core_get_active_member_count();
 
 	return array(
 		'status'  => 1,
@@ -346,10 +346,10 @@ function bp_admin_repair_count_members() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_admin_repair_last_activity() {
+function bboss_admin_repair_last_activity() {
 	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing member "last activity" data &hellip; %s', 'buddyboss' );
-	bp_last_activity_migrate();
+	bboss_last_activity_migrate();
 
 	return array(
 		'status'  => 1,
@@ -362,32 +362,32 @@ function bp_admin_repair_last_activity() {
  *
  * @since BuddyBoss 1.0.0
  */
-function repair_default_profiles_fields() {
+function bboss_repair_default_profiles_fields() {
 	global $wpdb;
 
-	$bp_prefix = bp_core_get_table_prefix();
+	$bp_prefix = bboss_core_get_table_prefix();
 
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+	require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 
-	bp_core_install_default_profiles_fields();
+	bboss_core_install_default_profiles_fields();
 
-	if ( ! bp_get_option( 'bp-xprofile-base-group-id' ) ) {
-		bp_update_option( 'bp-xprofile-base-group-id', 1 );
+	if ( ! bboss_get_option( 'bp-xprofile-base-group-id' ) ) {
+		bboss_update_option( 'bp-xprofile-base-group-id', 1 );
 	}
 
-	if ( ! bp_get_option( 'bp-xprofile-firstname-field-id' ) ) {
-		bp_update_option( 'bp-xprofile-firstname-field-id', 1 );
+	if ( ! bboss_get_option( 'bp-xprofile-firstname-field-id' ) ) {
+		bboss_update_option( 'bp-xprofile-firstname-field-id', 1 );
 	}
 
 	// First name field id.
-	$first_name_id = bp_xprofile_firstname_field_id();
+	$first_name_id = bboss_xprofile_firstname_field_id();
 
 	// Last name field id.
-	$last_name_id = bp_xprofile_lastname_field_id();
+	$last_name_id = bboss_xprofile_lastname_field_id();
 
 	// Nickname field id.
-	$nickname_id = bp_xprofile_nickname_field_id();
+	$nickname_id = bboss_xprofile_nickname_field_id();
 
 	// Query to remove all duplicate first name fields.
 	$first_name = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'First Name', 'textbox', $first_name_id );
@@ -408,7 +408,7 @@ function repair_default_profiles_fields() {
 	$wpdb->query( $nick_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $nick_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Clear profile completion data
-	bp_core_xprofile_clear_all_user_progress_cache();
+	bboss_core_xprofile_clear_all_user_progress_cache();
 
 	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing default profile set and fields &hellip; %s', 'buddyboss' );
@@ -429,17 +429,17 @@ function repair_default_profiles_fields() {
  *
  * @return array Repair status.
  */
-function bb_admin_repair_activity_topic_relationships() {
+function bboss_admin_repair_activity_topic_relationships() {
 	$offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified by the dispatcher.
 
-	if ( ! function_exists( 'bb_activity_topics_manager_instance' ) || ! bb_activity_topics_manager_instance() ) {
+	if ( ! function_exists( 'bboss_activity_topics_manager_instance' ) || ! bboss_activity_topics_manager_instance() ) {
 		return array(
 			'status'  => 0,
 			'message' => __( 'Activity topics are not available.', 'buddyboss' ),
 		);
 	}
 
-	$deleted = bb_activity_topics_manager_instance()->bb_delete_orphan_activity_topic_relationships( 500 );
+	$deleted = bboss_activity_topics_manager_instance()->bb_delete_orphan_activity_topic_relationships( 500 );
 
 	if ( $deleted > 0 ) {
 		$offset += $deleted;
@@ -448,7 +448,7 @@ function bb_admin_repair_activity_topic_relationships() {
 			'status'  => 'running',
 			'offset'  => $offset,
 			/* translators: %s: number of rows removed so far. */
-			'records' => sprintf( __( '%s orphaned activity topic relationships removed.', 'buddyboss' ), bp_core_number_format( $offset ) ),
+			'records' => sprintf( __( '%s orphaned activity topic relationships removed.', 'buddyboss' ), bboss_core_number_format( $offset ) ),
 		);
 	}
 
@@ -460,7 +460,7 @@ function bb_admin_repair_activity_topic_relationships() {
 			sprintf(
 				/* translators: %s: number of rows removed. */
 				__( 'Complete! %s removed.', 'buddyboss' ),
-				bp_core_number_format( $offset )
+				bboss_core_number_format( $offset )
 			)
 		),
 	);
@@ -471,7 +471,7 @@ function bb_admin_repair_activity_topic_relationships() {
  *
  * @since BuddyBoss 1.0.0
  */
-function resync_xprofile_wordpress_fields() {
+function bboss_resync_xprofile_wordpress_fields() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
@@ -484,13 +484,13 @@ function resync_xprofile_wordpress_fields() {
 	$users = get_users( $args );
 
 	if ( ! empty( $users ) ) {
-		array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
+		array_map( 'bboss_xprofile_sync_wp_profile_legacy', wp_list_pluck( $users, 'ID' ) );
 		foreach ( $users as $user ) {
 			$offset++;
 		}
 
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -511,7 +511,7 @@ function resync_xprofile_wordpress_fields() {
  *
  * @since BuddyBoss 1.0.0
  */
-function resync_wordpress_xprofile_fields() {
+function bboss_resync_wordpress_xprofile_fields() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
@@ -525,25 +525,25 @@ function resync_wordpress_xprofile_fields() {
 
 	if ( ! empty( $users ) ) {
 		foreach ( $users as $user ) {
-			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
+			bboss_xprofile_set_field_data( bboss_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
+			bboss_xprofile_set_field_data( bboss_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
 
 			// make sure nickname is valid
 			$nickname = get_user_meta( $user->ID, 'nickname', true );
 			$nickname = sanitize_title( $nickname );
-			$invalid  = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+			$invalid  = bboss_xprofile_validate_nickname_value( '', bboss_xprofile_nickname_field_id(), $nickname, $user->ID );
 
 			// or use the user_nicename
 			if ( ! $nickname || $invalid ) {
 				$nickname = $user->user_nicename;
 			}
 
-			bp_update_user_meta( $user->ID, 'nickname', $nickname );
-			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
+			bboss_update_user_meta( $user->ID, 'nickname', $nickname );
+			bboss_xprofile_set_field_data( bboss_xprofile_nickname_field_id(), $user->ID, $nickname );
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -579,7 +579,7 @@ function xprofile_update_display_names() {
 	if ( ! empty( $users ) ) {
 
 		foreach ( $users as $user ) {
-			$display_name = bp_core_get_user_displayname( $user->ID );
+			$display_name = bboss_core_get_user_displayname( $user->ID );
 
 			wp_update_user(
 				$args = array(
@@ -590,7 +590,7 @@ function xprofile_update_display_names() {
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -616,7 +616,7 @@ function xprofile_update_display_names() {
  *
  * @return false|Closure
  */
-function bp_admin_tools_feedback( $message, $class = false ) {
+function bboss_admin_tools_feedback( $message, $class = false ) {
 	if ( is_string( $message ) ) {
 		$message = '<p>' . $message . '</p>';
 		$class   = $class ? $class : 'updated';
@@ -647,7 +647,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 		echo wp_kses_post( $message );
 	};
 
-	add_action( bp_core_do_network_admin() ? 'network_admin_notices' : 'admin_notices', $lambda );
+	add_action( bboss_core_do_network_admin() ? 'network_admin_notices' : 'admin_notices', $lambda );
 
 	return $lambda;
 }
@@ -660,7 +660,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_core_admin_available_tools_page() {
+function bboss_core_admin_available_tools_page() {
 	?>
 	<div class="wrap">
 		<h1><?php esc_attr_e( 'Tools', 'buddyboss' ); ?></h1>
@@ -684,13 +684,13 @@ function bp_core_admin_available_tools_page() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_core_admin_available_tools_intro() {
+function bboss_core_admin_available_tools_intro() {
 	$query_arg = array(
 		'page' => 'bp-tools',
 	);
 
-	$page = bp_core_do_network_admin() ? 'admin.php' : 'admin.php';
-	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
+	$page = bboss_core_do_network_admin() ? 'admin.php' : 'admin.php';
+	$url  = add_query_arg( $query_arg, bboss_get_admin_url( $page ) );
 	?>
 	<div class="card tool-box">
 		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ); ?></h2>
@@ -709,33 +709,33 @@ function bp_core_admin_available_tools_intro() {
  *
  * @return array
  */
-function bp_admin_install_emails() {
+function bboss_admin_install_emails() {
 	$switched = false;
 
 	// Switch to the root blog, where the email posts live.
-	if ( ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
-		bp_register_taxonomies();
+	if ( ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
+		bboss_register_taxonomies();
 
 		$switched = true;
 	}
 
 	$defaults = array(
 		'post_status' => 'publish',
-		'post_type'   => bp_get_email_post_type(),
+		'post_type'   => bboss_get_email_post_type(),
 	);
 
-	$emails          = bp_email_get_schema();
-	$descriptions    = bp_email_get_type_schema();
+	$emails          = bboss_email_get_schema();
+	$descriptions    = bboss_email_get_type_schema();
 	$installed_email = 0;
 
 	// Add these emails to the database.
 	foreach ( $emails as $id => $email ) {
 		if (
-			term_exists( $id, bp_get_email_tax_type() ) &&
+			term_exists( $id, bboss_get_email_tax_type() ) &&
 			get_terms(
 				array(
-					'taxonomy' => bp_get_email_tax_type(),
+					'taxonomy' => bboss_get_email_tax_type(),
 					'slug'     => $id,
 					'fields'   => 'count',
 				)
@@ -749,9 +749,9 @@ function bp_admin_install_emails() {
 			continue;
 		}
 
-		$args = bp_parse_args( $email, $defaults, 'install_email_' . $id );
+		$args = bboss_parse_args( $email, $defaults, 'install_email_' . $id );
 
-		$page_exist = post_exists( $args['post_title'], '', '', bp_get_email_post_type() );
+		$page_exist = post_exists( $args['post_title'], '', '', bboss_get_email_post_type() );
 		if ( ! empty( $page_exist ) && 'publish' === get_post_status( $page_exist ) ) {
 			continue;
 		}
@@ -761,12 +761,12 @@ function bp_admin_install_emails() {
 			continue;
 		}
 
-		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		$tt_ids = wp_set_object_terms( $post_id, $id, bboss_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
-			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bboss_get_email_tax_type() );
 			wp_update_term(
 				(int) $term->term_id,
-				bp_get_email_tax_type(),
+				bboss_get_email_tax_type(),
 				array(
 					'description' => $descriptions[ $id ],
 				)
@@ -798,7 +798,7 @@ function bp_admin_install_emails() {
 					'tab'   => 'emails',
 					'panel' => 'all_emails',
 				),
-				get_admin_url( bp_get_root_blog_id(), 'admin.php' )
+				get_admin_url( bboss_get_root_blog_id(), 'admin.php' )
 			)
 		) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
 		: '';
@@ -828,13 +828,13 @@ function bp_admin_install_emails() {
  *
  * @return array
  */
-function bp_admin_reinstall_emails() {
+function bboss_admin_reinstall_emails() {
 	$switched = false;
 
 	// Switch to the root blog, where the email posts live.
-	if ( ! bp_is_root_blog() ) {
-		switch_to_blog( bp_get_root_blog_id() );
-		bp_register_taxonomies();
+	if ( ! bboss_is_root_blog() ) {
+		switch_to_blog( bboss_get_root_blog_id() );
+		bboss_register_taxonomies();
 
 		$switched = true;
 	}
@@ -843,7 +843,7 @@ function bp_admin_reinstall_emails() {
 		array(
 			'fields'                 => 'ids',
 			'post_status'            => 'publish',
-			'post_type'              => bp_get_email_post_type(),
+			'post_type'              => bboss_get_email_post_type(),
 			'posts_per_page'         => 200,
 			'suppress_filters'       => false,
 			'update_post_meta_cache' => false,
@@ -860,7 +860,7 @@ function bp_admin_reinstall_emails() {
 	// Make sure we have no orphaned email type terms.
 	$email_types = get_terms(
 		array(
-			'taxonomy'               => bp_get_email_tax_type(),
+			'taxonomy'               => bboss_get_email_tax_type(),
 			'fields'                 => 'ids',
 			'hide_empty'             => false,
 			'update_term_meta_cache' => false,
@@ -869,12 +869,12 @@ function bp_admin_reinstall_emails() {
 
 	if ( $email_types ) {
 		foreach ( $email_types as $term_id ) {
-			wp_delete_term( (int) $term_id, bp_get_email_tax_type() );
+			wp_delete_term( (int) $term_id, bboss_get_email_tax_type() );
 		}
 	}
 
-	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-	bp_core_install_emails();
+	require_once bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+	bboss_core_install_emails();
 
 	if ( $switched ) {
 		restore_current_blog();
@@ -885,7 +885,7 @@ function bp_admin_reinstall_emails() {
 	$records_text = sprintf(
 		/* translators: %s: number of emails reset to defaults. */
 		__( '%s emails reset to defaults.', 'buddyboss' ),
-		bp_core_number_format( $reset_count )
+		bboss_core_number_format( $reset_count )
 	);
 
 	$view_emails_link = '<a href="' . esc_url(
@@ -895,7 +895,7 @@ function bp_admin_reinstall_emails() {
 				'tab'   => 'emails',
 				'panel' => 'all_emails',
 			),
-			get_admin_url( bp_get_root_blog_id(), 'admin.php' )
+			get_admin_url( bboss_get_root_blog_id(), 'admin.php' )
 		)
 	) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>';
 
@@ -925,13 +925,13 @@ function bp_admin_reinstall_emails() {
  *
  * @since BuddyPress 2.6.0
  */
-function bp_core_admin_notice_repopulate_blogs_resume() {
+function bboss_core_admin_notice_repopulate_blogs_resume() {
 	$screen = get_current_screen();
 	if ( 'tools_page_bp-tools-network' !== $screen->id ) {
 		return;
 	}
 
-	if ( '' === bp_get_option( '_bp_record_blogs_offset' ) ) {
+	if ( '' === bboss_get_option( '_bp_record_blogs_offset' ) ) {
 		return;
 	}
 
@@ -947,7 +947,7 @@ add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resu
  *
  * @return array
  */
-function bp_admin_assign_member_type() {
+function bboss_admin_assign_member_type() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
@@ -963,7 +963,7 @@ function bp_admin_assign_member_type() {
 
 		foreach ( $users as $user ) {
 
-			$member_type = bp_get_member_type( $user->ID );
+			$member_type = bboss_get_member_type( $user->ID );
 
 			if ( false === $member_type ) {
 
@@ -972,16 +972,16 @@ function bp_admin_assign_member_type() {
 
 				if ( ! in_array( 'administrator', $user1->roles, true ) ) {
 
-					$existing_selected = bp_member_type_default_on_registration();
+					$existing_selected = bboss_member_type_default_on_registration();
 					// Assign the default member type to user.
-					bp_set_member_type( $user->ID, '' );
-					bp_set_member_type( $user->ID, $existing_selected );
+					bboss_set_member_type( $user->ID, '' );
+					bboss_set_member_type( $user->ID, $existing_selected );
 				}
 			}
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1001,7 +1001,7 @@ function bp_admin_assign_member_type() {
 
 }
 
-function bp_admin_repair_nickname_value() {
+function bboss_admin_repair_nickname_value() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
@@ -1015,18 +1015,18 @@ function bp_admin_repair_nickname_value() {
 	if ( ! empty( $users ) ) {
 
 		foreach ( $users as $user ) {
-			$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user->ID );
+			$nickname = bboss_xprofile_get_field_data( bboss_xprofile_nickname_field_id(), $user->ID );
 			if ( preg_match( '/[A-Z]/', $nickname ) ) {
-				xprofile_set_field_data(
-					bp_xprofile_nickname_field_id(),
-					bp_loggedin_user_id(),
+				bboss_xprofile_set_field_data(
+					bboss_xprofile_nickname_field_id(),
+					bboss_loggedin_user_id(),
 					strtolower( $nickname )
 				);
 			}
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1052,7 +1052,7 @@ function bp_admin_repair_nickname_value() {
  *
  * @since BuddyBoss 1.1.8
  */
-function bp_admin_repair_tools_wrapper_function() {
+function bboss_admin_repair_tools_wrapper_function() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -1061,18 +1061,18 @@ function bp_admin_repair_tools_wrapper_function() {
 	);
 
 	// Capability check — repair tools require admin privileges.
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	$type = bb_filter_input_string( INPUT_POST, 'type' );
+	$type = bboss_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Bail if not a POST action.
-	if ( ! bp_is_post_request() ) {
+	if ( ! bboss_is_post_request() ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1089,7 +1089,7 @@ function bp_admin_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
-	$repair_list = bp_admin_repair_list();
+	$repair_list = bboss_admin_repair_list();
 
 	$status       = array();
 	$repair_ran   = false;
@@ -1111,7 +1111,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	if ( $repair_ran ) {
 		$repair_offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.
 		if ( $repair_offset <= 0 ) {
-			bb_record_tool_usage( 'repair', $type, $repair_label );
+			bboss_record_tool_usage( 'repair', $type, $repair_label );
 		}
 	}
 
@@ -1123,7 +1123,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	//
 	// @since BuddyBoss 3.1.0
 	if ( is_array( $status ) ) {
-		$enrichment = bb_admin_repair_extract_count_summary( $status );
+		$enrichment = bboss_admin_repair_extract_count_summary( $status );
 		$status     = array_merge( $status, $enrichment );
 	}
 
@@ -1152,7 +1152,7 @@ function bp_admin_repair_tools_wrapper_function() {
  *     @type string          $summary Clean human-readable result text.
  * }
  */
-function bb_admin_repair_extract_count_summary( $status_or_html ) {
+function bboss_admin_repair_extract_count_summary( $status_or_html ) {
 	// Support both array (preferred) and string (BC).
 	if ( is_string( $status_or_html ) ) {
 		$status_or_html = array( 'message' => $status_or_html );
@@ -1215,10 +1215,10 @@ add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_t
  *
  * @since BuddyBoss 1.3.3
  */
-function bp_admin_update_activity_favourite() {
+function bboss_admin_update_activity_favourite() {
 	global $wpdb, $bp;
 
-	$bp_activity_reactions = bp_get_option( 'bp_activity_reactions', false );
+	$bp_activity_reactions = bboss_get_option( 'bp_activity_reactions', false );
 
 	if ( ! $bp_activity_reactions ) {
 		$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
@@ -1244,7 +1244,7 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 
-				$reaction = bb_load_reaction();
+				$reaction = bboss_load_reaction();
 				if ( ! $reaction ) {
 					++$offset;
 					continue;
@@ -1268,7 +1268,7 @@ function bp_admin_update_activity_favourite() {
 
 					if ( ! empty( $user_fav_chunks ) ) {
 						foreach ( $user_fav_chunks as $chunk ) {
-							bb_admin_tool_migration_reaction( $item_id, $chunk );
+							bboss_admin_tool_migration_reaction( $item_id, $chunk );
 						}
 					}
 				}
@@ -1277,7 +1277,7 @@ function bp_admin_update_activity_favourite() {
 			}
 
 			/* translators: %s: number of activity favorites updated. */
-			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 
 			return array(
 				'status'  => 'running',
@@ -1285,7 +1285,7 @@ function bp_admin_update_activity_favourite() {
 				'records' => $records_updated,
 			);
 		} else {
-			bp_update_option( 'bp_activity_reactions', true );
+			bboss_update_option( 'bp_activity_reactions', true );
 			/* translators: %s: the result of the action performed by the repair tool. */
 			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
@@ -1315,14 +1315,14 @@ function bp_admin_update_activity_favourite() {
  *
  * @return void
  */
-function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
+function bboss_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 	global $wpdb;
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	$reaction = bb_load_reaction();
+	$reaction = bboss_load_reaction();
 	if ( ! $reaction ) {
 		return;
 	}
@@ -1346,14 +1346,14 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 	$place_holder_queries = array();
 
 	foreach ( $filtered_user_ids as $user_id ) {
-		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bp_core_current_time() );
+		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bboss_core_current_time() );
 	}
 
 	if ( ! empty( $place_holder_queries ) ) {
 		$place_holder_queries = implode( ', ', $place_holder_queries );
         $wpdb->query( "INSERT INTO {$user_reaction_tbl} ( user_id, reaction_id, item_type, item_id, date_created ) VALUES {$place_holder_queries}" ); // phpcs:ignore
 
-		bp_core_reset_incrementor( 'bb_reactions' );
+		bboss_core_reset_incrementor( 'bb_reactions' );
 
 		$reaction->bb_prepare_reaction_summary_data(
 			array(
@@ -1373,20 +1373,20 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
  *
  * @return array
  */
-function bp_admin_invitations_table() {
+function bboss_admin_invitations_table() {
 	global $wpdb;
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+	require_once( bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
 	/* translators: %s: the result of the action performed by the repair tool */
 	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed to create table!', 'buddyboss' );
 
-	bp_core_install_invitations();
+	bboss_core_install_invitations();
 
 	// Check for existence of invitations table.
-	$table_name = BP_Invitation_Manager::get_table_name();
+	$table_name = BBoss_Invitation_Manager::get_table_name();
 	$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 	if ( ! $wpdb->get_var( $query ) == $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is the return of $wpdb->prepare() above (table name bound as %s via esc_like()).
 		return array(
@@ -1398,14 +1398,14 @@ function bp_admin_invitations_table() {
 	}
 
 	// Migrate group invitations if needed.
-	if ( bp_is_active( 'groups' ) ) {
-		$bp = buddypress();
+	if ( bboss_is_active( 'groups' ) ) {
+		$bp = bboss();
 
 		/* translators: %s: the result of the action performed by the repair tool */
 		$migrate_statement = __( 'Migrating existing group invitations &hellip; %s', 'buddyboss' );
 		$migrate_result    = __( 'Failed to migrate invitations!', 'buddyboss' );
 
-		bp_groups_migrate_invitations();
+		bboss_groups_migrate_invitations();
 
 		// Check that there are no outstanding group invites in the group_members table.
 		$records = $wpdb->get_results( "SELECT id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND is_banned = 0" );
@@ -1438,7 +1438,7 @@ function bp_admin_invitations_table() {
  *
  * @return array
  */
-function bb_sync_profile_completion_widget() {
+function bboss_sync_profile_completion_widget() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
 	// Users args.
@@ -1453,7 +1453,7 @@ function bb_sync_profile_completion_widget() {
 	if ( ! empty( $users ) ) {
 		foreach ( $users as $user ) {
 			// Get existing user meta who have profile completion widget data in DB.
-			$get_user_data = bp_get_user_meta( $user->ID, 'bp_profile_completion_widgets', true );
+			$get_user_data = bboss_get_user_meta( $user->ID, 'bp_profile_completion_widgets', true );
 			if ( ! empty( $get_user_data ) ) {
 				$total_completed_count = isset( $get_user_data['completed_fields'] ) ? $get_user_data['completed_fields'] : 0;
 
@@ -1462,10 +1462,10 @@ function bb_sync_profile_completion_widget() {
 					isset( $get_user_data['photo_type']['profile_photo'] ) &&
 					isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] )
 				) {
-					$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user->ID ) ) ? 1 : 0;
+					$is_profile_photo_uploaded = ( bboss_get_user_has_avatar( $user->ID ) ) ? 1 : 0;
 
 					if ( ! $is_profile_photo_uploaded &&
-					     bp_enable_profile_gravatar() &&
+					     bboss_enable_profile_gravatar() &&
 					     'blank' !== get_option( 'avatar_default', 'mystery' )
 					) {
 						/**
@@ -1493,14 +1493,14 @@ function bb_sync_profile_completion_widget() {
 				$get_user_data['completed_fields'] = $total_completed_count;
 
 				// Update new response for completion widget.
-				bp_update_user_meta( $user->ID, 'bp_profile_completion_widgets', $get_user_data );
+				bboss_update_user_meta( $user->ID, 'bp_profile_completion_widgets', $get_user_data );
 			}
 
 			$offset++;
 		}
 
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bboss_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1524,16 +1524,16 @@ function bb_sync_profile_completion_widget() {
  *
  * @return array
  */
-function bp_admin_repair_group_member_count() {
+function bboss_admin_repair_group_member_count() {
 	global $wpdb;
 
-	if ( ! bp_is_active( 'groups' ) ) {
+	if ( ! bboss_is_active( 'groups' ) ) {
 		return;
 	}
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$bp     = buddypress();
+	$bp     = bboss();
 
 	/**
 	 * Check and delete orphan group members records from wp_bp_groups_members table
@@ -1589,7 +1589,7 @@ function bp_admin_repair_group_member_count() {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			$member_count = $wpdb->get_var( $sql );
 
-			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
+			bboss_groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
 			wp_cache_set( $cache_key, absint( $member_count ), 'bp_groups' );
 
 			$offset++;
@@ -1601,7 +1601,7 @@ function bp_admin_repair_group_member_count() {
 			'records' => sprintf(
 				/* translators: %s: number of groups */
 				esc_html__( '%s groups member count updated successfully.', 'buddyboss' ),
-				bp_core_number_format( $offset )
+				bboss_core_number_format( $offset )
 			),
 		);
 	}

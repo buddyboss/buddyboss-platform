@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-class BuddyPress {
+class BBoss_Platform {
 	/**
 	 * Identify if ths BuddyPress class is from BuddyBoss Platform
 	 *
@@ -48,14 +48,14 @@ class BuddyPress {
 
 	/**
 	 * @var array The unfiltered URI broken down into chunks.
-	 * @see bp_core_set_uri_globals()
+	 * @see bboss_core_set_uri_globals()
 	 */
 	public $unfiltered_uri = array();
 
 	/**
 	 * @var array The canonical URI stack.
-	 * @see bp_redirect_canonical()
-	 * @see bp_core_new_nav_item()
+	 * @see bboss_redirect_canonical()
+	 * @see bboss_core_new_nav_item()
 	 */
 	public $canonical_stack = array();
 
@@ -124,9 +124,9 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 *
 	 * @static object $instance
-	 * @see buddypress()
+	 * @see bboss()
 	 *
-	 * @return BuddyPress|null The one true BuddyPress.
+	 * @return BBoss_Platform|null The one true BuddyPress.
 	 */
 	public static function instance() {
 
@@ -135,7 +135,7 @@ class BuddyPress {
 
 		// Only run these methods if they haven't been run previously.
 		if ( null === $instance ) {
-			$instance = new BuddyPress();
+			$instance = new BBoss_Platform();
 			$instance->constants();
 			$instance->setup_globals();
 			$instance->legacy_constants();
@@ -157,7 +157,7 @@ class BuddyPress {
 	 *
 	 * @since BuddyPress 1.7.0
 	 * @see BuddyPress::instance()
-	 * @see buddypress()
+	 * @see bboss()
 	 */
 	private function __construct() {
 		/* Do nothing here */ }
@@ -255,31 +255,31 @@ class BuddyPress {
 		}
 
 		// Path and URL.
-		if ( ! defined( 'BP_PLUGIN_DIR' ) ) {
-			define( 'BP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		if ( ! defined( 'BBOSS_PLUGIN_DIR' ) ) {
+			define( 'BBOSS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 		}
 
-		if ( ! defined( 'BP_PLUGIN_URL' ) ) {
-			define( 'BP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-		}
-
-		// Legacy forum constant - supported for compatibility with bbPress 2.
-		if ( ! defined( 'BP_FORUMS_PARENT_FORUM_ID' ) ) {
-			define( 'BP_FORUMS_PARENT_FORUM_ID', 1 );
+		if ( ! defined( 'BBOSS_PLUGIN_URL' ) ) {
+			define( 'BBOSS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
 
 		// Legacy forum constant - supported for compatibility with bbPress 2.
-		if ( ! defined( 'BP_FORUMS_SLUG' ) ) {
-			define( 'BP_FORUMS_SLUG', 'forums' );
+		if ( ! defined( 'BBOSS_FORUMS_PARENT_FORUM_ID' ) ) {
+			define( 'BBOSS_FORUMS_PARENT_FORUM_ID', 1 );
+		}
+
+		// Legacy forum constant - supported for compatibility with bbPress 2.
+		if ( ! defined( 'BBOSS_FORUMS_SLUG' ) ) {
+			define( 'BBOSS_FORUMS_SLUG', 'forums' );
 		}
 
 		// Only applicable to those running trunk.
-		if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
-			define( 'BP_SOURCE_SUBDIRECTORY', '' );
+		if ( ! defined( 'BBOSS_SOURCE_SUBDIRECTORY' ) ) {
+			define( 'BBOSS_SOURCE_SUBDIRECTORY', '' );
 		}
 
 		// Define on which blog ID BuddyPress should run.
-		if ( ! defined( 'BP_ROOT_BLOG' ) ) {
+		if ( ! defined( 'BBOSS_ROOT_BLOG' ) ) {
 
 			// Default to use current blog ID
 			// Fulfills non-network installs and BP_ENABLE_MULTIBLOG installs.
@@ -298,7 +298,7 @@ class BuddyPress {
 					$plugins = get_site_option( 'active_sitewide_plugins' );
 
 					// basename.
-					$basename = basename( constant( 'BP_PLUGIN_DIR' ) ) . '/bp-loader.php';
+					$basename = basename( constant( 'BBOSS_PLUGIN_DIR' ) ) . '/bp-loader.php';
 
 					// plugin is network-activated; use main site ID instead.
 					if ( isset( $plugins[ $basename ] ) ) {
@@ -308,15 +308,15 @@ class BuddyPress {
 				}
 			}
 
-			define( 'BP_ROOT_BLOG', $root_blog_id );
+			define( 'BBOSS_ROOT_BLOG', $root_blog_id );
 		}
 
 		// The search slug has to be defined nice and early because of the way
 		// search requests are loaded
 		//
 		// @todo Make this better
-		if ( ! defined( 'BP_SEARCH_SLUG' ) ) {
-			define( 'BP_SEARCH_SLUG', 'search' );
+		if ( ! defined( 'BBOSS_SEARCH_SLUG' ) ) {
+			define( 'BBOSS_SEARCH_SLUG', 'search' );
 		}
 	}
 
@@ -329,7 +329,7 @@ class BuddyPress {
 	private function setup_globals() {
 
 		/** Versions */
-		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
+		$this->version    = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : ( defined( 'BBOSS_VERSION' ) ? BBOSS_VERSION : '1.0.0' );
 		$this->db_version = 23641;
 
 		/** Loading */
@@ -353,7 +353,7 @@ class BuddyPress {
 
 		/**
 		 * @var int The current offset of the URI.
-		 * @see bp_core_set_uri_globals()
+		 * @see bboss_core_set_uri_globals()
 		 */
 		$this->unfiltered_uri_offset = 0;
 
@@ -393,15 +393,15 @@ class BuddyPress {
 		 *
 		 * @const constant BP_ROOT_BLOG BuddyPress Root blog ID.
 		 */
-		$this->root_blog_id = (int) apply_filters( 'bp_get_root_blog_id', BP_ROOT_BLOG );
+		$this->root_blog_id = (int) apply_filters( 'bp_get_root_blog_id', BBOSS_ROOT_BLOG );
 
 		/** Paths*/
 
 		// BuddyPress root directory.
-		$this->file       = constant( 'BP_PLUGIN_DIR' ) . 'bp-loader.php';
-		$this->basename   = basename( constant( 'BP_PLUGIN_DIR' ) ) . '/bp-loader.php';
-		$this->plugin_dir = trailingslashit( constant( 'BP_PLUGIN_DIR' ) . constant( 'BP_SOURCE_SUBDIRECTORY' ) );
-		$this->plugin_url = trailingslashit( constant( 'BP_PLUGIN_URL' ) . constant( 'BP_SOURCE_SUBDIRECTORY' ) );
+		$this->file       = constant( 'BBOSS_PLUGIN_DIR' ) . 'bp-loader.php';
+		$this->basename   = basename( constant( 'BBOSS_PLUGIN_DIR' ) ) . '/bp-loader.php';
+		$this->plugin_dir = trailingslashit( constant( 'BBOSS_PLUGIN_DIR' ) . constant( 'BBOSS_SOURCE_SUBDIRECTORY' ) );
+		$this->plugin_url = trailingslashit( constant( 'BBOSS_PLUGIN_URL' ) . constant( 'BBOSS_SOURCE_SUBDIRECTORY' ) );
 
 		// Languages.
 		$this->lang_dir = $this->plugin_dir . 'bp-languages';
@@ -486,23 +486,23 @@ class BuddyPress {
 	private function legacy_constants() {
 
 		// Define the BuddyPress version.
-		if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-			define( 'BP_PLATFORM_VERSION', $this->version );
+		if ( ! defined( 'BBOSS_PLATFORM_VERSION' ) ) {
+			define( 'BBOSS_PLATFORM_VERSION', $this->version );
 		}
 
 		// Define the BuddyPress version.
-		if ( ! defined( 'BP_VERSION' ) ) {
-			define( 'BP_VERSION', $this->version );
+		if ( ! defined( 'BBOSS_VERSION' ) ) {
+			define( 'BBOSS_VERSION', $this->version );
 		}
 
 		// Define the database version.
-		if ( ! defined( 'BP_DB_VERSION' ) ) {
-			define( 'BP_DB_VERSION', $this->db_version );
+		if ( ! defined( 'BBOSS_DB_VERSION' ) ) {
+			define( 'BBOSS_DB_VERSION', $this->db_version );
 		}
 
 		// Define if deprecated functions should be ignored.
-		if ( ! defined( 'BP_IGNORE_DEPRECATED' ) ) {
-			define( 'BP_IGNORE_DEPRECATED', true );
+		if ( ! defined( 'BBOSS_IGNORE_DEPRECATED' ) ) {
+			define( 'BBOSS_IGNORE_DEPRECATED', true );
 		}
 	}
 
@@ -569,7 +569,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
-		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
+		if ( ! bboss_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
 
 			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.2.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddypress/1.5.php';
@@ -612,7 +612,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
 		}
 
-		if ( bb_is_readylaunch_enabled() ) {
+		if ( bboss_is_readylaunch_enabled() ) {
 			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
 		}
 	}
@@ -625,6 +625,23 @@ class BuddyPress {
 	 * @param string $class
 	 */
 	public function autoload( $class ) {
+		// bbwt-rename:autoload-legacy — renamed classes map to their legacy names, from which
+		// the file paths below are derived (files keep their names). Pre-rename names are not
+		// ours any more: never load a file for them (the buddyboss.com compat layer aliases them).
+		static $bb_legacy_classes = null;
+		static $bb_legacy_names   = null;
+		if ( null === $bb_legacy_classes ) {
+			$bb_legacy_classes = require __DIR__ . '/bp-core/bb-class-legacy-map.php';
+			$bb_legacy_names   = array_change_key_case( array_flip( $bb_legacy_classes ), CASE_LOWER );
+		}
+		$bb_requested = $class;
+		$bb_key       = strtolower( $class );
+		if ( isset( $bb_legacy_classes[ $bb_key ] ) ) {
+			$class = $bb_legacy_classes[ $bb_key ];
+		} elseif ( isset( $bb_legacy_names[ $bb_key ] ) ) {
+			return;
+		}
+
 		$class_parts = explode( '_', strtolower( $class ) );
 
 		if ( 'bp' !== $class_parts[0] && 'bb' !== $class_parts[0] ) {
@@ -846,13 +863,20 @@ class BuddyPress {
 		 */
 		if (
 			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'suspend', 'profiletype' ), true ) &&
-			! bp_is_active( $component ) &&
+			! bboss_is_active( $component ) &&
 			! function_exists( 'tests_add_filter' )
 		) {
 			return;
 		}
 
 		require $path;
+
+		// @bbwt-com-start compat-layer
+		// bbwt-rename:autoload-compat — give the class its old name too (instanceof OldName).
+		if ( function_exists( 'bb_compat_alias_class' ) ) {
+			bb_compat_alias_class( $bb_requested );
+		}
+		// @bbwt-com-end compat-layer
 	}
 
 	/**
@@ -867,7 +891,7 @@ class BuddyPress {
 		add_action( 'deactivate_' . $this->basename, 'bp_deactivation' );
 
 		// If BuddyPress is being deactivated, do not add any actions.
-		if ( bp_is_deactivation( $this->basename ) ) {
+		if ( bboss_is_deactivation( $this->basename ) ) {
 			return;
 		}
 
@@ -899,7 +923,7 @@ class BuddyPress {
 		 *
 		 * @since BuddyPress 1.7.0
 		 *
-		 * @param BuddyPress $this. Current BuddyPress instance. Passed by reference.
+		 * @param BBoss_Platform $this. Current BuddyPress instance. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_after_setup_actions', array( &$this ) );
 	}
@@ -942,20 +966,20 @@ class BuddyPress {
 	public function register_theme_packages() {
 
 		// Register the default theme compatibility package.
-		bp_register_theme_package(
+		bboss_register_theme_package(
 			array(
 				'id'      => 'nouveau',
 				'name'    => 'BuddyPress Nouveau',
-				'version' => bp_get_version(),
+				'version' => bboss_get_version(),
 				'dir'     => trailingslashit( $this->themes_dir . '/bp-nouveau' ),
 				'url'     => trailingslashit( $this->themes_url . '/bp-nouveau' ),
 			)
 		);
 
 		// Register the basic theme stack. This is really dope.
-		bp_register_template_stack( 'get_stylesheet_directory', 10 );
-		bp_register_template_stack( 'get_template_directory', 12 );
-		bp_register_template_stack( 'bp_get_theme_compat_dir', 14 );
+		bboss_register_template_stack( 'get_stylesheet_directory', 10 );
+		bboss_register_template_stack( 'get_template_directory', 12 );
+		bboss_register_template_stack( 'bboss_get_theme_compat_dir', 14 );
 	}
 
 	/**
@@ -971,6 +995,6 @@ class BuddyPress {
 		}
 
 		// Setup the theme package to use for compatibility.
-		bp_setup_theme_compat( bp_get_theme_package_id() );
+		bboss_setup_theme_compat( bboss_get_theme_package_id() );
 	}
 }

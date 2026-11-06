@@ -5,7 +5,7 @@
  * The template for search results for posts.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $search_post_id = get_the_ID();
-$result         = bp_search_is_post_restricted( $search_post_id, get_current_user_id(), 'post' );
+$result         = bboss_search_is_post_restricted( $search_post_id, get_current_user_id(), 'post' );
 ?>
 <li class="bp-search-item bp-search-item_post <?php echo esc_attr( $result['post_class'] ); ?>">
 	<div class="list-wrap">
@@ -57,7 +57,7 @@ $result         = bp_search_is_post_restricted( $search_post_id, get_current_use
 				$get_the_post_content = ob_get_clean();
 
 				$get_the_post_content = strip_shortcodes( wp_strip_all_tags( $get_the_post_content ) );
-				$get_the_post_content = bp_create_excerpt(
+				$get_the_post_content = bboss_create_excerpt(
 					$get_the_post_content,
 					100,
 					array(

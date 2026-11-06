@@ -1,6 +1,6 @@
 <?php
 /**
- * BB REST: BB_REST_Topics_Endpoint class
+ * BB REST: BBoss_BB_REST_Topics_Endpoint class
  *
  * @since   2.8.80
  * @package BuddyBoss
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.8.80
  */
-class BB_REST_Topics_Endpoint extends WP_REST_Controller {
+class BBoss_BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,10 +21,10 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since 2.8.80
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'bb-topics';
 
-		if ( function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics() ) {
+		if ( function_exists( 'bboss_is_enabled_activity_topics' ) && bboss_is_enabled_activity_topics() ) {
 			$this->bp_rest_activity_support();
 		}
 	}
@@ -41,7 +41,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		add_filter( 'bp_rest_activity_create_item_permissions_check', array( $this, 'bb_rest_activity_topic_required_check' ), 10, 2 );
 		add_filter( 'bp_rest_activity_update_item_permissions_check', array( $this, 'bb_rest_activity_topic_required_check' ), 10, 2 );
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity',
 			'bb_topic',
 			array(
@@ -54,7 +54,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		bp_rest_register_field(
+		bboss_rest_register_field(
 			'activity',
 			'bb_topic_id',
 			array(
@@ -196,7 +196,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( 'groups' === $args['item_type'] && ! empty( $args['item_id'] ) ) {
 			$topics_data = function_exists( 'bb_get_group_activity_topics' ) ? bb_get_group_activity_topics( $args ) : array();
 		} else {
-			$topics_data = bb_activity_topics_manager_instance()->bb_get_activity_topics( $args );
+			$topics_data = bboss_activity_topics_manager_instance()->bb_get_activity_topics( $args );
 		}
 		$topics_count = ! empty( $topics_data['total'] ) ? $topics_data['total'] : 0;
 		$topics       = ! empty( $topics_data['topics'] ) ? $topics_data['topics'] : array();
@@ -211,7 +211,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $data );
-		$response = bp_rest_response_add_total_headers( $response, $topics_count, $request->get_param( 'per_page' ) );
+		$response = bboss_rest_response_add_total_headers( $response, $topics_count, $request->get_param( 'per_page' ) );
 
 		/**
 		 * Fires after the topics were fetched via the REST API.
@@ -241,10 +241,10 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		$retval    = false;
 		if ( 'activity' === $item_type ) {
 			$retval = true;
-		} elseif ( 'groups' === $item_type && bp_is_active( 'groups' ) ) {
+		} elseif ( 'groups' === $item_type && bboss_is_active( 'groups' ) ) {
 			$retval  = true;
 			$item_id = $request->get_param( 'item_id' );
-			$group   = ! empty( $item_id ) ? groups_get_group( $item_id ) : false;
+			$group   = ! empty( $item_id ) ? bboss_groups_get_group( $item_id ) : false;
 			if (
 				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 				! bb_is_enabled_group_activity_topics()
@@ -254,11 +254,11 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$retval = new WP_Error( 'bp_rest_topic_item_id_required', __( 'Item ID is required.', 'buddyboss' ), array( 'status' => 400 ) );
 			} elseif ( ! $group->id ) {
 				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array( 'status' => 404 ) );
-			} elseif ( ! bp_current_user_can( 'administrator' ) && 'public' !== $group->status ) {
+			} elseif ( ! bboss_current_user_can( 'administrator' ) && 'public' !== $group->status ) {
 				if (
-					! groups_is_user_member( bp_loggedin_user_id(), $item_id ) &&
-					! groups_is_user_mod( bp_loggedin_user_id(), $item_id ) &&
-					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+					! bboss_groups_is_user_member( bboss_loggedin_user_id(), $item_id ) &&
+					! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $item_id ) &&
+					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot view topics for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 				}
@@ -302,7 +302,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function create_item( $request ) {
 		$args = array(
 			'name'            => sanitize_text_field( $request->get_param( 'title' ) ),
-			'user_id'         => $request->get_param( 'user_id' ) ? absint( $request->get_param( 'user_id' ) ) : bp_loggedin_user_id(),
+			'user_id'         => $request->get_param( 'user_id' ) ? absint( $request->get_param( 'user_id' ) ) : bboss_loggedin_user_id(),
 			'permission_type' => sanitize_text_field( $request->get_param( 'permission_type' ) ),
 			'permission_data' => $request->get_param( 'permission_data' ),
 			'menu_order'      => $request->get_param( 'menu_order' ) ? absint( $request->get_param( 'menu_order' ) ) : 0,
@@ -315,7 +315,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Create the topic.
-		$topic_relationship = bb_topics_manager_instance()->bb_add_topic( $args );
+		$topic_relationship = bboss_topics_manager_instance()->bb_add_topic( $args );
 
 		if ( is_wp_error( $topic_relationship ) ) {
 			return $topic_relationship;
@@ -397,8 +397,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					__( 'Item type is required.', 'buddyboss' ),
 					array( 'status' => 400 )
 				);
-			} elseif ( bp_is_active( 'groups' ) && 'groups' === $item_type ) {
-				$group                   = ! empty( $item_id ) ? groups_get_group( $item_id ) : false;
+			} elseif ( bboss_is_active( 'groups' ) && 'groups' === $item_type ) {
+				$group                   = ! empty( $item_id ) ? bboss_groups_get_group( $item_id ) : false;
 				$valid_group_permissions = array( 'admins', 'mods', 'members' );
 				$group_topics_options    = function_exists( 'bb_get_group_activity_topic_options' ) ? bb_get_group_activity_topic_options() : '';
 				if (
@@ -429,8 +429,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 						array( 'status' => 404 )
 					);
 				} elseif (
-					! bp_current_user_can( 'administrator' ) &&
-					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+					! bboss_current_user_can( 'administrator' ) &&
+					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 				} elseif (
@@ -443,7 +443,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$valid_global_permissions = array( 'mods_admins', 'anyone' );
 				if ( ! empty( $item_id ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
-				} elseif ( ! bp_current_user_can( 'administrator' ) ) {
+				} elseif ( ! bboss_current_user_can( 'administrator' ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to create a topic.', 'buddyboss' ), array( 'status' => 403 ) );
 				} elseif ( ! in_array( $permission_type, $valid_global_permissions, true ) ) {
 					$retval = new WP_Error(
@@ -494,7 +494,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			'topic_id' => $id,
 		);
 
-		$topic = bb_topics_manager_instance()->bb_get_topic( $args );
+		$topic = bboss_topics_manager_instance()->bb_get_topic( $args );
 
 		if ( empty( $topic ) ) {
 			return new WP_Error( 'bp_rest_topic_empty', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
@@ -514,7 +514,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response  $response The response data.
 		 * @param WP_REST_Request   $request  The request sent to the API.
 		 *
-		 * @param BB_Topics_Manager $topic    Fetched topic.
+		 * @param BBoss_Topics_Manager $topic    Fetched topic.
 		 */
 		do_action( 'bp_rest_topic_get_item', $topic, $response, $request );
 
@@ -532,7 +532,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		$id        = $request->get_param( 'id' );
-		$topic     = ! empty( $id ) ? bb_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $id ) ) : false;
+		$topic     = ! empty( $id ) ? bboss_topics_manager_instance()->bb_get_topic( array( 'topic_id' => $id ) ) : false;
 		$item_type = ! empty( $topic->item_type ) ? $topic->item_type : false;
 
 		$retval = false;
@@ -542,9 +542,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			$retval = new WP_Error( 'bp_rest_topic_empty', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
 		} elseif ( 'activity' === $item_type ) {
 			$retval = true;
-		} elseif ( 'groups' === $item_type && bp_is_active( 'groups' ) ) {
+		} elseif ( 'groups' === $item_type && bboss_is_active( 'groups' ) ) {
 			$retval = true;
-			$group  = ! empty( $topic->item_id ) ? groups_get_group( $topic->item_id ) : false;
+			$group  = ! empty( $topic->item_id ) ? bboss_groups_get_group( $topic->item_id ) : false;
 			if (
 				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 				! bb_is_enabled_group_activity_topics()
@@ -554,12 +554,12 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$retval = new WP_Error( 'bp_rest_topic_item_id_required', __( 'Item ID is required.', 'buddyboss' ), array( 'status' => 400 ) );
 			} elseif ( empty( $group->id ) ) {
 				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array( 'status' => 404 ) );
-			} elseif ( ! bp_current_user_can( 'administrator' ) && 'public' !== $group->status ) {
+			} elseif ( ! bboss_current_user_can( 'administrator' ) && 'public' !== $group->status ) {
 				// Check if user has any level of access (member, mod, or admin).
 				if (
-					! groups_is_user_member( bp_loggedin_user_id(), $topic->item_id ) &&
-					! groups_is_user_mod( bp_loggedin_user_id(), $topic->item_id ) &&
-					! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+					! bboss_groups_is_user_member( bboss_loggedin_user_id(), $topic->item_id ) &&
+					! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $topic->item_id ) &&
+					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot view topics for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 				}
@@ -622,7 +622,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			$get_topic_args['item_type'] = $item_type;
 		}
 
-		$topic = bb_topics_manager_instance()->bb_get_topic( $get_topic_args );
+		$topic = bboss_topics_manager_instance()->bb_get_topic( $get_topic_args );
 		if ( ! $topic ) {
 			return new WP_Error(
 				'bp_rest_topic_invalid_id',
@@ -647,7 +647,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		// Update the topic.
-		$updated_topic = bb_topics_manager_instance()->bb_update_topic( $args );
+		$updated_topic = bboss_topics_manager_instance()->bb_update_topic( $args );
 
 		if ( is_wp_error( $updated_topic ) ) {
 			return $updated_topic;
@@ -711,7 +711,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $item_type ) ) {
 				$get_topic_args['item_type'] = $item_type;
 			}
-			$topic = bb_topics_manager_instance()->bb_get_topic( $get_topic_args );
+			$topic = bboss_topics_manager_instance()->bb_get_topic( $get_topic_args );
 
 			if ( empty( $name ) ) {
 				$retval = new WP_Error(
@@ -725,8 +725,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					__( 'Item type is required.', 'buddyboss' ),
 					array( 'status' => 400 )
 				);
-			} elseif ( bp_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
-				$group                = ! empty( $item_id ) ? groups_get_group( $item_id ) : false;
+			} elseif ( bboss_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
+				$group                = ! empty( $item_id ) ? bboss_groups_get_group( $item_id ) : false;
 				$group_topics_options = function_exists( 'bb_get_group_activity_topic_options' ) ? bb_get_group_activity_topic_options() : '';
 				if (
 					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
@@ -746,8 +746,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 						array( 'status' => 404 )
 					);
 				} elseif (
-					! bp_current_user_can( 'administrator' ) &&
-					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+					! bboss_current_user_can( 'administrator' ) &&
+					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 				} elseif ( empty( $topic ) ) {
@@ -792,7 +792,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			} elseif ( 'activity' === $item_type ) {
 				if ( ! empty( $item_id ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
-				} elseif ( ! bp_current_user_can( 'administrator' ) ) {
+				} elseif ( ! bboss_current_user_can( 'administrator' ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to create a topic.', 'buddyboss' ), array( 'status' => 403 ) );
 				} elseif ( empty( $topic ) ) {
 					$retval = new WP_Error(
@@ -880,7 +880,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			$args['item_type'] = $item_type;
 		}
 
-		$get_topic = bb_topics_manager_instance()->bb_get_topics( $args );
+		$get_topic = bboss_topics_manager_instance()->bb_get_topics( $args );
 		$get_topic = ! empty( $get_topic['topics'] ) ? current( $get_topic['topics'] ) : false;
 
 		unset( $args['fields'] );
@@ -888,7 +888,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( 'migrate' === $migrate_type && ! empty( $new_topic_id ) ) {
 			$args['new_topic_id'] = $new_topic_id;
 			$args['migrate_type'] = $migrate_type;
-			$migrated             = bb_topics_manager_instance()->bb_migrate_topic( $args );
+			$migrated             = bboss_topics_manager_instance()->bb_migrate_topic( $args );
 			if ( is_wp_error( $migrated ) ) {
 				return new WP_Error(
 					'bp_rest_topic_migrate_failed',
@@ -897,7 +897,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				);
 			}
 		}
-		$deleted = bb_topics_manager_instance()->bb_delete_topic( $args );
+		$deleted = bboss_topics_manager_instance()->bb_delete_topic( $args );
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_topic_delete_failed',
@@ -966,7 +966,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$args['item_id']   = $item_id;
 				$args['item_type'] = $item_type;
 			}
-			$get_topic = bb_topics_manager_instance()->bb_get_topics( $args );
+			$get_topic = bboss_topics_manager_instance()->bb_get_topics( $args );
 
 			// The posts can only move to a topic of the same group, or to another activity topic.
 			$new_topic_args = array(
@@ -979,7 +979,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			} elseif ( 'activity' === $item_type ) {
 				$new_topic_args['item_type'] = 'activity';
 			}
-			$new_topic = ! empty( $new_topic_id ) ? bb_topics_manager_instance()->bb_get_topics( $new_topic_args ) : array();
+			$new_topic = ! empty( $new_topic_id ) ? bboss_topics_manager_instance()->bb_get_topics( $new_topic_args ) : array();
 			$new_topic = ! empty( $new_topic['topics'] );
 
 			if ( ! empty( $migrate_type ) && 'migrate' !== $migrate_type ) {
@@ -1018,9 +1018,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					__( 'Invalid new topic data.', 'buddyboss' ),
 					array( 'status' => 400 )
 				);
-			} elseif ( bp_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
+			} elseif ( bboss_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
 				$item_id = ! empty( $item_id ) ? $item_id : 0;
-				$group   = ! empty( $item_id ) ? groups_get_group( $item_id ) : false;
+				$group   = ! empty( $item_id ) ? bboss_groups_get_group( $item_id ) : false;
 				if (
 					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 					! bb_is_enabled_group_activity_topics()
@@ -1035,15 +1035,15 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				} elseif ( empty( $group ) ) {
 					$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array( 'status' => 404 ) );
 				} elseif (
-					! bp_current_user_can( 'administrator' ) &&
-					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+					! bboss_current_user_can( 'administrator' ) &&
+					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot delete a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 				}
 			} elseif ( 'activity' === $item_type ) {
 				if ( ! empty( $item_id ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
-				} elseif ( ! bp_current_user_can( 'administrator' ) ) {
+				} elseif ( ! bboss_current_user_can( 'administrator' ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'Sorry, you are not allowed to delete topics.', 'buddyboss' ), array( 'status' => 403 ) );
 				}
 			}
@@ -1110,7 +1110,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 			// phpcs:ignore
 			$result = $wpdb->update(
-				bb_topics_manager_instance()->topic_rel_table,
+				bboss_topics_manager_instance()->topic_rel_table,
 				$update_data,
 				$where_data,
 				array( '%d' ),
@@ -1125,11 +1125,11 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if ( $success ) {
 			// Reset the cached topic lists before reading them back, so the response carries the new order.
-			if ( function_exists( 'bb_topics_order_updated_cache_reset' ) ) {
-				bb_topics_order_updated_cache_reset();
+			if ( function_exists( 'bboss_topics_order_updated_cache_reset' ) ) {
+				bboss_topics_order_updated_cache_reset();
 			}
 
-			$get_topics = bb_topics_manager_instance()->bb_get_topics(
+			$get_topics = bboss_topics_manager_instance()->bb_get_topics(
 				array(
 					'item_id'   => $group,
 					'item_type' => $item_type,
@@ -1205,8 +1205,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					__( 'Invalid topic order data.', 'buddyboss' ),
 					array( 'status' => 400 )
 				);
-			} elseif ( bp_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
-				$group = ! empty( $item_id ) ? groups_get_group( $item_id ) : false;
+			} elseif ( bboss_is_active( 'groups' ) && ! empty( $item_type ) && 'groups' === $item_type ) {
+				$group = ! empty( $item_id ) ? bboss_groups_get_group( $item_id ) : false;
 
 				if (
 					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
@@ -1226,13 +1226,13 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 						array( 'status' => 404 )
 					);
 				} elseif (
-					! bp_current_user_can( 'administrator' ) &&
-					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+					! bboss_current_user_can( 'administrator' ) &&
+					! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot allow to order topics for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 				}
 			} elseif ( 'activity' === $item_type ) {
-				if ( ! bp_current_user_can( 'administrator' ) ) {
+				if ( ! bboss_current_user_can( 'administrator' ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_invalid_permission_type', __( 'You are not allowed to update order of topics.', 'buddyboss' ), array( 'status' => 403 ) );
 				} elseif ( ! empty( $item_id ) ) {
 					$retval = new WP_Error( 'bp_rest_topic_item_id_not_required', __( 'Item ID is not required for activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
@@ -1246,7 +1246,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				);
 
 				foreach ( $topic_ids as $topic_id ) {
-					$topic = bb_topics_manager_instance()->bb_get_topic(
+					$topic = bboss_topics_manager_instance()->bb_get_topic(
 						array(
 							'topic_id'  => $topic_id,
 							'item_type' => $item_type,
@@ -1292,7 +1292,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$activity_topic = bb_topics_manager_instance()->bb_get_topics(
+		$activity_topic = bboss_topics_manager_instance()->bb_get_topics(
 			array(
 				'slug'      => $slug,
 				'item_type' => 'activity',
@@ -1329,7 +1329,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		return bp_current_user_can( 'administrator' ) || groups_is_user_admin( bp_loggedin_user_id(), $group_id );
+		return bboss_current_user_can( 'administrator' ) || bboss_groups_is_user_admin( bboss_loggedin_user_id(), $group_id );
 	}
 
 	/**
@@ -1358,8 +1358,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			! function_exists( 'bb_is_enabled_activity_topics' ) ||
-			! bb_is_enabled_activity_topics()
+			! function_exists( 'bboss_is_enabled_activity_topics' ) ||
+			! bboss_is_enabled_activity_topics()
 		) {
 			return $retval;
 		}
@@ -1375,7 +1375,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				return $retval;
 			}
 
-			$activity = new BP_Activity_Activity( $activity_id );
+			$activity = new BBoss_Activity_Activity( $activity_id );
 			if ( empty( $activity->id ) || 'activity_update' !== $activity->type ) {
 				return $retval;
 			}
@@ -1390,7 +1390,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 			// create_item() posts to a group whenever primary_item_id is sent and groups are active.
 			$primary_item_id = $request->get_param( 'primary_item_id' );
-			$component       = bp_is_active( 'groups' ) && ! is_null( $primary_item_id ) ? 'groups' : 'activity';
+			$component       = bboss_is_active( 'groups' ) && ! is_null( $primary_item_id ) ? 'groups' : 'activity';
 			$item_id         = (int) $primary_item_id;
 		}
 
@@ -1410,7 +1410,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$topic_args['item_id']   = $item_id;
 				$topic_args['item_type'] = 'groups';
 			}
-			$topic = bb_topics_manager_instance()->bb_get_topic( $topic_args );
+			$topic = bboss_topics_manager_instance()->bb_get_topic( $topic_args );
 			if ( empty( $topic ) ) {
 				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
 			}
@@ -1424,8 +1424,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if (
-			! function_exists( 'bb_is_activity_topic_required' ) ||
-			! bb_is_activity_topic_required() ||
+			! function_exists( 'bboss_is_activity_topic_required' ) ||
+			! bboss_is_activity_topic_required() ||
 			! $this->bb_rest_feed_offers_topic( $component, $item_id )
 		) {
 			return $retval;
@@ -1453,7 +1453,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	protected function bb_rest_feed_offers_topic( $component, $item_id ) {
 		if ( 'groups' === $component ) {
 			if (
-				! bp_is_active( 'groups' ) ||
+				! bboss_is_active( 'groups' ) ||
 				empty( $item_id ) ||
 				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
 				! bb_is_enabled_group_activity_topics() ||
@@ -1469,7 +1469,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				)
 			);
 		} else {
-			$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics(
+			$topics = bboss_activity_topics_manager_instance()->bb_get_activity_topics(
 				array(
 					'item_type' => 'activity',
 					'can_post'  => true,
@@ -1498,11 +1498,11 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bb_rest_activity_topic_permission_check( $topic, $activity_id ) {
 		$permission_type   = $topic->permission_type;
-		$existing_topic_id = ! empty( $activity_id ) ? bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id ) : 0;
+		$existing_topic_id = ! empty( $activity_id ) ? bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id ) : 0;
 		$keeps_its_topic   = ! empty( $existing_topic_id ) && (int) $existing_topic_id === (int) $topic->topic_id;
 
-		if ( ! empty( $topic->item_id ) && 'groups' === $topic->item_type && bp_is_active( 'groups' ) ) {
-			$group = groups_get_group( $topic->item_id );
+		if ( ! empty( $topic->item_id ) && 'groups' === $topic->item_type && bboss_is_active( 'groups' ) ) {
+			$group = bboss_groups_get_group( $topic->item_id );
 			if ( empty( $group ) ) {
 				return new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array( 'status' => 404 ) );
 			}
@@ -1519,24 +1519,24 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss' ), array( 'status' => 403 ) );
 			} elseif (
 				in_array( $permission_type, array( 'admins' ), true ) &&
-				! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+				! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 			) {
 				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 			} elseif (
 				in_array( $permission_type, array( 'mods' ), true ) &&
-				! groups_is_user_mod( bp_loggedin_user_id(), $topic->item_id ) &&
-				! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+				! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $topic->item_id ) &&
+				! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 			) {
 				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 			} elseif (
 				in_array( $permission_type, array( 'members' ), true ) &&
-				! groups_is_user_member( bp_loggedin_user_id(), $topic->item_id ) &&
-				! groups_is_user_mod( bp_loggedin_user_id(), $topic->item_id ) &&
-				! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+				! bboss_groups_is_user_member( bboss_loggedin_user_id(), $topic->item_id ) &&
+				! bboss_groups_is_user_mod( bboss_loggedin_user_id(), $topic->item_id ) &&
+				! bboss_groups_is_user_admin( bboss_loggedin_user_id(), $topic->item_id )
 			) {
 				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
 			}
-		} elseif ( ! $keeps_its_topic && ! bp_current_user_can( 'administrator' ) && 'mods_admins' === $permission_type ) {
+		} elseif ( ! $keeps_its_topic && ! bboss_current_user_can( 'administrator' ) && 'mods_admins' === $permission_type ) {
 			return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss' ), array( 'status' => 403 ) );
 		}
 
@@ -1729,7 +1729,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			'topic_id' => $item->topic_id,
 		);
 
-		$data['is_global_activity'] = function_exists( 'bb_topics_manager_instance' ) && method_exists( bb_topics_manager_instance(), 'bb_is_topic_global' ) ? bb_topics_manager_instance()->bb_is_topic_global( $item->topic_id ) : false;
+		$data['is_global_activity'] = function_exists( 'bboss_topics_manager_instance' ) && method_exists( bboss_topics_manager_instance(), 'bb_is_topic_global' ) ? bboss_topics_manager_instance()->bb_is_topic_global( $item->topic_id ) : false;
 
 		if ( isset( $item->item_id ) ) {
 			$data['item_id'] = $item->item_id;
@@ -1739,21 +1739,21 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$item_id   = $request->get_param( 'item_id' );
 		$item_type = $request->get_param( 'item_type' );
-		if ( bp_is_active( 'groups' ) && ! empty( $item_id ) && ! empty( $item_type ) && 'groups' === $item_type ) {
+		if ( bboss_is_active( 'groups' ) && ! empty( $item_id ) && ! empty( $item_type ) && 'groups' === $item_type ) {
 			$data['is_delete'] = $this->bb_rest_can_delete_group_topic( $item_id );
 
 			$data['can_post'] = false;
 			if (
 				(
-					groups_is_user_admin( bp_loggedin_user_id(), $item_id ) &&
+					bboss_groups_is_user_admin( bboss_loggedin_user_id(), $item_id ) &&
 					in_array( $data['permission_type'], array( 'admins', 'mods' ), true )
 				) ||
 				(
-					groups_is_user_mod( bp_loggedin_user_id(), $item_id ) &&
+					bboss_groups_is_user_mod( bboss_loggedin_user_id(), $item_id ) &&
 					in_array( $data['permission_type'], array( 'mods' ), true )
 				) ||
 				(
-					groups_is_user_member( bp_loggedin_user_id(), $item_id ) &&
+					bboss_groups_is_user_member( bboss_loggedin_user_id(), $item_id ) &&
 					in_array( $data['permission_type'], array( 'members' ), true )
 				)
 			) {
@@ -1765,11 +1765,11 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			$data['can_post'] = false;
 			if (
 				(
-					bp_current_user_can( 'bp_moderate' ) &&
+					bboss_current_user_can( 'bp_moderate' ) &&
 					in_array( $data['permission_type'], array( 'mods_admins', 'anyone' ), true )
 				) ||
 				(
-					! bp_current_user_can( 'bp_moderate' ) &&
+					! bboss_current_user_can( 'bp_moderate' ) &&
 					in_array( $data['permission_type'], array( 'anyone' ), true )
 				)
 			) {
@@ -1787,7 +1787,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response  $response The response data.
 		 * @param WP_REST_Request   $request  Request used to generate the response.
-		 * @param BB_Topics_Manager $topic    The topic object.
+		 * @param BBoss_Topics_Manager $topic    The topic object.
 		 */
 		return apply_filters( 'bp_rest_topic_prepare_value', $response, $request, $item );
 	}
@@ -1889,13 +1889,13 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		if (
 			'activity' === $activity['component'] &&
-			function_exists( 'bb_is_enabled_activity_topics' ) &&
-			! bb_is_enabled_activity_topics()
+			function_exists( 'bboss_is_enabled_activity_topics' ) &&
+			! bboss_is_enabled_activity_topics()
 		) {
 			return null;
 		}
 
-		$get_topic = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id, 'all' );
+		$get_topic = bboss_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id, 'all' );
 
 		if ( empty( $get_topic ) ) {
 			return null;
@@ -1911,7 +1911,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @since BuddyBoss 3.7.0 The required-topic check runs before the write only (bb_rest_activity_topic_required_check()).
 	 *
 	 * @param int    $topic_id   The BuddyPress component's object that was just created/updated during the request.
-	 *                           (in this case, the BP_Activity_Activity object).
+	 *                           (in this case, the BBoss_Activity_Activity object).
 	 * @param object $value      The value of the REST Field to save.
 	 * @param string $attribute  The REST Field key used in the REST response.
 	 *
@@ -1946,7 +1946,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				$args['item_type'] = 'groups';
 			}
 
-			$get_topic = bb_topics_manager_instance()->bb_get_topic( $args );
+			$get_topic = bboss_topics_manager_instance()->bb_get_topic( $args );
 			if ( empty( $get_topic ) ) {
 				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
 			}
@@ -1965,6 +1965,14 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			$args['component'] = $value->component;
 			$args['item_id']   = $value->item_id;
 		}
-		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship( $args );
+		bboss_activity_topics_manager_instance()->bb_add_activity_topic_relationship( $args );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_BB_REST_Topics_Endpoint', false ) || interface_exists( 'BBoss_BB_REST_Topics_Endpoint', false ) || trait_exists( 'BBoss_BB_REST_Topics_Endpoint', false ) ) && ! class_exists( 'BB_REST_Topics_Endpoint', false ) && ! interface_exists( 'BB_REST_Topics_Endpoint', false ) ) {
+	class_alias( 'BBoss_BB_REST_Topics_Endpoint', 'BB_REST_Topics_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

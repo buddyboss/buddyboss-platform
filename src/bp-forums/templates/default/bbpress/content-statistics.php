@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Get the statistics
-$stats = bbp_get_statistics(); ?>
+$stats = bboss_bbp_get_statistics(); ?>
 
 <ul role="main" class="bbp-stats">
 

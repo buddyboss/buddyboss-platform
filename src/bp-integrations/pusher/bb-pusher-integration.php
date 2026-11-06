@@ -15,10 +15,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.1.4
  */
-class BB_Pusher_Integration extends BP_Integration {
+class BBoss_Pusher_Integration extends BBoss_Integration {
 
 	/**
-	 * BB_Pusher_Integration constructor.
+	 * BBoss_Pusher_Integration constructor.
 	 */
 	public function __construct() {
 		$this->start(
@@ -42,7 +42,7 @@ class BB_Pusher_Integration extends BP_Integration {
 	 * @since BuddyBoss 2.1.4
 	 */
 	public function includes( $includes = array() ) {
-		$slashed_path = trailingslashit( buddypress()->integration_dir ) . $this->id . '/';
+		$slashed_path = trailingslashit( bboss()->integration_dir ) . $this->id . '/';
 
 		$includes = array(
 			'functions',
@@ -80,16 +80,24 @@ class BB_Pusher_Integration extends BP_Integration {
 	 */
 	public function setup_admin_integration_tab() {
 
-		require_once trailingslashit( buddypress()->integration_dir ) . $this->id . '/bb-pusher-admin-tab.php';
+		require_once trailingslashit( bboss()->integration_dir ) . $this->id . '/bb-pusher-admin-tab.php';
 
-		new BB_Pusher_Admin_Integration_Tab(
+		new BBoss_Pusher_Admin_Integration_Tab(
 			"bb-{$this->id}",
 			$this->name,
 			array(
-				'root_path'       => trailingslashit( buddypress()->integration_dir ) . $this->id,
-				'root_url'        => trailingslashit( buddypress()->integration_url ) . $this->id,
+				'root_path'       => trailingslashit( bboss()->integration_dir ) . $this->id,
+				'root_url'        => trailingslashit( bboss()->integration_url ) . $this->id,
 				'required_plugin' => $this->required_plugin,
 			)
 		);
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_Pusher_Integration', false ) || interface_exists( 'BBoss_Pusher_Integration', false ) || trait_exists( 'BBoss_Pusher_Integration', false ) ) && ! class_exists( 'BB_Pusher_Integration', false ) && ! interface_exists( 'BB_Pusher_Integration', false ) ) {
+	class_alias( 'BBoss_Pusher_Integration', 'BB_Pusher_Integration' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

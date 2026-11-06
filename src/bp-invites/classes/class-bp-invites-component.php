@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Invites_Component extends BP_Component {
+class BBoss_Invites_Component extends BBoss_Component {
 
 
 	/**
@@ -52,7 +52,7 @@ class BP_Invites_Component extends BP_Component {
 		parent::start(
 			'invites',
 			'Sent Invites',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
 				'search_query_arg'         => 'invites_search',
@@ -66,9 +66,9 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see BP_Component::includes() for a description of arguments.
+	 * @see BBoss_Component::includes() for a description of arguments.
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
+	 * @param array $includes See BBoss_Component::includes() for a description.
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
@@ -78,7 +78,7 @@ class BP_Invites_Component extends BP_Component {
 		);
 
 		// Conditional includes.
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$includes[] = 'activity';
 		}
 		if ( is_admin() ) {
@@ -102,7 +102,7 @@ class BP_Invites_Component extends BP_Component {
 		}
 
 		// Bail if not on Settings component.
-		if ( ! bp_is_invites_component() ) {
+		if ( ! bboss_is_invites_component() ) {
 			return;
 		}
 
@@ -110,31 +110,31 @@ class BP_Invites_Component extends BP_Component {
 
 		// Authenticated actions.
 		if ( is_user_logged_in() ) {
-			if ( ! bp_current_action() || bp_is_current_action( 'invites' ) ) {
+			if ( ! bboss_current_action() || bboss_is_current_action( 'invites' ) ) {
 				require $this->path . 'bp-invites/actions/invites.php';
 
 				// Specific to post requests.
-			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) && file_exists( $this->path . 'bp-invites/actions/' . bp_current_action() . '.php' ) ) {
-				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
+			} elseif ( bboss_is_post_request() && in_array( bboss_current_action(), $actions, true ) && file_exists( $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php' ) ) {
+				require $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php';
 			}
 
 			if ( is_user_logged_in() &&
-				 in_array( bp_current_action(), array( 'revoke-invite' ), true )
+				 in_array( bboss_current_action(), array( 'revoke-invite' ), true )
 			) {
-				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
+				require $this->path . 'bp-invites/actions/' . bboss_current_action() . '.php';
 			}
 		} else {
-			bp_core_no_access();
+			bboss_core_no_access();
 			return;
 		}
 
 		// Screens - User profile integration.
-		if ( bp_is_user() ) {
+		if ( bboss_is_user() ) {
 			require_once $this->path . 'bp-invites/screens/send-invites.php';
 
 			// Sub-nav items.
-			if ( in_array( bp_current_action(), $actions, true ) ) {
-				require_once $this->path . 'bp-invites/screens/' . bp_current_action() . '.php';
+			if ( in_array( bboss_current_action(), $actions, true ) ) {
+				require_once $this->path . 'bp-invites/screens/' . bboss_current_action() . '.php';
 			}
 		}
 
@@ -148,23 +148,23 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see BP_Component::setup_globals() for a description of arguments.
+	 * @see BBoss_Component::setup_globals() for a description of arguments.
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
+	 * @param array $args See BBoss_Component::setup_globals() for a description.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_INVITES_SLUG' ) ) {
-			define( 'BP_INVITES_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_INVITES_SLUG' ) ) {
+			define( 'BBOSS_INVITES_SLUG', $this->id );
 		}
 
 		// All globals for invites component.
 		// Note that global_tables is included in this array.
 		$args = array(
-			'slug'          => BP_INVITES_SLUG,
-			'root_slug'     => isset( $bp->pages->invites->slug ) ? $bp->pages->invites->slug : BP_INVITES_SLUG,
+			'slug'          => BBOSS_INVITES_SLUG,
+			'root_slug'     => isset( $bp->pages->invites->slug ) ? $bp->pages->invites->slug : BBOSS_INVITES_SLUG,
 			'has_directory' => false,
 		);
 
@@ -180,7 +180,7 @@ class BP_Invites_Component extends BP_Component {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function setup_canonical_stack() {
-		if ( ! bp_is_invites_component() ) {
+		if ( ! bboss_is_invites_component() ) {
 			return;
 		}
 
@@ -191,36 +191,36 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
+	 * @see BBoss_Component::setup_nav() for a description of arguments.
 	 *
-	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
-	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
+	 * @param array $main_nav Optional. See BBoss_Component::setup_nav() for description.
+	 * @param array $sub_nav  Optional. See BBoss_Component::setup_nav() for description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 		if ( is_user_logged_in() ) {
 			// Determine user to use.
-			if ( bp_displayed_user_domain() ) {
-				$user_domain = bp_displayed_user_domain();
-			} elseif ( bp_loggedin_user_domain() ) {
-				$user_domain = bp_loggedin_user_domain();
+			if ( bboss_displayed_user_domain() ) {
+				$user_domain = bboss_displayed_user_domain();
+			} elseif ( bboss_loggedin_user_domain() ) {
+				$user_domain = bboss_loggedin_user_domain();
 			} else {
 				return;
 			}
 
 			$nav_name     = __( 'Email Invites', 'buddyboss' );
-			$slug         = bp_get_invites_slug();
-			$access       = bp_core_can_edit_settings();
+			$slug         = bboss_get_invites_slug();
+			$access       = bboss_core_can_edit_settings();
 			$invites_link = trailingslashit( $user_domain . $slug );
 
-			if ( bp_allow_user_to_send_invites() ) {
+			if ( bboss_allow_user_to_send_invites() ) {
 
 				// Add 'Send Invites' to the main navigation.
 				$main_nav = array(
 					'name'                    => $nav_name,
 					'slug'                    => $slug,
 					'position'                => 90,
-					'screen_function'         => 'bp_invites_screen_send_invite',
+					'screen_function'         => 'bboss_invites_screen_send_invite',
 					'default_subnav_slug'     => 'send-invites',
 					'show_for_displayed_user' => $access,
 					'item_css_id'             => $this->id,
@@ -232,7 +232,7 @@ class BP_Invites_Component extends BP_Component {
 					'slug'            => 'send-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
-					'screen_function' => 'bp_invites_screen_send_invite',
+					'screen_function' => 'bboss_invites_screen_send_invite',
 					'user_has_access' => $access,
 					'position'        => 10,
 					'item_css_id'     => 'invites-send-invite',
@@ -244,7 +244,7 @@ class BP_Invites_Component extends BP_Component {
 					'slug'            => 'sent-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
-					'screen_function' => 'bp_invites_screen_sent_invite',
+					'screen_function' => 'bboss_invites_screen_sent_invite',
 					'user_has_access' => $access,
 					'position'        => 20,
 					'item_css_id'     => 'invites-sent-invites',
@@ -261,25 +261,25 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 * @see BBoss_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
 	 *
-	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a description.
+	 * @param array $wp_admin_nav See BBoss_Component::setup_admin_bar() for a description.
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 
 		// Menus for logged in user.
 		if ( is_user_logged_in() ) {
 
-			if ( true === bp_allow_user_to_send_invites() ) {
+			if ( true === bboss_allow_user_to_send_invites() ) {
 				// Setup the logged in user variables.
-				$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
+				$invites_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_invites_slug() );
 
 				$title = __( 'Email Invites', 'buddyboss' );
 
 				// Add the "My Account" sub menus.
 				$wp_admin_nav[] = array(
-					'parent' => buddypress()->my_account_menu_id,
+					'parent' => bboss()->my_account_menu_id,
 					'id'     => 'my-account-' . $this->id,
 					'title'  => $title,
 					'href'   => $invites_link,
@@ -315,8 +315,8 @@ class BP_Invites_Component extends BP_Component {
 	 */
 	public function setup_title() {
 
-		if ( bp_is_invites_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_invites_component() ) {
+			$bp = bboss();
 
 		}
 
@@ -327,14 +327,14 @@ class BP_Invites_Component extends BP_Component {
 
 		// Register invite custom post type.
 		register_post_type(
-			bp_get_invite_post_type(),
+			bboss_get_invite_post_type(),
 			apply_filters(
 				'bp_invite_post_type',
 				array(
 					'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
-					'labels'             => bp_get_invite_post_type_labels(),
+					'labels'             => bboss_get_invite_post_type_labels(),
 					'public'             => false,
-					'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+					'publicly_queryable' => bboss_current_user_can( 'bp_moderate' ),
 					'query_var'          => false,
 					'rewrite'            => false,
 					'show_in_admin_bar'  => false,
@@ -346,8 +346,8 @@ class BP_Invites_Component extends BP_Component {
 					'capabilities'       => array(
 						'create_posts' => 'do_not_allow', // false < WP 4.5, credit @Ewout
 					),
-					'show_ui'            => bp_current_user_can( 'bp_moderate' ),
-					'supports'           => bp_get_invite_post_type_supports(),
+					'show_ui'            => bboss_current_user_can( 'bp_moderate' ),
+					'supports'           => bboss_get_invite_post_type_supports(),
 				)
 			)
 		);
@@ -358,12 +358,12 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array( 'BP_REST_Invites_Endpoint' ) );
+		parent::rest_api_init( array( 'BBoss_REST_Invites_Endpoint' ) );
 	}
 
 	/**
@@ -371,7 +371,7 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

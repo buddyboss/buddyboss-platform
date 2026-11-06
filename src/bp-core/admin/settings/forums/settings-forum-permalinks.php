@@ -18,12 +18,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_forums_register_permalinks_panel_fields() {
+function bboss_forums_register_permalinks_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Forum Permalinks
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -36,7 +36,7 @@ function bb_forums_register_permalinks_panel_fields() {
 	);
 
 	// FIELD: Forum slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -45,13 +45,13 @@ function bb_forums_register_permalinks_panel_fields() {
 			'label'             => __( 'Forum', 'buddyboss' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_forum_slug', 'forum' ),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 10,
 		)
 	);
 
 	// FIELD: Discussion slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -60,13 +60,13 @@ function bb_forums_register_permalinks_panel_fields() {
 			'label'             => __( 'Discussion', 'buddyboss' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_topic_slug', 'discussion' ),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 20,
 		)
 	);
 
 	// FIELD: Discussion Tag slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -75,13 +75,13 @@ function bb_forums_register_permalinks_panel_fields() {
 			'label'             => __( 'Discussion Tag', 'buddyboss' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_topic_tag_slug', 'discussion-tag' ),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 30,
 		)
 	);
 
 	// FIELD: Discussion View slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -90,13 +90,13 @@ function bb_forums_register_permalinks_panel_fields() {
 			'label'             => __( 'Discussion View', 'buddyboss' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_view_slug', 'view' ),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 40,
 		)
 	);
 
 	// FIELD: Reply slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -105,13 +105,13 @@ function bb_forums_register_permalinks_panel_fields() {
 			'label'             => __( 'Reply', 'buddyboss' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_reply_slug', 'reply' ),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 50,
 		)
 	);
 
 	// FIELD: Search slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_permalinks_section',
@@ -120,7 +120,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'label'             => __( 'Search', 'buddyboss' ),
 			'type'              => 'text',
 			'default'           => get_option( '_bbp_search_slug', 'search' ),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 60,
 		)
 	);
@@ -128,7 +128,7 @@ function bb_forums_register_permalinks_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Forum Profile Permalinks
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'forums',
 		'forum_permalinks',
 		'forum_profile_permalinks_section',
@@ -141,7 +141,7 @@ function bb_forums_register_permalinks_panel_fields() {
 	);
 
 	// FIELD: Replies Created slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_profile_permalinks_section',
@@ -149,14 +149,14 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_reply_archive_slug',
 			'label'             => __( 'Replies Created', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_reply_archive_slug(),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'default'           => bboss_bbp_get_reply_archive_slug(),
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 10,
 		)
 	);
 
 	// FIELD: Favorite Discussions slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_profile_permalinks_section',
@@ -164,14 +164,14 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_user_favs_slug',
 			'label'             => __( 'Favorite Discussions', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_user_favorites_slug(),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'default'           => bboss_bbp_get_user_favorites_slug(),
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 20,
 		)
 	);
 
 	// FIELD: Subscriptions slug.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'forums',
 		'forum_permalinks',
 		'forum_profile_permalinks_section',
@@ -179,8 +179,8 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_user_subs_slug',
 			'label'             => __( 'Subscriptions', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_user_subscriptions_slug(),
-			'sanitize_callback' => 'bbp_sanitize_slug',
+			'default'           => bboss_bbp_get_user_subscriptions_slug(),
+			'sanitize_callback' => 'bboss_bbp_sanitize_slug',
 			'order'             => 30,
 		)
 	);

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return int Sanitized positive integer (minimum 1).
  */
-function bb_search_sanitize_number_of_results( $value ) {
+function bboss_search_sanitize_number_of_results( $value ) {
 	$value = absint( $value );
 
 	if ( $value < 1 ) {

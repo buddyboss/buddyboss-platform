@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 #[AllowDynamicProperties]
-class BP_Blogs_Blog {
+class BBoss_Blogs_Blog {
 
 	/**
 	 * Site ID.
@@ -59,7 +59,7 @@ class BP_Blogs_Blog {
 	public function populate() {
 		global $wpdb;
 
-		$bp   = buddypress();
+		$bp   = bboss();
 		$blog = wp_cache_get( $this->id, 'bp_blogs' );
 
 		if ( false === $blog ) {
@@ -106,7 +106,7 @@ class BP_Blogs_Blog {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Blogs_Blog $this Current instance of the blog item being saved. Passed by reference.
+		 * @param BBoss_Blogs_Blog $this Current instance of the blog item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_blogs_blog_before_save', array( &$this ) );
 
@@ -120,7 +120,7 @@ class BP_Blogs_Blog {
 			return false;
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( $this->id ) {
 			// Update.
@@ -141,7 +141,7 @@ class BP_Blogs_Blog {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Blogs_Blog $this Current instance of the blog item being saved. Passed by reference.
+		 * @param BBoss_Blogs_Blog $this Current instance of the blog item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'bp_blogs_blog_after_save', array( &$this ) );
 
@@ -161,7 +161,7 @@ class BP_Blogs_Blog {
 	public function exists() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->blogs->table_name} WHERE user_id = %d AND blog_id = %d", $this->user_id, $this->blog_id ) );
 	}
@@ -203,7 +203,7 @@ class BP_Blogs_Blog {
 	public static function get( ...$args ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
@@ -220,7 +220,7 @@ class BP_Blogs_Blog {
 				6 => 'include_blog_ids',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $args );
 		} else {
 			$args = reset( $args );
 		}
@@ -242,8 +242,8 @@ class BP_Blogs_Blog {
 		if (
 			! is_user_logged_in() ||
 			(
-				! bp_current_user_can( 'bp_moderate' ) &&
-				( bp_loggedin_user_id() !== (int) $r['user_id'] )
+				! bboss_current_user_can( 'bp_moderate' ) &&
+				( bboss_loggedin_user_id() !== (int) $r['user_id'] )
 			)
 		) {
 			$hidden_sql = 'AND wb.public = 1';
@@ -260,14 +260,14 @@ class BP_Blogs_Blog {
 		switch ( $r['type'] ) {
 			case 'active':
 			default:
-				$date_query_sql = BP_Date_Query::get_where_sql( $r['date_query'], 'bm.meta_value', true );
+				$date_query_sql = BBoss_Date_Query::get_where_sql( $r['date_query'], 'bm.meta_value', true );
 				$order_sql      = 'ORDER BY bm.meta_value DESC';
 				break;
 			case 'alphabetical':
 				$order_sql = 'ORDER BY bm_name.meta_value ASC';
 				break;
 			case 'newest':
-				$date_query_sql = BP_Date_Query::get_where_sql( $r['date_query'], 'wb.registered', true );
+				$date_query_sql = BBoss_Date_Query::get_where_sql( $r['date_query'], 'wb.registered', true );
 				$order_sql      = 'ORDER BY wb.registered DESC';
 				break;
 			case 'random':
@@ -283,7 +283,7 @@ class BP_Blogs_Blog {
 		}
 
 		if ( ! empty( $r['search_terms'] ) ) {
-			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$search_terms_like = '%' . bboss_esc_like( $r['search_terms'] ) . '%';
 			$search_terms_sql  = $wpdb->prepare( 'AND (bm_name.meta_value LIKE %s OR bm_description.meta_value LIKE %s)', $search_terms_like, $search_terms_like );
 		} else {
 			$search_terms_sql = '';
@@ -338,7 +338,7 @@ class BP_Blogs_Blog {
 		}
 
 		if ( $r['update_meta_cache'] ) {
-			bp_blogs_update_meta_cache( $blog_ids );
+			bboss_blogs_update_meta_cache( $blog_ids );
 		}
 
 		return array(
@@ -356,9 +356,9 @@ class BP_Blogs_Blog {
 	public static function delete_blog_for_all( $blog_id ) {
 		global $wpdb;
 
-		bp_blogs_delete_blogmeta( $blog_id );
+		bboss_blogs_delete_blogmeta( $blog_id );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->blogs->table_name} WHERE blog_id = %d", $blog_id ) );
 	}
@@ -375,10 +375,10 @@ class BP_Blogs_Blog {
 		global $wpdb;
 
 		if ( ! $user_id ) {
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->blogs->table_name} WHERE user_id = %d AND blog_id = %d", $user_id, $blog_id ) );
 	}
@@ -394,10 +394,10 @@ class BP_Blogs_Blog {
 		global $wpdb;
 
 		if ( ! $user_id ) {
-			$user_id = bp_loggedin_user_id();
+			$user_id = bboss_loggedin_user_id();
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->blogs->table_name} WHERE user_id = %d", $user_id ) );
 	}
@@ -421,14 +421,14 @@ class BP_Blogs_Blog {
 	public static function get_blogs_for_user( $user_id = 0, $show_hidden = false ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( ! $user_id ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
 		// Show logged in users their hidden blogs.
-		if ( ! bp_is_my_profile() && ! $show_hidden ) {
+		if ( ! bboss_is_my_profile() && ! $show_hidden ) {
 			$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT b.blog_id, b.id, bm1.meta_value as name, wb.domain, wb.path FROM {$bp->blogs->table_name} b, {$wpdb->base_prefix}blogs wb, {$bp->blogs->table_name_blogmeta} bm1 WHERE b.blog_id = wb.blog_id AND b.blog_id = bm1.blog_id AND bm1.meta_key = 'name' AND wb.public = 1 AND wb.deleted = 0 AND wb.spam = 0 AND wb.mature = 0 AND wb.archived = '0' AND b.user_id = %d ORDER BY b.blog_id", $user_id ) );
 		} else {
 			$blogs = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT b.blog_id, b.id, bm1.meta_value as name, wb.domain, wb.path FROM {$bp->blogs->table_name} b, {$wpdb->base_prefix}blogs wb, {$bp->blogs->table_name_blogmeta} bm1 WHERE b.blog_id = wb.blog_id AND b.blog_id = bm1.blog_id AND bm1.meta_key = 'name' AND wb.deleted = 0 AND wb.spam = 0 AND wb.mature = 0 AND wb.archived = '0' AND b.user_id = %d ORDER BY b.blog_id", $user_id ) );
@@ -463,10 +463,10 @@ class BP_Blogs_Blog {
 	public static function get_blog_ids_for_user( $user_id = 0 ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( ! $user_id ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
 		return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM {$bp->blogs->table_name} WHERE user_id = %d", $user_id ) ) );
@@ -482,7 +482,7 @@ class BP_Blogs_Blog {
 	public static function is_recorded( $blog_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->blogs->table_name} WHERE blog_id = %d", $blog_id ) );
 
@@ -503,14 +503,14 @@ class BP_Blogs_Blog {
 	public static function total_blog_count_for_user( $user_id = null ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( ! $user_id ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
 		// If the user is logged in return the blog count including their hidden blogs.
-		if ( ( is_user_logged_in() && $user_id == bp_loggedin_user_id() ) || bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ( is_user_logged_in() && $user_id == bboss_loggedin_user_id() ) || bboss_current_user_can( 'bp_moderate' ) ) {
 			return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT b.blog_id) FROM {$bp->blogs->table_name} b LEFT JOIN {$wpdb->base_prefix}blogs wb ON b.blog_id = wb.blog_id WHERE wb.deleted = 0 AND wb.spam = 0 AND wb.mature = 0 AND wb.archived = '0' AND user_id = %d", $user_id ) );
 		} else {
 			return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT b.blog_id) FROM {$bp->blogs->table_name} b LEFT JOIN {$wpdb->base_prefix}blogs wb ON b.blog_id = wb.blog_id WHERE wb.public = 1 AND wb.deleted = 0 AND wb.spam = 0 AND wb.mature = 0 AND wb.archived = '0' AND user_id = %d", $user_id ) );
@@ -535,11 +535,11 @@ class BP_Blogs_Blog {
 	public static function search_blogs( $filter, $limit = null, $page = null ) {
 		global $wpdb;
 
-		$search_terms_like = '%' . bp_esc_like( $filter ) . '%';
+		$search_terms_like = '%' . bboss_esc_like( $filter ) . '%';
 		$search_terms_sql  = $wpdb->prepare( 'bm.meta_value LIKE %s', $search_terms_like );
 
 		$hidden_sql = '';
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = 'AND wb.public = 1';
 		}
 
@@ -548,7 +548,7 @@ class BP_Blogs_Blog {
 			$pag_sql = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$paged_blogs = $wpdb->get_results( "SELECT DISTINCT bm.blog_id FROM {$bp->blogs->table_name_blogmeta} bm LEFT JOIN {$wpdb->base_prefix}blogs wb ON bm.blog_id = wb.blog_id WHERE ( ( bm.meta_key = 'name' OR bm.meta_key = 'description' ) AND {$search_terms_sql} ) {$hidden_sql} AND wb.mature = 0 AND wb.spam = 0 AND wb.archived = '0' AND wb.deleted = 0 ORDER BY meta_value ASC{$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $search_terms_sql is $wpdb->prepare()'d (LIKE %s), $hidden_sql is a constant chosen by capability, $pag_sql is prepared (%d, %d).
 		$total_blogs = $wpdb->get_var( "SELECT COUNT(DISTINCT bm.blog_id) FROM {$bp->blogs->table_name_blogmeta} bm LEFT JOIN {$wpdb->base_prefix}blogs wb ON bm.blog_id = wb.blog_id WHERE ( ( bm.meta_key = 'name' OR bm.meta_key = 'description' ) AND {$search_terms_sql} ) {$hidden_sql} AND wb.mature = 0 AND wb.spam = 0 AND wb.archived = '0' AND wb.deleted = 0 ORDER BY meta_value ASC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $search_terms_sql is $wpdb->prepare()'d (LIKE %s), $hidden_sql is a constant chosen by capability, $pag_sql is prepared (%d, %d).
@@ -581,9 +581,9 @@ class BP_Blogs_Blog {
 	public static function get_all( $limit = null, $page = null ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		$hidden_sql = ! bp_current_user_can( 'bp_moderate' ) ? 'AND wb.public = 1' : '';
+		$hidden_sql = ! bboss_current_user_can( 'bp_moderate' ) ? 'AND wb.public = 1' : '';
 		$pag_sql    = ( $limit && $page ) ? $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) ) : '';
 
 		$paged_blogs = $wpdb->get_results( "SELECT DISTINCT b.blog_id FROM {$bp->blogs->table_name} b LEFT JOIN {$wpdb->base_prefix}blogs wb ON b.blog_id = wb.blog_id WHERE wb.mature = 0 AND wb.spam = 0 AND wb.archived = '0' AND wb.deleted = 0 {$hidden_sql} {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant chosen by capability, $pag_sql is $wpdb->prepare()'d (%d, %d).
@@ -618,13 +618,13 @@ class BP_Blogs_Blog {
 	public static function get_by_letter( $letter, $limit = null, $page = null ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
-		$letter_like = '%' . bp_esc_like( $letter ) . '%';
+		$letter_like = '%' . bboss_esc_like( $letter ) . '%';
 		$letter_sql  = $wpdb->prepare( 'bm.meta_value LIKE %s', $letter_like );
 
 		$hidden_sql = '';
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = 'AND wb.public = 1';
 		}
 
@@ -664,7 +664,7 @@ class BP_Blogs_Blog {
 	public static function get_blog_extras( &$paged_blogs, &$blog_ids, $type = false ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		if ( empty( $blog_ids ) ) {
 			return $paged_blogs;
@@ -751,7 +751,7 @@ class BP_Blogs_Blog {
 	public static function get_user_blog( $user_id, $blog_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$user_blog = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->blogs->table_name} WHERE user_id = %d AND blog_id = %d", $user_id, $blog_id ) );
 

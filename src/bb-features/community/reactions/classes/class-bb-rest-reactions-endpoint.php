@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BB_REST_Reactions_Endpoint class
+ * BP REST: BBoss_REST_Reactions_Endpoint class
  *
  * @since   2.4.30
  * @package BuddyBoss
@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
+if ( class_exists( 'BBoss_REST_Reactions_Endpoint' ) ) {
 	return;
 }
 
@@ -17,7 +17,7 @@ if ( class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
  *
  * @since 2.4.30
  */
-class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -25,7 +25,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @since 2.4.30
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'reactions';
 	}
 
@@ -109,11 +109,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 */
 	public function get_reactions( $request ) {
-		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 		if ( ! $reaction_instance ) {
 			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
 		}
-		$reactions = $reaction_instance->bb_get_reactions( bb_get_reaction_mode() );
+		$reactions = $reaction_instance->bb_get_reactions( bboss_get_reaction_mode() );
 
 		$context = $request->get_param( 'context' );
 		$context = ! empty( $context ) ? $context : 'view';
@@ -146,7 +146,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_reactions_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -208,7 +208,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'count_total' => true,
 		);
 
-		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 		if ( ! $reaction_instance ) {
 			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
 		}
@@ -235,7 +235,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, $user_reactions['total'], $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, $user_reactions['total'], $args['per_page'] );
 
 		/**
 		 * Fires after a list of user reactions is fetched via the REST API.
@@ -261,7 +261,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -301,7 +301,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the user reaction.
 	 */
 	public function get_item( $request ) {
-		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 		if ( ! $reaction_instance ) {
 			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
 		}
@@ -331,7 +331,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a user reaction is fetched via the REST API.
 		 *
-		 * @param BB_Reaction      $user_reaction Fetched user reaction.
+		 * @param BBoss_Reaction      $user_reaction Fetched user reaction.
 		 * @param WP_REST_Response $response      The response data.
 		 * @param WP_REST_Request  $request       The request sent to the API.
 		 */
@@ -350,7 +350,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -393,7 +393,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [user_id] The ID for the author of the reaction.
 	 */
 	public function create_item( $request ) {
-		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 		if ( ! $reaction_instance ) {
 			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
 		}
@@ -435,7 +435,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a user reactions is created via the REST API.
 		 *
-		 * @param BB_Reaction      $user_reaction The created user reactions.
+		 * @param BBoss_Reaction      $user_reaction The created user reactions.
 		 * @param WP_REST_Response $response      The response data.
 		 * @param WP_REST_Request  $request       The request sent to the API.
 		 */
@@ -510,7 +510,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the user reaction.
 	 */
 	public function delete_item( $request ) {
-		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 		if ( ! $reaction_instance ) {
 			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
 		}
@@ -529,7 +529,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 
 		if (
 			property_exists( $user_reaction, 'user_id' ) &&
@@ -611,7 +611,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 			$retval            = true;
 			$id                = $request->get_param( 'id' );
-			$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+			$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 			$user_reaction     = $reaction_instance ? $reaction_instance->bb_get_user_reaction( $id ) : null;
 			if ( empty( $user_reaction->id ) ) {
 				$retval = new WP_Error(
@@ -644,14 +644,14 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args              = array();
 		$key               = 'create_item';
-		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['reaction_id'] = array(
 				'description'       => __( 'Reaction ID.', 'buddyboss' ),
 				'type'              => 'integer',
 				'required'          => true,
-				'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
+				'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bboss_get_reaction_mode() ), 'id' ) : array(),
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
@@ -676,7 +676,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			$args['user_id'] = array(
 				'description'       => __( 'User ID.', 'buddyboss' ),
 				'type'              => 'integer',
-				'default'           => bp_loggedin_user_id(),
+				'default'           => bboss_loggedin_user_id(),
 				'required'          => true,
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -697,7 +697,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 2.4.30
 	 *
-	 * @param BB_Reaction     $item    Reaction object.
+	 * @param BBoss_Reaction     $item    Reaction object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
@@ -709,7 +709,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'reaction_id'  => (int) $item->reaction_id,
 			'item_type'    => $item->item_type,
 			'item_id'      => (int) $item->item_id,
-			'date_created' => bp_rest_prepare_date_response( $item->date_created ),
+			'date_created' => bboss_rest_prepare_date_response( $item->date_created ),
 		);
 
 		$context = $request->get_param( 'context' );
@@ -725,7 +725,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  Request used to generate the response.
-		 * @param BB_Reaction      $item     Reaction object.
+		 * @param BBoss_Reaction      $item     Reaction object.
 		 */
 		return apply_filters( 'bb_rest_user_reactions_prepare_value', $response, $request, $item );
 	}
@@ -735,7 +735,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 2.4.30
 	 *
-	 * @param BB_Reaction     $item    Reaction object.
+	 * @param BBoss_Reaction     $item    Reaction object.
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array
@@ -743,7 +743,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	protected function prepare_links( $item, $request ) {
 		$links = array(
 			'user' => array(
-				'href'       => rest_url( bp_rest_get_user_url( $item->user_id ) ),
+				'href'       => rest_url( bboss_rest_get_user_url( $item->user_id ) ),
 				'embeddable' => true,
 			),
 		);
@@ -752,7 +752,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		 * Filter links prepared for the REST response.
 		 *
 		 * @param array           $links   The prepared links of the REST response.
-		 * @param BB_Reaction     $item    Reaction object.
+		 * @param BBoss_Reaction     $item    Reaction object.
 		 * @param WP_REST_Request $request Full details about the request.
 		 */
 		return apply_filters( 'bb_rest_user_reactions_prepare_links', $links, $item, $request );
@@ -803,7 +803,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
-		} elseif ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
+		} elseif ( ! empty( $user_id ) && $user_id !== bboss_loggedin_user_id() ) {
 			$retval = new WP_Error(
 				'bp_rest_user_reaction_invalid_user_id',
 				__( 'You cannot create reactions on behalf of another user.', 'buddyboss' ),
@@ -832,7 +832,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
 		$params['context']['default'] = 'view';
-		$reaction_instance            = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		$reaction_instance            = function_exists( 'bboss_load_reaction' ) ? bboss_load_reaction() : null;
 
 		if ( $params['search'] ) {
 			unset( $params['search'] );
@@ -843,7 +843,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
+			'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bboss_get_reaction_mode() ), 'id' ) : array(),
 		);
 
 		$params['item_type'] = array(
@@ -1019,16 +1019,16 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			return true;
 		}
 
-		if ( ! bp_is_active( 'activity' ) || ! class_exists( 'BP_REST_Activity_Endpoint' ) ) {
+		if ( ! bboss_is_active( 'activity' ) || ! class_exists( 'BBoss_REST_Activity_Endpoint' ) ) {
 			return false;
 		}
 
 		static $activity_endpoint = null;
 		if ( null === $activity_endpoint ) {
-			$activity_endpoint = new BP_REST_Activity_Endpoint();
+			$activity_endpoint = new BBoss_REST_Activity_Endpoint();
 		}
 
-		return $activity_endpoint->user_can_read_activity( new BP_Activity_Activity( (int) $item_id ) );
+		return $activity_endpoint->user_can_read_activity( new BBoss_Activity_Activity( (int) $item_id ) );
 	}
 
 	/**
@@ -1040,7 +1040,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @return bool|WP_Error Null if feature is enabled, WP_Error if disabled.
 	 */
 	private function bb_get_reactions_feature_disabled_error() {
-		if ( function_exists( 'bb_is_reactions_feature_enabled' ) && ! bb_is_reactions_feature_enabled() ) {
+		if ( function_exists( 'bboss_is_reactions_feature_enabled' ) && ! bboss_is_reactions_feature_enabled() ) {
 			return new WP_Error(
 				'bb_rest_reactions_feature_disabled',
 				__( 'The reactions feature is currently disabled.', 'buddyboss' ),
@@ -1051,3 +1051,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		return false;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Reactions_Endpoint', false ) || interface_exists( 'BBoss_REST_Reactions_Endpoint', false ) || trait_exists( 'BBoss_REST_Reactions_Endpoint', false ) ) && ! class_exists( 'BB_REST_Reactions_Endpoint', false ) && ! interface_exists( 'BB_REST_Reactions_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Reactions_Endpoint', 'BB_REST_Reactions_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

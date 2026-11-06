@@ -21,7 +21,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 	isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
 
 	// Act as the receiver only when the URL carries a valid signature for this receiver, item and attachment.
-	$receiver_id = function_exists( 'bb_media_preview_get_receiver_id' ) ? bb_media_preview_get_receiver_id( get_query_var( 'receiver' ), $explode_arr1[1], $explode_arr[1] ) : 0;
+	$receiver_id = function_exists( 'bboss_media_preview_get_receiver_id' ) ? bboss_media_preview_get_receiver_id( get_query_var( 'receiver' ), $explode_arr1[1], $explode_arr[1] ) : 0;
 	if ( 0 < $receiver_id ) {
 
 		add_filter(
@@ -45,7 +45,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 
 	$attachment_id      = (int) $explode_arr[1];
 	$id1                = (int) $explode_arr1[1];
-	$media_privacy      = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'photo', $attachment_id ) : true;
+	$media_privacy      = ( function_exists( 'bboss_media_user_can_access' ) ) ? bboss_media_user_can_access( $id1, 'photo', $attachment_id ) : true;
 	$can_view           = true === (bool) $media_privacy['can_view'];
 	$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );
 
@@ -61,20 +61,20 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 			$output_file_src = $file_path_org;
 
 			if ( ! file_exists( $output_file_src ) ) {
-				bp_media_regenerate_attachment_thumbnails( $attachment_id );
+				bboss_media_regenerate_attachment_thumbnails( $attachment_id );
 				$file = image_get_intermediate_size( $attachment_id, $size );
 
 				if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
 					$file_path_org   = $file_path . '/' . $file['file'];
 					$output_file_src = $file_path_org;
 				} else {
-					$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+					$output_file_src = bboss_core_scaled_attachment_path( $attachment_id );
 				}
 			}
 
 		} elseif ( ! $file ) {
 
-			bp_media_regenerate_attachment_thumbnails( $attachment_id );
+			bboss_media_regenerate_attachment_thumbnails( $attachment_id );
 
 			$file = image_get_intermediate_size( $attachment_id, $size );
 
@@ -88,18 +88,18 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 
 				// Regenerate attachment thumbnails.
 				if ( ! file_exists( $output_file_src ) ) {
-					bp_media_regenerate_attachment_thumbnails( $attachment_id );
+					bboss_media_regenerate_attachment_thumbnails( $attachment_id );
 					$file = image_get_intermediate_size( $attachment_id, $size );
 				}
 
 				if ( $file && ! empty( $file['path'] ) ) {
 					$output_file_src = $upload_dir . '/' . $file['path'];
 				} else {
-					$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+					$output_file_src = bboss_core_scaled_attachment_path( $attachment_id );
 				}
 			}
 		} else {
-			$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+			$output_file_src = bboss_core_scaled_attachment_path( $attachment_id );
 		}
 
 		if ( ! file_exists( $output_file_src ) ) {
@@ -107,7 +107,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 			if ( $file && ! empty( $file['path'] ) ) {
 				$output_file_src = $upload_dir . '/' . $file['path'];
 			} else {
-				$output_file_src = bb_core_scaled_attachment_path( $attachment_id );
+				$output_file_src = bboss_core_scaled_attachment_path( $attachment_id );
 			}
 		}
 

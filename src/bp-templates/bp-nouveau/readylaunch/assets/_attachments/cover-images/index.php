@@ -8,7 +8,7 @@
  * It's also used to create the common Backbone views.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -23,12 +23,12 @@ $container_class = 'bb-rl-cover-container';
 $group_id        = 0;
 $cover_label     = '';
 
-if ( bp_is_group() ) {
-	$group_id    = bp_get_current_group_id();
+if ( bboss_is_group() ) {
+	$group_id    = bboss_get_current_group_id();
 	$cover_label = __( 'Group', 'buddyboss' );
-	if ( bp_attachments_get_group_has_cover_image( $group_id ) ) {
+	if ( bboss_attachments_get_group_has_cover_image( $group_id ) ) {
 		$has_cover_image = true;
-		$cover_image_url = bp_attachments_get_attachment(
+		$cover_image_url = bboss_attachments_get_attachment(
 			'url',
 			array(
 				'object_dir' => 'groups',
@@ -37,10 +37,10 @@ if ( bp_is_group() ) {
 		);
 	}
 	$container_class .= ' bb-rl-cover-container--group';
-} elseif ( bp_is_user() ) {
-	$user_id     = bp_displayed_user_id();
+} elseif ( bboss_is_user() ) {
+	$user_id     = bboss_displayed_user_id();
 	$cover_label = __( 'Profile', 'buddyboss' );
-	if ( bp_attachments_get_attachment(
+	if ( bboss_attachments_get_attachment(
 		'url',
 		array(
 			'object_dir' => 'members',
@@ -48,7 +48,7 @@ if ( bp_is_group() ) {
 		)
 	) ) {
 		$has_cover_image = true;
-		$cover_image_url = bp_attachments_get_attachment(
+		$cover_image_url = bboss_attachments_get_attachment(
 			'url',
 			array(
 				'object_dir' => 'members',
@@ -87,7 +87,7 @@ $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' b
 <div class="bp-cover-image-status"></div>
 <div class="bp-cover-image-manage"></div>
 
-<?php bp_attachments_get_template_part( 'uploader' ); ?>
+<?php bboss_attachments_get_template_part( 'uploader' ); ?>
 
 <?php
 	/**

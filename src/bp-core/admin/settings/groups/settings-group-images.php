@@ -16,12 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_images_panel_fields() {
+function bboss_groups_register_images_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Avatar
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_images',
 		'group_avatar',
@@ -36,7 +36,7 @@ function bb_groups_register_images_panel_fields() {
 	// FIELD: Group Avatars.
 	// `invert_value`: Legacy DB stores 1 = disabled. Toggle shows "Enable", so invert for display.
 	// Raw DB value preserved for backward compatibility with `bp_disable_group_avatar_uploads()`.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_images',
 		'group_avatar',
@@ -46,7 +46,7 @@ function bb_groups_register_images_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Enable avatars for groups', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss' ),
-			'default'           => bp_disable_group_avatar_uploads(),
+			'default'           => bboss_disable_group_avatar_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
@@ -54,7 +54,7 @@ function bb_groups_register_images_panel_fields() {
 	);
 
 	// FIELD: Default Group Avatar (image_radio, depends on avatars enabled).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_images',
 		'group_avatar',
@@ -69,8 +69,8 @@ function bb_groups_register_images_panel_fields() {
 					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank">Imagick</a>'
 				)
 				: '',
-			'default'           => bb_get_default_group_avatar_type(),
-			'sanitize_callback' => 'bb_groups_sanitize_avatar_type',
+			'default'           => bboss_get_default_group_avatar_type(),
+			'sanitize_callback' => 'bboss_groups_sanitize_avatar_type',
 			'options'           => array(
 				array(
 					'label' => __( 'BuddyBoss', 'buddyboss' ),
@@ -119,7 +119,7 @@ function bb_groups_register_images_panel_fields() {
 	// -------------------------------------------------------------------------
 	// SECTION: Group Cover Image
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_images',
 		'group_cover',
@@ -134,7 +134,7 @@ function bb_groups_register_images_panel_fields() {
 	// FIELD: Group Cover Image.
 	// `invert_value`: Legacy DB stores 1 = disabled. Toggle shows "Enable", so invert for display.
 	// Raw DB value preserved for backward compatibility with `bp_disable_group_cover_image_uploads()`.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_images',
 		'group_cover',
@@ -144,7 +144,7 @@ function bb_groups_register_images_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Enable cover images for groups', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss' ),
-			'default'           => bp_disable_group_cover_image_uploads(),
+			'default'           => bboss_disable_group_cover_image_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
@@ -152,7 +152,7 @@ function bb_groups_register_images_panel_fields() {
 	);
 
 	// FIELD: Default Group Cover Image (image_radio, depends on cover enabled).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_images',
 		'group_cover',
@@ -161,8 +161,8 @@ function bb_groups_register_images_panel_fields() {
 			'label'             => __( 'Default Group Cover Image', 'buddyboss' ),
 			'type'              => 'image_radio',
 			'description'       => '',
-			'default'           => bb_get_default_group_cover_type(),
-			'sanitize_callback' => 'bb_groups_sanitize_cover_type',
+			'default'           => bboss_get_default_group_cover_type(),
+			'sanitize_callback' => 'bboss_groups_sanitize_cover_type',
 			'options'           => array(
 				array(
 					'label' => __( 'BuddyBoss', 'buddyboss' ),
@@ -202,7 +202,7 @@ function bb_groups_register_images_panel_fields() {
 
 	// FIELD: Cover Image Width (Pro only, select, grouped with height).
 	// Pro saves this value to an additional option for backward compatibility with older Pro versions.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_images',
 		'group_cover',
@@ -211,8 +211,8 @@ function bb_groups_register_images_panel_fields() {
 			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
 			'type'              => 'select',
 			'description'       => '',
-			'default'           => bb_get_group_cover_image_width(),
-			'sanitize_callback' => 'bb_groups_sanitize_cover_width',
+			'default'           => bboss_get_group_cover_image_width(),
+			'sanitize_callback' => 'bboss_groups_sanitize_cover_width',
 			'pro_only'          => true,
 			'options'           => array(
 				array(
@@ -237,7 +237,7 @@ function bb_groups_register_images_panel_fields() {
 	);
 
 	// FIELD: Cover Image Height (Pro only, select, grouped with width).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_images',
 		'group_cover',
@@ -246,8 +246,8 @@ function bb_groups_register_images_panel_fields() {
 			'label'             => '',
 			'type'              => 'select',
 			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
-			'default'           => bb_get_group_cover_image_height(),
-			'sanitize_callback' => 'bb_groups_sanitize_cover_height',
+			'default'           => bboss_get_group_cover_image_height(),
+			'sanitize_callback' => 'bboss_groups_sanitize_cover_height',
 			'pro_only'          => true,
 			'options'           => array(
 				array(

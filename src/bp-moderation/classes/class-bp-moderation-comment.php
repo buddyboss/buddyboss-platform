@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Comment extends BP_Moderation_Abstract {
+class BBoss_Moderation_Comment extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -30,7 +30,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * not stored anywhere reachable, so `remove_filter` cannot be called
 	 * without re-discovering the object via $wp_filter).
 	 *
-	 * @see BP_Moderation_Comment::bb_set_skip_report_button()
+	 * @see BBoss_Moderation_Comment::bb_set_skip_report_button()
 	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var bool
@@ -53,7 +53,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * BP_Moderation_Comment constructor.
+	 * BBoss_Moderation_Comment constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -89,7 +89,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -158,20 +158,20 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return $comment_text;
 		}
 
-		$comment_text = bb_moderation_remove_mention_link( $comment_text );
+		$comment_text = bboss_moderation_remove_mention_link( $comment_text );
 
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
 		if ( $this->is_content_hidden( $comment->comment_ID ) ) {
-			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
+			$is_user_blocked = bboss_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$comment_text = bb_moderation_has_blocked_message( $comment_text, $this->item_type, $comment->comment_ID );
+				$comment_text = bboss_moderation_has_blocked_message( $comment_text, $this->item_type, $comment->comment_ID );
 			} else {
 				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
-		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
-			$comment_text = bb_moderation_is_blocked_message( $comment_text, $this->item_type, $comment->comment_ID );
+		} elseif ( bboss_moderation_is_user_blocked_by( $comment_author_id ) ) {
+			$comment_text = bboss_moderation_is_blocked_message( $comment_text, $this->item_type, $comment->comment_ID );
 		}
 
 		return $comment_text;
@@ -192,10 +192,10 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
 
 		$user_id = self::get_content_owner_id( $comment_id );
-		if ( bp_moderation_is_user_blocked( $user_id ) ) {
-			return bb_moderation_is_blocked_label( $return, $user_id );
-		} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
-			return bb_moderation_has_blocked_label( $return, $user_id );
+		if ( bboss_moderation_is_user_blocked( $user_id ) ) {
+			return bboss_moderation_is_blocked_label( $return, $user_id );
+		} elseif ( bboss_moderation_is_user_blocked_by( $user_id ) ) {
+			return bboss_moderation_has_blocked_label( $return, $user_id );
 		}
 
 		return $return;
@@ -323,7 +323,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		$user_id = self::get_content_owner_id( $comment->comment_ID );
 
-		if ( $this->is_content_hidden( $comment->comment_ID ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if ( $this->is_content_hidden( $comment->comment_ID ) || bboss_moderation_is_user_blocked_by( $user_id ) ) {
 			$link = '';
 		}
 
@@ -378,12 +378,12 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		}
 
 		// Check if moderation is enabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return $comment_text;
 		}
 
 		// Add report button to all comments.
-		$comment_report_link = bp_moderation_get_report_button(
+		$comment_report_link = bboss_moderation_get_report_button(
 			array(
 				'id'                => 'comment_report',
 				'component'         => 'moderation',
@@ -457,8 +457,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		$author_id = self::get_content_owner_id( $item_id );
 
-		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bp_moderation_is_user_suspended( $author_id ) && bp_moderation_is_user_blocked( $author_id ) ) ||
-			 ( $check_hidden && $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
+		if ( ( $this->is_member_blocking_enabled() && ! empty( $author_id ) && ! bboss_moderation_is_user_suspended( $author_id ) && bboss_moderation_is_user_blocked( $author_id ) ) ||
+			 ( $check_hidden && $this->is_reporting_enabled() && BBoss_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) ) {
 			return true;
 		}
 
@@ -504,7 +504,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 */
 	public function bb_blocked_comment_author_url( $comment ) {
 		if ( $comment->user_id && ! $comment->comment_author_url ) {
-			$comment->comment_author_url = bp_core_get_user_domain( $comment->user_id );
+			$comment->comment_author_url = bboss_core_get_user_domain( $comment->user_id );
 		}
 
 		return $comment;
@@ -521,14 +521,14 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
-		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'widget_comments_args' ) ) {
+		if ( function_exists( 'bboss_did_filter' ) && bboss_did_filter( 'widget_comments_args' ) ) {
 			global $wpdb;
 			$this->alias = 's';
 			$sql         = $this->exclude_where_query();
 			if ( ! empty( $sql ) ) {
 				$comment_data['where'] .= ' AND ' . $sql;
 			}
-			$blocked_by_query = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
+			$blocked_by_query = bboss_moderation_get_blocked_by_sql( bboss_loggedin_user_id() );
 			if ( ! empty( $blocked_by_query ) ) {
 				$comment_data['where'] .= ' AND ' . $wpdb->comments . '.user_id NOT IN ( ' . $blocked_by_query . ' )';
 			}
@@ -556,15 +556,15 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
 
 		if ( $this->is_content_hidden( $comment_id ) ) {
-			$is_user_blocked = bp_moderation_is_user_blocked( $comment_author_id );
+			$is_user_blocked = bboss_moderation_is_user_blocked( $comment_author_id );
 
 			if ( $is_user_blocked ) {
-				$excerpt = bb_moderation_has_blocked_message( $excerpt, $this->item_type, $comment->comment_ID );
+				$excerpt = bboss_moderation_has_blocked_message( $excerpt, $this->item_type, $comment->comment_ID );
 			} else {
 				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
 			}
-		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
-			$excerpt = bb_moderation_is_blocked_message( $excerpt, $this->item_type, $comment->comment_ID );
+		} elseif ( bboss_moderation_is_user_blocked_by( $comment_author_id ) ) {
+			$excerpt = bboss_moderation_is_blocked_message( $excerpt, $this->item_type, $comment->comment_ID );
 		}
 
 		return $excerpt;

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since BuddyBoss 2.15.0
  */
-class BB_OM_Helpers {
+class BBoss_OM_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -24,7 +24,7 @@ class BB_OM_Helpers {
 	private static $instance = null;
 
 	/**
-	 * BB_OM_Helpers constructor.
+	 * BBoss_OM_Helpers constructor.
 	 *
 	 * @since BuddyBoss 2.15.0
 	 */
@@ -70,11 +70,11 @@ class BB_OM_Helpers {
 	 * @return array
 	 */
 	public function bb_offload_localize_scripts( $params = array() ) {
-		if ( bp_is_active( 'activity' ) && bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'activity' ) && bboss_is_active( 'media' ) ) {
 			$params['is_om_active'] = true;
 		}
 		return $params;
 	}
 }
 
-BB_OM_Helpers::instance();
+BBoss_OM_Helpers::instance();

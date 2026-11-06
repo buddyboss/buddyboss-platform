@@ -43,7 +43,7 @@ class BB_DRM_Controller {
 		// Check if Mothership loader is available.
 		if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) ) {
 			// Fallback to PLATFORM_EDITION constant or default.
-			return defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+			return defined( 'BBOSS_PLATFORM_EDITION' ) ? BBOSS_PLATFORM_EDITION : 'buddyboss-platform';
 		}
 
 		try {
@@ -53,7 +53,7 @@ class BB_DRM_Controller {
 			return $plugin_connector->pluginId;
 		} catch ( \Exception $e ) {
 			// Fallback to PLATFORM_EDITION constant or default if container access fails.
-			return defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+			return defined( 'BBOSS_PLATFORM_EDITION' ) ? BBOSS_PLATFORM_EDITION : 'buddyboss-platform';
 		}
 	}
 

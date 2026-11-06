@@ -19,12 +19,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_groups_register_group_types_panel_fields() {
+function bboss_groups_register_group_types_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Type Settings
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'groups',
 		'group_types',
 		'group_type_settings',
@@ -38,7 +38,7 @@ function bb_groups_register_group_types_panel_fields() {
 
 	// FIELD: Group Types toggle.
 	// Legacy option name implies "disable" but value 1 means enabled — do not invert.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_types',
 		'group_type_settings',
@@ -48,14 +48,14 @@ function bb_groups_register_group_types_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Enable group types', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, group types allow you to better organize groups.', 'buddyboss' ),
-			'default'           => (int) bp_disable_group_type_creation(),
+			'default'           => (int) bboss_disable_group_type_creation(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
 
 	// FIELD: Auto Membership Approval toggle.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'groups',
 		'group_types',
 		'group_type_settings',
@@ -65,7 +65,7 @@ function bb_groups_register_group_types_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow selected profile types to automatically join groups', 'buddyboss' ),
 			'help_text'         => __( 'When a member requests to join a group their membership is automatically accepted.', 'buddyboss' ),
-			'default'           => (int) bp_enable_group_auto_join(),
+			'default'           => (int) bboss_enable_group_auto_join(),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
 		)

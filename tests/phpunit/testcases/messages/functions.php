@@ -49,7 +49,7 @@ class BP_Tests_Messages_Functions extends BP_UnitTestCase {
 		$u1 = self::factory()->user->create();
 
 		// attempt to send a private message to an invalid username
-		$t1 = messages_new_message( array(
+		$t1 = bboss_messages_new_message( array(
 			'sender_id'  => $u1,
 			'recipients' => array( 'homerglumpkin' ),
 			'subject'    => 'A new message',
@@ -71,7 +71,7 @@ class BP_Tests_Messages_Functions extends BP_UnitTestCase {
 		add_action( 'messages_message_before_save', array( $this, 'remove_recipients_before_save' ) );
 
 		// send a private message
-		$t1 = messages_new_message( array(
+		$t1 = bboss_messages_new_message( array(
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'A new message',

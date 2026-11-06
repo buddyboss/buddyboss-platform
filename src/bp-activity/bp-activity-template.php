@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_slug() {
-	echo esc_attr( bp_get_activity_slug() );
+function bboss_activity_slug() {
+	echo esc_attr( bboss_get_activity_slug() );
 }
 /**
  * Return the activity component slug.
@@ -24,7 +24,7 @@ function bp_activity_slug() {
  *
  * @return string The activity component slug.
  */
-function bp_get_activity_slug() {
+function bboss_get_activity_slug() {
 
 	/**
 	 * Filters the activity component slug.
@@ -33,7 +33,7 @@ function bp_get_activity_slug() {
 	 *
 	 * @param string $slug Activity component slug.
 	 */
-	return apply_filters( 'bp_get_activity_slug', buddypress()->activity->slug );
+	return apply_filters( 'bp_get_activity_slug', bboss()->activity->slug );
 }
 
 /**
@@ -41,8 +41,8 @@ function bp_get_activity_slug() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_root_slug() {
-	echo esc_attr( bp_get_activity_root_slug() );
+function bboss_activity_root_slug() {
+	echo esc_attr( bboss_get_activity_root_slug() );
 }
 
 /**
@@ -52,7 +52,7 @@ function bp_activity_root_slug() {
  *
  * @return string The activity component root slug.
  */
-function bp_get_activity_root_slug() {
+function bboss_get_activity_root_slug() {
 
 	/**
 	 * Filters the activity component root slug.
@@ -61,7 +61,7 @@ function bp_get_activity_root_slug() {
 	 *
 	 * @param string $root_slug Activity component root slug.
 	 */
-	return apply_filters( 'bp_get_activity_root_slug', buddypress()->activity->root_slug );
+	return apply_filters( 'bp_get_activity_root_slug', bboss()->activity->root_slug );
 }
 
 /**
@@ -69,8 +69,8 @@ function bp_get_activity_root_slug() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_directory_permalink() {
-	echo esc_url( bp_get_activity_directory_permalink() );
+function bboss_activity_directory_permalink() {
+	echo esc_url( bboss_get_activity_directory_permalink() );
 }
 
 /**
@@ -80,7 +80,7 @@ function bp_activity_directory_permalink() {
  *
  * @return string Activity directory permalink.
  */
-function bp_get_activity_directory_permalink() {
+function bboss_get_activity_directory_permalink() {
 
 	/**
 	 * Filters the activity directory permalink.
@@ -89,26 +89,26 @@ function bp_get_activity_directory_permalink() {
 	 *
 	 * @param string $url Permalink url for the activity directory.
 	 */
-	return apply_filters( 'bp_get_activity_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_activity_root_slug() ) );
+	return apply_filters( 'bp_get_activity_directory_permalink', trailingslashit( bboss_get_root_domain() . '/' . bboss_get_activity_root_slug() ) );
 }
 
 /**
  * Initialize the activity loop.
  *
- * Based on the $args passed, bp_has_activities() populates the
+ * Based on the $args passed, bboss_has_activities() populates the
  * $activities_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of activity items.
  *
  * @since BuddyPress 1.0.0
  * @since BuddyPress 2.4.0 Introduced the `$fields` parameter.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param array|string $args {
  *     Arguments for limiting the contents of the activity loop. Most arguments
- *     are in the same format as {@link BP_Activity_Activity::get()}. However,
+ *     are in the same format as {@link BBoss_Activity_Activity::get()}. However,
  *     because the format of the arguments accepted here differs in a number of
- *     ways, and because bp_has_activities() determines some default arguments in
+ *     ways, and because bboss_has_activities() determines some default arguments in
  *     a dynamic fashion, we list all accepted arguments here as well.
  *
  *     Arguments can be passed as an associative array, or as a URL querystring
@@ -135,7 +135,7 @@ function bp_get_activity_directory_permalink() {
  *                                               {@link WP_Meta_Query::queries} for a description of the syntax.
  *     @type array             $date_query       Limit by date by passing an array of date_query conditions. See first
  *                                               parameter of {@link WP_Date_Query::__construct()} for syntax.
- *     @type array             $filter_query     Advanced activity filtering.  See {@link BP_Activity_Query::__construct()}.
+ *     @type array             $filter_query     Advanced activity filtering.  See {@link BBoss_Activity_Query::__construct()}.
  *     @type string            $search_terms     Limit results by a search term. Default: false.
  *     @type string            $scope            Use a BuddyPress pre-built filter.
  *                                                 - 'just-me' retrieves items belonging only to a user; this is equivalent
@@ -192,46 +192,46 @@ function bp_get_activity_directory_permalink() {
  * }
  * @return bool Returns true when activities are found, otherwise false.
  */
-function bp_has_activities( $args = '' ) {
+function bboss_has_activities( $args = '' ) {
 	global $activities_template;
 
-	$args = bp_parse_args( $args );
+	$args = bboss_parse_args( $args );
 
 	// Get BuddyPress.
-	$bp = buddypress();
+	$bp = bboss();
 
 	/*
 	 * Smart Defaults.
 	 */
 
 	// User filtering.
-	$user_id = bp_displayed_user_id()
-		? bp_displayed_user_id()
+	$user_id = bboss_displayed_user_id()
+		? bboss_displayed_user_id()
 		: false;
 
 	// The default scope should recognize custom slugs.
-	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
-		? $bp->loaded_components[ bp_current_action() ]
+	$scope = array_key_exists( bboss_current_action(), (array) $bp->loaded_components )
+		? $bp->loaded_components[ bboss_current_action() ]
 		: (
-		( ! empty( bp_current_action() ) && ! is_numeric( bp_current_action() ) )
-			? bp_current_action()
-			: ( isset( $_REQUEST['scope'] ) ? bb_activity_get_request_scope( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only registered scope names pass.
+		( ! empty( bboss_current_action() ) && ! is_numeric( bboss_current_action() ) )
+			? bboss_current_action()
+			: ( isset( $_REQUEST['scope'] ) ? bboss_activity_get_request_scope( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only registered scope names pass.
 		);
 
-	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
+	if ( bboss_is_user_activity() || bboss_is_activity_directory() ) {
 
 		// Scope from the heartbeat passed from the filter dropdown.
 		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
 	}
 
-	$scope = bp_activity_default_scope( $scope );
+	$scope = bboss_activity_default_scope( $scope );
 
 	// Group filtering.
-	if ( bp_is_group() ) {
+	if ( bboss_is_group() ) {
 		$object          = $bp->groups->id;
 		$args['privacy'] = ( isset( $args['privacy'] ) ? $args['privacy'] : array( 'public' ) );
-		$primary_id      = bp_get_current_group_id();
-		$show_hidden     = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
+		$primary_id      = bboss_get_current_group_id();
+		$show_hidden     = (bool) ( bboss_groups_is_user_member( bboss_loggedin_user_id(), $primary_id ) || bboss_current_user_can( 'bp_moderate' ) );
 	} else {
 		$object      = false;
 		$primary_id  = false;
@@ -239,12 +239,12 @@ function bp_has_activities( $args = '' ) {
 	}
 
 	// Support for permalinks on single item pages: /groups/my-group/activity/124/.
-	$include = bp_is_current_action( bp_get_activity_slug() )
-		? bp_action_variable( 0 )
+	$include = bboss_is_current_action( bboss_get_activity_slug() )
+		? bboss_action_variable( 0 )
 		: false;
 
 	$search_terms_default = false;
-	$search_query_arg     = bp_core_get_component_search_query_arg( 'activity' );
+	$search_query_arg     = bboss_core_get_component_search_query_arg( 'activity' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
@@ -255,7 +255,7 @@ function bp_has_activities( $args = '' ) {
 
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'display_comments'  => 'threaded',   // False for none, stream/threaded - show comments in the stream or threaded under items.
@@ -295,7 +295,7 @@ function bp_has_activities( $args = '' ) {
 			// Searching.
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
-			'status'            => bb_get_activity_published_status(),
+			'status'            => bboss_get_activity_published_status(),
 		),
 		'has_activities'
 	);
@@ -344,7 +344,7 @@ function bp_has_activities( $args = '' ) {
 	} elseif (
 		(
 			'just-me' === $scope &&
-			bp_is_activity_directory()
+			bboss_is_activity_directory()
 		) ||
 		(
 			! empty( $r['user_id'] ) ||
@@ -356,8 +356,8 @@ function bp_has_activities( $args = '' ) {
 			! empty( $r['since'] )
 		)
 	) {
-		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
-			$r['user_id'] = bp_loggedin_user_id();
+		if ( 'just-me' === $scope && bboss_is_activity_directory() ) {
+			$r['user_id'] = bboss_loggedin_user_id();
 		}
 
 		$r['filter'] = array(
@@ -381,14 +381,14 @@ function bp_has_activities( $args = '' ) {
 
 	// Pinned post.
 	if ( empty( $r['pin_type'] ) ) {
-		$r['pin_type'] = bb_activity_pin_type( $r );
+		$r['pin_type'] = bboss_activity_pin_type( $r );
 	}
 
 	/*
 	 * Query
 	 */
 
-	$activities_template = new BP_Activity_Template( $r );
+	$activities_template = new BBoss_Activity_Template( $r );
 
 	/**
 	 * Filters whether or not there are activity items to display.
@@ -397,7 +397,7 @@ function bp_has_activities( $args = '' ) {
 	 *
 	 * @param bool   $value               Whether or not there are activity items to display.
 	 * @param string $activities_template Current activities template being used.
-	 * @param array  $r                   Array of arguments passed into the BP_Activity_Template class.
+	 * @param array  $r                   Array of arguments passed into the BBoss_Activity_Template class.
 	 */
 	return apply_filters( 'bp_has_activities', $activities_template->has_activities(), $activities_template, $r );
 }
@@ -407,11 +407,11 @@ function bp_has_activities( $args = '' ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return bool Returns true when activities are found.
  */
-function bp_activities() {
+function bboss_activities() {
 	global $activities_template;
 	return $activities_template->user_activities();
 }
@@ -421,11 +421,11 @@ function bp_activities() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return object The current activity within the loop.
  */
-function bp_the_activity() {
+function bboss_the_activity() {
 	global $activities_template;
 	return $activities_template->the_activity();
 }
@@ -435,8 +435,8 @@ function bp_the_activity() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_activity_load_more_link() {
-	echo esc_url( bp_get_activity_load_more_link() );
+function bboss_activity_load_more_link() {
+	echo esc_url( bboss_get_activity_load_more_link() );
 }
 /**
  * Get the URL for the Load More link.
@@ -445,10 +445,10 @@ function bp_activity_load_more_link() {
  *
  * @return string $link
  */
-function bp_get_activity_load_more_link() {
+function bboss_get_activity_load_more_link() {
 	global $activities_template;
 
-	$url  = bp_get_requested_url();
+	$url  = bboss_get_requested_url();
 	$link = add_query_arg( $activities_template->pag_arg, $activities_template->pag_page + 1, $url );
 
 	/**
@@ -468,10 +468,10 @@ function bp_get_activity_load_more_link() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  */
-function bp_activity_pagination_count() {
-	echo esc_html( bp_get_activity_pagination_count() );
+function bboss_activity_pagination_count() {
+	echo esc_html( bboss_get_activity_pagination_count() );
 }
 
 /**
@@ -479,17 +479,17 @@ function bp_activity_pagination_count() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The pagination text.
  */
-function bp_get_activity_pagination_count() {
+function bboss_get_activity_pagination_count() {
 	global $activities_template;
 
 	$start_num = intval( ( $activities_template->pag_page - 1 ) * $activities_template->pag_num ) + 1;
-	$from_num  = bp_core_number_format( $start_num );
-	$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
-	$total     = bp_core_number_format( $activities_template->total_activity_count );
+	$from_num  = bboss_core_number_format( $start_num );
+	$to_num    = bboss_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
+	$total     = bboss_core_number_format( $activities_template->total_activity_count );
 
 	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
@@ -502,8 +502,8 @@ function bp_get_activity_pagination_count() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_pagination_links() {
-	echo wp_kses_post( bp_get_activity_pagination_links() );
+function bboss_activity_pagination_links() {
+	echo wp_kses_post( bboss_get_activity_pagination_links() );
 }
 
 /**
@@ -511,11 +511,11 @@ function bp_activity_pagination_links() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The pagination links.
  */
-function bp_get_activity_pagination_links() {
+function bboss_get_activity_pagination_links() {
 	global $activities_template;
 
 	/**
@@ -533,11 +533,11 @@ function bp_get_activity_pagination_links() {
  *
  * @since BuddyPress 1.5.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return bool $has_more_items True if more items, false if not.
  */
-function bp_activity_has_more_items() {
+function bboss_activity_has_more_items() {
 	global $activities_template;
 
 	if ( ! empty( $activities_template->has_more_items ) ) {
@@ -567,8 +567,8 @@ function bp_activity_has_more_items() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_count() {
-	echo esc_html( bp_get_activity_count() );
+function bboss_activity_count() {
+	echo esc_html( bboss_get_activity_count() );
 }
 
 /**
@@ -576,11 +576,11 @@ function bp_activity_count() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int The activity count.
  */
-function bp_get_activity_count() {
+function bboss_get_activity_count() {
 	global $activities_template;
 
 	/**
@@ -598,8 +598,8 @@ function bp_get_activity_count() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_per_page() {
-	echo esc_html( bp_get_activity_per_page() );
+function bboss_activity_per_page() {
+	echo esc_html( bboss_get_activity_per_page() );
 }
 
 /**
@@ -607,11 +607,11 @@ function bp_activity_per_page() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int The activities per page.
  */
-function bp_get_activity_per_page() {
+function bboss_get_activity_per_page() {
 	global $activities_template;
 
 	/**
@@ -631,8 +631,8 @@ function bp_get_activity_per_page() {
  *
  * @todo Deprecate.
  */
-function bp_activities_title() {
-	echo esc_html( bp_get_activities_title() );
+function bboss_activities_title() {
+	echo esc_html( bboss_get_activities_title() );
 }
 
 /**
@@ -645,7 +645,7 @@ function bp_activities_title() {
  *
  * @return string The activities title.
  */
-function bp_get_activities_title() {
+function bboss_get_activities_title() {
 	global $bp_activity_title;
 
 	/**
@@ -665,8 +665,8 @@ function bp_get_activities_title() {
  *
  * @todo Deprecate.
  */
-function bp_activities_no_activity() {
-	echo esc_html( bp_get_activities_no_activity() );
+function bboss_activities_no_activity() {
+	echo esc_html( bboss_get_activities_no_activity() );
 }
 
 /**
@@ -679,7 +679,7 @@ function bp_activities_no_activity() {
  *
  * @return string
  */
-function bp_get_activities_no_activity() {
+function bboss_get_activities_no_activity() {
 	global $bp_activity_no_activity;
 
 	/**
@@ -697,8 +697,8 @@ function bp_get_activities_no_activity() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_id() {
-	echo esc_attr( bp_get_activity_id() );
+function bboss_activity_id() {
+	echo esc_attr( bboss_get_activity_id() );
 }
 
 /**
@@ -706,11 +706,11 @@ function bp_activity_id() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int The activity ID.
  */
-function bp_get_activity_id() {
+function bboss_get_activity_id() {
 	global $activities_template;
 
 	$activity_id = 0;
@@ -733,8 +733,8 @@ function bp_get_activity_id() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_item_id() {
-	echo esc_attr( bp_get_activity_item_id() );
+function bboss_activity_item_id() {
+	echo esc_attr( bboss_get_activity_item_id() );
 }
 
 /**
@@ -742,11 +742,11 @@ function bp_activity_item_id() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int The activity item ID.
  */
-function bp_get_activity_item_id() {
+function bboss_get_activity_item_id() {
 	global $activities_template;
 
 	/**
@@ -764,8 +764,8 @@ function bp_get_activity_item_id() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_secondary_item_id() {
-	echo esc_attr( bp_get_activity_secondary_item_id() );
+function bboss_activity_secondary_item_id() {
+	echo esc_attr( bboss_get_activity_secondary_item_id() );
 }
 
 /**
@@ -773,11 +773,11 @@ function bp_activity_secondary_item_id() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int The activity secondary item ID.
  */
-function bp_get_activity_secondary_item_id() {
+function bboss_get_activity_secondary_item_id() {
 	global $activities_template;
 
 	/**
@@ -795,8 +795,8 @@ function bp_get_activity_secondary_item_id() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_date_recorded() {
-	echo esc_html( bp_get_activity_date_recorded() );
+function bboss_activity_date_recorded() {
+	echo esc_html( bboss_get_activity_date_recorded() );
 }
 
 /**
@@ -804,8 +804,8 @@ function bp_activity_date_recorded() {
  *
  * @since BuddyBoss 2.8.20
  */
-function bb_activity_date_updated() {
-	echo esc_html( bb_get_activity_date_updated() );
+function bboss_activity_date_updated() {
+	echo esc_html( bboss_get_activity_date_updated() );
 }
 
 /**
@@ -813,11 +813,11 @@ function bb_activity_date_updated() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The date the activity was recorded.
  */
-function bp_get_activity_date_recorded() {
+function bboss_get_activity_date_recorded() {
 	global $activities_template;
 
 	/**
@@ -835,11 +835,11 @@ function bp_get_activity_date_recorded() {
  *
  * @since BuddyBoss 2.8.20
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The date the activity was updated.
  */
-function bb_get_activity_date_updated() {
+function bboss_get_activity_date_updated() {
 	global $activities_template;
 
 	/**
@@ -857,8 +857,8 @@ function bb_get_activity_date_updated() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_activity_member_display_name() {
-	echo esc_html( bp_get_activity_member_display_name() );
+function bboss_activity_member_display_name() {
+	echo esc_html( bboss_get_activity_member_display_name() );
 }
 
 /**
@@ -866,16 +866,16 @@ function bp_activity_member_display_name() {
  *
  * @since BuddyPress 2.1.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The date the activity was recorded.
  */
-function bp_get_activity_member_display_name() {
+function bboss_get_activity_member_display_name() {
 	global $activities_template;
 
 	// Resolve for the current viewer (respects last-name visibility); never the raw WP display_name.
 	$retval = isset( $activities_template->activity )
-		? bb_activity_get_item_user_displayname( $activities_template->activity )
+		? bboss_activity_get_item_user_displayname( $activities_template->activity )
 		: '';
 
 	/**
@@ -897,8 +897,8 @@ add_filter( 'bp_get_activity_member_display_name', 'esc_html' );
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_object_name() {
-	echo esc_html( bp_get_activity_object_name() );
+function bboss_activity_object_name() {
+	echo esc_html( bboss_get_activity_object_name() );
 }
 
 /**
@@ -906,11 +906,11 @@ function bp_activity_object_name() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity object name.
  */
-function bp_get_activity_object_name() {
+function bboss_get_activity_object_name() {
 	global $activities_template;
 
 	/**
@@ -928,8 +928,8 @@ function bp_get_activity_object_name() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_type() {
-	echo esc_attr( bp_get_activity_type() );
+function bboss_activity_type() {
+	echo esc_attr( bboss_get_activity_type() );
 }
 
 /**
@@ -937,11 +937,11 @@ function bp_activity_type() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity type.
  */
-function bp_get_activity_type() {
+function bboss_get_activity_type() {
 	global $activities_template;
 
 	/**
@@ -957,39 +957,39 @@ function bp_get_activity_type() {
 /**
  * Output the activity action name.
  *
- * Just a wrapper for bp_activity_type().
+ * Just a wrapper for bboss_activity_type().
  *
  * @since BuddyPress 1.2.0
  * @deprecated 1.5.0
  *
- * @todo Properly deprecate in favor of bp_activity_type() and
+ * @todo Properly deprecate in favor of bboss_activity_type() and
  *       remove redundant echo
  */
-function bp_activity_action_name() {
-	echo esc_attr( bp_activity_type() ); }
+function bboss_activity_action_name() {
+	echo esc_attr( bboss_activity_type() ); }
 
 /**
  * Return the activity type.
  *
- * Just a wrapper for bp_get_activity_type().
+ * Just a wrapper for bboss_get_activity_type().
  *
  * @since BuddyPress 1.2.0
  * @deprecated 1.5.0
  *
- * @todo Properly deprecate in favor of bp_get_activity_type().
+ * @todo Properly deprecate in favor of bboss_get_activity_type().
  *
  * @return string The activity type.
  */
-function bp_get_activity_action_name() {
-	return bp_get_activity_type(); }
+function bboss_get_activity_action_name() {
+	return bboss_get_activity_type(); }
 
 /**
  * Output the activity user ID.
  *
  * @since BuddyPress 1.1.0
  */
-function bp_activity_user_id() {
-	echo esc_attr( bp_get_activity_user_id() );
+function bboss_activity_user_id() {
+	echo esc_attr( bboss_get_activity_user_id() );
 }
 
 /**
@@ -997,11 +997,11 @@ function bp_activity_user_id() {
  *
  * @since BuddyPress 1.1.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int The activity user ID.
  */
-function bp_get_activity_user_id() {
+function bboss_get_activity_user_id() {
 	global $activities_template;
 
 	/**
@@ -1019,8 +1019,8 @@ function bp_get_activity_user_id() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_user_link() {
-	echo wp_kses_post( bp_get_activity_user_link() );
+function bboss_activity_user_link() {
+	echo wp_kses_post( bboss_get_activity_user_link() );
 }
 
 /**
@@ -1028,17 +1028,17 @@ function bp_activity_user_link() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string $link The activity user link.
  */
-function bp_get_activity_user_link() {
+function bboss_get_activity_user_link() {
 	global $activities_template;
 
 	if ( empty( $activities_template->activity->user_id ) || empty( $activities_template->activity->user_nicename ) || empty( $activities_template->activity->user_login ) ) {
 		$link = $activities_template->activity->primary_link;
 	} else {
-		$link = bp_core_get_user_domain( $activities_template->activity->user_id, $activities_template->activity->user_nicename, $activities_template->activity->user_login );
+		$link = bboss_core_get_user_domain( $activities_template->activity->user_id, $activities_template->activity->user_nicename, $activities_template->activity->user_login );
 	}
 
 	/**
@@ -1056,25 +1056,25 @@ function bp_get_activity_user_link() {
  *
  * @since BuddyPress 1.1.0
  *
- * @see bp_get_activity_avatar() for description of arguments.
+ * @see bboss_get_activity_avatar() for description of arguments.
  *
- * @param array|string $args See {@link bp_get_activity_avatar()} for description.
+ * @param array|string $args See {@link bboss_get_activity_avatar()} for description.
  */
-function bp_activity_avatar( $args = '' ) {
-	echo wp_kses_post( bp_get_activity_avatar( $args ) );
+function bboss_activity_avatar( $args = '' ) {
+	echo wp_kses_post( bboss_get_activity_avatar( $args ) );
 }
 /**
  * Return the avatar of the user that performed the action.
  *
  * @since BuddyPress 1.1.0
  *
- * @see bp_core_fetch_avatar() For a description of the arguments.
- * @global object $activities_template {@link BP_Activity_Template}
+ * @see bboss_core_fetch_avatar() For a description of the arguments.
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param array|string $args  {
  *     Arguments are listed here with an explanation of their defaults.
  *     For more information about the arguments, see
- *     {@link bp_core_fetch_avatar()}.
+ *     {@link bboss_core_fetch_avatar()}.
  *     @type string      $alt     Default: 'Profile picture of [user name]' if
  *                                activity user name is available, otherwise 'Profile picture'.
  *     @type string      $class   Default: 'avatar'.
@@ -1086,20 +1086,20 @@ function bp_activity_avatar( $args = '' ) {
  * }
  * @return string User avatar string.
  */
-function bp_get_activity_avatar( $args = '' ) {
+function bboss_get_activity_avatar( $args = '' ) {
 	global $activities_template;
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	// On activity permalink pages, default to the full-size avatar.
-	$type_default = bp_is_single_activity() ? 'full' : 'thumb';
+	$type_default = bboss_is_single_activity() ? 'full' : 'thumb';
 
 	// Within the activity comment loop, the current activity should be set
 	// to current_comment. Otherwise, just use activity.
 	$current_activity_item = isset( $activities_template->activity->current_comment ) ? $activities_template->activity->current_comment : $activities_template->activity;
 
 	// Activity user display name, as the current viewer may see it (respects last-name visibility).
-	$dn_default = bb_activity_get_item_user_displayname( $current_activity_item );
+	$dn_default = bboss_activity_get_item_user_displayname( $current_activity_item );
 
 	// Prepend some descriptive text to alt.
 	/* translators: %s: member display name. */
@@ -1113,7 +1113,7 @@ function bp_get_activity_avatar( $args = '' ) {
 		'user_id' => false,
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 
 	if ( ! isset( $height ) && ! isset( $width ) ) {
@@ -1170,7 +1170,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	 */
 	return apply_filters(
 		'bp_get_activity_avatar',
-		bp_core_fetch_avatar(
+		bboss_core_fetch_avatar(
 			array(
 				'item_id' => $item_id,
 				'object'  => $object,
@@ -1190,12 +1190,12 @@ function bp_get_activity_avatar( $args = '' ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @see bp_get_activity_secondary_avatar() for description of arguments.
+ * @see bboss_get_activity_secondary_avatar() for description of arguments.
  *
  * @param array|string $args See {@link bp_get_activity_secondary_avatar} for description.
  */
-function bp_activity_secondary_avatar( $args = '' ) {
-	echo wp_kses_post( bp_get_activity_secondary_avatar( $args ) );
+function bboss_activity_secondary_avatar( $args = '' ) {
+	echo wp_kses_post( bboss_get_activity_secondary_avatar( $args ) );
 }
 
 /**
@@ -1203,11 +1203,11 @@ function bp_activity_secondary_avatar( $args = '' ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @see bp_core_fetch_avatar() for description of arguments.
- * @global object $activities_template {@link BP_Activity_Template}
+ * @see bboss_core_fetch_avatar() for description of arguments.
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param array|string $args  {
- *     For a complete description of arguments, see {@link bp_core_fetch_avatar()}.
+ *     For a complete description of arguments, see {@link bboss_core_fetch_avatar()}.
  *     @type string      $alt     Default value varies based on current activity
  *                                item component.
  *     @type string      $type    Default: 'full' when viewing a single activity
@@ -1218,10 +1218,10 @@ function bp_activity_secondary_avatar( $args = '' ) {
  * }
  * @return string The secondary avatar.
  */
-function bp_get_activity_secondary_avatar( $args = '' ) {
+function bboss_get_activity_secondary_avatar( $args = '' ) {
 	global $activities_template;
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'alt'        => '',
@@ -1241,7 +1241,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
 		case 'groups':
-			if ( bp_disable_group_avatar_uploads() ) {
+			if ( bboss_disable_group_avatar_uploads() ) {
 				return false;
 			}
 
@@ -1251,9 +1251,9 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$name    = '';
 
 			// Only if groups is active.
-			if ( bp_is_active( 'groups' ) ) {
-				$group = groups_get_group( $item_id );
-				$link  = bp_get_group_permalink( $group );
+			if ( bboss_is_active( 'groups' ) ) {
+				$group = bboss_groups_get_group( $item_id );
+				$link  = bboss_get_group_permalink( $group );
 				$name  = $group->name;
 			}
 
@@ -1285,11 +1285,11 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 		case 'friends':
 			$object  = 'user';
 			$item_id = $activities_template->activity->secondary_item_id;
-			$link    = bp_core_get_userlink( $item_id, false, true );
+			$link    = bboss_core_get_userlink( $item_id, false, true );
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: member display name. */
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
 			if ( ! empty( $item_id ) ) {
@@ -1301,7 +1301,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$object  = 'user';
 			$item_id = $activities_template->activity->user_id;
 			$email   = $activities_template->activity->user_email;
-			$link    = bp_core_get_userlink( $item_id, false, true );
+			$link    = bboss_core_get_userlink( $item_id, false, true );
 
 			if ( ! empty( $item_id ) ) {
 				$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
@@ -1309,7 +1309,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: Member display name. */
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_activity_get_item_user_displayname( $activities_template->activity ) );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_activity_get_item_user_displayname( $activities_template->activity ) );
 			}
 
 			break;
@@ -1343,7 +1343,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 	}
 
 	// Get the avatar.
-	$avatar = bp_core_fetch_avatar(
+	$avatar = bboss_core_fetch_avatar(
 		array(
 			'item_id' => $item_id,
 			'object'  => $object,
@@ -1395,10 +1395,10 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @param array $args See bp_get_activity_action().
+ * @param array $args See bboss_get_activity_action().
  */
-function bp_activity_action( $args = array() ) {
-	echo wp_kses_post( bp_get_activity_action( $args ) );
+function bboss_activity_action( $args = array() ) {
+	echo wp_kses_post( bboss_get_activity_action( $args ) );
 }
 
 /**
@@ -1406,7 +1406,7 @@ function bp_activity_action( $args = array() ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param array $args {
  *     @type bool $no_timestamp Whether to exclude the timestamp.
@@ -1414,10 +1414,10 @@ function bp_activity_action( $args = array() ) {
  *
  * @return string The activity action.
  */
-function bp_get_activity_action( $args = array() ) {
+function bboss_get_activity_action( $args = array() ) {
 	global $activities_template;
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'no_timestamp' => false,
@@ -1442,7 +1442,7 @@ function bp_get_activity_action( $args = array() ) {
 
 	// Prepend the activity action meta (link, time since, etc...).
 	if ( ! empty( $action ) && empty( $r['no_timestamp'] ) ) {
-		$action = bp_insert_activity_meta( $action );
+		$action = bboss_insert_activity_meta( $action );
 	}
 
 	/**
@@ -1467,8 +1467,8 @@ function bp_get_activity_action( $args = array() ) {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_content_body() {
-	echo bp_get_activity_content_body(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save and run through the display filter chain (autoembed); wp_kses_post() would strip embeds.
+function bboss_activity_content_body() {
+	echo bboss_get_activity_content_body(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save and run through the display filter chain (autoembed); wp_kses_post() would strip embeds.
 }
 
 /**
@@ -1476,16 +1476,16 @@ function bp_activity_content_body() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity content body.
  */
-function bp_get_activity_content_body() {
+function bboss_get_activity_content_body() {
 	global $activities_template;
 
 	// Backwards compatibility if action is not being used.
 	if ( empty( $activities_template->activity->action ) && ! empty( $activities_template->activity->content ) ) {
-		$activities_template->activity->content = bp_insert_activity_meta( $activities_template->activity->content );
+		$activities_template->activity->content = bboss_insert_activity_meta( $activities_template->activity->content );
 	}
 
 	// scrape off activity content if it contain empty characters only
@@ -1509,11 +1509,11 @@ function bp_get_activity_content_body() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return bool True if activity has content, false otherwise.
  */
-function bp_activity_has_content() {
+function bboss_activity_has_content() {
 	global $activities_template;
 
 	if ( ! empty( $activities_template->activity->content ) ) {
@@ -1531,8 +1531,8 @@ function bp_activity_has_content() {
  *
  * @todo properly deprecate this function.
  */
-function bp_activity_content() {
-	echo wp_kses_post( bp_get_activity_content() );
+function bboss_activity_content() {
+	echo wp_kses_post( bboss_get_activity_content() );
 }
 
 /**
@@ -1545,7 +1545,7 @@ function bp_activity_content() {
  *
  * @return string The activity content.
  */
-function bp_get_activity_content() {
+function bboss_get_activity_content() {
 
 	global $activities_template;
 
@@ -1555,7 +1555,7 @@ function bp_get_activity_content() {
 	 *
 	 * This function is mainly for backwards compatibility.
 	 */
-	$content = bp_get_activity_action() . ' ' . bp_get_activity_content_body();
+	$content = bboss_get_activity_action() . ' ' . bboss_get_activity_content_body();
 	// return apply_filters( 'bp_get_activity_content', $content );
 	return apply_filters_ref_array( 'bp_get_activity_content', array( $content, &$activities_template->activity ) );
 }
@@ -1565,8 +1565,8 @@ function bp_get_activity_content() {
  *
  * @since BuddyBoss 1.2.0
  */
-function bp_activity_privacy() {
-	echo esc_html( bp_get_activity_privacy() );
+function bboss_activity_privacy() {
+	echo esc_html( bboss_get_activity_privacy() );
 }
 
 /**
@@ -1574,11 +1574,11 @@ function bp_activity_privacy() {
  *
  * @since BuddyBoss 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity privacy.
  */
-function bp_get_activity_privacy() {
+function bboss_get_activity_privacy() {
 	global $activities_template;
 
 	/**
@@ -1600,27 +1600,27 @@ function bp_get_activity_privacy() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param string $content The activity content.
  * @return string The activity content with the metadata string attached.
  */
-function bp_insert_activity_meta( $content = '' ) {
+function bboss_insert_activity_meta( $content = '' ) {
 	global $activities_template;
 
 	// Strip any legacy time since placeholders from BP 1.0-1.1.
 	$new_content = str_replace( '<span class="time-since">%s</span>', '', $content );
 
 	// Get the time since this activity was recorded.
-	$date_recorded = bp_core_time_since( $activities_template->activity->date_recorded );
+	$date_recorded = bboss_core_time_since( $activities_template->activity->date_recorded );
 
 	$time_since = '';
 	// Remove time since from single activity page.
-	if ( ! bp_is_single_activity() ) {
+	if ( ! bboss_is_single_activity() ) {
 		// Set up 'time-since' <span>.
 		$time_since = sprintf(
 			'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-			bp_core_get_iso8601_date( $activities_template->activity->date_recorded ),
+			bboss_core_get_iso8601_date( $activities_template->activity->date_recorded ),
 			$date_recorded
 		);
 	}
@@ -1641,10 +1641,10 @@ function bp_insert_activity_meta( $content = '' ) {
 	);
 
 	// Insert the permalink.
-	if ( ! bp_is_single_activity() ) {
+	if ( ! bboss_is_single_activity() ) {
 
 		// Setup variables for activity meta.
-		$activity_permalink = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
+		$activity_permalink = bboss_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
 		$activity_meta      = sprintf(
 			'%1$s <a href="%2$s" class="view activity-time-since">%3$s</a>',
 			$new_content,
@@ -1686,12 +1686,12 @@ function bp_insert_activity_meta( $content = '' ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
- * @param false|BP_Activity_Activity $activity Optional. Falls back on the current item in the loop.
+ * @param false|BBoss_Activity_Activity $activity Optional. Falls back on the current item in the loop.
  * @return bool True if can delete, false otherwise.
  */
-function bp_activity_user_can_delete( $activity = false ) {
+function bboss_activity_user_can_delete( $activity = false ) {
 	global $activities_template;
 
 	// Try to use current activity if none was passed.
@@ -1711,19 +1711,19 @@ function bp_activity_user_can_delete( $activity = false ) {
 	if ( is_user_logged_in() ) {
 
 		// Community moderators can always delete activity (at least for now).
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bboss_current_user_can( 'bp_moderate' ) ) {
 			$can_delete = true;
 		}
 
 		// Users are allowed to delete their own activity. This is actually
 		// quite powerful, because doing so also deletes all comments to that
 		// activity item. We should revisit this eventually.
-		if ( isset( $activity->user_id ) && ( $activity->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $activity->user_id ) && ( $activity->user_id === bboss_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
 
 		// Viewing a single item, and this user is an admin of that item.
-		if ( 'groups' !== $activity->component && bp_is_single_item() && bp_is_item_admin() ) {
+		if ( 'groups' !== $activity->component && bboss_is_single_item() && bboss_is_item_admin() ) {
 			$can_delete = true;
 		}
 	}
@@ -1742,16 +1742,16 @@ function bp_activity_user_can_delete( $activity = false ) {
 /**
  * Determine if the current user can edit an activity item.
  *
- * @param false|BP_Activity_Activity $activity            Optional. Falls back on the current item in the loop.
+ * @param false|BBoss_Activity_Activity $activity            Optional. Falls back on the current item in the loop.
  * @param bool                       $privacy_edit        Optional. True if editing privacy.
  *
  * @return bool True if can edit, false otherwise.
- * @global object                    $activities_template {@link BP_Activity_Template}
+ * @global object                    $activities_template {@link BBoss_Activity_Template}
  *
  * @since BuddyBoss 1.2.0
  * @since BuddyBoss 3.5.1 Returns false while activity editing is disabled, unless `$privacy_edit`.
  */
-function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
+function bboss_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 	global $activities_template;
 
 	// Try to use current activity if none was passed.
@@ -1771,25 +1771,25 @@ function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 	if ( is_user_logged_in() && in_array( $activity->type, array( 'activity_update', 'activity_comment' ) ) ) {
 
 		// Users are allowed to edit their own activity.
-		if ( isset( $activity->user_id ) && ( bp_loggedin_user_id() === $activity->user_id ) ) {
+		if ( isset( $activity->user_id ) && ( bboss_loggedin_user_id() === $activity->user_id ) ) {
 			$can_edit = true;
 		}
 
 		// Viewing a single item, and this user is an admin of that item.
-		if ( bp_is_single_item() && bp_is_item_admin() ) {
+		if ( bboss_is_single_item() && bboss_is_item_admin() ) {
 			$can_edit = true;
 		}
 	}
 
 	if ( $can_edit && ! $privacy_edit ) {
 
-		if ( ! bp_is_activity_edit_enabled() ) {
+		if ( ! bboss_is_activity_edit_enabled() ) {
 			// Editing is switched off; without it there is no edit window at all.
 			$can_edit = false;
 		} else {
 			// Check activity edit time expiration.
-			$activity_edit_time        = (int) bp_get_activity_edit_time(); // for 10 minutes, 600
-			$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
+			$activity_edit_time        = (int) bboss_get_activity_edit_time(); // for 10 minutes, 600
+			$bp_dd_get_time            = bboss_core_current_time( true, 'timestamp' );
 			$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
 
 			// Checking if expire time still greater than current time.
@@ -1815,12 +1815,12 @@ function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @see bp_get_activity_parent_content() for a description of arguments.
+ * @see bboss_get_activity_parent_content() for a description of arguments.
  *
  * @param array|string $args See {@link bp_get_activity_parent_content} for description.
  */
-function bp_activity_parent_content( $args = '' ) {
-	echo wp_kses_post( bp_get_activity_parent_content( $args ) );
+function bboss_activity_parent_content( $args = '' ) {
+	echo wp_kses_post( bboss_get_activity_parent_content( $args ) );
 }
 
 /**
@@ -1828,12 +1828,12 @@ function bp_activity_parent_content( $args = '' ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param string $args Unused. Left over from an earlier implementation.
  * @return mixed False on failure, otherwise the activity parent content.
  */
-function bp_get_activity_parent_content( $args = '' ) {
+function bboss_get_activity_parent_content( $args = '' ) {
 	global $activities_template;
 
 	// Bail if no activity on no item ID.
@@ -1883,8 +1883,8 @@ function bp_get_activity_parent_content( $args = '' ) {
  *
  * @since BuddyPress 1.7.0
  */
-function bp_activity_parent_user_id() {
-	echo esc_attr( bp_get_activity_parent_user_id() );
+function bboss_activity_parent_user_id() {
+	echo esc_attr( bboss_get_activity_parent_user_id() );
 }
 
 /**
@@ -1892,12 +1892,12 @@ function bp_activity_parent_user_id() {
  *
  * @since BuddyPress 1.7.0
  *
- * @global BP_Activity_Template $activities_template
+ * @global BBoss_Activity_Template $activities_template
  *
  * @return bool|int False if parent activity can't be found, otherwise
  *                  the parent activity's user ID.
  */
-function bp_get_activity_parent_user_id() {
+function bboss_get_activity_parent_user_id() {
 	global $activities_template;
 
 	// Bail if no activity on no item ID.
@@ -1935,8 +1935,8 @@ function bp_get_activity_parent_user_id() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_is_favorite() {
-	echo esc_attr( bp_get_activity_is_favorite() );
+function bboss_activity_is_favorite() {
+	echo esc_attr( bboss_get_activity_is_favorite() );
 }
 
 /**
@@ -1944,11 +1944,11 @@ function bp_activity_is_favorite() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return bool True if user favorite, false otherwise.
  */
-function bp_get_activity_is_favorite() {
+function bboss_get_activity_is_favorite() {
 	global $activities_template;
 
 	/**
@@ -1970,8 +1970,8 @@ function bp_get_activity_is_favorite() {
  *
  * @param array|string $args See {@link bp_activity_get_comments} for description.
  */
-function bp_activity_comments( $args = '' ) {
-	echo bp_activity_get_comments( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
+function bboss_activity_comments( $args = '' ) {
+	echo bboss_activity_get_comments( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
 }
 
 /**
@@ -1980,18 +1980,18 @@ function bp_activity_comments( $args = '' ) {
  * @since BuddyPress 1.2.0
  *
  * @todo deprecate $args param
- * @todo Given that checks for children already happen in bp_activity_recurse_comments(),
+ * @todo Given that checks for children already happen in bboss_activity_recurse_comments(),
  *       this function can probably be streamlined or removed.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param string $args Unused. Left over from an earlier implementation.
  * @return bool
  */
-function bp_activity_get_comments( $args = '' ) {
+function bboss_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
-	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
+	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bboss_activity_can_comment() ) {
 		return false;
 	}
 
@@ -2000,10 +2000,10 @@ function bp_activity_get_comments( $args = '' ) {
 	}
 
 	$args = array(
-		'limit_comments'     => bp_is_single_activity() ? false : true,
-		'comment_load_limit' => bb_get_activity_comment_visibility(),
+		'limit_comments'     => bboss_is_single_activity() ? false : true,
+		'comment_load_limit' => bboss_get_activity_comment_visibility(),
 	);
-	bp_activity_recurse_comments( $activities_template->activity, $args );
+	bboss_activity_recurse_comments( $activities_template->activity, $args );
 }
 
 /**
@@ -2015,7 +2015,7 @@ function bp_activity_get_comments( $args = '' ) {
  * @since BuddyBoss 2.5.80
  * Added new param as args to pass some arguments to the function.
  *
- * @global object $activities_template    {@link BP_Activity_Template}
+ * @global object $activities_template    {@link BBoss_Activity_Template}
  *
  * @param object $comment The activity object currently being recursed.
  * @param array  $args {
@@ -2031,10 +2031,10 @@ function bp_activity_get_comments( $args = '' ) {
  *
  * @return bool|string
  */
-function bp_activity_recurse_comments( $comment, $args = array() ) {
+function bboss_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'limit_comments'         => false,
@@ -2113,7 +2113,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
 
-		$template = bp_locate_template( 'activity/comment.php', false, false );
+		$template = bboss_locate_template( 'activity/comment.php', false, false );
 
 		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
 		if (
@@ -2153,12 +2153,12 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
  *
  * @since BuddyPress 1.5.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return object|bool $current_comment The activity comment currently being
  *                                      displayed. False on failure.
  */
-function bp_activity_current_comment() {
+function bboss_activity_current_comment() {
 	global $activities_template;
 
 	$current_comment = ! empty( $activities_template->activity->current_comment )
@@ -2181,8 +2181,8 @@ function bp_activity_current_comment() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_id() {
-	echo esc_attr( bp_get_activity_comment_id() );
+function bboss_activity_comment_id() {
+	echo esc_attr( bboss_get_activity_comment_id() );
 }
 
 /**
@@ -2190,12 +2190,12 @@ function bp_activity_comment_id() {
  *
  * @since BuddyPress 1.5.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int|bool $comment_id The ID of the activity comment currently
  *                              being displayed, false if none is found.
  */
-function bp_get_activity_comment_id() {
+function bboss_get_activity_comment_id() {
 	global $activities_template;
 
 	$comment_id = isset( $activities_template->activity->current_comment->id ) ? $activities_template->activity->current_comment->id : false;
@@ -2215,8 +2215,8 @@ function bp_get_activity_comment_id() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_user_id() {
-	echo esc_attr( bp_get_activity_comment_user_id() );
+function bboss_activity_comment_user_id() {
+	echo esc_attr( bboss_get_activity_comment_user_id() );
 }
 
 /**
@@ -2224,12 +2224,12 @@ function bp_activity_comment_user_id() {
  *
  * @since BuddyPress 1.5.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return int|bool $user_id The user_id of the author of the displayed
  *                           activity comment. False on failure.
  */
-function bp_get_activity_comment_user_id() {
+function bboss_get_activity_comment_user_id() {
 	global $activities_template;
 
 	$user_id = isset( $activities_template->activity->current_comment->user_id ) ? $activities_template->activity->current_comment->user_id : false;
@@ -2249,8 +2249,8 @@ function bp_get_activity_comment_user_id() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_user_link() {
-	echo wp_kses_post( bp_get_activity_comment_user_link() );
+function bboss_activity_comment_user_link() {
+	echo wp_kses_post( bboss_get_activity_comment_user_link() );
 }
 
 /**
@@ -2260,8 +2260,8 @@ function bp_activity_comment_user_link() {
  *
  * @return string $user_link The URL of the activity comment author's profile.
  */
-function bp_get_activity_comment_user_link() {
-	$user_link = bp_core_get_user_domain( bp_get_activity_comment_user_id() );
+function bboss_get_activity_comment_user_link() {
+	$user_link = bboss_core_get_user_domain( bboss_get_activity_comment_user_id() );
 
 	/**
 	 * Filters the author link for the activity comment currently being displayed.
@@ -2278,8 +2278,8 @@ function bp_get_activity_comment_user_link() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_name() {
-	echo esc_html( bp_get_activity_comment_name() );
+function bboss_activity_comment_name() {
+	echo esc_html( bboss_get_activity_comment_name() );
 }
 
 /**
@@ -2290,18 +2290,18 @@ function bp_activity_comment_name() {
  *
  * @since BuddyPress 1.5.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string $name The full name of the activity comment author.
  */
-function bp_get_activity_comment_name() {
+function bboss_get_activity_comment_name() {
 	global $activities_template;
 
 	if ( isset( $activities_template->activity->current_comment->user_fullname ) ) {
 
 		$name = apply_filters( 'bp_acomment_name', $activities_template->activity->current_comment->user_fullname, $activities_template->activity->current_comment );  // Backward compatibility.
 	} else {
-		$name = bb_activity_get_item_user_displayname( $activities_template->activity->current_comment );
+		$name = bboss_activity_get_item_user_displayname( $activities_template->activity->current_comment );
 	}
 
 	/**
@@ -2319,8 +2319,8 @@ function bp_get_activity_comment_name() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_date_recorded() {
-	echo esc_html( bp_get_activity_comment_date_recorded() );
+function bboss_activity_comment_date_recorded() {
+	echo esc_html( bboss_get_activity_comment_date_recorded() );
 }
 
 /**
@@ -2331,7 +2331,7 @@ function bp_activity_comment_date_recorded() {
  * @return string|bool $date_recorded Time since the activity was recorded,
  *                                    in the form "%s ago". False on failure.
  */
-function bp_get_activity_comment_date_recorded() {
+function bboss_get_activity_comment_date_recorded() {
 
 	/**
 	 * Filters the recorded date of the activity comment currently being displayed.
@@ -2344,7 +2344,7 @@ function bp_get_activity_comment_date_recorded() {
 	 * @param string|bool string|bool $date_recorded Time since the activity was recorded,
 	 *                    in the form "%s ago". False on failure.
 	 */
-	return apply_filters( 'bp_activity_comment_date_recorded', bp_get_activity_comment_date_recorded_raw() );
+	return apply_filters( 'bp_activity_comment_date_recorded', bboss_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -2352,8 +2352,8 @@ function bp_get_activity_comment_date_recorded() {
  *
  * @since BuddyPress 2.3.0
  */
-function bp_activity_comment_date_recorded_raw() {
-	echo esc_html( bp_get_activity_comment_date_recorded_raw() );
+function bboss_activity_comment_date_recorded_raw() {
+	echo esc_html( bboss_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -2361,12 +2361,12 @@ function bp_activity_comment_date_recorded_raw() {
  *
  * @since BuddyPress 2.3.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string|bool $date_recorded Time since the activity was recorded,
  *                                    in the form "%s ago". False on failure.
  */
-function bp_get_activity_comment_date_recorded_raw() {
+function bboss_get_activity_comment_date_recorded_raw() {
 	global $activities_template;
 
 	/**
@@ -2384,8 +2384,8 @@ function bp_get_activity_comment_date_recorded_raw() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_delete_link() {
-	echo wp_kses_post( bp_get_activity_comment_delete_link() );
+function bboss_activity_comment_delete_link() {
+	echo wp_kses_post( bboss_get_activity_comment_delete_link() );
 }
 
 /**
@@ -2396,8 +2396,8 @@ function bp_activity_comment_delete_link() {
  * @return string $link The nonced URL for deleting the current
  *                      activity comment.
  */
-function bp_get_activity_comment_delete_link() {
-	$link = wp_nonce_url( trailingslashit( bp_get_activity_directory_permalink() . 'delete/' . bp_get_activity_comment_id() ) . '?cid=' . bp_get_activity_comment_id(), 'bp_activity_delete_link' );
+function bboss_get_activity_comment_delete_link() {
+	$link = wp_nonce_url( trailingslashit( bboss_get_activity_directory_permalink() . 'delete/' . bboss_get_activity_comment_id() ) . '?cid=' . bboss_get_activity_comment_id(), 'bp_activity_delete_link' );
 
 	/**
 	 * Filters the link used for deleting the activity comment currently being displayed.
@@ -2414,8 +2414,8 @@ function bp_get_activity_comment_delete_link() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_comment_content() {
-	echo wp_kses_post( bp_get_activity_comment_content() );
+function bboss_activity_comment_content() {
+	echo wp_kses_post( bboss_get_activity_comment_content() );
 }
 
 /**
@@ -2432,14 +2432,14 @@ function bp_activity_comment_content() {
  * @param int $activity_comment_id Activity comment ID.
  *
  * @return string $content The content of the current activity comment.
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  */
-function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
+function bboss_get_activity_comment_content( $activity_comment_id = 0 ) {
 	global $activities_template;
 
 	$activity_comment = new stdClass();
 	if ( ! empty( $activity_comment_id ) ) {
-		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+		$activity_comment = new BBoss_Activity_Activity( $activity_comment_id );
 	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
 		$activity_comment = $activities_template->activity->current_comment;
 	}
@@ -2461,7 +2461,7 @@ function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
 	 * Filters the content of the current activity comment.
 	 *
 	 * @since BuddyPress 1.2.0
-	 * @since BuddyPress 3.0.0 Added $context parameter to disambiguate from bp_get_activity_comment_content().
+	 * @since BuddyPress 3.0.0 Added $context parameter to disambiguate from bboss_get_activity_comment_content().
 	 *
 	 * @param string $content The content of the current activity comment.
 	 * @param string $context This filter's context ("get").
@@ -2474,8 +2474,8 @@ function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_comment_count() {
-	echo esc_html( bp_activity_get_comment_count() );
+function bboss_activity_comment_count() {
+	echo esc_html( bboss_activity_get_comment_count() );
 }
 
 /**
@@ -2483,12 +2483,12 @@ function bp_activity_comment_count() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @param array|null $deprecated Deprecated.
  * @return int $count The activity comment count.
  */
-function bp_activity_get_comment_count( $deprecated = null ) {
+function bboss_activity_get_comment_count( $deprecated = null ) {
 	global $activities_template;
 
 	// Deprecated notice about $args.
@@ -2521,7 +2521,7 @@ function bp_activity_get_comment_count( $deprecated = null ) {
  * @param int    $count The current iteration count.
  * @return int $count The activity comment count.
  */
-function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
+function bboss_activity_recurse_comment_count( $comment, $count = 0 ) {
 
 	// Copy the count.
 	$new_count = $count;
@@ -2530,7 +2530,7 @@ function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
 	if ( ! empty( $comment->children ) ) {
 		foreach ( (array) $comment->children as $comment ) {
 			++$new_count;
-			$new_count = bp_activity_recurse_comment_count( $comment, $new_count );
+			$new_count = bboss_activity_recurse_comment_count( $comment, $new_count );
 		}
 	}
 
@@ -2555,8 +2555,8 @@ function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
  * @param object|int $comment Object of the activity comment or activity comment ID. Usually unnecessary
  *                            when used in activity comment loop.
  */
-function bp_activity_comment_depth( $comment = 0 ) {
-	echo esc_html( bp_activity_get_comment_depth( $comment ) );
+function bboss_activity_comment_depth( $comment = 0 ) {
+	echo esc_html( bboss_activity_get_comment_depth( $comment ) );
 }
 
 /**
@@ -2569,7 +2569,7 @@ function bp_activity_comment_depth( $comment = 0 ) {
  *                             when used in activity comment loop.
  * @return int
  */
-function bp_activity_get_comment_depth( $comment = 0 ) {
+function bboss_activity_get_comment_depth( $comment = 0 ) {
 	$depth = 0;
 
 	// Activity comment loop takes precedence.
@@ -2580,13 +2580,13 @@ function bp_activity_get_comment_depth( $comment = 0 ) {
 	} elseif ( ! empty( $comment ) ) {
 		// We passed an activity ID, so fetch the activity object.
 		if ( is_int( $comment ) ) {
-			$comment = new BP_Activity_Activity( $comment );
+			$comment = new BBoss_Activity_Activity( $comment );
 		}
 
 		// Recurse through activity tree to find the depth.
 		if ( is_object( $comment ) && isset( $comment->type ) && 'activity_comment' === $comment->type ) {
 			// Fetch the entire root comment tree... ugh.
-			$comments = BP_Activity_Activity::get_activity_comments( $comment->item_id, 1, constant( 'PHP_INT_MAX' ) );
+			$comments = BBoss_Activity_Activity::get_activity_comments( $comment->item_id, 1, constant( 'PHP_INT_MAX' ) );
 
 			// Recursively find our comment object from the comment tree.
 			$iterator  = new RecursiveArrayIterator( $comments );
@@ -2621,8 +2621,8 @@ function bp_activity_get_comment_depth( $comment = 0 ) {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_comment_link() {
-	echo wp_kses_post( bp_get_activity_comment_link() );
+function bboss_activity_comment_link() {
+	echo wp_kses_post( bboss_get_activity_comment_link() );
 }
 
 /**
@@ -2630,11 +2630,11 @@ function bp_activity_comment_link() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity comment link.
  */
-function bp_get_activity_comment_link() {
+function bboss_get_activity_comment_link() {
 	global $activities_template;
 
 	/**
@@ -2652,8 +2652,8 @@ function bp_get_activity_comment_link() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_comment_form_nojs_display() {
-	echo bp_get_activity_comment_form_nojs_display(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
+function bboss_activity_comment_form_nojs_display() {
+	echo bboss_get_activity_comment_form_nojs_display(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 
 /**
@@ -2661,12 +2661,12 @@ function bp_activity_comment_form_nojs_display() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string|false The activity comment form no JavaScript
  *                      display CSS. False on failure.
  */
-function bp_get_activity_comment_form_nojs_display() {
+function bboss_get_activity_comment_form_nojs_display() {
 	global $activities_template;
 
 	if ( isset( $_GET['ac'] ) && ( $_GET['ac'] === ( $activities_template->activity->id . '/' ) ) ) {
@@ -2681,8 +2681,8 @@ function bp_get_activity_comment_form_nojs_display() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_comment_form_action() {
-	echo esc_url( bp_get_activity_comment_form_action() );
+function bboss_activity_comment_form_action() {
+	echo esc_url( bboss_get_activity_comment_form_action() );
 }
 
 /**
@@ -2692,7 +2692,7 @@ function bp_activity_comment_form_action() {
  *
  * @return string The activity comment form action.
  */
-function bp_get_activity_comment_form_action() {
+function bboss_get_activity_comment_form_action() {
 
 	/**
 	 * Filters the activity comment form action URL.
@@ -2701,7 +2701,7 @@ function bp_get_activity_comment_form_action() {
 	 *
 	 * @param string $value URL to use in the comment form's action attribute.
 	 */
-	return apply_filters( 'bp_get_activity_comment_form_action', home_url( bp_get_activity_root_slug() . '/reply/' ) );
+	return apply_filters( 'bp_get_activity_comment_form_action', home_url( bboss_get_activity_root_slug() . '/reply/' ) );
 }
 
 /**
@@ -2709,8 +2709,8 @@ function bp_get_activity_comment_form_action() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_permalink_id() {
-	echo esc_attr( bp_get_activity_permalink_id() );
+function bboss_activity_permalink_id() {
+	echo esc_attr( bboss_get_activity_permalink_id() );
 }
 
 /**
@@ -2720,7 +2720,7 @@ function bp_activity_permalink_id() {
  *
  * @return string The activity permalink ID.
  */
-function bp_get_activity_permalink_id() {
+function bboss_get_activity_permalink_id() {
 
 	/**
 	 * Filters the activity action permalink ID.
@@ -2729,7 +2729,7 @@ function bp_get_activity_permalink_id() {
 	 *
 	 * @param string $value Current action for the activity item.
 	 */
-	return apply_filters( 'bp_get_activity_permalink_id', bp_current_action() );
+	return apply_filters( 'bp_get_activity_permalink_id', bboss_current_action() );
 }
 
 /**
@@ -2737,8 +2737,8 @@ function bp_get_activity_permalink_id() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_thread_permalink() {
-	echo esc_url( bp_get_activity_thread_permalink() );
+function bboss_activity_thread_permalink() {
+	echo esc_url( bboss_get_activity_thread_permalink() );
 }
 
 /**
@@ -2748,10 +2748,10 @@ function bp_activity_thread_permalink() {
  *
  * @return string $link The activity thread permalink.
  */
-function bp_get_activity_thread_permalink() {
+function bboss_get_activity_thread_permalink() {
 	global $activities_template;
 
-	$link = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
+	$link = bboss_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
 
 	/**
 	 * Filters the activity thread permalink.
@@ -2768,8 +2768,8 @@ function bp_get_activity_thread_permalink() {
  *
  * @since BuddyPress 1.8.0
  */
-function bp_activity_comment_permalink() {
-	echo esc_url( bp_get_activity_comment_permalink() );
+function bboss_activity_comment_permalink() {
+	echo esc_url( bboss_get_activity_comment_permalink() );
 }
 /**
  * Return the activity comment permalink.
@@ -2778,10 +2778,10 @@ function bp_activity_comment_permalink() {
  *
  * @return string $link The activity comment permalink.
  */
-function bp_get_activity_comment_permalink() {
+function bboss_get_activity_comment_permalink() {
 	global $activities_template;
 
-	$link = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
+	$link = bboss_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
 
 	// Used for filter below.
 	$comment_id = isset( $activities_template->activity->current_comment->id )
@@ -2804,8 +2804,8 @@ function bp_get_activity_comment_permalink() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_favorite_link() {
-	echo wp_kses_post( bp_get_activity_favorite_link() );
+function bboss_activity_favorite_link() {
+	echo wp_kses_post( bboss_get_activity_favorite_link() );
 }
 
 /**
@@ -2814,11 +2814,11 @@ function bp_activity_favorite_link() {
  * @since BuddyPress 1.2.0
  *
  * @param int $activity_id The activity ID.
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity favorite link.
  */
-function bp_get_activity_favorite_link( $activity_id = 0 ) {
+function bboss_get_activity_favorite_link( $activity_id = 0 ) {
 
 	if ( empty( $activity_id ) ) {
 		global $activities_template;
@@ -2833,7 +2833,7 @@ function bp_get_activity_favorite_link( $activity_id = 0 ) {
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_id . '/' ), 'mark_favorite' ) );
+	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bboss_get_activity_root_slug() . '/favorite/' . $activity_id . '/' ), 'mark_favorite' ) );
 }
 
 /**
@@ -2841,8 +2841,8 @@ function bp_get_activity_favorite_link( $activity_id = 0 ) {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_unfavorite_link() {
-	echo wp_kses_post( bp_get_activity_unfavorite_link() );
+function bboss_activity_unfavorite_link() {
+	echo wp_kses_post( bboss_get_activity_unfavorite_link() );
 }
 
 /**
@@ -2851,11 +2851,11 @@ function bp_activity_unfavorite_link() {
  * @since BuddyPress 1.2.0
  *
  * @param int $activity_id The activity ID.
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity unfavorite link.
  */
-function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
+function bboss_get_activity_unfavorite_link( $activity_id = 0 ) {
 
 	if ( empty( $activity_id ) ) {
 		global $activities_template;
@@ -2870,7 +2870,7 @@ function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_id . '/' ), 'unmark_favorite' ) );
+	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bboss_get_activity_root_slug() . '/unfavorite/' . $activity_id . '/' ), 'unmark_favorite' ) );
 }
 
 /**
@@ -2878,8 +2878,8 @@ function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_css_class() {
-	echo esc_attr( bp_get_activity_css_class() );
+function bboss_activity_css_class() {
+	echo esc_attr( bboss_get_activity_css_class() );
 }
 
 /**
@@ -2887,11 +2887,11 @@ function bp_activity_css_class() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity item's CSS class.
  */
-function bp_get_activity_css_class() {
+function bboss_get_activity_css_class() {
 	global $activities_template;
 
 	/**
@@ -2919,15 +2919,15 @@ function bp_get_activity_css_class() {
 		$class .= ' mini';
 	}
 
-	if ( bp_activity_get_comment_count() && bp_activity_can_comment() ) {
+	if ( bboss_activity_get_comment_count() && bboss_activity_can_comment() ) {
 		$class .= ' has-comments';
 	}
 
-	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
+	if ( bboss_is_close_activity_comments_enabled() && bboss_is_activity_comments_closed( $activities_template->activity->id ) ) {
 		$class .= ' bb-closed-comments';
 	}
 
-	$activity_metas    = bb_activity_get_metadata( bp_get_activity_id() );
+	$activity_metas    = bboss_activity_get_metadata( bboss_get_activity_id() );
 	$link_embed        = $activity_metas['_link_embed'][0] ?? '';
 	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 
@@ -2938,11 +2938,11 @@ function bp_get_activity_css_class() {
 		$class .= ' wp-link-embed';
 	}
 
-	if ( ! empty( $activities_template->pinned_id ) && bp_get_activity_id() === (int) $activities_template->pinned_id ) {
+	if ( ! empty( $activities_template->pinned_id ) && bboss_get_activity_id() === (int) $activities_template->pinned_id ) {
 		$class .= ' bb-pinned';
 	}
 
-	if ( bb_user_has_mute_notification( bp_get_activity_id(), bp_loggedin_user_id() ) ) {
+	if ( bboss_user_has_mute_notification( bboss_get_activity_id(), bboss_loggedin_user_id() ) ) {
 		$class .= ' bb-muted';
 	}
 
@@ -2952,7 +2952,7 @@ function bp_get_activity_css_class() {
 		bb_pro_activity_post_feature_image_instance() &&
 		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
 	) {
-		$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( bp_get_activity_id() );
+		$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( bboss_get_activity_id() );
 		if ( ! empty( $feature_image_data ) ) {
 			$class .= ' has-featured-image';
 		}
@@ -2977,8 +2977,8 @@ function bp_get_activity_css_class() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_activity_comment_css_class() {
-	echo esc_attr( bp_get_activity_comment_css_class() );
+function bboss_activity_comment_css_class() {
+	echo esc_attr( bboss_get_activity_comment_css_class() );
 }
 
 /**
@@ -2988,27 +2988,27 @@ function bp_activity_comment_css_class() {
  *
  * @return string The activity comment's CSS class.
  */
-function bp_get_activity_comment_css_class() {
+function bboss_get_activity_comment_css_class() {
 
 	$class = ' comment-item activity-comment';
 
 	// Fall back on current comment in activity loop.
-	$comment_depth = bp_activity_get_comment_depth();
+	$comment_depth = bboss_activity_get_comment_depth();
 
 	// Threading is turned on, so check the depth.
-	if ( 'blogs' === bp_get_activity_object_name() ) {
+	if ( 'blogs' === bboss_get_activity_object_name() ) {
 		if ( get_option( 'thread_comments' ) ) {
 			$class .= ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
 		}
-	} elseif ( bb_is_activity_comment_threading_enabled() ) {
-		$class .= ( $comment_depth > bb_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
+	} elseif ( bboss_is_activity_comment_threading_enabled() ) {
+		$class .= ( $comment_depth > bboss_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
 	}
 
 	// Has children's.
-	$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
+	$comments_count = BBoss_Activity_Activity::bb_get_all_activity_comment_children_count(
 		array(
 			'spam'     => 'ham_only',
-			'activity' => bp_activity_current_comment(),
+			'activity' => bboss_activity_current_comment(),
 		)
 	);
 	if ( ! empty( $comments_count['all_child_count'] ) > 0 ) {
@@ -3023,8 +3023,8 @@ function bp_get_activity_comment_css_class() {
  *
  * @since BuddyPress 1.1.0
  */
-function bp_activity_delete_link() {
-	echo wp_kses_post( bp_get_activity_delete_link() );
+function bboss_activity_delete_link() {
+	echo wp_kses_post( bboss_get_activity_delete_link() );
 }
 
 /**
@@ -3032,18 +3032,18 @@ function bp_activity_delete_link() {
  *
  * @since BuddyPress 1.1.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string $link Activity delete link. Contains $redirect_to arg
  *                      if on single activity page.
  */
-function bp_get_activity_delete_link() {
+function bboss_get_activity_delete_link() {
 
-	$url   = bp_get_activity_delete_url();
+	$url   = bboss_get_activity_delete_url();
 	$class = 'delete-activity';
 
 	// Determine if we're on a single activity page, and customize accordingly.
-	if ( bp_is_activity_component() && is_numeric( bp_current_action() ) ) {
+	if ( bboss_is_activity_component() && is_numeric( bboss_current_action() ) ) {
 		$class = 'delete-activity-single';
 	}
 
@@ -3064,8 +3064,8 @@ function bp_get_activity_delete_link() {
  *
  * @since BuddyPress 2.1.0
  */
-function bp_activity_delete_url() {
-	echo esc_url( bp_get_activity_delete_url() );
+function bboss_activity_delete_url() {
+	echo esc_url( bboss_get_activity_delete_url() );
 }
 
 /**
@@ -3073,18 +3073,18 @@ function bp_activity_delete_url() {
  *
  * @since BuddyPress 2.1.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string $link Activity delete link. Contains $redirect_to arg
  *                      if on single activity page.
  */
-function bp_get_activity_delete_url() {
+function bboss_get_activity_delete_url() {
 	global $activities_template;
 
-	$url = trailingslashit( bp_get_root_domain() . '/' . bp_get_activity_root_slug() . '/delete/' . $activities_template->activity->id );
+	$url = trailingslashit( bboss_get_root_domain() . '/' . bboss_get_activity_root_slug() . '/delete/' . $activities_template->activity->id );
 
 	// Determine if we're on a single activity page, and customize accordingly.
-	if ( bp_is_activity_component() && is_numeric( bp_current_action() ) ) {
+	if ( bboss_is_activity_component() && is_numeric( bboss_current_action() ) ) {
 		$url = add_query_arg( array( 'redirect_to' => wp_get_referer() ), $url );
 	}
 
@@ -3105,12 +3105,12 @@ function bp_get_activity_delete_url() {
  *
  * @since BuddyPress 1.2.0
  *
- * @see bp_get_activity_latest_update() for description of parameters.
+ * @see bboss_get_activity_latest_update() for description of parameters.
  *
- * @param int $user_id See {@link bp_get_activity_latest_update()} for description.
+ * @param int $user_id See {@link bboss_get_activity_latest_update()} for description.
  */
-function bp_activity_latest_update( $user_id = 0 ) {
-	echo wp_kses_post( bp_get_activity_latest_update( $user_id ) );
+function bboss_activity_latest_update( $user_id = 0 ) {
+	echo wp_kses_post( bboss_get_activity_latest_update( $user_id ) );
 }
 
 /**
@@ -3122,17 +3122,17 @@ function bp_activity_latest_update( $user_id = 0 ) {
  * @return string|bool $latest_update The activity latest update link.
  *                                    False on failure.
  */
-function bp_get_activity_latest_update( $user_id = 0 ) {
+function bboss_get_activity_latest_update( $user_id = 0 ) {
 
 	if ( empty( $user_id ) ) {
-		$user_id = bp_displayed_user_id();
+		$user_id = bboss_displayed_user_id();
 	}
 
-	if ( bp_is_user_inactive( $user_id ) ) {
+	if ( bboss_is_user_inactive( $user_id ) ) {
 		return false;
 	}
 
-	if ( ! $update = bp_get_user_meta( $user_id, 'bp_latest_update', true ) ) {
+	if ( ! $update = bboss_get_user_meta( $user_id, 'bp_latest_update', true ) ) {
 		return false;
 	}
 
@@ -3145,12 +3145,12 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
 	 * @param string $value   The excerpt for the latest update.
 	 * @param int    $user_id ID of the queried user.
 	 */
-	$latest_update = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bp_create_excerpt( $update['content'], bp_activity_get_excerpt_length() ) ) ), $user_id );
+	$latest_update = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bboss_create_excerpt( $update['content'], bboss_activity_get_excerpt_length() ) ) ), $user_id );
 
 	$latest_update = sprintf(
 		'%s <a href="%s">%s</a>',
 		$latest_update,
-		esc_url_raw( bp_activity_get_permalink( $update['id'] ) ),
+		esc_url_raw( bboss_activity_get_permalink( $update['id'] ) ),
 		esc_attr__( 'View', 'buddyboss' )
 	);
 
@@ -3171,12 +3171,12 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
  *
  * @since BuddyPress 1.1.0
  *
- * @see bp_get_activity_filter_links() for description of parameters.
+ * @see bboss_get_activity_filter_links() for description of parameters.
  *
- * @param array|bool $args See {@link bp_get_activity_filter_links()} for description.
+ * @param array|bool $args See {@link bboss_get_activity_filter_links()} for description.
  */
-function bp_activity_filter_links( $args = false ) {
-	echo wp_kses_post( bp_get_activity_filter_links( $args ) );
+function bboss_activity_filter_links( $args = false ) {
+	echo wp_kses_post( bboss_get_activity_filter_links( $args ) );
 }
 
 /**
@@ -3191,9 +3191,9 @@ function bp_activity_filter_links( $args = false ) {
  * @return string|bool $component_links The activity filter links.
  *         False on failure.
  */
-function bp_get_activity_filter_links( $args = false ) {
+function bboss_get_activity_filter_links( $args = false ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'style' => 'list',
@@ -3204,7 +3204,7 @@ function bp_get_activity_filter_links( $args = false ) {
 	$component_links = array();
 
 	// Fetch the names of components that have activity recorded in the DB.
-	$components = BP_Activity_Activity::get_recorded_components();
+	$components = BBoss_Activity_Activity::get_recorded_components();
 
 	if ( empty( $components ) ) {
 		return false;
@@ -3282,19 +3282,19 @@ function bp_get_activity_filter_links( $args = false ) {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return bool $can_comment True if item can receive comments.
  */
-function bp_activity_can_comment() {
+function bboss_activity_can_comment() {
 	global $activities_template;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// Determine ability to comment based on activity type name.
-	$activity_type = bp_get_activity_type();
+	$activity_type = bboss_get_activity_type();
 
 	// Get the 'comment-reply' support for the current activity type.
-	$can_comment = bp_activity_type_supports( $activity_type, 'comment-reply' );
+	$can_comment = bboss_activity_type_supports( $activity_type, 'comment-reply' );
 
 	// Neutralize activity_comment.
 	if ( 'activity_comment' === $activity_type ) {
@@ -3322,14 +3322,14 @@ function bp_activity_can_comment() {
  * @return bool        $can_comment True if comment can receive comments,
  *                                  otherwise false.
  */
-function bp_activity_can_comment_reply( $comment = false ) {
+function bboss_activity_can_comment_reply( $comment = false ) {
 
 	// Assume activity can be commented on.
 	$can_comment = true;
 
 	// Check that comment exists.
 	if ( empty( $comment ) ) {
-		$comment = bp_activity_current_comment();
+		$comment = bboss_activity_current_comment();
 	}
 
 	/**
@@ -3352,9 +3352,9 @@ function bp_activity_can_comment_reply( $comment = false ) {
  *
  * @return bool True if comment can receive comments.
  */
-function bp_activity_can_favorite() {
+function bboss_activity_can_favorite() {
 
-	$retval = is_user_logged_in() && bb_is_reaction_activity_posts_enabled();
+	$retval = is_user_logged_in() && bboss_is_reaction_activity_posts_enabled();
 
 	/**
 	 * Filters whether users can favorite activity items.
@@ -3372,13 +3372,13 @@ function bp_activity_can_favorite() {
  * @since BuddyPress 1.2.0
  * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @param int    $user_id       See {@link bp_get_total_favorite_count_for_user()}.
+ * @param int    $user_id       See {@link bboss_get_total_favorite_count_for_user()}.
  * @param string $activity_type Activity type.
  *
- * @see   bp_get_total_favorite_count_for_user() for description of parameters.
+ * @see   bboss_get_total_favorite_count_for_user() for description of parameters.
  */
-function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
-	echo esc_html( bp_get_total_favorite_count_for_user( $user_id, $activity_type ) );
+function bboss_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
+	echo esc_html( bboss_get_total_favorite_count_for_user( $user_id, $activity_type ) );
 }
 
 /**
@@ -3392,18 +3392,18 @@ function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activ
  *
  * @return int The total favorite count for the specified user.
  */
-function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
+function bboss_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
 	$retval = false;
 
-	if ( bp_activity_can_favorite() ) {
+	if ( bboss_activity_can_favorite() ) {
 		// Default to displayed user if none is passed.
 		$user_id = empty( $user_id )
-			? bp_displayed_user_id()
+			? bboss_displayed_user_id()
 			: $user_id;
 
 		// Get user meta if user ID exists.
 		if ( ! empty( $user_id ) ) {
-			$retval = bp_activity_total_favorites_for_user( $user_id, $activity_type );
+			$retval = bboss_activity_total_favorites_for_user( $user_id, $activity_type );
 		}
 	}
 
@@ -3426,12 +3426,12 @@ function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'a
  *
  * @since BuddyPress 1.2.0
  *
- * @see bp_get_total_mention_count_for_user() for description of parameters.
+ * @see bboss_get_total_mention_count_for_user() for description of parameters.
  *
- * @param int $user_id See {@link bp_get_total_mention_count_for_user()}.
+ * @param int $user_id See {@link bboss_get_total_mention_count_for_user()}.
  */
-function bp_total_mention_count_for_user( $user_id = 0 ) {
-	echo esc_html( bp_get_total_mention_count_for_user( $user_id ) );
+function bboss_total_mention_count_for_user( $user_id = 0 ) {
+	echo esc_html( bboss_get_total_mention_count_for_user( $user_id ) );
 }
 
 /**
@@ -3442,16 +3442,16 @@ function bp_total_mention_count_for_user( $user_id = 0 ) {
  * @param int $user_id ID of user being queried. Default: displayed user ID.
  * @return int The total mention count for the specified user.
  */
-function bp_get_total_mention_count_for_user( $user_id = 0 ) {
+function bboss_get_total_mention_count_for_user( $user_id = 0 ) {
 
 	// Default to displayed user if none is passed.
 	$user_id = empty( $user_id )
-		? bp_displayed_user_id()
+		? bboss_displayed_user_id()
 		: $user_id;
 
 	// Get user meta if user ID exists.
 	$retval = ! empty( $user_id )
-		? bp_get_user_meta( $user_id, 'bp_new_mention_count', true )
+		? bboss_get_user_meta( $user_id, 'bp_new_mention_count', true )
 		: false;
 
 	/**
@@ -3471,8 +3471,8 @@ function bp_get_total_mention_count_for_user( $user_id = 0 ) {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_send_public_message_link() {
-	echo esc_url( bp_get_send_public_message_link() );
+function bboss_send_public_message_link() {
+	echo esc_url( bboss_get_send_public_message_link() );
 }
 
 /**
@@ -3482,14 +3482,14 @@ function bp_send_public_message_link() {
  *
  * @return string The public message link for the displayed user.
  */
-function bp_get_send_public_message_link() {
+function bboss_get_send_public_message_link() {
 
 	// No link if not logged in, not looking at someone else's profile.
-	if ( ! is_user_logged_in() || ! bp_is_user() || bp_is_my_profile() ) {
+	if ( ! is_user_logged_in() || ! bboss_is_user() || bboss_is_my_profile() ) {
 		$retval = '';
 	} else {
-		$args   = array( 'r' => bp_get_displayed_user_mentionname() );
-		$url    = add_query_arg( $args, bp_get_activity_directory_permalink() );
+		$args   = array( 'r' => bboss_get_displayed_user_mentionname() );
+		$url    = add_query_arg( $args, bboss_get_activity_directory_permalink() );
 		$retval = wp_nonce_url( $url );
 	}
 
@@ -3508,11 +3508,11 @@ function bp_get_send_public_message_link() {
  *
  * @since BuddyPress 2.0.0
  *
- * @param array $activity Array of activities generated from {@link bp_activity_get()}.
+ * @param array $activity Array of activities generated from {@link bboss_activity_get()}.
  * @param array $activity_ids Used for recursion purposes in this function.
  * @return array
  */
-function bp_activity_recurse_comments_activity_ids( $activity = array(), $activity_ids = array() ) {
+function bboss_activity_recurse_comments_activity_ids( $activity = array(), $activity_ids = array() ) {
 	if ( is_array( $activity ) && ! empty( $activity['activities'] ) ) {
 		$activity = $activity['activities'][0];
 	}
@@ -3522,7 +3522,7 @@ function bp_activity_recurse_comments_activity_ids( $activity = array(), $activi
 			$activity_ids[] = $child->id;
 
 			if ( ! empty( $child->children ) ) {
-				$activity_ids = bp_activity_recurse_comments_activity_ids( $child, $activity_ids );
+				$activity_ids = bboss_activity_recurse_comments_activity_ids( $child, $activity_ids );
 			}
 		}
 	}
@@ -3535,12 +3535,12 @@ function bp_activity_recurse_comments_activity_ids( $activity = array(), $activi
  *
  * @since BuddyPress 1.2.0
  *
- * @see bp_get_mentioned_user_display_name() for description of parameters.
+ * @see bboss_get_mentioned_user_display_name() for description of parameters.
  *
- * @param int|string|bool $user_id_or_username See {@link bp_get_mentioned_user_display_name()}.
+ * @param int|string|bool $user_id_or_username See {@link bboss_get_mentioned_user_display_name()}.
  */
-function bp_mentioned_user_display_name( $user_id_or_username = false ) {
-	echo esc_html( bp_get_mentioned_user_display_name( $user_id_or_username ) );
+function bboss_mentioned_user_display_name( $user_id_or_username = false ) {
+	echo esc_html( bboss_get_mentioned_user_display_name( $user_id_or_username ) );
 }
 
 /**
@@ -3551,10 +3551,10 @@ function bp_mentioned_user_display_name( $user_id_or_username = false ) {
  * @param int|string|bool $user_id_or_username User ID or username.
  * @return string The mentioned user's display name.
  */
-function bp_get_mentioned_user_display_name( $user_id_or_username = false ) {
+function bboss_get_mentioned_user_display_name( $user_id_or_username = false ) {
 
 	// Get user display name.
-	$name = bp_core_get_user_displayname( $user_id_or_username );
+	$name = bboss_core_get_user_displayname( $user_id_or_username );
 
 	// If user somehow has no name, return this really lame string.
 	if ( empty( $name ) ) {
@@ -3577,8 +3577,8 @@ function bp_get_mentioned_user_display_name( $user_id_or_username = false ) {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_activity_post_form_action() {
-	echo esc_url( bp_get_activity_post_form_action() );
+function bboss_activity_post_form_action() {
+	echo esc_url( bboss_get_activity_post_form_action() );
 }
 
 /**
@@ -3588,7 +3588,7 @@ function bp_activity_post_form_action() {
  *
  * @return string The activity post form action.
  */
-function bp_get_activity_post_form_action() {
+function bboss_get_activity_post_form_action() {
 
 	/**
 	 * Filters the action url used for the activity post form.
@@ -3597,7 +3597,7 @@ function bp_get_activity_post_form_action() {
 	 *
 	 * @param string $value URL to be used for the activity post form.
 	 */
-	return apply_filters( 'bp_get_activity_post_form_action', home_url( bp_get_activity_root_slug() . '/post/' ) );
+	return apply_filters( 'bp_get_activity_post_form_action', home_url( bboss_get_activity_root_slug() . '/post/' ) );
 }
 
 /**
@@ -3610,13 +3610,13 @@ function bp_get_activity_post_form_action() {
  *
  * @since BuddyPress 1.7.0
  *
- * @see bp_core_fetch_avatar() for a description of arguments.
+ * @see bboss_core_fetch_avatar() for a description of arguments.
  *
- * @param array $args See {@link bp_core_fetch_avatar()}.
+ * @param array $args See {@link bboss_core_fetch_avatar()}.
  */
-function bp_activity_comments_user_avatars( $args = array() ) {
+function bboss_activity_comments_user_avatars( $args = array() ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'height' => false,
@@ -3627,7 +3627,7 @@ function bp_activity_comments_user_avatars( $args = array() ) {
 	);
 
 	// Get the user IDs of everyone who has left a comment to the current activity item.
-	$user_ids = bp_activity_get_comments_user_ids();
+	$user_ids = bboss_activity_get_comments_user_ids();
 	$output   = array();
 	$retval   = '';
 
@@ -3640,10 +3640,10 @@ function bp_activity_comments_user_avatars( $args = array() ) {
 			}
 
 			// Get profile link for this user.
-			$profile_link = bp_core_get_user_domain( $user_id );
+			$profile_link = bboss_core_get_user_domain( $user_id );
 
 			// Get avatar for this user.
-			$image_html = bp_core_fetch_avatar(
+			$image_html = bboss_core_fetch_avatar(
 				array(
 					'item_id' => $user_id,
 					'height'  => $r['height'],
@@ -3684,11 +3684,11 @@ function bp_activity_comments_user_avatars( $args = array() ) {
  *
  * @return bool|array An array of IDs, or false if none are found.
  */
-function bp_activity_get_comments_user_ids() {
+function bboss_activity_get_comments_user_ids() {
 	global $activities_template;
 
 	$user_ids = ! empty( $activities_template->activity->children )
-		? (array) bp_activity_recurse_comments_user_ids( $activities_template->activity->children )
+		? (array) bboss_activity_recurse_comments_user_ids( $activities_template->activity->children )
 		: array();
 
 	/**
@@ -3706,10 +3706,10 @@ function bp_activity_get_comments_user_ids() {
  *
  * @since BuddyPress 1.7.0
  *
- * @param array $comments Array of {@link BP_Activity_Activity} items.
+ * @param array $comments Array of {@link BBoss_Activity_Activity} items.
  * @return array Array of user IDs.
  */
-function bp_activity_recurse_comments_user_ids( array $comments = array() ) {
+function bboss_activity_recurse_comments_user_ids( array $comments = array() ) {
 
 	// Default user ID's array.
 	$user_ids = array();
@@ -3729,7 +3729,7 @@ function bp_activity_recurse_comments_user_ids( array $comments = array() ) {
 
 			// Check for commentception.
 			if ( ! empty( $comment->children ) ) {
-				$user_ids = array_merge( $user_ids, bp_activity_recurse_comments_user_ids( $comment->children ) );
+				$user_ids = array_merge( $user_ids, bboss_activity_recurse_comments_user_ids( $comment->children ) );
 			}
 		}
 	}
@@ -3750,8 +3750,8 @@ function bp_activity_recurse_comments_user_ids( array $comments = array() ) {
  *
  * @since BuddyPress 1.9.0
  */
-function bp_displayed_user_mentionname() {
-	echo esc_html( bp_get_displayed_user_mentionname() );
+function bboss_displayed_user_mentionname() {
+	echo esc_html( bboss_get_displayed_user_mentionname() );
 }
 
 /**
@@ -3761,7 +3761,7 @@ function bp_displayed_user_mentionname() {
  *
  * @return string Mentionname for the displayed user, if available.
  */
-function bp_get_displayed_user_mentionname() {
+function bboss_get_displayed_user_mentionname() {
 
 	/**
 	 * Filters the mentionname for the displayed user.
@@ -3770,7 +3770,7 @@ function bp_get_displayed_user_mentionname() {
 	 *
 	 * @param string $value The mentionanme for the displayed user.
 	 */
-	return apply_filters( 'bp_get_displayed_user_mentionname', bp_activity_get_user_mentionname( bp_displayed_user_id() ) );
+	return apply_filters( 'bp_get_displayed_user_mentionname', bboss_activity_get_user_mentionname( bboss_displayed_user_id() ) );
 }
 
 /**
@@ -3787,9 +3787,9 @@ function bp_get_displayed_user_mentionname() {
  *                                       selected.
  * }
  */
-function bp_activity_types_list( $output = 'select', $args = '' ) {
+function bboss_activity_types_list( $output = 'select', $args = '' ) {
 
-	$args = bp_parse_args(
+	$args = bboss_parse_args(
 		$args,
 		array(
 			'checkbox_name' => 'bp_activity_types',
@@ -3797,7 +3797,7 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
 		)
 	);
 
-	$activities = bp_activity_get_types();
+	$activities = bboss_activity_get_types();
 	natsort( $activities );
 
 	// Loop through the activity types and output markup.
@@ -3851,8 +3851,8 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_sitewide_activity_feed_link() {
-	echo wp_kses_post( bp_get_sitewide_activity_feed_link() );
+function bboss_sitewide_activity_feed_link() {
+	echo wp_kses_post( bboss_get_sitewide_activity_feed_link() );
 }
 
 /**
@@ -3862,7 +3862,7 @@ function bp_sitewide_activity_feed_link() {
  *
  * @return string The sitewide activity feed link.
  */
-function bp_get_sitewide_activity_feed_link() {
+function bboss_get_sitewide_activity_feed_link() {
 
 	/**
 	 * Filters the sidewide activity feed link.
@@ -3871,7 +3871,7 @@ function bp_get_sitewide_activity_feed_link() {
 	 *
 	 * @param string $value The feed link for sitewide activity.
 	 */
-	return apply_filters( 'bp_get_sitewide_activity_feed_link', bp_get_root_domain() . '/' . bp_get_activity_root_slug() . '/feed/' );
+	return apply_filters( 'bp_get_sitewide_activity_feed_link', bboss_get_root_domain() . '/' . bboss_get_activity_root_slug() . '/feed/' );
 }
 
 /**
@@ -3879,8 +3879,8 @@ function bp_get_sitewide_activity_feed_link() {
  *
  * @since BuddyPress 1.2.0
  */
-function bp_member_activity_feed_link() {
-	echo esc_url( bp_get_member_activity_feed_link() );
+function bboss_member_activity_feed_link() {
+	echo esc_url( bboss_get_member_activity_feed_link() );
 }
 
 /**
@@ -3889,10 +3889,10 @@ function bp_member_activity_feed_link() {
  * @since BuddyPress 1.0.0
  * @deprecated 1.2.0
  *
- * @todo properly deprecate in favor of bp_member_activity_feed_link().
+ * @todo properly deprecate in favor of bboss_member_activity_feed_link().
  */
-function bp_activities_member_rss_link() {
-	echo esc_url( bp_get_member_activity_feed_link() );
+function bboss_activities_member_rss_link() {
+	echo esc_url( bboss_get_member_activity_feed_link() );
 }
 
 /**
@@ -3902,27 +3902,27 @@ function bp_activities_member_rss_link() {
  *
  * @return string $link The member activity feed link.
  */
-function bp_get_member_activity_feed_link() {
+function bboss_get_member_activity_feed_link() {
 
 	// Single member activity feed link.
-	if ( bp_is_profile_component() || bp_is_current_action( 'just-me' ) ) {
-		$link = bp_displayed_user_domain() . bp_get_activity_slug() . '/feed/';
+	if ( bboss_is_profile_component() || bboss_is_current_action( 'just-me' ) ) {
+		$link = bboss_displayed_user_domain() . bboss_get_activity_slug() . '/feed/';
 
 		// Friend feed link.
-	} elseif ( bp_is_active( 'friends' ) && bp_is_current_action( bp_get_friends_slug() ) ) {
-		$link = bp_displayed_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/feed/';
+	} elseif ( bboss_is_active( 'friends' ) && bboss_is_current_action( bboss_get_friends_slug() ) ) {
+		$link = bboss_displayed_user_domain() . bboss_get_activity_slug() . '/' . bboss_get_friends_slug() . '/feed/';
 
 		// Group feed link.
-	} elseif ( bp_is_active( 'groups' ) && bp_is_current_action( bp_get_groups_slug() ) ) {
-		$link = bp_displayed_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/feed/';
+	} elseif ( bboss_is_active( 'groups' ) && bboss_is_current_action( bboss_get_groups_slug() ) ) {
+		$link = bboss_displayed_user_domain() . bboss_get_activity_slug() . '/' . bboss_get_groups_slug() . '/feed/';
 
 		// Favorites activity feed link.
-	} elseif ( 'favorites' === bp_current_action() ) {
-		$link = bp_displayed_user_domain() . bp_get_activity_slug() . '/favorites/feed/';
+	} elseif ( 'favorites' === bboss_current_action() ) {
+		$link = bboss_displayed_user_domain() . bboss_get_activity_slug() . '/favorites/feed/';
 
 		// Mentions activity feed link.
-	} elseif ( ( 'mentions' === bp_current_action() ) && bp_activity_do_mentions() ) {
-		$link = bp_displayed_user_domain() . bp_get_activity_slug() . '/mentions/feed/';
+	} elseif ( ( 'mentions' === bboss_current_action() ) && bboss_activity_do_mentions() ) {
+		$link = bboss_displayed_user_domain() . bboss_get_activity_slug() . '/mentions/feed/';
 
 		// No feed link.
 	} else {
@@ -3945,12 +3945,12 @@ function bp_get_member_activity_feed_link() {
  * @since BuddyPress 1.0.0
  * @deprecated 1.2.0
  *
- * @todo properly deprecate in favor of bp_get_member_activity_feed_link().
+ * @todo properly deprecate in favor of bboss_get_member_activity_feed_link().
  *
  * @return string The member activity feed link.
  */
-function bp_get_activities_member_rss_link() {
-	return bp_get_member_activity_feed_link(); }
+function bboss_get_activities_member_rss_link() {
+	return bboss_get_member_activity_feed_link(); }
 
 
 /** Template tags for RSS feed output ****************************************/
@@ -3960,8 +3960,8 @@ function bp_get_activities_member_rss_link() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_feed_item_guid() {
-	echo esc_url( bp_get_activity_feed_item_guid() );
+function bboss_activity_feed_item_guid() {
+	echo esc_url( bboss_get_activity_feed_item_guid() );
 }
 
 /**
@@ -3969,11 +3969,11 @@ function bp_activity_feed_item_guid() {
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity feed item guid.
  */
-function bp_get_activity_feed_item_guid() {
+function bboss_get_activity_feed_item_guid() {
 	global $activities_template;
 
 	/**
@@ -3991,8 +3991,8 @@ function bp_get_activity_feed_item_guid() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_feed_item_title() {
-	echo wp_kses_post( bp_get_activity_feed_item_title() );
+function bboss_activity_feed_item_title() {
+	echo wp_kses_post( bboss_get_activity_feed_item_title() );
 }
 
 /**
@@ -4000,11 +4000,11 @@ function bp_activity_feed_item_title() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string $title The activity feed item title.
  */
-function bp_get_activity_feed_item_title() {
+function bboss_get_activity_feed_item_title() {
 	global $activities_template;
 
 	if ( ! empty( $activities_template->activity->action ) ) {
@@ -4021,7 +4021,7 @@ function bp_get_activity_feed_item_title() {
 	}
 
 	if ( 'activity_update' === $activities_template->activity->type ) {
-		$title .= ': ' . wp_strip_all_tags( ent2ncr( trim( convert_chars( bp_create_excerpt( $activities_template->activity->content, 70, array( 'ending' => ' [&#133;]' ) ) ) ) ) );
+		$title .= ': ' . wp_strip_all_tags( ent2ncr( trim( convert_chars( bboss_create_excerpt( $activities_template->activity->content, 70, array( 'ending' => ' [&#133;]' ) ) ) ) ) );
 	}
 
 	/**
@@ -4039,8 +4039,8 @@ function bp_get_activity_feed_item_title() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_feed_item_link() {
-	echo wp_kses_post( bp_get_activity_feed_item_link() );
+function bboss_activity_feed_item_link() {
+	echo wp_kses_post( bboss_get_activity_feed_item_link() );
 }
 
 /**
@@ -4048,11 +4048,11 @@ function bp_activity_feed_item_link() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity feed item link.
  */
-function bp_get_activity_feed_item_link() {
+function bboss_get_activity_feed_item_link() {
 	global $activities_template;
 
 	$retval = ! empty( $activities_template->activity->primary_link )
@@ -4074,8 +4074,8 @@ function bp_get_activity_feed_item_link() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_feed_item_date() {
-	echo esc_html( bp_get_activity_feed_item_date() );
+function bboss_activity_feed_item_date() {
+	echo esc_html( bboss_get_activity_feed_item_date() );
 }
 
 /**
@@ -4083,11 +4083,11 @@ function bp_activity_feed_item_date() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity feed item date.
  */
-function bp_get_activity_feed_item_date() {
+function bboss_get_activity_feed_item_date() {
 	global $activities_template;
 
 	$retval = ! empty( $activities_template->activity->date_recorded )
@@ -4109,8 +4109,8 @@ function bp_get_activity_feed_item_date() {
  *
  * @since BuddyPress 1.0.0
  */
-function bp_activity_feed_item_description() {
-	echo wp_kses_post( bp_get_activity_feed_item_description() ); // Feed item HTML (CDATA): keep allowed markup.
+function bboss_activity_feed_item_description() {
+	echo wp_kses_post( bboss_get_activity_feed_item_description() ); // Feed item HTML (CDATA): keep allowed markup.
 }
 
 /**
@@ -4118,11 +4118,11 @@ function bp_activity_feed_item_description() {
  *
  * @since BuddyPress 1.0.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity feed item description.
  */
-function bp_get_activity_feed_item_description() {
+function bboss_get_activity_feed_item_description() {
 	global $activities_template;
 
 	// Get the content, if exists.
@@ -4150,10 +4150,10 @@ function bp_get_activity_feed_item_description() {
  *
  * @since BuddyPress 1.5.0
  */
-function bp_activity_sitewide_feed() {
+function bboss_activity_sitewide_feed() {
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php esc_html_e( 'Site Wide Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php esc_html_e( 'Site Wide Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bboss_sitewide_activity_feed_link(); ?>" />
 
 	<?php
 }
@@ -4167,8 +4167,8 @@ add_action( 'bp_head', 'bp_activity_sitewide_feed' );
  * @param string $context The current context. 'activity', 'member',
  *                        'member_groups', 'group'.
  */
-function bp_activity_show_filters( $context = '' ) {
-	echo bp_get_activity_show_filters( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
+function bboss_activity_show_filters( $context = '' ) {
+	echo bboss_get_activity_show_filters( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
 }
 
 /**
@@ -4181,9 +4181,9 @@ function bp_activity_show_filters( $context = '' ) {
  *
  * @return string HTML for <option> values.
  */
-function bp_get_activity_show_filters( $context = '' ) {
+function bboss_get_activity_show_filters( $context = '' ) {
 	$filters = array();
-	$actions = bp_activity_get_actions_for_context( $context );
+	$actions = bboss_activity_get_actions_for_context( $context );
 	foreach ( $actions as $action ) {
 		// Connections activity collapses two filters into one.
 		if ( in_array( $action['key'], array( 'friendship_accepted', 'friendship_created' ) ) ) {
@@ -4229,8 +4229,8 @@ function bp_get_activity_show_filters( $context = '' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_follow_slug() {
-	echo esc_attr( bp_get_follow_slug() );
+function bboss_follow_slug() {
+	echo esc_attr( bboss_get_follow_slug() );
 }
 
 /**
@@ -4240,7 +4240,7 @@ function bp_follow_slug() {
  *
  * @return string
  */
-function bp_get_follow_slug() {
+function bboss_get_follow_slug() {
 
 	/**
 	 * Filters the follow component slug.
@@ -4249,7 +4249,7 @@ function bp_get_follow_slug() {
 	 *
 	 * @param string $value Follow component slug.
 	 */
-	return apply_filters( 'bp_get_follow_slug', BP_FOLLOW_SLUG );
+	return apply_filters( 'bp_get_follow_slug', BBOSS_FOLLOW_SLUG );
 }
 
 /**
@@ -4257,10 +4257,10 @@ function bp_get_follow_slug() {
  *
  * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
- * @uses bp_get_follower_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
+ * @uses bboss_get_follower_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_follower_ids( $args = '' ) {
-	echo esc_attr( bp_get_follower_ids( $args ) );
+function bboss_follower_ids( $args = '' ) {
+	echo esc_attr( bboss_get_follower_ids( $args ) );
 }
 
 /**
@@ -4276,18 +4276,18 @@ function bp_follower_ids( $args = '' ) {
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
  * @return Mixed Comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_get_follower_ids( $args = '' ) {
+function bboss_get_follower_ids( $args = '' ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'user_id'  => bp_displayed_user_id(),
+			'user_id'  => bboss_displayed_user_id(),
 			'page'     => false,
 			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_followers( $r ) );
+	$ids = implode( ',', (array) bboss_get_followers( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
@@ -4299,10 +4299,10 @@ function bp_get_follower_ids( $args = '' ) {
  *
  * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
- * @uses bp_get_following_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
+ * @uses bboss_get_following_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_following_ids( $args = '' ) {
-	echo esc_attr( bp_get_following_ids( $args ) );
+function bboss_following_ids( $args = '' ) {
+	echo esc_attr( bboss_get_following_ids( $args ) );
 }
 
 /**
@@ -4318,18 +4318,18 @@ function bp_following_ids( $args = '' ) {
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
  * @return Mixed Comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_get_following_ids( $args = '' ) {
+function bboss_get_following_ids( $args = '' ) {
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
-			'user_id'  => bp_displayed_user_id(),
+			'user_id'  => bboss_displayed_user_id(),
 			'page'     => false,
 			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_following( $r ) );
+	$ids = implode( ',', (array) bboss_get_following( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
@@ -4341,14 +4341,14 @@ function bp_get_following_ids( $args = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @see bp_add_follow_button() for information on arguments.
+ * @see bboss_add_follow_button() for information on arguments.
  *
  * @param int   $leader_id The user ID of the person we want to follow.
  * @param int   $follower_id The user ID initiating the follow request.
- * @param array $button_args See BP_Button class for more information.
+ * @param array $button_args See BBoss_Button class for more information.
  */
-function bp_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
-	echo wp_kses_post( bp_get_add_follow_button( $leader_id, $follower_id, $button_args ) );
+function bboss_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
+	echo wp_kses_post( bboss_get_add_follow_button( $leader_id, $follower_id, $button_args ) );
 }
 
 /**
@@ -4359,29 +4359,29 @@ function bp_add_follow_button( $leader_id = false, $follower_id = false, $button
  *
  * @param int   $leader_id The user ID of the person we want to follow.
  * @param int   $follower_id The user ID initiating the follow request.
- * @param array $button_args See BP_Button class for more information.
+ * @param array $button_args See BBoss_Button class for more information.
  *
  * @return mixed String of the button on success.  Boolean false on failure.
- * @uses bp_get_button() Renders a button using the BP Button API
+ * @uses bboss_get_button() Renders a button using the BP Button API
  * @since BuddyBoss 1.0.0
  */
-function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
+function bboss_get_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
 
 	if ( ! $leader_id || ! $follower_id ) {
 		return false;
 	}
 
-	$is_following = bp_is_following(
+	$is_following = bboss_is_following(
 		array(
 			'leader_id'   => $leader_id,
 			'follower_id' => $follower_id,
 		)
 	);
 
-	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bboss_parse_args( $button_args, get_class_vars( 'BBoss_Button' ) );
 
 	if ( $is_following ) {
-		$button = bp_parse_args(
+		$button = bboss_parse_args(
 			array(
 				'id'                => 'member_follow',
 				'component'         => 'members',
@@ -4389,14 +4389,14 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'block_self'        => true,
 				'wrapper_class'     => 'follow-button following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
-				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
+				'link_href'         => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
 				'link_text'         => esc_html__( 'Following', 'buddyboss' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'stop',
 				'link_class'        => 'follow-button following stop bp-toggle-action-button',
 				'data-balloon'      => esc_html__( 'Stop Following', 'buddyboss' ),
 				'button_attr'       => array(
-					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
+					'data-bp-nonce'        => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
 					'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
 					'data-title'           => esc_html__( 'Unfollow', 'buddyboss' ),
 					'data-title-displayed' => esc_html__( 'Following', 'buddyboss' ),
@@ -4405,7 +4405,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 			$button_args
 		);
 	} else {
-		$button = bp_parse_args(
+		$button = bboss_parse_args(
 			array(
 				'id'                => 'member_follow',
 				'component'         => 'members',
@@ -4413,13 +4413,13 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'block_self'        => true,
 				'wrapper_class'     => 'follow-button not_following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
-				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
+				'link_href'         => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
 				'link_text'         => esc_html__( 'Follow', 'buddyboss' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'start',
 				'link_class'        => 'follow-button not_following start',
 				'button_attr'       => array(
-					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
+					'data-bp-nonce'        => wp_nonce_url( bboss_loggedin_user_domain() . bboss_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
 					'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
 					'data-title'           => '',
 					'data-title-displayed' => '',
@@ -4436,7 +4436,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 	 *
 	 * @param string $button HTML markup for follow button.
 	 */
-	return bp_get_button( apply_filters( 'bp_get_add_follow_button', $button ) );
+	return bboss_get_button( apply_filters( 'bp_get_add_follow_button', $button ) );
 }
 
 /**
@@ -4444,8 +4444,8 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
  *
  * @since BuddyBoss 1.5.0
  */
-function bp_activity_entry_css_class() {
-	echo esc_attr( bp_get_activity_entry_css_class() );
+function bboss_activity_entry_css_class() {
+	echo esc_attr( bboss_get_activity_entry_css_class() );
 }
 
 /**
@@ -4453,11 +4453,11 @@ function bp_activity_entry_css_class() {
  *
  * @since BuddyBoss 1.5.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity entry item's CSS class.
  */
-function bp_get_activity_entry_css_class() {
+function bboss_get_activity_entry_css_class() {
 	global $activities_template;
 
 	$class = '';
@@ -4478,16 +4478,16 @@ function bp_get_activity_entry_css_class() {
  * @since BuddyBoss 2.4.40
  * @since BuddyBoss 3.5.1 Returns false while comment editing is disabled, unless `$privacy_edit`.
  *
- * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
+ * @param false|BBoss_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
  * @param bool                       $privacy_edit     Optional. True if editing privacy.
  *
  * @return bool True if can edit, false otherwise.
  */
-function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_edit = false ) {
+function bboss_activity_comment_user_can_edit( $activity_comment = false, $privacy_edit = false ) {
 
 	// Try to use current activity comment if none was passed.
 	if ( empty( $activity_comment ) ) {
-		$activity_comment = bp_activity_current_comment();
+		$activity_comment = bboss_activity_current_comment();
 	}
 
 	// Assume the user cannot edit the activity item.
@@ -4500,25 +4500,25 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 	) {
 
 		// Users are allowed to edit their own activity.
-		if ( isset( $activity_comment->user_id ) && ( bp_loggedin_user_id() === $activity_comment->user_id ) ) {
+		if ( isset( $activity_comment->user_id ) && ( bboss_loggedin_user_id() === $activity_comment->user_id ) ) {
 			$can_edit = true;
 		}
 
 		// Viewing a single item, and this user is an admin of that item.
-		if ( bp_is_single_item() && bp_is_item_admin() ) {
+		if ( bboss_is_single_item() && bboss_is_item_admin() ) {
 			$can_edit = true;
 		}
 	}
 
 	if ( $can_edit && ! $privacy_edit ) {
 
-		if ( ! bb_is_activity_comment_edit_enabled() ) {
+		if ( ! bboss_is_activity_comment_edit_enabled() ) {
 			// Editing is switched off; without it there is no edit window at all.
 			$can_edit = false;
 		} else {
 			// Check activity comment edit time expiration.
-			$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
-			$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
+			$activity_comment_edit_time        = (int) bboss_get_activity_comment_edit_time(); // for 10 minutes, 600.
+			$bp_dd_get_time                    = bboss_core_current_time( true, 'timestamp' );
 			$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
 
 			// Checking if expire time still greater than current time.
@@ -4546,9 +4546,9 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
  *
  * @return bool
  */
-function bb_activity_comment_can_favorite() {
+function bboss_activity_comment_can_favorite() {
 
-	$retval = is_user_logged_in() && bb_is_reaction_activity_comments_enabled();
+	$retval = is_user_logged_in() && bboss_is_reaction_activity_comments_enabled();
 
 	/**
 	 * Filters whether users can favorite activity comment items.
@@ -4567,9 +4567,9 @@ function bb_activity_comment_can_favorite() {
  *
  * @return bool
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  */
-function bb_get_activity_comment_is_favorite() {
+function bboss_get_activity_comment_is_favorite() {
 	/**
 	 * Filters whether the current activity comment item is in the current user's favorites.
 	 *
@@ -4577,8 +4577,8 @@ function bb_get_activity_comment_is_favorite() {
 	 *
 	 * @param bool $value Whether the current activity item is in the current user's favorites.
 	 */
-	$is_favorite = function_exists( 'bb_activity_is_item_favorite' )
-		? bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' )
+	$is_favorite = function_exists( 'bboss_activity_is_item_favorite' )
+		? bboss_activity_is_item_favorite( bboss_get_activity_comment_id(), 'activity_comment' )
 		: false;
 
 	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', $is_favorite );
@@ -4593,12 +4593,12 @@ function bb_get_activity_comment_is_favorite() {
  *
  * @return string The activity favorite link.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  */
-function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
+function bboss_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
 
 	if ( empty( $activity_comment_id ) ) {
-		$activity_comment_id = bp_get_activity_comment_id();
+		$activity_comment_id = bboss_get_activity_comment_id();
 	}
 
 	/**
@@ -4608,7 +4608,7 @@ function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
-	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_comment_id . '/' ), 'mark_favorite' ) );
+	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bboss_get_activity_root_slug() . '/favorite/' . $activity_comment_id . '/' ), 'mark_favorite' ) );
 }
 
 /**
@@ -4620,12 +4620,12 @@ function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
  *
  * @return string The activity comment unfavorite link.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  */
-function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
+function bboss_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 
 	if ( empty( $activity_comment_id ) ) {
-		$activity_comment_id = bp_get_activity_comment_id();
+		$activity_comment_id = bboss_get_activity_comment_id();
 	}
 	/**
 	 * Filters the activity comment unfavorite link.
@@ -4634,7 +4634,7 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
-	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bboss_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
 
 /**
@@ -4642,12 +4642,12 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
  *
  * @since BuddyBoss 2.13.0
  *
- * @param null|BP_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
+ * @param null|BBoss_Activity_Activity $activity_object Optional. Activity object to check. If null, use current activity in loop.
  *
  * @return bool True if the activity has a title, false otherwise.
  */
-function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = null ) {
-	$post_title = bb_activity_get_post_title( $activity_object );
+function bboss_activity_has_post_title( ?BBoss_Activity_Activity $activity_object = null ) {
+	$post_title = bboss_activity_get_post_title( $activity_object );
 	return ! empty( $post_title );
 }
 
@@ -4657,10 +4657,10 @@ function bb_activity_has_post_title( ?BP_Activity_Activity $activity_object = nu
  *
  * @since BuddyBoss 2.13.0
  *
- * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ * @param null|BBoss_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
  */
-function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null ) {
-	echo esc_html( bb_activity_get_post_title( $activity_object ) );
+function bboss_activity_post_title( ?BBoss_Activity_Activity $activity_object = null ) {
+	echo esc_html( bboss_activity_get_post_title( $activity_object ) );
 }
 
 /**
@@ -4668,13 +4668,13 @@ function bb_activity_post_title( ?BP_Activity_Activity $activity_object = null )
  *
  * @since BuddyBoss 2.13.0
  *
- * @param null|BP_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
+ * @param null|BBoss_Activity_Activity $activity_object Optional. Activity object to get post title from. If null, uses current activity in loop.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template {@link BBoss_Activity_Template}
  *
  * @return string The activity post title.
  */
-function bb_activity_get_post_title( ?BP_Activity_Activity $activity_object = null ) {
+function bboss_activity_get_post_title( ?BBoss_Activity_Activity $activity_object = null ) {
 	global $activities_template;
 
 	if ( ! is_object( $activities_template ) ) {
@@ -4699,7 +4699,7 @@ function bb_activity_get_post_title( ?BP_Activity_Activity $activity_object = nu
 	);
 
 	if ( ! empty( $activity_post_title ) ) {
-		$activity_post_title = bb_activity_strip_post_title( $activity_post_title );
+		$activity_post_title = bboss_activity_strip_post_title( $activity_post_title );
 	}
 
 	return $activity_post_title;

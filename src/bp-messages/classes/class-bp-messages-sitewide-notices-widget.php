@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
+class BBoss_Messages_Sitewide_Notices_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -46,7 +46,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		}
 
 		// Don't display the widget if there are no Notices to show.
-		$notices = BP_Messages_Notice::get_active();
+		$notices = BBoss_Messages_Notice::get_active();
 		if ( empty( $notices ) ) {
 			return;
 		}
@@ -71,7 +71,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		echo wp_kses_post( $before_title ) . esc_html( $title ) . wp_kses_post( $after_title ); ?>
 
 		<div class="bp-site-wide-message">
-			<?php bp_message_get_notices(); ?>
+			<?php bboss_message_get_notices(); ?>
 		</div>
 
 		<?php
@@ -105,7 +105,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 * @return string|null Widget form output.
 	 */
 	public function form( $instance ) {
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 			(array) $instance,
 			array(
 				'title' => '',

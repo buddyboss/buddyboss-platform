@@ -16,28 +16,28 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool False on failure.
  */
-function bp_activity_action_permalink_router() {
+function bboss_activity_action_permalink_router() {
 	// Not viewing activity.
-	if ( ! bp_is_activity_component() || ! bp_is_current_action( 'p' ) ) {
+	if ( ! bboss_is_activity_component() || ! bboss_is_current_action( 'p' ) ) {
 		return false;
 	}
 
 	// No activity to display.
-	if ( ! bp_action_variable( 0 ) || ! is_numeric( bp_action_variable( 0 ) ) ) {
+	if ( ! bboss_action_variable( 0 ) || ! is_numeric( bboss_action_variable( 0 ) ) ) {
 		return false;
 	}
 
 	// Get the activity details.
-	$activity = bp_activity_get_specific(
+	$activity = bboss_activity_get_specific(
 		array(
-			'activity_ids' => bp_action_variable( 0 ),
+			'activity_ids' => bboss_action_variable( 0 ),
 			'show_hidden'  => true,
 		)
 	);
 
 	// 404 if activity does not exist
 	if ( empty( $activity['activities'][0] ) ) {
-		bp_do_404();
+		bboss_do_404();
 		return;
 	} else {
 		$activity = $activity['activities'][0];
@@ -49,30 +49,30 @@ function bp_activity_action_permalink_router() {
 	do_action( 'bb_activity_before_permalink_redirect_url', $activity );
 
 	// Redirect based on the type of activity.
-	if ( bp_is_active( 'groups' ) && $activity->component == buddypress()->groups->id ) {
+	if ( bboss_is_active( 'groups' ) && $activity->component == bboss()->groups->id ) {
 
 		// Activity is a user update.
 		if ( ! empty( $activity->user_id ) ) {
-			$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
+			$redirect = bboss_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bboss_get_activity_slug() . '/' . $activity->id . '/';
 
 			// Activity is something else.
 		} else {
 
 			// Set redirect to group activity feed.
-			if ( $group = groups_get_group( $activity->item_id ) ) {
-				$redirect = bp_get_group_permalink( $group ) . bp_get_activity_slug() . '/' . $activity->id . '/';
+			if ( $group = bboss_groups_get_group( $activity->item_id ) ) {
+				$redirect = bboss_get_group_permalink( $group ) . bboss_get_activity_slug() . '/' . $activity->id . '/';
 			}
 		}
 
 		// Set redirect to users' activity feed.
 	} elseif ( ! empty( $activity->user_id ) ) {
-		$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
+		$redirect = bboss_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bboss_get_activity_slug() . '/' . $activity->id . '/';
 	}
 
 	do_action( 'bb_activity_after_permalink_redirect_url', $activity );
 
 	// check if edit activity link.
-	if ( 'edit' === bp_action_variable( 1 ) ) {
+	if ( 'edit' === bboss_action_variable( 1 ) ) {
 		$redirect = untrailingslashit( $redirect ) . '/edit';
 	}
 
@@ -91,11 +91,11 @@ function bp_activity_action_permalink_router() {
 	 * @param array $value Array with url to redirect to and activity related to the redirect.
 	 */
 	if ( ! $redirect = apply_filters_ref_array( 'bp_activity_permalink_redirect_url', array( $redirect, &$activity ) ) ) {
-		bp_core_redirect( bp_get_root_domain() );
+		bboss_core_redirect( bboss_get_root_domain() );
 	}
 
 	// Redirect to the actual activity permalink page.
-	bp_core_redirect( $redirect );
+	bboss_core_redirect( $redirect );
 }
 add_action( 'bp_actions', 'bp_activity_action_permalink_router' );
 
@@ -106,19 +106,19 @@ add_action( 'bp_actions', 'bp_activity_action_permalink_router' );
  *
  * @return bool|string Boolean on false or the template for a single activity item on success.
  */
-function bp_activity_screen_single_activity_permalink() {
+function bboss_activity_screen_single_activity_permalink() {
 	// No displayed user or not viewing activity component.
-	if ( ! bp_is_activity_component() ) {
+	if ( ! bboss_is_activity_component() ) {
 		return false;
 	}
 
-	$action = bp_current_action();
+	$action = bboss_current_action();
 	if ( ! $action || ! is_numeric( $action ) ) {
 		return false;
 	}
 
 	// Get the activity details.
-	$activity = bp_activity_get_specific(
+	$activity = bboss_activity_get_specific(
 		array(
 			'activity_ids' => $action,
 			'show_hidden'  => true,
@@ -127,8 +127,8 @@ function bp_activity_screen_single_activity_permalink() {
 	);
 
 	// 404 if activity does not exist
-	if ( empty( $activity['activities'][0] ) || ( bp_action_variables() && ! bp_is_activity_edit() ) ) {
-		bp_do_404();
+	if ( empty( $activity['activities'][0] ) || ( bboss_action_variables() && ! bboss_is_activity_edit() ) ) {
+		bboss_do_404();
 		return;
 
 	} else {
@@ -140,11 +140,11 @@ function bp_activity_screen_single_activity_permalink() {
 	 *
 	 * @since BuddyPress 3.0.0
 	 */
-	$has_access = bp_activity_user_can_read( $activity );
+	$has_access = bboss_activity_user_can_read( $activity );
 
 	// If activity author does not match displayed user, block access.
 	// More info:https://buddypress.trac.wordpress.org/ticket/7048#comment:28
-	if ( true === $has_access && bp_displayed_user_id() !== $activity->user_id ) {
+	if ( true === $has_access && bboss_displayed_user_id() !== $activity->user_id ) {
 		$has_access = false;
 	}
 
@@ -153,7 +153,7 @@ function bp_activity_screen_single_activity_permalink() {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @param BP_Activity_Activity $activity   Object representing the current activity item being displayed.
+	 * @param BBoss_Activity_Activity $activity   Object representing the current activity item being displayed.
 	 * @param bool                 $has_access Whether or not the current user has access to view activity.
 	 */
 	do_action( 'bp_activity_screen_single_activity_permalink', $activity, $has_access );
@@ -162,12 +162,12 @@ function bp_activity_screen_single_activity_permalink() {
 	if ( false === $has_access ) {
 		// If not logged in, prompt for login.
 		if ( ! is_user_logged_in() ) {
-			bp_core_no_access();
+			bboss_core_no_access();
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to this activity.', 'buddyboss' ), 'error' );
-			bp_core_redirect( bp_loggedin_user_domain() );
+			bboss_core_add_message( __( 'You do not have access to this activity.', 'buddyboss' ), 'error' );
+			bboss_core_redirect( bboss_loggedin_user_domain() );
 		}
 	}
 
@@ -181,6 +181,6 @@ function bp_activity_screen_single_activity_permalink() {
 	$template = apply_filters( 'bp_activity_template_profile_activity_permalink', 'members/single/activity/permalink' );
 
 	// Load the template.
-	bp_core_load_template( $template );
+	bboss_core_load_template( $template );
 }
 add_action( 'bp_screens', 'bp_activity_screen_single_activity_permalink' );

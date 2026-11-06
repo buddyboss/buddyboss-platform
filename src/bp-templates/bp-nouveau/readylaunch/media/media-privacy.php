@@ -5,7 +5,7 @@
  * This template handles the media privacy selection dropdown.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,9 +14,9 @@
 defined( 'ABSPATH' ) || exit;
 
 $album_privacy = '';
-if ( bp_is_user_media() || bp_is_user_albums() ) {
-	$album_id = (int) bp_action_variable( 0 );
-	$album    = new BP_Media_Album( $album_id );
+if ( bboss_is_user_media() || bboss_is_user_albums() ) {
+	$album_id = (int) bboss_action_variable( 0 );
+	$album    = new BBoss_Media_Album( $album_id );
 	if ( ! empty( $album ) ) {
 		$album_privacy = $album->privacy;
 	}
@@ -27,7 +27,7 @@ if ( bp_is_user_media() || bp_is_user_albums() ) {
 		<div class="bb-rl-dropdown-wrap bb-rl-filter">
 			<select id="bb-album-privacy">
 				<?php
-				foreach ( bp_media_get_visibility_levels() as $key => $privacy ) :
+				foreach ( bboss_media_get_visibility_levels() as $key => $privacy ) :
 					if ( 'grouponly' === $key ) {
 						continue;
 					}

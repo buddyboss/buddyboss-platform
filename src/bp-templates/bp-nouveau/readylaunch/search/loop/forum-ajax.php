@@ -5,7 +5,7 @@
  * The template for AJAX search results for forums.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,13 +14,13 @@
 defined( 'ABSPATH' ) || exit;
 
 $forum_id    = get_the_ID();
-$total       = bbp_get_forum_topic_count( $forum_id );
-$result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), 'forum' );
-$total_reply = bbp_get_forum_reply_count( $forum_id );
+$total       = bboss_bbp_get_forum_topic_count( $forum_id );
+$result      = bboss_search_is_post_restricted( $forum_id, get_current_user_id(), 'forum' );
+$total_reply = bboss_bbp_get_forum_reply_count( $forum_id );
 
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_forum">
-	<a href="<?php echo esc_url( bbp_get_forum_permalink( $forum_id ) ); ?>">
+	<a href="<?php echo esc_url( bboss_bbp_get_forum_permalink( $forum_id ) ); ?>">
 		<div class="item-avatar">
 			<?php
 			if ( $result['has_thumb'] ) {
@@ -37,7 +37,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 	</a>
 	<div class="item">
 		<div class="item-title">
-			<a href="<?php echo esc_url( bbp_get_forum_permalink( $forum_id ) ); ?>"><?php bbp_forum_title( $forum_id ); ?></a>
+			<a href="<?php echo esc_url( bboss_bbp_get_forum_permalink( $forum_id ) ); ?>"><?php bboss_bbp_forum_title( $forum_id ); ?></a>
 		</div>
 		<div class="item-desc">
 			<?php echo wp_kses_post( $result['post_content'] ); ?>
@@ -62,7 +62,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 					?>
 				</span>
 				<?php
-				$last_active = bbp_get_forum_last_active_time( $forum_id );
+				$last_active = bboss_bbp_get_forum_last_active_time( $forum_id );
 				if ( $last_active ) {
 					?>
 					<span class="middot">&middot;</span>

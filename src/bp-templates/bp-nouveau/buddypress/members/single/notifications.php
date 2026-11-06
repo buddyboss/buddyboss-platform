@@ -11,23 +11,23 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+$is_send_ajax_request = bboss_is_send_ajax_request();
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
+bboss_get_template_part( 'members/single/parts/item-subnav' );
 
-switch ( bp_current_action() ) :
+switch ( bboss_current_action() ) :
 	case 'unread':
 	case 'read':
-		bp_get_template_part( 'common/search-and-filters-bar' );
+		bboss_get_template_part( 'common/search-and-filters-bar' );
 		?>
 		<div id="notifications-user-list" class="notifications dir-list" data-bp-list="notifications">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bp-ajax-loader">';
-				bp_nouveau_user_feedback( 'member-notifications-loading' );
+				bboss_nouveau_user_feedback( 'member-notifications-loading' );
 				echo '</div>';
 			} else {
-				bp_get_template_part( 'members/single/notifications/notifications-loop' );
+				bboss_get_template_part( 'members/single/notifications/notifications-loop' );
 			}
 			?>
 		</div><!-- #groups-dir-list -->
@@ -36,6 +36,6 @@ switch ( bp_current_action() ) :
 
 	// Any other actions.
 	default:
-		bp_get_template_part( 'members/single/plugins' );
+		bboss_get_template_part( 'members/single/plugins' );
 		break;
 endswitch;

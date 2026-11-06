@@ -151,7 +151,7 @@ class BB_Messages extends Integration_Abstract {
 	/**
 	 * When new message created
 	 *
-	 * @param BP_Messages_Message $message Message object. Passed by reference.
+	 * @param BBoss_Messages_Message $message Message object. Passed by reference.
 	 */
 	public function event_messages_message_sent( $message ) {
 		$thread_id = $message->thread_id;
@@ -316,7 +316,7 @@ class BB_Messages extends Integration_Abstract {
 	/**
 	 * When user blocked.
 	 *
-	 * @param BP_Moderation $moderation Object of moderation data.
+	 * @param BBoss_Moderation $moderation Object of moderation data.
 	 */
 	public function event_bp_moderation_after_save( $moderation ) {
 		if ( 'user' === $moderation->item_type ) {
@@ -343,7 +343,7 @@ class BB_Messages extends Integration_Abstract {
 	/**
 	 * When user unblocked.
 	 *
-	 * @param BP_Moderation $moderation Object of moderation data.
+	 * @param BBoss_Moderation $moderation Object of moderation data.
 	 */
 	public function event_bb_moderation_after_delete( $moderation ) {
 		if ( 'user' === $moderation->item_type ) {
@@ -627,7 +627,7 @@ class BB_Messages extends Integration_Abstract {
 	 * When the member withdrawn connection request.
 	 *
 	 * @param int                   $friendship_id ID of the friendship.
-	 * @param BP_Friends_Friendship $friendship    Friendship object. Passed by reference.
+	 * @param BBoss_Friends_Friendship $friendship    Friendship object. Passed by reference.
 	 *
 	 * @return void
 	 */
@@ -733,7 +733,7 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	private function get_thread_ids_by_userid( $user_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id );
 
@@ -750,7 +750,7 @@ class BB_Messages extends Integration_Abstract {
 	 */
 	private function get_thread_id( $message_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp = bboss();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d LIMIT 1", $message_id );
 

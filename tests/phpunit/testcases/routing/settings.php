@@ -19,13 +19,13 @@ class BP_Tests_Routing_Settings extends BP_UnitTestCase {
 	}
 
 	function test_member_settings() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_settings_slug() );
-		$this->assertTrue( bp_is_user_settings_general() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_settings_slug() );
+		$this->assertTrue( bboss_is_user_settings_general() );
 	}
 
 	function test_member_settings_notifications() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_settings_slug() . '/notifications' );
-		$this->assertTrue( bp_is_user_settings_notifications() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_settings_slug() . '/notifications' );
+		$this->assertTrue( bboss_is_user_settings_notifications() );
 	}
 
 	// @todo How best to test this?
@@ -34,7 +34,7 @@ class BP_Tests_Routing_Settings extends BP_UnitTestCase {
 	}*/
 
 	function bp_is_user_settings_account_delete() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_settings_slug() . '/delete-account' );
-		$this->assertTrue( bp_is_user_settings_account_delete() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_settings_slug() . '/delete-account' );
+		$this->assertTrue( bboss_is_user_settings_account_delete() );
 	}
 }

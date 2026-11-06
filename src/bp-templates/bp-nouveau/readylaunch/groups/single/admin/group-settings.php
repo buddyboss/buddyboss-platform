@@ -6,7 +6,7 @@
  * and group type selection in the admin interface.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,10 +14,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$bp_get_new_group_status = bp_get_new_group_status();
-$bp_is_media_active      = bp_is_active( 'media' );
+$bp_get_new_group_status = bboss_get_new_group_status();
+$bp_is_media_active      = bboss_is_active( 'media' );
 
-if ( bp_is_group_create() ) : ?>
+if ( bboss_is_group_create() ) : ?>
 	<h3 class="bp-screen-title creation-step-name">
 		<?php esc_html_e( 'Select Group Settings', 'buddyboss' ); ?>
 	</h3>
@@ -48,7 +48,7 @@ if ( bp_is_group_create() ) : ?>
 		<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to invite others?', 'buddyboss' ); ?></p>
 
 		<?php
-		$invite_status = bp_group_get_invite_status( bp_get_current_group_id() );
+		$invite_status = bboss_group_get_invite_status( bboss_get_current_group_id() );
 		?>
 
 		<div class="bb-rl-filter">
@@ -60,7 +60,7 @@ if ( bp_is_group_create() ) : ?>
 		</div>
 	</fieldset>
 
-	<?php if ( bp_is_active( 'activity' ) ) : ?>
+	<?php if ( bboss_is_active( 'activity' ) ) : ?>
 
 		<fieldset class="radio group-post-form">
 			<legend><?php esc_html_e( 'Activity Feeds', 'buddyboss' ); ?></legend>
@@ -68,7 +68,7 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
 
 			<?php
-			$activity_feed_status = bp_group_get_activity_feed_status( bp_get_current_group_id() );
+			$activity_feed_status = bboss_group_get_activity_feed_status( bboss_get_current_group_id() );
 			?>
 
 			<div class="bb-rl-filter">
@@ -82,7 +82,7 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	if ( $bp_is_media_active && bp_is_group_media_support_enabled() ) :
+	if ( $bp_is_media_active && bboss_is_group_media_support_enabled() ) :
 		?>
 		<fieldset class="radio group-media">
 			<legend><?php esc_html_e( 'Group Photos', 'buddyboss' ); ?></legend>
@@ -90,7 +90,7 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload photos?', 'buddyboss' ); ?></p>
 
 			<?php
-			$media_status = bp_group_get_media_status( bp_get_current_group_id() );
+			$media_status = bboss_group_get_media_status( bboss_get_current_group_id() );
 			?>
 
 			<div class="bb-rl-filter">
@@ -104,7 +104,7 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	if ( $bp_is_media_active && bp_is_group_albums_support_enabled() ) :
+	if ( $bp_is_media_active && bboss_is_group_albums_support_enabled() ) :
 		?>
 		<fieldset class="radio group-albums">
 			<legend><?php esc_html_e( 'Group Albums', 'buddyboss' ); ?></legend>
@@ -112,7 +112,7 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to create albums?', 'buddyboss' ); ?></p>
 
 			<?php
-			$album_status = bp_group_get_album_status( bp_get_current_group_id() );
+			$album_status = bboss_group_get_album_status( bboss_get_current_group_id() );
 			?>
 
 			<div class="bb-rl-filter">
@@ -126,7 +126,7 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	if ( $bp_is_media_active && bp_is_group_document_support_enabled() ) :
+	if ( $bp_is_media_active && bboss_is_group_document_support_enabled() ) :
 		?>
 		<fieldset class="radio group-document">
 			<legend><?php esc_html_e( 'Group Documents', 'buddyboss' ); ?></legend>
@@ -134,7 +134,7 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload documents?', 'buddyboss' ); ?></p>
 
 			<?php
-			$document_status = bp_group_get_document_status( bp_get_current_group_id() );
+			$document_status = bboss_group_get_document_status( bboss_get_current_group_id() );
 			?>
 
 			<div class="bb-rl-filter">
@@ -148,7 +148,7 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) :
+	if ( bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled() ) :
 		?>
 		<fieldset class="radio group-video">
 			<legend><?php esc_html_e( 'Group Videos', 'buddyboss' ); ?></legend>
@@ -156,7 +156,7 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload videos?', 'buddyboss' ); ?></p>
 
 			<?php
-			$video_status = bp_group_get_video_status( bp_get_current_group_id() );
+			$video_status = bboss_group_get_video_status( bboss_get_current_group_id() );
 			?>
 
 			<div class="bb-rl-filter">
@@ -170,7 +170,7 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() ) :
+	if ( bboss_is_active( 'messages' ) && true === bboss_disable_group_messages() ) :
 		?>
 		<fieldset class="radio group-messages">
 			<legend><?php esc_html_e( 'Group Messages', 'buddyboss' ); ?></legend>
@@ -178,7 +178,7 @@ if ( bp_is_group_create() ) : ?>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to send group messages?', 'buddyboss' ); ?></p>
 
 			<?php
-			$message_status = bp_group_get_message_status( bp_get_current_group_id() );
+			$message_status = bboss_group_get_message_status( bboss_get_current_group_id() );
 			?>
 
 			<div class="bb-rl-filter">
@@ -192,16 +192,16 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
+	$group_types = bboss_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
 
 	// Hide Group Types if none is selected in Users > Profile Type > E.g. (Students) > Allowed Group Types meta box.
-	if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
-		$get_all_registered_member_types = bp_get_active_member_types();
+	if ( false === bboss_restrict_group_creation() && true === bboss_member_type_enable_disable() ) {
+		$get_all_registered_member_types = bboss_get_active_member_types();
 		if ( ! empty( $get_all_registered_member_types ) ) {
 
-			$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+			$current_user_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
 			if ( '' !== $current_user_member_type ) {
-				$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+				$member_type_post_id = bboss_member_type_post_by_type( $current_user_member_type );
 				$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
 				if ( ! empty( $include_group_type ) && 'none' === $include_group_type[0] ) {
 					$group_types = '';
@@ -230,21 +230,21 @@ if ( bp_is_group_create() ) : ?>
 								$group_type->name
 							),
 							esc_attr( $group_type->name ),
-							selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $group_type->name ) ) ? $group_type->name : '', $group_type->name, false ),
+							selected( ( true === bboss_groups_has_group_type( bboss_get_current_group_id(), $group_type->name ) ) ? $group_type->name : '', $group_type->name, false ),
 							esc_html( $group_type->labels['singular_name'] )
 						);
 
-						if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
+						if ( false === bboss_restrict_group_creation() && true === bboss_member_type_enable_disable() ) {
 
-							$get_all_registered_member_types = bp_get_active_member_types();
+							$get_all_registered_member_types = bboss_get_active_member_types();
 
 							if ( ! empty( $get_all_registered_member_types ) ) {
 
-								$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+								$current_user_member_type = bboss_get_member_type( bboss_loggedin_user_id() );
 
 								if ( '' !== $current_user_member_type ) {
 
-									$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+									$member_type_post_id = bboss_member_type_post_by_type( $current_user_member_type );
 									$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
 
 									if ( ! empty( $include_group_type ) ) {
@@ -271,9 +271,9 @@ if ( bp_is_group_create() ) : ?>
 		<?php
 	endif;
 
-	if ( bp_enable_group_hierarchies() ) :
-		$current_parent_group_id = bp_get_parent_group_id();
-		$possible_parent_groups  = bp_get_possible_parent_groups();
+	if ( bboss_enable_group_hierarchies() ) :
+		$current_parent_group_id = bboss_get_parent_group_id();
+		$possible_parent_groups  = bboss_get_possible_parent_groups();
 		?>
 		<fieldset class="select group-parent">
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>

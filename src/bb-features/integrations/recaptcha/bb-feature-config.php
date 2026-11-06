@@ -3,7 +3,7 @@
  * reCAPTCHA Integration Feature Configuration.
  *
  * Registers the reCAPTCHA integration in the BuddyBoss Feature Registry.
- * Auto-discovered by BB_Feature_Autoloader from bb-features/integrations/recaptcha/.
+ * Auto-discovered by BBoss_Feature_Autoloader from bb-features/integrations/recaptcha/.
  *
  * @package BuddyBoss\Features\Integrations\Recaptcha
  * @since BuddyBoss 3.0.0
@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register reCAPTCHA integration with Feature Registry.
  *
- * Uses bb_register_integration() which forces category to 'integrations'
- * and wires the Integration Bridge for legacy BP_Integration sync.
+ * Uses bboss_register_integration() which forces category to 'integrations'
+ * and wires the Integration Bridge for legacy BBoss_Integration sync.
  *
  * The card icon is a bundled font icon; the buddyboss.com build uses the
  * reCAPTCHA logo hosted on the BuddyBoss marketing bucket instead.
@@ -32,7 +32,7 @@ $bb_recaptcha_icon = array(
 );
 // @bbwt-com-end remote-upsell-features
 
-bb_register_integration(
+bboss_register_integration(
 	'recaptcha',
 	array(
 		'label'              => __( 'reCAPTCHA', 'buddyboss' ),
@@ -45,7 +45,7 @@ bb_register_integration(
 			// Respect Settings 2.0 feature toggle (bb-active-features).
 			// Backward compat: if 'recaptcha' key not set, treat as enabled
 			// (same as before this toggle existed).
-			$active_features = bp_get_option( 'bb-active-features', array() );
+			$active_features = bboss_get_option( 'bb-active-features', array() );
 			if ( ! array_key_exists( 'recaptcha', $active_features ) ) {
 				$is_active = true;
 			} else {

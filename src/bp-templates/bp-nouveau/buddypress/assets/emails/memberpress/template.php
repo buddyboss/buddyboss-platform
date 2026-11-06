@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$settings = bp_email_get_appearance_settings();
+$settings = bboss_email_get_appearance_settings();
 
 ?><!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -268,7 +268,7 @@ $settings = bp_email_get_appearance_settings();
 								 */
 								do_action( 'bp_before_email_header' );
 
-								$blogname = bp_get_option( 'blogname' );
+								$blogname = bboss_get_option( 'blogname' );
 								$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 								if ( !empty( $attachment_id ) ) {

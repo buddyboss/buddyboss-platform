@@ -28,7 +28,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 	public function test_bookmark_table_exists() {
 		global $wpdb;
 
-		$table = bp_core_get_table_prefix() . 'bb_bookmark';
+		$table = bboss_core_get_table_prefix() . 'bb_bookmark';
 		$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
 
 		$this->assertSame( $table, $found, 'The bb_bookmark table was not installed.' );
@@ -37,7 +37,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 	public function test_bookmark_table_has_unique_key() {
 		global $wpdb;
 
-		$table = bp_core_get_table_prefix() . 'bb_bookmark';
+		$table = bboss_core_get_table_prefix() . 'bb_bookmark';
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper.
 		$indexes = $wpdb->get_results( "SHOW INDEX FROM {$table} WHERE Key_name = 'bookmark_item'" );
 
@@ -62,11 +62,11 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$obj->status        = 1;
 		$obj->date_recorded = current_time( 'mysql' );
 
-		$id = BB_Bookmarks::add( $obj );
+		$id = BBoss_Bookmarks::add( $obj );
 		$this->assertIsInt( $id );
 		$this->assertGreaterThan( 0, $id );
 
-		$result = BB_Bookmarks::get(
+		$result = BBoss_Bookmarks::get(
 			array(
 				'type'    => 'post',
 				'user_id' => $u,
@@ -93,14 +93,14 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$obj->status        = 1;
 		$obj->date_recorded = current_time( 'mysql' );
 
-		$id = BB_Bookmarks::add( $obj );
+		$id = BBoss_Bookmarks::add( $obj );
 
 		$row     = new stdClass();
 		$row->id = $id;
 
-		$this->assertTrue( BB_Bookmarks::delete( $row ) );
+		$this->assertTrue( BBoss_Bookmarks::delete( $row ) );
 
-		$result = BB_Bookmarks::get(
+		$result = BBoss_Bookmarks::get(
 			array(
 				'type'    => 'post',
 				'user_id' => $u,
@@ -127,7 +127,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$obj->status        = 1;
 		$obj->date_recorded = current_time( 'mysql' );
 
-		$id = BB_Bookmarks::add( $obj );
+		$id = BBoss_Bookmarks::add( $obj );
 		$this->assertIsInt( $id );
 		$this->assertGreaterThan( 0, $id );
 
@@ -137,7 +137,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		// Prime the per-row cache the same way get_single_bookmark() would
 		// have, without calling it directly — it calls
 		// bb_bookmark_register_types(), which does not exist yet.
-		$table = BB_Bookmarks::get_bookmark_tbl();
+		$table = BBoss_Bookmarks::get_bookmark_tbl();
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper.
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT bm.* FROM {$table} bm WHERE bm.id = %d", $id ) );
 		wp_cache_set( $id, $row, 'bb_bookmarks' );
@@ -146,13 +146,13 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$this->assertNotFalse( $cached );
 		$this->assertSame( 1, (int) $cached->status );
 
-		$this->assertTrue( BB_Bookmarks::update_status( 'post', $p, 0 ) );
+		$this->assertTrue( BBoss_Bookmarks::update_status( 'post', $p, 0 ) );
 
 		// The stale per-row cache entry must be purged by update_status().
 		$this->assertFalse( wp_cache_get( $id, 'bb_bookmarks' ) );
 
 		// The database write really happened.
-		$result = BB_Bookmarks::get(
+		$result = BBoss_Bookmarks::get(
 			array(
 				'type'    => 'post',
 				'user_id' => $u,
@@ -171,13 +171,13 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$type = new BB_Tests_Fake_Bookmark_Type();
 		$type::instance();
 
-		$types = bb_bookmark_register_types();
+		$types = bboss_bookmark_register_types();
 
 		$this->assertArrayHasKey( 'fake', $types );
 		$this->assertSame( 'Fake', $types['fake']['label']['singular'] );
 		$this->assertTrue( is_callable( $types['fake']['items_callback'] ) );
 
-		$single = bb_bookmark_register_types( 'fake' );
+		$single = bboss_bookmark_register_types( 'fake' );
 		$this->assertSame( 'Fakes', $single['label']['plural'] );
 	}
 
@@ -187,12 +187,12 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 
 		$args = array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p );
 
-		$first  = bb_bookmark_add( $args );
-		$second = bb_bookmark_add( $args );
+		$first  = bboss_bookmark_add( $args );
+		$second = bboss_bookmark_add( $args );
 
 		$this->assertIsInt( $first );
 		$this->assertSame( $first, $second, 'A repeat add must return the same row, not create a second.' );
-		$this->assertSame( 1, bb_bookmark_get_count( 'post', $p ) );
+		$this->assertSame( 1, bboss_bookmark_get_count( 'post', $p ) );
 	}
 
 	public function test_toggle_returns_real_state() {
@@ -201,11 +201,11 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$u = $this->factory->user->create();
 		$p = $this->factory->post->create();
 
-		$this->assertTrue( bb_bookmark_toggle( 'post', $p, $u ), 'First toggle must return true (now bookmarked).' );
-		$this->assertTrue( bb_bookmark_is_bookmarked( 'post', $p, $u ) );
+		$this->assertTrue( bboss_bookmark_toggle( 'post', $p, $u ), 'First toggle must return true (now bookmarked).' );
+		$this->assertTrue( bboss_bookmark_is_bookmarked( 'post', $p, $u ) );
 
-		$this->assertFalse( bb_bookmark_toggle( 'post', $p, $u ), 'Second toggle must return false (now removed).' );
-		$this->assertFalse( bb_bookmark_is_bookmarked( 'post', $p, $u ) );
+		$this->assertFalse( bboss_bookmark_toggle( 'post', $p, $u ), 'Second toggle must return false (now removed).' );
+		$this->assertFalse( bboss_bookmark_is_bookmarked( 'post', $p, $u ) );
 	}
 
 	public function test_toggle_errors_without_a_user() {
@@ -213,7 +213,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 
 		$p = $this->factory->post->create();
 
-		$result = bb_bookmark_toggle( 'post', $p, 0 );
+		$result = bboss_bookmark_toggle( 'post', $p, 0 );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_bookmark_no_user', $result->get_error_code() );
@@ -223,7 +223,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$u = $this->factory->user->create();
 		$p = $this->factory->post->create();
 
-		$result = bb_bookmark_toggle( 'not_a_registered_type', $p, $u );
+		$result = bboss_bookmark_toggle( 'not_a_registered_type', $p, $u );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_bookmark_invalid_type', $result->get_error_code() );
@@ -234,15 +234,15 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$u2 = $this->factory->user->create();
 		$p  = $this->factory->post->create();
 
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u1, 'item_id' => $p ) );
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u2, 'item_id' => $p ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u1, 'item_id' => $p ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u2, 'item_id' => $p ) );
 
-		$this->assertSame( 2, bb_bookmark_get_count( 'post', $p ) );
+		$this->assertSame( 2, bboss_bookmark_get_count( 'post', $p ) );
 
-		$row = bb_bookmark_get_by_item( 'post', $p, $u1 );
-		bb_bookmark_delete( $row->id );
+		$row = bboss_bookmark_get_by_item( 'post', $p, $u1 );
+		bboss_bookmark_delete( $row->id );
 
-		$this->assertSame( 1, bb_bookmark_get_count( 'post', $p ) );
+		$this->assertSame( 1, bboss_bookmark_get_count( 'post', $p ) );
 	}
 
 	public function test_delete_bookmarks_by_item() {
@@ -250,16 +250,16 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$u2 = $this->factory->user->create();
 		$p  = $this->factory->post->create();
 
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u1, 'item_id' => $p ) );
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u2, 'item_id' => $p ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u1, 'item_id' => $p ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u2, 'item_id' => $p ) );
 
-		$this->assertSame( 2, bb_bookmark_delete_by_item( 'post', $p ) );
-		$this->assertSame( 0, bb_bookmark_get_count( 'post', $p ) );
+		$this->assertSame( 2, bboss_bookmark_delete_by_item( 'post', $p ) );
+		$this->assertSame( 0, bboss_bookmark_get_count( 'post', $p ) );
 	}
 
 	/**
-	 * Finding 1: bb_bookmark_prime_cache() must prime a cache that
-	 * bb_bookmark_is_bookmarked() actually reads — for both bookmarked and
+	 * Finding 1: bboss_bookmark_prime_cache() must prime a cache that
+	 * bboss_bookmark_is_bookmarked() actually reads — for both bookmarked and
 	 * unbookmarked items — and priming must eliminate the per-item query.
 	 */
 	public function test_prime_bookmark_cache_is_read_by_is_bookmarked() {
@@ -272,17 +272,17 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$p2 = $this->factory->post->create();
 		$p3 = $this->factory->post->create();
 
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p1 ) );
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p2 ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p1 ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p2 ) );
 		// $p3 is deliberately left unbookmarked -- proves the negative cache entry is written too.
 
-		bb_bookmark_prime_cache( 'post', array( $p1, $p2, $p3 ), $u );
+		bboss_bookmark_prime_cache( 'post', array( $p1, $p2, $p3 ), $u );
 
 		$num_queries_before = $wpdb->num_queries;
 
-		$this->assertTrue( bb_bookmark_is_bookmarked( 'post', $p1, $u ), 'p1 was bookmarked and primed.' );
-		$this->assertTrue( bb_bookmark_is_bookmarked( 'post', $p2, $u ), 'p2 was bookmarked and primed.' );
-		$this->assertFalse( bb_bookmark_is_bookmarked( 'post', $p3, $u ), 'p3 was never bookmarked and was primed as such.' );
+		$this->assertTrue( bboss_bookmark_is_bookmarked( 'post', $p1, $u ), 'p1 was bookmarked and primed.' );
+		$this->assertTrue( bboss_bookmark_is_bookmarked( 'post', $p2, $u ), 'p2 was bookmarked and primed.' );
+		$this->assertFalse( bboss_bookmark_is_bookmarked( 'post', $p3, $u ), 'p3 was never bookmarked and was primed as such.' );
 
 		$this->assertSame(
 			$num_queries_before,
@@ -300,29 +300,29 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$u = $this->factory->user->create();
 		$p = $this->factory->post->create( array( 'post_type' => 'post' ) );
 
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p ) );
-		$this->assertSame( 1, bb_bookmark_get_count( 'post', $p ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p ) );
+		$this->assertSame( 1, bboss_bookmark_get_count( 'post', $p ) );
 
 		wp_delete_post( $p, true );
 
-		$this->assertSame( 0, bb_bookmark_get_count( 'post', $p ) );
+		$this->assertSame( 0, bboss_bookmark_get_count( 'post', $p ) );
 	}
 
 	/**
 	 * Proves the `deleted_user` hook itself is wired -- not merely that
-	 * bb_bookmark_delete_user_items() works when called directly, which
+	 * bboss_bookmark_delete_user_items() works when called directly, which
 	 * test_delete_user_bookmarks_fires_removed_action_per_row() already covers.
 	 */
 	public function test_bookmarks_purged_when_user_deleted() {
 		$u = $this->factory->user->create();
 		$p = $this->factory->post->create();
 
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p ) );
-		$this->assertSame( 1, bb_bookmark_get_count( 'post', $p ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p ) );
+		$this->assertSame( 1, bboss_bookmark_get_count( 'post', $p ) );
 
 		wp_delete_user( $u );
 
-		$this->assertSame( 0, bb_bookmark_get_count( 'post', $p ) );
+		$this->assertSame( 0, bboss_bookmark_get_count( 'post', $p ) );
 	}
 
 	/**
@@ -335,16 +335,16 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$u = $this->factory->user->create();
 		$p = $this->factory->post->create( array( 'post_status' => 'publish' ) );
 
-		$this->assertTrue( bb_bookmark_toggle( 'post', $p, $u ) );
+		$this->assertTrue( bboss_bookmark_toggle( 'post', $p, $u ) );
 
 		// The author unpublishes the post.
 		wp_update_post( array( 'ID' => $p, 'post_status' => 'draft' ) );
 
 		$this->assertFalse(
-			bb_bookmark_toggle( 'post', $p, $u ),
+			bboss_bookmark_toggle( 'post', $p, $u ),
 			'Removing a bookmark must work even when the item is no longer published.'
 		);
-		$this->assertFalse( bb_bookmark_is_bookmarked( 'post', $p, $u ) );
+		$this->assertFalse( bboss_bookmark_is_bookmarked( 'post', $p, $u ) );
 	}
 
 	/**
@@ -358,8 +358,8 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$p1 = $this->factory->post->create();
 		$p2 = $this->factory->post->create();
 
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p1 ) );
-		bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p2 ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p1 ) );
+		bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p2 ) );
 
 		$fired = array();
 		add_action(
@@ -371,15 +371,15 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 			3
 		);
 
-		bb_bookmark_delete_user_items( $u );
+		bboss_bookmark_delete_user_items( $u );
 
 		$this->assertCount( 2, $fired, 'bb_bookmark_removed must fire once per deleted row.' );
-		$this->assertSame( 0, bb_bookmark_get_count( 'post', $p1 ) );
-		$this->assertSame( 0, bb_bookmark_get_count( 'post', $p2 ) );
+		$this->assertSame( 0, bboss_bookmark_get_count( 'post', $p1 ) );
+		$this->assertSame( 0, bboss_bookmark_get_count( 'post', $p2 ) );
 	}
 
 	/**
-	 * bb_bookmark_delete_blog_items() must be selective: it must delete
+	 * bboss_bookmark_delete_blog_items() must be selective: it must delete
 	 * only the rows for the target blog_id, and must leave every other
 	 * blog's rows untouched. A WHERE clause bug here could delete the wrong
 	 * site's bookmarks -- or none at all -- without anything catching it.
@@ -402,7 +402,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$current_obj->status        = 1;
 		$current_obj->date_recorded = current_time( 'mysql' );
 
-		$current_id = BB_Bookmarks::add( $current_obj );
+		$current_id = BBoss_Bookmarks::add( $current_obj );
 		$this->assertIsInt( $current_id );
 		$this->assertGreaterThan( 0, $current_id );
 
@@ -415,11 +415,11 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$other_obj->status        = 1;
 		$other_obj->date_recorded = current_time( 'mysql' );
 
-		$other_id = BB_Bookmarks::add( $other_obj );
+		$other_id = BBoss_Bookmarks::add( $other_obj );
 		$this->assertIsInt( $other_id );
 		$this->assertGreaterThan( 0, $other_id );
 
-		$table = BB_Bookmarks::get_bookmark_tbl();
+		$table = BBoss_Bookmarks::get_bookmark_tbl();
 
 		// Query the table directly -- BB_Bookmarks::get() defaults blog_id to
 		// the current site, which would silently hide the other blog's row.
@@ -431,7 +431,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$this->assertNotEmpty( $current_row_before, 'The current blog bookmark row must exist before the delete.' );
 		$this->assertNotEmpty( $other_row_before, 'The other blog bookmark row must exist before the delete.' );
 
-		bb_bookmark_delete_blog_items( $other_blog_id );
+		bboss_bookmark_delete_blog_items( $other_blog_id );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper.
 		$other_row_after = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $other_id ) );
@@ -443,7 +443,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 	}
 
 	/**
-	 * BB_Bookmarks::get() must not hydrate-then-discard when a specific column
+	 * BBoss_Bookmarks::get() must not hydrate-then-discard when a specific column
 	 * is requested. Requesting `fields => 'item_id'` (the shape
 	 * bb_blog_pro_get_user_bookmarks() uses, unpaginated, on every profile nav
 	 * render) must select that column directly -- not run one
@@ -461,13 +461,13 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 		$expected_item_ids = array();
 		for ( $i = 0; $i < 5; $i++ ) {
 			$p = $this->factory->post->create( array( 'post_type' => 'post', 'post_status' => 'publish' ) );
-			bb_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p ) );
+			bboss_bookmark_add( array( 'type' => 'post', 'user_id' => $u, 'item_id' => $p ) );
 			$expected_item_ids[] = $p;
 		}
 
 		$num_queries_before = $wpdb->num_queries;
 
-		$result = bb_bookmark_get_user_items(
+		$result = bboss_bookmark_get_user_items(
 			array(
 				'type'     => 'post',
 				'user_id'  => $u,
@@ -502,7 +502,7 @@ class BP_Tests_Core_Bookmarks extends BP_UnitTestCase {
 /**
  * A minimal bookmark type used only by the tests above.
  */
-class BB_Tests_Fake_Bookmark_Type extends BB_Bookmark_Type {
+class BB_Tests_Fake_Bookmark_Type extends BBoss_Bookmark_Type {
 
 	public function setup() {
 		$this->register_type(

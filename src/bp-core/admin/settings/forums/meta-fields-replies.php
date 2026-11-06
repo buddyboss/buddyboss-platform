@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings - Reply Meta Fields Registration.
  *
  * Registers core reply fields for the Reply Create/Edit modals
- * in the Settings 2.0 admin interface via BB_Admin_Meta_Field_Registry.
+ * in the Settings 2.0 admin interface via BBoss_Admin_Meta_Field_Registry.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  */
-function bb_replies_register_core_meta_fields( $registry, $component ) {
+function bboss_replies_register_core_meta_fields( $registry, $component ) {
 
 	// Content (Description).
 	$registry->register(
@@ -61,7 +61,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $reply->ID ) ) {
 					return null;
 				}
-				return bbp_get_reply_url( $reply->ID );
+				return bboss_bbp_get_reply_url( $reply->ID );
 			},
 		)
 	);
@@ -377,7 +377,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					'author_name'   => $user->display_name,
 					'author_avatar' => get_avatar_url( $user->ID, array( 'size' => 32 ) ),
-					'author_url'    => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
+					'author_url'    => function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
 				);
 			},
 			'save_value'        => function ( $reply, $value ) {
@@ -449,7 +449,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					'author_name'   => $user->display_name,
 					'author_avatar' => get_avatar_url( $user->ID, array( 'size' => 32 ) ),
-					'author_url'    => function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
+					'author_url'    => function_exists( 'bboss_core_get_user_domain' ) ? bboss_core_get_user_domain( $user->ID ) : get_author_posts_url( $user->ID ),
 				);
 			},
 		)

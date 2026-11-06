@@ -20,7 +20,7 @@ require_once __DIR__ . '/callbacks.php';
 // =========================================================================
 
 // Single side panel: reCAPTCHA Settings.
-bb_register_side_panel(
+bboss_register_side_panel(
 	'recaptcha',
 	'recaptcha_settings',
 	array(
@@ -29,7 +29,7 @@ bb_register_side_panel(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-gear',
 		),
-		'help_url'   => bp_get_admin_url(
+		'help_url'   => bboss_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -49,13 +49,13 @@ bb_register_side_panel(
 
 $status      = 'warning';
 $status_text = __( 'Not Connected', 'buddyboss' );
-$verified    = bb_recaptcha_connection_status();
+$verified    = bboss_recaptcha_connection_status();
 if ( ! empty( $verified ) && 'connected' === $verified ) {
 	$status      = 'success';
 	$status_text = __( 'Connected', 'buddyboss' );
 }
 
-bb_register_feature_section(
+bboss_register_feature_section(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -76,14 +76,14 @@ bb_register_feature_section(
 );
 
 // Prepare combined version options.
-$recaptcha_settings = bb_recaptcha_options();
-$current_version    = bb_recaptcha_admin_get_combined_version( $recaptcha_settings );
+$recaptcha_settings = bboss_recaptcha_options();
+$current_version    = bboss_recaptcha_admin_get_combined_version( $recaptcha_settings );
 
 // Per-option descriptions for version select (dynamic swap in React via option_descriptions).
-$version_descriptions = bb_recaptcha_admin_get_version_description();
+$version_descriptions = bboss_recaptcha_admin_get_version_description();
 
 // FIELD: Versions (combined select).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -108,13 +108,13 @@ bb_register_feature_field(
 		'default'             => $current_version,
 		'description'         => $version_descriptions[ $current_version ] ?? $version_descriptions['recaptcha_v3'],
 		'option_descriptions' => $version_descriptions,
-		'sanitize_callback'   => 'bb_recaptcha_sanitize_version',
+		'sanitize_callback'   => 'bboss_recaptcha_sanitize_version',
 		'order'               => 10,
 	)
 );
 
 // FIELD: API Keys (parent label for Site Key, Secret Key, and Verify).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -129,7 +129,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Site Key (child of API Keys).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -137,7 +137,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_site_key',
 		'label'             => __( 'Site Key', 'buddyboss' ),
 		'type'              => 'password',
-		'default'           => bb_recaptcha_site_key(),
+		'default'           => bboss_recaptcha_site_key(),
 		'placeholder'       => '',
 		'sanitize_callback' => 'sanitize_text_field',
 		'order'             => 21,
@@ -146,7 +146,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Secret Key (child of API Keys).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -154,7 +154,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_secret_key',
 		'label'             => __( 'Secret Key', 'buddyboss' ),
 		'type'              => 'password',
-		'default'           => bb_recaptcha_secret_key(),
+		'default'           => bboss_recaptcha_secret_key(),
 		'placeholder'       => '',
 		'sanitize_callback' => 'sanitize_text_field',
 		'order'             => 22,
@@ -163,7 +163,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Verify button (child of API Keys).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -195,7 +195,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Admin Console notice (plain description text per Figma).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
@@ -218,7 +218,7 @@ bb_register_feature_field(
 // SECTION 2: reCAPTCHA Settings
 // =========================================================================
 
-bb_register_feature_section(
+bboss_register_feature_section(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -241,7 +241,7 @@ bb_register_feature_section(
 // Virtual field that tracks the connection state. Cannot key off
 // site_key/secret_key alone because typing into those fields would flip
 // the conditional before verification actually completes.
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -256,7 +256,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Score Threshold (v3 only).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -264,9 +264,9 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_score_threshold',
 		'label'             => __( 'Score Threshold', 'buddyboss' ),
 		'type'              => 'number',
-		'default'           => (string) bb_recaptcha_score_threshold(),
+		'default'           => (string) bboss_recaptcha_score_threshold(),
 		'description'       => __( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0.0 and 1.0 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' ),
-		'sanitize_callback' => 'bb_recaptcha_sanitize_score_threshold',
+		'sanitize_callback' => 'bboss_recaptcha_sanitize_score_threshold',
 		'order'             => 10,
 		'step'              => '0.1',
 		'min'               => '0',
@@ -279,7 +279,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Enabled For (toggle list).
-$actions         = bb_recaptcha_actions();
+$actions         = bboss_recaptcha_actions();
 $enabled_options = array();
 $enabled_default = array();
 foreach ( $actions as $action_key => $action_data ) {
@@ -291,7 +291,7 @@ foreach ( $actions as $action_key => $action_data ) {
 	$enabled_default[ $action_key ] = $action_data['enabled'] ? 1 : 0;
 }
 
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -306,7 +306,7 @@ bb_register_feature_field(
 			__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss' ),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
 		),
-		'sanitize_callback' => 'bb_recaptcha_sanitize_enabled_for',
+		'sanitize_callback' => 'bboss_recaptcha_sanitize_enabled_for',
 		'order'             => 20,
 		// Group with bb_recaptcha_allow_bypass below so the divider between
 		// them disappears (matches Figma — they read as one block).
@@ -317,10 +317,10 @@ bb_register_feature_field(
 );
 
 // FIELD: Allow Bypass (checkbox + text input + copy URL).
-$allow_bypass = bb_recaptcha_setting( 'allow_bypass', false );
-$bypass_text  = bb_recaptcha_setting( 'bypass_text', '' );
+$allow_bypass = bboss_recaptcha_setting( 'allow_bypass', false );
+$bypass_text  = bboss_recaptcha_setting( 'bypass_text', '' );
 
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -350,7 +350,7 @@ bb_register_feature_field(
 );
 
 // Hidden field for bypass text (saved alongside the checkbox).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -359,13 +359,13 @@ bb_register_feature_field(
 		'label'             => '',
 		'type'              => 'hidden',
 		'default'           => $bypass_text,
-		'sanitize_callback' => 'bb_recaptcha_sanitize_bypass_text',
+		'sanitize_callback' => 'bboss_recaptcha_sanitize_bypass_text',
 		'order'             => 31,
 	)
 );
 
 // FIELD: Language Code.
-$languages       = bb_recaptcha_languages();
+$languages       = bboss_recaptcha_languages();
 $language_options = array();
 foreach ( $languages as $code => $label ) {
 	$language_options[] = array(
@@ -374,7 +374,7 @@ foreach ( $languages as $code => $label ) {
 	);
 }
 
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -383,7 +383,7 @@ bb_register_feature_field(
 		'label'             => __( 'Language Code', 'buddyboss' ),
 		'type'              => 'select',
 		'options'           => $language_options,
-		'default'           => bb_recaptcha_setting( 'language_code', 'en' ),
+		'default'           => bboss_recaptcha_setting( 'language_code', 'en' ),
 		'description'       => __( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss' ),
 		'sanitize_callback' => 'sanitize_text_field',
 		'order'             => 40,
@@ -391,7 +391,7 @@ bb_register_feature_field(
 );
 
 // FIELD: No-Conflict Mode.
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -399,7 +399,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_conflict_mode',
 		'label'             => __( 'No-Conflict Mode', 'buddyboss' ),
 		'type'              => 'toggle',
-		'default'           => bb_recaptcha_conflict_mode() ? 1 : 0,
+		'default'           => bboss_recaptcha_conflict_mode() ? 1 : 0,
 		'description'       => __( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss' ),
 		'help_text'         => __( 'When checked, other instances of reCAPTCHA are forcefully removed to prevent conflicts. Only enable this option if your site is experiencing compatibility issues or if instructed to do so by support.', 'buddyboss' ),
 		'sanitize_callback' => 'absint',
@@ -408,7 +408,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Exclude by IP.
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_general',
@@ -416,7 +416,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_exclude_ip',
 		'label'             => __( 'Exclude by IP', 'buddyboss' ),
 		'type'              => 'textarea',
-		'default'           => bb_recaptcha_setting( 'exclude_ip', '' ),
+		'default'           => bboss_recaptcha_setting( 'exclude_ip', '' ),
 		'placeholder'       => __( 'Enter IP addresses', 'buddyboss' ),
 		'description'       => __( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss' ),
 		'sanitize_callback' => 'sanitize_textarea_field',
@@ -428,7 +428,7 @@ bb_register_feature_field(
 // SECTION 3: reCAPTCHA Design (v2 only)
 // =========================================================================
 
-bb_register_feature_section(
+bboss_register_feature_section(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_design',
@@ -463,7 +463,7 @@ bb_register_feature_section(
 );
 
 // FIELD: Theme (v2 checkbox only).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_design',
@@ -475,16 +475,16 @@ bb_register_feature_field(
 			array(
 				'label' => __( 'Light', 'buddyboss' ),
 				'value' => 'light',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-light.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-light.png' ),
 			),
 			array(
 				'label' => __( 'Dark', 'buddyboss' ),
 				'value' => 'dark',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-dark.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-dark.png' ),
 			),
 		),
-		'default'           => bb_recaptcha_v2_theme(),
-		'sanitize_callback' => 'bb_recaptcha_sanitize_theme',
+		'default'           => bboss_recaptcha_v2_theme(),
+		'sanitize_callback' => 'bboss_recaptcha_sanitize_theme',
 		'order'             => 10,
 		'conditional'       => array(
 			'field' => 'bb_recaptcha_version',
@@ -494,7 +494,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Size (v2 checkbox only).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_design',
@@ -506,16 +506,16 @@ bb_register_feature_field(
 			array(
 				'label' => __( 'Normal', 'buddyboss' ),
 				'value' => 'normal',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-light.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-light.png' ),
 			),
 			array(
 				'label' => __( 'Compact', 'buddyboss' ),
 				'value' => 'compact',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-light-compact.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-light-compact.png' ),
 			),
 		),
-		'default'           => bb_recaptcha_v2_size(),
-		'sanitize_callback' => 'bb_recaptcha_sanitize_size',
+		'default'           => bboss_recaptcha_v2_size(),
+		'sanitize_callback' => 'bboss_recaptcha_sanitize_size',
 		'order'             => 20,
 		'conditional'       => array(
 			'field' => 'bb_recaptcha_version',
@@ -525,7 +525,7 @@ bb_register_feature_field(
 );
 
 // FIELD: Badge Position (v2 invisible only).
-bb_register_feature_field(
+bboss_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_design',
@@ -537,21 +537,21 @@ bb_register_feature_field(
 			array(
 				'label' => __( 'Bottom Right', 'buddyboss' ),
 				'value' => 'bottomright',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-bottom-right.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-bottom-right.png' ),
 			),
 			array(
 				'label' => __( 'Bottom Left', 'buddyboss' ),
 				'value' => 'bottomleft',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-bottom-left.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-bottom-left.png' ),
 			),
 			array(
 				'label' => __( 'Inline', 'buddyboss' ),
 				'value' => 'inline',
-				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-inline.png' ),
+				'image' => bboss_recaptcha_integration_url( 'assets/images/reCAPTCHA-inline.png' ),
 			),
 		),
-		'default'           => bb_recaptcha_v2_badge(),
-		'sanitize_callback' => 'bb_recaptcha_sanitize_badge_position',
+		'default'           => bboss_recaptcha_v2_badge(),
+		'sanitize_callback' => 'bboss_recaptcha_sanitize_badge_position',
 		'order'             => 30,
 		'conditional'       => array(
 			'field' => 'bb_recaptcha_version',

@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_The_Event_Calendar_Helpers Class
+ * BBoss_The_Event_Calendar_Helpers Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  */
-class BB_The_Event_Calendar_Helpers {
+class BBoss_The_Event_Calendar_Helpers {
 
 	/**
 	 * The single instance of the class.
@@ -27,7 +27,7 @@ class BB_The_Event_Calendar_Helpers {
 	private static $instance = null;
 
 	/**
-	 * BB_The_Event_Calendar_Helpers constructor.
+	 * BBoss_The_Event_Calendar_Helpers constructor.
 	 */
 	public function __construct() {
 
@@ -71,8 +71,8 @@ class BB_The_Event_Calendar_Helpers {
 
 		if ( true === is_search() ||
 			(
-				true === (bool) defined( 'DOING_AJAX' ) &&
-				true === (bool) DOING_AJAX &&
+				true === (bool) defined( 'BBOSS_DOING_AJAX' ) &&
+				true === (bool) BBOSS_DOING_AJAX &&
 				isset( $_REQUEST['action'] ) &&
 				'bp_search_ajax' === $_REQUEST['action']
 			)
@@ -97,7 +97,7 @@ class BB_The_Event_Calendar_Helpers {
 
 		// Check the user logged in or not.
 		if ( ! is_user_logged_in() ) {
-			$enable_private_network = bp_enable_private_network();
+			$enable_private_network = bboss_enable_private_network();
 
 			// Check if enabled private site or not from the platform.
 			if ( ! $enable_private_network ) {
@@ -146,4 +146,4 @@ class BB_The_Event_Calendar_Helpers {
 
 }
 
-BB_The_Event_Calendar_Helpers::instance();
+BBoss_The_Event_Calendar_Helpers::instance();

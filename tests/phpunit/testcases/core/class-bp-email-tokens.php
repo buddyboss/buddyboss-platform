@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the per-email sender resolution in BP_Email_Tokens (PROD-10519).
+ * Tests for the per-email sender resolution in BBoss_Email_Tokens (PROD-10519).
  *
  * @package BuddyBoss\Core
  */
@@ -9,8 +9,8 @@
  * Message emails rendered in one request must each show their own sender.
  *
  * @group core
- * @group BP_Email
- * @group BP_Email_Tokens
+ * @group BBoss_Email
+ * @group BBoss_Email_Tokens
  */
 class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 
@@ -38,7 +38,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	/**
 	 * Emails captured on the `bp_send_email` action, in send order.
 	 *
-	 * @var BP_Email[]
+	 * @var BBoss_Email[]
 	 */
 	protected $sent = array();
 
@@ -86,7 +86,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	/**
 	 * Capture every email handed to `bp_send_email`.
 	 *
-	 * @param BP_Email $email Email being sent.
+	 * @param BBoss_Email $email Email being sent.
 	 */
 	public function capture_email( $email ) {
 		$this->sent[] = $email;
@@ -119,8 +119,8 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	}
 
 	/**
-	 * Find the request-wide BP_Email_Tokens instance (it is created without a handle in
-	 * bp_setup_core_email_tokens()) and prime its sender the way `messages_message_sent` does.
+	 * Find the request-wide BBoss_Email_Tokens instance (it is created without a handle in
+	 * bboss_setup_core_email_tokens()) and prime its sender the way `messages_message_sent` does.
 	 *
 	 * @param int $sender_id Sender user ID to prime.
 	 */
@@ -129,7 +129,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 		$this->assertArrayHasKey( 'messages_message_sent', $wp_filter );
 		foreach ( $wp_filter['messages_message_sent']->callbacks as $callbacks ) {
 			foreach ( $callbacks as $cb ) {
-				if ( is_array( $cb['function'] ) && $cb['function'][0] instanceof BP_Email_Tokens ) {
+				if ( is_array( $cb['function'] ) && $cb['function'][0] instanceof BBoss_Email_Tokens ) {
 					$cb['function'][0]->messages_message_sent( (object) array( 'sender_id' => $sender_id ) );
 					return;
 				}
@@ -148,7 +148,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	 */
 	protected function create_message( $sender_id, $content = 'Hello' ) {
 		// messages_new_message() returns the thread ID; resolve the message ID from the thread.
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender_id,
 				'recipients' => array( $this->recipient ),
@@ -157,7 +157,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 		$this->assertNotEmpty( $thread_id, 'messages_new_message() should create the thread' );
-		$last = BP_Messages_Thread::get_last_message( (int) $thread_id );
+		$last = BBoss_Messages_Thread::get_last_message( (int) $thread_id );
 		$this->assertNotEmpty( $last->id, 'thread should have a message' );
 		$this->assertSame( (int) $sender_id, (int) $last->sender_id );
 		return (int) $last->id;
@@ -169,12 +169,12 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	protected function add_sender_url_to_template() {
 		$posts = get_posts(
 			array(
-				'post_type'   => bp_get_email_post_type(),
+				'post_type'   => bboss_get_email_post_type(),
 				'post_status' => 'any',
 				'numberposts' => 1,
 				'tax_query'   => array(
 					array(
-						'taxonomy' => bp_get_email_tax_type(),
+						'taxonomy' => bboss_get_email_tax_type(),
 						'field'    => 'slug',
 						'terms'    => 'messages-unread',
 					),
@@ -193,7 +193,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	/**
 	 * Read one formatted token off a captured email.
 	 *
-	 * @param BP_Email $email Captured email.
+	 * @param BBoss_Email $email Captured email.
 	 * @param string   $key   Token key.
 	 *
 	 * @return string|null
@@ -220,7 +220,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 				'receiver-user.id' => $this->recipient,
 			)
 		);
-		$result = bp_send_email( 'messages-unread', $this->recipient, array( 'tokens' => $tokens ) );
+		$result = bboss_send_email( 'messages-unread', $this->recipient, array( 'tokens' => $tokens ) );
 		$this->assertTrue( $result, 'bp_send_email() should succeed' );
 		return end( $this->sent )->get_content_html( 'replace-tokens' );
 	}
@@ -249,12 +249,12 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_a ), $html_a );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_a ), $html_a );
 		$this->assertStringContainsString( $this->avatar_of( $this->sender_a ), $html_a );
 
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_b ), $html_b, 'second email must link to its own sender' );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_b ), $html_b, 'second email must link to its own sender' );
 		$this->assertStringContainsString( $this->avatar_of( $this->sender_b ), $html_b, 'second email must show its own sender avatar' );
-		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_a ), $html_b, 'second email must not link to the first sender' );
+		$this->assertStringNotContainsString( bboss_core_get_user_domain( $this->sender_a ), $html_b, 'second email must not link to the first sender' );
 		$this->assertStringNotContainsString( $this->avatar_of( $this->sender_a ), $html_b, 'second email must not show the first sender avatar' );
 	}
 
@@ -275,7 +275,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 		$email_a = end( $this->sent );
-		$this->assertSame( bp_core_get_user_domain( $this->sender_a ), $this->token_of( $email_a, 'sender.url' ) );
+		$this->assertSame( bboss_core_get_user_domain( $this->sender_a ), $this->token_of( $email_a, 'sender.url' ) );
 
 		$this->send_unread(
 			array(
@@ -285,7 +285,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 		$email_b = end( $this->sent );
-		$this->assertSame( bp_core_get_user_domain( $this->sender_b ), $this->token_of( $email_b, 'sender.url' ) );
+		$this->assertSame( bboss_core_get_user_domain( $this->sender_b ), $this->token_of( $email_b, 'sender.url' ) );
 	}
 
 	/**
@@ -303,7 +303,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_a ), $html );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_a ), $html );
 		$this->assertStringContainsString( $this->avatar_of( $this->sender_a ), $html );
 	}
 
@@ -324,9 +324,9 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_a ), $html );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_a ), $html );
 		$this->assertStringContainsString( $this->avatar_of( $this->sender_a ), $html );
-		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_b ), $html );
+		$this->assertStringNotContainsString( bboss_core_get_user_domain( $this->sender_b ), $html );
 	}
 
 	/**
@@ -340,10 +340,10 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 		$html_a = $this->send_unread( array( 'message_id' => $message_a ) );
 		$html_b = $this->send_unread( array( 'message_id' => $message_b ) );
 
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_a ), $html_a );
-		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_b ), $html_a );
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_b ), $html_b );
-		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_a ), $html_b );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_a ), $html_a );
+		$this->assertStringNotContainsString( bboss_core_get_user_domain( $this->sender_b ), $html_a );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_b ), $html_b );
+		$this->assertStringNotContainsString( bboss_core_get_user_domain( $this->sender_a ), $html_b );
 	}
 
 	/**
@@ -361,7 +361,7 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 			)
 		);
 
-		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_b ), $html );
+		$this->assertStringContainsString( bboss_core_get_user_domain( $this->sender_b ), $html );
 		$this->assertStringContainsString( $this->avatar_of( $this->sender_b ), $html );
 		$this->assertStringNotContainsString( $this->avatar_of( $this->sender_a ), $html, 'the stored sender must not override sender.id' );
 	}

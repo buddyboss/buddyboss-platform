@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * This makes the Reactions feature appear as a feature card in the new admin settings
  * and enables conditional loading based on feature activation state.
  */
-bb_register_feature(
+bboss_register_feature(
 	'reactions',
 	array(
 		'label'              => __( 'Like & Reactions', 'buddyboss' ),
@@ -42,14 +42,14 @@ bb_register_feature(
 			}
 
 			// Reactions depend on activity component being active.
-			if ( ! bp_is_active( 'activity' ) ) {
+			if ( ! bboss_is_active( 'activity' ) ) {
 				$result = false;
 				return $result;
 			}
 
 			// Respect Settings 2.0 feature toggle (bb-active-features).
 			// Backward compat: if 'reactions' key not set, treat as enabled (same as before this toggle existed).
-			$active_features = bp_get_option( 'bb-active-features', array() );
+			$active_features = bboss_get_option( 'bb-active-features', array() );
 			if ( ! array_key_exists( 'reactions', $active_features ) ) {
 				$result = true;
 				return $result;

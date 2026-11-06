@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array|void Return array when it called directly otherwise call recursively.
  */
-function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is_updater = false ) {
+function bboss_subscriptions_migrate_users_forum_topic( $is_background = false, $is_updater = false ) {
 	global $wpdb, $bp_background_updater;
 
 	$forum_key = $wpdb->prefix . '_bbp_forum_subscriptions';
@@ -43,7 +43,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 						$bp_background_updater->data(
 							array(
 								array(
-									'callback' => 'bb_migrate_users_forum_topic_subscriptions',
+									'callback' => 'bboss_migrate_users_forum_topic_subscriptions',
 									'args'     => array( $chunk_result, $offset, $is_background ),
 								),
 							)
@@ -55,13 +55,13 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 
 				$bp_background_updater->dispatch();
 			} else {
-				bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
+				bboss_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
 			}
 		}
 
 		// Migrate bbpress forums/topics subscription to BuddyBoss new system.
 		if ( $is_updater ) {
-			bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background );
+			bboss_subscriptions_migrate_bbpress_users_forum_topic( $is_background );
 		}
 	} else {
 
@@ -73,7 +73,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 		}
 
 		if ( 0 === $offset ) {
-			$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+			$subscription_tbl = BBoss_Subscriptions::get_subscription_tbl();
 			// phpcs:ignore
 			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE type IN ( 'topic', 'forum' )" );
 
@@ -83,7 +83,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 		$results = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT( u.ID ) FROM $wpdb->users AS u INNER JOIN $wpdb->usermeta AS um ON ( u.ID = um.user_id ) WHERE ( um.meta_key = %s OR um.meta_key = %s ) GROUP BY u.ID ORDER BY um.umeta_id ASC LIMIT %d OFFSET %d", $forum_key, $topic_key, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
-			return bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
+			return bboss_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
 		} else {
 			delete_site_option( 'bb_subscriptions_migrate_offset' );
 
@@ -113,15 +113,15 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
  *
  * @return array|void Return array when it called directly otherwise call recursively.
  */
-function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
+function bboss_migrate_users_forum_topic_subscriptions( $subscription_users, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
-	$subscription_tbl  = BB_Subscriptions::get_subscription_tbl();
-	$forum_post_type   = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
-	$topic_post_type   = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
-	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
-	$trash_post_type   = function_exists( 'bbp_get_trash_status_id' ) ? bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
-	$pending_post_type = function_exists( 'bbp_get_pending_status_id' ) ? bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
+	$subscription_tbl  = BBoss_Subscriptions::get_subscription_tbl();
+	$forum_post_type   = function_exists( 'bboss_bbp_get_forum_post_type' ) ? bboss_bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
+	$topic_post_type   = function_exists( 'bboss_bbp_get_topic_post_type' ) ? bboss_bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
+	$spam_post_type    = function_exists( 'bboss_bbp_get_spam_status_id' ) ? bboss_bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
+	$trash_post_type   = function_exists( 'bboss_bbp_get_trash_status_id' ) ? bboss_bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
+	$pending_post_type = function_exists( 'bboss_bbp_get_pending_status_id' ) ? bboss_bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
 	$blog_id           = get_current_blog_id();
 
 	if ( ! empty( $subscription_users ) ) {
@@ -153,7 +153,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					}
 
 					// Check if forum is group forum or not?
-					$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+					$group_ids = function_exists( 'bboss_bbp_get_forum_group_ids' ) ? bboss_bbp_get_forum_group_ids( $forum_id ) : array();
 					if ( ! empty( $group_ids ) ) {
 						continue;
 					}
@@ -170,7 +170,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BB_Subscriptions::get( $record_args );
+					$subscription_exists = BBoss_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -181,7 +181,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						$subscription_status = 0;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bboss_core_current_time() );
 				}
 			}
 
@@ -214,7 +214,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BB_Subscriptions::get( $record_args );
+					$subscription_exists = BBoss_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
@@ -225,7 +225,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 						$subscription_status = 0;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bboss_core_current_time() );
 				}
 			}
 
@@ -254,7 +254,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 		$records_updated = sprintf(
 		/* translators: total members */
 			__( 'The BBPress (up to v2.5.14) forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
-			bp_core_number_format( $latest_offset - 1 )
+			bboss_core_number_format( $latest_offset - 1 )
 		);
 
 		return array(
@@ -275,7 +275,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
  *
  * @return array|void Return array when it called directly otherwise call recursively.
  */
-function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = false, $blog_id = 0 ) {
+function bboss_subscriptions_migrate_bbpress_users_forum_topic( $is_background = false, $blog_id = 0 ) {
 	$response = array();
 	if ( is_multisite() ) {
 
@@ -287,7 +287,7 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
 
 			foreach ( $sites as $site ) {
 				switch_to_blog( $site->blog_id );
-				bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $site->blog_id );
+				bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $site->blog_id );
 				restore_current_blog();
 			}
 		} else {
@@ -299,7 +299,7 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
 				$switch = true;
 			}
 
-			$response = bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
+			$response = bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
 
 			// Restore current blog.
 			if ( $switch ) {
@@ -310,7 +310,7 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
 		if ( ! $blog_id ) {
 			$blog_id = get_current_blog_id();
 		}
-		$response = bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
+		$response = bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $blog_id );
 	}
 
 	// Return the response if background process is false.
@@ -329,12 +329,12 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
  *
  * @return array|void Return array when it called directly otherwise call recursively.
  */
-function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background = false, $blog_id = 0 ) {
+function bboss_subscriptions_migrating_bbpress_users_subscriptions( $is_background = false, $blog_id = 0 ) {
 	global $wpdb, $bp_background_updater;
 
 	$subscription_key = '_bbp_subscription';
-	$forum_post_type  = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
-	$topic_post_type  = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
+	$forum_post_type  = function_exists( 'bboss_bbp_get_forum_post_type' ) ? bboss_bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
+	$topic_post_type  = function_exists( 'bboss_bbp_get_topic_post_type' ) ? bboss_bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
 
 	if ( $is_background ) {
 		delete_site_option( 'bb_subscriptions_migrate_bbpress_offset' );
@@ -354,7 +354,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 						$bp_background_updater->data(
 							array(
 								array(
-									'callback' => 'bb_migrate_bbpress_users_post_subscriptions',
+									'callback' => 'bboss_migrate_bbpress_users_post_subscriptions',
 									'args'     => array( $chunk_result, $blog_id, $offset, $is_background ),
 								),
 							)
@@ -366,7 +366,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 
 				$bp_background_updater->dispatch();
 			} else {
-				bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
+				bboss_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
 			}
 		}
 	} else {
@@ -381,7 +381,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 		$results = $wpdb->get_col( $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} AS p LEFT JOIN {$wpdb->postmeta} mt ON mt.post_id = p.ID WHERE mt.meta_key = %s AND ( p.post_type = %s OR p.post_type = %s ) GROUP BY p.ID ORDER BY p.ID ASC LIMIT %d OFFSET %d", $subscription_key, $forum_post_type, $topic_post_type, 20, $offset ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( ! empty( $results ) ) {
-			return bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
+			return bboss_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
 		} else {
 
 			if ( ! $is_background ) {
@@ -412,15 +412,15 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
  *
  * @return array|void Return array when it called directly otherwise call recursively.
  */
-function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id = 0, $offset = 0, $is_background = true ) {
+function bboss_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog_id = 0, $offset = 0, $is_background = true ) {
 	global $wpdb;
 
-	$subscription_tbl  = BB_Subscriptions::get_subscription_tbl();
-	$forum_post_type   = function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
-	$topic_post_type   = function_exists( 'bbp_get_topic_post_type' ) ? bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
-	$spam_post_type    = function_exists( 'bbp_get_spam_status_id' ) ? bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
-	$trash_post_type   = function_exists( 'bbp_get_trash_status_id' ) ? bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
-	$pending_post_type = function_exists( 'bbp_get_pending_status_id' ) ? bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
+	$subscription_tbl  = BBoss_Subscriptions::get_subscription_tbl();
+	$forum_post_type   = function_exists( 'bboss_bbp_get_forum_post_type' ) ? bboss_bbp_get_forum_post_type() : apply_filters( 'bbp_forum_post_type', 'forum' );
+	$topic_post_type   = function_exists( 'bboss_bbp_get_topic_post_type' ) ? bboss_bbp_get_topic_post_type() : apply_filters( 'bbp_topic_post_type', 'topic' );
+	$spam_post_type    = function_exists( 'bboss_bbp_get_spam_status_id' ) ? bboss_bbp_get_spam_status_id() : apply_filters( 'bbp_spam_post_status', 'spam' );
+	$trash_post_type   = function_exists( 'bboss_bbp_get_trash_status_id' ) ? bboss_bbp_get_trash_status_id() : apply_filters( 'bbp_trash_post_status', 'trash' );
+	$pending_post_type = function_exists( 'bboss_bbp_get_pending_status_id' ) ? bboss_bbp_get_pending_status_id() : apply_filters( 'bbp_pending_post_status', 'pending' );
 
 	if ( ! $blog_id ) {
 		$blog_id = get_current_blog_id();
@@ -467,7 +467,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 				$subscription_type = 'topic';
 
 				// Get forum id.
-				$forum_id = function_exists( 'bbp_get_topic_forum_id' ) ? bbp_get_topic_forum_id( $post_id ) : $post->post_parent;
+				$forum_id = function_exists( 'bboss_bbp_get_topic_forum_id' ) ? bboss_bbp_get_topic_forum_id( $post_id ) : $post->post_parent;
 			}
 
 			// Bail if subscription type is empty.
@@ -477,7 +477,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 
 			// Check if forum is group forum or not?
 			if ( $post->post_type === $forum_post_type ) {
-				$group_ids = function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
+				$group_ids = function_exists( 'bboss_bbp_get_forum_group_ids' ) ? bboss_bbp_get_forum_group_ids( $forum_id ) : array();
 				if ( ! empty( $group_ids ) ) {
 					continue;
 				}
@@ -495,8 +495,8 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 				foreach ( $bbpress_subscriptions as $user_id ) {
 
 					// Insert into the usermeta for backward compatibility.
-					if ( function_exists( 'bb_forum_legacy_subscription' ) ) {
-						bb_forum_legacy_subscription()->bb_create_legacy_forum_subscriptions(
+					if ( function_exists( 'bboss_forum_legacy_subscription' ) ) {
+						bboss_forum_legacy_subscription()->bb_create_legacy_forum_subscriptions(
 							array(
 								'type'    => $subscription_type,
 								'user_id' => (int) $user_id,
@@ -518,13 +518,13 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 					);
 
 					// Get subscription from new table.
-					$subscription_exists = BB_Subscriptions::get( $record_args );
+					$subscription_exists = BBoss_Subscriptions::get( $record_args );
 
 					if ( ! empty( $subscription_exists ) && ! empty( $subscription_exists['subscriptions'] ) ) {
 						continue;
 					}
 
-					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bp_core_current_time() );
+					$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %d, %d, %s)', $blog_id, $record_args['user_id'], $record_args['type'], $record_args['item_id'], $record_args['secondary_item_id'], $subscription_status, bboss_core_current_time() );
 				}
 			}
 		}
@@ -553,7 +553,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 	$records_updated = sprintf(
 	/* translators: total members */
 		__( 'The total %s BBPress (v2.6+) forum and discussion subscriptions successfully migrated to BuddyBoss.', 'buddyboss' ),
-		bp_core_number_format( $latest_offset - 1 )
+		bboss_core_number_format( $latest_offset - 1 )
 	);
 
 	// Restore current blog.
@@ -580,7 +580,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
  *
  * @return array Return subscription type if exists otherwise return all subscription types.
  */
-function bb_register_subscriptions_types( $type = '' ) {
+function bboss_register_subscriptions_types( $type = '' ) {
 
 	$subscription_type = apply_filters( 'bb_register_subscriptions_types', array() );
 
@@ -600,20 +600,20 @@ function bb_register_subscriptions_types( $type = '' ) {
  *
  * @return array
  */
-function bb_get_subscriptions_types( $singular = false ) {
+function bboss_get_subscriptions_types( $singular = false ) {
 	$types                   = array();
-	$all_subscriptions_types = bb_register_subscriptions_types();
+	$all_subscriptions_types = bboss_register_subscriptions_types();
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		if ( ! empty( $all_subscriptions_types ) ) {
 			foreach ( $all_subscriptions_types as $type ) {
-				if ( bb_is_enabled_subscription( $type['subscription_type'] ) ) {
+				if ( bboss_is_enabled_subscription( $type['subscription_type'] ) ) {
 					$types[ $type['subscription_type'] ] = ( $singular ? $type['label']['singular'] : $type['label']['plural'] );
 				}
 			}
 		}
 	} else {
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+		if ( function_exists( 'bboss_bbp_is_subscriptions_active' ) && bboss_bbp_is_subscriptions_active() ) {
 			$types['forum'] = ( $singular ? __( 'Forum', 'buddyboss' ) : __( 'Forums', 'buddyboss' ) );
 			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) );
 		}
@@ -639,17 +639,17 @@ function bb_get_subscriptions_types( $singular = false ) {
  *
  * @return int|bool|WP_Error
  */
-function bb_create_subscription( $args = array() ) {
-	$r = bp_parse_args(
+function bboss_create_subscription( $args = array() ) {
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'id'                => 0,
 			'blog_id'           => get_current_blog_id(),
 			'type'              => '',
-			'user_id'           => bp_loggedin_user_id(),
+			'user_id'           => bboss_loggedin_user_id(),
 			'item_id'           => 0,
 			'secondary_item_id' => 0,
-			'date_recorded'     => bp_core_current_time(),
+			'date_recorded'     => bboss_core_current_time(),
 			'error_type'        => 'wp_error',
 			'status'            => true,
 		),
@@ -657,7 +657,7 @@ function bb_create_subscription( $args = array() ) {
 	);
 
 	// Check if subscription is existed or not?.
-	$subscriptions = BB_Subscriptions::get(
+	$subscriptions = BBoss_Subscriptions::get(
 		array(
 			'type'              => $r['type'],
 			'blog_id'           => $r['blog_id'],
@@ -711,7 +711,7 @@ function bb_create_subscription( $args = array() ) {
 		}
 	}
 
-	$new_subscription                    = new BB_Subscriptions();
+	$new_subscription                    = new BBoss_Subscriptions();
 	$new_subscription->id                = $r['id'];
 	$new_subscription->blog_id           = $r['blog_id'];
 	$new_subscription->user_id           = $r['user_id'];
@@ -777,15 +777,15 @@ function bb_create_subscription( $args = array() ) {
  *                                paginated query params.
  * }
  */
-function bb_get_subscriptions( $args = array(), $force_cache = false ) {
+function bboss_get_subscriptions( $args = array(), $force_cache = false ) {
 	static $cache = array();
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'blog_id'  => get_current_blog_id(),
 			'type'     => array(),
-			'user_id'  => bp_loggedin_user_id(),
+			'user_id'  => bboss_loggedin_user_id(),
 			'per_page' => null,
 			'page'     => null,
 			'count'    => false,
@@ -796,7 +796,7 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscriptions_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions = BB_Subscriptions::get( $r );
+		$subscriptions = BBoss_Subscriptions::get( $r );
 
 		// A forced read is a one-off (fan-out pages); memoizing it only retains memory.
 		if ( true !== $force_cache ) {
@@ -834,10 +834,10 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
  *                                paginated query params.
  * }
  */
-function bb_get_subscription_users( $args = array(), $force_cache = false ) {
+function bboss_get_subscription_users( $args = array(), $force_cache = false ) {
 	static $cache = array();
 
-	$r = bp_parse_args(
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'blog_id'  => get_current_blog_id(),
@@ -853,7 +853,7 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscription_users_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions = BB_Subscriptions::get( $r );
+		$subscriptions = BBoss_Subscriptions::get( $r );
 
 		// A forced read is a one-off (fan-out pages); memoizing it only retains memory.
 		if ( true !== $force_cache ) {
@@ -877,12 +877,12 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
  *
  * @param int $subscription_id ID of the subscription.
  *
- * @return BB_Subscriptions $subscription The subscription object.
+ * @return BBoss_Subscriptions $subscription The subscription object.
  */
-function bb_subscriptions_get_subscription( $subscription_id ) {
+function bboss_subscriptions_get_subscription( $subscription_id ) {
 	// Backward compatibility.
 	if ( ! is_numeric( $subscription_id ) ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$subscription_id,
 			array(
 				'subscription_id' => false,
@@ -893,14 +893,14 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
 		$subscription_id = $r['subscription_id'];
 	}
 
-	$subscription = new BB_Subscriptions( $subscription_id );
+	$subscription = new BBoss_Subscriptions( $subscription_id );
 
 	/**
 	 * Filters a single subscription object.
 	 *
 	 * @since BuddyBoss 2.2.6
 	 *
-	 * @param BB_Subscriptions $subscription Single subscription object.
+	 * @param BBoss_Subscriptions $subscription Single subscription object.
 	 */
 	return apply_filters( 'bb_subscriptions_get_subscription', $subscription );
 }
@@ -917,8 +917,8 @@ function bb_subscriptions_get_subscription( $subscription_id ) {
  *
  * @return bool True on success, false on failure.
  */
-function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
-	return BB_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
+function bboss_subscriptions_update_subscriptions_status( $type, $item_id, $status, $blog_id = 0 ) {
+	return BBoss_Subscriptions::update_status( $type, $item_id, $status, $blog_id );
 }
 
 /**
@@ -930,7 +930,7 @@ function bb_subscriptions_update_subscriptions_status( $type, $item_id, $status,
  *
  * @return bool True on success, false on failure.
  */
-function bb_delete_subscription( $subscription_id ) {
+function bboss_delete_subscription( $subscription_id ) {
 
 	/**
 	 * Fires before the deletion of a subscription.
@@ -942,7 +942,7 @@ function bb_delete_subscription( $subscription_id ) {
 	do_action( 'bb_subscriptions_before_delete_subscription', $subscription_id );
 
 	// Get the subscription object.
-	$subscription = bb_subscriptions_get_subscription( $subscription_id );
+	$subscription = bboss_subscriptions_get_subscription( $subscription_id );
 
 	// Bail if subscription cannot be deleted.
 	if ( ! $subscription->delete() ) {
@@ -972,14 +972,14 @@ function bb_delete_subscription( $subscription_id ) {
  *
  * @return bool True on success, false on failure.
  */
-function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
+function bboss_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 
 	if ( empty( $blog_id ) ) {
 		$blog_id = get_current_blog_id();
 	}
 
 	// Get the subscriptions.
-	$all_subscriptions = bb_get_subscription_users(
+	$all_subscriptions = bboss_get_subscription_users(
 		array(
 			'type'    => $type,
 			'item_id' => $item_id,
@@ -1005,7 +1005,7 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 
 	if ( ! empty( $subscriptions ) ) {
 		foreach ( $subscriptions as $subscription ) {
-			bb_delete_subscription( $subscription );
+			bboss_delete_subscription( $subscription );
 		}
 	}
 
@@ -1034,28 +1034,28 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
  *
  * @return bool
  */
-function bb_is_enabled_subscription( $type, $notification_type = '' ) {
+function bboss_is_enabled_subscription( $type, $notification_type = '' ) {
 	if ( empty( $type ) ) {
 		return false;
 	}
 
 	$is_enabled = false;
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		switch ( $type ) {
 			case 'topic':
 			case 'forum':
-				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active();
+				$is_enabled = function_exists( 'bboss_bbp_is_subscriptions_active' ) && true === bboss_bbp_is_subscriptions_active();
 				break;
 			default:
 				if ( ! empty( $notification_type ) ) {
-					$is_enabled = bb_get_modern_notification_admin_settings_is_enabled( $notification_type );
+					$is_enabled = bboss_get_modern_notification_admin_settings_is_enabled( $notification_type );
 				}
 				break;
 		}
 	} elseif (
-		( bb_enabled_legacy_email_preference() || ! bp_is_active( 'notifications' ) ) &&
+		( bboss_enabled_legacy_email_preference() || ! bboss_is_active( 'notifications' ) ) &&
 		in_array( $type, array( 'forum', 'topic' ), true ) &&
-		function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active()
+		function_exists( 'bboss_bbp_is_subscriptions_active' ) && bboss_bbp_is_subscriptions_active()
 	) {
 		$is_enabled = true;
 	}
@@ -1084,8 +1084,8 @@ function bb_is_enabled_subscription( $type, $notification_type = '' ) {
  *
  * @return void
  */
-function bb_send_notifications_to_subscribers( $args ) {
-	$r = bp_parse_args(
+function bboss_send_notifications_to_subscribers( $args ) {
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'              => '',
@@ -1104,7 +1104,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		return;
 	}
 
-	$type_data = bb_register_subscriptions_types( $type );
+	$type_data = bboss_register_subscriptions_types( $type );
 
 	if (
 		empty( $type_data ) ||
@@ -1169,7 +1169,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	};
 	add_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', $bb_fanout_capture, PHP_INT_MAX );
 
-	$id_page = bb_get_subscription_users(
+	$id_page = bboss_get_subscription_users(
 		array(
 			'type'     => $type,
 			'item_id'  => $item_id,
@@ -1204,7 +1204,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	 * defaults.
 	 *
 	 * @since BuddyBoss 2.2.6
-	 * @since BuddyBoss 3.6.1 Also sizes the chunks queued by the background fan-out worker, bb_send_notifications_to_subscribers_batch().
+	 * @since BuddyBoss 3.6.1 Also sizes the chunks queued by the background fan-out worker, bboss_send_notifications_to_subscribers_batch().
 	 *
 	 * @param int $min_count Number of subscribers per queued chunk. Default 20.
 	 *                       Values below 1 are treated as 1.
@@ -1223,10 +1223,10 @@ function bb_send_notifications_to_subscribers( $args ) {
 	$usernames = array();
 	if ( ! empty( $r['data']['email_tokens'] ) && ! empty( $r['data']['email_tokens']['tokens'] ) ) {
 		if ( ! empty( $r['data']['email_tokens']['tokens']['reply.content'] ) ) {
-			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
+			$usernames = bboss_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['reply.content'] );
 		}
 		if ( ! empty( $r['data']['email_tokens']['tokens']['discussion.content'] ) ) {
-			$usernames = bp_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
+			$usernames = bboss_find_mentions_by_at_sign( array(), $r['data']['email_tokens']['tokens']['discussion.content'] );
 		}
 	}
 	if ( ! empty( $usernames ) ) {
@@ -1267,13 +1267,13 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 		// Drop the serialized activity object so the queue rows stay small; the
 		// chunk runner restores it once per chunk before the send callback.
-		$fanout_args['data'] = bb_subscriptions_compact_notification_data( $fanout_args['data'] );
+		$fanout_args['data'] = bboss_subscriptions_compact_notification_data( $fanout_args['data'] );
 
 		// A chain that never reached a normal end (queue row purged, item
 		// deleted while the row was held) leaves its cursor option behind, and
 		// the per-dispatch fanout_id means nothing ever reuses or clears it.
 		// Starting a new chain is the rare, cheap moment to sweep those.
-		bb_subscriptions_sweep_stale_fanout_cursors();
+		bboss_subscriptions_sweep_stale_fanout_cursors();
 
 		$bb_background_updater->data(
 			array(
@@ -1281,7 +1281,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 				'group'    => 'send_notifications_to_subscribers',
 				'data_id'  => $item_id,
 				'priority' => 5,
-				'callback' => 'bb_send_notifications_to_subscribers_batch',
+				'callback' => 'bboss_send_notifications_to_subscribers_batch',
 				'args'     => array( $fanout_args ),
 			)
 		);
@@ -1295,7 +1295,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	// user ids from it in a second bounded query; this is the step that applies
 	// bb_subscriptions_pre_validate, so a listener can still drop rows from
 	// delivery without affecting the size decision made above.
-	$user_page = bb_get_subscription_users(
+	$user_page = bboss_get_subscription_users(
 		array(
 			'type'     => $type,
 			'item_id'  => $item_id,
@@ -1320,7 +1320,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		// Drop the serialized activity object so each queue row stays small; the
 		// chunk runner restores it once per chunk before the send callback. The
 		// direct-call path below keeps the object (no serialization involved).
-		$parse_args['data'] = bb_subscriptions_compact_notification_data( $parse_args['data'] );
+		$parse_args['data'] = bboss_subscriptions_compact_notification_data( $parse_args['data'] );
 
 		$chunk_user_ids = array_chunk( $subscriber_user_ids, $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
@@ -1333,7 +1333,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 						'group'    => 'send_notifications_to_subscribers',
 						'data_id'  => $item_id,
 						'priority' => 5,
-						'callback' => 'bb_subscriptions_send_notification_chunk',
+						'callback' => 'bboss_subscriptions_send_notification_chunk',
 						'args'     => array( $parse_args ),
 					),
 				);
@@ -1362,18 +1362,18 @@ function bb_send_notifications_to_subscribers( $args ) {
  *
  * @return void
  */
-function bb_delete_group_forum_topic_subscriptions( $group_id ) {
+function bboss_delete_group_forum_topic_subscriptions( $group_id ) {
 	global $wpdb;
 
-	if ( ! empty( $group_id ) && bp_is_active( 'forums' ) ) {
-		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
-		$forum_ids        = bbp_get_group_forum_ids( $group_id );
+	if ( ! empty( $group_id ) && bboss_is_active( 'forums' ) ) {
+		$subscription_tbl = BBoss_Subscriptions::get_subscription_tbl();
+		$forum_ids        = bboss_bbp_get_group_forum_ids( $group_id );
 		$child_forums     = array();
 		$blog_id          = get_current_blog_id();
 
 		if ( ! empty( $forum_ids ) ) {
 			foreach ( $forum_ids as $forum_id ) {
-				$get_child_forums = bb_get_all_nested_subforums( $forum_id );
+				$get_child_forums = bboss_get_all_nested_subforums( $forum_id );
 				if ( ! empty( $get_child_forums ) ) {
 					$child_forums = array_merge( $child_forums, $get_child_forums );
 				}
@@ -1400,7 +1400,7 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 		} else {
 			wp_cache_flush();
 		}
-		bp_core_reset_incrementor( 'bb_subscriptions' );
+		bboss_core_reset_incrementor( 'bb_subscriptions' );
 
 		// Purge all the cache for API.
 		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -1414,7 +1414,7 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 /**
  * Background worker: fan out subscription notifications for one page of subscribers.
  *
- * Queued by bb_send_notifications_to_subscribers() when an item has more
+ * Queued by bboss_send_notifications_to_subscribers() when an item has more
  * subscribers than the background fan-out threshold. Fetches one keyset page of
  * subscriber IDs (sc.id > last_id), queues the regular per-chunk send jobs for
  * that page, then re-queues itself for the next page until the list is
@@ -1441,10 +1441,10 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
  * }
  *
  * @return false Always false so the processed queue row is removed
- *               (a truthy return re-runs the row — see BB_Background_Updater::task()).
+ *               (a truthy return re-runs the row — see BBoss_BB_Background_Updater::task()).
  */
-function bb_send_notifications_to_subscribers_batch( $args ) {
-	$r = bp_parse_args(
+function bboss_send_notifications_to_subscribers_batch( $args ) {
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'type'              => '',
@@ -1488,7 +1488,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	// would be re-sent. The cursor survives queue-row deletion, so a re-run
 	// RESUMES past pages whose chunk jobs were already queued.
 	$fanout_cursor_key = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $type, $item_id, (int) $r['blog_id'], $r['notification_from'], $r['data'], $r['fanout_id'] ) ) );
-	$fanout_done_to    = bb_subscriptions_get_fanout_cursor_last_id( get_option( $fanout_cursor_key, 0 ) );
+	$fanout_done_to    = bboss_subscriptions_get_fanout_cursor_last_id( get_option( $fanout_cursor_key, 0 ) );
 	if ( $last_id < $fanout_done_to ) {
 		$last_id = $fanout_done_to;
 	}
@@ -1496,7 +1496,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	// Re-resolve the send callback at run time instead of serializing the
 	// notification class instance into the queue row; bail gracefully when the
 	// type has been unregistered since the job was queued.
-	$type_data = bb_register_subscriptions_types( $type );
+	$type_data = bboss_register_subscriptions_types( $type );
 	if (
 		empty( $type_data ) ||
 		empty( $type_data['send_callback'] ) ||
@@ -1516,8 +1516,8 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	// The source activity can be deleted mid-chain. The per-chunk send
 	// callbacks would each no-op on it, but without this check the worker
 	// would keep paginating the full subscriber list queueing dead jobs.
-	if ( ! empty( $r['data']['activity_id'] ) && bp_is_active( 'activity' ) && class_exists( 'BP_Activity_Activity' ) ) {
-		$fanout_activity = new BP_Activity_Activity( (int) $r['data']['activity_id'] );
+	if ( ! empty( $r['data']['activity_id'] ) && bboss_is_active( 'activity' ) && class_exists( 'BBoss_Activity_Activity' ) ) {
+		$fanout_activity = new BBoss_Activity_Activity( (int) $r['data']['activity_id'] );
 
 		if ( empty( $fanout_activity->id ) ) {
 			delete_option( $fanout_cursor_key );
@@ -1548,8 +1548,8 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 
 		if ( empty( $fanout_forum_post ) ) {
 			$fanout_forum_post_gone = true;
-		} elseif ( function_exists( 'bbp_get_spam_status_id' ) && function_exists( 'bbp_get_trash_status_id' ) && function_exists( 'bbp_get_pending_status_id' ) ) {
-			$fanout_forum_post_gone = in_array( $fanout_forum_post->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true );
+		} elseif ( function_exists( 'bboss_bbp_get_spam_status_id' ) && function_exists( 'bboss_bbp_get_trash_status_id' ) && function_exists( 'bboss_bbp_get_pending_status_id' ) ) {
+			$fanout_forum_post_gone = in_array( $fanout_forum_post->post_status, array( bboss_bbp_get_spam_status_id(), bboss_bbp_get_trash_status_id(), bboss_bbp_get_pending_status_id() ), true );
 		}
 	}
 
@@ -1591,7 +1591,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	};
 	add_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', $bb_fanout_capture, PHP_INT_MAX );
 
-	$id_page = bb_get_subscription_users(
+	$id_page = bboss_get_subscription_users(
 		array(
 			'type'     => $type,
 			'item_id'  => $item_id,
@@ -1627,7 +1627,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	// Deterministic id ASC ordering (the default date_recorded DESC has heavy
 	// ties) so a re-run composes byte-identical chunk rows — that is what lets
 	// the queue's twin-row cleanup and the idempotency guard below dedupe them.
-	$user_page = bb_get_subscription_users(
+	$user_page = bboss_get_subscription_users(
 		array(
 			'type'     => $type,
 			'item_id'  => $item_id,
@@ -1671,7 +1671,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 				'group'    => 'send_notifications_to_subscribers',
 				'data_id'  => $item_id,
 				'priority' => 5,
-				'callback' => 'bb_subscriptions_send_notification_chunk',
+				'callback' => 'bboss_subscriptions_send_notification_chunk',
 				'args'     => array( $parse_args ),
 			)
 		);
@@ -1714,7 +1714,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		// duplicate-row cleanup in
 		// bb_background_remove_duplicate_async_request_batch_process().
 		$next_row_data = array(
-			'callback' => 'bb_send_notifications_to_subscribers_batch',
+			'callback' => 'bboss_send_notifications_to_subscribers_batch',
 			'args'     => array( $next_args ),
 		);
 
@@ -1765,7 +1765,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 					'group'    => 'send_notifications_to_subscribers',
 					'data_id'  => $item_id,
 					'priority' => 5,
-					'callback' => 'bb_send_notifications_to_subscribers_batch',
+					'callback' => 'bboss_send_notifications_to_subscribers_batch',
 					'args'     => array( $next_args ),
 				)
 			);
@@ -1774,8 +1774,8 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 
 			// A silently failed insert here ends the chain and the rest of the
 			// list is never notified — leave a trace for diagnosis.
-			if ( ! empty( $wpdb->last_error ) && function_exists( 'bb_error_log' ) ) {
-				bb_error_log( 'Subscription fan-out: failed to queue the next page (item ' . $item_id . '): ' . $wpdb->last_error );
+			if ( ! empty( $wpdb->last_error ) && function_exists( 'bboss_error_log' ) ) {
+				bboss_error_log( 'Subscription fan-out: failed to queue the next page (item ' . $item_id . '): ' . $wpdb->last_error );
 			}
 		}
 	} else {
@@ -1797,8 +1797,8 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
  *
  * Drops the serialized activity object from the email tokens so a queue row
  * stays small, and leaves an `activity.id` token behind as the marker.
- * bb_subscriptions_rehydrate_notification_data() reads that marker once per
- * chunk in bb_subscriptions_send_notification_chunk(), before the send
+ * bboss_subscriptions_rehydrate_notification_data() reads that marker once per
+ * chunk in bboss_subscriptions_send_notification_chunk(), before the send
  * callback, so every callback — BuddyBoss or third-party — still receives the
  * object whenever the activity still resolves at send time. Payloads without
  * the object are returned unchanged.
@@ -1809,7 +1809,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
  *
  * @return array The payload without the activity object.
  */
-function bb_subscriptions_compact_notification_data( $data ) {
+function bboss_subscriptions_compact_notification_data( $data ) {
 	if (
 		! is_array( $data ) ||
 		empty( $data['email_tokens']['tokens']['activity'] ) ||
@@ -1841,7 +1841,7 @@ function bb_subscriptions_compact_notification_data( $data ) {
 /**
  * Restore the activity object a compacted subscription payload dropped.
  *
- * Counterpart of bb_subscriptions_compact_notification_data(): a payload is
+ * Counterpart of bboss_subscriptions_compact_notification_data(): a payload is
  * rehydrated only when it carries the `activity.id` marker that compaction
  * leaves behind and no `activity` object. The object is rebuilt from that id
  * (cache-backed primary-key lookup) and put back where the producer placed
@@ -1857,13 +1857,13 @@ function bb_subscriptions_compact_notification_data( $data ) {
  *
  * @return array The payload with the activity object restored where possible.
  */
-function bb_subscriptions_rehydrate_notification_data( $data ) {
+function bboss_subscriptions_rehydrate_notification_data( $data ) {
 	if (
 		! is_array( $data ) ||
 		empty( $data['email_tokens']['tokens']['activity.id'] ) ||
 		! empty( $data['email_tokens']['tokens']['activity'] ) ||
-		! bp_is_active( 'activity' ) ||
-		! class_exists( 'BP_Activity_Activity' )
+		! bboss_is_active( 'activity' ) ||
+		! class_exists( 'BBoss_Activity_Activity' )
 	) {
 		return $data;
 	}
@@ -1873,7 +1873,7 @@ function bb_subscriptions_rehydrate_notification_data( $data ) {
 		return $data;
 	}
 
-	$activity = new BP_Activity_Activity( $activity_id );
+	$activity = new BBoss_Activity_Activity( $activity_id );
 	if ( ! empty( $activity->id ) ) {
 		$data['email_tokens']['tokens']['activity'] = $activity;
 	}
@@ -1899,12 +1899,12 @@ function bb_subscriptions_rehydrate_notification_data( $data ) {
  * @return mixed The send callback's return value; false when the type is no
  *               longer registered or has no callable send callback.
  */
-function bb_subscriptions_send_notification_chunk( $args ) {
+function bboss_subscriptions_send_notification_chunk( $args ) {
 	if ( ! is_array( $args ) || empty( $args['type'] ) ) {
 		return false;
 	}
 
-	$type_data = bb_register_subscriptions_types( $args['type'] );
+	$type_data = bboss_register_subscriptions_types( $args['type'] );
 	if (
 		empty( $type_data ) ||
 		empty( $type_data['send_callback'] ) ||
@@ -1914,7 +1914,7 @@ function bb_subscriptions_send_notification_chunk( $args ) {
 	}
 
 	if ( isset( $args['data'] ) ) {
-		$args['data'] = bb_subscriptions_rehydrate_notification_data( $args['data'] );
+		$args['data'] = bboss_subscriptions_rehydrate_notification_data( $args['data'] );
 	}
 
 	return call_user_func( $type_data['send_callback'], $args );
@@ -1936,7 +1936,7 @@ function bb_subscriptions_send_notification_chunk( $args ) {
  *
  * @return string The hash, or an empty string when the chunk has no user ids.
  */
-function bb_subscriptions_get_notification_chunk_key( $args ) {
+function bboss_subscriptions_get_notification_chunk_key( $args ) {
 	$user_ids = ! empty( $args['user_ids'] ) ? (array) $args['user_ids'] : array();
 
 	if ( empty( $user_ids ) ) {
@@ -1971,7 +1971,7 @@ function bb_subscriptions_get_notification_chunk_key( $args ) {
  *
  * @return int Lifetime in seconds, at least 1.
  */
-function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
+function bboss_subscriptions_get_notification_chunk_claim_ttl( $args ) {
 	/**
 	 * Filters the notification chunk-claim lifetime.
 	 *
@@ -2003,23 +2003,23 @@ function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
  * pre-existing behavior.
  *
  * Three cooperating markers, all in the dedicated `bb_subscriptions_claims`
- * cache group — deliberately NOT the `bb_subscriptions` data group, which
- * bb_delete_group_forum_topic_subscriptions() flushes with
+ * cache group — deliberately NOT the `BBoss_Subscriptions` data group, which
+ * bboss_delete_group_forum_topic_subscriptions() flushes with
  * wp_cache_flush_group() when a group's forum changes; a group flush
  * mid-fan-out would otherwise erase every claim and completion marker. The
  * dedicated group does NOT survive a full wp_cache_flush(): the moderation
  * component issues one on every hide, unhide, suspend and report save
- * (bb_moderation_clear_status_change_cache() and siblings in
+ * (bboss_moderation_clear_status_change_cache() and siblings in
  * bp-moderation-filters.php, also reached when a forum is connected to a
  * group), and the subscription migrations do too. After such a flush a
  * re-run of an already-finished chunk row is no longer refused, so the
  * duplicate protection is best-effort across full flushes, not a guarantee:
- * - the claim (short TTL, see bb_subscriptions_get_notification_chunk_claim_ttl())
+ * - the claim (short TTL, see bboss_subscriptions_get_notification_chunk_claim_ttl())
  *   blocks a concurrent duplicate run; the send callbacks refresh it after
- *   every recipient via bb_subscriptions_touch_notification_chunk_claim() so a
+ *   every recipient via bboss_subscriptions_touch_notification_chunk_claim() so a
  *   slow chunk stays owned for as long as it is actually sending;
  * - the completion marker (filterable, one day) set by
- *   bb_subscriptions_complete_notification_chunk() blocks a duplicate row that
+ *   bboss_subscriptions_complete_notification_chunk() blocks a duplicate row that
  *   runs long after the original finished (a late twin row);
  * - a worker that fatals mid-chunk leaves neither refreshed for long, so a
  *   retry proceeds once the short TTL lapses — provided the queue row still
@@ -2040,16 +2040,16 @@ function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
  *                          notification_from, data (identifies the activity/topic/reply),
  *                          and user_ids for this chunk.
  * @param string $chunk_key Optional. Key precomputed from the pristine payload via
- *                          bb_subscriptions_get_notification_chunk_key(). Callbacks that
+ *                          bboss_subscriptions_get_notification_chunk_key(). Callbacks that
  *                          mutate $args afterwards (author removal) MUST pass it so claim,
  *                          refreshes and completion all hash the same shape. Default ''.
  *
  * @return bool True if this run owns the chunk, false if a concurrent duplicate run already claimed it
  *              or the chunk was already completed.
  */
-function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
+function bboss_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
 	if ( '' === $chunk_key ) {
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $args );
 	}
 
 	if ( '' === $chunk_key ) {
@@ -2077,7 +2077,7 @@ function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
 		return false;
 	}
 
-	if ( wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions_claims', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) ) ) {
+	if ( wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions_claims', bboss_subscriptions_get_notification_chunk_claim_ttl( $args ) ) ) {
 		return true;
 	}
 
@@ -2093,22 +2093,22 @@ function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
  *
  * @since BuddyBoss 3.6.1
  *
- * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
+ * @param array  $args      Parsed send-callback arguments (see bboss_subscriptions_claim_notification_chunk()).
  * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
  *                          that was used to claim the chunk. Default ''.
  *
  * @return void
  */
-function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = '' ) {
+function bboss_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = '' ) {
 	if ( '' === $chunk_key ) {
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $args );
 	}
 
 	if ( '' === $chunk_key ) {
 		return;
 	}
 
-	wp_cache_set( 'bb_sub_chunk_claim_' . $chunk_key, microtime( true ), 'bb_subscriptions_claims', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) );
+	wp_cache_set( 'bb_sub_chunk_claim_' . $chunk_key, microtime( true ), 'bb_subscriptions_claims', bboss_subscriptions_get_notification_chunk_claim_ttl( $args ) );
 }
 
 /**
@@ -2122,15 +2122,15 @@ function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = ''
  *
  * @since BuddyBoss 3.6.1
  *
- * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
+ * @param array  $args      Parsed send-callback arguments (see bboss_subscriptions_claim_notification_chunk()).
  * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
  *                          that was used to claim the chunk. Default ''.
  *
  * @return void
  */
-function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = '' ) {
+function bboss_subscriptions_release_notification_chunk_claim( $args, $chunk_key = '' ) {
 	if ( '' === $chunk_key ) {
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $args );
 	}
 
 	if ( '' === $chunk_key ) {
@@ -2145,19 +2145,19 @@ function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = 
  *
  * Called by the send callbacks once every recipient has been processed; a
  * duplicate queue row for the same chunk that runs afterwards is refused by
- * bb_subscriptions_claim_notification_chunk().
+ * bboss_subscriptions_claim_notification_chunk().
  *
  * @since BuddyBoss 3.6.1
  *
- * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
+ * @param array  $args      Parsed send-callback arguments (see bboss_subscriptions_claim_notification_chunk()).
  * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
  *                          that was used to claim the chunk. Default ''.
  *
  * @return void
  */
-function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) {
+function bboss_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) {
 	if ( '' === $chunk_key ) {
-		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+		$chunk_key = bboss_subscriptions_get_notification_chunk_key( $args );
 	}
 
 	if ( '' === $chunk_key ) {
@@ -2195,7 +2195,7 @@ function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) 
  *
  * @return int The last processed subscription row id, 0 when unset.
  */
-function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
+function bboss_subscriptions_get_fanout_cursor_last_id( $cursor ) {
 	if ( is_array( $cursor ) ) {
 		return isset( $cursor['last_id'] ) ? (int) $cursor['last_id'] : 0;
 	}
@@ -2206,7 +2206,7 @@ function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
 /**
  * Delete fan-out page cursors left behind by chains that never ended normally.
  *
- * The worker, bb_send_notifications_to_subscribers_batch(), deletes its cursor
+ * The worker, bboss_send_notifications_to_subscribers_batch(), deletes its cursor
  * on every code path that ends a chain, but a chain can also disappear without
  * running that code: the queue row purged by an operator, the queue table
  * cleared, a row dropped after repeated fatals. Each cursor is namespaced by a
@@ -2229,7 +2229,7 @@ function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
  *
  * @return int Number of cursor options deleted.
  */
-function bb_subscriptions_sweep_stale_fanout_cursors() {
+function bboss_subscriptions_sweep_stale_fanout_cursors() {
 	global $wpdb;
 
 	/**
@@ -2298,3 +2298,18 @@ function bb_subscriptions_sweep_stale_fanout_cursors() {
 
 	return $deleted;
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( function_exists( 'bboss_delete_group_forum_topic_subscriptions' ) && ! function_exists( 'bb_delete_group_forum_topic_subscriptions' ) ) {
+	/**
+	 * Backward-compatible alias of {@see bboss_delete_group_forum_topic_subscriptions()} (also declared by another BuddyBoss product).
+	 *
+	 * @deprecated Use bboss_delete_group_forum_topic_subscriptions() instead.
+	 */
+	function bb_delete_group_forum_topic_subscriptions( $group_id ) {
+		return bboss_delete_group_forum_topic_subscriptions( $group_id );
+	}
+}
+// @bbwt-com-end compat-layer

@@ -3,7 +3,7 @@
 /**
  * PROD-10649: commenting, reacting and the favorites feed follow the group rules of the activity.
  *
- * bb_validate_activity_privacy() only checks the activity privacy, never the group, so these
+ * bboss_validate_activity_privacy() only checks the activity privacy, never the group, so these
  * paths let a non-member of a private or hidden group write to it or read it back.
  *
  * @group activity
@@ -23,8 +23,8 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	 * bb_reactions_reaction_id() keeps the ID in a static that a per-test rollback would orphan.
 	 */
 	public static function wpSetUpBeforeClass() {
-		if ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() && ! bp_get_option( 'bb_reactions_default_like_reaction_added' ) ) {
-			bb_load_reaction()->bb_register_activity_like();
+		if ( function_exists( 'bboss_load_reaction' ) && bboss_load_reaction() && ! bboss_get_option( 'bb_reactions_default_like_reaction_added' ) ) {
+			bboss_load_reaction()->bb_register_activity_like();
 		}
 	}
 
@@ -45,7 +45,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 
 		$this->root = self::factory()->activity->create(
 			array(
-				'component'     => buddypress()->groups->id,
+				'component'     => bboss()->groups->id,
 				'type'          => 'activity_update',
 				'user_id'       => $this->author,
 				'item_id'       => $this->group_id,
@@ -53,7 +53,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 			)
 		);
 
-		$this->comment = bp_activity_new_comment(
+		$this->comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $this->root,
@@ -64,7 +64,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	}
 
 	protected function skip_without_reactions() {
-		if ( ! function_exists( 'bb_load_reaction' ) || ! bb_load_reaction() || ! bb_load_reaction()->bb_reactions_reaction_id() ) {
+		if ( ! function_exists( 'bboss_load_reaction' ) || ! bboss_load_reaction() || ! bboss_load_reaction()->bb_reactions_reaction_id() ) {
 			$this->markTestSkipped( 'Reactions are not available.' );
 		}
 	}
@@ -72,7 +72,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	protected function comment_as( $user_id, $activity_id, $parent_id = false ) {
 		$this->set_current_user( $user_id );
 
-		return bp_activity_new_comment(
+		return bboss_activity_new_comment(
 			array(
 				'user_id'     => $user_id,
 				'activity_id' => $activity_id,
@@ -86,13 +86,13 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	protected function react_as( $user_id, $activity_id ) {
 		$this->set_current_user( $user_id );
 
-		return bp_activity_add_user_favorite( $activity_id, $user_id, array( 'error_type' => 'wp_error' ) );
+		return bboss_activity_add_user_favorite( $activity_id, $user_id, array( 'error_type' => 'wp_error' ) );
 	}
 
 	protected function favorite_ids_as( $user_id, $scope = 'favorites' ) {
 		$this->set_current_user( $user_id );
 
-		$activities = bp_activity_get(
+		$activities = bboss_activity_get(
 			array(
 				'scope'       => $scope,
 				'user_id'     => $user_id,
@@ -105,7 +105,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	}
 
 	protected function add_reaction_row( $user_id, $activity_id ) {
-		$reaction = bb_load_reaction();
+		$reaction = bboss_load_reaction();
 
 		$added = $reaction->bb_add_user_item_reaction(
 			array(
@@ -134,7 +134,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	}
 
 	public function test_banned_member_cannot_comment_on_private_group_post() {
-		$member = new BP_Groups_Member( $this->member, $this->group_id );
+		$member = new BBoss_Groups_Member( $this->member, $this->group_id );
 		$member->ban();
 
 		$this->assertWPError( $this->comment_as( $this->member, $this->root ) );
@@ -154,7 +154,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 	public function test_reply_cannot_use_a_comment_from_another_thread_as_parent() {
 		$own_root    = self::factory()->activity->create( array( 'user_id' => $this->stranger ) );
 		$other_root  = self::factory()->activity->create( array( 'user_id' => $this->author ) );
-		$other_reply = bp_activity_new_comment(
+		$other_reply = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $other_root,
@@ -222,7 +222,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 		$this->add_reaction_row( $this->member, $this->root );
 		$this->assertContains( $this->root, $this->favorite_ids_as( $this->member ) );
 
-		groups_leave_group( $this->group_id, $this->member );
+		bboss_groups_leave_group( $this->group_id, $this->member );
 
 		$this->assertNotContains( $this->root, $this->favorite_ids_as( $this->member ) );
 	}
@@ -241,7 +241,7 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 
 		$sub_activity = self::factory()->activity->create(
 			array(
-				'component'     => buddypress()->groups->id,
+				'component'     => bboss()->groups->id,
 				'type'          => 'activity_update',
 				'user_id'       => $this->author,
 				'item_id'       => $this->group_id,

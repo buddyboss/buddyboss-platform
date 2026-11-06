@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-class BP_Core_Login_Widget extends WP_Widget {
+class BBoss_Core_Login_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -74,14 +74,14 @@ class BP_Core_Login_Widget extends WP_Widget {
 			?>
 
 			<div class="bp-login-widget-user-avatar">
-				<a href="<?php echo esc_url( bp_loggedin_user_domain() ); ?>">
-					<?php bp_loggedin_user_avatar( 'type=thumb&width=50&height=50' ); ?>
+				<a href="<?php echo esc_url( bboss_loggedin_user_domain() ); ?>">
+					<?php bboss_loggedin_user_avatar( 'type=thumb&width=50&height=50' ); ?>
 				</a>
 			</div>
 
 			<div class="bp-login-widget-user-links">
-				<h4 class="bp-login-widget-user-link"><?php echo wp_kses_post( bp_core_get_userlink( bp_loggedin_user_id() ) ); ?></h4>
-				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss' ); ?></a></div>
+				<h4 class="bp-login-widget-user-link"><?php echo wp_kses_post( bboss_core_get_userlink( bboss_loggedin_user_id() ) ); ?></h4>
+				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo esc_url( wp_logout_url( bboss_get_requested_url() ) ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss' ); ?></a></div>
 			</div>
 
 			<?php
@@ -111,7 +111,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 				<input type="text" name="log" id="bp-login-widget-user-login" class="input" value="" />
 
 				<label for="bp-login-widget-user-pass"><?php esc_html_e( 'Password', 'buddyboss' ); ?></label>
-				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bp_form_field_attributes( 'password' ); ?> />
+				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bboss_form_field_attributes( 'password' ); ?> />
 
 				<div class="forgetmenot">
 					<input name="rememberme" type="checkbox" id="bp-login-widget-rememberme" class="bs-styled-checkbox" value="forever" />
@@ -122,9 +122,9 @@ class BP_Core_Login_Widget extends WP_Widget {
 					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" />
 				</div>
 
-				<?php if ( bp_get_signup_allowed() ) : ?>
+				<?php if ( bboss_get_signup_allowed() ) : ?>
 
-					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bp_get_signup_page() ); ?>"><?php esc_html_e( 'Register', 'buddyboss' ); ?></a></span>
+					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bboss_get_signup_page() ); ?>"><?php esc_html_e( 'Register', 'buddyboss' ); ?></a></span>
 
 				<?php endif; ?>
 
@@ -182,7 +182,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	 */
 	public function form( $instance = array() ) {
 
-		$settings = bp_parse_args(
+		$settings = bboss_parse_args(
 			$instance,
 			array(
 				'title' => '',

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  * @since BuddyPress 2.3.0 We only support Akismet 3+.
  */
-function bp_activity_setup_akismet() {
+function bboss_activity_setup_akismet() {
 	/**
 	 * Filters if BuddyBoss Activity Akismet support has been disabled by another plugin.
 	 *
@@ -23,12 +23,12 @@ function bp_activity_setup_akismet() {
 	 *
 	 * @param bool $value Return value of bp_is_akismet_active boolean function.
 	 */
-	if ( ! apply_filters( 'bp_activity_use_akismet', bp_is_akismet_active() ) ) {
+	if ( ! apply_filters( 'bp_activity_use_akismet', bboss_is_akismet_active() ) ) {
 		return;
 	}
 
 	// Instantiate Akismet for BuddyPress.
-	buddypress()->activity->akismet = new BP_Akismet();
+	bboss()->activity->akismet = new BBoss_Akismet();
 }
 add_action( 'bp_activity_setup_globals', 'bp_activity_setup_akismet' );
 
@@ -42,10 +42,10 @@ add_action( 'bp_activity_setup_globals', 'bp_activity_setup_akismet' );
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
-function bp_activity_akismet_delete_old_metadata() {
+function bboss_activity_akismet_delete_old_metadata() {
 	global $wpdb;
 
-	$bp = buddypress();
+	$bp = bboss();
 
 	/**
 	 * Filters the threshold for how many days old Akismet metadata needs to be before being automatically deleted.
@@ -65,7 +65,7 @@ function bp_activity_akismet_delete_old_metadata() {
 
 	if ( ! empty( $activity_ids ) ) {
 		foreach ( $activity_ids as $activity_id ) {
-			bp_activity_delete_meta( $activity_id, '_bp_akismet_submission' );
+			bboss_activity_delete_meta( $activity_id, '_bp_akismet_submission' );
 		}
 	}
 }

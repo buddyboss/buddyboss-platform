@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Reply_Actions_Endpoint class
+ * BP REST: BBoss_REST_Reply_Actions_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,26 +13,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
+class BBoss_REST_Reply_Actions_Endpoint extends BBoss_REST_Reply_Endpoint {
 
 	/**
-	 * BP_REST_Forums_Endpoint Instance.
+	 * BBoss_REST_Forums_Endpoint Instance.
 	 *
-	 * @var BP_REST_Forums_Endpoint
+	 * @var BBoss_REST_Forums_Endpoint
 	 */
 	protected $forum_endpoint;
 
 	/**
-	 * BP_REST_Topics_Endpoint Instance.
+	 * BBoss_REST_Topics_Endpoint Instance.
 	 *
-	 * @var BP_REST_Topics_Endpoint
+	 * @var BBoss_REST_Topics_Endpoint
 	 */
 	protected $topic_endpoint;
 
 	/**
-	 * Rest_BBP_Walker_Reply Instance.
+	 * BBoss_Rest_BBP_Walker_Reply Instance.
 	 *
-	 * @var Rest_BBP_Walker_Reply
+	 * @var BBoss_Rest_BBP_Walker_Reply
 	 */
 	protected $bbb_walker_reply;
 
@@ -42,11 +42,11 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace        = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base        = 'reply';
-		$this->forum_endpoint   = new BP_REST_Forums_Endpoint();
-		$this->topic_endpoint   = new BP_REST_Topics_Endpoint();
-		$this->bbb_walker_reply = new Rest_BBP_Walker_Reply();
+		$this->forum_endpoint   = new BBoss_REST_Forums_Endpoint();
+		$this->topic_endpoint   = new BBoss_REST_Topics_Endpoint();
+		$this->bbb_walker_reply = new BBoss_Rest_BBP_Walker_Reply();
 	}
 
 	/**
@@ -247,7 +247,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			$move_reply_id = (int) $request['id'];
 		}
 
-		$move_reply = bbp_get_reply( $move_reply_id );
+		$move_reply = bboss_bbp_get_reply( $move_reply_id );
 
 		// Reply exists.
 		if ( empty( $move_reply ) ) {
@@ -262,7 +262,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 
 		/** Topic to Move From */
 		// Get the current topic a reply is in.
-		$source_topic = bbp_get_topic( $move_reply->post_parent );
+		$source_topic = bboss_bbp_get_topic( $move_reply->post_parent );
 
 		// No topic.
 		if ( empty( $source_topic ) ) {
@@ -323,7 +323,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					}
 
 					// Get the destination topic.
-					$destination_topic = bbp_get_topic( $destination_topic_id );
+					$destination_topic = bboss_bbp_get_topic( $destination_topic_id );
 
 					// No destination topic.
 					if ( empty( $destination_topic ) ) {
@@ -348,7 +348,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					}
 
 					// Bump the reply position.
-					$reply_position = bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
+					$reply_position = bboss_bbp_get_topic_reply_count( $destination_topic->ID, true ) + 1;
 
 					// Update the reply.
 					wp_update_post(
@@ -363,8 +363,8 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					);
 
 					// Adjust reply meta values.
-					bbp_update_reply_topic_id( $move_reply->ID, $destination_topic->ID );
-					bbp_update_reply_forum_id( $move_reply->ID, bbp_get_topic_forum_id( $destination_topic->ID ) );
+					bboss_bbp_update_reply_topic_id( $move_reply->ID, $destination_topic->ID );
+					bboss_bbp_update_reply_forum_id( $move_reply->ID, bboss_bbp_get_topic_forum_id( $destination_topic->ID ) );
 
 					break;
 
@@ -389,15 +389,15 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 								'ID'          => $move_reply->ID,
 								'post_title'  => $destination_topic_title,
 								'post_name'   => false,
-								'post_type'   => bbp_get_topic_post_type(),
+								'post_type'   => bboss_bbp_get_topic_post_type(),
 								'post_parent' => $source_topic->post_parent,
 								'guid'        => '',
 							)
 						);
-						$destination_topic    = bbp_get_topic( $destination_topic_id );
+						$destination_topic    = bboss_bbp_get_topic( $destination_topic_id );
 
 						// Make sure the new topic knows its a topic.
-						bbp_update_topic_topic_id( $move_reply->ID );
+						bboss_bbp_update_topic_topic_id( $move_reply->ID );
 
 						// Shouldn't happen.
 						if (
@@ -455,12 +455,12 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		$freshness     = $move_reply->post_date;
 
 		// Get the reply to.
-		$parent = bbp_get_reply_to( $move_reply->ID );
+		$parent = bboss_bbp_get_reply_to( $move_reply->ID );
 
 		// Fix orphaned children.
 		$children = get_posts(
 			array(
-				'post_type'  => bbp_get_reply_post_type(),
+				'post_type'  => bboss_bbp_get_reply_post_type(),
 				'meta_key'   => '_bbp_reply_to', // phpcs:ignore
 				'meta_type'  => 'NUMERIC',
 				'meta_value' => $move_reply->ID, // phpcs:ignore
@@ -469,7 +469,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 
 		if ( ! empty( $children ) ) {
 			foreach ( $children as $child ) {
-				bbp_update_reply_to( $child->ID, $parent );
+				bboss_bbp_update_reply_to( $child->ID, $parent );
 			}
 		}
 
@@ -479,21 +479,21 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		// It is a new topic and we need to set some default metas to make.
 		// the topic display in bbp_has_topics() list.
 		if ( 'topic' === $move_option ) {
-			bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
-			bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
-			bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
+			bboss_bbp_update_topic_last_reply_id( $destination_topic->ID, $last_reply_id );
+			bboss_bbp_update_topic_last_active_id( $destination_topic->ID, $last_reply_id );
+			bboss_bbp_update_topic_last_active_time( $destination_topic->ID, $freshness );
 
 			// Otherwise update the existing destination topic.
 		} else {
-			bbp_update_topic_last_reply_id( $destination_topic->ID );
-			bbp_update_topic_last_active_id( $destination_topic->ID );
-			bbp_update_topic_last_active_time( $destination_topic->ID );
+			bboss_bbp_update_topic_last_reply_id( $destination_topic->ID );
+			bboss_bbp_update_topic_last_active_id( $destination_topic->ID );
+			bboss_bbp_update_topic_last_active_time( $destination_topic->ID );
 		}
 
 		// Update source topic ID last active.
-		bbp_update_topic_last_reply_id( $source_topic->ID );
-		bbp_update_topic_last_active_id( $source_topic->ID );
-		bbp_update_topic_last_active_time( $source_topic->ID );
+		bboss_bbp_update_topic_last_reply_id( $source_topic->ID );
+		bboss_bbp_update_topic_last_active_id( $source_topic->ID );
+		bboss_bbp_update_topic_last_active_time( $source_topic->ID );
 
 		/** Successful Move */
 		// Update counts, etc...
@@ -549,21 +549,21 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	protected function rest_update_reply_spam( $reply_id, $value ) {
 
 		$status   = true;
-		$is_spam  = bbp_is_reply_spam( $reply_id );
-		$topic_id = bbp_get_reply_topic_id( $reply_id );
+		$is_spam  = bboss_bbp_is_reply_spam( $reply_id );
+		$topic_id = bboss_bbp_get_reply_topic_id( $reply_id );
 
 		// Subscribed and unsubscribing.
 		if ( true === $is_spam && empty( $value ) ) {
-			$status = bbp_unspam_reply( $reply_id );
+			$status = bboss_bbp_unspam_reply( $reply_id );
 
 			// Not subscribed and subscribing.
 		} elseif ( false === $is_spam && ! empty( $value ) ) {
-			$status = bbp_spam_reply( $reply_id );
+			$status = bboss_bbp_spam_reply( $reply_id );
 		}
 
-		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bboss_bbp_update_total_parent_reply' ) ) {
 			// Update total parent reply count when any parent trashed.
-			bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
+			bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		}
 
 		return $status;
@@ -591,7 +591,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		}
 
 		$post_status = get_post_status( $reply_id );
-		$topic_id    = bbp_get_reply_topic_id( $reply_id );
+		$topic_id    = bboss_bbp_get_reply_topic_id( $reply_id );
 
 		if (
 			'trash' === $post_status
@@ -605,11 +605,19 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			$status = wp_trash_post( $reply_id );
 		}
 
-		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bbp_update_total_parent_reply' ) ) {
+		if ( false !== $status && ! is_wp_error( $status ) && function_exists( 'bboss_bbp_update_total_parent_reply' ) ) {
 			// Update total parent reply count when any parent trashed.
-			bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
+			bboss_bbp_update_total_parent_reply( $reply_id, $topic_id, '', 'update' );
 		}
 
 		return ( ! empty( $status ) && ! is_wp_error( $status ) ? true : $status );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Reply_Actions_Endpoint', false ) || interface_exists( 'BBoss_REST_Reply_Actions_Endpoint', false ) || trait_exists( 'BBoss_REST_Reply_Actions_Endpoint', false ) ) && ! class_exists( 'BP_REST_Reply_Actions_Endpoint', false ) && ! interface_exists( 'BP_REST_Reply_Actions_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Reply_Actions_Endpoint', 'BP_REST_Reply_Actions_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

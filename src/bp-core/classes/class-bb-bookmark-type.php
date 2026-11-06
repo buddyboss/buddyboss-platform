@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.2.0
  */
-abstract class BB_Bookmark_Type {
+abstract class BBoss_Bookmark_Type {
 
 	/**
 	 * Instances, keyed by concrete class name.
@@ -111,7 +111,7 @@ abstract class BB_Bookmark_Type {
 			return;
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'label'          => array(

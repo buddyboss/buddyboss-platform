@@ -18,27 +18,27 @@ class BP_Tests_Activity_Functions_BpActivityGetCommentDepth extends BP_UnitTestC
 		) );
 
 		// create some activity comments
-		$comment_one = bp_activity_new_comment( array(
+		$comment_one = bboss_activity_new_comment( array(
 			'user_id'     => $u,
 			'activity_id' => $parent_activity,
 			'content'     => 'depth 1'
 		) );
 
-		$comment_one_one = bp_activity_new_comment( array(
+		$comment_one_one = bboss_activity_new_comment( array(
 			'user_id'     => $u,
 			'activity_id' => $parent_activity,
 			'parent_id'   => $comment_one,
 			'content'     => 'depth 2'
 		) );
 
-		$comment_two = bp_activity_new_comment( array(
+		$comment_two = bboss_activity_new_comment( array(
 			'user_id'     => $u,
 			'activity_id' => $parent_activity,
 			'content'     => 'depth 1'
 		) );
 
 		// Instantiate activity loop, which also includes activity comments.
-		bp_has_activities( 'display_comments=threaded' );
+		bboss_has_activities( 'display_comments=threaded' );
 
 		// Loop through activity comments generated in activity loop.
 		$recursive = new RecursiveIteratorIterator( new RecursiveArrayIterator( $GLOBALS['activities_template']->activities[0]->children ), RecursiveIteratorIterator::SELF_FIRST );
@@ -58,11 +58,11 @@ class BP_Tests_Activity_Functions_BpActivityGetCommentDepth extends BP_UnitTestC
 			switch ( $aid ) {
 				case $comment_one :
 				case $comment_two :
-					$this->assertSame( bp_activity_get_comment_depth(), 1 );
+					$this->assertSame( bboss_activity_get_comment_depth(), 1 );
 					break;
 
 				case $comment_one_one :
-					$this->assertSame( bp_activity_get_comment_depth(), 2 );
+					$this->assertSame( bboss_activity_get_comment_depth(), 2 );
 					break;
 			}
 
@@ -85,27 +85,27 @@ class BP_Tests_Activity_Functions_BpActivityGetCommentDepth extends BP_UnitTestC
 		) );
 
 		// create some activity comments
-		$comment_one = bp_activity_new_comment( array(
+		$comment_one = bboss_activity_new_comment( array(
 			'user_id'     => $u,
 			'activity_id' => $parent_activity,
 			'content'     => 'depth 1'
 		) );
 
-		$comment_one_one = bp_activity_new_comment( array(
+		$comment_one_one = bboss_activity_new_comment( array(
 			'user_id'     => $u,
 			'activity_id' => $parent_activity,
 			'parent_id'   => $comment_one,
 			'content'     => 'depth 2'
 		) );
 
-		$comment_two = bp_activity_new_comment( array(
+		$comment_two = bboss_activity_new_comment( array(
 			'user_id'     => $u,
 			'activity_id' => $parent_activity,
 			'content'     => 'depth 1'
 		) );
 
-		$this->assertSame( bp_activity_get_comment_depth( $comment_one ), 1 );
-		$this->assertSame( bp_activity_get_comment_depth( $comment_one_one ), 2 );
-		$this->assertSame( bp_activity_get_comment_depth( $comment_two ), 1 );
+		$this->assertSame( bboss_activity_get_comment_depth( $comment_one ), 1 );
+		$this->assertSame( bboss_activity_get_comment_depth( $comment_one_one ), 2 );
+		$this->assertSame( bboss_activity_get_comment_depth( $comment_two ), 1 );
 	}
 }

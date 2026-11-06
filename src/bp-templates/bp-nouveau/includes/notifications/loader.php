@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Notifications {
+class BBoss_Nouveau_Notifications {
 	/**
 	 * Constructor
 	 *
@@ -61,7 +61,7 @@ class BP_Nouveau_Notifications {
 		$ajax_actions = array(
 			array(
 				'notifications_filter' => array(
-					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'function' => 'bboss_nouveau_ajax_object_template_loader',
 					'nopriv'   => false,
 				),
 			),
@@ -96,11 +96,11 @@ class BP_Nouveau_Notifications {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_notifications( $bp_nouveau = null ) {
+function bboss_nouveau_notifications( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->notifications = new BP_Nouveau_Notifications();
+	$bp_nouveau->notifications = new BBoss_Nouveau_Notifications();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_notifications', 10, 1 );

@@ -23,7 +23,7 @@ abstract class BB_Two_Factor_UnitTestCase extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'Two_Factor_Core' ) || ! function_exists( 'bb_two_factor_settings_admin_nav' ) ) {
+		if ( ! class_exists( 'Two_Factor_Core' ) || ! function_exists( 'bboss_two_factor_settings_admin_nav' ) ) {
 			$this->markTestSkipped( 'The Two Factor plugin is not loaded. Run with tests/phpunit/two-factor.xml.' );
 		}
 	}

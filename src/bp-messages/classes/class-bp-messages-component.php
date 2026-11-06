@@ -12,12 +12,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Implementation of BP_Component for the Messages component.
+ * Implementation of BBoss_Component for the Messages component.
  *
  * @since BuddyPress 1.5.0
  */
 #[\AllowDynamicProperties]
-class BP_Messages_Component extends BP_Component {
+class BBoss_Messages_Component extends BBoss_Component {
 
 	/**
 	 * If this is true, the Message autocomplete will return friends only, unless
@@ -37,7 +37,7 @@ class BP_Messages_Component extends BP_Component {
 		parent::start(
 			'messages',
 			'Private Messages',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 50,
 				'features'                 => array( 'star' ),
@@ -50,7 +50,7 @@ class BP_Messages_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @param array $includes See {BP_Component::includes()} for details.
+	 * @param array $includes See {BBoss_Component::includes()} for details.
 	 */
 	public function includes( $includes = array() ) {
 
@@ -65,10 +65,10 @@ class BP_Messages_Component extends BP_Component {
 		);
 
 		// Conditional includes.
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			$includes[] = 'notifications';
 		}
-		if ( bp_is_active( $this->id, 'star' ) ) {
+		if ( bboss_is_active( $this->id, 'star' ) ) {
 			$includes[] = 'star';
 		}
 		if ( is_admin() ) {
@@ -91,43 +91,43 @@ class BP_Messages_Component extends BP_Component {
 			return;
 		}
 
-		if ( bp_is_messages_component() ) {
+		if ( bboss_is_messages_component() ) {
 			// Authenticated actions for archived threads.
-			if ( is_user_logged_in() && 'archived' === bp_current_action() && bp_action_variable( 0 ) && 'view' === bp_action_variable( 0 ) ) {
-				require $this->path . 'bp-messages/screens/' . bp_current_action() . '-' . bp_action_variable( 0 ) . '.php';
-			} elseif ( 'archived' === bp_current_action() ) {
-				require $this->path . 'bp-messages/actions/' . bp_current_action() . '.php';
+			if ( is_user_logged_in() && 'archived' === bboss_current_action() && bboss_action_variable( 0 ) && 'view' === bboss_action_variable( 0 ) ) {
+				require $this->path . 'bp-messages/screens/' . bboss_current_action() . '-' . bboss_action_variable( 0 ) . '.php';
+			} elseif ( 'archived' === bboss_current_action() ) {
+				require $this->path . 'bp-messages/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Authenticated actions.
 			if ( is_user_logged_in() &&
-				in_array( bp_current_action(), array( 'compose', 'notices', 'view' ), true )
+				in_array( bboss_current_action(), array( 'compose', 'notices', 'view' ), true )
 			) {
-				require $this->path . 'bp-messages/actions/' . bp_current_action() . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Authenticated action variables.
-			if ( is_user_logged_in() && bp_action_variable( 0 ) &&
-				in_array( bp_action_variable( 0 ), array( 'delete', 'read', 'unread', 'bulk-manage', 'bulk-delete' ), true )
+			if ( is_user_logged_in() && bboss_action_variable( 0 ) &&
+				in_array( bboss_action_variable( 0 ), array( 'delete', 'read', 'unread', 'bulk-manage', 'bulk-delete' ), true )
 			) {
-				require $this->path . 'bp-messages/actions/' . bp_action_variable( 0 ) . '.php';
+				require $this->path . 'bp-messages/actions/' . bboss_action_variable( 0 ) . '.php';
 			}
 
 			// Authenticated actions - Star.
-			if ( is_user_logged_in() && bp_is_active( $this->id, 'star' ) ) {
+			if ( is_user_logged_in() && bboss_is_active( $this->id, 'star' ) ) {
 				// Single action.
-				if ( in_array( bp_current_action(), array( 'star', 'unstar' ), true ) ) {
+				if ( in_array( bboss_current_action(), array( 'star', 'unstar' ), true ) ) {
 					require $this->path . 'bp-messages/actions/star.php';
 				}
 
 				// Bulk-manage.
-				if ( bp_is_action_variable( 'bulk-manage' ) ) {
+				if ( bboss_is_action_variable( 'bulk-manage' ) ) {
 					require $this->path . 'bp-messages/actions/bulk-manage-star.php';
 				}
 			}
 
 			// Screens - User profile integration.
-			if ( bp_is_user() ) {
+			if ( bboss_is_user() ) {
 				require $this->path . 'bp-messages/screens/inbox.php';
 
 				/*
@@ -135,12 +135,12 @@ class BP_Messages_Component extends BP_Component {
 				 *
 				 * 'view' is not a registered nav item, but we add a screen handler manually.
 				 */
-				if ( bp_is_user_messages() && in_array( bp_current_action(), array( 'compose', 'notices', 'view' ), true ) ) {
-					require $this->path . 'bp-messages/screens/' . bp_current_action() . '.php';
+				if ( bboss_is_user_messages() && in_array( bboss_current_action(), array( 'compose', 'notices', 'view' ), true ) ) {
+					require $this->path . 'bp-messages/screens/' . bboss_current_action() . '.php';
 				}
 
 				// Nav item - Starred.
-				if ( bp_is_active( $this->id, 'star' ) && bp_is_current_action( bp_get_messages_starred_slug() ) ) {
+				if ( bboss_is_active( $this->id, 'star' ) && bboss_is_current_action( bboss_get_messages_starred_slug() ) ) {
 					require $this->path . 'bp-messages/screens/starred.php';
 				}
 			}
@@ -158,11 +158,11 @@ class BP_Messages_Component extends BP_Component {
 	 * @param array $args Not used.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_MESSAGES_SLUG' ) ) {
-			define( 'BP_MESSAGES_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_MESSAGES_SLUG' ) ) {
+			define( 'BBOSS_MESSAGES_SLUG', $this->id );
 		}
 
 		// Global tables for messaging component.
@@ -184,9 +184,9 @@ class BP_Messages_Component extends BP_Component {
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                  => BP_MESSAGES_SLUG,
+				'slug'                  => BBOSS_MESSAGES_SLUG,
 				'has_directory'         => false,
-				'notification_callback' => 'messages_format_notifications',
+				'notification_callback' => 'bboss_messages_format_notifications',
 				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss' ),
 				'global_tables'         => $global_tables,
 				'meta_tables'           => $meta_tables,
@@ -197,33 +197,33 @@ class BP_Messages_Component extends BP_Component {
 	/**
 	 * Set up navigation for user pages.
 	 *
-	 * @param array $main_nav See {BP_Component::setup_nav()} for details.
-	 * @param array $sub_nav  See {BP_Component::setup_nav()} for details.
+	 * @param array $main_nav See {BBoss_Component::setup_nav()} for details.
+	 * @param array $sub_nav  See {BBoss_Component::setup_nav()} for details.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
-		$access        = bp_core_can_edit_settings();
-		$slug          = bp_get_messages_slug();
+		$access        = bboss_core_can_edit_settings();
+		$slug          = bboss_get_messages_slug();
 		$messages_link = trailingslashit( $user_domain . $slug );
 
 		// Only grab count if we're on a user page and current user has access.
-		if ( bp_is_user() && bp_user_has_access() ) {
-			$count     = bp_get_total_unread_messages_count( bp_displayed_user_id() );
+		if ( bboss_is_user() && bboss_user_has_access() ) {
+			$count     = bboss_get_total_unread_messages_count( bboss_displayed_user_id() );
 			$class     = ( 0 === $count ) ? 'no-count' : 'count';
 			$nav_name  = __( 'Messages', 'buddyboss' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
-				bp_core_number_format( $count )
+				bboss_core_number_format( $count )
 			);
 		} else {
 			$nav_name = __( 'Messages', 'buddyboss' );
@@ -235,7 +235,7 @@ class BP_Messages_Component extends BP_Component {
 			'slug'                    => $slug,
 			'position'                => 50,
 			'show_for_displayed_user' => $access,
-			'screen_function'         => 'messages_screen_inbox',
+			'screen_function'         => 'bboss_messages_screen_inbox',
 			'default_subnav_slug'     => 'inbox',
 			'item_css_id'             => $this->id,
 		);
@@ -246,15 +246,15 @@ class BP_Messages_Component extends BP_Component {
 			'slug'            => 'inbox',
 			'parent_url'      => $messages_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'messages_screen_inbox',
+			'screen_function' => 'bboss_messages_screen_inbox',
 			'position'        => 10,
 			'user_has_access' => $access,
 		);
 
 		// Show certain screens only if the current user is the displayed user.
-		if ( bp_is_my_profile() ) {
+		if ( bboss_is_my_profile() ) {
 
-			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
+			if ( bboss_is_user_messages() && bboss_is_active( 'notifications' ) ) {
 				// Show "Actions" on the logged-in user's profile only.
 				$sub_nav[] = array(
 					'name'            => __( 'Actions', 'buddyboss' ),
@@ -273,7 +273,7 @@ class BP_Messages_Component extends BP_Component {
 				'slug'            => 'compose',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'messages_screen_compose',
+				'screen_function' => 'bboss_messages_screen_compose',
 				'position'        => 30,
 				'user_has_access' => $access,
 			);
@@ -293,13 +293,13 @@ class BP_Messages_Component extends BP_Component {
 			 * Show "Notices" on the logged-in user's profile only
 			 * and then only if the user can create notices.
 			 */
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
+			if ( bboss_current_user_can( 'bp_moderate' ) ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Notices', 'buddyboss' ),
 					'slug'            => 'notices',
 					'parent_url'      => $messages_link,
 					'parent_slug'     => $slug,
-					'screen_function' => 'messages_screen_notices',
+					'screen_function' => 'bboss_messages_screen_notices',
 					'position'        => 90,
 					'user_has_access' => true,
 				);
@@ -312,7 +312,7 @@ class BP_Messages_Component extends BP_Component {
 	/**
 	 * Set up the Toolbar.
 	 *
-	 * @param array $wp_admin_nav See {BP_Component::setup_admin_bar()} for details.
+	 * @param array $wp_admin_nav See {BBoss_Component::setup_admin_bar()} for details.
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 
@@ -320,20 +320,20 @@ class BP_Messages_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables.
-			$messages_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+			$messages_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
 
 			// Unread message count.
-			$count = messages_get_unread_count( bp_loggedin_user_id() );
+			$count = bboss_messages_get_unread_count( bboss_loggedin_user_id() );
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread message count for the current user */
 					__( 'Messages %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
+					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 				$inbox = sprintf(
 					/* translators: %s: Unread message count for the current user */
 					__( 'Messages %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
+					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 			} else {
 				$title = __( 'Messages', 'buddyboss' );
@@ -342,7 +342,7 @@ class BP_Messages_Component extends BP_Component {
 
 			// Add main Messages menu.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => $title,
 				'href'   => $messages_link,
@@ -367,7 +367,7 @@ class BP_Messages_Component extends BP_Component {
 			);
 
 			// Site Wide Notices.
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
+			if ( bboss_current_user_can( 'bp_moderate' ) ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notices',
@@ -386,21 +386,21 @@ class BP_Messages_Component extends BP_Component {
 	 */
 	public function setup_title() {
 
-		if ( bp_is_messages_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_messages_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() ) {
+			if ( bboss_is_my_profile() ) {
 				$bp->bp_options_title = __( 'My Messages', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
-						'item_id' => bp_displayed_user_id(),
+						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
-				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 			}
 		}
 
@@ -432,16 +432,16 @@ class BP_Messages_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init(
 			array(
-				'BP_REST_Messages_Endpoint',
-				'BP_REST_Group_Messages_Endpoint',
-				'BP_REST_Messages_Actions_Endpoint',
+				'BBoss_REST_Messages_Endpoint',
+				'BBoss_REST_Group_Messages_Endpoint',
+				'BBoss_REST_Messages_Actions_Endpoint',
 			)
 		);
 	}
@@ -451,7 +451,7 @@ class BP_Messages_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

@@ -3,7 +3,7 @@
  * Search Loop - Single Topic Template
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php do_action( 'bbp_theme_before_topic_author_details' ); ?>
 
 		<?php
-		bbp_topic_author_link(
+		bboss_bbp_topic_author_link(
 			array(
 				'sep'       => '<br />',
 				'show_role' => true,
@@ -36,22 +36,22 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="bb-rl-sec-header">
 			<h3>
-				<a class="bbp-topic-permalink" href="<?php bbp_topic_permalink(); ?>"><?php bbp_topic_title(); ?></a>
+				<a class="bbp-topic-permalink" href="<?php bboss_bbp_topic_permalink(); ?>"><?php bboss_bbp_topic_title(); ?></a>
 			</h3>
 
 			<div class="bb-rl-topic-footer">
 			<div class="bb-rl-topic-meta">
 
-			<?php if ( bbp_is_user_home() ) : ?>
+			<?php if ( bboss_bbp_is_user_home() ) : ?>
 
-				<?php if ( bbp_is_favorites() ) : ?>
+				<?php if ( bboss_bbp_is_favorites() ) : ?>
 
 					<span class="bb-rl-row-actions">
 
 						<?php do_action( 'bbp_theme_before_topic_favorites_action' ); ?>
 
 						<?php
-						bbp_topic_favorite_link(
+						bboss_bbp_topic_favorite_link(
 							array(
 								'before'    => '',
 								'favorite'  => '+',
@@ -64,14 +64,14 @@ defined( 'ABSPATH' ) || exit;
 
 					</span>
 
-				<?php elseif ( bbp_is_subscriptions() ) : ?>
+				<?php elseif ( bboss_bbp_is_subscriptions() ) : ?>
 
 					<span class="bb-rl-row-actions">
 
 						<?php do_action( 'bbp_theme_before_topic_subscription_action' ); ?>
 
 						<?php
-						bbp_topic_subscription_link(
+						bboss_bbp_topic_subscription_link(
 							array(
 								'before'      => '',
 								'subscribe'   => '+',
@@ -92,7 +92,7 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php do_action( 'bbp_theme_after_topic_title' ); ?>
 
-			<?php bbp_topic_pagination(); ?>
+			<?php bboss_bbp_topic_pagination(); ?>
 
 			<?php do_action( 'bbp_theme_before_topic_meta' ); ?>
 
@@ -100,7 +100,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<?php do_action( 'bbp_theme_before_topic_started_by' ); ?>
 
-				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss' ), wp_kses_post( bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
+				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss' ), wp_kses_post( bboss_bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
 
 				<?php do_action( 'bbp_theme_after_topic_started_by' ); ?>
 
@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<?php do_action( 'bbp_theme_before_topic_freshness_link' ); ?>
 
-					<?php bbp_topic_freshness_link(); ?>
+					<?php bboss_bbp_topic_freshness_link(); ?>
 
 					<?php do_action( 'bbp_theme_after_topic_freshness_link' ); ?>
 
@@ -122,7 +122,7 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php do_action( 'bbp_theme_after_topic_meta' ); ?>
 
-			<?php bbp_topic_row_actions(); ?>
+			<?php bboss_bbp_topic_row_actions(); ?>
 
 			</div>
 		</div>
@@ -133,7 +133,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-forum-content">
 				<?php do_action( 'bbp_theme_before_topic_content' ); ?>
 
-				<?php bbp_topic_content(); ?>
+				<?php bboss_bbp_topic_content(); ?>
 
 				<?php do_action( 'bbp_theme_after_topic_content' ); ?>
 			</div>

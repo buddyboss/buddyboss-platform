@@ -10,7 +10,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->reset_actions = clone $bp->activity->actions;
 		$bp->activity->actions = new stdClass();
@@ -21,7 +21,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
-		$bp = buddypress();
+		$bp = bboss();
 
 		$bp->activity->actions = $this->reset_actions;
 
@@ -66,7 +66,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 			),
 		) );
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 
 		_unregister_post_type( 'foo5' );
 		_unregister_post_type( 'foo25' );
@@ -85,7 +85,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 	 * @ticket BP6865
 	 */
 	public function test_bp_activity_get_actions_sort() {
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'new_foo',
 			'Did a foo',
@@ -95,7 +95,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 			10
 		);
 
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'new_bar',
 			'Did a bar',
@@ -105,7 +105,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 			5
 		);
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 
 		$expected = array(
 			'new_bar' => 'new_bar',
@@ -130,7 +130,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 			),
 		) );
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 
 		_unregister_post_type( 'foo' );
 
@@ -147,9 +147,9 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 	 * @ticket BP6865
 	 */
 	public function test_sort_new_post_type_twice() {
-		$reset_activity_track = buddypress()->activity->track;
+		$reset_activity_track = bboss()->activity->track;
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 		$expected = array(
 			'new_blog_post'    => 'new_blog_post',
 			'new_blog_comment' => 'new_blog_comment',
@@ -171,9 +171,9 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 		 * Reset manually as bp_activity_get_actions() -- at the top of this test --
 		 * sets ->track[] for the previously-registered post types.
 		 */
-		buddypress()->activity->track = bp_activity_get_post_types_tracking_args();
+		bboss()->activity->track = bboss_activity_get_post_types_tracking_args();
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 
 		_unregister_post_type( 'foo' );
 
@@ -185,14 +185,14 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 
 		$this->assertSame( $expected, wp_list_pluck( (array) $actions->blogs, 'key' ) );
 
-		buddypress()->activity->track = $reset_activity_track;
+		bboss()->activity->track = $reset_activity_track;
 	}
 
 	/**
 	 * @ticket BP6865
 	 */
 	public function test_sort_no_post_type_registered() {
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'new_foo',
 			'Did a foo',
@@ -202,7 +202,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 			10
 		);
 
-		bp_activity_set_action(
+		bboss_activity_set_action(
 			'foo',
 			'new_bar',
 			'Did a bar',
@@ -214,7 +214,7 @@ class BP_Tests_Activity_Functions_BpActivityGetActions extends BP_UnitTestCase {
 
 		remove_post_type_support( 'post', 'buddypress-activity' );
 
-		$actions = bp_activity_get_actions();
+		$actions = bboss_activity_get_actions();
 
 		$expected = array(
 			'new_bar' => 'new_bar',

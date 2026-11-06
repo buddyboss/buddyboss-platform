@@ -32,8 +32,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		// update entry is injected into the update_plugins transient by
 		// {@see BB_Mothership_Loader::inject_platform_update()}; this basename is the key it
 		// is filed under.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->basename ) ) {
-			$this->pluginFile = buddypress()->basename;
+		if ( function_exists( 'bboss' ) && isset( bboss()->basename ) ) {
+			$this->pluginFile = bboss()->basename;
 		}
 	}
 
@@ -43,8 +43,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The plugin ID.
 	 */
 	public function getDynamicPluginId(): string {
-		$storedPluginId = self::get_license_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
-		return ! empty( $storedPluginId ) ? $storedPluginId : PLATFORM_EDITION;
+		$storedPluginId = self::get_license_option( 'buddyboss_dynamic_plugin_id', BBOSS_PLATFORM_EDITION );
+		return ! empty( $storedPluginId ) ? $storedPluginId : BBOSS_PLATFORM_EDITION;
 	}
 
 	/**
@@ -83,7 +83,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		}
 
 		$plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', '' );
-		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+		$plugin_id = '' !== $plugin_id ? $plugin_id : BBOSS_PLATFORM_EDITION;
 
 		foreach ( self::license_option_names( $plugin_id ) as $name ) {
 			add_filter( "pre_option_{$name}", array( self::class, 'filter_legacy_option_read' ), 10, 3 );
@@ -132,7 +132,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return bool
 	 */
 	public static function is_network_mode(): bool {
-		if ( ! is_multisite() || ! function_exists( 'buddypress' ) || empty( buddypress()->basename ) ) {
+		if ( ! is_multisite() || ! function_exists( 'bboss' ) || empty( bboss()->basename ) ) {
 			return false;
 		}
 
@@ -140,7 +140,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		return is_plugin_active_for_network( buddypress()->basename );
+		return is_plugin_active_for_network( bboss()->basename );
 	}
 
 	/**
@@ -278,7 +278,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		}
 
 		// Never overwrite a license the network already holds.
-		$network_plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
+		$network_plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', BBOSS_PLATFORM_EDITION );
 		if ( '' !== (string) get_site_option( self::STABLE_LICENSE_KEY_OPTION, '' ) || '' !== (string) get_site_option( $network_plugin_id . '_license_key', '' ) ) {
 			update_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, 1 );
 
@@ -290,7 +290,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		self::$bypass_legacy_bridge = true;
 
 		$plugin_id = (string) get_blog_option( $main_site_id, 'buddyboss_dynamic_plugin_id', '' );
-		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+		$plugin_id = '' !== $plugin_id ? $plugin_id : BBOSS_PLATFORM_EDITION;
 
 		$main_key = (string) get_blog_option( $main_site_id, $plugin_id . '_license_key', '' );
 		if ( '' === $main_key ) {
@@ -433,7 +433,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		foreach ( $blog_ids as $blog_id ) {
 			$blog_id   = (int) $blog_id;
 			$plugin_id = (string) get_blog_option( $blog_id, 'buddyboss_dynamic_plugin_id', '' );
-			$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+			$plugin_id = '' !== $plugin_id ? $plugin_id : BBOSS_PLATFORM_EDITION;
 
 			if ( ! get_blog_option( $blog_id, $plugin_id . '_license_activation_status', false ) ) {
 				continue;
@@ -509,7 +509,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		// Nothing was ever moved up, or it has already been handed back: a repeat run must not
 		// wipe the main site's license rows.
 		$network_id_for_check = (string) get_site_option( 'buddyboss_dynamic_plugin_id', '' );
-		$network_id_for_check = '' !== $network_id_for_check ? $network_id_for_check : PLATFORM_EDITION;
+		$network_id_for_check = '' !== $network_id_for_check ? $network_id_for_check : BBOSS_PLATFORM_EDITION;
 		if (
 			! get_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, false ) &&
 			'' === (string) get_site_option( self::STABLE_LICENSE_KEY_OPTION, '' ) &&
@@ -523,9 +523,9 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		self::$bypass_legacy_bridge = true;
 
 		$plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', '' );
-		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+		$plugin_id = '' !== $plugin_id ? $plugin_id : BBOSS_PLATFORM_EDITION;
 		$main_id   = (string) get_blog_option( $main_site_id, 'buddyboss_dynamic_plugin_id', '' );
-		$main_id   = '' !== $main_id ? $main_id : PLATFORM_EDITION;
+		$main_id   = '' !== $main_id ? $main_id : BBOSS_PLATFORM_EDITION;
 
 		$network_key = (string) get_site_option( $plugin_id . '_license_key', '' );
 		if ( '' === $network_key ) {
@@ -700,16 +700,16 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 *                                       active license and a stored key.
 	 */
 	private static function get_site_license( int $blog_id ): ?array {
-		if ( ! function_exists( 'buddypress' ) || ! get_site( $blog_id ) ) {
+		if ( ! function_exists( 'bboss' ) || ! get_site( $blog_id ) ) {
 			return null;
 		}
 
-		if ( ! in_array( buddypress()->basename, (array) get_blog_option( $blog_id, 'active_plugins', array() ), true ) ) {
+		if ( ! in_array( bboss()->basename, (array) get_blog_option( $blog_id, 'active_plugins', array() ), true ) ) {
 			return null;
 		}
 
 		$plugin_id = (string) get_blog_option( $blog_id, 'buddyboss_dynamic_plugin_id', '' );
-		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+		$plugin_id = '' !== $plugin_id ? $plugin_id : BBOSS_PLATFORM_EDITION;
 
 		if ( ! get_blog_option( $blog_id, $plugin_id . '_license_activation_status', false ) ) {
 			return null;
@@ -732,7 +732,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	private static function known_plugin_ids(): array {
 		return array(
-			PLATFORM_EDITION,
+			BBOSS_PLATFORM_EDITION,
 			'bb-platform-free',
 			'bb-platform-pro-1-site',
 			'bb-platform-pro-2-sites',
@@ -809,8 +809,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		self::clear_all_caches();
 
 		self::delete_license_option( 'buddyboss_dynamic_plugin_id' );
-		$this->pluginId  = PLATFORM_EDITION;
-		$this->productId = PLATFORM_EDITION;
+		$this->pluginId  = BBOSS_PLATFORM_EDITION;
+		$this->productId = BBOSS_PLATFORM_EDITION;
 
 		// Purge caches scoped to the default plugin ID after clearing.
 		self::clear_all_caches();

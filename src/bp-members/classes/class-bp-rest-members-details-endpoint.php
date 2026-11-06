@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Members_Details_Endpoint class
+ * BP REST: BBoss_REST_Members_Details_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
+class BBoss_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 	/**
-	 * BP_REST_Members_Endpoint Instance.
+	 * BBoss_REST_Members_Endpoint Instance.
 	 *
-	 * @var BP_REST_Members_Endpoint
+	 * @var BBoss_REST_Members_Endpoint
 	 */
 	protected $members_endpoint;
 
@@ -36,9 +36,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace        = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base        = 'members';
-		$this->members_endpoint = new BP_REST_Members_Endpoint();
+		$this->members_endpoint = new BBoss_REST_Members_Endpoint();
 	}
 
 	/**
@@ -138,7 +138,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$retval = array();
 
 		$retval['tabs']          = $this->get_members_tabs();
-		$retval['order_options'] = function_exists( 'bp_nouveau_get_component_filters' ) ? bp_nouveau_get_component_filters( '', 'members' ) : $this->bp_rest_legacy_get_members_component_filters();
+		$retval['order_options'] = function_exists( 'bboss_nouveau_get_component_filters' ) ? bboss_nouveau_get_component_filters( '', 'members' ) : $this->bp_rest_legacy_get_members_component_filters();
 
 		$response = rest_ensure_response( $retval );
 
@@ -172,7 +172,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			)
 		);
 
-		if ( bp_is_active( 'members' ) ) {
+		if ( bboss_is_active( 'members' ) ) {
 			$retval = true;
 		}
 
@@ -212,7 +212,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$current_user_id = $request->get_param( 'id' );
 		if ( empty( $current_user_id ) ) {
-			$current_user_id = bp_loggedin_user_id();
+			$current_user_id = bboss_loggedin_user_id();
 		}
 
 		$this->user_id = $current_user_id;
@@ -227,7 +227,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		$user = bp_rest_get_user( $current_user_id );
+		$user = bboss_rest_get_user( $current_user_id );
 
 		if ( ! $user instanceof WP_User ) {
 			return new WP_Error(
@@ -239,7 +239,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		$url = bp_core_get_user_domain( $current_user_id );
+		$url = bboss_core_get_user_domain( $current_user_id );
 
 		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
 
@@ -254,7 +254,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 */
 		$_SERVER['REQUEST_URI'] = $url;
 
-		bp_core_set_uri_globals();
+		bboss_core_set_uri_globals();
 
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
@@ -269,10 +269,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
 		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
-		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+		if ( function_exists( 'bboss_init_email_background_updater' ) ) {
 			remove_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 		}
-		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+		if ( function_exists( 'bboss_init_notifications_background_updater' ) ) {
 			remove_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 		}
 		remove_all_actions( 'bp_actions' );
@@ -293,10 +293,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		add_action( 'bp_init', 'bp_add_permastructs', 40 );
 		add_action( 'bp_init', 'bp_init_background_updater', 50 );
-		if ( function_exists( 'bb_init_email_background_updater' ) ) {
+		if ( function_exists( 'bboss_init_email_background_updater' ) ) {
 			add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 		}
-		if ( function_exists( 'bb_init_notifications_background_updater' ) ) {
+		if ( function_exists( 'bboss_init_notifications_background_updater' ) ) {
 			add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
 		}
 
@@ -304,16 +304,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$profile_tabs = array();
 		$default_tab  = 'profile';
-		$navs         = buddypress()->members->nav;
+		$navs         = bboss()->members->nav;
 
 		// if it's nouveau then let it order the tabs.
-		if ( function_exists( 'bp_nouveau_set_nav_item_order' ) ) {
-			bp_nouveau_set_nav_item_order( $navs, bp_nouveau_get_appearance_settings( 'user_nav_order' ) );
+		if ( function_exists( 'bboss_nouveau_set_nav_item_order' ) ) {
+			bboss_nouveau_set_nav_item_order( $navs, bboss_nouveau_get_appearance_settings( 'user_nav_order' ) );
 		}
 
-		if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-			$tab         = bp_nouveau_get_appearance_settings( 'user_default_tab' );
-			$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+		if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) ) {
+			$tab         = bboss_nouveau_get_appearance_settings( 'user_default_tab' );
+			$default_tab = bboss_is_active( $tab ) ? $tab : $default_tab;
 		}
 
 		$id_map = array( 'profile' => 'xprofile' );
@@ -331,7 +331,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$id   = $nav['slug'];
 				$link = $nav['link'];
 
-				$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
+				$hidden_tabs = bboss_nouveau_get_appearance_settings( 'user_nav_hide' );
 				if ( is_array( $hidden_tabs )
 					&& ! empty( $hidden_tabs )
 					&& in_array( $id, $hidden_tabs, true )
@@ -477,7 +477,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -487,7 +487,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_is_active( 'members' ) ) {
+		if ( true === $retval && ! bboss_is_active( 'members' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
 				__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
@@ -718,14 +718,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_members_tabs() {
 		$tabs = array();
 
-		$tabs_items = function_exists( 'bp_nouveau_get_members_directory_nav_items' ) ? bp_nouveau_get_members_directory_nav_items() : $this->bp_rest_legacy_get_members_directory_nav_items();
+		$tabs_items = function_exists( 'bboss_nouveau_get_members_directory_nav_items' ) ? bboss_nouveau_get_members_directory_nav_items() : $this->bp_rest_legacy_get_members_directory_nav_items();
 
 		if ( ! empty( $tabs_items ) ) {
 			foreach ( $tabs_items as $key => $item ) {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
 				$tabs[ $key ]['slug']     = $item['slug'];
-				$tabs[ $key ]['count']    = ! empty( $item['count'] ) ? bp_core_number_format( $item['count'] ) : '';
+				$tabs[ $key ]['count']    = ! empty( $item['count'] ) ? bboss_core_number_format( $item['count'] ) : '';
 			}
 		}
 
@@ -740,12 +740,12 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return int
 	 */
 	public function bp_rest_get_displayed_user( $user_id ) {
-		return ( ! empty( $this->user_id ) ? $this->user_id : bp_loggedin_user_id() );
+		return ( ! empty( $this->user_id ) ? $this->user_id : bboss_loggedin_user_id() );
 	}
 
 	/**
 	 * Retrieve the count attribute for the current nav item.
-	 * - from bp_nouveau_get_nav_count();
+	 * - from bboss_nouveau_get_nav_count();
 	 *
 	 * @param array $nav Navigation array.
 	 *
@@ -754,7 +754,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	protected function bp_rest_get_nav_count( $nav ) {
 		$count = '';
 
-		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$enable_count = function_exists( 'bboss_enable_content_counts' ) ? bboss_enable_content_counts() : true;
 		if ( $enable_count ) {
 			if ( ! empty( $nav['primary'] ) ) {
 				$span = strpos( $nav['name'], '<span' );
@@ -768,7 +768,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			}
 
 			if ( '' !== $count ) {
-				$count = bp_core_number_format( $count );
+				$count = bboss_core_number_format( $count );
 			}
 		}
 
@@ -785,7 +785,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 	/**
 	 * Checks if the nav item has a count attribute.
-	 * - from bp_nouveau_nav_has_count();
+	 * - from bboss_nouveau_nav_has_count();
 	 *
 	 * @param array $nav Navigation array.
 	 *
@@ -794,7 +794,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function bp_rest_nav_has_count( $nav ) {
 		$count = false;
 
-		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$enable_count = function_exists( 'bboss_enable_content_counts' ) ? bboss_enable_content_counts() : true;
 		if ( $enable_count ) {
 			if ( ! empty( $nav['primary'] ) ) {
 				$count = (bool) strpos( $nav['name'], '="count"' );
@@ -818,7 +818,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed|void
 	 */
 	public function bp_rest_legacy_get_members_directory_nav_items() {
-		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$enable_count = function_exists( 'bboss_enable_content_counts' ) ? bboss_enable_content_counts() : true;
 		$nav_items    = array();
 
 		$nav_items['all'] = array(
@@ -826,18 +826,18 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'position' => 5,
 		);
 		if ( $enable_count ) {
-			$nav_items['all']['count'] = bp_core_number_format( bp_get_total_member_count() );
+			$nav_items['all']['count'] = bboss_core_number_format( bboss_get_total_member_count() );
 		}
 
-		if ( is_user_logged_in() && bp_is_active( 'friends' ) ) {
-			$total_friend_count = bp_get_total_friend_count( bp_loggedin_user_id() );
+		if ( is_user_logged_in() && bboss_is_active( 'friends' ) ) {
+			$total_friend_count = bboss_get_total_friend_count( bboss_loggedin_user_id() );
 			if ( $total_friend_count ) {
 				$nav_items['friends'] = array(
 					'text'     => __( 'My Friends', 'buddyboss' ),
 					'position' => 15,
 				);
 				if ( $enable_count ) {
-					$nav_items['friends']['count'] = bp_core_number_format( $total_friend_count );
+					$nav_items['friends']['count'] = bboss_core_number_format( $total_friend_count );
 				}
 			}
 		}
@@ -859,7 +859,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$filters_data['active'] = __( 'Last Active', 'buddyboss' );
 		$filters_data['newest'] = __( 'Newest Registered', 'buddyboss' );
 		if ( is_user_logged_in() ) {
-			if ( bp_is_active( 'xprofile' ) ) {
+			if ( bboss_is_active( 'xprofile' ) ) {
 				$filters_data['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
 			}
 		}
@@ -876,7 +876,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 */
 	public function get_profile_navigation( $default ) {
 
-		if ( function_exists( 'bp_is_active' ) && ! empty( $default ) ) {
+		if ( function_exists( 'bboss_is_active' ) && ! empty( $default ) ) {
 			if ( has_nav_menu( 'header-my-account' ) ) {
 				$menu = wp_nav_menu(
 					array(
@@ -908,10 +908,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 */
 	protected function bp_rest_default_menu() {
 		$items        = array();
-		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$enable_count = function_exists( 'bboss_enable_content_counts' ) ? bboss_enable_content_counts() : true;
 
-		if ( bp_is_active( 'xprofile' ) ) {
-			$profile_link  = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() );
+		if ( bboss_is_active( 'xprofile' ) ) {
+			$profile_link  = trailingslashit( bboss_loggedin_user_domain() . bboss_get_profile_slug() );
 			$item_xprofile = array(
 				'ID'       => 'profile',
 				'title'    => __( 'Profile', 'buddyboss' ),
@@ -933,7 +933,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				),
 			);
 
-			if ( buddypress()->avatar->show_avatars ) {
+			if ( bboss()->avatar->show_avatars ) {
 				$item_xprofile['children'][] = array(
 					'ID'    => 'profile-photo',
 					'title' => __( 'Profile Photo', 'buddyboss' ),
@@ -942,7 +942,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				);
 			}
 
-			if ( function_exists( 'bp_displayed_user_use_cover_image_header' ) && bp_displayed_user_use_cover_image_header() ) {
+			if ( function_exists( 'bboss_displayed_user_use_cover_image_header' ) && bboss_displayed_user_use_cover_image_header() ) {
 				$item_xprofile['children'][] = array(
 					'ID'    => 'cover-photo',
 					'title' => __( 'Cover Photo', 'buddyboss' ),
@@ -954,10 +954,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_xprofile;
 		}
 
-		if ( bp_is_active( 'settings' ) ) {
-			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+		if ( bboss_is_active( 'settings' ) ) {
+			$settings_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_settings_slug() );
 			$item_settings = array(
-				'ID'       => bp_get_settings_slug(),
+				'ID'       => bboss_get_settings_slug(),
 				'title'    => __( 'Account', 'buddyboss' ),
 				'url'      => esc_url( $settings_link ),
 				'count'    => '',
@@ -973,8 +973,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			if ( has_action( 'bp_notification_settings' ) ) {
 				$title = esc_html__( 'Email Preferences', 'buddyboss' );
-				if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
-					$data  = bb_core_notification_preferences_data();
+				if ( function_exists( 'bboss_core_notification_preferences_data' ) ) {
+					$data  = bboss_core_notification_preferences_data();
 					$title = esc_html( $data['menu_title'] );
 				}
 				$item_settings['children'][] = array(
@@ -992,7 +992,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				'count' => '',
 			);
 
-			if ( bp_core_can_edit_settings() ) {
+			if ( bboss_core_can_edit_settings() ) {
 				$item_settings['children'][] = array(
 					'ID'    => 'invites',
 					'title' => __( 'Group Invites', 'buddyboss' ),
@@ -1008,7 +1008,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				'count' => '',
 			);
 
-			if ( ! bp_current_user_can( 'bp_moderate' ) && ! bp_core_get_root_option( 'bp-disable-account-deletion' ) ) {
+			if ( ! bboss_current_user_can( 'bp_moderate' ) && ! bboss_core_get_root_option( 'bp-disable-account-deletion' ) ) {
 				$item_settings['children'][] = array(
 					'ID'    => 'delete-account',
 					'title' => __( 'Delete Account', 'buddyboss' ),
@@ -1020,8 +1020,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_settings;
 		}
 
-		if ( bp_is_active( 'activity' ) ) {
-			$activity_link = trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() );
+		if ( bboss_is_active( 'activity' ) ) {
+			$activity_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_activity_slug() );
 			$item_activity = array(
 				'ID'       => 'activities',
 				'title'    => __( 'Timeline', 'buddyboss' ),
@@ -1033,23 +1033,23 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_activity;
 		}
 
-		if ( bp_is_active( 'notifications' ) ) {
+		if ( bboss_is_active( 'notifications' ) ) {
 			// Setup the logged in user variables.
-			$notifications_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
+			$notifications_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
 
 			// Pending notification requests.
-			$count             = $enable_count ? bp_notifications_get_unread_notification_count( bp_loggedin_user_id() ) : '';
+			$count             = $enable_count ? bboss_notifications_get_unread_notification_count( bboss_loggedin_user_id() ) : '';
 			$item_notification = array(
 				'ID'       => 'notifications',
 				'title'    => __( 'Notifications', 'buddyboss' ),
 				'url'      => esc_url( $notifications_link ),
-				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+				'count'    => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'unread',
 						'title' => __( 'Unread', 'buddyboss' ),
 						'url'   => esc_url( $notifications_link ),
-						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+						'count' => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 					),
 					array(
 						'ID'    => 'read',
@@ -1063,24 +1063,24 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_notification;
 		}
 
-		if ( bp_is_active( 'messages' ) ) {
+		if ( bboss_is_active( 'messages' ) ) {
 			// Setup the logged in user variables.
-			$messages_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+			$messages_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() );
 
 			// Unread message count.
-			$count = $enable_count ? messages_get_unread_count( bp_loggedin_user_id() ) : '';
+			$count = $enable_count ? bboss_messages_get_unread_count( bboss_loggedin_user_id() ) : '';
 
 			$item_messages = array(
 				'ID'       => 'messages',
 				'title'    => __( 'Messages', 'buddyboss' ),
 				'url'      => esc_url( $messages_link ),
-				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+				'count'    => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'inbox',
 						'title' => __( 'Messages', 'buddyboss' ),
 						'url'   => esc_url( $messages_link ),
-						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+						'count' => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 					),
 					array(
 						'ID'    => 'compose',
@@ -1094,18 +1094,18 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_messages;
 		}
 
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 			// Setup the logged in user variables.
-			$friends_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() );
+			$friends_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_friends_slug() );
 
 			// Pending friend requests.
-			$count = $enable_count ? count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) ) : '';
+			$count = $enable_count ? count( bboss_friends_get_friendship_request_user_ids( bboss_loggedin_user_id() ) ) : '';
 
 			$item_friends = array(
 				'ID'       => 'friends',
 				'title'    => __( 'Connections', 'buddyboss' ),
 				'url'      => esc_url( $friends_link ),
-				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+				'count'    => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'my-friends',
@@ -1117,7 +1117,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						'ID'    => 'requests',
 						'title' => ( ! empty( $count ) ? __( 'Pending Requests', 'buddyboss' ) : __( 'No Pending Requests', 'buddyboss' ) ),
 						'url'   => esc_url( trailingslashit( $friends_link . 'requests' ) ),
-						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+						'count' => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 					),
 				),
 			);
@@ -1125,18 +1125,18 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_friends;
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bboss_is_active( 'groups' ) ) {
 			// Setup the logged in user variables.
-			$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
+			$groups_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() );
 
 			// Pending group invites.
-			$count = $enable_count ? groups_get_invite_count_for_user() : '';
+			$count = $enable_count ? bboss_groups_get_invite_count_for_user() : '';
 
 			$item_groups = array(
 				'ID'       => 'groups',
 				'title'    => __( 'Groups', 'buddyboss' ),
 				'url'      => esc_url( $groups_link ),
-				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : 0,
+				'count'    => ! empty( $count ) ? bboss_core_number_format( $count ) : 0,
 				'children' => array(
 					array(
 						'ID'    => 'my-groups',
@@ -1148,16 +1148,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						'ID'    => 'invites',
 						'title' => ( ! empty( $count ) ? __( 'Pending Invites', 'buddyboss' ) : __( 'No Pending Invites', 'buddyboss' ) ),
 						'url'   => esc_url( trailingslashit( $groups_link . 'invites' ) ),
-						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
+						'count' => ! empty( $count ) ? bboss_core_number_format( $count ) : '',
 					),
 				),
 			);
 
-			if ( bp_user_can_create_groups() ) {
+			if ( bboss_user_can_create_groups() ) {
 				$item_groups['children'][] = array(
 					'ID'    => 'create-group',
 					'title' => __( 'Create Group', 'buddyboss' ),
-					'url'   => esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ),
+					'url'   => esc_url( trailingslashit( bboss_get_groups_directory_permalink() . 'create' ) ),
 					'count' => '',
 				);
 			}
@@ -1185,7 +1185,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			bb_meprlms_enable()
 		) {
 			$slug        = bb_meprlms_profile_courses_slug();
-			$course_link = trailingslashit( bp_loggedin_user_domain() . $slug );
+			$course_link = trailingslashit( bboss_loggedin_user_domain() . $slug );
 			$name        = esc_html__( 'Courses', 'buddyboss' );
 
 			$item_courses = array(
@@ -1207,7 +1207,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				),
 			);
 
-			if ( user_can( bp_loggedin_user_id(), 'administrator' ) ) {
+			if ( user_can( bboss_loggedin_user_id(), 'administrator' ) ) {
 				$item_courses['children'][] = array(
 					'ID'    => bb_meprlms_profile_instructor_courses_slug(),
 					'title' => esc_html__( 'My Created Courses', 'buddyboss' ),
@@ -1219,9 +1219,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_courses;
 		}
 
-		if ( bp_is_active( 'forums' ) ) {
-			$user_domain = bp_loggedin_user_domain();
-			$forums_link = trailingslashit( $user_domain . bbp_get_root_slug() );
+		if ( bboss_is_active( 'forums' ) ) {
+			$user_domain = bboss_loggedin_user_domain();
+			$forums_link = trailingslashit( $user_domain . bboss_bbp_get_root_slug() );
 
 			$item_forums = array(
 				'ID'       => 'forums',
@@ -1232,23 +1232,23 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					array(
 						'ID'    => 'topics',
 						'title' => __( 'My Discussions', 'buddyboss' ),
-						'url'   => esc_url( trailingslashit( $forums_link . bbp_get_topic_archive_slug() ) ),
+						'url'   => esc_url( trailingslashit( $forums_link . bboss_bbp_get_topic_archive_slug() ) ),
 						'count' => '',
 					),
 					array(
 						'ID'    => 'replies',
 						'title' => __( 'My Replies', 'buddyboss' ),
-						'url'   => esc_url( trailingslashit( $forums_link . bbp_get_reply_archive_slug() ) ),
+						'url'   => esc_url( trailingslashit( $forums_link . bboss_bbp_get_reply_archive_slug() ) ),
 						'count' => '',
 					),
 				),
 			);
 
-			if ( function_exists( 'bbp_is_favorites_active' ) && bbp_is_favorites_active() ) {
+			if ( function_exists( 'bboss_bbp_is_favorites_active' ) && bboss_bbp_is_favorites_active() ) {
 				$item_forums['children'][] = array(
 					'ID'    => 'favorite',
 					'title' => __( 'My Favorites', 'buddyboss' ),
-					'url'   => esc_url( trailingslashit( $forums_link . bbp_get_user_favorites_slug() ) ),
+					'url'   => esc_url( trailingslashit( $forums_link . bboss_bbp_get_user_favorites_slug() ) ),
 					'count' => '',
 				);
 			}
@@ -1256,9 +1256,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_forums;
 		}
 
-		if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && function_exists( 'bboss_is_profile_media_support_enabled' ) && bboss_is_profile_media_support_enabled() ) {
 			// Setup the logged in user variables.
-			$media_link = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() );
+			$media_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_media_slug() );
 
 			$item_media = array(
 				'ID'       => 'photos',
@@ -1275,7 +1275,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				),
 			);
 
-			if ( function_exists( 'bp_is_profile_albums_support_enabled' ) && bp_is_profile_albums_support_enabled() ) {
+			if ( function_exists( 'bboss_is_profile_albums_support_enabled' ) && bboss_is_profile_albums_support_enabled() ) {
 				$item_media['children'][] = array(
 					'ID'    => 'albums',
 					'title' => __( 'My Albums', 'buddyboss' ),
@@ -1287,9 +1287,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_media;
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
+		if ( bboss_is_active( 'media' ) && bboss_is_active( 'document' ) && function_exists( 'bboss_is_profile_document_support_enabled' ) && bboss_is_profile_document_support_enabled() ) {
 			// Setup the logged in user variables.
-			$document_link = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() );
+			$document_link = trailingslashit( bboss_loggedin_user_domain() . bp_get_document_slug() );
 
 			$item_documents = array(
 				'ID'       => 'documents',
@@ -1308,9 +1308,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[]        = $item_documents;
 		}
 
-		if ( bp_is_active( 'invites' ) && function_exists( 'bp_allow_user_to_send_invites' ) && true === bp_allow_user_to_send_invites() ) {
+		if ( bboss_is_active( 'invites' ) && function_exists( 'bboss_allow_user_to_send_invites' ) && true === bboss_allow_user_to_send_invites() ) {
 			// Setup the logged in user variables.
-			$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
+			$invites_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_invites_slug() );
 			$item_invites = array(
 				'ID'       => 'invites',
 				'title'    => __( 'Email Invites', 'buddyboss' ),
@@ -1401,10 +1401,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$user_domain = '';
 
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		}
 
 		if ( ! empty( $user_domain ) ) {
@@ -1438,9 +1438,9 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$user_id = (int) $request['id'];
 
-		$is_suspended  = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user_id );
-		$is_blocked    = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user_id );
-		$is_blocked_by = function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $user_id );
+		$is_suspended  = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( $user_id );
+		$is_blocked    = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( $user_id );
+		$is_blocked_by = function_exists( 'bboss_moderation_is_user_blocked_by' ) && bboss_moderation_is_user_blocked_by( $user_id );
 
 		if ( $is_suspended || $is_blocked || $is_blocked_by ) {
 			// Fixed 403 with a distinct code: 401 + the shared auth code makes API
@@ -1492,14 +1492,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		$member_types = array();
-		if ( function_exists( 'bp_get_member_type' ) ) {
-			$member_types = bp_get_member_type( $user_id, false );
+		if ( function_exists( 'bboss_get_member_type' ) ) {
+			$member_types = bboss_get_member_type( $user_id, false );
 			if ( ! empty( $member_types ) ) {
 				$member_types = array_map(
 					function ( $type ) {
-						$type_obj = bp_get_member_type_object( $type );
-						if ( $type_obj && function_exists( 'bb_get_member_type_label_colors' ) ) {
-							$type_obj->label_colors = bb_get_member_type_label_colors( $type );
+						$type_obj = bboss_get_member_type_object( $type );
+						if ( $type_obj && function_exists( 'bboss_get_member_type_label_colors' ) ) {
+							$type_obj->label_colors = bboss_get_member_type_label_colors( $type );
 						}
 						return $type_obj;
 					},
@@ -1510,7 +1510,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$followers = $this->members_endpoint->rest_bp_get_follower_ids( array( 'user_id' => $user_id ) );
 
-		$avatar_full = bp_core_fetch_avatar(
+		$avatar_full = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $user_id,
 				'html'    => false,
@@ -1520,7 +1520,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$avatar_urls = array(
 			'full'       => $avatar_full,
-			'thumb'      => bp_core_fetch_avatar(
+			'thumb'      => bboss_core_fetch_avatar(
 				array(
 					'item_id' => $user_id,
 					'html'    => false,
@@ -1531,20 +1531,20 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$message_url = '';
-		if ( bp_is_active( 'messages' ) ) {
+		if ( bboss_is_active( 'messages' ) ) {
 			$message_url = apply_filters(
 				'bp_get_send_private_message_link',
 				esc_url(
 					wp_nonce_url(
-						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_members_get_user_nicename( $user_id )
+						bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/compose/?r=' . bboss_members_get_user_nicename( $user_id )
 					)
 				)
 			);
 		}
 
 		$can_send_message = false;
-		if ( bp_is_active( 'messages' ) && function_exists( 'bb_messages_user_can_send_message' ) ) {
-			$can_send_message = bb_messages_user_can_send_message(
+		if ( bboss_is_active( 'messages' ) && function_exists( 'bboss_messages_user_can_send_message' ) ) {
+			$can_send_message = bboss_messages_user_can_send_message(
 				array(
 					'sender_id'     => get_current_user_id(),
 					'recipients_id' => $user_id,
@@ -1553,22 +1553,22 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		$followers_count = ! empty( $followers ) ? count( $followers ) : 0;
-		$button_args     = function_exists( 'bb_member_get_profile_action_arguments' ) ? bb_member_get_profile_action_arguments() : array();
+		$button_args     = function_exists( 'bboss_member_get_profile_action_arguments' ) ? bboss_member_get_profile_action_arguments() : array();
 
 		$data = array(
 			'id'                 => $user_id,
-			'link'               => bp_core_get_user_domain( $user_id ),
+			'link'               => bboss_core_get_user_domain( $user_id ),
 			'member_types'       => ! empty( $member_types ) ? $member_types : null,
-			'registered_date'    => bp_rest_prepare_date_response( $user->user_registered ),
-			'profile_name'       => bp_core_get_user_displayname( $user_id ),
-			'last_activity'      => function_exists( 'bp_get_last_activity' ) ? bp_get_last_activity( $user_id ) : '',
+			'registered_date'    => bboss_rest_prepare_date_response( $user->user_registered ),
+			'profile_name'       => bboss_core_get_user_displayname( $user_id ),
+			'last_activity'      => function_exists( 'bboss_get_last_activity' ) ? bboss_get_last_activity( $user_id ) : '',
 			/* translators: %s: number. */
 			'followers'          => sprintf( _n( '%d follower', '%d followers', $followers_count, 'buddyboss' ), $followers_count ),
 			'avatar_urls'        => $avatar_urls,
 			'message_url'        => wp_specialchars_decode( $message_url ),
 			'can_send_message'   => $can_send_message,
-			'follow_button_html' => function_exists( 'bp_get_add_follow_button' ) && bp_is_activity_follow_active() ? bp_get_add_follow_button( $user_id, get_current_user_id(), $button_args ) : '',
-			'friend_button_html' => function_exists( 'bp_get_add_friend_button' ) ? bp_get_add_friend_button( $user_id, false, $button_args ) : '',
+			'follow_button_html' => function_exists( 'bboss_get_add_follow_button' ) && bboss_is_activity_follow_active() ? bboss_get_add_follow_button( $user_id, get_current_user_id(), $button_args ) : '',
+			'friend_button_html' => function_exists( 'bboss_get_add_friend_button' ) ? bboss_get_add_friend_button( $user_id, false, $button_args ) : '',
 		);
 
 		$response = rest_ensure_response( $data );
@@ -1594,16 +1594,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 */
 	public function bb_rest_get_timeline_sub_nav( $is_profile_dropdown_default_menu = false ) {
 		$subnav = array();
-		if ( function_exists( 'bb_get_enabled_activity_timeline_filter_options' ) ) {
-			$activity_filters = bb_get_enabled_activity_timeline_filter_options();
-			$filters_labels   = bb_get_activity_timeline_filter_options_labels();
+		if ( function_exists( 'bboss_get_enabled_activity_timeline_filter_options' ) ) {
+			$activity_filters = bboss_get_enabled_activity_timeline_filter_options();
+			$filters_labels   = bboss_get_activity_timeline_filter_options_labels();
 
 			// Allow valid options only.
-			$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+			$activity_filters = bboss_filter_activity_filter_scope_keys( $activity_filters );
 			arsort( $activity_filters );
 			if ( ! empty( $activity_filters ) ) {
 				$i             = 1;
-				$activity_link = trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() );
+				$activity_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_activity_slug() );
 				foreach ( $activity_filters as $key => $is_enabled ) {
 					if (
 						empty( $is_enabled ) ||
@@ -1646,10 +1646,10 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Whether an avatar URL is the member's default (i.e. not an uploaded avatar).
 	 *
-	 * URL-based port of bp_get_user_has_avatar()'s path tests: uploaded avatars are
+	 * URL-based port of bboss_get_user_has_avatar()'s path tests: uploaded avatars are
 	 * served from /avatars/{user_id}/ while auto-generated defaults live under
 	 * /default/{user_id}/. Testing the already-fetched URL avoids the extra
-	 * bp_core_fetch_avatar() call the canonical helper issues per member.
+	 * bboss_core_fetch_avatar() call the canonical helper issues per member.
 	 *
 	 * @since 3.5.0
 	 *
@@ -1665,3 +1665,11 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		return ! $has_uploaded;
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Members_Details_Endpoint', false ) || interface_exists( 'BBoss_REST_Members_Details_Endpoint', false ) || trait_exists( 'BBoss_REST_Members_Details_Endpoint', false ) ) && ! class_exists( 'BP_REST_Members_Details_Endpoint', false ) && ! interface_exists( 'BP_REST_Members_Details_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Members_Details_Endpoint', 'BP_REST_Members_Details_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

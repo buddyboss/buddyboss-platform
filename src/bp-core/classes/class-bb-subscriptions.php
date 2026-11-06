@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Subscriptions' ) ) {
+if ( ! class_exists( 'BBoss_Subscriptions' ) ) {
 
 	/**
 	 * BuddyBoss Subscriptions object.
@@ -16,7 +16,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 	 * @since BuddyBoss 2.2.6
 	 */
 	#[\AllowDynamicProperties]
-	class BB_Subscriptions {
+	class BBoss_Subscriptions {
 
 		/**
 		 * ID of the subscriptions.
@@ -208,7 +208,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				return;
 			}
 
-			$type_data = bb_register_subscriptions_types( $this->type );
+			$type_data = bboss_register_subscriptions_types( $this->type );
 
 			if (
 				! empty( $type_data ) &&
@@ -229,7 +229,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				);
 
 				if ( ! empty( $item_data ) && ! empty( current( $item_data ) ) ) {
-					$item_extra = bp_parse_args( (array) current( $item_data ), $item_extra );
+					$item_extra = bboss_parse_args( (array) current( $item_data ), $item_extra );
 				}
 
 				$this->title            = $item_extra['title'];
@@ -268,7 +268,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss 2.2.6
 			 *
-			 * @param BB_Subscriptions $this Current instance of the subscription item being saved. Passed by reference.
+			 * @param BBoss_Subscriptions $this Current instance of the subscription item being saved. Passed by reference.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_save', array( &$this ) );
 
@@ -305,7 +305,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 * @since BuddyBoss 2.2.6
 			 *
 			 * @param bool             $is_validate True when subscription request correct otherwise false/WP_Error. Default true.
-			 * @param BB_Subscriptions $this        Current instance of the subscription item being saved.
+			 * @param BBoss_Subscriptions $this        Current instance of the subscription item being saved.
 			 */
 			$is_validate = apply_filters( 'bb_subscriptions_validate_before_save', true, $this );
 
@@ -378,7 +378,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss 2.2.6
 			 *
-			 * @param BB_Subscriptions $this Current instance of the subscription item that was saved. Passed by reference.
+			 * @param BBoss_Subscriptions $this Current instance of the subscription item that was saved. Passed by reference.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_save', array( &$this ) );
 
@@ -397,7 +397,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		public static function update_secondary_item_id( $args = array() ) {
 			global $wpdb;
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$args,
 				array(
 					'blog_id'           => get_current_blog_id(),
@@ -458,7 +458,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss 2.2.6
 			 *
-			 * @param BB_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param BBoss_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int              $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_before_delete_subscription', array( &$this, $this->id ) );
@@ -473,7 +473,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 *
 			 * @since BuddyBoss 2.2.6
 			 *
-			 * @param BB_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
+			 * @param BBoss_Subscriptions $this Current instance of the subscription item being deleted. Passed by reference.
 			 * @param int              $id   ID of subscription.
 			 */
 			do_action_ref_array( 'bb_subscriptions_after_delete_subscription', array( &$this, $this->id ) );
@@ -666,7 +666,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				'cache'             => true,
 			);
 
-			$r = bp_parse_args( $args, $defaults, 'bb_subscriptions_subscription_get' );
+			$r = bboss_parse_args( $args, $defaults, 'bb_subscriptions_subscription_get' );
 
 			// Sanitize the column name.
 			$r['fields'] = self::validate_column( $r['fields'] );
@@ -735,7 +735,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			}
 
 			/* Order/orderby ********************************************/
-			$order    = bp_esc_sql_order( $r['order'] );
+			$order    = bboss_esc_sql_order( $r['order'] );
 			$order_by = $r['order_by'];
 
 			// Whitelist: the value is interpolated into the ORDER BY clause
@@ -816,14 +816,14 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			 */
 			$paged_subscriptions_sql = apply_filters( 'bb_subscriptions_get_paged_subscriptions_sql', $paged_subscriptions_sql, $sql, $r );
 
-			$cached = bp_core_get_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions' );
+			$cached = bboss_core_get_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions' );
 			if ( false === $cached || false === $r['cache'] ) {
 				$paged_subscription_ids = $wpdb->get_col( $paged_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 				// cache => false means "fresh, one-off read" (keyset pages of the
 				// background fan-out): don't leave a never-read key per page behind.
 				if ( false !== $r['cache'] ) {
-					bp_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
+					bboss_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
 				}
 			} else {
 				$paged_subscription_ids = $cached;
@@ -884,7 +884,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 					}
 				}
 			} else {
-				$uncached_subscription_ids = bp_get_non_cached_ids( $paged_subscription_ids, 'bb_subscriptions' );
+				$uncached_subscription_ids = bboss_get_non_cached_ids( $paged_subscription_ids, 'bb_subscriptions' );
 				if ( $uncached_subscription_ids ) {
 					$subscription_ids_sql      = implode( ',', array_map( 'intval', $uncached_subscription_ids ) );
 					$subscription_data_objects = $wpdb->get_results( "SELECT sc.* FROM {$subscription_tbl} sc WHERE sc.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -895,7 +895,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 
 				$paged_subscriptions = array();
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-					$paged_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, ( 'all' === $r['fields'] ) );
+					$paged_subscriptions[] = new BBoss_Subscriptions( $paged_subscription_id, ( 'all' === $r['fields'] ) );
 				}
 			}
 
@@ -918,12 +918,12 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				 */
 				$total_subscriptions_sql = apply_filters( 'bb_subscriptions_get_total_subscriptions_sql', $total_subscriptions_sql, $sql, $r );
 
-				$cached = bp_core_get_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions' );
+				$cached = bboss_core_get_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions' );
 				if ( false === $cached || false === $r['cache'] ) {
 					$total_subscriptions = (int) $wpdb->get_var( $total_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 					if ( false !== $r['cache'] ) {
-						bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
+						bboss_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
 					}
 				} else {
 					$total_subscriptions = (int) ( ! empty( $cached ) ? current( $cached ) : 0 );

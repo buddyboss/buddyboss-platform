@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Latest_Activities extends WP_Widget {
+class BBoss_Latest_Activities extends WP_Widget {
 	/**
 	 * Construct the widget.
 	 *
@@ -23,7 +23,7 @@ class BP_Latest_Activities extends WP_Widget {
 	public function __construct() {
 
 		/**
-		 * Filters the widget options for the BP_Latest_Activities widget.
+		 * Filters the widget options for the BBoss_Latest_Activities widget.
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
@@ -46,7 +46,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @since BuddyPress 3.0.0
 	 */
 	public static function register_widget() {
-		register_widget( 'BP_Latest_Activities' );
+		register_widget( 'BBoss_Latest_Activities' );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class BP_Latest_Activities extends WP_Widget {
 		$title      = __( 'Latest updates', 'buddyboss' );
 		$type       = array( 'activity_update' );
 		$max        = 5;
-		$bp_nouveau = bp_nouveau();
+		$bp_nouveau = bboss_nouveau();
 
 		// Check instance for a custom title
 		if ( ! empty( $instance['title'] ) ) {
@@ -70,7 +70,7 @@ class BP_Latest_Activities extends WP_Widget {
 		}
 
 		/**
-		 * Filters the BP_Latest_Activities widget title.
+		 * Filters the BBoss_Latest_Activities widget title.
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
@@ -110,32 +110,32 @@ class BP_Latest_Activities extends WP_Widget {
 
 		$scope[] = 'public';
 
-		if ( bp_loggedin_user_id() ) {
+		if ( bboss_loggedin_user_id() ) {
 
 			$scope[] = 'just-me';
 
-			if ( bp_activity_do_mentions() ) {
+			if ( bboss_activity_do_mentions() ) {
 				$scope[] = 'mentions';
 			}
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				$scope[] = 'friends';
 			}
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bboss_is_active( 'groups' ) ) {
 				$scope[] = 'groups';
 			}
 
-			if ( bp_is_activity_follow_active() ) {
+			if ( bboss_is_activity_follow_active() ) {
 				$scope[] = 'following';
 			}
 
-			if ( bp_is_active( 'forums' ) ) {
+			if ( bboss_is_active( 'forums' ) ) {
 				$scope[] = 'forums';
 			}
 		}
 
-		if ( bp_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
+		if ( bboss_loggedin_user_id() && ! empty( $instance['relevant'] ) ) {
 			$key = array_search( 'public', $scope, true );
 			if ( is_array( $scope ) && false !== $key ) {
 				unset( $scope[ $key ] );
@@ -151,7 +151,7 @@ class BP_Latest_Activities extends WP_Widget {
 
 		/**
 		 * Globalize the activity widget arguments.
-		 * @see bp_nouveau_activity_widget_query() to override
+		 * @see bboss_nouveau_activity_widget_query() to override
 		 */
 		$bp_nouveau->activity->widget_args = array(
 			'max'          => $max,
@@ -167,12 +167,12 @@ class BP_Latest_Activities extends WP_Widget {
 			$bp_nouveau->activity->widget_args['display_comments'] = 'stream';
 		}
 
-		if ( bp_is_active( 'blogs' ) && function_exists( 'bb_filter_activity_get_filter_sql' ) ) {
+		if ( bboss_is_active( 'blogs' ) && function_exists( 'bboss_filter_activity_get_filter_sql' ) ) {
 			$flag_activity_get_filter_sql = true;
 			add_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
 		}
 
-		bp_get_template_part( 'activity/widget' );
+		bboss_get_template_part( 'activity/widget' );
 
 		if ( ! empty( $flag_activity_get_filter_sql ) ) {
 			remove_filter( 'bb_activity_activity_get_filter_sql', 'bb_filter_activity_get_filter_sql', 10, 2 );
@@ -223,7 +223,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @return string HTML output.
 	 */
 	public function form( $instance ) {
-		$instance = bp_parse_args(
+		$instance = bboss_parse_args(
 			(array) $instance,
 			array(
 				'title'    => __( 'Latest updates', 'buddyboss' ),
@@ -257,7 +257,7 @@ class BP_Latest_Activities extends WP_Widget {
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'type' ) ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss' ); ?></label>
 			<select class="widefat" multiple="multiple" id="<?php echo esc_attr( $this->get_field_id( 'type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'type' ) ); ?>[]">
-				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
+				<?php foreach ( bboss_nouveau_get_activity_filters() as $key => $name ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type, true ) ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>

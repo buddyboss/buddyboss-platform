@@ -25,7 +25,7 @@ class BP_Tests_Notifications_BPNotificationsTemplate extends BP_UnitTestCase {
 
 		$_REQUEST['npage'] = 2;
 
-		$template = new BP_Notifications_Template( array(
+		$template = new BBoss_Notifications_Template( array(
 			'user_id' => $u,
 			'is_new' => true,
 			'per_page' => 2,

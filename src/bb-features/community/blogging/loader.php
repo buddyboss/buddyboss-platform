@@ -19,7 +19,7 @@ add_filter( 'the_content', 'bb_blog_append_post_footer_sections', 20 );
  * Whether ReadyLaunch should take over blog pages.
  *
  * Reads the enabled-pages option directly instead of calling
- * BB_Readylaunch::instance() — instantiating the singleton from inside the
+ * BBoss_Readylaunch::instance() — instantiating the singleton from inside the
  * `bb_is_readylaunch_enabled_for_page` filter causes infinite constructor
  * recursion, because the singleton is only assigned after the constructor
  * (which applies that filter) returns.
@@ -28,8 +28,8 @@ add_filter( 'the_content', 'bb_blog_append_post_footer_sections', 20 );
  *
  * @return bool
  */
-function bb_blog_rl_is_enabled() {
-	$enabled_pages = bp_get_option( 'bb_rl_enabled_pages', array() );
+function bboss_blog_rl_is_enabled() {
+	$enabled_pages = bboss_get_option( 'bb_rl_enabled_pages', array() );
 
 	return ! empty( $enabled_pages['blog'] );
 }
@@ -43,8 +43,8 @@ function bb_blog_rl_is_enabled() {
  *
  * @return bool
  */
-function bb_blog_readylaunch_enabled_for_page( $retval ) {
-	if ( bb_blog_rl_is_enabled() && bb_blog_is_blog_context() ) {
+function bboss_blog_readylaunch_enabled_for_page( $retval ) {
+	if ( bboss_blog_rl_is_enabled() && bboss_blog_is_blog_context() ) {
 		return true;
 	}
 
@@ -59,12 +59,12 @@ add_filter( 'bb_is_readylaunch_enabled_for_page', 'bb_blog_readylaunch_enabled_f
  *
  * @return void
  */
-function bb_blog_rl_archive_open() {
-	if ( is_singular() || ! bb_blog_is_blog_context() ) {
+function bboss_blog_rl_archive_open() {
+	if ( is_singular() || ! bboss_blog_is_blog_context() ) {
 		return;
 	}
 
-	bp_get_template_part( 'blog/archive-header' );
+	bboss_get_template_part( 'blog/archive-header' );
 	echo '<div class="bb-rl-blog-grid">';
 }
 add_action( 'bb_rl_layout_before_loop', 'bb_blog_rl_archive_open' );
@@ -76,8 +76,8 @@ add_action( 'bb_rl_layout_before_loop', 'bb_blog_rl_archive_open' );
  *
  * @return void
  */
-function bb_blog_rl_archive_close() {
-	if ( is_singular() || ! bb_blog_is_blog_context() ) {
+function bboss_blog_rl_archive_close() {
+	if ( is_singular() || ! bboss_blog_is_blog_context() ) {
 		return;
 	}
 
@@ -103,7 +103,7 @@ add_action( 'bb_rl_layout_after_loop', 'bb_blog_rl_archive_close' );
  *
  * @return void
  */
-function bb_blog_setup_profile_nav() {
+function bboss_blog_setup_profile_nav() {
 	/**
 	 * Whether the member profile Blogs tab renders.
 	 *
@@ -118,12 +118,12 @@ function bb_blog_setup_profile_nav() {
 		return;
 	}
 
-	bp_core_new_nav_item(
+	bboss_core_new_nav_item(
 		array(
 			'name'                    => __( 'Blogs', 'buddyboss' ),
 			'slug'                    => 'blog',
 			'position'                => 90,
-			'screen_function'         => 'bb_blog_screen_member_posts',
+			'screen_function'         => 'bboss_blog_screen_member_posts',
 			'default_subnav_slug'     => apply_filters( 'bb_blog_profile_default_subnav', 'blog' ),
 			'show_for_displayed_user' => true,
 		)
@@ -138,7 +138,7 @@ add_action( 'bp_setup_nav', 'bb_blog_setup_profile_nav', 100 );
  *
  * @return void
  */
-function bb_blog_screen_member_posts() {
+function bboss_blog_screen_member_posts() {
 	add_action( 'bp_template_content', 'bb_blog_member_posts_content' );
 
 	/**
@@ -148,7 +148,7 @@ function bb_blog_screen_member_posts() {
 	 *
 	 * @param string $template Template name.
 	 */
-	bp_core_load_template( apply_filters( 'bb_blog_screen_member_posts_template', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'bb_blog_screen_member_posts_template', 'members/single/home' ) );
 }
 
 /**
@@ -158,8 +158,8 @@ function bb_blog_screen_member_posts() {
  *
  * @return void
  */
-function bb_blog_member_posts_content() {
-	bp_get_template_part( 'members/single/blog' );
+function bboss_blog_member_posts_content() {
+	bboss_get_template_part( 'members/single/blog' );
 }
 
 /**
@@ -173,21 +173,21 @@ function bb_blog_member_posts_content() {
  *
  * @return void
  */
-function bb_blog_enqueue_member_blog_assets() {
-	if ( ! function_exists( 'bp_is_user' ) || ! bp_is_user() || ! bp_is_current_component( 'blog' ) ) {
+function bboss_blog_enqueue_member_blog_assets() {
+	if ( ! function_exists( 'bboss_is_user' ) || ! bboss_is_user() || ! bboss_is_current_component( 'blog' ) ) {
 		return;
 	}
 
 	// ReadyLaunch enqueues its own blog stylesheet.
-	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+	if ( function_exists( 'bboss_is_readylaunch_enabled' ) && bboss_is_readylaunch_enabled() ) {
 		return;
 	}
 
 	wp_enqueue_style(
 		'bb-member-blog',
-		buddypress()->plugin_url . 'bp-templates/bp-nouveau/buddypress/css/member-blog.css',
+		bboss()->plugin_url . 'bp-templates/bp-nouveau/buddypress/css/member-blog.css',
 		array(),
-		bp_get_version()
+		bboss_get_version()
 	);
 }
 add_action( 'bp_enqueue_scripts', 'bb_blog_enqueue_member_blog_assets' );

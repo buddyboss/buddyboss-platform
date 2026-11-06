@@ -12,15 +12,15 @@
 defined( 'ABSPATH' ) || exit;
 
 // Added this condition for theme backward compatibility.
-if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
-	bp_get_template_part( 'members/single/settings/subscriptions' );
+if ( bboss_action_variables() && 'subscriptions' === bboss_action_variable( 0 ) ) {
+	bboss_get_template_part( 'members/single/settings/subscriptions' );
 	return;
-} elseif ( bp_action_variables() ) {
+} elseif ( bboss_action_variables() ) {
 	/**
 	 * Fires to render a custom notifications settings sub-tab (e.g. a
 	 * plugin-registered tab such as "Blog Subscriptions") when a theme routes
 	 * the notifications action through this template (as buddyboss-theme does).
-	 * The screen handler (`bp_settings_screen_notification()`) 404s any
+	 * The screen handler (`bboss_settings_screen_notification()`) 404s any
 	 * sub-action without a registered handler, so this only fires for
 	 * recognised sub-tabs. Handlers echo their content.
 	 *
@@ -28,16 +28,16 @@ if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 	 *
 	 * @param string $action_variable The sub-tab slug.
 	 */
-	do_action( 'bb_member_settings_notifications_custom_tab', bp_action_variable( 0 ) );
+	do_action( 'bb_member_settings_notifications_custom_tab', bboss_action_variable( 0 ) );
 	return;
 }
 
-bp_nouveau_member_hook( 'before', 'settings_template' );
+bboss_nouveau_member_hook( 'before', 'settings_template' );
 
-$is_web_enabled = bb_web_notification_enabled();
-$is_app_enabled = bb_app_notification_enabled();
+$is_web_enabled = bboss_web_notification_enabled();
+$is_app_enabled = bboss_app_notification_enabled();
 
-$data  = bb_core_notification_preferences_data();
+$data  = bboss_core_notification_preferences_data();
 $class = '';
 if ( $is_web_enabled && $is_app_enabled ) {
 	$class = 'bb-notification-column-3';
@@ -48,15 +48,15 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 <h2 class="screen-heading email-settings-screen"><?php echo wp_kses_post( $data['screen_title'] ); ?></h2>
 
-<?php bp_get_template_part( 'members/single/parts/notification-subnav' ); ?>
+<?php bboss_get_template_part( 'members/single/parts/notification-subnav' ); ?>
 
 <p class="bp-help-text email-notifications-info">
 	<?php echo wp_kses_post( $data['screen_description'] ); ?>
 </p>
 
-<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
+<form action="<?php echo esc_url( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form <?php echo esc_attr( $class ); ?>" id="settings-form">
 	<?php
-	if ( false === bb_enabled_legacy_email_preference() && ( $is_web_enabled || $is_app_enabled ) ) {
+	if ( false === bboss_enabled_legacy_email_preference() && ( $is_web_enabled || $is_app_enabled ) ) {
 		?>
 		<div class="notification_info">
 
@@ -103,9 +103,9 @@ if ( $is_web_enabled && $is_app_enabled ) {
 		<?php
 	}
 
-	bp_nouveau_member_email_notice_settings();
-	bp_nouveau_submit_button( 'member-notifications-settings' );
+	bboss_nouveau_member_email_notice_settings();
+	bboss_nouveau_submit_button( 'member-notifications-settings' );
 	?>
 </form>
 <?php
-bp_nouveau_member_hook( 'after', 'settings_template' );
+bboss_nouveau_member_hook( 'after', 'settings_template' );

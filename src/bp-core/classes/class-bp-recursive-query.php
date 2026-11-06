@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.2.0
  */
-abstract class BP_Recursive_Query {
+abstract class BBoss_Recursive_Query {
 
 	/**
 	 * Query arguments passed to the constructor.
@@ -29,8 +29,8 @@ abstract class BP_Recursive_Query {
 	 *
 	 * Extending classes should call this method from within a publicly
 	 * accessible get_sql() method, and manipulate the SQL as necessary.
-	 * For example, {@link BP_XProfile_Query::get_sql()} is merely a wrapper for
-	 * get_sql_clauses(), while {@link BP_Activity_Query::get_sql()} discards
+	 * For example, {@link BBoss_XProfile_Query::get_sql()} is merely a wrapper for
+	 * get_sql_clauses(), while {@link BBoss_Activity_Query::get_sql()} discards
 	 * the empty 'join' clause, and only passes the 'where' clause.
 	 *
 	 * @since BuddyPress 2.2.0

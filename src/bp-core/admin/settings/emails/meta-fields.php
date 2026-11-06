@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
  *
  * @return void
  */
-function bb_emails_register_core_meta_fields( $registry, $component = 'emails' ) {
+function bboss_emails_register_core_meta_fields( $registry, $component = 'emails' ) {
 
 	// =========================================================================
 	// TAB: Details (order 10–50)
@@ -138,7 +138,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 				if ( empty( $post->ID ) ) {
 					return '';
 				}
-				$terms = get_the_terms( $post->ID, bp_get_email_tax_type() );
+				$terms = get_the_terms( $post->ID, bboss_get_email_tax_type() );
 				if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
 					return $terms[0]->slug;
 				}
@@ -146,10 +146,10 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 			},
 			'save_value'        => function ( $post, $value ) {
 				if ( ! empty( $post->ID ) ) {
-					if ( ! empty( $value ) && term_exists( $value, bp_get_email_tax_type() ) ) {
-						wp_set_object_terms( $post->ID, $value, bp_get_email_tax_type() );
+					if ( ! empty( $value ) && term_exists( $value, bboss_get_email_tax_type() ) ) {
+						wp_set_object_terms( $post->ID, $value, bboss_get_email_tax_type() );
 					} else {
-						wp_set_object_terms( $post->ID, array(), bp_get_email_tax_type() );
+						wp_set_object_terms( $post->ID, array(), bboss_get_email_tax_type() );
 					}
 				}
 			},

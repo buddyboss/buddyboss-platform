@@ -25,10 +25,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool Returns true on success, false on failure.
  */
-function bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post', $unique = false ) {
+function bboss_bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post', $unique = false ) {
 	$object_id = absint( $object_id );
 	$user_id   = absint( $user_id );
-	$retval    = bbp_user_engagements_interface( $rel_key, $rel_type )->add_user_to_object( $object_id, $user_id, $rel_key, $rel_type, $unique );
+	$retval    = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->add_user_to_object( $object_id, $user_id, $rel_key, $rel_type, $unique );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_add_user_to_object', $retval, $object_id, $user_id, $rel_key, $rel_type, $unique );
@@ -47,8 +47,8 @@ function bbp_add_user_to_object( $object_id = 0, $user_id = 0, $rel_key = '', $r
  *
  * @return bool Returns true on success, false on failure.
  */
-function bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
-	$retval = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_user_from_object( $object_id, $user_id, $rel_key, $rel_type );
+function bboss_bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
+	$retval = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->remove_user_from_object( $object_id, $user_id, $rel_key, $rel_type );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_user_from_object', $retval, $object_id, $user_id, $rel_key, $rel_type );
@@ -66,9 +66,9 @@ function bbp_remove_user_from_object( $object_id = 0, $user_id = 0, $rel_key = '
  *
  * @return bool Returns true on success, false on failure.
  */
-function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
+function bboss_bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$user_id = absint( $user_id );
-	$retval  = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_user_from_all_objects( $user_id, $rel_key, $rel_type );
+	$retval  = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->remove_user_from_all_objects( $user_id, $rel_key, $rel_type );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_user_from_all_objects', $retval, $user_id, $rel_key, $rel_type );
@@ -86,9 +86,9 @@ function bbp_remove_user_from_all_objects( $user_id = 0, $rel_key = '', $rel_typ
  *
  * @return bool Returns true on success, false on failure.
  */
-function bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
+function bboss_bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$object_id = absint( $object_id );
-	$retval    = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_object_from_all_users( $object_id, $rel_key, $rel_type );
+	$retval    = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->remove_object_from_all_users( $object_id, $rel_key, $rel_type );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_object_from_all_users', $retval, $object_id, $rel_key, $rel_type );
@@ -105,8 +105,8 @@ function bbp_remove_object_from_all_users( $object_id = 0, $rel_key = '', $rel_t
  *
  * @return bool Returns true on success, false on failure.
  */
-function bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post' ) {
-	$retval = bbp_user_engagements_interface( $rel_key, $rel_type )->remove_all_users_from_all_objects( $rel_key, $rel_type );
+function bboss_bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post' ) {
+	$retval = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->remove_all_users_from_all_objects( $rel_key, $rel_type );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_remove_all_users_from_all_objects', $retval, $rel_key, $rel_type );
@@ -124,9 +124,9 @@ function bbp_remove_all_users_from_all_objects( $rel_key = '', $rel_type = 'post
  *
  * @return array Returns ids of users.
  */
-function bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
+function bboss_bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$object_id = absint( $object_id );
-	$retval    = bbp_user_engagements_interface( $rel_key, $rel_type )->get_users_for_object( $object_id, $rel_key, $rel_type );
+	$retval    = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->get_users_for_object( $object_id, $rel_key, $rel_type );
 
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_users_for_object', $retval, $object_id, $rel_key, $rel_type );
@@ -145,10 +145,10 @@ function bbp_get_users_for_object( $object_id = 0, $rel_key = '', $rel_type = 'p
  *
  * @return bool Returns true if object has a user, false if not.
  */
-function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
+function bboss_bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $rel_type = 'post' ) {
 	$object_id = absint( $object_id );
 	$user_id   = absint( $user_id );
-	$user_ids  = bbp_get_users_for_object( $object_id, $rel_key, $rel_type );
+	$user_ids  = bboss_bbp_get_users_for_object( $object_id, $rel_key, $rel_type );
 	$retval    = is_numeric( array_search( $user_id, $user_ids, true ) );
 
 	// Filter & return.
@@ -168,8 +168,8 @@ function bbp_is_object_of_user( $object_id = 0, $user_id = 0, $rel_key = '', $re
  *
  * @return array
  */
-function bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '', $rel_type = 'post' ) {
-	$retval = bbp_user_engagements_interface( $rel_key, $rel_type )->get_query( $args, "get_user_{$context}", $rel_key, $rel_type );
+function bboss_bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '', $rel_type = 'post' ) {
+	$retval = bboss_bbp_user_engagements_interface( $rel_key, $rel_type )->get_query( $args, "get_user_{$context}", $rel_key, $rel_type );
 
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_user_object_query', $retval, $args, $context, $rel_key, $rel_type );
@@ -187,9 +187,9 @@ function bbp_get_user_object_query( $args = array(), $context = '', $rel_key = '
  *
  * @return array|bool Results if the topic has any engagements, otherwise false.
  */
-function bbp_get_topic_engagements( $topic_id = 0 ) {
-	$topic_id = bbp_get_topic_id( $topic_id );
-	$users    = bbp_get_users_for_object( $topic_id, '_bbp_engagement' );
+function bboss_bbp_get_topic_engagements( $topic_id = 0 ) {
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
+	$users    = bboss_bbp_get_users_for_object( $topic_id, '_bbp_engagement' );
 
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_engagements', $users, $topic_id );
@@ -207,12 +207,12 @@ function bbp_get_topic_engagements( $topic_id = 0 ) {
  *
  * @return array
  */
-function bbp_get_topic_engagements_raw( $topic_id = 0 ) {
+function bboss_bbp_get_topic_engagements_raw( $topic_id = 0 ) {
 
 	// Default variables.
-	$topic_id = bbp_get_topic_id( $topic_id );
-	$bbp_db   = bbp_db();
-	$statii   = "'" . implode( "', '", bbp_get_public_topic_statuses() ) . "'";
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
+	$bbp_db   = bboss_bbp_db();
+	$statii   = "'" . implode( "', '", bboss_bbp_get_public_topic_statuses() ) . "'";
 
 	// A cool UNION query!.
 	$sql = "
@@ -225,7 +225,7 @@ UNION
 ) as u1";
 
 	// Prepare & get results.
-	$query   = $bbp_db->prepare( $sql, $topic_id, bbp_get_topic_post_type(), $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type() );
+	$query   = $bbp_db->prepare( $sql, $topic_id, bboss_bbp_get_topic_post_type(), $topic_id, bboss_bbp_get_public_status_id(), bboss_bbp_get_reply_post_type() );
 	$results = $bbp_db->get_col( $query );
 
 	// Parse results into voices.
@@ -244,13 +244,13 @@ UNION
  * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments.
  * @since BuddyBoss 2.3.4
  *
- * @param array $args Optional. Arguments to pass into bbp_has_replies().
+ * @param array $args Optional. Arguments to pass into bboss_bbp_has_replies().
  *
  * @return bool True if user has engaged, otherwise false.
  */
-function bbp_get_user_engagements( $args = array() ) {
-	$r     = bbp_get_user_object_query( $args, 'engagements', '_bbp_engagement' );
-	$query = bbp_has_topics( $r );
+function bboss_bbp_get_user_engagements( $args = array() ) {
+	$r     = bboss_bbp_get_user_object_query( $args, 'engagements', '_bbp_engagement' );
+	$query = bboss_bbp_has_topics( $r );
 
 	// Filter & return.
 	return apply_filters( 'bbp_get_user_engagements', $query, 0, $r, $args );
@@ -267,10 +267,10 @@ function bbp_get_user_engagements( $args = array() ) {
  *
  * @return bool True if the topic is in user's engagements, otherwise false.
  */
-function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
-	$user_id  = bbp_get_user_id( $user_id, true, true );
-	$topic_id = bbp_get_topic_id( $topic_id );
-	$retval   = bbp_is_object_of_user( $topic_id, $user_id, '_bbp_engagement' );
+function bboss_bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
+	$user_id  = bboss_bbp_get_user_id( $user_id, true, true );
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
+	$retval   = bboss_bbp_is_object_of_user( $topic_id, $user_id, '_bbp_engagement' );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_user_engaged', $retval, $user_id, $topic_id );
@@ -292,7 +292,7 @@ function bbp_is_user_engaged( $user_id = 0, $topic_id = 0 ) {
  *
  * @return bool Always true.
  */
-function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
+function bboss_bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
 
 	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
@@ -300,12 +300,12 @@ function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
 	}
 
 	// Bail if already a engaged.
-	if ( bbp_is_user_engaged( $user_id, $topic_id ) ) {
+	if ( bboss_bbp_is_user_engaged( $user_id, $topic_id ) ) {
 		return false;
 	}
 
 	// Bail if add fails.
-	if ( ! bbp_add_user_to_object( $topic_id, $user_id, '_bbp_engagement' ) ) {
+	if ( ! bboss_bbp_add_user_to_object( $topic_id, $user_id, '_bbp_engagement' ) ) {
 		return false;
 	}
 
@@ -325,7 +325,7 @@ function bbp_add_user_engagement( $user_id = 0, $topic_id = 0 ) {
  *
  * @return bool True if the topic was removed from user's engagements, otherwise false.
  */
-function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
+function bboss_bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
 
 	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
@@ -333,12 +333,12 @@ function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
 	}
 
 	// Bail if not already engaged.
-	if ( ! bbp_is_user_engaged( $user_id, $topic_id ) ) {
+	if ( ! bboss_bbp_is_user_engaged( $user_id, $topic_id ) ) {
 		return false;
 	}
 
 	// Bail if remove fails.
-	if ( ! bbp_remove_user_from_object( $topic_id, $user_id, '_bbp_engagement' ) ) {
+	if ( ! bboss_bbp_remove_user_from_object( $topic_id, $user_id, '_bbp_engagement' ) ) {
 		return false;
 	}
 
@@ -364,15 +364,15 @@ function bbp_remove_user_engagement( $user_id = 0, $topic_id = 0 ) {
  *
  * @return boolean True if any engagements are added, false otherwise.
  */
-function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
+function bboss_bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
 
 	// Default return value.
 	$retval = false;
 
 	// Check post type.
-	$topic_id = bbp_is_reply( $topic_id )
-		? bbp_get_reply_topic_id( $topic_id )
-		: bbp_get_topic_id( $topic_id );
+	$topic_id = bboss_bbp_is_reply( $topic_id )
+		? bboss_bbp_get_reply_topic_id( $topic_id )
+		: bboss_bbp_get_topic_id( $topic_id );
 
 	// Bail if no topic ID.
 	if ( empty( $topic_id ) ) {
@@ -380,8 +380,8 @@ function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
 	}
 
 	// Query for engagements.
-	$old_engagements = bbp_get_topic_engagements( $topic_id );
-	$new_engagements = bbp_get_topic_engagements_raw( $topic_id );
+	$old_engagements = bboss_bbp_get_topic_engagements( $topic_id );
+	$new_engagements = bboss_bbp_get_topic_engagements_raw( $topic_id );
 
 	// Sort arrays.
 	sort( $old_engagements, SORT_NUMERIC );
@@ -391,11 +391,11 @@ function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
 	if ( ( true === $force ) || ( $old_engagements !== $new_engagements ) ) {
 
 		// Delete all engagements.
-		bbp_remove_object_from_all_users( $topic_id, '_bbp_engagement' );
+		bboss_bbp_remove_object_from_all_users( $topic_id, '_bbp_engagement' );
 
 		// Update the voice count for this topic id.
 		foreach ( $new_engagements as $user_id ) {
-			$retval = bbp_add_user_engagement( $user_id, $topic_id );
+			$retval = bboss_bbp_add_user_engagement( $user_id, $topic_id );
 		}
 	}
 
@@ -407,7 +407,7 @@ function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
  * Update the engagements of a topic.
  *
  * Hooked to 'bbp_new_topic' and 'bbp_new_reply', this gets the post author and
- * if not anonymous, passes it into bbp_add_user_engagement().
+ * if not anonymous, passes it into bboss_bbp_add_user_engagement().
  *
  * @since 2.6.0 bbPress (r6526)
  * @since BuddyBoss 2.3.4
@@ -416,29 +416,29 @@ function bbp_recalculate_topic_engagements( $topic_id = 0, $force = false ) {
  *
  * @return bool|void
  */
-function bbp_update_topic_engagements( $topic_id = 0 ) {
+function bboss_bbp_update_topic_engagements( $topic_id = 0 ) {
 
 	// Is a reply.
-	if ( bbp_is_reply( $topic_id ) ) {
+	if ( bboss_bbp_is_reply( $topic_id ) ) {
 
 		// Bail if reply isn't published.
-		if ( ! bbp_is_reply_published( $topic_id ) ) {
+		if ( ! bboss_bbp_is_reply_published( $topic_id ) ) {
 			return;
 		}
 
-		$author_id = bbp_get_reply_author_id( $topic_id );
-		$topic_id  = bbp_get_reply_topic_id( $topic_id );
+		$author_id = bboss_bbp_get_reply_author_id( $topic_id );
+		$topic_id  = bboss_bbp_get_reply_topic_id( $topic_id );
 
 		// Is a topic.
-	} elseif ( bbp_is_topic( $topic_id ) ) {
+	} elseif ( bboss_bbp_is_topic( $topic_id ) ) {
 
 		// Bail if topic isn't published.
-		if ( ! bbp_is_topic_published( $topic_id ) ) {
+		if ( ! bboss_bbp_is_topic_published( $topic_id ) ) {
 			return;
 		}
 
-		$author_id = bbp_get_topic_author_id( $topic_id );
-		$topic_id  = bbp_get_topic_id( $topic_id );
+		$author_id = bboss_bbp_get_topic_author_id( $topic_id );
+		$topic_id  = bboss_bbp_get_topic_id( $topic_id );
 
 		// Is unknown.
 	} else {
@@ -451,7 +451,7 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
 	}
 
 	// Return whether engagement was added.
-	return bbp_add_user_engagement( $author_id, $topic_id );
+	return bboss_bbp_add_user_engagement( $author_id, $topic_id );
 }
 
 /** Favorites *****************************************************************/
@@ -466,9 +466,9 @@ function bbp_update_topic_engagements( $topic_id = 0 ) {
  *
  * @return array|bool Results if the topic has any favoriters, otherwise false.
  */
-function bbp_get_topic_favoriters( $topic_id = 0 ) {
-	$topic_id = bbp_get_topic_id( $topic_id );
-	$users    = bbp_get_users_for_object( $topic_id, '_bbp_favorite' );
+function bboss_bbp_get_topic_favoriters( $topic_id = 0 ) {
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
+	$users    = bboss_bbp_get_users_for_object( $topic_id, '_bbp_favorite' );
 
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_topic_favoriters', $users, $topic_id );
@@ -481,14 +481,14 @@ function bbp_get_topic_favoriters( $topic_id = 0 ) {
  * @since 2.6.0 bbPress (r6618) Signature changed to accept an array of arguments.
  * @since BuddyBoss 2.3.4
  *
- * @param array $args Optional. Arguments to pass into bbp_has_topics().
+ * @param array $args Optional. Arguments to pass into bboss_bbp_has_topics().
  *
  * @return array Array of topics if user has favorites, otherwise empty array.
  */
-function bbp_get_user_favorites( $args = array() ) {
-	$r     = bbp_get_user_object_query( $args, 'favorites', '_bbp_favorite' );
+function bboss_bbp_get_user_favorites( $args = array() ) {
+	$r     = bboss_bbp_get_user_object_query( $args, 'favorites', '_bbp_favorite' );
 	$query = ! empty( $r )
-		? bbp_has_topics( $r )
+		? bboss_bbp_has_topics( $r )
 		: array();
 
 	// Filter & return.
@@ -506,8 +506,8 @@ function bbp_get_user_favorites( $args = array() ) {
  *
  * @return bool True if the topic is in user's favorites, otherwise false.
  */
-function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
-	$retval = bbp_is_object_of_user( $topic_id, $user_id, '_bbp_favorite' );
+function bboss_bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
+	$retval = bboss_bbp_is_object_of_user( $topic_id, $user_id, '_bbp_favorite' );
 
 	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_user_favorite', $retval, $user_id, $topic_id );
@@ -529,9 +529,9 @@ function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
  *
  * @return bool True if the topic was added to user's favorites, otherwise false.
  */
-function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
-	$user_id  = bbp_get_user_id( $user_id, false, false );
-	$topic_id = bbp_get_topic_id( $topic_id );
+function bboss_bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
+	$user_id  = bboss_bbp_get_user_id( $user_id, false, false );
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
 
 	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
@@ -539,12 +539,12 @@ function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
 	}
 
 	// Bail if already a favorite.
-	if ( bbp_is_user_favorite( $user_id, $topic_id ) ) {
+	if ( bboss_bbp_is_user_favorite( $user_id, $topic_id ) ) {
 		return false;
 	}
 
 	// Bail if add fails.
-	if ( ! bbp_add_user_to_object( $topic_id, $user_id, '_bbp_favorite' ) ) {
+	if ( ! bboss_bbp_add_user_to_object( $topic_id, $user_id, '_bbp_favorite' ) ) {
 		return false;
 	}
 
@@ -564,9 +564,9 @@ function bbp_add_user_favorite( $user_id = 0, $topic_id = 0 ) {
  *
  * @return bool True if the topic was removed from user's favorites, otherwise false.
  */
-function bbp_remove_user_favorite( $user_id, $topic_id ) {
-	$user_id  = bbp_get_user_id( $user_id, false, false );
-	$topic_id = bbp_get_topic_id( $topic_id );
+function bboss_bbp_remove_user_favorite( $user_id, $topic_id ) {
+	$user_id  = bboss_bbp_get_user_id( $user_id, false, false );
+	$topic_id = bboss_bbp_get_topic_id( $topic_id );
 
 	// Bail if not enough info.
 	if ( empty( $user_id ) || empty( $topic_id ) ) {
@@ -574,12 +574,12 @@ function bbp_remove_user_favorite( $user_id, $topic_id ) {
 	}
 
 	// Bail if not already a favorite.
-	if ( ! bbp_is_user_favorite( $user_id, $topic_id ) ) {
+	if ( ! bboss_bbp_is_user_favorite( $user_id, $topic_id ) ) {
 		return false;
 	}
 
 	// Bail if remove fails.
-	if ( ! bbp_remove_user_from_object( $topic_id, $user_id, '_bbp_favorite' ) ) {
+	if ( ! bboss_bbp_remove_user_from_object( $topic_id, $user_id, '_bbp_favorite' ) ) {
 		return false;
 	}
 
@@ -595,13 +595,13 @@ function bbp_remove_user_favorite( $user_id, $topic_id ) {
  *
  * @return bool
  */
-function bbp_favorites_handler( $action = '' ) {
+function bboss_bbp_favorites_handler( $action = '' ) {
 
 	// Default.
 	$success = false;
 
 	// Bail if favorites not active.
-	if ( ! bbp_is_favorites_active() ) {
+	if ( ! bboss_bbp_is_favorites_active() ) {
 		return $success;
 	}
 
@@ -622,36 +622,36 @@ function bbp_favorites_handler( $action = '' ) {
 	}
 
 	// What action is taking place?.
-	$topic_id = bbp_get_topic_id( $_GET['topic_id'] ); // phpcs:ignore
-	$user_id  = bbp_get_user_id( 0, true, true );
+	$topic_id = bboss_bbp_get_topic_id( $_GET['topic_id'] ); // phpcs:ignore
+	$user_id  = bboss_bbp_get_user_id( 0, true, true );
 
 	// Check for empty topic.
 	if ( empty( $topic_id ) ) {
-		bbp_add_error( 'bbp_favorite_topic_id', __( '<strong>Error</strong>: No topic was found. Which topic are you marking/unmarking as favorite?', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_favorite_topic_id', __( '<strong>Error</strong>: No topic was found. Which topic are you marking/unmarking as favorite?', 'buddyboss' ) );
 
 		// Check nonce.
-	} elseif ( ! bbp_verify_nonce_request( 'toggle-favorite_' . $topic_id ) ) {
-		bbp_add_error( 'bbp_favorite_nonce', __( '<strong>Error</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+	} elseif ( ! bboss_bbp_verify_nonce_request( 'toggle-favorite_' . $topic_id ) ) {
+		bboss_bbp_add_error( 'bbp_favorite_nonce', __( '<strong>Error</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
 
 		// Check current user's ability to edit the user.
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
-		bbp_add_error( 'bbp_favorite_permission', __( '<strong>Error</strong>: You do not have permission to edit favorites for that user.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_favorite_permission', __( '<strong>Error</strong>: You do not have permission to edit favorites for that user.', 'buddyboss' ) );
 	}
 
 	// Bail if errors.
-	if ( bbp_has_errors() ) {
+	if ( bboss_bbp_has_errors() ) {
 		return $success;
 	}
 
 	/** No errors */
 
-	$is_favorite = bbp_is_user_favorite( $user_id, $topic_id );
+	$is_favorite = bboss_bbp_is_user_favorite( $user_id, $topic_id );
 	$success     = false;
 
 	if ( true === $is_favorite && 'bbp_favorite_remove' === $action ) {
-		$success = bbp_remove_user_favorite( $user_id, $topic_id );
+		$success = bboss_bbp_remove_user_favorite( $user_id, $topic_id );
 	} elseif ( false === $is_favorite && 'bbp_favorite_add' === $action ) {
-		$success = bbp_add_user_favorite( $user_id, $topic_id );
+		$success = bboss_bbp_add_user_favorite( $user_id, $topic_id );
 	}
 
 	// Do additional favorites actions.
@@ -665,25 +665,25 @@ function bbp_favorites_handler( $action = '' ) {
 		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			$redirect = $_REQUEST['redirect_to']; // Validated later.
-		} elseif ( bbp_is_favorites() ) {
-			$redirect = bbp_get_favorites_permalink( $user_id, true );
-		} elseif ( bbp_is_single_user() ) {
-			$redirect = bbp_get_user_profile_url();
-		} elseif ( is_singular( bbp_get_topic_post_type() ) ) {
-			$redirect = bbp_get_topic_permalink( $topic_id );
+		} elseif ( bboss_bbp_is_favorites() ) {
+			$redirect = bboss_bbp_get_favorites_permalink( $user_id, true );
+		} elseif ( bboss_bbp_is_single_user() ) {
+			$redirect = bboss_bbp_get_user_profile_url();
+		} elseif ( is_singular( bboss_bbp_get_topic_post_type() ) ) {
+			$redirect = bboss_bbp_get_topic_permalink( $topic_id );
 		} elseif ( is_single() || is_page() ) {
 			$redirect = get_permalink();
 		} else {
 			$redirect = get_permalink( $topic_id );
 		}
 
-		bbp_redirect( $redirect );
+		bboss_bbp_redirect( $redirect );
 
 		// Fail! Handle errors.
 	} elseif ( 'bbp_favorite_remove' === $action ) {
-		bbp_add_error( 'bbp_favorite_remove', __( '<strong>Error</strong>: There was a problem removing that topic from favorites.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_favorite_remove', __( '<strong>Error</strong>: There was a problem removing that topic from favorites.', 'buddyboss' ) );
 	} elseif ( 'bbp_favorite_add' === $action ) {
-		bbp_add_error( 'bbp_favorite_add', __( '<strong>Error</strong>: There was a problem favoriting that topic.', 'buddyboss' ) );
+		bboss_bbp_add_error( 'bbp_favorite_add', __( '<strong>Error</strong>: There was a problem favoriting that topic.', 'buddyboss' ) );
 	}
 
 	return (bool) $success;
@@ -712,16 +712,16 @@ function bbp_favorites_handler( $action = '' ) {
  *
  * @return array|bool Results if user has objects, otherwise null.
  */
-function bbp_get_user_object_ids( $args = array() ) {
+function bboss_bbp_get_user_object_ids( $args = array() ) {
 	$object_ids = array();
 	$defaults   = array();
 
 	// Parse arguments.
-	$r = bbp_parse_args(
+	$r = bboss_bbp_parse_args(
 		$args,
 		array(
 			'user_id'     => 0,
-			'object_type' => bbp_get_topic_post_type(),
+			'object_type' => bboss_bbp_get_topic_post_type(),
 			'rel_key'     => '',
 			'rel_type'    => 'post',
 			'filter'      => 'user_object_ids',
@@ -731,7 +731,7 @@ function bbp_get_user_object_ids( $args = array() ) {
 	);
 
 	// Sanitize arguments.
-	$r['user_id']     = bbp_get_user_id( $r['user_id'] );
+	$r['user_id']     = bboss_bbp_get_user_id( $r['user_id'] );
 	$r['rel_key']     = sanitize_key( $r['rel_key'] );
 	$r['rel_type']    = sanitize_key( $r['rel_type'] );
 	$r['object_type'] = sanitize_key( $r['object_type'] );
@@ -762,7 +762,7 @@ function bbp_get_user_object_ids( $args = array() ) {
 	}
 
 	// Parse arguments.
-	$query_args = bbp_parse_args( $r['args'], $defaults, "get_{$r['filter']}_args" );
+	$query_args = bboss_bbp_parse_args( $r['args'], $defaults, "get_{$r['filter']}_args" );
 
 	// Queries.
 	if ( 'post' === $r['rel_type'] ) {
@@ -784,12 +784,12 @@ function bbp_get_user_object_ids( $args = array() ) {
  *
  * @return array Return array of forum ids, or empty array.
  */
-function bbp_get_moderator_forum_ids( $user_id = 0 ) {
-	return bbp_get_user_object_ids(
+function bboss_bbp_get_moderator_forum_ids( $user_id = 0 ) {
+	return bboss_bbp_get_user_object_ids(
 		array(
 			'user_id'     => $user_id,
 			'rel_key'     => '_bbp_moderator_id',
-			'object_type' => bbp_get_forum_post_type(),
+			'object_type' => bboss_bbp_get_forum_post_type(),
 			'filter'      => 'moderator_forum_ids',
 		)
 	);
@@ -805,8 +805,8 @@ function bbp_get_moderator_forum_ids( $user_id = 0 ) {
  *
  * @return array Return array of topic ids, or empty array.
  */
-function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
-	return bbp_get_user_object_ids(
+function bboss_bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
+	return bboss_bbp_get_user_object_ids(
 		array(
 			'user_id' => $user_id,
 			'rel_key' => '_bbp_engagement',
@@ -825,8 +825,8 @@ function bbp_get_user_engaged_topic_ids( $user_id = 0 ) {
  *
  * @return array Return array of favorite topic ids, or empty array.
  */
-function bbp_get_user_favorites_topic_ids( $user_id = 0 ) {
-	return bbp_get_user_object_ids(
+function bboss_bbp_get_user_favorites_topic_ids( $user_id = 0 ) {
+	return bboss_bbp_get_user_object_ids(
 		array(
 			'user_id' => $user_id,
 			'rel_key' => '_bbp_favorite',

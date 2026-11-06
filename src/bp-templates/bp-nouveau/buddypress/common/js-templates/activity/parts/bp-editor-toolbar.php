@@ -25,22 +25,22 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<?php
 	if (
-		bp_is_active( 'media' ) &&
+		bboss_is_active( 'media' ) &&
 		(
 			(
-				bp_is_activity_directory() &&
+				bboss_is_activity_directory() &&
 				(
-					bp_is_profiles_emoji_support_enabled() ||
-					bp_is_groups_emoji_support_enabled()
+					bboss_is_profiles_emoji_support_enabled() ||
+					bboss_is_groups_emoji_support_enabled()
 				)
 			) ||
 			(
-				bp_is_user_activity() &&
-				bp_is_profiles_emoji_support_enabled()
+				bboss_is_user_activity() &&
+				bboss_is_profiles_emoji_support_enabled()
 			) ||
 			(
-				bp_is_group_activity() &&
-				bp_is_groups_emoji_support_enabled()
+				bboss_is_group_activity() &&
+				bboss_is_groups_emoji_support_enabled()
 			)
 		)
 	) :

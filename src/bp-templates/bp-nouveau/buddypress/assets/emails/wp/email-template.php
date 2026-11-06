@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$settings = bp_email_get_appearance_settings();
+$settings = bboss_email_get_appearance_settings();
 $width = wp_is_mobile() ? '100%' : '600px';
 
 ?><!DOCTYPE html>
@@ -291,7 +291,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											 */
 											do_action( 'bp_before_email_header' );
 
-											$blogname = bp_get_option( 'blogname' );
+											$blogname = bboss_get_option( 'blogname' );
 											$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 											if ( !empty( $attachment_id ) ) {
@@ -323,7 +323,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											do_action( 'bp_before_email_recipient' );
 
 											if ( ! empty( $email_user->ID ) ) {
-												echo esc_html( $email_user->display_name ) . ' <img src="' . esc_url( bp_core_fetch_avatar( array(
+												echo esc_html( $email_user->display_name ) . ' <img src="' . esc_url( bboss_core_fetch_avatar( array(
 														'item_id' => $email_user->ID,
 														'html'    => false
 													) ) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';

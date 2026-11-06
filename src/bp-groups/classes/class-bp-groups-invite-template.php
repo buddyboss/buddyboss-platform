@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.1.0
  */
 #[\AllowDynamicProperties]
-class BP_Groups_Invite_Template {
+class BBoss_Groups_Invite_Template {
 
 	/**
 	 * @since BuddyPress 1.1.0
@@ -72,7 +72,7 @@ class BP_Groups_Invite_Template {
 	public $total_invite_count;
 
 	/**
-	 * BP_Groups_Invite_Template constructor.
+	 * BBoss_Groups_Invite_Template constructor.
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
@@ -92,26 +92,26 @@ class BP_Groups_Invite_Template {
 				1 => 'group_id',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$args,
 			array(
 				'page'     => 1,
 				'per_page' => 20,
 				'page_arg' => 'invitepage',
-				'user_id'  => bp_loggedin_user_id(),
-				'group_id' => bp_get_current_group_id(),
+				'user_id'  => bboss_loggedin_user_id(),
+				'group_id' => bboss_get_current_group_id(),
 			),
 			'groups_invite_template'
 		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
+		$this->pag_page = bboss_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bboss_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		$iquery = new BP_Group_Member_Query(
+		$iquery = new BBoss_Group_Member_Query(
 			array(
 				'group_id'     => $r['group_id'],
 				'type'         => 'first_joined',
@@ -210,7 +210,7 @@ class BP_Groups_Invite_Template {
 			 * @since BuddyPress 2.3.0 `$this` parameter added.
 			 * @since BuddyPress 2.7.0 Action renamed from `loop_start`.
 			 *
-			 * @param BP_Groups_Invite_Template $this Instance of the current Invites template.
+			 * @param BBoss_Groups_Invite_Template $this Instance of the current Invites template.
 			 */
 			do_action( 'group_invitation_loop_end', $this );
 
@@ -239,11 +239,11 @@ class BP_Groups_Invite_Template {
 		// This method previously populated the user object with
 		// BP_Core_User. We manually configure BP_Core_User data for
 		// backward compatibility.
-		if ( bp_is_active( 'xprofile' ) ) {
-			$this->invite->user->profile_data = BP_XProfile_ProfileData::get_all_for_user( $user_id );
+		if ( bboss_is_active( 'xprofile' ) ) {
+			$this->invite->user->profile_data = BBoss_XProfile_ProfileData::get_all_for_user( $user_id );
 		}
 
-		$this->invite->user->avatar       = bp_core_fetch_avatar(
+		$this->invite->user->avatar       = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $user_id,
 				'type'    => 'full',
@@ -257,7 +257,7 @@ class BP_Groups_Invite_Template {
 				),
 			)
 		);
-		$this->invite->user->avatar_thumb = bp_core_fetch_avatar(
+		$this->invite->user->avatar_thumb = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $user_id,
 				'type'    => 'thumb',
@@ -271,7 +271,7 @@ class BP_Groups_Invite_Template {
 				),
 			)
 		);
-		$this->invite->user->avatar_mini  = bp_core_fetch_avatar(
+		$this->invite->user->avatar_mini  = bboss_core_fetch_avatar(
 			array(
 				'item_id' => $user_id,
 				'type'    => 'thumb',
@@ -282,19 +282,19 @@ class BP_Groups_Invite_Template {
 			)
 		);
 		$this->invite->user->email        = $this->invite->user->user_email;
-		$this->invite->user->user_url     = bp_core_get_user_domain( $user_id, $this->invite->user->user_nicename, $this->invite->user->user_login );
+		$this->invite->user->user_url     = bboss_core_get_user_domain( $user_id, $this->invite->user->user_nicename, $this->invite->user->user_login );
 		$this->invite->user->user_link    = "<a href='{$this->invite->user->user_url}'>{$this->invite->user->fullname}</a>";
 		/* translators: %s: human-readable time since last activity. */
-		$this->invite->user->last_active  = bp_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss' ) );
+		$this->invite->user->last_active  = bboss_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss' ) );
 
-		if ( bp_is_active( 'groups' ) ) {
-			$total_groups                     = BP_Groups_Member::total_group_count( $user_id );
+		if ( bboss_is_active( 'groups' ) ) {
+			$total_groups                     = BBoss_Groups_Member::total_group_count( $user_id );
 			/* translators: %d: number of groups. */
 			$this->invite->user->total_groups = sprintf( _n( '%d group', '%d groups', $total_groups, 'buddyboss' ), $total_groups );
 		}
 
-		if ( bp_is_active( 'friends' ) ) {
-			$this->invite->user->total_friends = BP_Friends_Friendship::total_friend_count( $user_id );
+		if ( bboss_is_active( 'friends' ) ) {
+			$this->invite->user->total_friends = BBoss_Friends_Friendship::total_friend_count( $user_id );
 		}
 
 		$this->invite->user->total_blogs = null;
@@ -312,7 +312,7 @@ class BP_Groups_Invite_Template {
 			 * @since BuddyPress 2.3.0 `$this` parameter added.
 			 * @since BuddyPress 2.7.0 Action renamed from `loop_start`.
 			 *
-			 * @param BP_Groups_Invite_Template $this Instance of the current Invites template.
+			 * @param BBoss_Groups_Invite_Template $this Instance of the current Invites template.
 			 */
 			do_action( 'group_invitation_loop_start', $this );
 		}

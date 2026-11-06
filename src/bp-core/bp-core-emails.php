@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_setup_core_email_tokens() {
-	new BP_Email_Tokens();
+function bboss_setup_core_email_tokens() {
+	new BBoss_Email_Tokens();
 }
 add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
 
@@ -23,7 +23,7 @@ add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_email_set_content_type() {
+function bboss_email_set_content_type() {
 	return 'text/html';
 }
 
@@ -32,7 +32,7 @@ function bp_email_set_content_type() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_email_core_wp_get_template( $content = '', $user = false ) {
+function bboss_email_core_wp_get_template( $content = '', $user = false ) {
 	ob_start();
 
 	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
@@ -43,7 +43,7 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 
 	// Try to locate the email template using the standard template stack.
 	// This respects theme overrides and ReadyLaunch customizations if they exist.
-	$located = bp_locate_template( array( 'assets/emails/wp/email-template.php' ), false, false );
+	$located = bboss_locate_template( array( 'assets/emails/wp/email-template.php' ), false, false );
 
 	/*
 		If template is not found via template stack (e.g., ReadyLaunch is enabled but
@@ -53,7 +53,7 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 	if ( empty( $located ) ) {
 		// Build path to the default email template in the plugin directory.
 		// This path is theme-independent and always available.
-		$default_template = trailingslashit( buddypress()->themes_dir ) . 'bp-nouveau/buddypress/assets/emails/wp/email-template.php';
+		$default_template = trailingslashit( bboss()->themes_dir ) . 'bp-nouveau/buddypress/assets/emails/wp/email-template.php';
 
 		// Verify the default template exists before using it.
 		if ( file_exists( $default_template ) ) {
@@ -76,27 +76,27 @@ function bp_email_core_wp_get_template( $content = '', $user = false ) {
 }
 
 /**
- * Function to load the instance of the class BP_Email_Queue.
+ * Function to load the instance of the class BBoss_Email_Queue.
  *
  * @since BuddyBoss 1.8.1
  *
- * @return null|BP_Email_Queue|void
+ * @return null|BBoss_Email_Queue|void
  */
-function bb_email_queue() {
-	if ( class_exists( 'BP_Email_Queue' ) ) {
-		return BP_Email_Queue::instance();
+function bboss_email_queue() {
+	if ( class_exists( 'BBoss_Email_Queue' ) ) {
+		return BBoss_Email_Queue::instance();
 	}
 }
 
 /**
- * Function to check if bb_email_queue() and cron enabled
+ * Function to check if bboss_email_queue() and cron enabled
  *
  * @since BuddyBoss 1.8.1
  *
  * @return bool
  */
-function bb_is_email_queue() {
-	return function_exists( 'bb_email_queue' ) && class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_is_email_queue', true );
+function bboss_is_email_queue() {
+	return function_exists( 'bboss_email_queue' ) && class_exists( 'BBoss_BB_Background_Updater' ) && apply_filters( 'bb_is_email_queue', true );
 }
 
 /**
@@ -106,7 +106,7 @@ function bb_is_email_queue() {
  *
  * @return false
  */
-function bb_disabled_email_queue() {
+function bboss_disabled_email_queue() {
 	return false;
 }
 
@@ -119,9 +119,9 @@ function bb_disabled_email_queue() {
  *
  * @since BuddyBoss 1.8.1
  */
-function bb_email_queue_has_min_count( $recipients ) {
+function bboss_email_queue_has_min_count( $recipients ) {
 	$min_recipients = false;
-	$min_count      = bb_get_email_queue_min_count();
+	$min_count      = bboss_get_email_queue_min_count();
 
 	if ( $min_count < count( (array) $recipients ) ) {
 		$min_recipients = true;
@@ -137,6 +137,6 @@ function bb_email_queue_has_min_count( $recipients ) {
  *
  * @return int
  */
-function bb_get_email_queue_min_count() {
+function bboss_get_email_queue_min_count() {
 	return (int) apply_filters( 'bb_email_queue_min_count', 20 );
 }

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 #[\AllowDynamicProperties]
-class BP_Groups_Group {
+class BBoss_Groups_Group {
 
 	/**
 	 * ID of the group.
@@ -212,7 +212,7 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		// Get BuddyPress.
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Check cache for group data.
 		$group = wp_cache_get( $this->id, 'bp_groups' );
@@ -267,7 +267,7 @@ class BP_Groups_Group {
 	public function save() {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$this->creator_id   = apply_filters( 'groups_group_creator_id_before_save', $this->creator_id, $this->id );
 		$this->name         = apply_filters( 'groups_group_name_before_save', $this->name, $this->id );
@@ -285,7 +285,7 @@ class BP_Groups_Group {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Groups_Group $this Current instance of the group item being saved. Passed by reference.
+		 * @param BBoss_Groups_Group $this Current instance of the group item being saved. Passed by reference.
 		 */
 		do_action_ref_array( 'groups_group_before_save', array( &$this ) );
 
@@ -306,13 +306,13 @@ class BP_Groups_Group {
 
 		// Check for slug conflicts if creating new group.
 		if ( empty( $this->id ) ) {
-			$this->slug = groups_check_slug( $this->slug );
+			$this->slug = bboss_groups_check_slug( $this->slug );
 		}
 
 		$old_group_name = '';
 		if ( ! empty( $this->id ) ) {
 			// Get the group name from the database.
-			$old_group_name = bp_get_group_name( groups_get_group( $this->id ) );
+			$old_group_name = bboss_get_group_name( bboss_groups_get_group( $this->id ) );
 
 			$sql = $wpdb->prepare(
 				"UPDATE {$bp->groups->table_name} SET
@@ -369,8 +369,8 @@ class BP_Groups_Group {
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
 		} elseif ( ! empty( $old_group_name ) && $this->name !== $old_group_name ) {
-			if ( bb_core_get_first_character( $old_group_name ) !== bb_core_get_first_character( $this->name ) ) {
-				bb_delete_default_group_png_avatar( array( $this->id ) );
+			if ( bboss_core_get_first_character( $old_group_name ) !== bboss_core_get_first_character( $this->name ) ) {
+				bboss_delete_default_group_png_avatar( array( $this->id ) );
 			}
 		}
 
@@ -379,7 +379,7 @@ class BP_Groups_Group {
 		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_Groups_Group $this Current instance of the group item that was saved. Passed by reference.
+		 * @param BBoss_Groups_Group $this Current instance of the group item that was saved. Passed by reference.
 		 */
 		do_action_ref_array( 'groups_group_after_save', array( &$this ) );
 
@@ -399,10 +399,10 @@ class BP_Groups_Group {
 		global $wpdb;
 
 		// Delete groupmeta for the group.
-		groups_delete_groupmeta( $this->id );
+		bboss_groups_delete_groupmeta( $this->id );
 
 		// Fetch the user IDs of all the members of the group.
-		$user_ids    = BP_Groups_Member::get_group_member_ids( $this->id );
+		$user_ids    = BBoss_Groups_Member::get_group_member_ids( $this->id );
 		if ( ! empty( $user_ids ) ) {
 			$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
 
@@ -411,40 +411,40 @@ class BP_Groups_Group {
 		}
 
 		// Now delete all group member entries.
-		BP_Groups_Member::delete_all( $this->id );
+		BBoss_Groups_Member::delete_all( $this->id );
 
 		/**
 		 * Fires before the deletion of a group.
 		 *
 		 * @since BuddyPress 1.2.0
 		 *
-		 * @param BP_Groups_Group $this     Current instance of the group item being deleted. Passed by reference.
+		 * @param BBoss_Groups_Group $this     Current instance of the group item being deleted. Passed by reference.
 		 * @param array           $user_ids Array of user IDs that were members of the group.
 		 */
 		do_action_ref_array( 'bp_groups_delete_group', array( &$this, $user_ids ) );
 
 		wp_cache_delete( $this->id, 'bp_groups' );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Finally, remove the group entry from the DB.
 		if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) ) {
 			return false;
 		}
 
-		$wp_filesystem = bb_wp_filesystem();
+		$wp_filesystem = bboss_wp_filesystem();
 
 		// Delete group avatars.
-		$upload_path = bp_core_avatar_upload_path();
+		$upload_path = bboss_core_avatar_upload_path();
 		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/' . $this->id ), true );
 
 		// Delete group avatars.
-		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
+		$bp_attachments_uploads_dir = bboss_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
 		$wp_filesystem->delete( trailingslashit( $type_dir . 'groups/' . $this->id ), true );
 
 		// Delete group default PNG avatars.
-		$upload_path = bp_core_avatar_upload_path();
+		$upload_path = bboss_core_avatar_upload_path();
 		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/default/' . $this->id ), true );
 
 		return true;
@@ -463,7 +463,7 @@ class BP_Groups_Group {
 			case 'last_activity':
 			case 'total_member_count':
 			case 'forum_id':
-				$retval = groups_get_groupmeta( $this->id, $key );
+				$retval = bboss_groups_get_groupmeta( $this->id, $key );
 
 				if ( 'last_activity' !== $key ) {
 					$retval = (int) $retval;
@@ -482,10 +482,10 @@ class BP_Groups_Group {
 				return $this->get_is_member();
 
 			case 'is_invited':
-				return groups_check_user_has_invite( bp_loggedin_user_id(), $this->id );
+				return bboss_groups_check_user_has_invite( bboss_loggedin_user_id(), $this->id );
 
 			case 'is_pending':
-				return groups_check_for_membership_request( bp_loggedin_user_id(), $this->id );
+				return bboss_groups_check_for_membership_request( bboss_loggedin_user_id(), $this->id );
 
 			case 'user_has_access':
 				return $this->get_user_has_access();
@@ -597,10 +597,10 @@ class BP_Groups_Group {
 	 * @since BuddyPress 2.7.0
 	 */
 	protected function set_up_admins_and_mods() {
-		$admin_ids         = BP_Groups_Member::get_group_administrator_ids( $this->id );
+		$admin_ids         = BBoss_Groups_Member::get_group_administrator_ids( $this->id );
 		$admin_ids_plucked = wp_list_pluck( $admin_ids, 'user_id' );
 
-		$mod_ids         = BP_Groups_Member::get_group_moderator_ids( $this->id );
+		$mod_ids         = BBoss_Groups_Member::get_group_moderator_ids( $this->id );
 		$mod_ids_plucked = wp_list_pluck( $mod_ids, 'user_id' );
 
 		$admin_mod_ids   = array_merge( $admin_ids_plucked, $mod_ids_plucked );
@@ -650,7 +650,7 @@ class BP_Groups_Group {
 			return $this->is_member;
 		}
 
-		$this->is_member = groups_is_user_member( bp_loggedin_user_id(), $this->id );
+		$this->is_member = bboss_groups_is_user_member( bboss_loggedin_user_id(), $this->id );
 		return $this->is_member;
 	}
 
@@ -672,7 +672,7 @@ class BP_Groups_Group {
 			$this->user_has_access = false;
 
 			// Group members or community moderators have access.
-			if ( ( is_user_logged_in() && $this->get_is_member() ) || bp_current_user_can( 'bp_moderate' ) ) {
+			if ( ( is_user_logged_in() && $this->get_is_member() ) || bboss_current_user_can( 'bp_moderate' ) ) {
 				$this->user_has_access = true;
 			}
 		} else {
@@ -700,7 +700,7 @@ class BP_Groups_Group {
 			$this->is_visible = false;
 
 			// Group members or community moderators have access.
-			if ( ( is_user_logged_in() && $this->get_is_member() ) || bp_current_user_can( 'bp_moderate' ) ) {
+			if ( ( is_user_logged_in() && $this->get_is_member() ) || bboss_current_user_can( 'bp_moderate' ) ) {
 				$this->is_visible = true;
 			}
 		} else {
@@ -749,12 +749,12 @@ class BP_Groups_Group {
 	/**
 	 * Get the ID of a group by the group's slug.
 	 *
-	 * Alias of {@link BP_Groups_Group::group_exists()}.
+	 * Alias of {@link BBoss_Groups_Group::group_exists()}.
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 * @param string $slug See {@link BP_Groups_Group::group_exists()}.
-	 * @return int|null See {@link BP_Groups_Group::group_exists()}.
+	 * @param string $slug See {@link BBoss_Groups_Group::group_exists()}.
+	 * @return int|null See {@link BBoss_Groups_Group::group_exists()}.
 	 */
 	public static function get_id_from_slug( $slug ) {
 		return self::group_exists( $slug );
@@ -824,7 +824,7 @@ class BP_Groups_Group {
 			$sent_arg = 'all';
 		}
 
-		return groups_get_invites(
+		return bboss_groups_get_invites(
 			array(
 				'item_id'     => $group_id,
 				'inviter_id'  => $user_id,
@@ -855,7 +855,7 @@ class BP_Groups_Group {
 	 */
 	public static function filter_user_groups( $filter, $user_id = 0, $order = false, $limit = null, $page = null ) {
 		if ( empty( $user_id ) ) {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		}
 
 		$args = array(
@@ -939,7 +939,7 @@ class BP_Groups_Group {
 	public static function check_slug( $slug ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		return $wpdb->get_var( $wpdb->prepare( "SELECT slug FROM {$bp->groups->table_name} WHERE slug = %s", $slug ) );
 	}
@@ -955,7 +955,7 @@ class BP_Groups_Group {
 	public static function get_slug( $group_id ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_group_slug_by_id_' . $group_id;
 		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
@@ -978,7 +978,7 @@ class BP_Groups_Group {
 	public static function has_members( $group_id ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_group_has_members_' . $group_id;
 		$members   = wp_cache_get( $cache_key, 'bp_groups' );
 
@@ -1006,7 +1006,7 @@ class BP_Groups_Group {
 	public static function has_membership_requests( $group_id ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_group_has_membership_requests_' . $group_id;
 		$result    = wp_cache_get( $cache_key, 'bp_groups' );
 
@@ -1045,8 +1045,8 @@ class BP_Groups_Group {
 			$args['page'] = $page;
 		}
 
-		$requests = groups_get_requests( $args );
-		$total    = count( groups_get_membership_requested_user_ids( $group_id ) );
+		$requests = bboss_groups_get_requests( $args );
+		$total    = count( bboss_groups_get_membership_requested_user_ids( $group_id ) );
 
 		return array(
 			'requests' => $requests,
@@ -1121,7 +1121,7 @@ class BP_Groups_Group {
 	 *                                            results to. If specified, $show_hidden is ignored.
 	 *                                            Default: empty array.
 	 *     @type string       $fields             Which fields to return. Specify 'ids' to fetch a list of IDs.
-	 *                                            Default: 'all' (return BP_Groups_Group objects).
+	 *                                            Default: 'all' (return BBoss_Groups_Group objects).
 	 *                                            If set, meta and admin caches will not be prefetched.
 	 * }
 	 * @return array {
@@ -1153,7 +1153,7 @@ class BP_Groups_Group {
 				8 => 'show_hidden',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
+			$args = bboss_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$defaults = array(
@@ -1182,9 +1182,9 @@ class BP_Groups_Group {
 			'fields'             => 'all',
 		);
 
-		$r = bp_parse_args( $args, $defaults, 'bp_groups_group_get' );
+		$r = bboss_parse_args( $args, $defaults, 'bp_groups_group_get' );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$sql = array(
 			'select'     => 'SELECT DISTINCT g.id',
@@ -1216,14 +1216,14 @@ class BP_Groups_Group {
 		 *      then hide hidden group
 		 */
 		if (
-			! bp_is_user_groups_invites() &&
+			! bboss_is_user_groups_invites() &&
 			! empty( $r['show_hidden'] ) &&
-			! bp_current_user_can( 'bp_moderate' ) &&
+			! bboss_current_user_can( 'bp_moderate' ) &&
 			is_user_logged_in() &&
-			bp_loggedin_user_id() != $r['user_id']
+			bboss_loggedin_user_id() != $r['user_id']
 		) {
 			// Exclude all other hidden group.
-			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", ( ! empty( $r['user_id'] ) ? $r['user_id'] : bp_loggedin_user_id() ) );
+			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", ( ! empty( $r['user_id'] ) ? $r['user_id'] : bboss_loggedin_user_id() ) );
 		} elseif (
 			(
 				empty( $r['show_hidden'] ) ||
@@ -1231,7 +1231,7 @@ class BP_Groups_Group {
 					! empty( $r['show_hidden'] ) &&
 					! is_user_logged_in()
 				)
-			) && ! bb_is_wp_cli()
+			) && ! bboss_is_wp_cli()
 		) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
@@ -1268,7 +1268,7 @@ class BP_Groups_Group {
 			$searches      = array();
 			$leading_wild  = ( 'leading' == $wild || 'both' == $wild ) ? '%' : '';
 			$trailing_wild = ( 'trailing' == $wild || 'both' == $wild ) ? '%' : '';
-			$wildcarded    = $leading_wild . bp_esc_like( $search ) . $trailing_wild;
+			$wildcarded    = $leading_wild . bboss_esc_like( $search ) . $trailing_wild;
 
 			$search_columns = array( 'name', 'description' );
 			if ( $r['search_columns'] ) {
@@ -1386,7 +1386,7 @@ class BP_Groups_Group {
 
 		// Process date query for 'date_created' and 'last_activity' sort.
 		if ( 'date_created' === $orderby || 'last_activity' === $orderby ) {
-			$date_query_sql = BP_Date_Query::get_where_sql( $r['date_query'], self::convert_orderby_to_order_by_term( $orderby ) );
+			$date_query_sql = BBoss_Date_Query::get_where_sql( $r['date_query'], self::convert_orderby_to_order_by_term( $orderby ) );
 
 			if ( ! empty( $date_query_sql ) ) {
 				$where_conditions['date'] = $date_query_sql;
@@ -1394,7 +1394,7 @@ class BP_Groups_Group {
 		}
 
 		// Sanitize 'order'.
-		$order = bp_esc_sql_order( $order );
+		$order = bboss_esc_sql_order( $order );
 
 		/**
 		 * Filters the converted 'orderby' term.
@@ -1457,10 +1457,10 @@ class BP_Groups_Group {
 		 */
 		$paged_groups_sql = apply_filters( 'bp_groups_get_paged_groups_sql', $paged_groups_sql, $sql, $r );
 
-		$cached = bp_core_get_incremented_cache( $paged_groups_sql, 'bp_groups' );
+		$cached = bboss_core_get_incremented_cache( $paged_groups_sql, 'bp_groups' );
 		if ( false === $cached ) {
 			$paged_group_ids = $wpdb->get_col( $paged_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_groups_get_paged_groups_sql and bp_groups_get_where_conditions (listeners may rewrite parts, e.g. BB_WPML_Helpers rewrites the search clause when WPML is active); as built by this method: table names from $bp, user/creator/search/hidden/pagination $wpdb->prepare()'d, include/exclude/parent_id via wp_parse_id_list(), status/slug via sanitize_title(), meta/date/group type via WP_Meta_Query/BP_Date_Query/WP_Tax_Query, ORDER BY column whitelisted and order via bp_esc_sql_order().
-			bp_core_set_incremented_cache( $paged_groups_sql, 'bp_groups', $paged_group_ids );
+			bboss_core_set_incremented_cache( $paged_groups_sql, 'bp_groups', $paged_group_ids );
 		} else {
 			$paged_group_ids = $cached;
 		}
@@ -1469,7 +1469,7 @@ class BP_Groups_Group {
 			// We only want the IDs.
 			$paged_groups = array_map( 'intval', $paged_group_ids );
 		} else {
-			$uncached_group_ids = bp_get_non_cached_ids( $paged_group_ids, 'bp_groups' );
+			$uncached_group_ids = bboss_get_non_cached_ids( $paged_group_ids, 'bp_groups' );
 			if ( $uncached_group_ids ) {
 				$group_ids_sql      = implode( ',', array_map( 'intval', $uncached_group_ids ) );
 				$group_data_objects = $wpdb->get_results( "SELECT g.* FROM {$bp->groups->table_name} g WHERE g.id IN ({$group_ids_sql})" );
@@ -1480,7 +1480,7 @@ class BP_Groups_Group {
 
 			$paged_groups = array();
 			foreach ( $paged_group_ids as $paged_group_id ) {
-				$paged_groups[] = new BP_Groups_Group( $paged_group_id );
+				$paged_groups[] = new BBoss_Groups_Group( $paged_group_id );
 			}
 
 			$group_ids = array();
@@ -1490,12 +1490,12 @@ class BP_Groups_Group {
 
 			// Grab all groupmeta.
 			if ( ! empty( $r['update_meta_cache'] ) ) {
-				bp_groups_update_meta_cache( $group_ids );
+				bboss_groups_update_meta_cache( $group_ids );
 			}
 
 			// Prefetch all administrator IDs, if requested.
 			if ( $r['update_admin_cache'] ) {
-				BP_Groups_Member::prime_group_admins_mods_cache( $group_ids );
+				BBoss_Groups_Member::prime_group_admins_mods_cache( $group_ids );
 			}
 
 			// Set up integer properties needing casting.
@@ -1527,10 +1527,10 @@ class BP_Groups_Group {
 		 */
 		$total_groups_sql = apply_filters( 'bp_groups_get_total_groups_sql', $total_groups_sql, $sql, $r );
 
-		$cached = bp_core_get_incremented_cache( $total_groups_sql, 'bp_groups' );
+		$cached = bboss_core_get_incremented_cache( $total_groups_sql, 'bp_groups' );
 		if ( false === $cached ) {
 			$total_groups = (int) $wpdb->get_var( $total_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_groups_get_total_groups_sql; built from the same $sql['from'] and $where as the paged query above (see the reason there).
-			bp_core_set_incremented_cache( $total_groups_sql, 'bp_groups', $total_groups );
+			bboss_core_set_incremented_cache( $total_groups_sql, 'bp_groups', $total_groups );
 		} else {
 			$total_groups = (int) $cached;
 		}
@@ -1542,7 +1542,7 @@ class BP_Groups_Group {
 	}
 
 	/**
-	 * Get the SQL for the 'meta_query' param in BP_Groups_Group::get()
+	 * Get the SQL for the 'meta_query' param in BBoss_Groups_Group::get()
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses.
@@ -1566,7 +1566,7 @@ class BP_Groups_Group {
 
 			// WP_Meta_Query expects the table name at
 			// $wpdb->group.
-			$wpdb->groupmeta = buddypress()->groups->table_name_groupmeta;
+			$wpdb->groupmeta = bboss()->groups->table_name_groupmeta;
 
 			$meta_sql           = $groups_meta_query->get_sql( 'group', 'g', 'id' );
 			$sql_array['join']  = $meta_sql['join'];
@@ -1658,7 +1658,7 @@ class BP_Groups_Group {
 				break;
 
 			case 'meta_id':
-				$order_by_term = buddypress()->groups->table_name_groupmeta . '.id';
+				$order_by_term = bboss()->groups->table_name_groupmeta . '.id';
 				break;
 
 			case 'id':
@@ -1723,7 +1723,7 @@ class BP_Groups_Group {
 	/**
 	 * Get a list of random groups.
 	 *
-	 * Use BP_Groups_Group::get() with 'type' = 'random' instead.
+	 * Use BBoss_Groups_Group::get() with 'type' = 'random' instead.
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
@@ -1778,13 +1778,13 @@ class BP_Groups_Group {
 	 * @return array $paged_groups
 	 */
 	public static function get_group_extras( &$paged_groups, &$group_ids, $type = false ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 
 		foreach ( $paged_groups as &$group ) {
-			$group->is_member  = groups_is_user_member( $user_id, $group->id ) ? 1 : 0;
-			$group->is_invited = groups_is_user_invited( $user_id, $group->id ) ? 1 : 0;
-			$group->is_pending = groups_is_user_pending( $user_id, $group->id ) ? 1 : 0;
-			$group->is_banned  = (bool) groups_is_user_banned( $user_id, $group->id );
+			$group->is_member  = bboss_groups_is_user_member( $user_id, $group->id ) ? 1 : 0;
+			$group->is_invited = bboss_groups_is_user_invited( $user_id, $group->id ) ? 1 : 0;
+			$group->is_pending = bboss_groups_is_user_pending( $user_id, $group->id ) ? 1 : 0;
+			$group->is_banned  = (bool) bboss_groups_is_user_banned( $user_id, $group->id );
 		}
 
 		return $paged_groups;
@@ -1804,7 +1804,7 @@ class BP_Groups_Group {
 			return false;
 		}
 
-		$invites_class = new BP_Groups_Invitation_Manager();
+		$invites_class = new BBoss_Groups_Invitation_Manager();
 
 		return $invites_class->delete(
 			array(
@@ -1828,12 +1828,12 @@ class BP_Groups_Group {
 
 		$hidden_sql = '';
 		$cache_key  = 'bp_get_moderator_total_group_count';
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = "WHERE status != 'hidden'";
 			$cache_key  = 'bp_get_total_group_count';
 		}
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$record = wp_cache_get( $cache_key, 'bp_groups' );
 
@@ -1856,7 +1856,7 @@ class BP_Groups_Group {
 	public static function get_total_member_count( $group_id ) {
 		global $wpdb;
 
-		$bp        = buddypress();
+		$bp        = bboss();
 		$cache_key = 'bp_group_get_total_member_count_' . $group_id;
 		$record    = wp_cache_get( $cache_key, 'bp_groups' );
 
@@ -1903,7 +1903,7 @@ class BP_Groups_Group {
 	 * Get an array containing ids for each group type.
 	 *
 	 * A bit of a kludge workaround for some issues
-	 * with bp_has_groups().
+	 * with bboss_has_groups().
 	 *
 	 * @since BuddyPress 1.7.0
 	 *
@@ -1912,7 +1912,7 @@ class BP_Groups_Group {
 	public static function get_group_type_ids() {
 		global $wpdb;
 
-		$bp  = buddypress();
+		$bp  = bboss();
 		$ids = array();
 
 		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
@@ -1947,7 +1947,7 @@ class BP_Groups_Group {
 
 		$types = array();
 		foreach ( $group_types as $gt ) {
-			if ( bp_groups_get_group_type_object( $gt ) ) {
+			if ( bboss_groups_get_group_type_object( $gt ) ) {
 				$types[] = $gt;
 			}
 		}
@@ -1963,7 +1963,7 @@ class BP_Groups_Group {
 			)
 		);
 
-		$site_id  = bp_get_taxonomy_term_site_id( 'bp_group_type' );
+		$site_id  = bboss_get_taxonomy_term_site_id( 'bp_group_type' );
 		$switched = false;
 		if ( $site_id !== get_current_blog_id() ) {
 			switch_to_blog( $site_id );

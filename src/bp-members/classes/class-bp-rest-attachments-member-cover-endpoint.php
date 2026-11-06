@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Attachments_Member_Cover_Endpoint class
+ * BP REST: BBoss_REST_Attachments_Member_Cover_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,16 +15,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 
-	use BP_REST_Attachments;
+	use BBoss_REST_Attachments;
 
 	/**
-	 * BP_Attachment_Cover_Image Instance.
+	 * BBoss_Attachment_Cover_Image Instance.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var BP_Attachment_Cover_Image
+	 * @var BBoss_Attachment_Cover_Image
 	 */
 	protected $attachment_instance;
 
@@ -52,9 +52,9 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace           = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace           = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base           = 'members';
-		$this->attachment_instance = new BP_Attachment_Cover_Image();
+		$this->attachment_instance = new BBoss_Attachment_Cover_Image();
 	}
 
 	/**
@@ -110,7 +110,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} user_id A unique numeric ID for the User.
 	 */
 	public function get_item( $request ) {
-		$cover_url = bp_attachments_get_attachment(
+		$cover_url = bboss_attachments_get_attachment(
 			'url',
 			array(
 				'item_id' => $this->user->ID,
@@ -158,7 +158,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -168,7 +168,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$this->user = bp_rest_get_user( $request['user_id'] );
+		$this->user = bboss_rest_get_user( $request['user_id'] );
 
 		if ( true === $retval && ! $this->user instanceof WP_User ) {
 			$retval = new WP_Error(
@@ -261,7 +261,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = $this->delete_item_permissions_check( $request );
 
-		if ( true === $retval && bp_disable_cover_image_uploads() ) {
+		if ( true === $retval && bboss_disable_cover_image_uploads() ) {
 			$retval = new WP_Error(
 				'bp_rest_attachments_member_cover_disabled',
 				__( 'Sorry, user cover upload is disabled.', 'buddyboss' ),
@@ -301,14 +301,14 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	public function delete_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		$cover_url = bp_attachments_get_attachment(
+		$cover_url = bboss_attachments_get_attachment(
 			'url',
 			array(
 				'item_id' => $this->user->ID,
 			)
 		);
 
-		$deleted = bp_attachments_delete_file(
+		$deleted = bboss_attachments_delete_file(
 			array(
 				'item_id' => (int) $this->user->ID,
 			)
@@ -388,7 +388,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! empty( $args ) && ! bp_attachments_current_user_can( 'edit_cover_image', $args ) ) {
+		if ( true === $retval && ! empty( $args ) && ! bboss_attachments_current_user_can( 'edit_cover_image', $args ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
@@ -478,3 +478,11 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_attachments_member_cover_schema', $this->add_additional_fields_schema( $schema ) );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Attachments_Member_Cover_Endpoint', false ) || interface_exists( 'BBoss_REST_Attachments_Member_Cover_Endpoint', false ) || trait_exists( 'BBoss_REST_Attachments_Member_Cover_Endpoint', false ) ) && ! class_exists( 'BP_REST_Attachments_Member_Cover_Endpoint', false ) && ! interface_exists( 'BP_REST_Attachments_Member_Cover_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Attachments_Member_Cover_Endpoint', 'BP_REST_Attachments_Member_Cover_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

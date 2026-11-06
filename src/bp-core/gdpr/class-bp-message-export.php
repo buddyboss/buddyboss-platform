@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Message_Export class
+ * Export API: BBoss_Message_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Message_Export
+ * Class BBoss_Message_Export
  */
-final class BP_Message_Export extends BP_Export {
+final class BBoss_Message_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -23,7 +23,7 @@ final class BP_Message_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Message_Export();
+			$instance = new BBoss_Message_Export();
 			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss' ) );
 		}
 
@@ -57,7 +57,7 @@ final class BP_Message_Export extends BP_Export {
 			$group_label = __( 'Message Threads & Replies', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$permalink = bp_get_message_thread_view_link( $item->thread_id, $user->ID );
+			$permalink = bboss_get_message_thread_view_link( $item->thread_id, $user->ID );
 
 			// recipients
 			$recipients = array();
@@ -68,7 +68,7 @@ final class BP_Message_Export extends BP_Export {
 				if ( ! empty( $r_user ) ) {
 					// Resolve for the data subject ($user) so a recipient's last name hidden by
 					// profile-field visibility is not exported in the raw column.
-					$name = bp_core_get_user_displayname( $r_user->ID, $user->ID );
+					$name = bboss_core_get_user_displayname( $r_user->ID, $user->ID );
 					if ( empty( $name ) ) {
 						$name = $r_user->user_login;
 					}

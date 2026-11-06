@@ -19,13 +19,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function bb_admin_settings_register_advanced_feature() {
+function bboss_admin_settings_register_advanced_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'advanced',
 		array(
 			'label'              => __( 'Advanced', 'buddyboss' ),
@@ -55,7 +55,7 @@ function bb_admin_settings_register_advanced_feature() {
 	// =========================================================================
 
 	// Side Panel 1: General (default).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'advanced',
 		'general',
 		array(
@@ -64,7 +64,7 @@ function bb_admin_settings_register_advanced_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
 			),
-			'help_url'   => bp_get_admin_url(
+			'help_url'   => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -79,7 +79,7 @@ function bb_admin_settings_register_advanced_feature() {
 	);
 
 	// Side Panel 2: Privacy.
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'advanced',
 		'privacy',
 		array(
@@ -88,7 +88,7 @@ function bb_admin_settings_register_advanced_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
 			),
-			'help_url' => bp_get_admin_url(
+			'help_url' => bboss_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -112,10 +112,10 @@ function bb_admin_settings_register_advanced_feature() {
 	// Unlicensed sites only. Paid sites are forced to "complete" reporting by
 	// bb_force_telemetry_for_licensed_sites(), so showing the control there
 	// would offer a choice that has no effect.
-	$bb_show_telemetry = ! bb_has_paid_product();
+	$bb_show_telemetry = ! bboss_has_paid_product();
 	// @bbwt-com-end telemetry-complete
 	if ( $bb_show_telemetry ) {
-		bb_register_side_panel(
+		bboss_register_side_panel(
 			'advanced',
 			'telemetry',
 			array(
@@ -134,16 +134,16 @@ function bb_admin_settings_register_advanced_feature() {
 	// REGISTER FIELDS (delegated to sub-files)
 	// =========================================================================
 
-	bb_advanced_register_general_fields();
-	bb_advanced_register_privacy_fields();
+	bboss_advanced_register_general_fields();
+	bboss_advanced_register_privacy_fields();
 
 	// @bbwt-com-start telemetry-complete
-	$bb_show_telemetry = ! bb_has_paid_product();
+	$bb_show_telemetry = ! bboss_has_paid_product();
 
 	// @bbwt-com-end telemetry-complete
 	// Telemetry fields only where the panel above was registered.
 	if ( $bb_show_telemetry ) {
-		bb_advanced_register_telemetry_fields();
+		bboss_advanced_register_telemetry_fields();
 	}
 
 	/**

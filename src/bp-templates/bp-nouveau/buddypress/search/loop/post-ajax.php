@@ -12,7 +12,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
+$result = bboss_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_post">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), get_permalink() ) ); ?>">

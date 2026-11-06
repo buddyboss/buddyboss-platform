@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'BP_Media_Rotation' ) ) {
+if ( ! class_exists( 'BBoss_Media_Rotation' ) ) {
 	/**
 	 * Fixes media rotation from mobile uploads
 	 *
 	 * @since BuddyPress 1.1.1
 	 */
-	class BP_Media_Rotation {
+	class BBoss_Media_Rotation {
 
 		/**
 		 * Constructor method.

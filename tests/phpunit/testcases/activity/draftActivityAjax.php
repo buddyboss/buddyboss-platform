@@ -2,7 +2,7 @@
 /**
  * Tests for the activity draft AJAX handler's data_key allowlist (PROD-10561).
  *
- * The handler bb_nouveau_ajax_post_draft_activity() writes and deletes a usermeta
+ * The handler bboss_nouveau_ajax_post_draft_activity() writes and deletes a usermeta
  * row named by the client's draft_activity[data_key]. Without an allowlist a member
  * could name wp_capabilities (or any other meta key) and overwrite their own role.
  * These tests pin the gate added in PROD-10561: only draft_user, draft_user_{id}
@@ -285,7 +285,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertIsArray( $response );
 		$this->assertTrue( $response['success'], 'A valid draft_user save must succeed.' );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 		$this->assertIsArray( $stored );
 		$this->assertSame( 'draft_user', $stored['data_key'] );
 	}
@@ -309,7 +309,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertIsArray( $response );
 		$this->assertTrue( $response['success'] );
-		$this->assertIsArray( bp_get_user_meta( $user_id, 'draft_user_' . $user_id, true ) );
+		$this->assertIsArray( bboss_get_user_meta( $user_id, 'draft_user_' . $user_id, true ) );
 	}
 
 	/**
@@ -340,7 +340,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertIsArray( $response );
 		$this->assertTrue( $response['success'], 'A valid draft_group_{id} save must succeed.' );
-		$this->assertIsArray( bp_get_user_meta( $user_id, 'draft_group_' . $group_id, true ) );
+		$this->assertIsArray( bboss_get_user_meta( $user_id, 'draft_group_' . $group_id, true ) );
 	}
 
 	/**
@@ -369,13 +369,13 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$attached = $this->create_attachment_for( $owner );
 		$post_id  = self::factory()->post->create( array( 'post_author' => $owner ) );
 
-		$this->assertTrue( bb_user_can_manage_draft_attachment( $attached, false, $owner ) );
-		$this->assertTrue( bb_user_can_manage_draft_attachment( $attached, true, $owner ), 'An unsaved own upload may be deleted.' );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( $attached, false, $other ), 'Another user does not own it.' );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( $post_id, false, $owner ), 'A non-attachment post is never a draft attachment.' );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( 0, false, $owner ) );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( -1 * $attached, false, $owner ), 'Negative IDs are not normalised to a real ID.' );
-		$this->assertFalse( bb_user_can_manage_draft_attachment( array( $attached ), false, $owner ) );
+		$this->assertTrue( bboss_user_can_manage_draft_attachment( $attached, false, $owner ) );
+		$this->assertTrue( bboss_user_can_manage_draft_attachment( $attached, true, $owner ), 'An unsaved own upload may be deleted.' );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( $attached, false, $other ), 'Another user does not own it.' );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( $post_id, false, $owner ), 'A non-attachment post is never a draft attachment.' );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( 0, false, $owner ) );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( -1 * $attached, false, $owner ), 'Negative IDs are not normalised to a real ID.' );
+		$this->assertFalse( bboss_user_can_manage_draft_attachment( array( $attached ), false, $owner ) );
 	}
 
 	/**
@@ -391,8 +391,8 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			$attached = $this->create_attachment_for( $owner );
 			update_post_meta( $attached, $meta_key, 123 );
 
-			$this->assertTrue( bb_user_can_manage_draft_attachment( $attached, false, $owner ), "{$meta_key}: flagging is still allowed." );
-			$this->assertFalse( bb_user_can_manage_draft_attachment( $attached, true, $owner ), "{$meta_key}: a saved upload is not deletable." );
+			$this->assertTrue( bboss_user_can_manage_draft_attachment( $attached, false, $owner ), "{$meta_key}: flagging is still allowed." );
+			$this->assertFalse( bboss_user_can_manage_draft_attachment( $attached, true, $owner ), "{$meta_key}: a saved upload is not deletable." );
 		}
 	}
 
@@ -534,7 +534,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * on the earlier request, so a two-step request could delete any file.
 	 */
 	public function test_forum_draft_resave_does_not_delete_foreign_attachments() {
-		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+		if ( ! function_exists( 'bboss_post_topic_reply_draft' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
@@ -608,13 +608,13 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			$this->assertSame( 'original', $response['data']['draft_activity']['data']['content'], 'The stored draft comes back so the browser can keep it.' );
 		}
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 		$this->assertSame( 'original', $stored['data']['content'], 'The stored draft survives every refused save.' );
 
 		$accepted = $this->save_rev_draft( $user_id, 'edited', 'revCCCCCCCC', 'revOLDOLDOLD,revAAAAAAAA' );
 		$this->assertTrue( $accepted['success'], 'A base that includes the stored revision is accepted.' );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 		$this->assertSame( 'edited', $stored['data']['content'] );
 		$this->assertSame( 'revCCCCCCCC', $stored['_draft_rev'], 'The revision the client sent is stored.' );
 	}
@@ -646,12 +646,12 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * A forum composer cannot overwrite a stored draft it never saw.
 	 */
 	public function test_forum_save_over_an_unseen_draft_is_refused() {
-		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+		if ( ! function_exists( 'bboss_post_topic_reply_draft' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$key     = 'draft_discussion_' . $forum;
 
 		$entry = function ( $text, $rev ) use ( $key ) {
@@ -670,13 +670,13 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertFalse( $refused['success'] );
 		$this->assertTrue( $refused['data']['conflict'] );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertSame( 'original', $row[ $key ]['data']['bbp_topic_content'] );
 
 		$accepted = $this->invoke_forum_draft_handler( $user_id, $entry( 'edited', 'revCCCCCCCC' ), array( 'bb_draft_base' => 'revAAAAAAAA' ) );
 		$this->assertTrue( $accepted['success'] );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertSame( 'edited', $row[ $key ]['data']['bbp_topic_content'] );
 		$this->assertSame( 'revCCCCCCCC', $row[ $key ]['_draft_rev'] );
 	}
@@ -689,7 +689,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$group   = self::factory()->group->create( array( 'creator_id' => $user_id ) );
 		$old_key = 'draft_group_' . $group;
 
-		bp_update_user_meta(
+		bboss_update_user_meta(
 			$user_id,
 			$old_key,
 			array(
@@ -724,16 +724,16 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertArrayHasKey( $old_key, $third['data']['evicted_drafts'], 'Premise: still owed until acknowledged.' );
 
 		$_POST['bb_draft_evicted_ack'] = $old_key;
-		$this->assertSame( array(), bb_draft_pending_evicted( $user_id, bb_draft_request_acked_evictions() ), 'An acknowledged hand-back is dropped from the hold.' );
+		$this->assertSame( array(), bboss_draft_pending_evicted( $user_id, bboss_draft_request_acked_evictions() ), 'An acknowledged hand-back is dropped from the hold.' );
 		unset( $_POST['bb_draft_evicted_ack'] );
-		$this->assertSame( array(), bb_draft_get_evicted_hold( $user_id ) );
+		$this->assertSame( array(), bboss_draft_get_evicted_hold( $user_id ) );
 	}
 
 	/**
 	 * The forum draft fetch returns only the drafts the page's forms can use (V14).
 	 */
 	public function test_forum_fetch_returns_only_requested_prefixes() {
-		if ( ! function_exists( 'bb_get_topic_reply_drafts' ) ) {
+		if ( ! function_exists( 'bboss_get_topic_reply_drafts' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
@@ -745,7 +745,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 				'data'     => array( 'bbp_reply_content' => 'text ' . $key ),
 			);
 		}
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		bboss_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
 
 		$response = $this->invoke_handler( 'bb_get_topic_reply_drafts', 'unused', '_wpnonce_post_topic_reply_draft', 'post_topic_reply_draft_data', $user_id, '', array( 'prefixes' => 'draft_reply_12' ) );
 
@@ -760,12 +760,12 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * An attachment list sent as an array instead of JSON is handled, not a fatal (V25).
 	 */
 	public function test_forum_save_with_an_array_attachment_list_does_not_fatal() {
-		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+		if ( ! function_exists( 'bboss_post_topic_reply_draft' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 
 		$response = $this->invoke_forum_draft_handler(
 			$user_id,
@@ -797,7 +797,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			'data'       => array( 'content' => 'held text' ),
 		);
 
-		bb_draft_hold_evicted( $user_id, array( $key => $entry ) );
+		bboss_draft_hold_evicted( $user_id, array( $key => $entry ) );
 		$this->assertSame( '1', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The page-view flag is set with the hold.' );
 
 		$response = $this->invoke_handler(
@@ -818,7 +818,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertSame( 'held text', $response['data']['draft_activity']['data']['content'], 'Nothing is stored, so the held copy is restored.' );
 
 		$_POST['bb_draft_evicted_ack'] = $key;
-		bb_draft_pending_evicted( $user_id, bb_draft_request_acked_evictions() );
+		bboss_draft_pending_evicted( $user_id, bboss_draft_request_acked_evictions() );
 		unset( $_POST['bb_draft_evicted_ack'] );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The flag clears with the hold.' );
 	}
@@ -857,7 +857,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertTrue( $response['success'], 'The draft saves: the preview text is not the member\'s content.' );
 
-		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$stored = bboss_get_user_meta( $user_id, 'draft_user', true );
 		$this->assertCount( 10, $stored['data']['document'], 'Every attachment is kept.' );
 		$this->assertArrayNotHasKey( 'text', $stored['data']['document'][0], 'The preview text is not stored.' );
 		$this->assertArrayNotHasKey( 'svg_icon_download', $stored['data']['document'][0] );
@@ -868,7 +868,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * The forum composer stores its documents as JSON; the same fields go.
 	 */
 	public function test_forum_document_preview_text_is_stripped() {
-		$draft = bb_draft_strip_document_render_fields(
+		$draft = bboss_draft_strip_document_render_fields(
 			array(
 				'data' => array(
 					'bbp_document' => wp_json_encode(
@@ -893,7 +893,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 */
 	public function test_handback_without_a_hold_leaves_notoptions_alone() {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		$option  = bb_draft_evicted_hold_option( $user_id );
+		$option  = bboss_draft_evicted_hold_option( $user_id );
 		$read    = 0;
 
 		$count = function ( $pre, $name ) use ( $option, &$read ) {
@@ -906,7 +906,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		add_filter( 'pre_option', $count, 10, 2 );
 		add_filter( 'pre_site_option', $count, 10, 2 );
 
-		$owed = bb_draft_handback( $user_id );
+		$owed = bboss_draft_handback( $user_id );
 
 		remove_filter( 'pre_option', $count, 10 );
 		remove_filter( 'pre_site_option', $count, 10 );
@@ -927,7 +927,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	public function test_fetch_removes_a_corrupt_draft_row() {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 
-		bp_update_user_meta( $user_id, 'draft_user', 'not a draft' );
+		bboss_update_user_meta( $user_id, 'draft_user', 'not a draft' );
 
 		$response = $this->invoke_handler(
 			'bb_nouveau_ajax_get_draft_activity',
@@ -945,7 +945,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertTrue( $response['success'] );
 		$this->assertFalse( $response['data']['draft_activity'], 'Nothing restorable is returned.' );
-		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'The corrupt row is gone, so has_draft is false on the next page view.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, bboss_get_user_meta_key( 'draft_user' ) ), 'The corrupt row is gone, so has_draft is false on the next page view.' );
 	}
 
 	/**
@@ -962,7 +962,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			'data'     => array( 'content' => 'waiting text' ),
 		);
 
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -978,7 +978,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			)
 		);
 
-		$this->assertSame( $entry, bb_draft_get_held_entry( $user_id, $key ), 'The page view finds the waiting draft, so the composer fetches it.' );
+		$this->assertSame( $entry, bboss_draft_get_held_entry( $user_id, $key ), 'The page view finds the waiting draft, so the composer fetches it.' );
 
 		$response = $this->invoke_handler(
 			'bb_nouveau_ajax_get_draft_activity',
@@ -998,7 +998,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertSame( 'waiting text', $response['data']['draft_activity']['data']['content'], 'The waiting draft is restored.' );
 		$this->assertArrayHasKey( $key, $response['data']['evicted_drafts'], 'And handed back, so the browser keeps it pending and acknowledges it.' );
 
-		bb_draft_pending_evicted( $user_id, array( $key, 'draft_user' ) );
+		bboss_draft_pending_evicted( $user_id, array( $key, 'draft_user' ) );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The acknowledgement clears both.' );
 	}
 
@@ -1011,7 +1011,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	public function test_save_waits_for_the_handback_of_a_held_draft() {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -1028,7 +1028,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertTrue( $refused['data']['conflict'] );
 		$this->assertTrue( $refused['data']['held'], 'Flagged, so the browser keeps the merged copy.' );
 		$this->assertSame( 'held text', $refused['data']['evicted_drafts']['draft_user']['data']['content'], 'The held draft is handed back.' );
-		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'Nothing was stored.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, bboss_get_user_meta_key( 'draft_user' ) ), 'Nothing was stored.' );
 
 		$held_rev = $refused['data']['evicted_drafts']['draft_user']['_draft_rev'];
 		$this->assertMatchesRegularExpression( '/^[A-Za-z0-9]{8,32}$/', (string) $held_rev, 'A held draft saved without a revision is given one.' );
@@ -1049,20 +1049,20 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		);
 
 		$this->assertTrue( $accepted['success'], 'The save built on the handed-back draft goes through.' );
-		$this->assertSame( 'held text typed text', bp_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
-		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'The hold is done.' );
+		$this->assertSame( 'held text typed text', bboss_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
+		$this->assertEmpty( bboss_draft_get_evicted_hold( $user_id ), 'The hold is done.' );
 	}
 
 	/**
 	 * The forum save waits for a held draft's hand-back the same way.
 	 */
 	public function test_forum_save_waits_for_the_handback_of_a_held_draft() {
-		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+		if ( ! function_exists( 'bboss_post_topic_reply_draft' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$key     = 'draft_discussion_' . $forum;
 		$entry   = function ( $text, $rev ) use ( $key ) {
 			return array(
@@ -1074,7 +1074,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			);
 		};
 
-		bb_draft_hold_evicted( $user_id, array( 'bb_user_topic_reply_draft:' . $key => $entry( 'held topic', 'revHELD00001' ) ) );
+		bboss_draft_hold_evicted( $user_id, array( 'bb_user_topic_reply_draft:' . $key => $entry( 'held topic', 'revHELD00001' ) ) );
 
 		$refused = $this->invoke_forum_draft_handler( $user_id, $entry( 'typed topic', 'revTYPED0001' ) );
 
@@ -1082,7 +1082,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertTrue( $refused['data']['held'] );
 		$this->assertSame( 'held topic', $refused['data']['evicted_drafts'][ 'bb_user_topic_reply_draft:' . $key ]['data']['bbp_topic_content'] );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertFalse( is_array( $row ) && isset( $row[ $key ] ), 'Nothing was stored for the key.' );
 
 		// Acknowledged by another tab, but not built on the held draft (V-09).
@@ -1096,12 +1096,12 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		);
 		$this->assertFalse( $stale['success'], 'A shared acknowledgement does not let a save that never showed the held draft through.' );
 		$this->assertSame( 'held topic', $stale['data']['evicted_drafts'][ 'bb_user_topic_reply_draft:' . $key ]['data']['bbp_topic_content'], 'The held draft is handed back again.' );
-		$this->assertNotFalse( bb_draft_get_held_entry( $user_id, 'bb_user_topic_reply_draft:' . $key ), 'The refused request\'s acknowledgement did not end the hold.' );
+		$this->assertNotFalse( bboss_draft_get_held_entry( $user_id, 'bb_user_topic_reply_draft:' . $key ), 'The refused request\'s acknowledgement did not end the hold.' );
 
 		$accepted = $this->invoke_forum_draft_handler( $user_id, $entry( 'held topic typed topic', 'revMERGED001' ), array( 'bb_draft_base' => 'revHELD00001' ) );
 		$this->assertTrue( $accepted['success'], 'A save built on the held revision goes through.' );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertSame( 'held topic typed topic', $row[ $key ]['data']['bbp_topic_content'] );
 	}
 
@@ -1113,7 +1113,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	public function test_save_built_on_the_held_revision_is_not_refused() {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -1128,9 +1128,9 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$saved = $this->save_rev_draft( $user_id, 'base text X', 'revNEXTNEXT1', 'revHELDHELD1' );
 
 		$this->assertTrue( $saved['success'], 'The composer showed the held draft, so nothing is dropped unseen.' );
-		$this->assertSame( 'base text X', bp_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
+		$this->assertSame( 'base text X', bboss_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
 		$this->assertArrayNotHasKey( 'draft_user', (array) $saved['data']['evicted_drafts'], 'Nothing to hand back: the stored draft ends the hold.' );
-		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ) );
+		$this->assertEmpty( bboss_draft_get_evicted_hold( $user_id ) );
 	}
 
 	/**
@@ -1141,7 +1141,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	public function test_shared_acknowledgement_does_not_let_a_stale_tab_drop_the_hold() {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 
-		bb_draft_hold_evicted(
+		bboss_draft_hold_evicted(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -1171,14 +1171,14 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertFalse( $refused['success'] );
 		$this->assertTrue( $refused['data']['held'] );
 		$this->assertSame( 'held text from device B', $refused['data']['evicted_drafts']['draft_user']['data']['content'], 'Handed back to the stale tab.' );
-		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'The stale text was not stored over it.' );
-		$this->assertNotFalse( bb_draft_get_held_entry( $user_id, 'draft_user' ), 'The hold survives the refusal.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, bboss_get_user_meta_key( 'draft_user' ) ), 'The stale text was not stored over it.' );
+		$this->assertNotFalse( bboss_draft_get_held_entry( $user_id, 'draft_user' ), 'The hold survives the refusal.' );
 
 		// A later request delivering the acknowledgement still ends it.
 		$_POST['bb_draft_evicted_ack'] = 'draft_user';
-		bb_draft_pending_evicted( $user_id, bb_draft_request_acked_evictions() );
+		bboss_draft_pending_evicted( $user_id, bboss_draft_request_acked_evictions() );
 		unset( $_POST['bb_draft_evicted_ack'] );
-		$this->assertFalse( bb_draft_get_held_entry( $user_id, 'draft_user' ) );
+		$this->assertFalse( bboss_draft_get_held_entry( $user_id, 'draft_user' ) );
 	}
 
 	/**
@@ -1188,7 +1188,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	public function test_legacy_unstamped_hold_still_accepts_the_acknowledgement() {
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 
-		bb_draft_set_evicted_hold(
+		bboss_draft_set_evicted_hold(
 			$user_id,
 			array(
 				'draft_user' => array(
@@ -1275,7 +1275,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * not the group page's own draft.
 	 */
 	public function test_publish_to_a_group_from_the_feed_keeps_the_group_draft() {
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bboss_is_active( 'groups' ) ) {
 			$this->markTestSkipped( 'Groups component is not active.' );
 		}
 
@@ -1304,7 +1304,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * Publishing a topic or reply keeps a stored draft the form never showed.
 	 */
 	public function test_forum_publish_keeps_a_draft_the_form_never_showed() {
-		if ( ! function_exists( 'bb_forums_delete_published_draft_key' ) ) {
+		if ( ! function_exists( 'bboss_forums_delete_published_draft_key' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
@@ -1324,13 +1324,13 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		);
 
 		$_POST = array( 'bb_draft_base' => 'none' );
-		bb_forums_delete_published_draft_key( $user_id, $key );
+		bboss_forums_delete_published_draft_key( $user_id, $key );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertArrayHasKey( $key, $row, 'A draft the form never showed survives the publish.' );
 
 		$_POST = array( 'bb_draft_base' => 'revAAAAAAAA' );
-		bb_forums_delete_published_draft_key( $user_id, $key );
+		bboss_forums_delete_published_draft_key( $user_id, $key );
 
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ), 'Publishing the version the form showed clears it.' );
 	}
@@ -1339,15 +1339,15 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * A member can discard their own draft for a topic that has since been trashed.
 	 */
 	public function test_forum_discard_of_own_draft_for_a_trashed_topic() {
-		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+		if ( ! function_exists( 'bboss_post_topic_reply_draft' ) ) {
 			$this->markTestSkipped( 'Forums component is not loaded.' );
 		}
 
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bboss_bbp_get_forum_post_type() ) );
 		$topic   = self::factory()->post->create(
 			array(
-				'post_type'   => bbp_get_topic_post_type(),
+				'post_type'   => bboss_bbp_get_topic_post_type(),
 				'post_parent' => $forum,
 			)
 		);
@@ -1380,7 +1380,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertTrue( $discard['success'], 'The member\'s own draft is discardable after the topic is trashed.' );
 
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$row = bboss_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertFalse( is_array( $row ) && isset( $row[ $key ] ), 'The draft is gone.' );
 
 		// A key the member does NOT hold still gets the indistinguishable refusal.

@@ -3,7 +3,7 @@
  * Legacy Meta-Box Bridge for the Groups edit modal.
  *
  * Auto-detects third-party plugins that register meta boxes on the legacy
- * groups admin screen (via BP_Group_Extension or plain add_meta_box()) and
+ * groups admin screen (via BBoss_Group_Extension or plain add_meta_box()) and
  * surfaces their fields as native typed fields in the Settings 2.0 React
  * edit modal — without requiring the third-party plugin to migrate.
  *
@@ -14,18 +14,18 @@
  *   2. Walk $wp_meta_boxes; skip core/known/already-migrated boxes; capture
  *      each remaining box's HTML output via output buffering.
  *   3. Parse with DOMDocument; for every <input>/<select>/<textarea> with a
- *      safe name, register a typed field via bb_register_admin_meta_field().
+ *      safe name, register a typed field via bboss_register_admin_meta_field().
  *      RegisteredMetaField.js renders it natively.
  *   4. On save, save_value puts each value back on $_POST so the third-party
  *      plugin's own save handler reads its expected POST keys. For
- *      BP_Group_Extension subclasses we also invoke settings_screen_save()
+ *      BBoss_Group_Extension subclasses we also invoke settings_screen_save()
  *      manually (Platform deliberately removed that auto-call).
  *
  * Known limitations (documented; not bugs):
  *   - **Array-notation field names** (e.g. `name="meta[foo]"` /
  *     `name="things[]"`) are silently rejected. Bridging arrays correctly
  *     requires reassembly logic that's worse than telling the plugin author
- *     to migrate. Affected plugins must use `BB_Admin_Meta_Field_Registry`
+ *     to migrate. Affected plugins must use `BBoss_Admin_Meta_Field_Registry`
  *     with `sanitize_callback` to preserve the array shape.
  *   - **Non-ASCII identifier names** are silently rejected (the regex
  *     allowlist requires `^[A-Za-z][A-Za-z0-9_\-]*$`). WordPress conventions
@@ -34,7 +34,7 @@
  *     uploader, jQuery-UI autocomplete etc. requires the corresponding
  *     script/style enqueued on the React admin page. Common cases are
  *     auto-detected via HTML class markers and enqueued by
- *     `bb_legacy_groups_auto_enqueue_widget_scripts()` (see below). Plugin
+ *     `bboss_legacy_groups_auto_enqueue_widget_scripts()` (see below). Plugin
  *     authors with custom JS deps can extend the marker→handle map via the
  *     `bb_legacy_meta_box_extra_scripts` filter, or enqueue their scripts
  *     directly on `admin_enqueue_scripts` for the `bb-settings` screen.
@@ -63,8 +63,8 @@
  *     transient expires (1 hour) or a plugin lifecycle event clears it.
  *     The actual *values* are still per-group (rendered through the
  *     `get_value` closure on every request). Workaround: plugins that need
- *     role-conditional inputs should migrate to `BB_Admin_Meta_Field_Registry`
- *     and gate fields via `BB_Feature_Loader` / `current_user_can()` checks
+ *     role-conditional inputs should migrate to `BBoss_Admin_Meta_Field_Registry`
+ *     and gate fields via `BBoss_Feature_Loader` / `current_user_can()` checks
  *     in their registration callback.
  *
  * @package BuddyBoss\Core\Administration
@@ -87,7 +87,7 @@ require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
  *                      (avoids re-running third-party callbacks N+1 times).
  *
  * Note: parsed-DOMXPath caching used to live here too — it now lives inside
- * `bb_legacy_get_xpath()` (in the shared utils file) as a module-level
+ * `bboss_legacy_get_xpath()` (in the shared utils file) as a module-level
  * static, so all component bridges share one parse per HTML hash without
  * having to coordinate state.
  *
@@ -95,7 +95,7 @@ require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
  *
  * @return array Reference to mutable state array.
  */
-function &bb_legacy_groups_bridge_state() {
+function &bboss_legacy_groups_bridge_state() {
 	static $state = null;
 	if ( null === $state ) {
 		$state = array(
@@ -117,10 +117,10 @@ function &bb_legacy_groups_bridge_state() {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier ('groups').
  */
-function bb_legacy_groups_meta_bridge_register( $registry, $component ) {
+function bboss_legacy_groups_meta_bridge_register( $registry, $component ) {
 	if ( 'groups' !== $component ) {
 		return;
 	}
@@ -140,7 +140,7 @@ function bb_legacy_groups_meta_bridge_register( $registry, $component ) {
 
 	$in_bridge = true;
 	try {
-		bb_legacy_groups_meta_bridge_register_inner( $registry, $component );
+		bboss_legacy_groups_meta_bridge_register_inner( $registry, $component );
 	} finally {
 		$in_bridge = false;
 	}
@@ -152,10 +152,10 @@ add_action( 'bb_register_groups_meta_fields', 'bb_legacy_groups_meta_bridge_regi
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
  */
-function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
+function bboss_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
 	global $wp_meta_boxes;
 
 	// Self-bootstrap. The React group GET handler (bb_admin_get_group) fires
@@ -227,7 +227,7 @@ function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
 		}
 	}
 
-	$state = &bb_legacy_groups_bridge_state();
+	$state = &bboss_legacy_groups_bridge_state();
 	$order = 5000;
 
 	// Cast to array — `$wp_meta_boxes[ $screen ]` is normally a nested-array
@@ -245,7 +245,7 @@ function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
 					continue;
 				}
 
-				bb_legacy_groups_bridge_box( $registry, $component, $box, $order );
+				bboss_legacy_groups_bridge_box( $registry, $component, $box, $order );
 
 				// Track this slug so the save loop knows we surfaced its fields
 				// (used to avoid double-saving when bp_group_admin_edit_after
@@ -266,21 +266,21 @@ function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param BBoss_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
  * @param array                        $box       Metabox descriptor from $wp_meta_boxes.
  * @param int                          $order     Order counter (passed by reference).
  */
-function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
+function bboss_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 	// Version the cache key with BP_PLATFORM_VERSION so a Platform upgrade that
 	// changes parser behaviour or input descriptors invalidates stale entries
 	// instead of returning the previous version's parse.
-	$version   = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+	$version   = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 	$cache_key = 'bb_legacy_box_inputs_' . md5( $box['id'] . '|' . $version );
 	$inputs    = get_transient( $cache_key );
 
 	if ( ! is_array( $inputs ) ) {
-		$html = bb_legacy_capture_box_html( $box, null );
+		$html = bboss_legacy_capture_box_html( $box, null );
 		if ( ! $html ) {
 			// Cache the negative result briefly so we don't re-capture every
 			// request when a box's render is empty / errors out.
@@ -288,7 +288,7 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 			return;
 		}
 
-		$inputs = bb_legacy_parse_box_inputs( $html );
+		$inputs = bboss_legacy_parse_box_inputs( $html );
 		set_transient( $cache_key, $inputs, HOUR_IN_SECONDS );
 	}
 
@@ -303,7 +303,7 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 
 		// Block dangerous $_POST keys at registration so they never become
 		// editable bridge fields (see bb_legacy_is_safe_post_key()).
-		if ( ! bb_legacy_is_safe_post_key( $input['name'] ) ) {
+		if ( ! bboss_legacy_is_safe_post_key( $input['name'] ) ) {
 			continue;
 		}
 
@@ -333,7 +333,7 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 		$raw_label       = $input['label'] ? $input['label'] : $box['title'];
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
 
-		$sanitize_cb = bb_legacy_resolve_sanitize_callback( $input['type'] );
+		$sanitize_cb = bboss_legacy_resolve_sanitize_callback( $input['type'] );
 
 		$args = array(
 			// Labels are surfaced as plain-text in the React modal, descriptions
@@ -353,11 +353,11 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 			'field_group_label' => isset( $box['title'] ) && '' !== (string) $box['title']
 				? (string) $box['title']
 				: ( isset( $box['id'] ) ? (string) $box['id'] : '' ),
-			'get_value'         => bb_legacy_make_get_value( $box, $input['name'], $input['type'] ),
+			'get_value'         => bboss_legacy_make_get_value( $box, $input['name'], $input['type'] ),
 			'save_value'        => function ( $group, $value ) use ( $input ) {
 				// Defense in depth: verify safety again at save time in case
 				// the registration-time check was bypassed.
-				if ( ! bb_legacy_is_safe_post_key( $input['name'] ) ) {
+				if ( ! bboss_legacy_is_safe_post_key( $input['name'] ) ) {
 					return;
 				}
 				// Don't clobber a key that's already set — if React (or any
@@ -380,13 +380,13 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 
 		if ( 'select' === $input['type'] || 'toggle_list' === $input['type'] ) {
 			$args['get_options'] = function ( $group ) use ( $box, $input ) {
-				$html = bb_legacy_capture_box_html( $box, $group );
-				return bb_legacy_extract_select_options( $html, $input['name'] );
+				$html = bboss_legacy_capture_box_html( $box, $group );
+				return bboss_legacy_extract_select_options( $html, $input['name'] );
 			};
 		} elseif ( 'radio' === $input['type'] ) {
 			$args['get_options'] = function ( $group ) use ( $box, $input ) {
-				$html = bb_legacy_capture_box_html( $box, $group );
-				return bb_legacy_extract_radio_options( $html, $input['name'] );
+				$html = bboss_legacy_capture_box_html( $box, $group );
+				return bboss_legacy_extract_radio_options( $html, $input['name'] );
 			};
 		}
 
@@ -405,15 +405,15 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
  * @since BuddyBoss 3.0.0
  *
  * @param array                $box   Metabox descriptor.
- * @param BP_Groups_Group|null $group Group object for re-render, or null.
+ * @param BBoss_Groups_Group|null $group Group object for re-render, or null.
  * @return string Captured HTML or empty string on error.
  */
-function bb_legacy_capture_box_html( $box, $group ) {
+function bboss_legacy_capture_box_html( $box, $group ) {
 	if ( empty( $box['callback'] ) || empty( $box['id'] ) ) {
 		return '';
 	}
 
-	$state     = &bb_legacy_groups_bridge_state();
+	$state     = &bboss_legacy_groups_bridge_state();
 	$group_id  = ( is_object( $group ) && isset( $group->id ) ) ? (int) $group->id : 0;
 	$cache_key = $box['id'] . '|' . $group_id;
 	if ( isset( $state['html_cache'][ $cache_key ] ) ) {
@@ -446,7 +446,7 @@ function bb_legacy_capture_box_html( $box, $group ) {
 
 	$result = '';
 	try {
-		$result = bb_legacy_with_wp_die_safety(
+		$result = bboss_legacy_with_wp_die_safety(
 			function () use ( $box, $group ) {
 				ob_start();
 				try {
@@ -469,7 +469,7 @@ function bb_legacy_capture_box_html( $box, $group ) {
 		}
 	}
 
-	if ( strlen( $result ) > BB_LEGACY_BRIDGE_MAX_HTML ) {
+	if ( strlen( $result ) > BBOSS_LEGACY_BRIDGE_MAX_HTML ) {
 		// Reject suspiciously large output — defense against billion-laughs
 		// / quadratic-blowup payloads from malicious metabox HTML.
 		$result = '';
@@ -490,19 +490,19 @@ function bb_legacy_capture_box_html( $box, $group ) {
  * @param string $type Detected field type.
  * @return callable get_value callback.
  */
-function bb_legacy_make_get_value( $box, $name, $type ) {
+function bboss_legacy_make_get_value( $box, $name, $type ) {
 	return function ( $group ) use ( $box, $name, $type ) {
-		$html = bb_legacy_capture_box_html( $box, $group );
+		$html = bboss_legacy_capture_box_html( $box, $group );
 		if ( ! $html ) {
 			return ( 'checkbox' === $type ) ? '0' : '';
 		}
-		return bb_legacy_extract_input_value( $html, $name, $type );
+		return bboss_legacy_extract_input_value( $html, $name, $type );
 	};
 }
 
 /**
  * After the React save populates $_POST via the registry, manually call each
- * registered BP_Group_Extension's settings_screen_save() — Platform
+ * registered BBoss_Group_Extension's settings_screen_save() — Platform
  * deliberately removed the auto-call (see class-bp-group-extension.php).
  *
  * Skips extensions whose slug WASN'T bridged (those rely on their own
@@ -513,19 +513,19 @@ function bb_legacy_make_get_value( $box, $name, $type ) {
  * @since BuddyBoss 3.0.0
  *
  * @param int             $group_id Saved group ID.
- * @param BP_Groups_Group $group    Saved group object (unused — signature
+ * @param BBoss_Groups_Group $group    Saved group object (unused — signature
  *                                  imposed by the bb_admin_after_save_group
  *                                  action).
  */
-function bb_legacy_groups_run_extension_saves( $group_id, $group ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed,Generic.CodeAnalysis.UnusedFunctionParameter.Found
-	$state         = &bb_legacy_groups_bridge_state();
+function bboss_legacy_groups_run_extension_saves( $group_id, $group ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed,Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	$state         = &bboss_legacy_groups_bridge_state();
 	$bridged_slugs = $state['bridged_slugs'];
 
 	if ( empty( $bridged_slugs ) ) {
 		return;
 	}
 
-	foreach ( bb_legacy_get_registered_group_extensions() as $extension ) {
+	foreach ( bboss_legacy_get_registered_group_extensions() as $extension ) {
 		if ( ! method_exists( $extension, 'is_screen_enabled' ) || ! $extension->is_screen_enabled( 'admin' ) ) {
 			continue;
 		}
@@ -555,7 +555,7 @@ function bb_legacy_groups_run_extension_saves( $group_id, $group ) { // phpcs:ig
 				continue;
 			}
 
-			bb_legacy_with_wp_die_safety(
+			bboss_legacy_with_wp_die_safety(
 				function () use ( $callback, $group_id ) {
 					call_user_func( $callback, $group_id );
 				}
@@ -578,14 +578,14 @@ function bb_legacy_groups_run_extension_saves( $group_id, $group ) { // phpcs:ig
 add_action( 'bb_admin_after_save_group', 'bb_legacy_groups_run_extension_saves', 5, 2 );
 
 /**
- * Discover registered BP_Group_Extension instances by scanning listeners on
+ * Discover registered BBoss_Group_Extension instances by scanning listeners on
  * the bp_groups_admin_meta_boxes action.
  *
  * @since BuddyBoss 3.0.0
  *
- * @return BP_Group_Extension[] List of registered extension instances.
+ * @return BBoss_Group_Extension[] List of registered extension instances.
  */
-function bb_legacy_get_registered_group_extensions() {
+function bboss_legacy_get_registered_group_extensions() {
 	global $wp_filter;
 	$out = array();
 
@@ -602,7 +602,7 @@ function bb_legacy_get_registered_group_extensions() {
 			if (
 				is_array( $fn )
 				&& isset( $fn[0], $fn[1] )
-				&& $fn[0] instanceof BP_Group_Extension
+				&& $fn[0] instanceof BBoss_Group_Extension
 				&& '_meta_box_display_callback' === $fn[1]
 			) {
 				$out[] = $fn[0];
@@ -626,11 +626,11 @@ function bb_legacy_get_registered_group_extensions() {
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_legacy_groups_clear_bridge_cache() {
+function bboss_legacy_groups_clear_bridge_cache() {
 	if ( wp_using_ext_object_cache() ) {
 		// Object-cache path: iterate known box IDs and delete per key.
 		global $wp_meta_boxes;
-		$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+		$version = defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0';
 		$screens = isset( $wp_meta_boxes ) && is_array( $wp_meta_boxes ) ? $wp_meta_boxes : array();
 		foreach ( $screens as $contexts ) {
 			if ( ! is_array( $contexts ) ) {
@@ -684,7 +684,7 @@ add_action( 'switch_theme', 'bb_legacy_groups_clear_bridge_cache' );
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_legacy_groups_auto_enqueue_widget_scripts() {
+function bboss_legacy_groups_auto_enqueue_widget_scripts() {
 	static $did_enqueue = false;
 	if ( $did_enqueue ) {
 		return;
@@ -726,7 +726,7 @@ function bb_legacy_groups_auto_enqueue_widget_scripts() {
 				if ( ! is_array( $box ) || empty( $box['callback'] ) ) {
 					continue;
 				}
-				$combined_html .= bb_legacy_capture_box_html( $box, null );
+				$combined_html .= bboss_legacy_capture_box_html( $box, null );
 			}
 		}
 	}

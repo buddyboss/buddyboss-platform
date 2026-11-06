@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_screen_sent_invite() {
+function bboss_invites_screen_sent_invite() {
 
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
@@ -32,7 +32,7 @@ function bp_invites_screen_sent_invite() {
 	 *
 	 * @param string $value Path to a users Invites > Invite by Email page template.
 	 */
-	bp_core_load_template( apply_filters( 'bp_invites_screen_sent_invite', 'members/single/plugins' ) );
+	bboss_core_load_template( apply_filters( 'bp_invites_screen_sent_invite', 'members/single/plugins' ) );
 }
 
 /**
@@ -40,6 +40,6 @@ function bp_invites_screen_sent_invite() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_invites_sent_invite_screen() {
-	bp_get_template_part( 'members/single/invites' );
+function bboss_invites_sent_invite_screen() {
+	bboss_get_template_part( 'members/single/invites' );
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Export API: BP_Settings_Export class
+ * Export API: BBoss_Settings_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BP_Settings_Export
+ * Class BBoss_Settings_Export
  */
-final class BP_Settings_Export extends BP_Export {
+final class BBoss_Settings_Export extends BBoss_Export {
 
 	/**
 	 * Get the instance of this class.
@@ -25,7 +25,7 @@ final class BP_Settings_Export extends BP_Export {
 		static $instance = null;
 
 		if ( null === $instance ) {
-			$instance = new BP_Settings_Export();
+			$instance = new BBoss_Settings_Export();
 			$instance->setup( 'bp_settings', __( 'Settings', 'buddyboss' ) );
 		}
 
@@ -65,7 +65,7 @@ final class BP_Settings_Export extends BP_Export {
 
 		foreach ( $notification_settings as $noti_key => $notification_label ) {
 
-			$value = bp_get_user_meta( $user->ID, $noti_key, true );
+			$value = bboss_get_user_meta( $user->ID, $noti_key, true );
 
 			if ( empty( $value ) || 'yes' === $value ) {
 				if ( 'yes' === $value ) {
@@ -86,7 +86,7 @@ final class BP_Settings_Export extends BP_Export {
 
 		$notification_data = apply_filters( 'buddyboss_bp_gdpr_notification_settings_after_data_prepare', $notification_data, $user );
 
-		$data = bb_core_notification_preferences_data();
+		$data = bboss_core_notification_preferences_data();
 
 		$export_items[] = array(
 			'group_id'    => $group_id . '_notification',
@@ -126,7 +126,7 @@ final class BP_Settings_Export extends BP_Export {
 		$notification_settings = $this->get_notification_settings();
 
 		foreach ( $notification_settings as $noti_key => $notification_label ) {
-			bp_delete_user_meta( $user->ID, $noti_key );
+			bboss_delete_user_meta( $user->ID, $noti_key );
 		}
 
 		/**
@@ -152,18 +152,18 @@ final class BP_Settings_Export extends BP_Export {
 	public function get_notification_settings() {
 		$notification_settings = array();
 
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$notification_settings['notification_activity_new_mention'] = esc_html__( 'A member mentions you in an update using "@name"', 'buddyboss' );
 			$notification_settings['notification_activity_new_reply']   = esc_html__( 'A member replies to an update or comment you\'ve posted', 'buddyboss' );
 		}
-		if ( bp_is_active( 'messages' ) ) {
+		if ( bboss_is_active( 'messages' ) ) {
 			$notification_settings['notification_messages_new_message'] = esc_html__( 'A member sends you a new message	', 'buddyboss' );
 		}
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 			$notification_settings['notification_friends_friendship_request']  = esc_html__( 'A member invites you to connect', 'buddyboss' );
 			$notification_settings['notification_friends_friendship_accepted'] = esc_html__( 'A member accepts your connection request', 'buddyboss' );
 		}
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bboss_is_active( 'groups' ) ) {
 			$notification_settings['notification_groups_invite']                = esc_html__( 'A member invites you to join a group', 'buddyboss' );
 			$notification_settings['notification_groups_group_updated']         = esc_html__( 'Group information is updated', 'buddyboss' );
 			$notification_settings['notification_groups_admin_promotion']       = esc_html__( 'You are promoted to a group organizer or moderator', 'buddyboss' );
@@ -172,7 +172,7 @@ final class BP_Settings_Export extends BP_Export {
 			$notification_settings['notification_group_messages_new_message']   = esc_html__( 'Message from Group Send Message', 'buddyboss' );
 		}
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bboss_is_active( 'forums' ) ) {
 			$notification_settings['notification_forums_following_reply'] = esc_html__( 'A member replies to a discussion you are subscribed to', 'buddyboss' );
 			$notification_settings['notification_forums_following_topic'] = esc_html__( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' );
 		}

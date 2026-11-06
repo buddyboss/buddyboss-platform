@@ -14,20 +14,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_group_admin_requests() {
-	$bp = buddypress();
+function bboss_groups_screen_group_admin_requests() {
+	$bp = bboss();
 
-	if ( 'membership-requests' != bp_get_group_current_admin_tab() ) {
+	if ( 'membership-requests' != bboss_get_group_current_admin_tab() ) {
 		return false;
 	}
 
-	if ( ! bp_is_item_admin() || ( 'public' == $bp->groups->current_group->status ) ) {
+	if ( ! bboss_is_item_admin() || ( 'public' == $bp->groups->current_group->status ) ) {
 		return false;
 	}
 
 	$request_action = isset( $_GET['action'] ) ? $_GET['action'] : false;
 	$user_id        = isset( $_GET['user_id'] ) ? (int) $_GET['user_id'] : false;
-	$group_id       = bp_get_current_group_id();
+	$group_id       = bboss_get_current_group_id();
 
 	if ( $request_action && $user_id && $group_id ) {
 		if ( 'accept' === $request_action ) {
@@ -38,10 +38,10 @@ function groups_screen_group_admin_requests() {
 			}
 
 			// Accept the membership request.
-			if ( ! groups_accept_membership_request( false, $user_id, $group_id ) ) {
-				bp_core_add_message( __( 'There was an error accepting the membership request. Please try again.', 'buddyboss' ), 'error' );
+			if ( ! bboss_groups_accept_membership_request( false, $user_id, $group_id ) ) {
+				bboss_core_add_message( __( 'There was an error accepting the membership request. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bp_core_add_message( __( 'Group membership request accepted', 'buddyboss' ) );
+				bboss_core_add_message( __( 'Group membership request accepted', 'buddyboss' ) );
 			}
 
 		} elseif ( 'reject' === $request_action ) {
@@ -51,15 +51,15 @@ function groups_screen_group_admin_requests() {
 			}
 
 			// Reject the membership request.
-			if ( ! groups_reject_membership_request( false, $user_id, $group_id ) ) {
-				bp_core_add_message( __( 'There was an error rejecting the membership request. Please try again.', 'buddyboss' ), 'error' );
+			if ( ! bboss_groups_reject_membership_request( false, $user_id, $group_id ) ) {
+				bboss_core_add_message( __( 'There was an error rejecting the membership request. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bp_core_add_message( __( 'Group membership request rejected', 'buddyboss' ) );
+				bboss_core_add_message( __( 'Group membership request rejected', 'buddyboss' ) );
 			}
 		}
 
 		// Was the member added to the group?
-		$membership_id = groups_is_user_member( $user_id, $group_id );
+		$membership_id = bboss_groups_is_user_member( $user_id, $group_id );
 
 		/**
 		 * Fires before the redirect if a group membership request has been handled.
@@ -73,7 +73,7 @@ function groups_screen_group_admin_requests() {
 		 * @param int    $group_id       The ID of the requested group.
 		 */
 		do_action( 'groups_group_request_managed', $bp->groups->current_group->id, $request_action, $membership_id, $user_id, $group_id );
-		bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'admin/membership-requests/' );
+		bboss_core_redirect( bboss_get_group_permalink( bboss_groups_get_current_group() ) . 'admin/membership-requests/' );
 	}
 
 	/**
@@ -92,6 +92,6 @@ function groups_screen_group_admin_requests() {
 	 *
 	 * @param string $value Path to a group's membership request template.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_group_admin_requests', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_group_admin_requests', 'groups/single/home' ) );
 }
 add_action( 'bp_screens', 'groups_screen_group_admin_requests' );

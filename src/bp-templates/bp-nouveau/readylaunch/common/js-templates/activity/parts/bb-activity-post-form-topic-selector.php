@@ -3,7 +3,7 @@
  * The template for displaying topic selector in activity post form.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-topic-selector-list">
 			<ul>
 				<?php
-				if ( ! bb_is_activity_topic_required() ) {
+				if ( ! bboss_is_activity_topic_required() ) {
 				?>
 					<li>
 						<a href="#" data-topic-id="">

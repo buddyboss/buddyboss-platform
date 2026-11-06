@@ -28,12 +28,12 @@ defined( 'ABSPATH' ) || exit;
 				<div class="ac-form-placeholder">
 					<div class="bp-ac-form-container">
 						<div class="ac-reply-avatar">
-							<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
+							<?php bboss_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
 						</div>
 						<div class="ac-reply-content">
 							<div class="ac-reply-toolbar">
 								<?php
-								if ( bp_is_active( 'media' ) ) {
+								if ( bboss_is_active( 'media' ) ) {
 									?>
 									<div class="post-elements-buttons-item post-media media-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 										</a>
 									</div>
 
-									<?php if ( bp_is_active( 'video' ) ) : ?>
+									<?php if ( bboss_is_active( 'video' ) ) : ?>
 									<div class="post-elements-buttons-item post-video video-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-video"></i>
@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 									</div>
 									<?php endif; ?>
 
-									<?php if ( bp_is_active( 'document' ) ) : ?>
+									<?php if ( bboss_is_active( 'document' ) ) : ?>
 									<div class="post-elements-buttons-item post-media document-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-attach"></i>

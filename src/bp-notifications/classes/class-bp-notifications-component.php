@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Extends the component class to set up the Notifications component.
  */
 #[\AllowDynamicProperties]
-class BP_Notifications_Component extends BP_Component {
+class BBoss_Notifications_Component extends BBoss_Component {
 
 	/**
 	 * Start the notifications component creation process.
@@ -26,7 +26,7 @@ class BP_Notifications_Component extends BP_Component {
 		parent::start(
 			'notifications',
 			'Notifications',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30,
 			)
@@ -38,9 +38,9 @@ class BP_Notifications_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Component::includes() for a description of arguments.
+	 * @see BBoss_Component::includes() for a description of arguments.
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
+	 * @param array $includes See BBoss_Component::includes() for a description.
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
@@ -67,20 +67,20 @@ class BP_Notifications_Component extends BP_Component {
 		}
 
 		// Bail if not on a notifications page or logged in.
-		if ( ! bp_is_user_notifications() || ! is_user_logged_in() ) {
+		if ( ! bboss_is_user_notifications() || ! is_user_logged_in() ) {
 			return;
 		}
 
 		// Actions.
-		if ( bp_is_post_request() ) {
+		if ( bboss_is_post_request() ) {
 			require $this->path . 'bp-notifications/actions/bulk-manage.php';
-		} elseif ( bp_is_get_request() ) {
+		} elseif ( bboss_is_get_request() ) {
 			require $this->path . 'bp-notifications/actions/delete.php';
 		}
 
 		// Screens.
 		require $this->path . 'bp-notifications/screens/unread.php';
-		if ( bp_is_current_action( 'read' ) ) {
+		if ( bboss_is_current_action( 'read' ) ) {
 			require $this->path . 'bp-notifications/screens/read.php';
 		}
 	}
@@ -90,16 +90,16 @@ class BP_Notifications_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Component::setup_globals() for a description of arguments.
+	 * @see BBoss_Component::setup_globals() for a description of arguments.
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
+	 * @param array $args See BBoss_Component::setup_globals() for a description.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_NOTIFICATIONS_SLUG' ) ) {
-			define( 'BP_NOTIFICATIONS_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_NOTIFICATIONS_SLUG' ) ) {
+			define( 'BBOSS_NOTIFICATIONS_SLUG', $this->id );
 		}
 
 		// Global tables for the notifications component.
@@ -116,7 +116,7 @@ class BP_Notifications_Component extends BP_Component {
 		// All globals for the notifications component.
 		// Note that global_tables is included in this array.
 		$args = array(
-			'slug'          => BP_NOTIFICATIONS_SLUG,
+			'slug'          => BBOSS_NOTIFICATIONS_SLUG,
 			'has_directory' => false,
 			'search_string' => __( 'Search Notifications...', 'buddyboss' ),
 			'global_tables' => $global_tables,
@@ -131,37 +131,37 @@ class BP_Notifications_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
+	 * @see BBoss_Component::setup_nav() for a description of arguments.
 	 *
-	 * @param array $main_nav Optional. See BP_Component::setup_nav() for
+	 * @param array $main_nav Optional. See BBoss_Component::setup_nav() for
 	 *                        description.
-	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for
+	 * @param array $sub_nav  Optional. See BBoss_Component::setup_nav() for
 	 *                        description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			return;
 		}
 
-		$access             = bp_core_can_edit_settings();
-		$slug               = bp_get_notifications_slug();
+		$access             = bboss_core_can_edit_settings();
+		$slug               = bboss_get_notifications_slug();
 		$notifications_link = trailingslashit( $user_domain . $slug );
 
 		// Only grab count if we're on a user page and current user has access.
-		if ( bp_is_user() && bp_user_has_access() ) {
-			$count    = bp_notifications_get_unread_notification_count( bp_displayed_user_id() );
+		if ( bboss_is_user() && bboss_user_has_access() ) {
+			$count    = bboss_notifications_get_unread_notification_count( bboss_displayed_user_id() );
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
 			$nav_name = __( 'Notifications', 'buddyboss' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
-				bp_core_number_format( $count )
+				bboss_core_number_format( $count )
 			);
 		} else {
 			$nav_name = __( 'Notifications', 'buddyboss' );
@@ -173,7 +173,7 @@ class BP_Notifications_Component extends BP_Component {
 			'slug'                    => $slug,
 			'position'                => 30,
 			'show_for_displayed_user' => $access,
-			'screen_function'         => 'bp_notifications_screen_unread',
+			'screen_function'         => 'bboss_notifications_screen_unread',
 			'default_subnav_slug'     => 'unread',
 			'item_css_id'             => $this->id,
 		);
@@ -184,7 +184,7 @@ class BP_Notifications_Component extends BP_Component {
 			'slug'            => 'unread',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_notifications_screen_unread',
+			'screen_function' => 'bboss_notifications_screen_unread',
 			'position'        => 10,
 			'item_css_id'     => 'notifications-my-notifications',
 			'user_has_access' => $access,
@@ -195,7 +195,7 @@ class BP_Notifications_Component extends BP_Component {
 			'slug'            => 'read',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_notifications_screen_read',
+			'screen_function' => 'bboss_notifications_screen_read',
 			'position'        => 20,
 			'user_has_access' => $access,
 		);
@@ -208,10 +208,10 @@ class BP_Notifications_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 * @see BBoss_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
 	 *
-	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a
+	 * @param array $wp_admin_nav See BBoss_Component::setup_admin_bar() for a
 	 *                            description.
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
@@ -220,14 +220,14 @@ class BP_Notifications_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables.
-			$notifications_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
+			$notifications_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_notifications_slug() );
 
 			$title  = __( 'Notifications', 'buddyboss' );
 			$unread = __( 'Unread', 'buddyboss' );
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => $title,
 				'href'   => $notifications_link,
@@ -263,21 +263,21 @@ class BP_Notifications_Component extends BP_Component {
 	public function setup_title() {
 
 		// Adjust title.
-		if ( bp_is_notifications_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_notifications_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() ) {
+			if ( bboss_is_my_profile() ) {
 				$bp->bp_options_title = __( 'Notifications', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
-						'item_id' => bp_displayed_user_id(),
+						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
-				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 			}
 		}
 
@@ -308,12 +308,12 @@ class BP_Notifications_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array( 'BP_REST_Notifications_Endpoint' ) );
+		parent::rest_api_init( array( 'BBoss_REST_Notifications_Endpoint' ) );
 	}
 
 	/**
@@ -321,7 +321,7 @@ class BP_Notifications_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

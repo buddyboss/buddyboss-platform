@@ -19,9 +19,9 @@ class BP_Tests_Routing_Activity extends BP_UnitTestCase {
 	}
 
 	function test_activity_directory() {
-		$this->go_to( bp_get_activity_directory_permalink() );
+		$this->go_to( bboss_get_activity_directory_permalink() );
         
-        $root_slug = bp_get_activity_root_slug();
+        $root_slug = bboss_get_activity_root_slug();
         
         /**
          * Since 'news-feed' is the default slug now, instead of 'activity', this will never evaluate to be same as current component, which is still 'activity'.
@@ -31,49 +31,49 @@ class BP_Tests_Routing_Activity extends BP_UnitTestCase {
             $root_slug = 'activity';
         }
         
-		$this->assertEquals( $root_slug, bp_current_component() );
+		$this->assertEquals( $root_slug, bboss_current_component() );
 	}
 
 	/**
-	 * Can't test using bp_activity_get_permalink(); see bp_activity_action_permalink_router().
+	 * Can't test using bboss_activity_get_permalink(); see bboss_activity_action_permalink_router().
 	 */
 	function test_activity_permalink() {
 		$a = self::factory()->activity->create();
 		$activity = self::factory()->activity->get_object_by_id( $a );
 
-		$url = bp_core_get_user_domain( $activity->user_id ) . bp_get_activity_slug() . '/' . $activity->id . '/';
+		$url = bboss_core_get_user_domain( $activity->user_id ) . bboss_get_activity_slug() . '/' . $activity->id . '/';
 		$this->go_to( $url );
-		$this->assertTrue( bp_is_single_activity() );
+		$this->assertTrue( bboss_is_single_activity() );
 	}
 
 	function test_member_activity() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_activity_slug() );
-		$this->assertTrue( bp_is_user_activity() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_activity_slug() );
+		$this->assertTrue( bboss_is_user_activity() );
 	}
 
 	function test_member_activity_mentions() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_activity_slug() . '/mentions'  );
-		$this->assertTrue( bp_is_user_activity() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_activity_slug() . '/mentions'  );
+		$this->assertTrue( bboss_is_user_activity() );
 	}
 
 	function test_member_activity_favourites() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_activity_slug() . '/favorites'  );
-		$this->assertTrue( bp_is_user_activity() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_activity_slug() . '/favorites'  );
+		$this->assertTrue( bboss_is_user_activity() );
 	}
 
 	/**
 	 * @group friends
 	 */
 	function test_member_activity_friends() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_activity_slug() . '/' . bp_get_friends_slug() );
-		$this->assertTrue( bp_is_user_friends_activity() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_activity_slug() . '/' . bboss_get_friends_slug() );
+		$this->assertTrue( bboss_is_user_friends_activity() );
 	}
 
 	/**
 	 * @group groups
 	 */
 	function test_member_activity_groups() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_activity_slug() . '/' . bp_get_groups_slug() );
-		$this->assertTrue( bp_is_user_groups_activity() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_activity_slug() . '/' . bboss_get_groups_slug() );
+		$this->assertTrue( bboss_is_user_groups_activity() );
 	}
 }

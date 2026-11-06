@@ -11,9 +11,9 @@
  *   1. The current user can manage the community (`bp_moderate`).
  *   2. The feature's code is NOT loaded — videos/documents: nothing claims the
  *      component through the `bb_component_directory_available` filter;
- *      GIFs: {@see bb_giphy_provider_available()} is false.
+ *      GIFs: {@see bboss_giphy_provider_available()} is false.
  *   3. On multisite, the current site is the BuddyBoss root blog.
- *   4. The site has stored content of that type (videos in `bp_media` with type
+ *   4. The site has stored content of that type (videos in `BBoss_Media` with type
  *      `video`, rows in `bp_document`, or `_gif_data` meta on activity, messages
  *      or forum posts).
  *
@@ -34,14 +34,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.7.0
  */
-const BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN = 'buddyboss-addons/buddyboss-addons.php';
+const BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN = 'buddyboss-addons/buddyboss-addons.php';
 
 /**
  * User meta key holding the time the notice was last dismissed.
  *
  * @since BuddyBoss 3.7.0
  */
-const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_notice_dismissed';
+const BBOSS_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_notice_dismissed';
 
 /**
  * Count the stored videos, documents, GIFs and group subscriptions on this site.
@@ -54,7 +54,7 @@ const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_n
  *
  * @return array{video: int, document: int, gif: int, group_subscription: int} Number of stored items per feature.
  */
-function bb_moved_media_features_get_stored_counts() {
+function bboss_moved_media_features_get_stored_counts() {
 	$counts = get_transient( 'bb_moved_media_features_stored_counts' );
 
 	if ( is_array( $counts ) && isset( $counts['video'], $counts['document'], $counts['gif'], $counts['group_subscription'] ) ) {
@@ -63,7 +63,7 @@ function bb_moved_media_features_get_stored_counts() {
 
 	global $wpdb;
 
-	$prefix = bp_core_get_table_prefix();
+	$prefix = bboss_core_get_table_prefix();
 	$counts = array(
 		'video'              => 0,
 		'document'           => 0,
@@ -71,11 +71,11 @@ function bb_moved_media_features_get_stored_counts() {
 		'group_subscription' => 0,
 	);
 
-	if ( bb_moved_media_features_table_exists( $prefix . 'bp_media' ) ) {
+	if ( bboss_moved_media_features_table_exists( $prefix . 'bp_media' ) ) {
 		$counts['video'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$prefix}bp_media WHERE type = %s", 'video' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted BP table name; counts are cached in a transient.
 	}
 
-	if ( bb_moved_media_features_table_exists( $prefix . 'bp_document' ) ) {
+	if ( bboss_moved_media_features_table_exists( $prefix . 'bp_document' ) ) {
 		$counts['document'] = (int) $wpdb->get_var( "SELECT COUNT(id) FROM {$prefix}bp_document" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted BP table name; counts are cached in a transient.
 	}
 
@@ -84,21 +84,21 @@ function bb_moved_media_features_get_stored_counts() {
 	// rows are skipped and forum GIFs are counted once, from the post meta.
 	$activity_meta_table = $prefix . 'bp_activity_meta';
 	$activity_table      = $prefix . 'bp_activity';
-	if ( bb_moved_media_features_table_exists( $activity_meta_table ) && bb_moved_media_features_table_exists( $activity_table ) ) {
+	if ( bboss_moved_media_features_table_exists( $activity_meta_table ) && bboss_moved_media_features_table_exists( $activity_table ) ) {
 		$counts['gif'] += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(m.id) FROM {$activity_meta_table} m INNER JOIN {$activity_table} a ON a.id = m.activity_id WHERE m.meta_key = %s AND a.type NOT IN ( 'bbp_topic_create', 'bbp_reply_create' )", '_gif_data' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted BP table names; counts are cached in a transient.
 	}
 
 	// Forums live on the BuddyBoss root blog, so read its post meta table.
-	$postmeta_table = $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'postmeta';
+	$postmeta_table = $wpdb->get_blog_prefix( bboss_get_root_blog_id() ) . 'postmeta';
 	foreach ( array( $prefix . 'bp_messages_meta', $postmeta_table ) as $meta_table ) {
-		if ( bb_moved_media_features_table_exists( $meta_table ) ) {
+		if ( bboss_moved_media_features_table_exists( $meta_table ) ) {
 			$counts['gif'] += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$meta_table} WHERE meta_key = %s", '_gif_data' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted table name; counts are cached in a transient.
 		}
 	}
 
 	// Group subscriptions live in the network-wide subscriptions table.
 	$subscription_table = $wpdb->base_prefix . 'bb_notifications_subscriptions';
-	if ( bb_moved_media_features_table_exists( $subscription_table ) ) {
+	if ( bboss_moved_media_features_table_exists( $subscription_table ) ) {
 		$counts['group_subscription'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$subscription_table} WHERE type = %s AND status = %d", 'group', 1 ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted table name; counts are cached in a transient.
 	}
 
@@ -118,7 +118,7 @@ function bb_moved_media_features_get_stored_counts() {
  *
  * @return void
  */
-function bb_moved_media_features_clear_stored_counts() {
+function bboss_moved_media_features_clear_stored_counts() {
 	delete_transient( 'bb_moved_media_features_stored_counts' );
 }
 add_action( 'activated_plugin', 'bb_moved_media_features_clear_stored_counts' );
@@ -135,7 +135,7 @@ add_action( 'update_option_bp-active-components', 'bb_moved_media_features_clear
  *
  * @return bool
  */
-function bb_moved_media_features_table_exists( $table ) {
+function bboss_moved_media_features_table_exists( $table ) {
 	global $wpdb;
 
 	return $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -149,24 +149,24 @@ function bb_moved_media_features_table_exists( $table ) {
  * @return array<string, int> Feature key ('video', 'document', 'gif', 'group_subscription') => number of
  *                            stored items, for every unavailable feature that has content.
  */
-function bb_moved_media_features_get_hidden_content() {
+function bboss_moved_media_features_get_hidden_content() {
 	// Videos and Documents need Media. With Media turned off they are hidden by the
 	// admin's own choice, and installing BuddyBoss Add-ons would not show them.
-	$media_active = bp_is_active( 'media' );
+	$media_active = bboss_is_active( 'media' );
 	$unavailable  = array(
-		'video'              => $media_active && ! bb_is_component_directory_available( 'video' ),
-		'document'           => $media_active && ! bb_is_component_directory_available( 'document' ),
-		'gif'                => function_exists( 'bb_giphy_provider_available' ) && ! bb_giphy_provider_available(),
+		'video'              => $media_active && ! bboss_is_component_directory_available( 'video' ),
+		'document'           => $media_active && ! bboss_is_component_directory_available( 'document' ),
+		'gif'                => function_exists( 'bboss_giphy_provider_available' ) && ! bboss_giphy_provider_available(),
 		// The group subscriptions module needs Groups and Notifications, like the feature did.
 		// Turned off by the admin, they are not missed.
-		'group_subscription' => bp_is_active( 'groups' ) && bp_is_active( 'notifications' ) && bp_get_option( 'bb_enable_group_subscriptions', true ) && ! did_action( 'bb_addons_group_subscription_loaded' ),
+		'group_subscription' => bboss_is_active( 'groups' ) && bboss_is_active( 'notifications' ) && bboss_get_option( 'bb_enable_group_subscriptions', true ) && ! did_action( 'bb_addons_group_subscription_loaded' ),
 	);
 
 	if ( ! in_array( true, $unavailable, true ) ) {
 		return array();
 	}
 
-	$counts = bb_moved_media_features_get_stored_counts();
+	$counts = bboss_moved_media_features_get_stored_counts();
 	$hidden = array();
 
 	foreach ( $unavailable as $feature => $is_unavailable ) {
@@ -185,16 +185,16 @@ function bb_moved_media_features_get_hidden_content() {
  *
  * @return string One of 'not_installed', 'inactive' or 'active'.
  */
-function bb_moved_media_features_get_addons_state() {
+function bboss_moved_media_features_get_addons_state() {
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 
-	if ( is_plugin_active( BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ) {
+	if ( is_plugin_active( BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ) {
 		return 'active';
 	}
 
-	if ( file_exists( WP_PLUGIN_DIR . '/' . BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ) {
+	if ( file_exists( WP_PLUGIN_DIR . '/' . BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ) {
 		return 'inactive';
 	}
 
@@ -213,14 +213,14 @@ function bb_moved_media_features_get_addons_state() {
  *
  * @return bool True when the site is entitled and that is known from local data.
  */
-function bb_moved_media_features_is_entitled_from_cache() {
-	if ( ! function_exists( 'bb_is_entitled_to_addons' ) ) {
+function bboss_moved_media_features_is_entitled_from_cache() {
+	if ( ! function_exists( 'bboss_is_entitled_to_addons' ) ) {
 		return false;
 	}
 
 	/** This filter is documented in bp-core/bp-core-update.php */
 	if ( null !== apply_filters( 'bb_pre_is_entitled_to_addons', null ) ) {
-		return bb_is_entitled_to_addons();
+		return bboss_is_entitled_to_addons();
 	}
 
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
@@ -239,7 +239,7 @@ function bb_moved_media_features_is_entitled_from_cache() {
 		return false;
 	}
 
-	return bb_is_entitled_to_addons();
+	return bboss_is_entitled_to_addons();
 }
 
 /**
@@ -251,7 +251,7 @@ function bb_moved_media_features_is_entitled_from_cache() {
  *
  * @return string
  */
-function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
+function bboss_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
 	// Builds without pricing links (the wordpress.org edition) return an empty URL;
 	// callers then leave the link out.
 	$url = '';
@@ -285,8 +285,8 @@ function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
  *
  * @return bool
  */
-function bb_moved_media_features_notice_is_snoozed() {
-	$dismissed = (int) get_user_meta( get_current_user_id(), BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META, true );
+function bboss_moved_media_features_notice_is_snoozed() {
+	$dismissed = (int) get_user_meta( get_current_user_id(), BBOSS_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META, true );
 
 	return $dismissed > 0 && ( time() - $dismissed ) < 30 * DAY_IN_SECONDS;
 }
@@ -298,18 +298,18 @@ function bb_moved_media_features_notice_is_snoozed() {
  *
  * @return void
  */
-function bb_moved_media_features_render_notice() {
-	if ( ! bp_current_user_can( 'bp_moderate' ) || bb_moved_media_features_notice_is_snoozed() ) {
+function bboss_moved_media_features_render_notice() {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) || bboss_moved_media_features_notice_is_snoozed() ) {
 		return;
 	}
 
 	// On multisite the community lives on the BuddyBoss root blog; other sites' dashboards
 	// would show its counts with the wrong plugin state.
-	if ( ! bp_is_root_blog() ) {
+	if ( ! bboss_is_root_blog() ) {
 		return;
 	}
 
-	$hidden = bb_moved_media_features_get_hidden_content();
+	$hidden = bboss_moved_media_features_get_hidden_content();
 	if ( empty( $hidden ) ) {
 		return;
 	}
@@ -337,19 +337,19 @@ function bb_moved_media_features_render_notice() {
 		$items[] = sprintf( _n( '%s group subscription', '%s group subscriptions', $hidden['group_subscription'], 'buddyboss' ), number_format_i18n( $hidden['group_subscription'] ) );
 	}
 
-	$state       = bb_moved_media_features_get_addons_state();
-	$upgrade_url = bb_moved_media_features_get_upgrade_url();
+	$state       = bboss_moved_media_features_get_addons_state();
+	$upgrade_url = bboss_moved_media_features_get_upgrade_url();
 
 	// Empty in builds without the BuddyBoss licence and add-ons screens (the wordpress.org
 	// edition); the buttons that use them are then not shown.
-	$addons_url  = bb_admin_addons_screen_url();
-	$license_url = bb_admin_license_screen_url();
+	$addons_url  = bboss_admin_addons_screen_url();
+	$license_url = bboss_admin_license_screen_url();
 
 	if ( 'inactive' === $state ) {
 		$message   = __( 'Activate the BuddyBoss Add-ons plugin to show them to your members again.', 'buddyboss' );
 		$primary   = array(
 			'label' => __( 'Activate BuddyBoss Add-ons', 'buddyboss' ),
-			'url'   => wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ), 'activate-plugin_' . BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ),
+			'url'   => wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ) ), 'activate-plugin_' . BBOSS_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN ),
 		);
 		$secondary = array(
 			'label'    => __( 'View plans', 'buddyboss' ),
@@ -358,9 +358,9 @@ function bb_moved_media_features_render_notice() {
 		);
 	} elseif (
 		'active' === $state &&
-		bb_is_addons_below_required_version() &&
+		bboss_is_addons_below_required_version() &&
 		(
-			bb_moved_media_features_is_entitled_from_cache() ||
+			bboss_moved_media_features_is_entitled_from_cache() ||
 			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
 		)
 	) {
@@ -385,7 +385,7 @@ function bb_moved_media_features_render_notice() {
 			'label' => __( 'Manage license', 'buddyboss' ),
 			'url'   => $license_url,
 		);
-	} elseif ( bb_moved_media_features_is_entitled_from_cache() ) {
+	} elseif ( bboss_moved_media_features_is_entitled_from_cache() ) {
 		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss' );
 		$primary   = array(
 			'label' => __( 'Install BuddyBoss Add-ons', 'buddyboss' ),
@@ -475,14 +475,14 @@ add_action( 'admin_notices', 'bb_moved_media_features_render_notice' );
  *
  * @return void
  */
-function bb_moved_media_features_dismiss_notice() {
+function bboss_moved_media_features_dismiss_notice() {
 	check_ajax_referer( 'bb_dismiss_moved_media_features_notice', 'nonce' );
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error();
 	}
 
-	update_user_meta( get_current_user_id(), BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META, time() );
+	update_user_meta( get_current_user_id(), BBOSS_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META, time() );
 
 	wp_send_json_success();
 }

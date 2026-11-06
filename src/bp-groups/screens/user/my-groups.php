@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_my_groups() {
+function bboss_groups_screen_my_groups() {
 
 	/**
 	 * Fires before the loading of the My Groups page.
@@ -30,5 +30,5 @@ function groups_screen_my_groups() {
 	 *
 	 * @param string $value Path to the My Groups page template to load.
 	 */
-	bp_core_load_template( apply_filters( 'groups_template_my_groups', 'members/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_template_my_groups', 'members/single/home' ) );
 }

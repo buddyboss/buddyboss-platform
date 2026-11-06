@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.3.0
  */
-class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
+class BBoss_XProfile_Field_Type_Biography extends BBoss_XProfile_Field_Type_Textarea {
 
 	/**
 	 * Constructor for the biography field type.
@@ -40,11 +40,11 @@ class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 		$this->supports_richtext = false;
 
 		/**
-		 * Fires inside __construct() method for BB_XProfile_Field_Type_Biography class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Biography class.
 		 *
 		 * @since BuddyBoss 3.3.0
 		 *
-		 * @param BB_XProfile_Field_Type_Biography $this Current instance of the
+		 * @param BBoss_XProfile_Field_Type_Biography $this Current instance of the
 		 *                                               field type biography.
 		 */
 		do_action( 'bb_xprofile_field_type_biography', $this );

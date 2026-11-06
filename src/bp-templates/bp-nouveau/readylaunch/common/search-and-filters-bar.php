@@ -6,7 +6,7 @@
  * BuddyPress components including activity, members, groups, and media.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -17,18 +17,18 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="subnav-filters filters no-ajax" id="subnav-filters">
 	<?php
-	$bp_current_component = bp_current_component();
+	$bp_current_component = bboss_current_component();
 	if (
 		'friends' !== $bp_current_component &&
 		(
 			'members' !== $bp_current_component ||
-			bp_disable_advanced_profile_search()
+			bboss_disable_advanced_profile_search()
 		) &&
-		! bp_is_directory() &&
-		! bp_is_user_activity()
+		! bboss_is_directory() &&
+		! bboss_is_user_activity()
 	) {
 		?>
-		<div class="subnav-search clearfix"><?php bp_nouveau_search_form(); ?></div>
+		<div class="subnav-search clearfix"><?php bboss_nouveau_search_form(); ?></div>
 		<?php
 	}
 
@@ -38,9 +38,9 @@ defined( 'ABSPATH' ) || exit;
 			'groups' === $bp_current_component ||
 			'friends' === $bp_current_component
 		) &&
-		! bp_is_current_action( 'requests' )
+		! bboss_is_current_action( 'requests' )
 	) {
-		bp_get_template_part( 'common/filters/grid-filters' );
+		bboss_get_template_part( 'common/filters/grid-filters' );
 	}
 
 	if (
@@ -48,35 +48,35 @@ defined( 'ABSPATH' ) || exit;
 			'members' === $bp_current_component ||
 			(
 				'groups' === $bp_current_component &&
-				! bp_is_group_single()
+				! bboss_is_group_single()
 			)
 		) ||
 		(
-			bp_is_user() &&
+			bboss_is_user() &&
 			(
-				! bp_is_current_action( 'requests' ) &&
-				! bp_is_current_action( 'mutual' )
+				! bboss_is_current_action( 'requests' ) &&
+				! bboss_is_current_action( 'mutual' )
 			)
 		)
 	) {
-		bp_get_template_part( 'common/filters/directory-filters' );
+		bboss_get_template_part( 'common/filters/directory-filters' );
 	}
 
 	if (
 		'members' === $bp_current_component ||
 		(
 			'friends' === $bp_current_component &&
-			'my-friends' === bp_current_action()
+			'my-friends' === bboss_current_action()
 		)
 	) {
-		bp_get_template_part( 'common/filters/member-filters' );
+		bboss_get_template_part( 'common/filters/member-filters' );
 	}
 
 	if (
 		'groups' === $bp_current_component &&
-		! bp_is_group_single()
+		! bboss_is_group_single()
 	) {
-		bp_get_template_part( 'common/filters/group-filters' );
+		bboss_get_template_part( 'common/filters/group-filters' );
 	}
 
 	if (
@@ -84,28 +84,28 @@ defined( 'ABSPATH' ) || exit;
 		'document' === $bp_current_component ||
 		'video' === $bp_current_component
 	) {
-		bp_get_template_part( 'common/filters/common-filters' );
+		bboss_get_template_part( 'common/filters/common-filters' );
 	}
 	?>
 </div><!-- search & filters -->
 
 <?php
-if ( bp_is_activity_directory() || bp_is_user_activity() ) {
+if ( bboss_is_activity_directory() || bboss_is_user_activity() ) {
 	?>
 	<div class="activity-head-bar">
 		<?php
 
 		// Timeline filters - ReadyLaunch uses Title Case (default labels) for both dropdown and button.
-		if ( bp_is_user_activity() ) {
-			$activity_filters = bb_get_enabled_activity_timeline_filter_options();
-			$filters_labels   = bb_get_activity_timeline_filter_options_labels();
+		if ( bboss_is_user_activity() ) {
+			$activity_filters = bboss_get_enabled_activity_timeline_filter_options();
+			$filters_labels   = bboss_get_activity_timeline_filter_options_labels();
 		} else {
-			$activity_filters = bb_get_enabled_activity_filter_options();
-			$filters_labels   = bb_get_activity_filter_options_labels();
+			$activity_filters = bboss_get_enabled_activity_filter_options();
+			$filters_labels   = bboss_get_activity_filter_options_labels();
 		}
 
 		// Allow valid options only.
-		$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+		$activity_filters = bboss_filter_activity_filter_scope_keys( $activity_filters );
 
 		arsort( $activity_filters );
 		$default_selected = key( $activity_filters );
@@ -129,7 +129,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 								if (
 									empty( $is_enabled ) ||
 									empty( $filters_labels[ $key ] ) ||
-									( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
+									( bboss_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
 								) {
 									continue;
 								}
@@ -148,7 +148,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		</div>
 
 		<?php
-		$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+		$avail_sorting_options = bboss_get_enabled_activity_sorting_options();
 		arsort( $avail_sorting_options );
 		$default_selected = key( $avail_sorting_options );
 		if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
@@ -161,7 +161,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		}
 
 		// ReadyLaunch uses Title Case (default labels) for sorting.
-		$sorting_labels = bb_get_activity_sorting_options_labels();
+		$sorting_labels = bboss_get_activity_sorting_options_labels();
 		?>
 		<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>

@@ -6,7 +6,7 @@
  * including member type filters and sorting options.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -15,7 +15,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Check profile type enable?
-$is_member_type_enabled = bp_member_type_enable_disable();
+$is_member_type_enabled = bboss_member_type_enable_disable();
 
 if ( $is_member_type_enabled ) {
 	$args = array(
@@ -27,7 +27,7 @@ if ( $is_member_type_enabled ) {
 		),
 	);
 
-	if ( bp_is_members_directory() ) {
+	if ( bboss_is_members_directory() ) {
 		$args['meta_query'][] = array(
 			'key'   => '_bp_member_type_enable_remove',
 			'value' => 0,
@@ -35,7 +35,7 @@ if ( $is_member_type_enabled ) {
 	}
 
 	// Get active member types.
-	$member_types = bp_get_active_member_types( $args );
+	$member_types = bboss_get_active_member_types( $args );
 
 	if ( ! empty( $member_types ) ) {
 		?>
@@ -49,7 +49,7 @@ if ( $is_member_type_enabled ) {
 						<option value=""><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
 						<?php
 						foreach ( $member_types as $member_type_id ) {
-							$type_name        = bp_get_member_type_key( $member_type_id );
+							$type_name        = bboss_get_member_type_key( $member_type_id );
 							$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 							?>
 							<option value="<?php echo esc_attr( $member_type_id ); ?>">
@@ -68,7 +68,7 @@ if ( $is_member_type_enabled ) {
 }
 
 // Member scope as a dropdown.
-if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
+if ( bboss_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 	// Get the scope from URL parameter for pre-selection.
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	$url_scope = isset( $_GET['bb-rl-scope'] ) ? sanitize_text_field( wp_unslash( $_GET['bb-rl-scope'] ) ) : '';
@@ -81,18 +81,18 @@ if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 			<div class="select-wrap">
 				<select id="bb-rl-members-scope-options" data-bp-members-scope-filter="members" data-dropdown-align="true">
 					<?php
-					while ( bp_nouveau_nav_items() ) :
-						bp_nouveau_nav_item();
-						$nav_item      = bp_nouveau()->current_nav_item;
+					while ( bboss_nouveau_nav_items() ) :
+						bboss_nouveau_nav_item();
+						$nav_item      = bboss_nouveau()->current_nav_item;
 						$current_scope = isset( $nav_item->slug ) ? $nav_item->slug : '';
 						$is_selected   = ( ! empty( $url_scope ) && $url_scope === $current_scope );
 						?>
-						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>" <?php selected( $is_selected, true ); ?>>
+						<option id="<?php bboss_nouveau_nav_id(); ?>" <?php bboss_nouveau_nav_scope(); ?> data-bp-object="<?php bboss_nouveau_directory_nav_object(); ?>" <?php selected( $is_selected, true ); ?>>
 							<?php
-							if ( 'bb-rl-members-all' === bp_nouveau_get_nav_id() ) {
+							if ( 'bb-rl-members-all' === bboss_nouveau_get_nav_id() ) {
 								esc_html_e( 'All', 'buddyboss' );
 							} else {
-								bp_nouveau_nav_link_text();
+								bboss_nouveau_nav_link_text();
 							}
 							?>
 						</option>

@@ -19,12 +19,12 @@ class BP_Tests_Routing_Friends extends BP_UnitTestCase {
 	}
 
 	function test_member_friends() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_friends_slug() );
-		$this->assertTrue( bp_is_user_friends() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_friends_slug() );
+		$this->assertTrue( bboss_is_user_friends() );
 	}
 
 	function test_member_friends_requests() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_friends_slug()  . '/requests' );
-		$this->assertTrue( bp_is_user_friend_requests() );
+		$this->go_to( bboss_core_get_user_domain( bboss_loggedin_user_id() ) . bboss_get_friends_slug()  . '/requests' );
+		$this->assertTrue( bboss_is_user_friend_requests() );
 	}
 }

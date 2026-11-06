@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function bp_notifications_action_bulk_manage() {
+function bboss_notifications_action_bulk_manage() {
 
 	// Bail if not the read or unread screen.
-	if ( ! bp_is_notifications_component() || ! ( bp_is_current_action( 'read' ) || bp_is_current_action( 'unread' ) ) ) {
+	if ( ! bboss_is_notifications_component() || ! ( bboss_is_current_action( 'read' ) || bboss_is_current_action( 'unread' ) ) ) {
 		return false;
 	}
 
@@ -35,7 +35,7 @@ function bp_notifications_action_bulk_manage() {
 
 	// Check the nonce.
 	if ( ! wp_verify_nonce( $nonce, 'notifications_bulk_nonce' ) ) {
-		bp_core_add_message( __( 'There was a problem managing your notifications.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem managing your notifications.', 'buddyboss' ), 'error' );
 		return false;
 	}
 
@@ -45,27 +45,27 @@ function bp_notifications_action_bulk_manage() {
 	switch ( $action ) {
 		case 'delete':
 			foreach ( $notifications as $notification ) {
-				bp_notifications_delete_notification( $notification );
+				bboss_notifications_delete_notification( $notification );
 			}
-			bp_core_add_message( __( 'Notifications deleted.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Notifications deleted.', 'buddyboss' ) );
 			break;
 
 		case 'read':
 			foreach ( $notifications as $notification ) {
-				bp_notifications_mark_notification( $notification, false );
+				bboss_notifications_mark_notification( $notification, false );
 			}
-			bp_core_add_message( __( 'Notifications marked as read', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Notifications marked as read', 'buddyboss' ) );
 			break;
 
 		case 'unread':
 			foreach ( $notifications as $notification ) {
-				bp_notifications_mark_notification( $notification, true );
+				bboss_notifications_mark_notification( $notification, true );
 			}
-			bp_core_add_message( __( 'Notifications marked as unread.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Notifications marked as unread.', 'buddyboss' ) );
 			break;
 	}
 
 	// Redirect.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_notifications_slug() . '/' . bp_current_action() . '/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/' . bboss_current_action() . '/' );
 }
 add_action( 'bp_actions', 'bp_notifications_action_bulk_manage' );

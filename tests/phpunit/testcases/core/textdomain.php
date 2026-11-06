@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for bp_core_load_buddypress_textdomain().
+ * Tests for bboss_core_load_buddypress_textdomain().
  *
  * The loader is locale-change aware: it re-resolves the locale and reloads the
  * catalog on init, change_locale, and the WPML/Polylang switch actions. These
@@ -224,7 +224,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			3
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_OVERRIDE_OK',
@@ -262,7 +262,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			3
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertNotEmpty(
 			$seen,
@@ -285,7 +285,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$this->force_locale( $locale );
 		$this->set_locations( array( $high, $low ) );
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_FROM_HIGH',
@@ -315,11 +315,11 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			99
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame( 'BB_FIRST', __( 'BB_LOCALE_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		$current = $second;
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_SECOND',
 			__( 'BB_LOCALE_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
@@ -344,14 +344,14 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$this->force_locale( $locale );
 		$this->set_locations( array( $dir ) );
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame( 'BB_UNLOAD_OK', __( 'BB_UNLOAD_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		// Same locale, but someone else dropped the catalog.
 		unload_textdomain( 'buddyboss' );
 		$this->assertFalse( is_textdomain_loaded( 'buddyboss' ) );
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_UNLOAD_OK',
 			__( 'BB_UNLOAD_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
@@ -434,7 +434,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			2
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_PLUGIN_LOCALE_OK',
@@ -498,7 +498,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			4
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertNotEmpty( $locales, 'load_textdomain() was never reached.' );
 
@@ -536,7 +536,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->set_locations( array( $dir ) );
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame( 'BB_SWITCH_EN', __( 'BB_SWITCH_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		$this->assertTrue( switch_to_locale( 'es_ES' ), 'switch_to_locale() refused the locale.' );
@@ -585,7 +585,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		// as it would on a real site where the files predate the request.
 		$GLOBALS['wp_textdomain_registry'] = new WP_Textdomain_Registry();
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame( 'BB_FASTSAFE_EN', __( 'BB_FASTSAFE_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		// Capture the state our priority-0 listener will see.
@@ -679,7 +679,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		// No buddyboss_locale_locations filter: the real precedence list applies.
 		$this->force_locale( $first );
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_OCL_FIRST',
 			__( 'BB_OCL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
@@ -687,7 +687,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		);
 
 		$this->force_locale( $second );
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_OCL_SECOND',
@@ -707,7 +707,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$this->force_locale( $locale );
 		$this->set_locations( array( $dir ) );
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_MEMO_OK',
 			__( 'BB_MEMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
@@ -723,7 +723,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		};
 
 		add_action( 'load_textdomain', $listener, 10, 1 );
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 		remove_action( 'load_textdomain', $listener, 10 );
 
 		$this->assertSame( 0, $counter->hit, 'The memo did not short-circuit a repeat call for the same locale.' );
@@ -767,7 +767,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			2
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_OVSRV_OK',
@@ -805,7 +805,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			2
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			$locale,
@@ -849,7 +849,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		);
 
 		$this->set_locations( array( $high, $low ) );
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_PROMO_HIGH',
@@ -873,14 +873,14 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		// First pass: the loader registers the bundled languages/ directory.
 		$this->force_locale( 'zz_CPATH1' );
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$third_party = WP_CONTENT_DIR . '/zz-third-party-languages';
 		$GLOBALS['wp_textdomain_registry']->set_custom_path( 'buddyboss', $third_party );
 
 		// A later pass — init:0, change_locale, a WPML/Polylang switch.
 		$this->force_locale( 'zz_CPATH2' );
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$property = new ReflectionProperty( 'WP_Textdomain_Registry', 'custom_paths' );
 		$property->setAccessible( true );
@@ -937,7 +937,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			'Positive control: the base catalog was not written.'
 		);
 
-		bp_core_load_buddypress_textdomain();
+		bboss_core_load_buddypress_textdomain();
 
 		$this->assertSame(
 			'BB_FROM_LOCO',

@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-class BP_Walker_Nav_Menu_Checklist extends Walker_Nav_Menu {
+class BBoss_Walker_Nav_Menu_Checklist extends Walker_Nav_Menu {
 
 	/**
 	 * Constructor.

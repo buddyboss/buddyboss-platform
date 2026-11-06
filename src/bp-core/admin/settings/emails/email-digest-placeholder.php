@@ -67,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Plugin basename.
  */
-function bb_email_digest_addon_plugin_file() {
+function bboss_email_digest_addon_plugin_file() {
 	return 'buddyboss-addons/buddyboss-addons.php';
 }
 
@@ -82,7 +82,7 @@ function bb_email_digest_addon_plugin_file() {
  *
  * @return string Plugin slug.
  */
-function bb_email_digest_addon_plugin_slug() {
+function bboss_email_digest_addon_plugin_slug() {
 	return 'buddyboss-addons';
 }
 
@@ -98,7 +98,7 @@ function bb_email_digest_addon_plugin_slug() {
  *
  * @return array List of lowercase plan SKU prefixes.
  */
-function bb_email_digest_required_plans() {
+function bboss_email_digest_required_plans() {
 	// SINGLE SOURCE OF TRUTH when the add-on is installed. The list below is a copy, and a
 	// copy drifts: the moment a new plan SKU is added to the add-on's registry and not here,
 	// this panel starts telling entitled customers to upgrade (or, in the other direction,
@@ -159,7 +159,7 @@ function bb_email_digest_required_plans() {
  *
  * @return bool True when a licence is activated.
  */
-function bb_email_digest_is_license_active() {
+function bboss_email_digest_is_license_active() {
 	$active = false;
 
 	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
@@ -188,7 +188,7 @@ function bb_email_digest_is_license_active() {
  *
  * @return string Lowercase SKU, or an empty string when it cannot be determined.
  */
-function bb_email_digest_licensed_plan_sku() {
+function bboss_email_digest_licensed_plan_sku() {
 	$sku = '';
 
 	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
@@ -223,19 +223,19 @@ function bb_email_digest_licensed_plan_sku() {
  * @return string One of 'needs_license', 'not_in_plan', 'addon_inactive',
  *                'addon_not_installed', 'addon_outdated'.
  */
-function bb_email_digest_get_placeholder_state() {
-	if ( ! bb_email_digest_is_license_active() ) {
+function bboss_email_digest_get_placeholder_state() {
+	if ( ! bboss_email_digest_is_license_active() ) {
 		return 'needs_license';
 	}
 
-	$sku = bb_email_digest_licensed_plan_sku();
+	$sku = bboss_email_digest_licensed_plan_sku();
 
 	if ( '' === $sku ) {
 		return 'not_in_plan';
 	}
 
 	$in_plan = false;
-	foreach ( bb_email_digest_required_plans() as $prefix ) {
+	foreach ( bboss_email_digest_required_plans() as $prefix ) {
 		$prefix = strtolower( trim( (string) $prefix ) );
 		if ( '' !== $prefix && 0 === strpos( $sku, $prefix ) ) {
 			$in_plan = true;
@@ -253,13 +253,13 @@ function bb_email_digest_get_placeholder_state() {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 
-	if ( ! is_plugin_active( bb_email_digest_addon_plugin_file() ) ) {
+	if ( ! is_plugin_active( bboss_email_digest_addon_plugin_file() ) ) {
 		// The plugin that carries the digest is not running at all. Nothing about the
 		// licence is wrong, so the fix is the plugin, not the plan — but WHICH fix
 		// depends on whether it is on disk. A plugin sitting there switched off is one
 		// click away; one that was never installed has to be fetched from the add-on
 		// server first, which is a different button and a different handler.
-		return file_exists( WP_PLUGIN_DIR . '/' . bb_email_digest_addon_plugin_file() )
+		return file_exists( WP_PLUGIN_DIR . '/' . bboss_email_digest_addon_plugin_file() )
 			? 'addon_inactive'
 			: 'addon_not_installed';
 	}
@@ -282,12 +282,12 @@ function bb_email_digest_get_placeholder_state() {
  *
  * @return string Version string, or an empty string when it cannot be read.
  */
-function bb_email_digest_addon_installed_version() {
+function bboss_email_digest_addon_installed_version() {
 	if ( ! function_exists( 'get_plugin_data' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 
-	$file = WP_PLUGIN_DIR . '/' . bb_email_digest_addon_plugin_file();
+	$file = WP_PLUGIN_DIR . '/' . bboss_email_digest_addon_plugin_file();
 
 	if ( ! file_exists( $file ) ) {
 		return '';
@@ -318,7 +318,7 @@ function bb_email_digest_addon_installed_version() {
  *     @type string $url     Package URL, empty when unresolved.
  * }
  */
-function bb_email_digest_addon_latest_release() {
+function bboss_email_digest_addon_latest_release() {
 	$none = array(
 		'version' => '',
 		'url'     => '',
@@ -329,7 +329,7 @@ function bb_email_digest_addon_latest_release() {
 	}
 
 	try {
-		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_email_digest_addon_plugin_slug() );
+		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bboss_email_digest_addon_plugin_slug() );
 	} catch ( \Exception $e ) {
 		return $none;
 	}
@@ -349,7 +349,7 @@ function bb_email_digest_addon_latest_release() {
 /**
  * Whether a newer add-on build than the one on disk is available to this licence.
  *
- * REMOTE CALL — see bb_email_digest_addon_latest_release().
+ * REMOTE CALL — see bboss_email_digest_addon_latest_release().
  *
  * Fails closed: an unreadable installed version or an unresolved release means "no",
  * because the alternative is offering an Update button that cannot change anything.
@@ -358,9 +358,9 @@ function bb_email_digest_addon_latest_release() {
  *
  * @return bool True when an update is available.
  */
-function bb_email_digest_addon_update_available() {
-	$installed = bb_email_digest_addon_installed_version();
-	$latest    = bb_email_digest_addon_latest_release();
+function bboss_email_digest_addon_update_available() {
+	$installed = bboss_email_digest_addon_installed_version();
+	$latest    = bboss_email_digest_addon_latest_release();
 
 	$available = '' !== $installed
 		&& '' !== $latest['version']
@@ -394,7 +394,7 @@ function bb_email_digest_addon_update_available() {
  *
  * @return string Resolved placeholder state.
  */
-function bb_email_digest_placeholder_state() {
+function bboss_email_digest_placeholder_state() {
 	/**
 	 * Filters the resolved Email Digest placeholder state.
 	 *
@@ -403,7 +403,7 @@ function bb_email_digest_placeholder_state() {
 	 * @param string $state One of 'needs_license', 'not_in_plan', 'addon_inactive',
 	 *                      'addon_not_installed', 'addon_outdated'.
 	 */
-	return apply_filters( 'bb_email_digest_placeholder_state', bb_email_digest_get_placeholder_state() );
+	return apply_filters( 'bb_email_digest_placeholder_state', bboss_email_digest_get_placeholder_state() );
 }
 
 /**
@@ -416,23 +416,23 @@ function bb_email_digest_placeholder_state() {
  *
  * @return void
  */
-function bb_admin_settings_register_email_digest_placeholder() {
-	if ( ! is_admin() || ! function_exists( 'bb_register_side_panel' ) || ! function_exists( 'bb_feature_registry' ) ) {
+function bboss_admin_settings_register_email_digest_placeholder() {
+	if ( ! is_admin() || ! function_exists( 'bboss_register_side_panel' ) || ! function_exists( 'bboss_feature_registry' ) ) {
 		return;
 	}
 
 	// Something already owns this panel — the entitled add-on module, the standalone QA
 	// plugin, or a core-merged build. Asking the registry rather than testing for a
 	// specific plugin keeps this correct for all three.
-	$panels = bb_feature_registry()->bb_get_side_panels( 'emails' );
+	$panels = bboss_feature_registry()->bb_get_side_panels( 'emails' );
 	if ( isset( $panels['email_digest'] ) ) {
 		return;
 	}
 
-	$state  = bb_email_digest_placeholder_state();
+	$state  = bboss_email_digest_placeholder_state();
 	$locked = 'not_in_plan' === $state;
 
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'emails',
 		'email_digest',
 		array(
@@ -464,17 +464,17 @@ function bb_admin_settings_register_email_digest_placeholder() {
 		);
 	}
 
-	bb_register_feature_section( 'emails', 'email_digest', 'email_digest', $section_args );
+	bboss_register_feature_section( 'emails', 'email_digest', 'email_digest', $section_args );
 
 	if ( $locked ) {
 		// A licence holder on a plan without the digest gets the real form, locked, so
 		// they can see what the upgrade buys. Every other state is a blocker they can
 		// clear themselves, and a card naming that blocker serves them better.
-		bb_admin_settings_register_email_digest_locked_form();
+		bboss_admin_settings_register_email_digest_locked_form();
 		return;
 	}
 
-	bb_admin_settings_register_email_digest_card( $state );
+	bboss_admin_settings_register_email_digest_card( $state );
 }
 add_action( 'bb_register_features', 'bb_admin_settings_register_email_digest_placeholder', 35 );
 
@@ -491,12 +491,12 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_email_digest_pla
  * @param string $state Resolved placeholder state.
  * @return void
  */
-function bb_admin_settings_register_email_digest_card( $state ) {
+function bboss_admin_settings_register_email_digest_card( $state ) {
 	// GroundLevel 9.1.2 names the add-on AJAX actions after the dynamic plugin ID
 	// (`{plugin_id}_addon_activate` / `_addon_install`); the unscoped `mosh_addon_*`
 	// actions no longer exist. When the resolver is unavailable the action stays null,
 	// so the card falls back to its `button_url` link instead of posting a dead action.
-	$addon_actions = function_exists( 'bb_admin_settings_get_addon_ajax_actions' ) ? bb_admin_settings_get_addon_ajax_actions() : array();
+	$addon_actions = function_exists( 'bboss_admin_settings_get_addon_ajax_actions' ) ? bboss_admin_settings_get_addon_ajax_actions() : array();
 
 	switch ( $state ) {
 		case 'addon_inactive':
@@ -520,7 +520,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'button_label'            => __( 'Activate', 'buddyboss' ),
 				'button_url'              => admin_url( 'plugins.php' ),
 				'addon_action'            => isset( $addon_actions['activate'] ) ? $addon_actions['activate'] : null,
-				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
+				'addon_slug'              => bboss_email_digest_addon_plugin_slug(),
 				'addon_busy_label'        => __( 'Activating…', 'buddyboss' ),
 			);
 			break;
@@ -545,7 +545,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'button_url'              => admin_url( 'update-core.php' ),
 				// @bbwt-com-start installers
 				'addon_action'            => 'bb_email_digest_update_addon',
-				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
+				'addon_slug'              => bboss_email_digest_addon_plugin_slug(),
 				'addon_nonce_key'         => 'ajaxNonce',
 				'addon_busy_label'        => __( 'Updating…', 'buddyboss' ),
 				// @bbwt-com-end installers
@@ -567,7 +567,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
 				'button_url'              => admin_url( 'plugins.php' ),
 				'addon_action'            => isset( $addon_actions['install'] ) ? $addon_actions['install'] : null,
-				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
+				'addon_slug'              => bboss_email_digest_addon_plugin_slug(),
 				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
 			);
 			break;
@@ -581,12 +581,12 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'empty_state_title'       => __( 'License Activation Required', 'buddyboss' ),
 				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter. Activate your license to unlock Email Digest.', 'buddyboss' ),
 				'button_label'            => __( 'Activate License', 'buddyboss' ),
-				'button_url'              => bb_admin_license_screen_url(),
+				'button_url'              => bboss_admin_license_screen_url(),
 			);
 			break;
 	}
 
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'emails',
 		'email_digest',
 		'email_digest',
@@ -616,17 +616,17 @@ function bb_admin_settings_register_email_digest_card( $state ) {
  *
  * @return void
  */
-function bb_admin_settings_register_email_digest_signpost() {
+function bboss_admin_settings_register_email_digest_signpost() {
 	if (
 		! is_admin()
-		|| ! function_exists( 'bb_register_side_panel' )
-		|| ! function_exists( 'bb_get_feature_settings_url' )
+		|| ! function_exists( 'bboss_register_side_panel' )
+		|| ! function_exists( 'bboss_get_feature_settings_url' )
 		|| function_exists( 'bb_notification_digest_register_notifications_link' )
 	) {
 		return;
 	}
 
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'notifications',
 		'email_digest_link',
 		array(
@@ -637,7 +637,7 @@ function bb_admin_settings_register_email_digest_signpost() {
 			),
 			'order'        => 100,
 			'divider'      => true,
-			'external_url' => bb_get_feature_settings_url( 'emails', 'email_digest' ),
+			'external_url' => bboss_get_feature_settings_url( 'emails', 'email_digest' ),
 		)
 	);
 }
@@ -663,7 +663,7 @@ add_action( 'bb_notifications_after_register_settings_fields', 'bb_admin_setting
  * @param string $feature_id Feature the field belongs to.
  * @return array Field data.
  */
-function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature_id ) {
+function bboss_email_digest_soften_stale_update_card( $field_data, $field, $feature_id ) {
 	if (
 		'emails' !== $feature_id
 		|| ! isset( $field['name'], $field_data['addon_action'] )
@@ -673,7 +673,7 @@ function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature
 		return $field_data;
 	}
 
-	if ( bb_email_digest_addon_update_available() ) {
+	if ( bboss_email_digest_addon_update_available() ) {
 		return $field_data;
 	}
 
@@ -715,7 +715,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_email_digest_soften_stale
  *
  * @return void
  */
-function bb_email_digest_ajax_update_addon() {
+function bboss_email_digest_ajax_update_addon() {
 	if ( ! current_user_can( 'update_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
@@ -726,20 +726,20 @@ function bb_email_digest_ajax_update_addon() {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
-	$plugin_file = bb_email_digest_addon_plugin_file();
+	$plugin_file = bboss_email_digest_addon_plugin_file();
 
 	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
 		wp_send_json_error( array( 'message' => __( 'The BuddyBoss Add-ons plugin is not installed.', 'buddyboss' ) ) );
 	}
 
-	$installed = bb_email_digest_addon_installed_version();
-	$latest    = bb_email_digest_addon_latest_release();
+	$installed = bboss_email_digest_addon_installed_version();
+	$latest    = bboss_email_digest_addon_latest_release();
 
 	if ( '' === $latest['url'] ) {
 		wp_send_json_error(
 			array(
 				'message'     => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss' ),
-				'license_url' => bb_admin_license_screen_url(),
+				'license_url' => bboss_admin_license_screen_url(),
 			)
 		);
 	}
@@ -822,7 +822,7 @@ add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update
  *
  * @return void
  */
-function bb_admin_settings_register_email_digest_locked_form() {
+function bboss_admin_settings_register_email_digest_locked_form() {
 	/**
 	 * Register one inert field.
 	 *
@@ -849,7 +849,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 		$args['disabled']          = true;
 		$args['sanitize_callback'] = '__return_empty_string';
 
-		bb_register_feature_field( 'emails', 'email_digest', 'email_digest', $args );
+		bboss_register_feature_field( 'emails', 'email_digest', 'email_digest', $args );
 	};
 
 	// FIELD 1 — the enable toggle, and the only row carrying the START badge. Set

@@ -23,7 +23,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 	 * }
 	 * @param string $column The DB column to query against.
 	 */
-	class BP_Date_Query extends WP_Date_Query {
+	class BBoss_Date_Query extends WP_Date_Query {
 		/**
 		 * The column to query against. Can be changed via the query arguments.
 		 *
@@ -115,7 +115,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 		/**
 		 * Helper method to generate and fetch the WHERE SQL clause for a date query.
 		 *
-		 * See {@link BP_Date_Query::__construct()} for all argument documentation.
+		 * See {@link BBoss_Date_Query::__construct()} for all argument documentation.
 		 *
 		 * @since BuddyPress 10.0.0
 		 * @since BuddyBoss 2.3.90

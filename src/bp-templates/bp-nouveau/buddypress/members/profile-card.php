@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 						<span class="card-meta-item card-meta-joined"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> <span></span></span>
 						<span class="card-meta-item card-meta-last-active"></span>
 						<?php
-						if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+						if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
 							?>
 							<span class="card-meta-item card-meta-followers"></span>
 							<?php
@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-card-footer">
 				<?php
 				if ( is_user_logged_in() ) {
-					if ( bp_is_active( 'messages' ) ) {
+					if ( bboss_is_active( 'messages' ) ) {
 						?>
 						<div class="bb-card-action bb-card-action-message bb-card-action-primary">
 							<a href="" class="card-button send-message">
@@ -68,13 +68,13 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 					}
 
-					if ( bp_is_active( 'friends' ) ) {
+					if ( bboss_is_active( 'friends' ) ) {
 						?>
 						<div class="bb-card-action bb-card-action-connect bb-card-action-primary"></div>
 						<?php
 					}
 
-					if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+					if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
 						?>
 						<div class="bb-card-action bb-card-action-follow bb-card-action-secondary"></div>
 						<?php

@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_XProfile_Types_Endpoint class
+ * BP REST: BBoss_REST_XProfile_Types_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
+class BBoss_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -23,8 +23,8 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base = buddypress()->profile->id . '/types';
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
+		$this->rest_base = bboss()->profile->id . '/types';
 	}
 
 	/**
@@ -65,7 +65,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 */
 	public function get_items( $request ) {
-		$registered_types = bp_get_member_types( array(), 'objects' );
+		$registered_types = bboss_get_member_types( array(), 'objects' );
 
 		$retval = array();
 		if ( ! empty( $registered_types ) ) {
@@ -103,7 +103,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+		if ( function_exists( 'bboss_rest_enable_private_network' ) && true === bboss_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
@@ -113,7 +113,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+		if ( true === $retval && function_exists( 'bboss_member_type_enable_disable' ) && false === bboss_member_type_enable_disable() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Profile Types is disabled from setting.', 'buddyboss' ),
@@ -223,7 +223,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 		// Define default visibility property.
 		if ( isset( $schema['bp-group-type'] ) ) {
-			$get_all_registered_group_types = bp_groups_get_group_types( array(), 'names' );
+			$get_all_registered_group_types = bboss_groups_get_group_types( array(), 'names' );
 			$get_selected_group_types       = ( ! empty( $post_id ) && ! empty( get_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', true ) ) ) ? get_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', true ) : array();
 			$group_types                    = array();
 			if ( ! empty( $get_all_registered_group_types ) ) {
@@ -239,7 +239,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 		// Define default visibility property.
 		if ( isset( $schema['bp-group-type-auto-join'] ) ) {
-			$get_all_registered_group_types = bp_groups_get_group_types( array(), 'names' );
+			$get_all_registered_group_types = bboss_groups_get_group_types( array(), 'names' );
 			$get_selected_group_types       = ( ! empty( $post_id ) && ! empty( get_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', true ) ) ) ? get_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', true ) : array();
 			$group_types_auto_join          = array();
 			if ( ! empty( $get_all_registered_group_types ) ) {
@@ -268,7 +268,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 
 		// Define default visibility property.
 		if ( isset( $schema['bp-member-type-invite'] ) ) {
-			$member_types              = bp_get_member_types( array(), 'names' );
+			$member_types              = bboss_get_member_types( array(), 'names' );
 			$get_selected_member_types = ( ! empty( $post_id ) && ! empty( get_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', true ) ) ) ? get_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', true ) : array();
 			$member_types_invite       = array();
 			if ( ! empty( $member_types ) ) {
@@ -408,9 +408,9 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			);
 
 			if (
-				bp_is_active( 'groups' )
-				&& function_exists( 'bp_restrict_group_creation' )
-				&& false === bp_restrict_group_creation()
+				bboss_is_active( 'groups' )
+				&& function_exists( 'bboss_restrict_group_creation' )
+				&& false === bboss_restrict_group_creation()
 			) {
 				$schema['properties']['bp-group-type'] = array(
 					'description' => __( 'Which group types this profile type is allowed to create.', 'buddyboss' ),
@@ -421,11 +421,11 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			}
 
 			if (
-				bp_is_active( 'groups' )
-				&& function_exists( 'bp_disable_group_type_creation' )
-				&& function_exists( 'bp_enable_group_auto_join' )
-				&& true === bp_disable_group_type_creation()
-				&& true === bp_enable_group_auto_join()
+				bboss_is_active( 'groups' )
+				&& function_exists( 'bboss_disable_group_type_creation' )
+				&& function_exists( 'bboss_enable_group_auto_join' )
+				&& true === bboss_disable_group_type_creation()
+				&& true === bboss_enable_group_auto_join()
 			) {
 				$schema['properties']['bp-group-type-auto-join'] = array(
 					'description' => __( 'On Registration and Account activation, Profile Type members will auto-join Groups from Selected Group Types below other than Hidden Groups.', 'buddyboss' ),
@@ -436,9 +436,9 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 			}
 
 			if (
-				bp_is_active( 'invites' )
-				&& function_exists( 'bp_disable_invite_member_type' )
-				&& true === bp_disable_invite_member_type()
+				bboss_is_active( 'invites' )
+				&& function_exists( 'bboss_disable_invite_member_type' )
+				&& true === bboss_disable_invite_member_type()
 			) {
 				$schema['properties']['bp-member-type-enabled-invite'] = array(
 					'description' => __( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration.', 'buddyboss' ),
@@ -462,7 +462,7 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 				'readonly'    => true,
 			);
 
-			if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
+			if ( bboss_is_active( 'messages' ) && bboss_is_active( 'friends' ) && true === (bool) bboss_get_option( 'bp-force-friendship-to-message', false ) ) {
 				$schema['properties']['allow_messaging_without_connection'] = array(
 					'description' => __( 'Allow messaging without connection.', 'buddyboss' ),
 					'type'        => 'boolean',
@@ -535,3 +535,11 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_XProfile_Types_Endpoint', false ) || interface_exists( 'BBoss_REST_XProfile_Types_Endpoint', false ) || trait_exists( 'BBoss_REST_XProfile_Types_Endpoint', false ) ) && ! class_exists( 'BP_REST_XProfile_Types_Endpoint', false ) && ! interface_exists( 'BP_REST_XProfile_Types_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_XProfile_Types_Endpoint', 'BP_REST_XProfile_Types_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

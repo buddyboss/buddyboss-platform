@@ -7,7 +7,7 @@
  * profile completion, connections, network activity, and group information.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
 $static_sidebar_widget = false;
 
 ob_start();
-if ( bp_is_user() && bp_is_active( 'xprofile' ) ) {
-	bp_get_template_part( 'members/single/profile/profile-loop' );
+if ( bboss_is_user() && bboss_is_active( 'xprofile' ) ) {
+	bboss_get_template_part( 'members/single/profile/profile-loop' );
 }
 
 $static_sidebar_widget = ob_get_clean();
@@ -27,27 +27,27 @@ $static_sidebar_widget = ob_get_clean();
 $available_widgets = array();
 
 // @todo enable based on the enabled widget for specific page.
-if ( bp_is_user() ) {
-	$bb_rl_member_profile_sidebars = bp_get_option( 'bb_rl_member_profile_sidebars', array() );
+if ( bboss_is_user() ) {
+	$bb_rl_member_profile_sidebars = bboss_get_option( 'bb_rl_member_profile_sidebars', array() );
 	if ( ! empty( $bb_rl_member_profile_sidebars['complete_profile'] ) ) {
 		$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
 	}
 
 	if ( ! empty( $bb_rl_member_profile_sidebars['connections'] ) ) {
-		if ( bp_is_active( 'friends' ) && ! bp_is_user_friends() ) {
+		if ( bboss_is_active( 'friends' ) && ! bboss_is_user_friends() ) {
 			$available_widgets[] = 'BB_Core_Connections_Widget';
 		}
 	}
 
 	if ( ! empty( $bb_rl_member_profile_sidebars['my_network'] ) ) {
-		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+		if ( bboss_is_active( 'activity' ) && bboss_is_activity_follow_active() ) {
 			$available_widgets[] = 'BB_Core_Follow_My_Network_Widget';
 		}
 	}
 }
 
-if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
-	$bb_rl_activity_sidebars = bp_get_option( 'bb_rl_activity_sidebars', array() );
+if ( bboss_is_active( 'activity' ) && bboss_is_activity_directory() ) {
+	$bb_rl_activity_sidebars = bboss_get_option( 'bb_rl_activity_sidebars', array() );
 	if ( ! empty( $bb_rl_activity_sidebars['complete_profile'] ) ) {
 		$available_widgets[] = 'BP_Xprofile_Profile_Completion_Widget';
 	}
@@ -65,8 +65,8 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
 	}
 }
 
-if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-	$bb_rl_groups_sidebars = bp_get_option( 'bb_rl_groups_sidebars', array() );
+if ( bboss_is_active( 'groups' ) && bboss_is_group() ) {
+	$bb_rl_groups_sidebars = bboss_get_option( 'bb_rl_groups_sidebars', array() );
 	if ( ! empty( $bb_rl_groups_sidebars['about_group'] ) ) {
 		$available_widgets[] = 'BB_Group_About_Widget';
 	}
@@ -91,7 +91,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 
 				if ( 'BP_Xprofile_Profile_Completion_Widget' === $widget ) {
 					$args           = array();
-					$steps_options  = bp_core_profile_completion_steps_options();
+					$steps_options  = bboss_core_profile_completion_steps_options();
 					$profile_groups = $steps_options['profile_groups'];
 					foreach ( $profile_groups as $single_group_details ) {
 						$profile_groups                   = $steps_options['profile_groups'];

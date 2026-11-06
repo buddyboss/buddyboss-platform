@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 /** Theme Setup */
 
-if ( ! class_exists( 'BBP_Default' ) ) :
+if ( ! class_exists( 'BBoss_BBP_Default' ) ) :
 
 	/**
 	 * Loads Forums Default Theme functionality
@@ -28,7 +28,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 	 *
 	 * @since bbPress (r3732)
 	 */
-	class BBP_Default extends BBP_Theme_Compat {
+	class BBoss_BBP_Default extends BBoss_BBP_Theme_Compat {
 
 		/** Functions *************************************************************/
 
@@ -37,20 +37,20 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses  BBP_Default::setup_globals()
-		 * @uses  BBP_Default::setup_actions()
+		 * @uses  BBoss_BBP_Default::setup_globals()
+		 * @uses  BBoss_BBP_Default::setup_actions()
 		 */
 		public function __construct( $properties = array() ) {
 
 			parent::__construct(
-				bbp_parse_args(
+				bboss_bbp_parse_args(
 					$properties,
 					array(
 						'id'      => 'default',
 						'name'    => __( 'Forums Default', 'buddyboss' ),
-						'version' => bbp_get_version(),
-						'dir'     => trailingslashit( bbpress()->themes_dir . 'default' ),
-						'url'     => trailingslashit( bbpress()->themes_url . 'default' ),
+						'version' => bboss_bbp_get_version(),
+						'dir'     => trailingslashit( bboss_forums()->themes_dir . 'default' ),
+						'url'     => trailingslashit( bboss_forums()->themes_url . 'default' ),
 					),
 					'default_theme'
 				)
@@ -129,27 +129,27 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses  bbp_is_single_forum() To check if it's the forum page
-		 * @uses  bbp_is_single_topic() To check if it's the topic page
-		 * @uses  bbp_thread_replies() To check if threaded replies are enabled
-		 * @uses  bbp_is_single_user_edit() To check if it's the profile edit page
+		 * @uses  bboss_bbp_is_single_forum() To check if it's the forum page
+		 * @uses  bboss_bbp_is_single_topic() To check if it's the topic page
+		 * @uses  bboss_bbp_thread_replies() To check if threaded replies are enabled
+		 * @uses  bboss_bbp_is_single_user_edit() To check if it's the profile edit page
 		 * @uses  wp_enqueue_script() To enqueue the scripts
 		 */
 		public function enqueue_scripts() {
 
-			if ( ! is_bbpress() ) {
+			if ( ! bboss_is_bbpress() ) {
 
-				if ( ! bp_is_active( 'groups' ) ) {
+				if ( ! bboss_is_active( 'groups' ) ) {
 					return false;
 				}
 
 				// Only filter if group forums are active.
-			   if ( ! bbp_is_group_forums_active() ) {
+			   if ( ! bboss_bbp_is_group_forums_active() ) {
 					return false;
 			   }
 
 			   // Only filter for single group forum topics.
-			   if ( ! bp_is_group_single() && ! bp_is_group_forum_topic() && ! bp_is_group_forum_topic_edit() && ! bbp_is_reply_edit() ) {
+			   if ( ! bboss_is_group_single() && ! bboss_is_group_forum_topic() && ! bboss_is_group_forum_topic_edit() && ! bboss_bbp_is_reply_edit() ) {
 					return false;
 			   }
 
@@ -159,7 +159,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			$scripts = array();
 
 			// Always pull in jQuery for TinyMCE shortcode usage.
-			if ( bbp_use_wp_editor() ) {
+			if ( bboss_bbp_use_wp_editor() ) {
 				$scripts['bbpress-editor'] = array(
 					'file'         => 'js/editor.js',
 					'dependencies' => array( 'jquery' ),
@@ -173,7 +173,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			wp_enqueue_style( 'bp-select2' );
 
 			// Forum-specific scripts.
-			if ( bbp_is_single_forum() ) {
+			if ( bboss_bbp_is_single_forum() ) {
 				$scripts['bbpress-forum'] = array(
 					'file'         => 'js/forum.js',
 					'dependencies' => array( 'jquery' ),
@@ -181,7 +181,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Topic-specific scripts.
-			if ( bbp_is_single_topic() ) {
+			if ( bboss_bbp_is_single_topic() ) {
 
 				// Topic favorite/unsubscribe.
 				$scripts['bbpress-topic'] = array(
@@ -190,7 +190,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				);
 
 				// Hierarchical replies.
-				if ( bbp_thread_replies() ) {
+				if ( bboss_bbp_thread_replies() ) {
 					$scripts['bbpress-reply'] = array(
 						'file'         => 'js/reply.js',
 						'dependencies' => array( 'jquery' ),
@@ -198,9 +198,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 			}
 
-			if ( bbp_is_single_forum() || bbp_is_single_topic() ) {
+			if ( bboss_bbp_is_single_forum() || bboss_bbp_is_single_topic() ) {
 				$dependencies = array( 'jquery', 'bp-nouveau' );
-				if ( bp_is_active( 'media' ) ) {
+				if ( bboss_is_active( 'media' ) ) {
 					$dependencies[] = 'bp-nouveau-media';
 				}
 
@@ -211,7 +211,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// User Profile edit.
-			if ( bbp_is_single_user_edit() ) {
+			if ( bboss_bbp_is_single_user_edit() ) {
 				$scripts['bbpress-user'] = array(
 					'file'         => 'js/user.js',
 					'dependencies' => array( 'user-query' ),
@@ -228,17 +228,17 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Enqueue the scripts.
 			foreach ( $scripts as $handle => $attributes ) {
-				bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], bp_get_version(), 'screen' );
+				bboss_bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], bboss_get_version(), 'screen' );
 			}
 
 			$no_load_topic = true;
-			if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+			if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
 				$no_load_topic = false;
 			}
 
 			$common_array = array(
 				'loading_text' => __( 'Loading', 'buddyboss' ),
-				'ajax_url'     => bp_core_ajax_url(),
+				'ajax_url'     => bboss_core_ajax_url(),
 				'nonce'        => wp_create_nonce( 'search_tag' ),
 				'load'         => $no_load_topic,
 				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
@@ -246,22 +246,22 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			wp_localize_script( 'bbpress-common', 'bbpCommonJsData', $common_array );
 
-			if ( bp_is_active( 'media' ) ) {
+			if ( bboss_is_active( 'media' ) ) {
 
 				$gif = false;
-				if ( bp_is_forums_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) {
+				if ( bboss_is_forums_gif_support_enabled() || bboss_is_groups_gif_support_enabled() ) {
 					wp_enqueue_script( 'giphy' );
 					$gif = true;
 				}
 
 				$emoji = false;
-				if ( bp_is_forums_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() ) {
+				if ( bboss_is_forums_emoji_support_enabled() || bboss_is_groups_emoji_support_enabled() ) {
 					wp_enqueue_script( 'emojionearea' );
 					wp_enqueue_style( 'emojionearea' );
 					$emoji = true;
 				}
 
-				if ( bp_is_forums_media_support_enabled() || $gif || $emoji ) {
+				if ( bboss_is_forums_media_support_enabled() || $gif || $emoji ) {
 					wp_enqueue_script( 'bp-media-dropzone' );
 					wp_enqueue_script( 'bp-nouveau-media' );
 					wp_enqueue_script( 'isInViewport' );
@@ -269,7 +269,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 			}
 
-			if ( bbp_use_wp_editor() ) {
+			if ( bboss_bbp_use_wp_editor() ) {
 				wp_localize_script(
 					'bbpress-editor',
 					'bbpEditorJsStrs',
@@ -299,27 +299,27 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 			}
 
-			$min = bp_core_get_minified_asset_suffix();
+			$min = bboss_core_get_minified_asset_suffix();
 
 			if ( ! wp_script_is( 'bp-mentions' ) ) {
 				wp_enqueue_script(
 					'bp-mentions',
-					buddypress()->plugin_url . "bp-core/js/mentions{$min}.js",
+					bboss()->plugin_url . "bp-core/js/mentions{$min}.js",
 					array(
 						'jquery',
 						'jquery-atwho',
 					),
-					bp_get_version(),
+					bboss_get_version(),
 					true
 				);
-				wp_enqueue_style( 'bp-mentions-css', buddypress()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bp_get_version() );
+				wp_enqueue_style( 'bp-mentions-css', bboss()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bboss_get_version() );
 
 				wp_style_add_data( 'bp-mentions-css', 'rtl', true );
 				if ( $min ) {
 					wp_style_add_data( 'bp-mentions-css', 'suffix', $min );
 				}
 
-				wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bp_at_mention_default_options() );
+				wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bboss_at_mention_default_options() );
 
 				/**
 				 * Fires at the end of the Mentions script.
@@ -340,21 +340,21 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 */
 		public function media_localize_script() {
 
-			if ( ! is_bbpress() ) {
+			if ( ! bboss_is_bbpress() ) {
 				return false;
 			}
 
 			$params = array();
 
-			if ( bp_is_active( 'media' ) ) {
+			if ( bboss_is_active( 'media' ) ) {
 
 				// check if topic edit.
-				if ( bbp_is_topic_edit() ) {
+				if ( bboss_bbp_is_topic_edit() ) {
 					$params['bbp_is_topic_edit'] = true;
 
-					$document_ids = get_post_meta( bbp_get_topic_id(), 'bp_document_ids', true );
+					$document_ids = get_post_meta( bboss_bbp_get_topic_id(), 'bp_document_ids', true );
 
-					if ( bp_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
+					if ( bboss_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
 						array(
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
@@ -382,9 +382,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-					$video_ids = get_post_meta( bbp_get_topic_id(), 'bp_video_ids', true );
+					$video_ids = get_post_meta( bboss_bbp_get_topic_id(), 'bp_video_ids', true );
 
-					if ( bp_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
+					if ( bboss_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
 						array(
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
@@ -421,9 +421,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-					$media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
+					$media_ids = get_post_meta( bboss_bbp_get_topic_id(), 'bp_media_ids', true );
 
-					if ( ! empty( $media_ids ) && bp_has_media(
+					if ( ! empty( $media_ids ) && bboss_has_media(
 						array(
 							'include'  => $media_ids,
 							'order_by' => 'menu_order',
@@ -433,22 +433,22 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					) ) {
 						$params['topic_edit_media'] = array();
 						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+						while ( bboss_media() ) {
+							bboss_the_media();
 
 							$params['topic_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
+								'id'            => bboss_get_media_id(),
+								'attachment_id' => bboss_get_media_attachment_id(),
+								'name'          => bboss_get_media_title(),
+								'thumb'         => bboss_get_media_attachment_image_thumbnail(),
+								'url'           => bboss_get_media_attachment_image(),
 								'menu_order'    => $index,
 							);
 							$index ++;
 						}
 					}
 
-					$gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
+					$gif_data = get_post_meta( bboss_bbp_get_topic_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
 						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
@@ -457,18 +457,18 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						$params['topic_edit_gif_data'] = array(
 							'preview_url'  => $preview_url,
 							'video_url'    => $video_url,
-							'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
+							'gif_raw_data' => get_post_meta( bboss_bbp_get_topic_id(), '_gif_raw_data', true ),
 						);
 					}
 				}
 
 				// check if reply edit.
-				if ( bbp_is_reply_edit() ) {
+				if ( bboss_bbp_is_reply_edit() ) {
 					$params['bbp_is_reply_edit'] = true;
 
-					$document_ids = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
+					$document_ids = get_post_meta( bboss_bbp_get_reply_id(), 'bp_document_ids', true );
 
-					if ( bp_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
+					if ( bboss_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
 						array(
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
@@ -496,9 +496,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-					$video_ids = get_post_meta( bbp_get_reply_id(), 'bp_video_ids', true );
+					$video_ids = get_post_meta( bboss_bbp_get_reply_id(), 'bp_video_ids', true );
 
-					if ( bp_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
+					if ( bboss_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
 						array(
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
@@ -535,9 +535,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-					$media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
+					$media_ids = get_post_meta( bboss_bbp_get_reply_id(), 'bp_media_ids', true );
 
-					if ( ! empty( $media_ids ) && bp_has_media(
+					if ( ! empty( $media_ids ) && bboss_has_media(
 						array(
 							'include'  => $media_ids,
 							'order_by' => 'menu_order',
@@ -547,22 +547,22 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					) ) {
 						$params['reply_edit_media'] = array();
 						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+						while ( bboss_media() ) {
+							bboss_the_media();
 
 							$params['reply_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
+								'id'            => bboss_get_media_id(),
+								'attachment_id' => bboss_get_media_attachment_id(),
+								'name'          => bboss_get_media_title(),
+								'thumb'         => bboss_get_media_attachment_image_thumbnail(),
+								'url'           => bboss_get_media_attachment_image(),
 								'menu_order'    => $index,
 							);
 							$index ++;
 						}
 					}
 
-					$gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
+					$gif_data = get_post_meta( bboss_bbp_get_reply_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
 						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
@@ -571,18 +571,18 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						$params['reply_edit_gif_data'] = array(
 							'preview_url'  => $preview_url,
 							'video_url'    => $video_url,
-							'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
+							'gif_raw_data' => get_post_meta( bboss_bbp_get_reply_id(), '_gif_raw_data', true ),
 						);
 					}
 				}
 
 				// check if forum edit.
-				if ( bbp_is_forum_edit() ) {
+				if ( bboss_bbp_is_forum_edit() ) {
 					$params['bbp_is_forum_edit'] = true;
 
-					$document_ids = get_post_meta( bbp_get_forum_id(), 'bp_document_ids', true );
+					$document_ids = get_post_meta( bboss_bbp_get_forum_id(), 'bp_document_ids', true );
 
-					if ( bp_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
+					if ( bboss_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
 						array(
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
@@ -610,9 +610,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-					$video_ids = get_post_meta( bbp_get_forum_id(), 'bp_video_ids', true );
+					$video_ids = get_post_meta( bboss_bbp_get_forum_id(), 'bp_video_ids', true );
 
-					if ( bp_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
+					if ( bboss_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
 						array(
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
@@ -649,9 +649,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-					$media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+					$media_ids = get_post_meta( bboss_bbp_get_forum_id(), 'bp_media_ids', true );
 
-					if ( ! empty( $media_ids ) && bp_has_media(
+					if ( ! empty( $media_ids ) && bboss_has_media(
 						array(
 							'include'  => $media_ids,
 							'order_by' => 'menu_order',
@@ -661,22 +661,22 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					) ) {
 						$params['forum_edit_media'] = array();
 						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+						while ( bboss_media() ) {
+							bboss_the_media();
 
 							$params['forum_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
+								'id'            => bboss_get_media_id(),
+								'attachment_id' => bboss_get_media_attachment_id(),
+								'name'          => bboss_get_media_title(),
+								'thumb'         => bboss_get_media_attachment_image_thumbnail(),
+								'url'           => bboss_get_media_attachment_image(),
 								'menu_order'    => $index,
 							);
 							$index ++;
 						}
 					}
 
-					$gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
+					$gif_data = get_post_meta( bboss_bbp_get_forum_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
 						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
@@ -685,7 +685,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						$params['forum_edit_gif_data'] = array(
 							'preview_url'  => $preview_url,
 							'video_url'    => $video_url,
-							'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
+							'gif_raw_data' => get_post_meta( bboss_bbp_get_forum_id(), '_gif_raw_data', true ),
 						);
 					}
 				}
@@ -710,28 +710,28 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses  bbp_is_single_forum() To check if it's the forum page
-		 * @uses  bbp_is_single_topic() To check if it's the topic page
+		 * @uses  bboss_bbp_is_single_forum() To check if it's the forum page
+		 * @uses  bboss_bbp_is_single_topic() To check if it's the topic page
 		 * @uses  is_user_logged_in() To check if user is logged in
-		 * @uses  bbp_get_current_user_id() To get the current user id
-		 * @uses  bbp_get_forum_id() To get the forum id
-		 * @uses  bbp_get_topic_id() To get the topic id
-		 * @uses  bbp_get_favorites_permalink() To get the favorites permalink
-		 * @uses  bbp_is_user_favorite() To check if the topic is in user's favorites
-		 * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
-		 * @uses  bbp_is_user_subscribed() To check if the user is subscribed to topic
-		 * @uses  bbp_get_topic_permalink() To get the topic permalink
+		 * @uses  bboss_bbp_get_current_user_id() To get the current user id
+		 * @uses  bboss_bbp_get_forum_id() To get the forum id
+		 * @uses  bboss_bbp_get_topic_id() To get the topic id
+		 * @uses  bboss_bbp_get_favorites_permalink() To get the favorites permalink
+		 * @uses  bboss_bbp_is_user_favorite() To check if the topic is in user's favorites
+		 * @uses  bboss_is_enabled_subscription() To check if the subscriptions are active
+		 * @uses  bboss_bbp_is_user_subscribed() To check if the user is subscribed to topic
+		 * @uses  bboss_bbp_get_topic_permalink() To get the topic permalink
 		 * @uses  wp_localize_script() To localize the script
 		 */
 		public function localize_topic_script() {
 
 			// Single forum.
-			if ( bbp_is_single_forum() ) {
+			if ( bboss_bbp_is_single_forum() ) {
 				wp_localize_script(
 					'bbpress-forum',
 					'bbpForumJS',
 					array(
-						'bbp_ajaxurl'        => bbp_get_ajax_url(),
+						'bbp_ajaxurl'        => bboss_bbp_get_ajax_url(),
 						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
 						'is_user_logged_in'  => is_user_logged_in(),
 						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . get_the_ID() ),
@@ -739,16 +739,16 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				);
 
 				// Single topic.
-			} elseif ( bbp_is_single_topic() ) {
+			} elseif ( bboss_bbp_is_single_topic() ) {
 				wp_localize_script(
 					'bbpress-topic',
 					'bbpTopicJS',
 					array(
-						'bbp_ajaxurl'        => bbp_get_ajax_url(),
+						'bbp_ajaxurl'        => bboss_bbp_get_ajax_url(),
 						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
 						'is_user_logged_in'  => is_user_logged_in(),
-						'fav_nonce'          => wp_create_nonce( 'toggle-favorite_' . bbp_get_topic_id() ),
-						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . bbp_get_topic_id() ),
+						'fav_nonce'          => wp_create_nonce( 'toggle-favorite_' . bboss_bbp_get_topic_id() ),
+						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . bboss_bbp_get_topic_id() ),
 					)
 				);
 			}
@@ -759,57 +759,57 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r5155)
 		 *
-		 * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
+		 * @uses  bboss_is_enabled_subscription() To check if the subscriptions are active
 		 * @uses  bbp_is_user_logged_in() To check if user is logged in
-		 * @uses  bbp_get_current_user_id() To get the current user id
+		 * @uses  bboss_bbp_get_current_user_id() To get the current user id
 		 * @uses  current_user_can() To check if the current user can edit the user
-		 * @uses  bbp_get_forum() To get the forum
+		 * @uses  bboss_bbp_get_forum() To get the forum
 		 * @uses  wp_verify_nonce() To verify the nonce
-		 * @uses  bbp_is_user_subscribed() To check if the forum is in user's subscriptions
+		 * @uses  bboss_bbp_is_user_subscribed() To check if the forum is in user's subscriptions
 		 * @uses  bbp_remove_user_subscriptions() To remove the forum from user's subscriptions
 		 * @uses  bbp_add_user_subscriptions() To add the forum from user's subscriptions
-		 * @uses  bbp_ajax_response() To return JSON
+		 * @uses  bboss_bbp_ajax_response() To return JSON
 		 */
 		public function ajax_forum_subscription() {
 
 			// Bail if subscriptions are not active.
-			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
-				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
+			if ( ! bboss_is_enabled_subscription( 'forum' ) ) {
+				bboss_bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
 			}
 
 			// Bail if user is not logged in.
 			if ( ! is_user_logged_in() ) {
-				bbp_ajax_response( false, __( 'Please login to subscribe to this forum.', 'buddyboss' ), 301 );
+				bboss_bbp_ajax_response( false, __( 'Please login to subscribe to this forum.', 'buddyboss' ), 301 );
 			}
 
 			// Get user and forum data.
-			$user_id  = bbp_get_current_user_id();
+			$user_id  = bboss_bbp_get_current_user_id();
 			$forum_id = intval( $_POST['id'] );
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
-				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
+				bboss_bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
 			}
 
 			// Get the forum.
-			$forum = bbp_get_forum( $forum_id );
+			$forum = bboss_bbp_get_forum( $forum_id );
 
 			// Bail if forum cannot be found.
 			if ( empty( $forum ) ) {
-				bbp_ajax_response( false, __( 'The forum could not be found.', 'buddyboss' ), 303 );
+				bboss_bbp_ajax_response( false, __( 'The forum could not be found.', 'buddyboss' ), 303 );
 			}
 
 			// Bail if user did not take this action.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $forum->ID ) ) {
-				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+				bboss_bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
 			// Take action.
-			$status = bbp_is_user_subscribed( $user_id, $forum->ID ) ? bbp_remove_user_subscription( $user_id, $forum->ID ) : bbp_add_user_subscription( $user_id, $forum->ID );
+			$status = bboss_bbp_is_user_subscribed( $user_id, $forum->ID ) ? bboss_bbp_remove_user_subscription( $user_id, $forum->ID ) : bboss_bbp_add_user_subscription( $user_id, $forum->ID );
 
 			// Bail if action failed.
 			if ( empty( $status ) ) {
-				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+				bboss_bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
 			}
 
 			// Put subscription attributes in convenient array.
@@ -819,7 +819,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			);
 
 			// Action succeeded.
-			bbp_ajax_response( true, bbp_get_forum_subscription_link( $attrs, $user_id, false ), 200 );
+			bboss_bbp_ajax_response( true, bboss_bbp_get_forum_subscription_link( $attrs, $user_id, false ), 200 );
 		}
 
 		/**
@@ -827,57 +827,57 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses  bbp_is_favorites_active() To check if favorites are active
+		 * @uses  bboss_bbp_is_favorites_active() To check if favorites are active
 		 * @uses  bbp_is_user_logged_in() To check if user is logged in
-		 * @uses  bbp_get_current_user_id() To get the current user id
+		 * @uses  bboss_bbp_get_current_user_id() To get the current user id
 		 * @uses  current_user_can() To check if the current user can edit the user
-		 * @uses  bbp_get_topic() To get the topic
+		 * @uses  bboss_bbp_get_topic() To get the topic
 		 * @uses  wp_verify_nonce() To verify the nonce & check the referer
-		 * @uses  bbp_is_user_favorite() To check if the topic is user's favorite
-		 * @uses  bbp_remove_user_favorite() To remove the topic from user's favorites
-		 * @uses  bbp_add_user_favorite() To add the topic from user's favorites
-		 * @uses  bbp_ajax_response() To return JSON
+		 * @uses  bboss_bbp_is_user_favorite() To check if the topic is user's favorite
+		 * @uses  bboss_bbp_remove_user_favorite() To remove the topic from user's favorites
+		 * @uses  bboss_bbp_add_user_favorite() To add the topic from user's favorites
+		 * @uses  bboss_bbp_ajax_response() To return JSON
 		 */
 		public function ajax_favorite() {
 
 			// Bail if favorites are not active.
-			if ( ! bbp_is_favorites_active() ) {
-				bbp_ajax_response( false, __( 'Saving discussions is no longer active.', 'buddyboss' ), 300 );
+			if ( ! bboss_bbp_is_favorites_active() ) {
+				bboss_bbp_ajax_response( false, __( 'Saving discussions is no longer active.', 'buddyboss' ), 300 );
 			}
 
 			// Bail if user is not logged in.
 			if ( ! is_user_logged_in() ) {
-				bbp_ajax_response( false, __( 'Please login to make this discussion a favorite.', 'buddyboss' ), 301 );
+				bboss_bbp_ajax_response( false, __( 'Please login to make this discussion a favorite.', 'buddyboss' ), 301 );
 			}
 
 			// Get user and topic data.
-			$user_id  = bbp_get_current_user_id();
+			$user_id  = bboss_bbp_get_current_user_id();
 			$topic_id = ! empty( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
-				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
+				bboss_bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
 			}
 
 			// Get the topic.
-			$topic = bbp_get_topic( $topic_id );
+			$topic = bboss_bbp_get_topic( $topic_id );
 
 			// Bail if topic cannot be found.
 			if ( empty( $topic ) ) {
-				bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss' ), 303 );
+				bboss_bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss' ), 303 );
 			}
 
 			// Bail if user did not take this action.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-favorite_' . $topic->ID ) ) {
-				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+				bboss_bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
 			// Take action.
-			$status = bbp_is_user_favorite( $user_id, $topic->ID ) ? bbp_remove_user_favorite( $user_id, $topic->ID ) : bbp_add_user_favorite( $user_id, $topic->ID );
+			$status = bboss_bbp_is_user_favorite( $user_id, $topic->ID ) ? bboss_bbp_remove_user_favorite( $user_id, $topic->ID ) : bboss_bbp_add_user_favorite( $user_id, $topic->ID );
 
 			// Bail if action failed.
 			if ( empty( $status ) ) {
-				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+				bboss_bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
 			}
 
 			// Put subscription attributes in convenient array.
@@ -887,7 +887,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			);
 
 			// Action succeeded.
-			bbp_ajax_response( true, bbp_get_user_favorites_link( $attrs, $user_id, false ), 200 );
+			bboss_bbp_ajax_response( true, bboss_bbp_get_user_favorites_link( $attrs, $user_id, false ), 200 );
 		}
 
 		/**
@@ -895,57 +895,57 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		 *
 		 * @since bbPress (r3732)
 		 *
-		 * @uses  bb_is_enabled_subscription() To check if the subscriptions are active
+		 * @uses  bboss_is_enabled_subscription() To check if the subscriptions are active
 		 * @uses  bbp_is_user_logged_in() To check if user is logged in
-		 * @uses  bbp_get_current_user_id() To get the current user id
+		 * @uses  bboss_bbp_get_current_user_id() To get the current user id
 		 * @uses  current_user_can() To check if the current user can edit the user
-		 * @uses  bbp_get_topic() To get the topic
+		 * @uses  bboss_bbp_get_topic() To get the topic
 		 * @uses  wp_verify_nonce() To verify the nonce
-		 * @uses  bbp_is_user_subscribed() To check if the topic is in user's subscriptions
+		 * @uses  bboss_bbp_is_user_subscribed() To check if the topic is in user's subscriptions
 		 * @uses  bbp_remove_user_subscriptions() To remove the topic from user's subscriptions
 		 * @uses  bbp_add_user_subscriptions() To add the topic from user's subscriptions
-		 * @uses  bbp_ajax_response() To return JSON
+		 * @uses  bboss_bbp_ajax_response() To return JSON
 		 */
 		public function ajax_subscription() {
 
 			// Bail if subscriptions are not active.
-			if ( ! bb_is_enabled_subscription( 'topic' ) ) {
-				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
+			if ( ! bboss_is_enabled_subscription( 'topic' ) ) {
+				bboss_bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
 			}
 
 			// Bail if user is not logged in.
 			if ( ! is_user_logged_in() ) {
-				bbp_ajax_response( false, __( 'Please login to subscribe to this discussion.', 'buddyboss' ), 301 );
+				bboss_bbp_ajax_response( false, __( 'Please login to subscribe to this discussion.', 'buddyboss' ), 301 );
 			}
 
 			// Get user and topic data.
-			$user_id  = bbp_get_current_user_id();
+			$user_id  = bboss_bbp_get_current_user_id();
 			$topic_id = intval( $_POST['id'] );
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
-				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
+				bboss_bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
 			}
 
 			// Get the topic.
-			$topic = bbp_get_topic( $topic_id );
+			$topic = bboss_bbp_get_topic( $topic_id );
 
 			// Bail if topic cannot be found.
 			if ( empty( $topic ) ) {
-				bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss' ), 303 );
+				bboss_bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss' ), 303 );
 			}
 
 			// Bail if user did not take this action.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $topic->ID ) ) {
-				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+				bboss_bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
 			// Take action.
-			$status = bbp_is_user_subscribed( $user_id, $topic->ID ) ? bbp_remove_user_subscription( $user_id, $topic->ID ) : bbp_add_user_subscription( $user_id, $topic->ID );
+			$status = bboss_bbp_is_user_subscribed( $user_id, $topic->ID ) ? bboss_bbp_remove_user_subscription( $user_id, $topic->ID ) : bboss_bbp_add_user_subscription( $user_id, $topic->ID );
 
 			// Bail if action failed.
 			if ( empty( $status ) ) {
-				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+				bboss_bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
 			}
 
 			// Put subscription attributes in convenient array.
@@ -955,9 +955,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			);
 
 			// Action succeeded.
-			bbp_ajax_response( true, bbp_get_user_subscribe_link( $attrs, $user_id, false ), 200 );
+			bboss_bbp_ajax_response( true, bboss_bbp_get_user_subscribe_link( $attrs, $user_id, false ), 200 );
 		}
 	}
 
-	new BBP_Default();
+	new BBoss_BBP_Default();
 endif;

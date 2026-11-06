@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BP_REST_Components_Endpoint class
+ * BP REST: BBoss_REST_Components_Endpoint class
  *
  * @package BuddyBoss
  * @since 0.1.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.1.0
  */
-class BP_REST_Components_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Components_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Allow batch.
@@ -28,7 +28,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'components';
 	}
 
@@ -111,10 +111,10 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		$type = $args['type'];
 
 		// Get all components based on type.
-		$components = bp_core_get_components( $type );
+		$components = bboss_core_get_components( $type );
 
 		// Active components.
-		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
+		$active_components = apply_filters( 'bp_active_components', bboss_get_option( 'bp-active-components' ) );
 
 		// Core component is always active.
 		if ( 'optional' !== $type && array_key_exists( 'core', $components ) ) {
@@ -153,7 +153,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response( $retval );
-		$response = bp_rest_response_add_total_headers( $response, count( $current_components ), $args['per_page'] );
+		$response = bboss_rest_response_add_total_headers( $response, count( $current_components ), $args['per_page'] );
 
 		/**
 		 * Fires after a list of components is fetched via the REST API.
@@ -186,7 +186,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( is_user_logged_in() && bp_current_user_can( 'manage_options' ) ) {
+		if ( is_user_logged_in() && bboss_current_user_can( 'manage_options' ) ) {
 			$retval = true;
 		}
 
@@ -243,7 +243,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( 'activate' === $action ) {
-			if ( bp_is_active( $component ) ) {
+			if ( bboss_is_active( $component ) ) {
 				return new WP_Error(
 					'bp_rest_component_already_active',
 					__( 'Sorry, this component is already active.', 'buddyboss' ),
@@ -255,7 +255,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 
 			$component_info = $this->activate_helper( $component );
 		} else {
-			if ( ! bp_is_active( $component ) ) {
+			if ( ! bboss_is_active( $component ) ) {
 				return new WP_Error(
 					'bp_rest_component_inactive',
 					__( 'Sorry, this component is not active.', 'buddyboss' ),
@@ -265,7 +265,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			if ( array_key_exists( $component, bp_core_get_components( 'required' ) ) ) {
+			if ( array_key_exists( $component, bboss_core_get_components( 'required' ) ) ) {
 				return new WP_Error(
 					'bp_rest_required_component',
 					__( 'Sorry, you cannot deactivate a required component.', 'buddyboss' ),
@@ -362,7 +362,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function verify_component_status( $name ) {
-		if ( 'core' === $name || bp_is_active( $name ) ) {
+		if ( 'core' === $name || bboss_is_active( $name ) ) {
 			return __( 'active', 'buddyboss' );
 		}
 
@@ -379,13 +379,13 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 */
 	protected function deactivate_helper( $component ) {
 
-		$active_components =& buddypress()->active_components;
+		$active_components =& bboss()->active_components;
 
 		// Set for the rest of the page load.
 		unset( $active_components[ $component ] );
 
 		// Save in the db.
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		return $this->get_component_info( $component );
 	}
@@ -400,13 +400,13 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 */
 	protected function activate_helper( $component ) {
 
-		$active_components =& buddypress()->active_components;
+		$active_components =& bboss()->active_components;
 
 		// Set for the rest of the page load.
 		$active_components[ $component ] = 1;
 
 		// Save in the db.
-		bp_update_option( 'bp-active-components', $active_components );
+		bboss_update_option( 'bp-active-components', $active_components );
 
 		// Ensure that dbDelta() is defined.
 		if ( ! function_exists( 'dbDelta' ) ) {
@@ -414,10 +414,10 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		}
 
 		// Run the setup, in case tables have to be created.
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+		require_once bboss()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
 
-		bp_core_install( $active_components );
-		bp_core_add_page_mappings( $active_components );
+		bboss_core_install( $active_components );
+		bboss_core_add_page_mappings( $active_components );
 
 		return $this->get_component_info( $component );
 	}
@@ -433,7 +433,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	public function get_component_info( $component ) {
 
 		// Get all components.
-		$components = bp_core_get_components();
+		$components = bboss_core_get_components();
 
 		// Get specific component info.
 		$info = $components[ $component ];
@@ -460,7 +460,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function component_exists( $component ) {
-		return in_array( $component, array_keys( bp_core_get_components() ), true );
+		return in_array( $component, array_keys( bboss_core_get_components() ), true );
 	}
 
 	/**
@@ -543,3 +543,11 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_components_collection_params', $params );
 	}
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Components_Endpoint', false ) || interface_exists( 'BBoss_REST_Components_Endpoint', false ) || trait_exists( 'BBoss_REST_Components_Endpoint', false ) ) && ! class_exists( 'BP_REST_Components_Endpoint', false ) && ! interface_exists( 'BP_REST_Components_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Components_Endpoint', 'BP_REST_Components_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

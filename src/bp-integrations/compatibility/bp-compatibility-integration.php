@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.5
  */
-class BP_Compatibility_Integration extends BP_Integration {
+class BBoss_Compatibility_Integration extends BBoss_Integration {
 
 	public function __construct() {
 		$this->start(
@@ -70,11 +70,11 @@ class BP_Compatibility_Integration extends BP_Integration {
 
 		if (
 			! empty( $extractedLinks )
-			&& in_array( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ), $extractedLinks )
+			&& in_array( bboss_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ), $extractedLinks )
 		) {
 			// Add a few links to the existing links array.
 			return array_merge( $link, array(
-				'settings' => '<a href="' . esc_url( bp_get_admin_url( add_query_arg( array(
+				'settings' => '<a href="' . esc_url( bboss_get_admin_url( add_query_arg( array(
 						'page' => 'bp-integrations',
 						'tab'  => 'bp-compatibility'
 					), 'admin.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
@@ -93,7 +93,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 
 		require_once trailingslashit( $this->path ) . 'bp-admin-compatibility-tab.php';
 
-		new BP_Compatibility_Admin_Integration_Tab(
+		new BBoss_Compatibility_Admin_Integration_Tab(
 			"bp-{$this->id}",
 			$this->name,
 			array(

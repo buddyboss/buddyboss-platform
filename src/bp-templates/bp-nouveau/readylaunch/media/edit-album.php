@@ -5,7 +5,7 @@
  * This template handles the edit album modal and functionality.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit;
 
 global $media_album_template;
 
-$album_id         = (int) bp_action_variable( 0 );
-$bp_is_my_profile = bp_is_my_profile();
-$bp_is_group      = bp_is_group();
+$album_id         = (int) bboss_action_variable( 0 );
+$bp_is_my_profile = bboss_is_my_profile();
+$bp_is_group      = bboss_is_group();
 
 $bp_is_user_video = false;
-if ( bp_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_id ) ) ) {
-	$bp_is_user_video = bp_is_user_video();
+if ( bboss_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_id ) ) ) {
+	$bp_is_user_video = bboss_is_user_video();
 }
 ?>
 <div id="bb-rl-media-edit-album" class="bb-rl-media-edit-album bb-rl-modal-edit-album" style="display: none;" data-activity-id="" data-id="" data-attachment-id="" data-privacy="">
@@ -47,9 +47,9 @@ if ( bp_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_
 							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show bb-rl-filter">
 								<select id="bb-album-privacy">
 									<?php
-									foreach ( ( bp_is_active( 'video' ) ? bp_video_get_visibility_levels() : bp_media_get_visibility_levels() ) as $k => $option ) {
+									foreach ( ( bboss_is_active( 'video' ) ? bp_video_get_visibility_levels() : bboss_media_get_visibility_levels() ) as $k => $option ) {
 										$selected = '';
-										$privacy  = bp_get_album_privacy();
+										$privacy  = bboss_get_album_privacy();
 										if ( $k === $privacy ) {
 											$selected = 'selected="selectred"';}
 										?>

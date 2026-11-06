@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function groups_screen_group_subgroups() {
 
-	if ( ! bp_is_single_item() ) {
+	if ( ! bboss_is_single_item() ) {
 		return false;
 	}
 
@@ -34,6 +34,6 @@ function groups_screen_group_subgroups() {
 	 *
 	 * @param string $value Path to a single group's template to load.
 	 */
-	bp_core_load_template( apply_filters( 'groups_screen_group_subgroups', 'groups/single/home' ) );
+	bboss_core_load_template( apply_filters( 'groups_screen_group_subgroups', 'groups/single/home' ) );
 
 }

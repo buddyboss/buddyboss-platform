@@ -14,7 +14,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-class BP_Messages_Notices_List_Table extends WP_List_Table {
+class BBoss_Messages_Notices_List_Table extends WP_List_Table {
 
 	/**
 	 * Constructor
@@ -38,7 +38,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function ajax_user_can() {
-		return bp_current_user_can( 'bp_moderate' );
+		return bboss_current_user_can( 'bp_moderate' );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 		$page     = $this->get_pagenum();
 		$per_page = $this->get_items_per_page( 'bp_notices_per_page' );
 
-		$this->items = BP_Messages_Notice::get_notices(
+		$this->items = BBoss_Messages_Notice::get_notices(
 			array(
 				'pag_num'  => $per_page,
 				'pag_page' => $page,
@@ -62,7 +62,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 
 		$this->set_pagination_args(
 			array(
-				'total_items' => BP_Messages_Notice::get_total_notice_count(),
+				'total_items' => BBoss_Messages_Notice::get_total_notice_count(),
 				'per_page'    => $per_page,
 			)
 		);
@@ -125,7 +125,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 								'notice_action' => 'activate',
 								'notice_id'     => $item->id,
 							),
-							bp_get_admin_url( 'admin.php' )
+							bboss_get_admin_url( 'admin.php' )
 						),
 						'messages-activate-notice-' . $item->id
 					)
@@ -143,7 +143,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 								'notice_action' => 'delete',
 								'notice_id'     => $item->id,
 							),
-							bp_get_admin_url( 'admin.php' )
+							bboss_get_admin_url( 'admin.php' )
 						),
 						'messages-delete-notice-' . $item->id
 					)
@@ -166,7 +166,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 								'notice_action' => 'deactivate',
 								'notice_id'     => $item->id,
 							),
-							bp_get_admin_url( 'admin.php' )
+							bboss_get_admin_url( 'admin.php' )
 						),
 						'messages-deactivate-notice-' . $item->id
 					)
@@ -198,6 +198,6 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	public function column_date_sent( $item ) {
-		echo esc_html( apply_filters( 'bp_get_message_notice_post_date', bp_format_time( strtotime( $item->date_sent ) ) ) );
+		echo esc_html( apply_filters( 'bp_get_message_notice_post_date', bboss_format_time( strtotime( $item->date_sent ) ) ) );
 	}
 }

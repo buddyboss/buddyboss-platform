@@ -9,13 +9,13 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BBP_Shortcodes' ) ) :
+if ( ! class_exists( 'BBoss_BBP_Shortcodes' ) ) :
 	/**
 	 * Forums Shortcode Class
 	 *
 	 * @since bbPress (r3031)
 	 */
-	class BBP_Shortcodes {
+	class BBoss_BBP_Shortcodes {
 
 		/** Vars ******************************************************************/
 
@@ -111,7 +111,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 * @since bbPress (r3034)
 		 */
 		private function unset_globals() {
-			$bbp = bbpress();
+			$bbp = bboss_forums();
 
 			// Unset global queries.
 			$bbp->forum_query  = new WP_Query();
@@ -143,13 +143,13 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @param string $query_name
 		 *
-		 * @uses bbp_set_query_name()
+		 * @uses bboss_bbp_set_query_name()
 		 * @uses ob_start()
 		 */
 		private function start( $query_name = '' ) {
 
 			// Set query name.
-			bbp_set_query_name( $query_name );
+			bboss_bbp_set_query_name( $query_name );
 
 			// Set shortcode query name.
 			set_query_var( '_bbp_shortcode_query', 'bbp_shortcodes' );
@@ -166,7 +166,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @since bbPress( r3079)
 		 *
-		 * @uses BBP_Shortcodes::unset_globals() Cleans up global values
+		 * @uses BBoss_BBP_Shortcodes::unset_globals() Cleans up global values
 		 * @return string Contents of output buffer.
 		 */
 		private function end() {
@@ -175,10 +175,10 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->unset_globals();
 
 			// Get the query name, for filter.
-			$query_name = bbp_get_query_name();
+			$query_name = bboss_bbp_get_query_name();
 
 			// Reset the query name.
-			bbp_reset_query_name();
+			bboss_bbp_reset_query_name();
 
 			// Return and flush the output buffer.
 			$output = ob_get_clean();
@@ -197,7 +197,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @param array  $attr
 		 * @param string $content
-		 * @uses bbp_has_forums()
+		 * @uses bboss_bbp_has_forums()
 		 * @uses get_template_part()
 		 * @return string
 		 */
@@ -209,7 +209,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			// Start output buffer.
 			$this->start( 'bbp_forum_archive' );
 
-			bbp_get_template_part( 'content', 'archive-forum' );
+			bboss_bbp_get_template_part( 'content', 'archive-forum' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -224,7 +224,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 * @param array  $attr
 		 * @param string $content
 		 * @uses get_template_part()
-		 * @uses bbp_single_forum_description()
+		 * @uses bboss_bbp_single_forum_description()
 		 * @return string
 		 */
 		public function display_forum( $attr, $content = '' ) {
@@ -235,10 +235,10 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			}
 
 			// Set passed attribute to $forum_id for clarity.
-			$forum_id = bbpress()->current_forum_id = $attr['id'];
+			$forum_id = bboss_forums()->current_forum_id = $attr['id'];
 
 			// Bail if ID passed is not a forum.
-			if ( ! bbp_is_forum( $forum_id ) ) {
+			if ( ! bboss_bbp_is_forum( $forum_id ) ) {
 				return $content;
 			}
 
@@ -246,12 +246,12 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_single_forum' );
 
 			// Check forum caps.
-			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
-				bbp_get_template_part( 'content', 'single-forum' );
+			if ( bboss_bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
+				bboss_bbp_get_template_part( 'content', 'single-forum' );
 
 				// Forum is private/hidden and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+			} elseif ( bboss_bbp_is_forum_private( $forum_id, false ) || bboss_bbp_is_forum_hidden( $forum_id, false ) ) {
+				bboss_bbp_get_template_part( 'feedback', 'no-access' );
 			}
 
 			// Return contents of output buffer.
@@ -272,7 +272,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_forum_form' );
 
 			// Output templates.
-			bbp_get_template_part( 'form', 'forum' );
+			bboss_bbp_get_template_part( 'form', 'forum' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -288,7 +288,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @param array  $attr
 		 * @param string $content
-		 * @uses bbp_get_hidden_forum_ids()
+		 * @uses bboss_bbp_get_hidden_forum_ids()
 		 * @uses get_template_part()
 		 * @return string
 		 */
@@ -298,7 +298,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->unset_globals();
 
 			// Filter the query.
-			if ( ! bbp_is_topic_archive() ) {
+			if ( ! bboss_bbp_is_topic_archive() ) {
 				add_filter( 'bbp_before_has_topics_parse_args', array( $this, 'display_topic_index_query' ) );
 			}
 
@@ -306,7 +306,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_topic_archive' );
 
 			// Output template.
-			bbp_get_template_part( 'content', 'archive-topic' );
+			bboss_bbp_get_template_part( 'content', 'archive-topic' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -334,26 +334,26 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->unset_globals();
 
 			// Set passed attribute to $forum_id for clarity.
-			$topic_id = bbpress()->current_topic_id = $attr['id'];
-			$forum_id = bbp_get_topic_forum_id( $topic_id );
+			$topic_id = bboss_forums()->current_topic_id = $attr['id'];
+			$forum_id = bboss_bbp_get_topic_forum_id( $topic_id );
 
 			// Bail if ID passed is not a topic.
-			if ( ! bbp_is_topic( $topic_id ) ) {
+			if ( ! bboss_bbp_is_topic( $topic_id ) ) {
 				return $content;
 			}
 
 			// Reset the queries if not in theme compat.
-			if ( ! bbp_is_theme_compat_active() ) {
+			if ( ! bboss_bbp_is_theme_compat_active() ) {
 
-				$bbp = bbpress();
+				$bbp = bboss_forums();
 
 				// Reset necessary forum_query attributes for topics loop to function.
-				$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
+				$bbp->forum_query->query_vars['post_type'] = bboss_bbp_get_forum_post_type();
 				$bbp->forum_query->in_the_loop             = true;
 				$bbp->forum_query->post                    = get_post( $forum_id );
 
 				// Reset necessary topic_query attributes for topics loop to function.
-				$bbp->topic_query->query_vars['post_type'] = bbp_get_topic_post_type();
+				$bbp->topic_query->query_vars['post_type'] = bboss_bbp_get_topic_post_type();
 				$bbp->topic_query->in_the_loop             = true;
 				$bbp->topic_query->post                    = get_post( $topic_id );
 			}
@@ -362,12 +362,12 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_single_topic' );
 
 			// Check forum caps.
-			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
-				bbp_get_template_part( 'content', 'single-topic' );
+			if ( bboss_bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
+				bboss_bbp_get_template_part( 'content', 'single-topic' );
 
 				// Forum is private/hidden and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access-topic' );
+			} elseif ( bboss_bbp_is_forum_private( $forum_id, false ) || bboss_bbp_is_forum_hidden( $forum_id, false ) ) {
+				bboss_bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
 
@@ -393,7 +393,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		public function display_topic_form( $attr = array(), $content = '' ) {
 
 			// Sanity check supplied info.
-			if ( ! empty( $content ) || ( ! empty( $attr['forum_id'] ) && ( ! is_numeric( $attr['forum_id'] ) || ! bbp_is_forum( $attr['forum_id'] ) ) ) ) {
+			if ( ! empty( $content ) || ( ! empty( $attr['forum_id'] ) && ( ! is_numeric( $attr['forum_id'] ) || ! bboss_bbp_is_forum( $attr['forum_id'] ) ) ) ) {
 				return $content;
 			}
 
@@ -404,7 +404,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			if ( ! empty( $attr['forum_id'] ) ) {
 
 				// Set the global current_forum_id for future requests.
-				bbpress()->current_forum_id = $forum_id = bbp_get_forum_id( $attr['forum_id'] );
+				bboss_forums()->current_forum_id = $forum_id = bboss_bbp_get_forum_id( $attr['forum_id'] );
 
 				// Start output buffer.
 				$this->start( 'bbp_single_forum' );
@@ -420,12 +420,12 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			}
 
 			// If the forum id is set, check forum caps else display normal topic form.
-			if ( empty( $forum_id ) || bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
-				bbp_get_template_part( 'form', 'topic' );
+			if ( empty( $forum_id ) || bboss_bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
+				bboss_bbp_get_template_part( 'form', 'topic' );
 
 				// Forum is private/hidden and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access-topic' );
+			} elseif ( bboss_bbp_is_forum_private( $forum_id, false ) || bboss_bbp_is_forum_hidden( $forum_id, false ) ) {
+				bboss_bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
 			// Return contents of output buffer.
@@ -456,26 +456,26 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->unset_globals();
 
 			// Set passed attribute to $reply_id for clarity.
-			$reply_id = bbpress()->current_reply_id = $attr['id'];
-			$forum_id = bbp_get_reply_forum_id( $reply_id );
+			$reply_id = bboss_forums()->current_reply_id = $attr['id'];
+			$forum_id = bboss_bbp_get_reply_forum_id( $reply_id );
 
 			// Bail if ID passed is not a reply.
-			if ( ! bbp_is_reply( $reply_id ) ) {
+			if ( ! bboss_bbp_is_reply( $reply_id ) ) {
 				return $content;
 			}
 
 			// Reset the queries if not in theme compat.
-			if ( ! bbp_is_theme_compat_active() ) {
+			if ( ! bboss_bbp_is_theme_compat_active() ) {
 
-				$bbp = bbpress();
+				$bbp = bboss_forums();
 
 				// Reset necessary forum_query attributes for replys loop to function.
-				$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
+				$bbp->forum_query->query_vars['post_type'] = bboss_bbp_get_forum_post_type();
 				$bbp->forum_query->in_the_loop             = true;
 				$bbp->forum_query->post                    = get_post( $forum_id );
 
 				// Reset necessary reply_query attributes for replys loop to function.
-				$bbp->reply_query->query_vars['post_type'] = bbp_get_reply_post_type();
+				$bbp->reply_query->query_vars['post_type'] = bboss_bbp_get_reply_post_type();
 				$bbp->reply_query->in_the_loop             = true;
 				$bbp->reply_query->post                    = get_post( $reply_id );
 			}
@@ -484,12 +484,12 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_single_reply' );
 
 			// Check forum caps.
-			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
-				bbp_get_template_part( 'content', 'single-reply' );
+			if ( bboss_bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
+				bboss_bbp_get_template_part( 'content', 'single-reply' );
 
 				// Forum is private/hidden and user does not have caps.
-			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access-reply' );
+			} elseif ( bboss_bbp_is_forum_private( $forum_id, false ) || bboss_bbp_is_forum_hidden( $forum_id, false ) ) {
+				bboss_bbp_get_template_part( 'feedback', 'no-access-reply' );
 			}
 
 			// Return contents of output buffer.
@@ -506,7 +506,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_reply_form( $attr = array(), $content = '' ) {
 
-			if ( isset( $attr['id'] ) && bbp_is_topic( $attr['id'] ) ) {
+			if ( isset( $attr['id'] ) && bboss_bbp_is_topic( $attr['id'] ) ) {
 				// Unset globals.
 				$this->unset_globals();
 
@@ -514,25 +514,25 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				$topic_id = 0;
 
 				// Get forum ID from given topic ID.
-				$forum_id = bbp_get_reply_forum_id( $attr['id'] );
+				$forum_id = bboss_bbp_get_reply_forum_id( $attr['id'] );
 				$topic_id = $attr['id'];
 
 				// Set global variables.
-				bbpress()->current_forum_id = $forum_id;
-				bbpress()->current_topic_id = $topic_id;
+				bboss_forums()->current_forum_id = $forum_id;
+				bboss_forums()->current_topic_id = $topic_id;
 
 				// Reset the queries if not in theme compat.
-				if ( ! bbp_is_theme_compat_active() ) {
+				if ( ! bboss_bbp_is_theme_compat_active() ) {
 
-					$bbp = bbpress();
+					$bbp = bboss_forums();
 
 					// Reset necessary forum_query attributes for replies loop to function.
-					$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
+					$bbp->forum_query->query_vars['post_type'] = bboss_bbp_get_forum_post_type();
 					$bbp->forum_query->in_the_loop             = true;
 					$bbp->forum_query->post                    = get_post( $forum_id );
 
 					// Reset necessary topic_query attributes for replies loop to function.
-					$bbp->topic_query->query_vars['post_type'] = bbp_get_topic_post_type();
+					$bbp->topic_query->query_vars['post_type'] = bboss_bbp_get_topic_post_type();
 					$bbp->topic_query->in_the_loop             = true;
 					$bbp->topic_query->post                    = get_post( $topic_id );
 				}
@@ -542,7 +542,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_reply_form' );
 
 			// Output templates.
-			bbp_get_template_part( 'form', 'reply' );
+			bboss_bbp_get_template_part( 'form', 'reply' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -572,7 +572,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 					'smallest' => 9,
 					'largest'  => 38,
 					'number'   => 80,
-					'taxonomy' => bbp_get_topic_tag_tax_id(),
+					'taxonomy' => bboss_bbp_get_topic_tag_tax_id(),
 				)
 			);
 
@@ -602,7 +602,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->unset_globals();
 
 			// Filter the query.
-			if ( ! bbp_is_topic_tag() ) {
+			if ( ! bboss_bbp_is_topic_tag() ) {
 				add_filter( 'bbp_before_has_topics_parse_args', array( $this, 'display_topics_of_tag_query' ) );
 			}
 
@@ -610,10 +610,10 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_topic_tag' );
 
 			// Set passed attribute to $ag_id for clarity.
-			bbpress()->current_topic_tag_id = $tag_id = $attr['id'];
+			bboss_forums()->current_topic_tag_id = $tag_id = $attr['id'];
 
 			// Output template.
-			bbp_get_template_part( 'content', 'archive-topic' );
+			bboss_bbp_get_template_part( 'content', 'archive-topic' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -639,7 +639,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_topic_tag_edit' );
 
 			// Output template.
-			bbp_get_template_part( 'content', 'topic-tag-edit' );
+			bboss_bbp_get_template_part( 'content', 'topic-tag-edit' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -656,7 +656,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 * @param array  $attr
 		 * @param string $content
 		 * @uses get_template_part()
-		 * @uses bbp_single_forum_description()
+		 * @uses bboss_bbp_single_forum_description()
 		 * @return string
 		 */
 		public function display_view( $attr, $content = '' ) {
@@ -676,13 +676,13 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->unset_globals();
 
 			// Set the current view ID.
-			bbpress()->current_view_id = $view_id;
+			bboss_forums()->current_view_id = $view_id;
 
 			// Load the view.
-			bbp_view_query( $view_id );
+			bboss_bbp_view_query( $view_id );
 
 			// Output template.
-			bbp_get_template_part( 'content', 'single-view' );
+			bboss_bbp_get_template_part( 'content', 'single-view' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -701,7 +701,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		public function display_search_form() {
 
 			// Bail if search is disabled.
-			if ( ! bbp_allow_search() ) {
+			if ( ! bboss_bbp_allow_search() ) {
 				return;
 			}
 
@@ -709,7 +709,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_search_form' );
 
 			// Output templates.
-			bbp_get_template_part( 'form', 'search' );
+			bboss_bbp_get_template_part( 'form', 'search' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -723,7 +723,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 *
 		 * @param array  $attr
 		 * @param string $content
-		 * @uses bbp_search_query()
+		 * @uses bboss_bbp_search_query()
 		 * @uses get_template_part()
 		 */
 		public function display_search( $attr, $content = '' ) {
@@ -734,7 +734,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			}
 
 			// Bail if search is disabled.
-			if ( ! bbp_allow_search() ) {
+			if ( ! bboss_bbp_allow_search() ) {
 				return;
 			}
 
@@ -745,11 +745,11 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 			// Set passed attribute to $search_terms for clarity
 			$search_terms = empty( $attr['search'] )
-				? bbp_get_search_terms()
+				? bboss_bbp_get_search_terms()
 				: $attr['search'];
 
 			// Get the rewrite ID (one time, to avoid repeated calls)
-			$rewrite_id = bbp_get_search_rewrite_id();
+			$rewrite_id = bboss_bbp_get_search_rewrite_id();
 
 			// Unset globals.
 			$this->unset_globals();
@@ -761,7 +761,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( $rewrite_id );
 
 			// Output template.
-			bbp_get_template_part( 'content', 'search' );
+			bboss_bbp_get_template_part( 'content', 'search' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -785,7 +785,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start();
 
 			// Output statistics.
-			bbp_get_template_part( 'content', 'statistics' );
+			bboss_bbp_get_template_part( 'content', 'statistics' );
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -807,7 +807,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start();
 
 			// Output breadcrumb.
-			bbp_breadcrumb();
+			bboss_bbp_breadcrumb();
 
 			// Return contents of output buffer.
 			return $this->end();
@@ -839,12 +839,12 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 * @return array
 		 */
 		public function display_topics_of_tag_query( $args = array() ) {
-			if ( ! empty( bbpress()->current_topic_tag_id ) ) {
+			if ( ! empty( bboss_forums()->current_topic_tag_id ) ) {
 				$args['tax_query'] = array(
 					array(
-						'taxonomy' => bbp_get_topic_tag_tax_id(),
+						'taxonomy' => bboss_bbp_get_topic_tag_tax_id(),
 						'field'    => 'id',
-						'terms'    => bbpress()->current_topic_tag_id,
+						'terms'    => bboss_forums()->current_topic_tag_id,
 					),
 				);
 			}

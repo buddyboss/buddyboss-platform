@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.2.0
  */
-class BP_XProfile_Query {
+class BBoss_XProfile_Query {
 
 	/**
 	 * Array of xprofile queries.
@@ -192,7 +192,7 @@ class BP_XProfile_Query {
 	/**
 	 * Generate SQL clauses to be appended to a main query.
 	 *
-	 * Called by the public {@see BP_XProfile_Query::get_sql()}, this method is abstracted out to maintain parity
+	 * Called by the public {@see BBoss_XProfile_Query::get_sql()}, this method is abstracted out to maintain parity
 	 * with WP's Query classes.
 	 *
 	 * @since BuddyPress 2.2.0
@@ -393,7 +393,7 @@ class BP_XProfile_Query {
 		// First build the JOIN clause, if one is required.
 		$join = '';
 
-		$data_table = buddypress()->profile->table_name_data;
+		$data_table = bboss()->profile->table_name_data;
 
 		// We prefer to avoid joins if possible. Look for an existing join compatible with this clause.
 		$alias = $this->find_compatible_table_alias( $clause, $parent_query );
@@ -428,7 +428,7 @@ class BP_XProfile_Query {
 		if ( array_key_exists( 'field', $clause ) ) {
 			// Convert field name to ID if necessary.
 			if ( ! is_numeric( $clause['field'] ) ) {
-				$clause['field'] = xprofile_get_field_id_from_name( $clause['field'] );
+				$clause['field'] = bboss_xprofile_get_field_id_from_name( $clause['field'] );
 			}
 
 			// NOT EXISTS has its own syntax.
@@ -467,7 +467,7 @@ class BP_XProfile_Query {
 
 				case 'LIKE':
 				case 'NOT LIKE':
-					$field_value = '%' . bp_esc_like( $field_value ) . '%';
+					$field_value = '%' . bboss_esc_like( $field_value ) . '%';
 					$where       = $wpdb->prepare( '%s', $field_value );
 					break;
 
@@ -498,7 +498,7 @@ class BP_XProfile_Query {
 	 * We avoid unnecessary table joins by allowing each clause to look for an existing table alias that is
 	 * compatible with the query that it needs to perform. An existing alias is compatible if (a) it is a
 	 * sibling of $clause (ie, it's under the scope of the same relation), and (b) the combination of
-	 * operator and relation between the clauses allows for a shared table join. In the case of BP_XProfile_Query,
+	 * operator and relation between the clauses allows for a shared table join. In the case of BBoss_XProfile_Query,
 	 * this * only applies to IN clauses that are connected by the relation OR.
 	 *
 	 * @since BuddyPress 2.2.0

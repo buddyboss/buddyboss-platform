@@ -3,7 +3,7 @@
  * New/Edit Reply
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -12,23 +12,23 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<?php if ( bbp_is_reply_edit() ) : ?>
+<?php if ( bboss_bbp_is_reply_edit() ) : ?>
 
 <div id="bbpress-forums">
 
 <?php endif; ?>
 
-<?php if ( bbp_current_user_can_access_create_reply_form() ) : ?>
+<?php if ( bboss_bbp_current_user_can_access_create_reply_form() ) : ?>
 
-	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form bb-rl-forum-modal <?php echo ( bbp_is_reply_edit() ? 'bb-rl-forum-modal--static' : '' ); ?>">
+	<div id="new-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-reply-form bb-rl-forum-modal <?php echo ( bboss_bbp_is_reply_edit() ? 'bb-rl-forum-modal--static' : '' ); ?>">
 
-		<form id="new-post" class="bb-rl-forum-form" name="new-post" method="post" action="<?php bbp_is_reply_edit() ? bbp_reply_edit_url() : the_permalink(); ?>">
+		<form id="new-post" class="bb-rl-forum-form" name="new-post" method="post" action="<?php bboss_bbp_is_reply_edit() ? bboss_bbp_reply_edit_url() : the_permalink(); ?>">
 
 			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
 
 			<fieldset class="bbp-form">
 				<div class="bb-rl-forum-modal-header">
-					<?php if ( ! bbp_is_reply_edit() ) : ?>
+					<?php if ( ! bboss_bbp_is_reply_edit() ) : ?>
 						<h3><?php esc_html_e( 'Replying to', 'buddyboss' ); ?></h3>
 					<?php else : ?>
 						<h3><?php esc_html_e( 'Edit reply', 'buddyboss' ); ?></h3>
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
 
-				<?php if ( ! bbp_is_topic_open() && ! bbp_is_reply_edit() ) : ?>
+				<?php if ( ! bboss_bbp_is_topic_open() && ! bboss_bbp_is_reply_edit() ) : ?>
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<div class="bb-rl-forum-modal-content">
 
-					<?php if ( ! bbp_is_reply_edit() ) : ?>
+					<?php if ( ! bboss_bbp_is_reply_edit() ) : ?>
 						<div class="bb-rl-reply-header">
 							<div class="bb-rl-reply-header-avatar">
 								<img class="bb-rl-avatar" alt="<?php esc_attr_e( 'Reply author avatar', 'buddyboss' ); ?>" />
@@ -67,44 +67,44 @@ defined( 'ABSPATH' ) || exit;
 					<?php else : ?>
 						<div class="bb-rl-reply-header">
 							<div class="bb-rl-reply-header-avatar">
-								<?php bbp_topic_author_link( array( 'size' => '48' ) ); ?>
+								<?php bboss_bbp_topic_author_link( array( 'size' => '48' ) ); ?>
 							</div>
 							<div class="bb-rl-reply-header-content">
-								<h4 class="bb-rl-reply-header-title"><?php echo bbp_get_topic_author_display_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() is self-escaping. ?></h4>
-								<p class="bb-rl-reply-header-excerpt"><?php bbp_reply_excerpt( bbp_get_topic_id(), 50 ); ?></p>
+								<h4 class="bb-rl-reply-header-title"><?php echo bboss_bbp_get_topic_author_display_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() is self-escaping. ?></h4>
+								<p class="bb-rl-reply-header-excerpt"><?php bboss_bbp_reply_excerpt( bboss_bbp_get_topic_id(), 50 ); ?></p>
 							</div>
 						</div>
 					<?php endif; ?>
 
-					<?php bbp_get_template_part( 'form', 'anonymous' ); ?>
+					<?php bboss_bbp_get_template_part( 'form', 'anonymous' ); ?>
 
 					<?php do_action( 'bbp_theme_before_reply_form_content' ); ?>
 
-					<?php bbp_the_content( array( 'context' => 'reply' ) ); ?>
+					<?php bboss_bbp_the_content( array( 'context' => 'reply' ) ); ?>
 
 					<?php do_action( 'bbp_theme_after_reply_form_content' ); ?>
 
-					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
+					<?php if ( ! ( bboss_bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
 							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ) ); ?></label><br />
-							<code><?php bbp_allowed_tags(); ?></code>
+							<code><?php bboss_bbp_allowed_tags(); ?></code>
 						</p>
 
 					<?php endif; ?>
 
-					<?php if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) : ?>
+					<?php if ( bboss_bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_reply_form_tags' ); ?>
 
 						<?php
-						$get_topic_id = bbp_get_topic_id();
-						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bbp_get_topic_tag_names( $get_topic_id ) : array();
+						$get_topic_id = bboss_bbp_get_topic_id();
+						$get_the_tags = isset( $get_topic_id ) && ! empty( $get_topic_id ) ? bboss_bbp_get_topic_tag_names( $get_topic_id ) : array();
 						?>
 
 						<p class="bb-rl-forum-tags">
 							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tags, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bboss_bbp_tab_index(); ?>">
 								<?php
 								if ( ! empty( $get_the_tags ) ) {
 									$get_the_tags = explode( ',', $get_the_tags );
@@ -123,19 +123,19 @@ defined( 'ABSPATH' ) || exit;
 
 					<?php endif; ?>
 
-					<?php if ( bbp_allow_revisions() && bbp_is_reply_edit() ) : ?>
+					<?php if ( bboss_bbp_allow_revisions() && bboss_bbp_is_reply_edit() ) : ?>
 
 						<?php do_action( 'bbp_theme_before_reply_form_revisions' ); ?>
 
 					<fieldset class="bbp-form bb-rl-reply-log-edit">
 						<div class="bp-checkbox-wrap">
-							<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_reply_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bboss_bbp_form_reply_log_edit(); ?> tabindex="<?php bboss_bbp_tab_index(); ?>" />
 							<label for="bbp_log_reply_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss' ); ?></label>
 						</div>
 
 						<div class="bb-rl-forum-edit-reason">
-							<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss' ), esc_html( bbp_get_current_user_name() ) ); ?></label><br />
-							<input type="text" value="<?php bbp_form_reply_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
+							<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss' ), esc_html( bboss_bbp_get_current_user_name() ) ); ?></label><br />
+							<input type="text" value="<?php bboss_bbp_form_reply_edit_reason(); ?>" tabindex="<?php bboss_bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
 						</div>
 					</fieldset>
 
@@ -146,14 +146,14 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 
 				<div class="bb-rl-forum-modal-footer">
-					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+					<?php bboss_bbp_get_template_part( 'form', 'attachments' ); ?>
 
-					<?php if ( bb_is_enabled_subscription( 'topic' ) && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
+					<?php if ( bboss_is_enabled_subscription( 'topic' ) && ! bboss_bbp_is_anonymous() && ( ! bboss_bbp_is_reply_edit() || ( bboss_bbp_is_reply_edit() && ! bboss_bbp_is_reply_anonymous() ) ) ) : ?>
 
 						<?php
 						if (
-							bb_enabled_legacy_email_preference() ||
-							( ! bb_enabled_legacy_email_preference() && bb_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) )
+							bboss_enabled_legacy_email_preference() ||
+							( ! bboss_enabled_legacy_email_preference() && bboss_get_modern_notification_admin_settings_is_enabled( 'bb_forums_subscribed_reply' ) )
 						) {
 							?>
 
@@ -161,18 +161,18 @@ defined( 'ABSPATH' ) || exit;
 
 							<p class="checkbox bp-checkbox-wrap bb-rl-forum-subscription">
 
-								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+								<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bboss_bbp_form_topic_subscribed(); ?> tabindex="<?php bboss_bbp_tab_index(); ?>" />
 
 								<?php
-								if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) :
+								if ( bboss_bbp_is_reply_edit() && ( bboss_bbp_get_reply_author_id() !== bboss_bbp_get_current_user_id() ) ) :
 
 									if (
 										(
-											function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference()
+											function_exists( 'bboss_enabled_legacy_email_preference' ) && bboss_enabled_legacy_email_preference()
 										) ||
 										(
-											function_exists( 'bp_is_active' ) &&
-											! bp_is_active( 'notifications' )
+											function_exists( 'bboss_is_active' ) &&
+											! bboss_is_active( 'notifications' )
 										)
 									) {
 										?>
@@ -185,11 +185,11 @@ defined( 'ABSPATH' ) || exit;
 									}
 								elseif (
 										(
-											function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference()
+											function_exists( 'bboss_enabled_legacy_email_preference' ) && bboss_enabled_legacy_email_preference()
 										) ||
 										(
-											function_exists( 'bp_is_active' ) &&
-											! bp_is_active( 'notifications' )
+											function_exists( 'bboss_is_active' ) &&
+											! bboss_is_active( 'notifications' )
 										)
 									) :
 
@@ -218,11 +218,11 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php do_action( 'bbp_theme_before_reply_form_submit_button' ); ?>
 
-						<?php bbp_cancel_reply_to_link(); ?>
+						<?php bboss_bbp_cancel_reply_to_link(); ?>
 
-						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="bb-rl-button bb-rl-button--tertiaryText bb-rl-button--small discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
+						<button type="button" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="bb-rl-button bb-rl-button--tertiaryText bb-rl-button--small discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Post', 'buddyboss' ); ?></button>
+						<button type="submit" tabindex="<?php bboss_bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Post', 'buddyboss' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>
 
@@ -232,7 +232,7 @@ defined( 'ABSPATH' ) || exit;
 
 				</div>
 
-				<?php bbp_reply_form_fields(); ?>
+				<?php bboss_bbp_reply_form_fields(); ?>
 
 			</fieldset>
 
@@ -242,29 +242,29 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-forum-modal-overlay"></div>
 	</div>
 
-<?php elseif ( bbp_is_topic_closed() ) : ?>
+<?php elseif ( bboss_bbp_is_topic_closed() ) : ?>
 
-	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
+	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
 				<?php
 				/* translators: %s: Topic title */
-				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss' ), bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping.
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss' ), bboss_bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping.
 				?>
 			</p>
 		</div>
 	</div>
 
-<?php elseif ( bbp_is_forum_closed( bbp_get_topic_forum_id() ) ) : ?>
+<?php elseif ( bboss_bbp_is_forum_closed( bboss_bbp_get_topic_forum_id() ) ) : ?>
 
-	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
+	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id() ) ) );
+				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), esc_html( bboss_bbp_get_forum_title( bboss_bbp_get_topic_forum_id() ) ) );
 				?>
 			</p>
 		</div>
@@ -272,7 +272,7 @@ defined( 'ABSPATH' ) || exit;
 
 <?php else : ?>
 
-	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
+	<div id="no-reply-<?php bboss_bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss' ) : esc_html_e( 'Log in  to reply.', 'buddyboss' ); ?></p>
@@ -281,7 +281,7 @@ defined( 'ABSPATH' ) || exit;
 
 <?php endif; ?>
 
-<?php if ( bbp_is_reply_edit() ) : ?>
+<?php if ( bboss_bbp_is_reply_edit() ) : ?>
 
 </div>
 

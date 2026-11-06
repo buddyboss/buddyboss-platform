@@ -6,20 +6,20 @@ class BP_UnitTestCase_Emails extends BP_UnitTestCase {
 	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
-		require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+		require_once( bboss()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
 		/*
 		 * WP's test suite wipes out BP's email posts.
 		 * We must reestablish them before our tests can be successfully run.
 		 */
-		bp_core_install_emails();
+		bboss_core_install_emails();
 	}
 
 	public static function tearDownAfterClass(): void {
 		$emails = get_posts( array(
 			'fields'                 => 'ids',
 			'post_status'            => 'any',
-			'post_type'              => bp_get_email_post_type(),
+			'post_type'              => bboss_get_email_post_type(),
 			'posts_per_page'         => 200,
 			'suppress_filters'       => false,
 			'update_post_meta_cache' => false,

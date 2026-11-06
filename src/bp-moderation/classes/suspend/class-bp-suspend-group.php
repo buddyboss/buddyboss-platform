@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Suspend_Group extends BP_Suspend_Abstract {
+class BBoss_Suspend_Group extends BBoss_Suspend_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public static $type = 'groups';
 
 	/**
-	 * BP_Suspend_Group constructor.
+	 * BBoss_Suspend_Group constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -87,7 +87,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	public static function get_member_group_ids( $member_id ) {
 		$group_ids = array();
 
-		$user_groups = bp_get_user_groups(
+		$user_groups = bboss_get_user_groups(
 			$member_id,
 			array(
 				'is_admin' => true,
@@ -190,7 +190,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return $restrict;
 		}
 
-		if ( BP_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
+		if ( BBoss_Core_Suspend::check_suspended_content( (int) $group->id, self::$type ) ) {
 			return false;
 		}
 
@@ -213,7 +213,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -235,7 +235,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::add_suspend( $suspend_args );
+		BBoss_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $group_id;
 
@@ -275,7 +275,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$suspend_args = bp_parse_args(
+		$suspend_args = bboss_parse_args(
 			$args,
 			array(
 				'item_id'   => $group_id,
@@ -293,7 +293,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			isset( $suspend_args['type'] ) &&
 			$suspend_args['type'] !== self::$type
 		) {
-			$group_author_id = BP_Moderation_Groups::get_content_owner_id( $group_id );
+			$group_author_id = BBoss_Moderation_Groups::get_content_owner_id( $group_id );
 			if ( isset( $suspend_args['blocked_user'] ) && in_array( $suspend_args['blocked_user'], $group_author_id, true ) ) {
 				unset( $suspend_args['blocked_user'] );
 			}
@@ -309,7 +309,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		);
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
-		BP_Core_Suspend::remove_suspend( $suspend_args );
+		BBoss_Core_Suspend::remove_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $group_id;
 
@@ -346,30 +346,30 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 		$related_contents = array();
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
-		if ( bp_is_active( 'forums' ) && $page < 2 ) {
-			$related_contents[ BP_Suspend_Forum::$type ] = (array) bbp_get_group_forum_ids( $group_id );
+		if ( bboss_is_active( 'forums' ) && $page < 2 ) {
+			$related_contents[ BBoss_Suspend_Forum::$type ] = (array) bboss_bbp_get_group_forum_ids( $group_id );
 		}
 
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_group_activity_ids( $group_id, $page );
+		if ( bboss_is_active( 'activity' ) ) {
+			$related_contents[ BBoss_Suspend_Activity::$type ] = BBoss_Suspend_Activity::get_group_activity_ids( $group_id, $page );
 		}
 
-		if ( bp_is_active( 'messages' ) && $page < 2 ) {
-			$related_contents[ BP_Suspend_Message::$type ] = BP_Suspend_Message::get_group_message_thread_ids( $group_id );
+		if ( bboss_is_active( 'messages' ) && $page < 2 ) {
+			$related_contents[ BBoss_Suspend_Message::$type ] = BBoss_Suspend_Message::get_group_message_thread_ids( $group_id );
 		}
 
-		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_group_folder_ids( $group_id, $page );
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_group_document_ids( $group_id, $page );
+		if ( bboss_is_active( 'document' ) ) {
+			$related_contents[ BBoss_Suspend_Folder::$type ]   = BBoss_Suspend_Folder::get_group_folder_ids( $group_id, $page );
+			$related_contents[ BBoss_Suspend_Document::$type ] = BBoss_Suspend_Document::get_group_document_ids( $group_id, $page );
 		}
 
-		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_group_album_ids( $group_id, $page );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_group_media_ids( $group_id, $page );
+		if ( bboss_is_active( 'media' ) ) {
+			$related_contents[ BBoss_Suspend_Album::$type ] = BBoss_Suspend_Album::get_group_album_ids( $group_id, $page );
+			$related_contents[ BBoss_Suspend_Media::$type ] = BBoss_Suspend_Media::get_group_media_ids( $group_id, $page );
 		}
 
-		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_group_video_ids( $group_id, $page );
+		if ( bboss_is_active( 'video' ) ) {
+			$related_contents[ BBoss_Suspend_Video::$type ] = BBoss_Suspend_Video::get_group_video_ids( $group_id, $page );
 		}
 
 		return $related_contents;
@@ -380,7 +380,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param BP_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
+	 * @param BBoss_Groups_Group $group Current instance of the group item that was saved. Passed by reference.
 	 */
 	public function sync_moderation_data_on_save( $group ) {
 
@@ -388,11 +388,11 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return;
 		}
 
-		$sub_items     = bp_moderation_get_sub_items( $group->id, BP_Moderation_Groups::$moderation_type );
+		$sub_items     = bboss_moderation_get_sub_items( $group->id, BBoss_Moderation_Groups::$moderation_type );
 		$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $group->id;
-		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BP_Moderation_Groups::$moderation_type;
+		$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : BBoss_Moderation_Groups::$moderation_type;
 
-		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
+		$suspended_record = BBoss_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
 		// @todo Removed below creator logic as we are adding site admin new organizer when the group creator is suspended and we do not want to moderate group.
 		/* if ( empty( $suspended_record ) ) {
@@ -411,7 +411,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param BP_Groups_Group $group Current instance of the group item being deleted. Passed by reference.
+	 * @param BBoss_Groups_Group $group Current instance of the group item being deleted. Passed by reference.
 	 */
 	public function sync_moderation_data_on_delete( $group ) {
 
@@ -419,7 +419,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 			return;
 		}
 
-		BP_Core_Suspend::delete_suspend( $group->id, $this->item_type );
+		BBoss_Core_Suspend::delete_suspend( $group->id, $this->item_type );
 	}
 
 	/**
@@ -438,21 +438,21 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * @return null|bool
 	 */
 	public function update_group_meta_before_block_list( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		if ( 'forum_id' === $meta_key && bp_is_active( 'forums' ) ) {
+		if ( 'forum_id' === $meta_key && bboss_is_active( 'forums' ) ) {
 			if ( empty( $prev_value ) ) {
-				$prev_value = bbp_get_group_forum_ids( $object_id );
+				$prev_value = bboss_bbp_get_group_forum_ids( $object_id );
 			}
 
 			$forum_id     = (int) ( is_array( $prev_value ) ? current( $prev_value ) : $prev_value );
 			$forum_author = get_post_field( 'post_author', $forum_id );
 			remove_filter( 'query', 'bp_filter_metaid_column_name' );
 			do_action(
-				'bp_suspend_hide_' . BP_Suspend_Forum::$type,
+				'bp_suspend_hide_' . BBoss_Suspend_Forum::$type,
 				$forum_id,
-				(bool) bp_moderation_is_user_suspended( $forum_author ),
+				(bool) bboss_moderation_is_user_suspended( $forum_author ),
 				array(
 					'blocked_user'     => $forum_author,
-					'user_suspended'   => (bool) bp_moderation_is_user_suspended( $forum_author ),
+					'user_suspended'   => (bool) bboss_moderation_is_user_suspended( $forum_author ),
 					'force_bg_process' => true,
 				)
 			);
@@ -479,12 +479,12 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		$forum_id = (int) ( is_array( $forum_id ) ? current( $forum_id ) : $forum_id );
 
-		if ( empty( $forum_id ) || ! bp_is_active( 'forums' ) ) {
+		if ( empty( $forum_id ) || ! bboss_is_active( 'forums' ) ) {
 			return;
 		}
 
 		do_action(
-			'bp_suspend_unhide_' . BP_Suspend_Forum::$type,
+			'bp_suspend_unhide_' . BBoss_Suspend_Forum::$type,
 			$forum_id,
 			0,
 			false,
@@ -492,7 +492,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 				'blocked_user'     => get_post_field( 'post_author', $forum_id ),
 				'user_suspended'   => 0,
 				'author_compare'   => true,
-				'type'             => BP_Suspend_Forum::$type,
+				'type'             => BBoss_Suspend_Forum::$type,
 				'force_bg_process' => true,
 			)
 		);

@@ -22,7 +22,7 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 			$this->markTestSkipped( 'Document folders are provided by BuddyBoss Add-ons, which is not loaded.' );
 		}
 
-		bp_update_option( 'bp_media_group_document_support', 1 );
+		bboss_update_option( 'bp_media_group_document_support', 1 );
 		add_filter( 'bp_is_active', array( $this, 'force_components_active' ), 10, 2 );
 	}
 
@@ -56,7 +56,7 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 	 * @return int Folder ID.
 	 */
 	protected function create_group_folder( $owner_id, $group_id, $status = 'members' ) {
-		groups_update_groupmeta( $group_id, 'document_status', $status );
+		bboss_groups_update_groupmeta( $group_id, 'document_status', $status );
 
 		return bp_folder_add(
 			array(
@@ -108,8 +108,8 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 		$folder = $this->create_group_folder( $owner, $group, 'members' );
 
 		// The vulnerable configuration: group documents OFF, profile documents ON.
-		bp_update_option( 'bp_media_group_document_support', 0 );
-		bp_update_option( 'bp_media_profile_document_support', 1 );
+		bboss_update_option( 'bp_media_group_document_support', 0 );
+		bboss_update_option( 'bp_media_profile_document_support', 1 );
 
 		self::set_current_user( $outsider );
 
@@ -151,7 +151,7 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 		self::set_current_user( $member );
 
 		foreach ( array( 'members', 'mods', 'admins' ) as $status ) {
-			groups_update_groupmeta( $group, 'document_status', $status );
+			bboss_groups_update_groupmeta( $group, 'document_status', $status );
 
 			$this->assertTrue(
 				bb_document_user_can_add_to_folder( $folder ),
@@ -182,7 +182,7 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 			)
 		);
 
-		groups_update_groupmeta( $group, 'document_status', 'admins' );
+		bboss_groups_update_groupmeta( $group, 'document_status', 'admins' );
 
 		self::set_current_user( $mod );
 
@@ -209,8 +209,8 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 		self::set_current_user( $outsider );
 		$this->assertFalse( bb_document_user_can_add_to_folder( $folder ) );
 
-		bp_update_option( 'bp_media_group_document_support', 0 );
-		bp_update_option( 'bp_media_profile_document_support', 1 );
+		bboss_update_option( 'bp_media_group_document_support', 0 );
+		bboss_update_option( 'bp_media_profile_document_support', 1 );
 		$this->assertFalse( bb_document_user_can_add_to_folder( $folder ) );
 	}
 
@@ -364,8 +364,8 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 		self::set_current_user( $admin );
 
 		// Precondition: without bp_moderate this test proves nothing.
-		$this->assertTrue( bp_current_user_can( 'bp_moderate' ) );
-		$this->assertFalse( groups_is_user_member( $admin, $group ) );
+		$this->assertTrue( bboss_current_user_can( 'bp_moderate' ) );
+		$this->assertFalse( bboss_groups_is_user_member( $admin, $group ) );
 
 		$this->assertTrue( bb_document_user_can_add_to_folder( $folder ) );
 	}
@@ -383,7 +383,7 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		self::set_current_user( $admin );
 
-		$this->assertTrue( bp_current_user_can( 'bp_moderate' ) );
+		$this->assertTrue( bboss_current_user_can( 'bp_moderate' ) );
 
 		$this->assertFalse( bb_document_user_can_add_to_folder( 0 ) );
 		$this->assertFalse( bb_document_user_can_add_to_folder( false ) );
@@ -432,7 +432,7 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 		add_filter( 'bp_is_active', array( $this, 'force_groups_inactive' ), 20, 2 );
 
 		self::set_current_user( $member );
-		$this->assertFalse( bp_is_active( 'groups' ), 'Precondition: the groups component must read as inactive.' );
+		$this->assertFalse( bboss_is_active( 'groups' ), 'Precondition: the groups component must read as inactive.' );
 		$this->assertFalse( bb_document_user_can_add_to_folder( $folder ), 'A peer must be denied when the groups component is inactive.' );
 
 		self::set_current_user( $owner );

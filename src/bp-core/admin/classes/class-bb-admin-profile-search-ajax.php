@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Profile_Search_Ajax
+ * Class BBoss_Admin_Profile_Search_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Profile_Search_Ajax {
+class BBoss_Admin_Profile_Search_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -36,7 +36,7 @@ class BB_Admin_Profile_Search_Ajax {
 	 * @return void
 	 */
 	private function bb_verify_request() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -86,11 +86,11 @@ class BB_Admin_Profile_Search_Ajax {
 	 * @return int Form post ID.
 	 */
 	private function bb_get_form_id() {
-		$form_id = bp_profile_search_main_form();
+		$form_id = bboss_profile_search_main_form();
 
 		if ( empty( $form_id ) || ! get_post( $form_id ) ) {
-			bp_profile_search_add_main_form();
-			$form_id = bp_profile_search_main_form();
+			bboss_profile_search_add_main_form();
+			$form_id = bboss_profile_search_main_form();
 		}
 
 		return $form_id;
@@ -105,9 +105,9 @@ class BB_Admin_Profile_Search_Ajax {
 		$this->bb_verify_request();
 
 		$form_id = $this->bb_get_form_id();
-		$meta    = bp_ps_meta( $form_id );
+		$meta    = bboss_ps_meta( $form_id );
 
-		list( $groups, $fields ) = bp_ps_get_fields();
+		list( $groups, $fields ) = bboss_ps_get_fields();
 
 		// Build saved fields list.
 		$saved_fields = array();
@@ -126,7 +126,7 @@ class BB_Admin_Profile_Search_Ajax {
 
 			// Build available search modes for this field.
 			$available_modes = array();
-			$filter_labels   = bp_ps_Fields::get_filters( $field_obj );
+			$filter_labels   = BBoss_ps_Fields::get_filters( $field_obj );
 			foreach ( $filter_labels as $filter_value => $filter_label ) {
 				$available_modes[] = array(
 					'value' => $filter_value,
@@ -157,7 +157,7 @@ class BB_Admin_Profile_Search_Ajax {
 			$group_items = array();
 			foreach ( $group_fields as $gf ) {
 				$field_obj     = isset( $fields[ $gf['id'] ] ) ? $fields[ $gf['id'] ] : null;
-				$filter_labels = $field_obj ? bp_ps_Fields::get_filters( $field_obj ) : array();
+				$filter_labels = $field_obj ? BBoss_ps_Fields::get_filters( $field_obj ) : array();
 				$modes         = array();
 				foreach ( $filter_labels as $fv => $fl ) {
 					$modes[] = array(
@@ -209,17 +209,17 @@ class BB_Admin_Profile_Search_Ajax {
 		}
 
 		// Validate field code exists in available fields.
-		list( , $fields ) = bp_ps_get_fields();
+		list( , $fields ) = bboss_ps_get_fields();
 		if ( ! isset( $fields[ $field_code ] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid field selected.', 'buddyboss' ) ) );
 		}
 
 		// Validate search mode.
 		$field_obj  = $fields[ $field_code ];
-		$field_mode = bp_ps_Fields::valid_filter( $field_obj, $field_mode );
+		$field_mode = BBoss_ps_Fields::valid_filter( $field_obj, $field_mode );
 
 		$form_id = $this->bb_get_form_id();
-		$meta    = bp_ps_meta( $form_id );
+		$meta    = bboss_ps_meta( $form_id );
 
 		$codes  = isset( $meta['field_code'] ) ? $meta['field_code'] : array();
 		$labels = isset( $meta['field_label'] ) ? $meta['field_label'] : array();
@@ -285,7 +285,7 @@ class BB_Admin_Profile_Search_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$form_id = $this->bb_get_form_id();
-		$meta    = bp_ps_meta( $form_id );
+		$meta    = bboss_ps_meta( $form_id );
 
 		$codes = isset( $meta['field_code'] ) ? $meta['field_code'] : array();
 
@@ -339,7 +339,7 @@ class BB_Admin_Profile_Search_Ajax {
 		}
 
 		$form_id = $this->bb_get_form_id();
-		$meta    = bp_ps_meta( $form_id );
+		$meta    = bboss_ps_meta( $form_id );
 
 		$codes  = isset( $meta['field_code'] ) ? $meta['field_code'] : array();
 		$labels = isset( $meta['field_label'] ) ? $meta['field_label'] : array();
@@ -354,7 +354,7 @@ class BB_Admin_Profile_Search_Ajax {
 		// below would compare 2 client IDs against 3 stored codes and reject
 		// the reorder with a "field count mismatch" error even though the
 		// client sent every index it could see.
-		list( , $live_fields ) = bp_ps_get_fields();
+		list( , $live_fields ) = bboss_ps_get_fields();
 
 		$new_codes  = array();
 		$new_labels = array();
@@ -412,8 +412,8 @@ class BB_Admin_Profile_Search_Ajax {
 			return false;
 		}
 
-		return 'on' === bp_xprofile_get_meta( $field_obj->group_id, 'group', 'is_repeater_enabled', true );
+		return 'on' === bboss_xprofile_get_meta( $field_obj->group_id, 'group', 'is_repeater_enabled', true );
 	}
 }
 
-new BB_Admin_Profile_Search_Ajax();
+new BBoss_Admin_Profile_Search_Ajax();

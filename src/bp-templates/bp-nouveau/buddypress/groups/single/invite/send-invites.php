@@ -11,8 +11,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
-	bp_get_template_part( 'groups/single/parts/invite-subnav' );
+if ( ! bboss_is_group_creation_step( 'group-invites' ) ) {
+	bboss_get_template_part( 'groups/single/parts/invite-subnav' );
 }
 ?>
 <div id="group-invites-container">
@@ -21,7 +21,7 @@ if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
 			<div class="bb-panel-head">
 				<div class="bb-panel-subhead">
 					<h4 class="total-members-text"><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
-					<?php if ( bp_is_active( 'friends' ) ) { ?>
+					<?php if ( bboss_is_active( 'friends' ) ) { ?>
 					<div id="bp-invites-dropdown-options-loader" class="bp-invites-dropdown-options-loader-hide">
 						<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 					</div>
@@ -36,7 +36,7 @@ if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
 			<div class="group-invites-search subnav-search clearfix" role="search">
 				<div class="bp-search">
 					<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form search-form-has-reset" data-bp-search="group-invites">
-						<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
+						<label for="group_invites_search" class="bp-screen-reader-text"><?php bboss_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
 						<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 						<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit search-form_submit">
 							<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>

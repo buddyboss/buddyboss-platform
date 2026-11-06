@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <?php
-$bp_nouveau = bp_nouveau();
-$has_nav    = bp_nouveau_has_nav( array( 'type' => 'secondary' ) );
+$bp_nouveau = bboss_nouveau();
+$has_nav    = bboss_nouveau_has_nav( array( 'type' => 'secondary' ) );
 $nav_count  = count( $bp_nouveau->sorted_nav );
 
 if ( ! $has_nav || $nav_count <= 1 ) {
@@ -23,30 +23,30 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 	return;
 }
 ?>
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
+<nav class="<?php bboss_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 
 		<?php
-		while ( bp_nouveau_nav_items() ) :
-			bp_nouveau_nav_item();
+		while ( bboss_nouveau_nav_items() ) :
+			bboss_nouveau_nav_item();
 
-			$nav_item = bp_nouveau()->current_nav_item;
+			$nav_item = bboss_nouveau()->current_nav_item;
 			if ( 'archived' === $nav_item->slug ) {
 				continue;
 			}
 			?>
 
-			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
-				<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>" class="<?php bp_nouveau_nav_link_class(); ?>">
+			<li id="<?php bboss_nouveau_nav_id(); ?>" class="<?php bboss_nouveau_nav_classes(); ?>" <?php bboss_nouveau_nav_scope(); ?>>
+				<a href="<?php bboss_nouveau_nav_link(); ?>" id="<?php bboss_nouveau_nav_link_id(); ?>" class="<?php bboss_nouveau_nav_link_class(); ?>">
 					<?php
-					bp_nouveau_nav_link_text();
+					bboss_nouveau_nav_link_text();
 
-					if ( bp_nouveau_nav_has_count() ) : ?>
-						<span class="count"><?php bp_nouveau_nav_count(); ?></span>
+					if ( bboss_nouveau_nav_has_count() ) : ?>
+						<span class="count"><?php bboss_nouveau_nav_count(); ?></span>
 					<?php endif; ?>
 				</a>
 
-				<?php do_action( 'bb_nouveau_after_nav_link' . '_' . bp_nouveau_get_nav_link_id() ); ?>
+				<?php do_action( 'bb_nouveau_after_nav_link' . '_' . bboss_nouveau_get_nav_link_id() ); ?>
 			</li>
 
 		<?php endwhile; ?>

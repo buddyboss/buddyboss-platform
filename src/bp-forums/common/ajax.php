@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since bbPress (r4543)
  *
- * @uses bbp_get_ajax_url() To get the URL to use for AJAX requests
+ * @uses bboss_bbp_get_ajax_url() To get the URL to use for AJAX requests
  */
-function bbp_ajax_url() {
-	echo esc_url( bbp_get_ajax_url() );
+function bboss_bbp_ajax_url() {
+	echo esc_url( bboss_bbp_get_ajax_url() );
 }
 	/**
 	 * Return the URL to use for theme-side Forums AJAX requests
@@ -30,10 +30,10 @@ function bbp_ajax_url() {
 	 * @global WP $wp
 	 * @return string
 	 */
-function bbp_get_ajax_url() {
+function bboss_bbp_get_ajax_url() {
 	global $wp;
 
-	$ssl      = bbp_get_url_scheme();
+	$ssl      = bboss_bbp_get_url_scheme();
 	$url      = trailingslashit( $wp->request );
 	$base_url = home_url( $url, $ssl );
 	$ajaxurl  = add_query_arg( array( 'bbp-ajax' => 'true' ), $base_url );
@@ -48,7 +48,7 @@ function bbp_get_ajax_url() {
  *
  * @return bool Looking for bbp-ajax
  */
-function bbp_is_ajax() {
+function bboss_bbp_is_ajax() {
 	return (bool) ( ( isset( $_GET['bbp-ajax'] ) || isset( $_POST['bbp-ajax'] ) ) && ! empty( $_REQUEST['action'] ) );
 }
 
@@ -60,15 +60,15 @@ function bbp_is_ajax() {
  *
  * @return If not a Forums ajax request
  */
-function bbp_do_ajax() {
+function bboss_bbp_do_ajax() {
 
 	// Bail if not an ajax request
-	if ( ! bbp_is_ajax() ) {
+	if ( ! bboss_bbp_is_ajax() ) {
 		return;
 	}
 
 	// Set WordPress core ajax constant
-	define( 'DOING_AJAX', true );
+	define( 'BBOSS_DOING_AJAX', true );
 
 	// Set the header content type
 	@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
@@ -92,7 +92,7 @@ function bbp_do_ajax() {
  * @param string $content
  * @param array  $extras
  */
-function bbp_ajax_response( $success = false, $content = '', $status = -1, $extras = array() ) {
+function bboss_bbp_ajax_response( $success = false, $content = '', $status = -1, $extras = array() ) {
 
 	// Set status to 200 if setting response as successful.
 	global $redirect_url;

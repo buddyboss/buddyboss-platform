@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.0.3
  */
-class BP_Moderation_Notification extends BP_Moderation_Abstract {
+class BBoss_Moderation_Notification extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	public static $moderation_type = 'notification';
 
 	/**
-	 * BP_Moderation_Notification constructor.
+	 * BBoss_Moderation_Notification constructor.
 	 *
 	 * @since BuddyBoss 2.0.3
 	 */
@@ -114,7 +114,7 @@ class BP_Moderation_Notification extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bb_get_the_notification_mark_unread_link_callback( $retval, $user_id ) {
-		$notification = buddypress()->notifications->query_loop->notification;
+		$notification = bboss()->notifications->query_loop->notification;
 		if (
 			! empty( $notification ) &&
 			isset( $notification->is_new ) &&

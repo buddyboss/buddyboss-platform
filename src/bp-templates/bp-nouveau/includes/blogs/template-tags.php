@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_before_blogs_directory_content() {
+function bboss_nouveau_before_blogs_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
@@ -50,7 +50,7 @@ function bp_nouveau_before_blogs_directory_content() {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_after_blogs_directory_content() {
+function bboss_nouveau_after_blogs_directory_content() {
 	/**
 	 * Fires inside and displays the blogs content.
 	 *
@@ -88,7 +88,7 @@ function bp_nouveau_after_blogs_directory_content() {
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
  */
-function bp_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
+function bboss_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
 
 	if ( $when ) {
@@ -102,7 +102,7 @@ function bp_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
 		$hook[] = $suffix;
 	}
 
-	bp_nouveau_hook( $hook );
+	bboss_nouveau_hook( $hook );
 }
 
 /**
@@ -110,7 +110,7 @@ function bp_nouveau_blogs_create_hook( $when = '', $suffix = '' ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_blogs_loop_item() {
+function bboss_nouveau_blogs_loop_item() {
 	/**
 	 * Fires after the listing of a blog item in the blogs loop.
 	 *
@@ -124,16 +124,16 @@ function bp_nouveau_blogs_loop_item() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $args See bp_nouveau_wrapper() for the description of parameters.
+ * @param array $args See bboss_nouveau_wrapper() for the description of parameters.
  */
-function bp_nouveau_blogs_loop_buttons( $args = array() ) {
+function bboss_nouveau_blogs_loop_buttons( $args = array() ) {
 	if ( empty( $GLOBALS['blogs_template'] ) ) {
 		return;
 	}
 
 	$args['type'] = 'loop';
 
-	$output = join( ' ', bp_nouveau_get_blogs_buttons( $args ) );
+	$output = join( ' ', bboss_nouveau_get_blogs_buttons( $args ) );
 
 	ob_start();
 	/**
@@ -148,7 +148,7 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
 		return;
 	}
 
-	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+	bboss_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
 
 	/**
@@ -160,11 +160,11 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
 	 *
 	 * @return array
 	 */
-	function bp_nouveau_get_blogs_buttons( $args ) {
+	function bboss_nouveau_get_blogs_buttons( $args ) {
 		$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'loop';
 
 		// @todo Not really sure why BP Legacy needed to do this...
-		if ( 'loop' !== $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( 'loop' !== $type && is_admin() && ! ( defined( 'BBOSS_DOING_AJAX' ) && BBOSS_DOING_AJAX ) ) {
 			return array();
 		}
 
@@ -215,12 +215,12 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
 		 */
 		add_filter( 'bp_get_blogs_visit_blog_button', 'bp_nouveau_blogs_catch_button_args', 100, 1 );
 
-		bp_get_blogs_visit_blog_button();
+		bboss_get_blogs_visit_blog_button();
 
 		remove_filter( 'bp_get_blogs_visit_blog_button', 'bp_nouveau_blogs_catch_button_args', 100, 1 );
 
-		if ( ! empty( bp_nouveau()->blogs->button_args ) ) {
-			$button_args = bp_nouveau()->blogs->button_args ;
+		if ( ! empty( bboss_nouveau()->blogs->button_args ) ) {
+			$button_args = bboss_nouveau()->blogs->button_args ;
 
 			// If we pass through parent classes add them to $button array
 			$parent_class = '';
@@ -250,7 +250,7 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
 				),
 			);
 
-			unset( bp_nouveau()->blogs->button_args );
+			unset( bboss_nouveau()->blogs->button_args );
 		}
 
 		/**
@@ -269,17 +269,17 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
 		}
 
 		// It's the first entry of the loop, so build the Group and sort it
-		if ( ! isset( bp_nouveau()->blogs->group_buttons ) || ! is_a( bp_nouveau()->blogs->group_buttons, 'BP_Buttons_Group' ) ) {
+		if ( ! isset( bboss_nouveau()->blogs->group_buttons ) || ! is_a( bboss_nouveau()->blogs->group_buttons, 'BBoss_Buttons_Group' ) ) {
 			$sort = true;
-			bp_nouveau()->blogs->group_buttons = new BP_Buttons_Group( $buttons_group );
+			bboss_nouveau()->blogs->group_buttons = new BBoss_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group
 		} else {
 			$sort = false;
-			bp_nouveau()->blogs->group_buttons->update( $buttons_group );
+			bboss_nouveau()->blogs->group_buttons->update( $buttons_group );
 		}
 
-		$return = bp_nouveau()->blogs->group_buttons->get( $sort );
+		$return = bboss_nouveau()->blogs->group_buttons->get( $sort );
 
 		if ( ! $return ) {
 			return array();
@@ -306,6 +306,6 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
  *
  * @return bool True if the sites has a latest post. False otherwise.
  */
-function bp_nouveau_blog_has_latest_post() {
-	return (bool) bp_get_blog_latest_post_title();
+function bboss_nouveau_blog_has_latest_post() {
+	return (bool) bboss_get_blog_latest_post_title();
 }

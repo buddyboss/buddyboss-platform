@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Recent_Blog_Posts_Widget extends WP_Widget {
+class BBoss_Recent_Blog_Posts_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -47,13 +47,13 @@ class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 			)
 		);
 		$class_prefix = 'bb-';
-		if ( bb_is_readylaunch_enabled() ) {
+		if ( bboss_is_readylaunch_enabled() ) {
 			$class_prefix = 'bb-rl-';
 		}
 		if ( ! empty( $recent_posts ) ) {
 			echo wp_kses_post( $args['before_widget'] );
 
-			$blogs_dir_url = function_exists( 'bp_get_blogs_directory_permalink' ) ? bp_get_blogs_directory_permalink() : '';
+			$blogs_dir_url = function_exists( 'bboss_get_blogs_directory_permalink' ) ? bboss_get_blogs_directory_permalink() : '';
 			?>
 			<div class="widget-header">
 				<h2 class="widget-title"><?php esc_html_e( 'Recent blog posts', 'buddyboss' ); ?></h2>

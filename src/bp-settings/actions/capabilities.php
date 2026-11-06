@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_settings_action_capabilities() {
-	if ( ! bp_is_post_request() ) {
+function bboss_settings_action_capabilities() {
+	if ( ! bboss_is_post_request() ) {
 		return;
 	}
 
@@ -25,19 +25,19 @@ function bp_settings_action_capabilities() {
 	}
 
 	// Bail if not in settings.
-	if ( ! bp_is_settings_component() || ! bp_is_current_action( 'capabilities' ) ) {
+	if ( ! bboss_is_settings_component() || ! bboss_is_current_action( 'capabilities' ) ) {
 		return false;
 	}
 
 	// 404 if there are any additional action variables attached
-	if ( bp_action_variables() ) {
-		bp_do_404();
+	if ( bboss_action_variables() ) {
+		bboss_do_404();
 		return;
 	}
 
 	// Only super admins can currently spam users (but they can't spam
 	// themselves).
-	if ( ! is_super_admin() || bp_is_my_profile() ) {
+	if ( ! is_super_admin() || bboss_is_my_profile() ) {
 		return;
 	}
 
@@ -55,9 +55,9 @@ function bp_settings_action_capabilities() {
 
 	$is_spammer = ! empty( $_POST['user-spammer'] ) ? true : false;
 
-	if ( bp_is_user_spammer( bp_displayed_user_id() ) != $is_spammer ) {
+	if ( bboss_is_user_spammer( bboss_displayed_user_id() ) != $is_spammer ) {
 		$status = ( true == $is_spammer ) ? 'spam' : 'ham';
-		bp_core_process_spammer_status( bp_displayed_user_id(), $status );
+		bboss_core_process_spammer_status( bboss_displayed_user_id(), $status );
 
 		/**
 		 * Fires after processing a user as a spammer.
@@ -67,7 +67,7 @@ function bp_settings_action_capabilities() {
 		 * @param int    $value  ID of the currently displayed user.
 		 * @param string $status Determined status of "spam" or "ham" for the displayed user.
 		 */
-		do_action( 'bp_core_action_set_spammer_status', bp_displayed_user_id(), $status );
+		do_action( 'bp_core_action_set_spammer_status', bboss_displayed_user_id(), $status );
 	}
 
 	/* Other *************************************************************/
@@ -80,6 +80,6 @@ function bp_settings_action_capabilities() {
 	do_action( 'bp_settings_capabilities_after_save' );
 
 	// Redirect to the root domain.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_settings_slug() . '/capabilities/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_settings_slug() . '/capabilities/' );
 }
 add_action( 'bp_actions', 'bp_settings_action_capabilities' );

@@ -16,15 +16,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.5.0
  */
-interface BP_Email_Delivery {
+interface BBoss_Email_Delivery {
 
 	/**
 	 * Send email(s).
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param BP_Email $email Email to send.
+	 * @param BBoss_Email $email Email to send.
 	 * @return bool|WP_Error Returns true if email send, else a descriptive WP_Error.
 	 */
-	public function bp_email( BP_Email $email );
+	public function bp_email( BBoss_Email $email );
 }

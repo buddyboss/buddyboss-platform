@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_get_fields() {
+function bboss_ps_get_fields() {
 	static $groups = array();
 	static $fields = array();
 
@@ -29,7 +29,7 @@ function bp_ps_get_fields() {
 		 * @since BuddyBoss 1.0.0
 		 */
 		do_action( 'bp_ps_edit_field', $f );
-		if ( ! bp_ps_Fields::set_filters( $f ) ) {
+		if ( ! BBoss_ps_Fields::set_filters( $f ) ) {
 			continue;
 		}
 
@@ -48,7 +48,7 @@ function bp_ps_get_fields() {
  *
  * @since BuddyBoss 1.0.0
  */
-class bp_ps_Fields {
+class BBoss_ps_Fields {
 
 	private static $display = array(
 		'text'      => array(
@@ -151,11 +151,11 @@ class bp_ps_Fields {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_parse_request( $request ) {
+function bboss_ps_parse_request( $request ) {
 	$j = 1;
 
 	$parsed          = array();
-	list (, $fields) = bp_ps_get_fields();
+	list (, $fields) = bboss_ps_get_fields();
 	foreach ( $fields as $key => $value ) {
 		$parsed[ $key ] = clone $fields[ $key ];
 	}
@@ -165,14 +165,14 @@ function bp_ps_parse_request( $request ) {
 			continue;
 		}
 
-		$k = bp_ps_match_key( $key, $parsed );
+		$k = bboss_ps_match_key( $key, $parsed );
 		if ( $k === false ) {
 			continue;
 		}
 
 		$f      = $parsed[ $k ];
 		$filter = ( $key == $f->code ) ? '' : substr( $key, strlen( $f->code ) + 1 );
-		if ( ! bp_ps_is_filter( $filter, $f ) ) {
+		if ( ! bboss_ps_is_filter( $filter, $f ) ) {
 			continue;
 		}
 
@@ -307,7 +307,7 @@ function bp_ps_parse_request( $request ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_match_key( $key, $fields ) {
+function bboss_ps_match_key( $key, $fields ) {
 	foreach ( $fields as $k => $f ) {
 		if ( $key == $f->code || strpos( $key, $f->code . '_' ) === 0 ) {
 			return $k;
@@ -322,7 +322,7 @@ function bp_ps_match_key( $key, $fields ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_is_filter( $filter, $f ) {
+function bboss_ps_is_filter( $filter, $f ) {
 	if ( $filter == 'range_min' || $filter == 'range_max' ) {
 		$filter = 'range';
 	}
@@ -333,7 +333,7 @@ function bp_ps_is_filter( $filter, $f ) {
 		return true;
 	}
 
-	return bp_ps_Fields::is_filter( $f, $filter );
+	return BBoss_ps_Fields::is_filter( $f, $filter );
 }
 
 /**
@@ -341,8 +341,8 @@ function bp_ps_is_filter( $filter, $f ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_escaped_form_data( $version = '' ) {
-	 return bp_ps_escaped_form_data47( $version );
+function bboss_ps_escaped_form_data( $version = '' ) {
+	 return bboss_ps_escaped_form_data47( $version );
 }
 
 /**
@@ -350,9 +350,9 @@ function bp_ps_escaped_form_data( $version = '' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_escaped_filters_data( $version = '4.7' ) {
+function bboss_ps_escaped_filters_data( $version = '4.7' ) {
 	if ( $version == '4.7' ) {
-		return bp_ps_escaped_filters_data47();
+		return bboss_ps_escaped_filters_data47();
 	}
 	if ( $version == '4.8' ) {
 		return bp_ps_escaped_filters_data48();
@@ -366,13 +366,13 @@ function bp_ps_escaped_filters_data( $version = '4.7' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_set_hidden_field( $name, $value ) {
+function bboss_ps_set_hidden_field( $name, $value ) {
 	$new            = new stdClass();
 	$new->display   = 'hidden';
 	$new->code      = $name;     // to be removed
 	$new->html_name = $name;
 	$new->value     = $value;
-	$new->unique_id = bp_ps_unique_id( $name );
+	$new->unique_id = bboss_ps_unique_id( $name );
 
 	return $new;
 }
@@ -382,6 +382,6 @@ function bp_ps_set_hidden_field( $name, $value ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_sort_fields( $a, $b ) {
+function bboss_ps_sort_fields( $a, $b ) {
 	return ( $a->order <= $b->order ) ? -1 : 1;
 }

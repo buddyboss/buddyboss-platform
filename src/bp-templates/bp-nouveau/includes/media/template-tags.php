@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_before_media_directory_content() {
+function bboss_nouveau_before_media_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
@@ -34,7 +34,7 @@ function bp_nouveau_before_media_directory_content() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_after_media_directory_content() {
+function bboss_nouveau_after_media_directory_content() {
 	/**
 	 * Fires after the display of the media list.
 	 *
@@ -72,7 +72,7 @@ function bp_nouveau_after_media_directory_content() {
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
  */
-function bp_nouveau_media_hook( $when = '', $suffix = '' ) {
+function bboss_nouveau_media_hook( $when = '', $suffix = '' ) {
 	$hook = array( 'bp' );
 
 	if ( $when ) {
@@ -86,7 +86,7 @@ function bp_nouveau_media_hook( $when = '', $suffix = '' ) {
 		$hook[] = $suffix;
 	}
 
-	bp_nouveau_hook( $hook );
+	bboss_nouveau_hook( $hook );
 }
 
 /**
@@ -94,8 +94,8 @@ function bp_nouveau_media_hook( $when = '', $suffix = '' ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_media_timestamp() {
-	echo esc_attr( bp_nouveau_get_media_timestamp() );
+function bboss_nouveau_media_timestamp() {
+	echo esc_attr( bboss_nouveau_get_media_timestamp() );
 }
 
 	/**
@@ -105,7 +105,7 @@ function bp_nouveau_media_timestamp() {
 	 *
 	 * @return integer The Media timestamp.
 	 */
-	function bp_nouveau_get_media_timestamp() {
+	function bboss_nouveau_get_media_timestamp() {
 		/**
 		 * Filter here to edit the media timestamp.
 		 *
@@ -113,5 +113,5 @@ function bp_nouveau_media_timestamp() {
 		 *
 		 * @param integer $value The Media timestamp.
 		 */
-		return apply_filters( 'bp_nouveau_get_media_timestamp', strtotime( bp_get_media_date_created() ) );
+		return apply_filters( 'bp_nouveau_get_media_timestamp', strtotime( bboss_get_media_date_created() ) );
 	}

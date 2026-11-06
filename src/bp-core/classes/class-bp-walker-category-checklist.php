@@ -8,7 +8,7 @@
  *
  * @since BuddyPress 2.5.0
  */
-class BP_Walker_Category_Checklist extends Walker {
+class BBoss_Walker_Category_Checklist extends Walker {
 	public $tree_type = 'category';
 	public $db_fields = array(
 		'parent' => 'parent',

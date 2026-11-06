@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-function bp_admin() {
-	buddypress()->admin = new BP_Admin();
+function bboss_admin() {
+	bboss()->admin = new BBoss_Admin();
 	return;
 
 	// These are strings we may use to describe maintenance/security releases, where we aim for no new strings.

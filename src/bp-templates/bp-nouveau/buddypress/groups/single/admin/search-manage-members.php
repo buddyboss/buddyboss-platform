@@ -11,9 +11,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$group = groups_get_current_group();
+$group = bboss_groups_get_current_group();
 if ( ! empty( $group->id ) ) {
-	$groups_template = new BP_Groups_Template(
+	$groups_template = new BBoss_Groups_Template(
 		array(
 			'type' => 'single-group',
 		)
@@ -23,31 +23,31 @@ if ( ! empty( $group->id ) ) {
 	$GLOBALS['groups_template']->group = current( $groups_template->groups );
 }
 
-bp_nouveau_group_hook( 'before', 'manage_members_list' );
+bboss_nouveau_group_hook( 'before', 'manage_members_list' );
 ?>
 
-<?php if ( bp_group_has_members( bp_ajax_querystring( 'manage_group_members' ) . '&per_page=15&type=group_role&exclude_banned=0' ) ) : ?>
+<?php if ( bboss_group_has_members( bboss_ajax_querystring( 'manage_group_members' ) . '&per_page=15&type=group_role&exclude_banned=0' ) ) : ?>
 
 	<?php
-	if ( bp_group_member_needs_pagination() ) {
-		bp_nouveau_pagination( 'top' );
+	if ( bboss_group_member_needs_pagination() ) {
+		bboss_nouveau_pagination( 'top' );
 	}
 	?>
 
 	<ul id="members-list" class="item-list single-line">
 		<?php
-		while ( bp_group_members() ) :
-			bp_group_the_member();
+		while ( bboss_group_members() ) :
+			bboss_group_the_member();
 			?>
 
-			<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
-				<?php bp_group_member_avatar_mini(); ?>
+			<li class="<?php bboss_group_member_css_class(); ?> members-entry clearfix">
+				<?php bboss_group_member_avatar_mini(); ?>
 
 				<p class="list-title member-name">
-					<?php bp_group_member_link(); ?>
+					<?php bboss_group_member_link(); ?>
 					<span class="banned warn">
 						<?php
-						if ( bp_get_group_member_is_banned() ) :
+						if ( bboss_get_group_member_is_banned() ) :
 							/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
 							esc_html_e( '(banned)', 'buddyboss' );
 						endif;
@@ -56,7 +56,7 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 				</p>
 
 				<?php
-				bp_nouveau_groups_manage_members_buttons(
+				bboss_nouveau_groups_manage_members_buttons(
 					array(
 						'container'         => 'div',
 						'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
@@ -71,12 +71,12 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 	</ul>
 
 	<?php
-	if ( bp_group_member_needs_pagination() ) :
-		bp_nouveau_pagination( 'bottom' );
+	if ( bboss_group_member_needs_pagination() ) :
+		bboss_nouveau_pagination( 'bottom' );
 	endif;
 	?>
 	<?php
 else :
-	bp_nouveau_user_feedback( 'group-members-search-none' );
+	bboss_nouveau_user_feedback( 'group-members-search-none' );
 endif;
 ?>

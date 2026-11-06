@@ -3,7 +3,7 @@
  * BuddyBoss Invites component admin screen.
  *
  * Legacy CPT list table code removed — migrated to Settings 2.0
- * via BB_Admin_Invites_Ajax and InvitesListScreen.js.
+ * via BBoss_Admin_Invites_Ajax and InvitesListScreen.js.
  *
  * @package BuddyBoss\Invites
  * @since BuddyBoss 1.0.0
@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  * @since BuddyBoss 3.0.0 Updated to point to Settings 2.0 React list screen.
  */
-function bp_invites_add_admin_menu() {
+function bboss_invites_add_admin_menu() {
 	global $submenu;
 
-	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'invites', 'invites_list' )
+	$settings_url = function_exists( 'bboss_get_feature_settings_url' )
+		? bboss_get_feature_settings_url( 'invites', 'invites_list' )
 		: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
 	$submenu['buddyboss-platform'][] = array(
@@ -31,7 +31,7 @@ function bp_invites_add_admin_menu() {
 		$settings_url,
 	);
 }
-add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
+add_action( bboss_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
 
 /**
  * Register the Invites submenu for multisite network admin.
@@ -39,11 +39,11 @@ add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
  * @since BuddyBoss 1.0.0
  * @since BuddyBoss 3.0.0 Updated to point to Settings 2.0 React list screen.
  */
-function bp_invites_add_sub_menu_page_admin_menu() {
+function bboss_invites_add_sub_menu_page_admin_menu() {
 
-	if ( is_multisite() && bp_is_network_activated() ) {
-		$settings_url = function_exists( 'bb_get_feature_settings_url' )
-			? bb_get_feature_settings_url( 'invites', 'invites_list' )
+	if ( is_multisite() && bboss_is_network_activated() ) {
+		$settings_url = function_exists( 'bboss_get_feature_settings_url' )
+			? bboss_get_feature_settings_url( 'invites', 'invites_list' )
 			: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
 		add_submenu_page(
@@ -67,19 +67,19 @@ add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
  * @param array $custom_menus The list of top-level BP menu items.
  * @return array
  */
-function invites_admin_menu_order( $custom_menus = array() ) {
+function bboss_invites_admin_menu_order( $custom_menus = array() ) {
 
-	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'invites', 'invites_list' )
+	$settings_url = function_exists( 'bboss_get_feature_settings_url' )
+		? bboss_get_feature_settings_url( 'invites', 'invites_list' )
 		: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
 	array_push( $custom_menus, $settings_url );
 
 	// Network admin: also push the root site's Settings 2.0 URL (matches emails_admin_menu_order pattern).
-	if ( is_network_admin() && bp_is_network_activated() ) {
+	if ( is_network_admin() && bboss_is_network_activated() ) {
 		array_push(
 			$custom_menus,
-			get_admin_url( bp_get_root_blog_id(), 'admin.php?page=bb-settings&tab=invites&panel=invites_list' )
+			get_admin_url( bboss_get_root_blog_id(), 'admin.php?page=bb-settings&tab=invites&panel=invites_list' )
 		);
 	}
 
@@ -91,19 +91,19 @@ add_filter( 'bp_admin_menu_order', 'invites_admin_menu_order', 20 );
 // DEPRECATED FUNCTIONS — Legacy CPT list table (migrated to Settings 2.0).
 // ──────────────────────────────────────────────────────────────────────────────
 
-if ( ! function_exists( 'bp_register_invite_type_sections_filters_actions' ) ) {
+if ( ! function_exists( 'bboss_register_invite_type_sections_filters_actions' ) ) {
 	/**
 	 * Registers the invite admin action and filters.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Invites_Ajax}.
+	 * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BBoss_Admin_Invites_Ajax}.
 	 */
-	function bp_register_invite_type_sections_filters_actions() {
+	function bboss_register_invite_type_sections_filters_actions() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Invites_Ajax' );
 	}
 }
 
-if ( ! function_exists( 'bp_invite_add_column' ) ) {
+if ( ! function_exists( 'bboss_invite_add_column' ) ) {
 	/**
 	 * Add columns to invite list table.
 	 *
@@ -113,13 +113,13 @@ if ( ! function_exists( 'bp_invite_add_column' ) ) {
 	 * @param array $columns Existing columns.
 	 * @return array
 	 */
-	function bp_invite_add_column( $columns ) {
+	function bboss_invite_add_column( $columns ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $columns;
 	}
 }
 
-if ( ! function_exists( 'bp_invite_show_data' ) ) {
+if ( ! function_exists( 'bboss_invite_show_data' ) ) {
 	/**
 	 * Display data by column and post id.
 	 *
@@ -129,12 +129,12 @@ if ( ! function_exists( 'bp_invite_show_data' ) ) {
 	 * @param string $column  Column name.
 	 * @param int    $post_id Post ID.
 	 */
-	function bp_invite_show_data( $column, $post_id ) {
+	function bboss_invite_show_data( $column, $post_id ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
-if ( ! function_exists( 'bp_invite_add_sortable_columns' ) ) {
+if ( ! function_exists( 'bboss_invite_add_sortable_columns' ) ) {
 	/**
 	 * Add sortable columns.
 	 *
@@ -144,25 +144,25 @@ if ( ! function_exists( 'bp_invite_add_sortable_columns' ) ) {
 	 * @param array $columns Columns.
 	 * @return array
 	 */
-	function bp_invite_add_sortable_columns( $columns ) {
+	function bboss_invite_add_sortable_columns( $columns ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $columns;
 	}
 }
 
-if ( ! function_exists( 'bp_invite_add_request_filter' ) ) {
+if ( ! function_exists( 'bboss_invite_add_request_filter' ) ) {
 	/**
 	 * Add filter to invite sort items.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @deprecated BuddyBoss 3.0.0
 	 */
-	function bp_invite_add_request_filter() {
+	function bboss_invite_add_request_filter() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
-if ( ! function_exists( 'bp_invite_sort_items' ) ) {
+if ( ! function_exists( 'bboss_invite_sort_items' ) ) {
 	/**
 	 * Sort invite list.
 	 *
@@ -172,13 +172,13 @@ if ( ! function_exists( 'bp_invite_sort_items' ) ) {
 	 * @param array $qv Query vars.
 	 * @return array
 	 */
-	function bp_invite_sort_items( $qv ) {
+	function bboss_invite_sort_items( $qv ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $qv;
 	}
 }
 
-if ( ! function_exists( 'bp_invite_hide_quick_edit' ) ) {
+if ( ! function_exists( 'bboss_invite_hide_quick_edit' ) ) {
 	/**
 	 * Hide quick edit link.
 	 *
@@ -189,13 +189,13 @@ if ( ! function_exists( 'bp_invite_hide_quick_edit' ) ) {
 	 * @param WP_Post $post    Post object.
 	 * @return array
 	 */
-	function bp_invite_hide_quick_edit( $actions, $post ) {
+	function bboss_invite_hide_quick_edit( $actions, $post ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $actions;
 	}
 }
 
-if ( ! function_exists( 'bp_invites_remove_bulk_actions' ) ) {
+if ( ! function_exists( 'bboss_invites_remove_bulk_actions' ) ) {
 	/**
 	 * Remove bulk actions.
 	 *
@@ -205,13 +205,13 @@ if ( ! function_exists( 'bp_invites_remove_bulk_actions' ) ) {
 	 * @param array $actions Bulk actions.
 	 * @return array
 	 */
-	function bp_invites_remove_bulk_actions( $actions ) {
+	function bboss_invites_remove_bulk_actions( $actions ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $actions;
 	}
 }
 
-if ( ! function_exists( 'bp_invites_bulk_action_handler' ) ) {
+if ( ! function_exists( 'bboss_invites_bulk_action_handler' ) ) {
 	/**
 	 * Bulk revoke handler.
 	 *
@@ -223,37 +223,37 @@ if ( ! function_exists( 'bp_invites_bulk_action_handler' ) ) {
 	 * @param array  $object_ids Post IDs.
 	 * @return string
 	 */
-	function bp_invites_bulk_action_handler( $redirect, $doaction, $object_ids ) {
+	function bboss_invites_bulk_action_handler( $redirect, $doaction, $object_ids ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $redirect;
 	}
 }
 
-if ( ! function_exists( 'bp_invite_bulk_action_notices' ) ) {
+if ( ! function_exists( 'bboss_invite_bulk_action_notices' ) ) {
 	/**
 	 * Bulk action admin notice.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @deprecated BuddyBoss 3.0.0
 	 */
-	function bp_invite_bulk_action_notices() {
+	function bboss_invite_bulk_action_notices() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
-if ( ! function_exists( 'bp_invites_js_bulk_admin_footer' ) ) {
+if ( ! function_exists( 'bboss_invites_js_bulk_admin_footer' ) ) {
 	/**
 	 * JS confirm for bulk revoke.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @deprecated BuddyBoss 3.0.0
 	 */
-	function bp_invites_js_bulk_admin_footer() {
+	function bboss_invites_js_bulk_admin_footer() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
-if ( ! function_exists( 'bb_invites_modify_posts_distinct_request' ) ) {
+if ( ! function_exists( 'bboss_invites_modify_posts_distinct_request' ) ) {
 	/**
 	 * Modify posts distinct for invite search.
 	 *
@@ -264,13 +264,13 @@ if ( ! function_exists( 'bb_invites_modify_posts_distinct_request' ) ) {
 	 * @param WP_Query $query    Query instance.
 	 * @return string
 	 */
-	function bb_invites_modify_posts_distinct_request( $distinct, $query ) {
+	function bboss_invites_modify_posts_distinct_request( $distinct, $query ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $distinct;
 	}
 }
 
-if ( ! function_exists( 'bb_invites_modify_posts_join_request' ) ) {
+if ( ! function_exists( 'bboss_invites_modify_posts_join_request' ) ) {
 	/**
 	 * Modify posts join for invite search.
 	 *
@@ -281,13 +281,13 @@ if ( ! function_exists( 'bb_invites_modify_posts_join_request' ) ) {
 	 * @param WP_Query $query Query instance.
 	 * @return string
 	 */
-	function bb_invites_modify_posts_join_request( $join, $query ) {
+	function bboss_invites_modify_posts_join_request( $join, $query ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $join;
 	}
 }
 
-if ( ! function_exists( 'bb_invites_modify_posts_where_request' ) ) {
+if ( ! function_exists( 'bboss_invites_modify_posts_where_request' ) ) {
 	/**
 	 * Modify posts where for invite search.
 	 *
@@ -298,7 +298,7 @@ if ( ! function_exists( 'bb_invites_modify_posts_where_request' ) ) {
 	 * @param WP_Query $query Query instance.
 	 * @return string
 	 */
-	function bb_invites_modify_posts_where_request( $where, $query ) {
+	function bboss_invites_modify_posts_where_request( $where, $query ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 		return $where;
 	}

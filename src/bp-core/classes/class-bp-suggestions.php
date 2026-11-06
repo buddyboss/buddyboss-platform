@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * for similar kinds of future core requirements, or those desired by third-party developers.
  *
  * To implement a new suggestions service, create a new class that extends this one, and update
- * the list of default services in {@link bp_core_get_suggestions()}. If you're building a plugin,
+ * the list of default services in {@link bboss_core_get_suggestions()}. If you're building a plugin,
  * it's recommend that you use the `bp_suggestions_services` filter to do this. :)
  *
  * While the implementation of the query logic is left to you, it should be as quick and efficient
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.1.0
  */
-abstract class BP_Suggestions {
+abstract class BBoss_Suggestions {
 
 	/**
 	 * Default arguments common to all suggestions services.
@@ -78,7 +78,7 @@ abstract class BP_Suggestions {
 	 * }
 	 */
 	public function set_query( array $args = array() ) {
-		$this->args = bp_parse_args( $args, $this->default_args );
+		$this->args = bboss_parse_args( $args, $this->default_args );
 	}
 
 	/**
@@ -96,12 +96,12 @@ abstract class BP_Suggestions {
 		$this->args['term']  = trim( sanitize_text_field( $this->args['term'] ) );
 
 		/**
-		 * Filters the arguments to be validated for the BP_Suggestions query.
+		 * Filters the arguments to be validated for the BBoss_Suggestions query.
 		 *
 		 * @since BuddyPress 2.1.0
 		 *
-		 * @param BP_Suggestions $value Arguments to be validated.
-		 * @param BP_Suggestions $this  Current BP_Suggestions instance.
+		 * @param BBoss_Suggestions $value Arguments to be validated.
+		 * @param BBoss_Suggestions $this  Current BBoss_Suggestions instance.
 		 */
 		$this->args = apply_filters( 'bp_suggestions_args', $this->args, $this );
 
@@ -111,17 +111,17 @@ abstract class BP_Suggestions {
 		}
 
 		// Check for blocked users (e.g. deleted accounts, or spammers).
-		if ( is_user_logged_in() && ! bp_is_user_active( get_current_user_id() ) ) {
+		if ( is_user_logged_in() && ! bboss_is_user_active( get_current_user_id() ) ) {
 			return new WP_Error( 'invalid_user' );
 		}
 
 		/**
-		 * Filters the status of validation for the BP_Suggestions query.
+		 * Filters the status of validation for the BBoss_Suggestions query.
 		 *
 		 * @since BuddyPress 2.1.0
 		 *
 		 * @param bool           $value Whether or not the values are valid.
-		 * @param BP_Suggestions $this  Current BP_Suggestions instance.
+		 * @param BBoss_Suggestions $this  Current BBoss_Suggestions instance.
 		 */
 		return apply_filters( 'bp_suggestions_validate_args', true, $this );
 	}

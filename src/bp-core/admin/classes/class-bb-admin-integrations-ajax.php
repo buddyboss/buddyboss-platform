@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.1.0
  */
-class BB_Admin_Integrations_Ajax {
+class BBoss_Admin_Integrations_Ajax {
 
 	/**
 	 * Nonce action shared by the integrations plugin actions.
@@ -155,4 +155,4 @@ class BB_Admin_Integrations_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Integrations_Ajax();
+new BBoss_Admin_Integrations_Ajax();

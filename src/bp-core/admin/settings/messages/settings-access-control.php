@@ -25,12 +25,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_messages_register_access_control_fields() {
+function bboss_messages_register_access_control_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Message Access.
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
+	bboss_register_feature_section(
 		'messages',
 		'access_controls',
 		'message_access',
@@ -38,7 +38,7 @@ function bb_messages_register_access_control_fields() {
 			'title'      => __( 'Message Access', 'buddyboss' ),
 			'order'      => 10,
 			'help_url'   => '636154',
-			'pro_notice' => bb_admin_settings_get_pro_notice(
+			'pro_notice' => bboss_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'access_controls',
 					'context' => 'section',
@@ -48,7 +48,7 @@ function bb_messages_register_access_control_fields() {
 	);
 
 	// FIELD: Send Messages access control.
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'messages',
 		'access_controls',
 		'message_access',
@@ -67,12 +67,12 @@ function bb_messages_register_access_control_fields() {
 			// with - Any Member / With Specific …" sentence is no longer needed.
 			'threaded_sub_label' => __( 'can send message to', 'buddyboss' ),
 			'order'              => 10,
-			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
+			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bboss_sanitize_access_control_fallback',
 		)
 	);
 
 	// FIELD: Admin notice (displayed once at the end of the section).
-	bb_register_feature_field(
+	bboss_register_feature_field(
 		'messages',
 		'access_controls',
 		'message_access',

@@ -18,13 +18,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 3.0.0
  */
-function bb_admin_settings_register_emails_feature() {
+function bboss_admin_settings_register_emails_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
-	bb_register_feature(
+	bboss_register_feature(
 		'emails',
 		array(
 			'label'              => __( 'Emails', 'buddyboss' ),
@@ -52,7 +52,7 @@ function bb_admin_settings_register_emails_feature() {
 	// =========================================================================
 
 	// Side Panel: Email Templates (list screen).
-	bb_register_side_panel(
+	bboss_register_side_panel(
 		'emails',
 		'all_emails',
 		array(

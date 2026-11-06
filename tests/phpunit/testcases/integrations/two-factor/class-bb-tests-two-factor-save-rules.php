@@ -76,7 +76,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	 * Recovery providers default.
 	 */
 	public function test_recovery_providers_default() {
-		$this->assertSame( array( 'Two_Factor_Backup_Codes' ), bb_two_factor_get_recovery_providers() );
+		$this->assertSame( array( 'Two_Factor_Backup_Codes' ), bboss_two_factor_get_recovery_providers() );
 	}
 
 	/**
@@ -85,7 +85,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_email_only_is_rejected_as_recovery_required() {
 		$this->post_providers( array( 'Two_Factor_Email' ) );
 
-		$result = bb_two_factor_validate_recovery_method( $this->member );
+		$result = bboss_two_factor_validate_recovery_method( $this->member );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_two_factor_recovery_required', $result->get_error_code() );
@@ -97,7 +97,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_totp_only_is_rejected_as_recovery_required() {
 		$this->post_providers( array( 'Two_Factor_Totp' ) );
 
-		$result = bb_two_factor_validate_recovery_method( $this->member );
+		$result = bboss_two_factor_validate_recovery_method( $this->member );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_two_factor_recovery_required', $result->get_error_code() );
@@ -109,7 +109,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_email_with_ungenerated_backup_codes_is_rejected_as_not_configured() {
 		$this->post_providers( array( 'Two_Factor_Email', 'Two_Factor_Backup_Codes' ) );
 
-		$result = bb_two_factor_validate_recovery_method( $this->member );
+		$result = bboss_two_factor_validate_recovery_method( $this->member );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_two_factor_recovery_not_configured', $result->get_error_code() );
@@ -122,7 +122,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->generate_backup_codes();
 		$this->post_providers( array( 'Two_Factor_Email', 'Two_Factor_Backup_Codes' ) );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -132,7 +132,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->generate_backup_codes();
 		$this->post_providers( array( 'Two_Factor_Email' ) );
 
-		$result = bb_two_factor_validate_recovery_method( $this->member );
+		$result = bboss_two_factor_validate_recovery_method( $this->member );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_two_factor_recovery_required', $result->get_error_code() );
@@ -144,7 +144,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_empty_submission_is_accepted() {
 		$this->post_providers( array() );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -153,7 +153,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_missing_field_is_accepted() {
 		unset( $_POST['_two_factor_enabled_providers'] );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -162,7 +162,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_backup_codes_only_is_accepted() {
 		$this->post_providers( array( 'Two_Factor_Backup_Codes' ) );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -171,7 +171,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_unknown_provider_only_is_accepted() {
 		$this->post_providers( array( 'Not_A_Provider' ) );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->post_providers( array( 'Two_Factor_Email' ) );
 		add_filter( 'bb_two_factor_require_recovery_method', '__return_false' );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -191,7 +191,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->post_providers( array( 'Two_Factor_Email' ) );
 		add_filter( 'bb_two_factor_recovery_providers', array( __CLASS__, 'email_is_recovery' ) );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	/**
@@ -201,7 +201,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->post_providers( array( 'Two_Factor_Email' ) );
 		add_filter( 'bb_two_factor_recovery_providers', array( __CLASS__, 'no_recovery_providers' ) );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	// Recovery rule when the site does not offer Recovery Codes (V-2).
@@ -219,7 +219,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	 * Control: with Recovery Codes offered, Email alone is still refused.
 	 */
 	public function test_control_email_only_refused_when_backup_codes_offered() {
-		$result = bb_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Email' ) );
+		$result = bboss_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Email' ) );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_two_factor_recovery_required', $result->get_error_code() );
@@ -232,7 +232,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		add_filter( 'pre_option_two_factor_enabled_providers', array( __CLASS__, 'site_providers_without_backup_codes' ) );
 
 		$this->assertArrayNotHasKey( 'Two_Factor_Backup_Codes', Two_Factor_Core::get_supported_providers_for_user( $this->member ) );
-		$this->assertTrue( bb_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Email' ) ) );
+		$this->assertTrue( bboss_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Email' ) ) );
 	}
 
 	/**
@@ -241,7 +241,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_totp_accepted_when_site_does_not_offer_backup_codes() {
 		add_filter( 'pre_option_two_factor_enabled_providers', array( __CLASS__, 'site_providers_without_backup_codes' ) );
 
-		$this->assertTrue( bb_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Totp' ) ) );
+		$this->assertTrue( bboss_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Totp' ) ) );
 	}
 
 	/**
@@ -251,7 +251,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		add_filter( 'pre_option_two_factor_enabled_providers', array( __CLASS__, 'site_providers_without_backup_codes' ) );
 		$this->post_providers( array( 'Two_Factor_Email' ) );
 
-		$this->assertTrue( bb_two_factor_validate_recovery_method( $this->member ) );
+		$this->assertTrue( bboss_two_factor_validate_recovery_method( $this->member ) );
 	}
 
 	// Recovery rule with more than one recovery provider (V-3).
@@ -282,11 +282,11 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$set = array( 'Two_Factor_Email', 'Two_Factor_Totp', 'Two_Factor_Backup_Codes' );
 
 		add_filter( 'bb_two_factor_recovery_providers', array( __CLASS__, 'totp_then_backup_codes' ) );
-		$first = bb_two_factor_check_recovery_method( $this->member, $set );
+		$first = bboss_two_factor_check_recovery_method( $this->member, $set );
 		remove_filter( 'bb_two_factor_recovery_providers', array( __CLASS__, 'totp_then_backup_codes' ) );
 
 		add_filter( 'bb_two_factor_recovery_providers', array( __CLASS__, 'backup_codes_then_totp' ) );
-		$second = bb_two_factor_check_recovery_method( $this->member, $set );
+		$second = bboss_two_factor_check_recovery_method( $this->member, $set );
 
 		$this->assertTrue( $first );
 		$this->assertTrue( $second );
@@ -298,7 +298,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_only_unconfigured_recovery_providers_is_not_configured() {
 		add_filter( 'bb_two_factor_recovery_providers', array( __CLASS__, 'totp_then_backup_codes' ) );
 
-		$result = bb_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Email', 'Two_Factor_Totp', 'Two_Factor_Backup_Codes' ) );
+		$result = bboss_two_factor_check_recovery_method( $this->member, array( 'Two_Factor_Email', 'Two_Factor_Totp', 'Two_Factor_Backup_Codes' ) );
 
 		$this->assertWPError( $result );
 		$this->assertSame( 'bb_two_factor_recovery_not_configured', $result->get_error_code() );
@@ -321,7 +321,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->assertFalse( Two_Factor_Core::is_user_using_two_factor( $this->member ) );
 
 		$this->assertTrue( Two_Factor_Core::current_user_can_update_two_factor_options( 'save' ) );
-		$this->assertTrue( bb_two_factor_current_user_can_manage( 'save' ) );
+		$this->assertTrue( bboss_two_factor_current_user_can_manage( 'save' ) );
 	}
 
 	/**
@@ -334,7 +334,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		$this->assertFalse( Two_Factor_Core::is_current_user_session_two_factor() );
 
 		$this->assertFalse( Two_Factor_Core::current_user_can_update_two_factor_options( 'save' ) );
-		$this->assertFalse( bb_two_factor_current_user_can_manage( 'save' ) );
+		$this->assertFalse( bboss_two_factor_current_user_can_manage( 'save' ) );
 	}
 
 	/**
@@ -345,7 +345,7 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 		add_filter( 'two_factor_is_required_for_user', '__return_false' );
 
 		$this->assertTrue( Two_Factor_Core::current_user_can_update_two_factor_options( 'save' ) );
-		$this->assertTrue( bb_two_factor_current_user_can_manage( 'save' ) );
+		$this->assertTrue( bboss_two_factor_current_user_can_manage( 'save' ) );
 	}
 
 	/**
@@ -354,15 +354,15 @@ class BB_Tests_Two_Factor_Save_Rules extends BB_Two_Factor_UnitTestCase {
 	public function test_can_manage_false_when_logged_out() {
 		self::set_current_user( 0 );
 
-		$this->assertFalse( bb_two_factor_current_user_can_manage( 'save' ) );
+		$this->assertFalse( bboss_two_factor_current_user_can_manage( 'save' ) );
 	}
 
 	/**
 	 * Can manage false when feature off.
 	 */
 	public function test_can_manage_false_when_feature_off() {
-		bp_update_option( 'bb-active-features', array( 'two-factor' => 0 ) );
+		bboss_update_option( 'bb-active-features', array( 'two-factor' => 0 ) );
 
-		$this->assertFalse( bb_two_factor_current_user_can_manage( 'save' ) );
+		$this->assertFalse( bboss_two_factor_current_user_can_manage( 'save' ) );
 	}
 }

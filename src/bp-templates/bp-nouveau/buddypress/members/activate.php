@@ -11,15 +11,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-bp_nouveau_activation_hook( 'before', 'page' ); ?>
+bboss_nouveau_activation_hook( 'before', 'page' ); ?>
 
 <div class="page" id="activate-page">
 
 	<?php
-	bp_nouveau_template_notices();
-	bp_nouveau_activation_hook( 'before', 'content' );
+	bboss_nouveau_template_notices();
+	bboss_nouveau_activation_hook( 'before', 'content' );
 
-	if ( bp_account_was_activated() ) {
+	if ( bboss_account_was_activated() ) {
 
 		if ( isset( $_GET['e'] ) ) { ?>
 			<p><?php esc_html_e( 'Your account was activated successfully! Your account details have been sent to you in a separate email.', 'buddyboss' ); ?></p>
@@ -30,7 +30,7 @@ bp_nouveau_activation_hook( 'before', 'page' ); ?>
 
 		printf(
 			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
-			esc_url( wp_login_url( bp_get_root_domain() ) ),
+			esc_url( wp_login_url( bboss_get_root_domain() ) ),
 			esc_html__( 'Log In', 'buddyboss' )
 		);
 	} else {
@@ -38,7 +38,7 @@ bp_nouveau_activation_hook( 'before', 'page' ); ?>
 		<p><?php esc_html_e( 'Please provide a valid activation key.', 'buddyboss' ); ?></p>
 		<form action="" method="post" class="standard-form" id="activation-form">
 			<label for="key"><?php esc_html_e( 'Activation Key:', 'buddyboss' ); ?></label>
-			<input type="text" name="key" id="key" value="<?php echo esc_attr( bp_get_current_activation_key() ); ?>" />
+			<input type="text" name="key" id="key" value="<?php echo esc_attr( bboss_get_current_activation_key() ); ?>" />
 			<?php
 			/**
 			 * Fires before the activation submit button.
@@ -54,9 +54,9 @@ bp_nouveau_activation_hook( 'before', 'page' ); ?>
 		<?php
 	}
 
-	bp_nouveau_activation_hook( 'after', 'content' );
+	bboss_nouveau_activation_hook( 'after', 'content' );
 	?>
 
 </div><!-- .page -->
 
-<?php bp_nouveau_activation_hook( 'after', 'page' ); ?>
+<?php bboss_nouveau_activation_hook( 'after', 'page' ); ?>

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <script type="text/html" id="tmpl-activity-post-form-privacy">
 	<div class="bb-rl-activity-privacy__list">
-		<?php foreach ( bp_activity_get_visibility_levels() as $key => $privacy ) : ?>
+		<?php foreach ( bboss_activity_get_visibility_levels() as $key => $privacy ) : ?>
 
 			<label for="<?php echo esc_attr( $key ); ?>" class="bb-rl-radio-style bb-rl-activity-privacy__label bb-rl-activity-privacy__label-<?php echo esc_attr( $key ); ?>">
 				<div class="bb-rl-privacy-tag-wrapper">
@@ -42,8 +42,8 @@ defined( 'ABSPATH' ) || exit;
 		<?php endforeach; ?>
 
 		<?php
-		if ( bp_is_active( 'groups' ) ) {
-			if ( 0 !== (int) groups_total_groups_for_user( bp_loggedin_user_id() ) ) {
+		if ( bboss_is_active( 'groups' ) ) {
+			if ( 0 !== (int) bboss_groups_total_groups_for_user( bboss_loggedin_user_id() ) ) {
 				?>
 				<label for="group" class="bb-rl-radio-style bb-rl-activity-privacy__label bb-rl-activity-privacy__label-group">
 					<div class="bb-rl-privacy-tag-wrapper">

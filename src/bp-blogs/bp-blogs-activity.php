@@ -16,13 +16,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool|null Returns false if activity component is not active.
  */
-function bp_blogs_register_activity_actions() {
+function bboss_blogs_register_activity_actions() {
 	if ( is_multisite() ) {
-		bp_activity_set_action(
-			buddypress()->blogs->id,
+		bboss_activity_set_action(
+			bboss()->blogs->id,
 			'new_blog',
 			__( 'New site created', 'buddyboss' ),
-			'bp_blogs_format_activity_action_new_blog',
+			'bboss_blogs_format_activity_action_new_blog',
 			__( 'New Sites', 'buddyboss' ),
 			array( 'activity', 'member' ),
 			0
@@ -41,15 +41,15 @@ add_action( 'bp_register_activity_actions', 'bp_blogs_register_activity_actions'
 /**
  * Set up the tracking arguments for the 'post' post type.
  *
- * @since BuddyPress 2.5.0 This was moved out of the BP_Blogs_Component class.
+ * @since BuddyPress 2.5.0 This was moved out of the BBoss_Blogs_Component class.
  *
- * @see bp_activity_get_post_type_tracking_args() for information on parameters.
+ * @see bboss_activity_get_post_type_tracking_args() for information on parameters.
  *
  * @param object|null $params    Tracking arguments.
  * @param string|int  $post_type Post type to track.
  * @return object|null
  */
-function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) {
+function bboss_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) {
 
 	/**
 	 * Filters the post types to track for the Blogs component.
@@ -63,7 +63,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 	 *
 	 * @param array $value Array of post types to track.
 	 */
-	$post_types = apply_filters( 'bp_blogs_record_post_post_types', bp_core_get_active_custom_post_type_feed() );
+	$post_types = apply_filters( 'bp_blogs_record_post_post_types', bboss_core_get_active_custom_post_type_feed() );
 
 	$post_types_array = array_flip( $post_types );
 
@@ -73,7 +73,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 
 	if ( 'post' === $post_type ) {
 		// Set specific params for the 'post' post type.
-		$params->component_id    = buddypress()->blogs->id;
+		$params->component_id    = bboss()->blogs->id;
 		$params->action_id       = 'new_blog_post';
 		$params->admin_filter    = __( 'New post published', 'buddyboss' );
 		$params->format_callback = 'bp_blogs_format_activity_action_new_blog_post';
@@ -82,7 +82,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		$params->position        = 5;
 	} else {
 
-		$enabled = bp_is_post_type_feed_enable( $post_type );
+		$enabled = bboss_is_post_type_feed_enable( $post_type );
 		if ( $enabled ) {
 
 			$args = array(
@@ -99,7 +99,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 				$singular_label_name = $cu->labels->singular_name;
 
 				// Set specific params for the 'post' post type.
-				$params->component_id    = buddypress()->blogs->id;
+				$params->component_id    = bboss()->blogs->id;
 				$params->action_id       = 'new_blog_' . $post_type;
 				/* translators: %s: singular post type label. */
 				$params->admin_filter    = sprintf( __( 'New %s published', 'buddyboss' ), strtolower( $singular_label_name ) );
@@ -137,7 +137,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
 		}
 
-		$bp_allowed_cpt = bb_feed_post_types();
+		$bp_allowed_cpt = bboss_feed_post_types();
 
 		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
 			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
@@ -152,7 +152,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 
 		if ( isset( $comment_post_types_array[ $post_type ] ) ) {
 			$params->comments_tracking                  = new stdClass();
-			$params->comments_tracking->component_id    = buddypress()->blogs->id;
+			$params->comments_tracking->component_id    = bboss()->blogs->id;
 			$params->comments_tracking->action_id       = 'new_blog_comment';
 			$params->comments_tracking->admin_filter    = __( 'New post comment posted', 'buddyboss' );
 			$params->comments_tracking->format_callback = 'bp_blogs_format_activity_action_new_blog_comment';
@@ -175,22 +175,22 @@ add_filter( 'bp_activity_get_post_type_tracking_args', 'bp_blogs_register_post_t
  * @param object $activity Activity data object.
  * @return string
  */
-function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
-	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
-	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
+function bboss_blogs_format_activity_action_new_blog( $action, $activity ) {
+	$blog_url  = bboss_blogs_get_blogmeta( $activity->item_id, 'url' );
+	$blog_name = bboss_blogs_get_blogmeta( $activity->item_id, 'name' );
 
 	/* translators: 1: member profile link, 2: site link. */
-	$action = sprintf( __( '%1$s created the site %2$s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+	$action = sprintf( __( '%1$s created the site %2$s', 'buddyboss' ), bboss_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 
 	// Legacy filter - requires the BP_Blogs_Blog object.
 	if ( has_filter( 'bp_blogs_activity_created_blog_action' ) ) {
-		$user_blog = BP_Blogs_Blog::get_user_blog( $activity->user_id, $activity->item_id );
+		$user_blog = BBoss_Blogs_Blog::get_user_blog( $activity->user_id, $activity->item_id );
 		if ( $user_blog ) {
-			$recorded_blog = new BP_Blogs_Blog( $user_blog );
+			$recorded_blog = new BBoss_Blogs_Blog( $user_blog );
 		}
 
 		if ( isset( $recorded_blog ) ) {
-			$action = apply_filters( 'bp_blogs_activity_created_blog_action', $action, $recorded_blog, $blog_name, bp_blogs_get_blogmeta( $activity->item_id, 'description' ) );
+			$action = apply_filters( 'bp_blogs_activity_created_blog_action', $action, $recorded_blog, $blog_name, bboss_blogs_get_blogmeta( $activity->item_id, 'description' ) );
 		}
 	}
 
@@ -214,16 +214,16 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
  * @param object $activity Activity data object.
  * @return string Constructed activity action.
  */
-function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
-	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
-	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
+function bboss_blogs_format_activity_action_new_blog_post( $action, $activity ) {
+	$blog_url  = bboss_blogs_get_blogmeta( $activity->item_id, 'url' );
+	$blog_name = bboss_blogs_get_blogmeta( $activity->item_id, 'name' );
 
 	if ( empty( $blog_url ) || empty( $blog_name ) ) {
 		$blog_url  = get_home_url( $activity->item_id );
 		$blog_name = get_blog_option( $activity->item_id, 'blogname' );
 
-		bp_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
-		bp_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
+		bboss_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
+		bboss_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
 	}
 
 	/**
@@ -253,7 +253,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 		// If activity already exists try to get the post title from activity meta.
 	} elseif ( ! empty( $activity->id ) ) {
-		$post_title = bp_activity_get_meta( $activity->id, 'post_title' );
+		$post_title = bboss_activity_get_meta( $activity->id, 'post_title' );
 	}
 
 	/**
@@ -275,14 +275,14 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 			// Make sure the activity exists before saving the post title in activity meta.
 			if ( ! empty( $activity->id ) ) {
-				bp_activity_update_meta( $activity->id, 'post_title', $post_title );
+				bboss_activity_update_meta( $activity->id, 'post_title', $post_title );
 			}
 		}
 
 		restore_current_blog();
 	}
 
-	$user_link = bp_core_get_userlink( $activity->user_id );
+	$user_link = bboss_core_get_userlink( $activity->user_id );
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
@@ -324,7 +324,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
  * @param object $activity Activity data object.
  * @return string Constructed activity action.
  */
-function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) {
+function bboss_blogs_format_activity_action_new_blog_comment( $action, $activity ) {
 	/**
 	 * When the comment is published we are faking an activity object
 	 * to which we add 4 properties :
@@ -343,7 +343,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	if ( isset( $activity->blog_url ) ) {
 		$blog_url = $activity->blog_url;
 	} else {
-		$blog_url = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
+		$blog_url = bboss_blogs_get_blogmeta( $activity->item_id, 'url' );
 	}
 
 	$blog_name = false;
@@ -352,15 +352,15 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	if ( isset( $activity->blog_name ) ) {
 		$blog_name = $activity->blog_name;
 	} else {
-		$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
+		$blog_name = bboss_blogs_get_blogmeta( $activity->item_id, 'name' );
 	}
 
 	if ( empty( $blog_url ) || empty( $blog_name ) ) {
 		$blog_url  = get_home_url( $activity->item_id );
 		$blog_name = get_blog_option( $activity->item_id, 'blogname' );
 
-		bp_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
-		bp_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
+		bboss_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
+		bboss_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
 	}
 
 	$post_url = false;
@@ -375,7 +375,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 		 * item id property of the activity object.
 		 */
 	} elseif ( ! empty( $activity->id ) ) {
-		$post_url = bp_activity_get_meta( $activity->id, 'post_url' );
+		$post_url = bboss_activity_get_meta( $activity->id, 'post_url' );
 	}
 
 	$post_title = false;
@@ -386,7 +386,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 
 		// If activity already exists try to get the post title from activity meta
 	} elseif ( ! empty( $activity->id ) ) {
-		$post_title = bp_activity_get_meta( $activity->id, 'post_title' );
+		$post_title = bboss_activity_get_meta( $activity->id, 'post_title' );
 	}
 
 	// Should only be empty at the time of post creation.
@@ -397,13 +397,13 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 
 		if ( ! empty( $comment->comment_post_ID ) ) {
 			$post_url = add_query_arg( 'p', $comment->comment_post_ID, trailingslashit( $blog_url ) );
-			bp_activity_update_meta( $activity->id, 'post_url', $post_url );
+			bboss_activity_update_meta( $activity->id, 'post_url', $post_url );
 
 			$post = get_post( $comment->comment_post_ID );
 
 			if ( is_a( $post, 'WP_Post' ) ) {
 				$post_title = $post->post_title;
-				bp_activity_update_meta( $activity->id, 'post_title', $post_title );
+				bboss_activity_update_meta( $activity->id, 'post_title', $post_title );
 			}
 		}
 
@@ -411,7 +411,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	}
 
 	$post_link = '<a href="' . esc_url( $post_url ) . '">' . $post_title . '</a>';
-	$user_link = bp_core_get_userlink( $activity->user_id );
+	$user_link = bboss_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
 		/* translators: 1: member profile link, 2: post link, 3: site link. */
@@ -453,7 +453,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
  * @param array $activities Array of activity items.
  * @return array
  */
-function bp_blogs_prefetch_activity_object_data( $activities ) {
+function bboss_blogs_prefetch_activity_object_data( $activities ) {
 	if ( empty( $activities ) ) {
 		return $activities;
 	}
@@ -461,7 +461,7 @@ function bp_blogs_prefetch_activity_object_data( $activities ) {
 	$blog_ids = array();
 
 	foreach ( $activities as $activity ) {
-		if ( buddypress()->blogs->id !== $activity->component ) {
+		if ( bboss()->blogs->id !== $activity->component ) {
 			continue;
 		}
 
@@ -469,7 +469,7 @@ function bp_blogs_prefetch_activity_object_data( $activities ) {
 	}
 
 	if ( ! empty( $blog_ids ) ) {
-		bp_blogs_update_meta_cache( $blog_ids );
+		bboss_blogs_update_meta_cache( $blog_ids );
 	}
 
 	return $activities;
@@ -481,31 +481,31 @@ add_filter( 'bp_activity_prefetch_object_data', 'bp_blogs_prefetch_activity_obje
  *
  * @since BuddyPress 1.0.0
  *
- * @see bp_activity_add() for description of parameters.
+ * @see bboss_activity_add() for description of parameters.
  *
  * @param array|string $args {
- *     See {@link bp_activity_add()} for complete description of arguments.
+ *     See {@link bboss_activity_add()} for complete description of arguments.
  *     The arguments listed here have different default values from
- *     bp_activity_add().
+ *     bboss_activity_add().
  *     @type string $component Default: 'blogs'.
  * }
  * @return WP_Error|bool|int On success, returns the activity ID. False on failure.
  */
-function bp_blogs_record_activity( $args = '' ) {
+function bboss_blogs_record_activity( $args = '' ) {
 	$defaults = array(
-		'user_id'           => bp_loggedin_user_id(),
+		'user_id'           => bboss_loggedin_user_id(),
 		'action'            => '',
 		'content'           => '',
 		'primary_link'      => '',
-		'component'         => buddypress()->blogs->id,
+		'component'         => bboss()->blogs->id,
 		'type'              => false,
 		'item_id'           => false,
 		'secondary_item_id' => false,
-		'recorded_time'     => bp_core_current_time(),
+		'recorded_time'     => bboss_core_current_time(),
 		'hide_sitewide'     => false,
 	);
 
-	$r = bp_parse_args( $args, $defaults );
+	$r = bboss_parse_args( $args, $defaults );
 
 	if ( ! empty( $r['action'] ) ) {
 
@@ -530,11 +530,11 @@ function bp_blogs_record_activity( $args = '' ) {
 		 * @param string $value Content for the activity feed.
 		 * @param array  $r     Array of arguments used for the activity feed item.
 		 */
-		$r['content'] = apply_filters( 'bp_blogs_record_activity_content', bp_activity_create_summary( $r['content'], $r ), $r['content'], $r );
+		$r['content'] = apply_filters( 'bp_blogs_record_activity_content', bboss_activity_create_summary( $r['content'], $r ), $r['content'], $r );
 	}
 
 	// Check for an existing entry and update if one exists.
-	$id = bp_activity_get_activity_id(
+	$id = bboss_activity_get_activity_id(
 		array(
 			'user_id'           => $r['user_id'],
 			'component'         => $r['component'],
@@ -544,7 +544,7 @@ function bp_blogs_record_activity( $args = '' ) {
 		)
 	);
 
-	return bp_activity_add(
+	return bboss_activity_add(
 		array(
 			'id'                => $id,
 			'user_id'           => $r['user_id'],
@@ -566,29 +566,29 @@ function bp_blogs_record_activity( $args = '' ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @see bp_activity_delete() for description of parameters.
+ * @see bboss_activity_delete() for description of parameters.
  *
  * @param array|string $args {
- *     See {@link bp_activity_delete()} for complete description of arguments.
+ *     See {@link bboss_activity_delete()} for complete description of arguments.
  *     The arguments listed here have different default values from
- *     bp_activity_add().
+ *     bboss_activity_add().
  *     @type string $component Default: 'blogs'.
  * }
  * @return bool True on success, false on failure.
  */
-function bp_blogs_delete_activity( $args = '' ) {
-	$r = bp_parse_args(
+function bboss_blogs_delete_activity( $args = '' ) {
+	$r = bboss_parse_args(
 		$args,
 		array(
 			'item_id'           => false,
-			'component'         => buddypress()->blogs->id,
+			'component'         => bboss()->blogs->id,
 			'type'              => false,
 			'user_id'           => false,
 			'secondary_item_id' => false,
 		)
 	);
 
-	bp_activity_delete_by_item_id( $r );
+	bboss_activity_delete_by_item_id( $r );
 }
 
 /**
@@ -604,16 +604,16 @@ function bp_blogs_delete_activity( $args = '' ) {
  *
  * @since BuddyPress 2.0.0
  *
- * @param object $activity The BP_Activity_Activity object.
+ * @param object $activity The BBoss_Activity_Activity object.
  * @return bool
  */
-function bp_blogs_comments_open( $activity ) {
+function bboss_blogs_comments_open( $activity ) {
 	$open = true;
 
 	$blog_id = $activity->item_id;
 
 	// See if we've mirrored the close comments option before.
-	$days_old = bp_blogs_get_blogmeta( $blog_id, 'close_comments_days_old' );
+	$days_old = bboss_blogs_get_blogmeta( $blog_id, 'close_comments_days_old' );
 
 	// We've never cached these items before, so do it now.
 	if ( '' === $days_old ) {
@@ -633,9 +633,9 @@ function bp_blogs_comments_open( $activity ) {
 			$thread_depth = 1;
 		}
 
-		bp_blogs_update_blogmeta( $blog_id, 'close_comments_for_old_posts', get_option( 'close_comments_for_old_posts' ) );
-		bp_blogs_update_blogmeta( $blog_id, 'close_comments_days_old', get_option( 'close_comments_days_old' ) );
-		bp_blogs_update_blogmeta( $blog_id, 'thread_comments_depth', $thread_depth );
+		bboss_blogs_update_blogmeta( $blog_id, 'close_comments_for_old_posts', get_option( 'close_comments_for_old_posts' ) );
+		bboss_blogs_update_blogmeta( $blog_id, 'close_comments_days_old', get_option( 'close_comments_days_old' ) );
+		bboss_blogs_update_blogmeta( $blog_id, 'thread_comments_depth', $thread_depth );
 
 		restore_current_blog();
 
@@ -644,11 +644,11 @@ function bp_blogs_comments_open( $activity ) {
 	} else {
 
 		// Comments are closed.
-		if ( 'closed' == bp_activity_get_meta( $activity->id, 'post_comment_status' ) ) {
+		if ( 'closed' == bboss_activity_get_meta( $activity->id, 'post_comment_status' ) ) {
 			return false;
 		}
 
-		if ( ! bp_blogs_get_blogmeta( $blog_id, 'close_comments_for_old_posts' ) ) {
+		if ( ! bboss_blogs_get_blogmeta( $blog_id, 'close_comments_for_old_posts' ) ) {
 			return $open;
 		}
 
@@ -688,14 +688,14 @@ function bp_blogs_comments_open( $activity ) {
  *
  * @since BuddyPress 2.6.0
  *
- * @param BP_Blogs_Blog $recorded_blog Current site being recorded. Passed by reference.
+ * @param BBoss_Blogs_Blog $recorded_blog Current site being recorded. Passed by reference.
  * @param bool          $is_private    Whether the current site being recorded is private.
  * @param bool          $is_recorded   Whether the current site was recorded.
  */
-function bp_blogs_record_activity_on_site_creation( $recorded_blog, $is_private, $is_recorded, $no_activity ) {
+function bboss_blogs_record_activity_on_site_creation( $recorded_blog, $is_private, $is_recorded, $no_activity ) {
 	// Only record this activity if the blog is public.
-	if ( ! $is_private && ! $no_activity && bp_blogs_is_blog_trackable( $recorded_blog->blog_id, $recorded_blog->user_id ) ) {
-		bp_blogs_record_activity(
+	if ( ! $is_private && ! $no_activity && bboss_blogs_is_blog_trackable( $recorded_blog->blog_id, $recorded_blog->user_id ) ) {
+		bboss_blogs_record_activity(
 			array(
 				'user_id'      => $recorded_blog->user_id,
 
@@ -723,10 +723,10 @@ add_action( 'bp_blogs_new_blog', 'bp_blogs_record_activity_on_site_creation', 10
  *
  * @param int $blog_id Site ID.
  */
-function bp_blogs_delete_new_blog_activity_for_site( $blog_id, $user_id = 0 ) {
+function bboss_blogs_delete_new_blog_activity_for_site( $blog_id, $user_id = 0 ) {
 	$args = array(
 		'item_id'   => $blog_id,
-		'component' => buddypress()->blogs->id,
+		'component' => bboss()->blogs->id,
 		'type'      => 'new_blog',
 	);
 
@@ -738,7 +738,7 @@ function bp_blogs_delete_new_blog_activity_for_site( $blog_id, $user_id = 0 ) {
 		$args['user_id'] = $user_id;
 	}
 
-	bp_blogs_delete_activity( $args );
+	bboss_blogs_delete_activity( $args );
 }
 add_action( 'bp_blogs_remove_blog', 'bp_blogs_delete_new_blog_activity_for_site', 10, 1 );
 add_action( 'bp_blogs_remove_blog_for_user', 'bp_blogs_delete_new_blog_activity_for_site', 10, 2 );
@@ -750,11 +750,11 @@ add_action( 'bp_blogs_remove_blog_for_user', 'bp_blogs_delete_new_blog_activity_
  *
  * @param int $blog_id Site ID.
  */
-function bp_blogs_delete_activity_for_site( $blog_id ) {
-	bp_blogs_delete_activity(
+function bboss_blogs_delete_activity_for_site( $blog_id ) {
+	bboss_blogs_delete_activity(
 		array(
 			'item_id'   => $blog_id,
-			'component' => buddypress()->blogs->id,
+			'component' => bboss()->blogs->id,
 			'type'      => false,
 		)
 	);
@@ -772,7 +772,7 @@ add_action( 'bp_blogs_remove_data_for_blog', 'bp_blogs_delete_activity_for_site'
  *                     is currently unused in the function (but is passed to hooks).
  * @return bool
  */
-function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
+function bboss_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	global $wpdb;
 
 	if ( empty( $wpdb->blogid ) ) {
@@ -786,7 +786,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	}
 
 	if ( ! $user_id ) {
-		$user_id = bp_loggedin_user_id();
+		$user_id = bboss_loggedin_user_id();
 	}
 
 	/**
@@ -800,11 +800,11 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	 */
 	do_action( 'bp_blogs_before_remove_post', $blog_id, $post_id, $user_id );
 
-	bp_blogs_delete_activity(
+	bboss_blogs_delete_activity(
 		array(
 			'item_id'           => $blog_id,
 			'secondary_item_id' => $post_id,
-			'component'         => buddypress()->blogs->id,
+			'component'         => bboss()->blogs->id,
 			'type'              => 'new_blog_post',
 		)
 	);
@@ -829,7 +829,7 @@ add_action( 'delete_post', 'bp_blogs_remove_post' );
  *
  * Note: This is only a one-way sync - activity comments -> blog comment.
  *
- * For blog post -> activity comment, see {@link bp_activity_post_type_comment()}.
+ * For blog post -> activity comment, see {@link bboss_activity_post_type_comment()}.
  *
  * @since BuddyPress 2.0.0
  * @since BuddyPress 2.5.0 Allow custom post types to sync their comments with activity ones
@@ -838,7 +838,7 @@ add_action( 'delete_post', 'bp_blogs_remove_post' );
  * @param array  $params          Parameters for the activity comment.
  * @param object $parent_activity Parameters of the parent activity item (in this case, the blog post).
  */
-function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_activity ) {
+function bboss_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_activity ) {
 	global $bb_activity_comment_edit;
 
 	// Return if $comment_id empty or edit activity comment.
@@ -847,35 +847,35 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	}
 
 	// if parent activity isn't a post type having the buddypress-activity support, stop now!
-	if ( ! bp_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
+	if ( ! bboss_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
 		return;
 	}
 
 	// If activity comments are disabled for blog posts, stop now!
-	if ( bp_disable_blogforum_comments() ) {
+	if ( bboss_disable_blogforum_comments() ) {
 		return;
 	}
 
 	// Do not sync if the activity comment was marked as spam.
-	$activity = new BP_Activity_Activity( $comment_id );
+	$activity = new BBoss_Activity_Activity( $comment_id );
 	if ( $activity->is_spam ) {
 		return;
 	}
 
 	// Get userdata.
-	if ( $params['user_id'] == bp_loggedin_user_id() ) {
-		$user = buddypress()->loggedin_user->userdata;
+	if ( $params['user_id'] == bboss_loggedin_user_id() ) {
+		$user = bboss()->loggedin_user->userdata;
 	} else {
-		$user = bp_core_get_core_userdata( $params['user_id'] );
+		$user = bboss_core_get_core_userdata( $params['user_id'] );
 	}
 
 	// Get associated post type and set default comment parent
-	$post_type      = bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' );
+	$post_type      = bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' );
 	$comment_parent = 0;
 
 	// See if a parent WP comment ID exists.
 	if ( ! empty( $params['parent_id'] ) && ! empty( $post_type ) ) {
-		$comment_parent = bp_activity_get_meta( $params['parent_id'], "bp_blogs_{$post_type}_comment_id" );
+		$comment_parent = bboss_activity_get_meta( $params['parent_id'], "bp_blogs_{$post_type}_comment_id" );
 	}
 
 	/**
@@ -893,10 +893,10 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	// Comment args.
 	$args = array(
 		'comment_post_ID'      => $parent_activity->secondary_item_id,
-		'comment_author'       => bp_core_get_user_displayname( $params['user_id'] ),
+		'comment_author'       => bboss_core_get_user_displayname( $params['user_id'] ),
 		'comment_author_email' => $user->user_email,
-		'comment_author_url'   => bp_core_get_user_domain( $params['user_id'], $user->user_nicename, $user->user_login ),
-		'comment_content'      => bp_activity_at_name_filter( $params['content'] ),
+		'comment_author_url'   => bboss_core_get_user_domain( $params['user_id'], $user->user_nicename, $user->user_login ),
+		'comment_content'      => bboss_activity_at_name_filter( $params['content'] ),
 		'comment_type'         => '', // Could be interesting to add 'buddypress' here...
 		'comment_parent'       => (int) $comment_parent,
 		'user_id'              => $params['user_id'],
@@ -922,7 +922,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 
 	// Add meta to activity comment.
 	if ( ! empty( $post_type ) ) {
-		bp_activity_update_meta( $comment_id, "bp_blogs_{$post_type}_comment_id", $post_comment_id );
+		bboss_activity_update_meta( $comment_id, "bp_blogs_{$post_type}_comment_id", $post_comment_id );
 	}
 
 	// Resave activity comment with WP comment permalink.
@@ -932,7 +932,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	//
 	// @todo since this is done after AJAX posting, the activity comment permalink
 	// doesn't change on the front end until the next page refresh.
-	$resave_activity               = new BP_Activity_Activity( $comment_id );
+	$resave_activity               = new BBoss_Activity_Activity( $comment_id );
 	$resave_activity->primary_link = '';
 
 	/**
@@ -984,17 +984,17 @@ add_action( 'bp_activity_comment_posted', 'bp_blogs_sync_add_from_activity_comme
  * @param bool $deleted            Whether the comment was deleted or not.
  * @return bool
  */
-function bp_blogs_sync_delete_from_activity_comment( $retval, $parent_activity_id, $activity_id, &$deleted ) {
+function bboss_blogs_sync_delete_from_activity_comment( $retval, $parent_activity_id, $activity_id, &$deleted ) {
 	// Check if parent activity is a blog post.
-	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+	$parent_activity = new BBoss_Activity_Activity( $parent_activity_id );
 
 	// if parent activity isn't a post type having the buddypress-activity support, stop now!
-	if ( ! bp_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
+	if ( ! bboss_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
 		return $retval;
 	}
 
 	// Fetch the activity comments for the activity item.
-	$activity = bp_activity_get(
+	$activity = bboss_activity_get(
 		array(
 			'in'               => $activity_id,
 			'display_comments' => 'stream',
@@ -1003,7 +1003,7 @@ function bp_blogs_sync_delete_from_activity_comment( $retval, $parent_activity_i
 	);
 
 	// Get all activity comment IDs for the pending deleted item.
-	$activity_ids   = bp_activity_recurse_comments_activity_ids( $activity );
+	$activity_ids   = bboss_activity_recurse_comments_activity_ids( $activity );
 	$activity_ids[] = $activity_id;
 
 	// Handle multisite
@@ -1011,14 +1011,14 @@ function bp_blogs_sync_delete_from_activity_comment( $retval, $parent_activity_i
 	switch_to_blog( $parent_activity->item_id );
 
 	// Remove associated blog comments.
-	bp_blogs_remove_associated_blog_comments( $activity_ids, current_user_can( 'moderate_comments' ) );
+	bboss_blogs_remove_associated_blog_comments( $activity_ids, current_user_can( 'moderate_comments' ) );
 
 	// Multisite again!
 	restore_current_blog();
 
 	// Rebuild activity comment tree
 	// emulate bp_activity_delete_comment().
-	BP_Activity_Activity::rebuild_activity_comment_tree( $parent_activity_id );
+	BBoss_Activity_Activity::rebuild_activity_comment_tree( $parent_activity_id );
 
 	// Avoid the error message although the comments were successfully deleted
 	$deleted = true;
@@ -1034,24 +1034,24 @@ add_filter( 'bp_activity_delete_comment_pre', 'bp_blogs_sync_delete_from_activit
  *
  * @since BuddyPress 2.0.0
  *
- * @param BP_Activity_Activity $activity The activity object.
+ * @param BBoss_Activity_Activity $activity The activity object.
  */
-function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $activity ) {
+function bboss_blogs_sync_activity_edit_to_post_comment( BBoss_Activity_Activity $activity ) {
 	// This is a new entry, so stop!
 	// We only want edits!
-	if ( empty( $activity->id ) || bp_disable_blogforum_comments() ) {
+	if ( empty( $activity->id ) || bboss_disable_blogforum_comments() ) {
 		return;
 	}
 
 	// fetch parent activity item
-	$parent_activity = new BP_Activity_Activity( $activity->item_id );
+	$parent_activity = new BBoss_Activity_Activity( $activity->item_id );
 
 	// if parent activity isn't a post type having the buddypress-activity support for comments, stop now!
-	if ( ! bp_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
+	if ( ! bboss_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
 		return;
 	}
 
-	$post_type = bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' );
+	$post_type = bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' );
 
 	// No associated post type for this activity comment, stop.
 	if ( ! $post_type ) {
@@ -1059,7 +1059,7 @@ function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $acti
 	}
 
 	// Try to see if a corresponding blog comment exists.
-	$post_comment_id = bp_activity_get_meta( $activity->id, "bp_blogs_{$post_type}_comment_id" );
+	$post_comment_id = bboss_activity_get_meta( $activity->id, "bp_blogs_{$post_type}_comment_id" );
 
 	if ( empty( $post_comment_id ) ) {
 		return;
@@ -1133,7 +1133,7 @@ add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comm
  * @param array $comments Array of comment statuses. The key is comment ID, the
  *                        value is the $comment->comment_approved value.
  */
-function bp_blogs_remove_activity_meta_for_trashed_comments( $post_id = 0, $comments = array() ) {
+function bboss_blogs_remove_activity_meta_for_trashed_comments( $post_id = 0, $comments = array() ) {
 	if ( ! empty( $comments ) ) {
 		foreach ( array_keys( $comments ) as $comment_id ) {
 			delete_comment_meta( $comment_id, 'bp_activity_comment_id' );
@@ -1143,33 +1143,33 @@ function bp_blogs_remove_activity_meta_for_trashed_comments( $post_id = 0, $comm
 add_action( 'trashed_post_comments', 'bp_blogs_remove_activity_meta_for_trashed_comments', 10, 2 );
 
 /**
- * Filter 'new_blog_comment' bp_has_activities() loop to include new- and old-style blog activity comment items.
+ * Filter 'new_blog_comment' bboss_has_activities() loop to include new- and old-style blog activity comment items.
  *
  * In BuddyPress 2.0, the schema for storing activity items related to blog
  * posts changed. Instead creating new top-level 'new_blog_comment' activity
  * items, blog comments are recorded in the activity feed as comments on the
  * 'new_blog_post' activity items corresponding to the parent post. This filter
- * ensures that the 'new_blog_comment' filter in bp_has_activities() (which
+ * ensures that the 'new_blog_comment' filter in bboss_has_activities() (which
  * powers the 'Comments' filter in the activity directory dropdown) includes
  * both old-style and new-style activity comments.
  *
  * @since BuddyPress 2.1.0
  * @since BuddyPress 2.5.0 Used for any synced Post type comments, in wp-admin or front-end contexts.
  *
- * @param array $args Arguments passed from bp_parse_args() in bp_has_activities().
+ * @param array $args Arguments passed from bboss_parse_args() in bboss_has_activities().
  * @return array $args
  */
-function bp_blogs_new_blog_comment_query_backpat( $args ) {
+function bboss_blogs_new_blog_comment_query_backpat( $args ) {
 	global $wpdb;
-	$bp = buddypress();
+	$bp = bboss();
 
 	// If activity comments are disabled for blog posts, stop now!
-	if ( bp_disable_blogforum_comments() ) {
+	if ( bboss_disable_blogforum_comments() ) {
 		return $args;
 	}
 
 	// Get the associated post type
-	$post_type = bp_activity_post_type_get_tracking_arg( $args['action'], 'post_type' );
+	$post_type = bboss_activity_post_type_get_tracking_arg( $args['action'], 'post_type' );
 
 	// Bail if this is not an activity associated with a post type
 	if ( empty( $post_type ) ) {
@@ -1177,7 +1177,7 @@ function bp_blogs_new_blog_comment_query_backpat( $args ) {
 	}
 
 	// Bail if this is an activity about posts and not comments
-	if ( bp_activity_post_type_get_tracking_arg( $args['action'], 'comment_action_id' ) ) {
+	if ( bboss_activity_post_type_get_tracking_arg( $args['action'], 'comment_action_id' ) ) {
 		return $args;
 	}
 
@@ -1198,7 +1198,7 @@ function bp_blogs_new_blog_comment_query_backpat( $args ) {
 			'relation' => 'AND',
 			array(
 				'column' => 'user_id',
-				'value'  => bp_displayed_user_id(),
+				'value'  => bboss_displayed_user_id(),
 			),
 		);
 		$args['scope'] = '';
@@ -1242,18 +1242,18 @@ add_filter( 'bp_activity_list_table_filter_activity_type_items', 'bp_blogs_new_b
  *
  * @since BuddyPress 2.0.0
  *
- * @see bp_blogs_disable_activity_commenting()
- * @see bp_blogs_setup_comment_loop_globals_on_ajax()
+ * @see bboss_blogs_disable_activity_commenting()
+ * @see bboss_blogs_setup_comment_loop_globals_on_ajax()
  *
- * @param object $activity The BP_Activity_Activity object.
+ * @param object $activity The BBoss_Activity_Activity object.
  */
-function bp_blogs_setup_activity_loop_globals( $activity ) {
+function bboss_blogs_setup_activity_loop_globals( $activity ) {
 	if ( ! is_object( $activity ) ) {
 		return;
 	}
 
 	// The activity type does not support comments or replies ? stop now!
-	if ( ! bp_activity_type_supports( $activity->type, 'post-type-comment-reply' ) ) {
+	if ( ! bboss_activity_type_supports( $activity->type, 'post-type-comment-reply' ) ) {
 		return;
 	}
 
@@ -1262,24 +1262,24 @@ function bp_blogs_setup_activity_loop_globals( $activity ) {
 	}
 
 	// If we've already done this before, stop now!
-	if ( isset( buddypress()->blogs->allow_comments[ $activity->id ] ) ) {
+	if ( isset( bboss()->blogs->allow_comments[ $activity->id ] ) ) {
 		return;
 	}
 
-	$allow_comments = bp_blogs_comments_open( $activity );
-	$thread_depth   = bp_blogs_get_blogmeta( $activity->item_id, 'thread_comments_depth' );
-	$moderation     = bp_blogs_get_blogmeta( $activity->item_id, 'comment_moderation' );
+	$allow_comments = bboss_blogs_comments_open( $activity );
+	$thread_depth   = bboss_blogs_get_blogmeta( $activity->item_id, 'thread_comments_depth' );
+	$moderation     = bboss_blogs_get_blogmeta( $activity->item_id, 'comment_moderation' );
 
 	// Initialize a local object so we won't have to query this again in the
 	// comment loop.
-	if ( empty( buddypress()->blogs->allow_comments ) ) {
-		buddypress()->blogs->allow_comments = array();
+	if ( empty( bboss()->blogs->allow_comments ) ) {
+		bboss()->blogs->allow_comments = array();
 	}
-	if ( empty( buddypress()->blogs->thread_depth ) ) {
-		buddypress()->blogs->thread_depth = array();
+	if ( empty( bboss()->blogs->thread_depth ) ) {
+		bboss()->blogs->thread_depth = array();
 	}
-	if ( empty( buddypress()->blogs->comment_moderation ) ) {
-		buddypress()->blogs->comment_moderation = array();
+	if ( empty( bboss()->blogs->comment_moderation ) ) {
+		bboss()->blogs->comment_moderation = array();
 	}
 
 	/*
@@ -1292,9 +1292,9 @@ function bp_blogs_setup_activity_loop_globals( $activity ) {
 	 *
 	 * Should probably object cache these values instead...
 	 */
-	buddypress()->blogs->allow_comments[ $activity->id ]     = $allow_comments;
-	buddypress()->blogs->thread_depth[ $activity->id ]       = $thread_depth;
-	buddypress()->blogs->comment_moderation[ $activity->id ] = $moderation;
+	bboss()->blogs->allow_comments[ $activity->id ]     = $allow_comments;
+	bboss()->blogs->thread_depth[ $activity->id ]       = $thread_depth;
+	bboss()->blogs->comment_moderation[ $activity->id ] = $moderation;
 }
 
 /**
@@ -1302,23 +1302,23 @@ function bp_blogs_setup_activity_loop_globals( $activity ) {
  *
  * @since BuddyPress 2.0.0
  *
- * @see bp_blogs_setup_activity_loop_globals()
+ * @see bboss_blogs_setup_activity_loop_globals()
  */
-function bp_blogs_setup_comment_loop_globals_on_ajax() {
+function bboss_blogs_setup_comment_loop_globals_on_ajax() {
 	// Not AJAX? stop now!
-	if ( ! defined( 'DOING_AJAX' ) ) {
+	if ( ! defined( 'BBOSS_DOING_AJAX' ) ) {
 		return;
 	}
-	if ( false === (bool) constant( 'DOING_AJAX' ) ) {
+	if ( false === (bool) constant( 'BBOSS_DOING_AJAX' ) ) {
 		return;
 	}
 
 	// Get the parent activity item.
-	$comment         = bp_activity_current_comment();
-	$parent_activity = new BP_Activity_Activity( $comment->item_id );
+	$comment         = bboss_activity_current_comment();
+	$parent_activity = new BBoss_Activity_Activity( $comment->item_id );
 
 	// Setup the globals.
-	bp_blogs_setup_activity_loop_globals( $parent_activity );
+	bboss_blogs_setup_activity_loop_globals( $parent_activity );
 }
 add_action( 'bp_before_activity_comment', 'bp_blogs_setup_comment_loop_globals_on_ajax' );
 
@@ -1337,7 +1337,7 @@ add_action( 'bp_before_activity_comment', 'bp_blogs_setup_comment_loop_globals_o
  * @param bool $retval Is activity commenting enabled for this activity entry.
  * @return bool
  */
-function bp_blogs_disable_activity_commenting( $retval ) {
+function bboss_blogs_disable_activity_commenting( $retval ) {
 	global $activities_template;
 
 	// If activity commenting is disabled, return current value.
@@ -1345,27 +1345,27 @@ function bp_blogs_disable_activity_commenting( $retval ) {
 		return $retval;
 	}
 
-	if ( bp_disable_blogforum_comments() ) {
+	if ( bboss_disable_blogforum_comments() ) {
 		$retval = false;
 	}
 
-	$type = bp_get_activity_type();
+	$type = bboss_get_activity_type();
 
 	// It's a post type supporting comment tracking.
-	if ( bp_activity_type_supports( $type, 'post-type-comment-tracking' ) ) {
+	if ( bboss_activity_type_supports( $type, 'post-type-comment-tracking' ) ) {
 		// The activity type is supporting comments or replies.
-		if ( bp_activity_type_supports( $type, 'post-type-comment-reply' ) ) {
+		if ( bboss_activity_type_supports( $type, 'post-type-comment-reply' ) ) {
 			// Setup some globals we'll need to reference later.
-			bp_blogs_setup_activity_loop_globals( $activities_template->activity );
+			bboss_blogs_setup_activity_loop_globals( $activities_template->activity );
 
 			// If comments are closed for the WP blog post, we should disable
 			// activity comments for this activity entry.
-			if ( empty( buddypress()->blogs->allow_comments[ bp_get_activity_id() ] ) ) {
+			if ( empty( bboss()->blogs->allow_comments[ bboss_get_activity_id() ] ) ) {
 				$retval = false;
 			}
 
 			// If comments need moderation, disable activity commenting.
-			if ( ! empty( buddypress()->blogs->comment_moderation[ bp_get_activity_id() ] ) ) {
+			if ( ! empty( bboss()->blogs->comment_moderation[ bboss_get_activity_id() ] ) ) {
 				$retval = false;
 			}
 			// The activity type does not support comments or replies.
@@ -1390,23 +1390,23 @@ add_filter( 'bp_activity_can_comment', 'bp_blogs_disable_activity_commenting' );
  * @param  int $retval  The comment count for the activity.
  * @return int          The comment count, or 0 to hide activity comment replies.
  */
-function bp_blogs_post_type_comments_avoid_duplicates( $retval ) {
+function bboss_blogs_post_type_comments_avoid_duplicates( $retval ) {
 	/**
 	 * Only limit the display when Post type comments are synced with
 	 * activity comments.
 	 */
-	if ( bp_disable_blogforum_comments() ) {
+	if ( bboss_disable_blogforum_comments() ) {
 		return $retval;
 	}
 
-	if ( 'activity_comment' !== bp_get_activity_type() ) {
+	if ( 'activity_comment' !== bboss_get_activity_type() ) {
 		return $retval;
 	}
 
 	// Check the parent activity
-	$parent_activity = new BP_Activity_Activity( bp_get_activity_item_id() );
+	$parent_activity = new BBoss_Activity_Activity( bboss_get_activity_item_id() );
 
-	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
+	if ( isset( $parent_activity->type ) && bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = 0;
 	}
 
@@ -1420,8 +1420,8 @@ add_filter( 'bp_activity_get_comment_count', 'bp_blogs_post_type_comments_avoid_
  * By default, disables replying to activity comments if the corresponding WP
  * blog post no longer accepts comments.
  *
- * This check uses a locally-cached value set in {@link bp_blogs_disable_activity_commenting()}
- * via {@link bp_blogs_setup_activity_loop_globals()}.
+ * This check uses a locally-cached value set in {@link bboss_blogs_disable_activity_commenting()}
+ * via {@link bboss_blogs_setup_activity_loop_globals()}.
  *
  * @since BuddyPress 2.0.0
  *
@@ -1430,29 +1430,29 @@ add_filter( 'bp_activity_get_comment_count', 'bp_blogs_post_type_comments_avoid_
  *
  * @return bool
  */
-function bp_blogs_can_comment_reply( $retval, $comment ) {
+function bboss_blogs_can_comment_reply( $retval, $comment ) {
 	if ( is_array( $comment ) ) {
 		$comment = (object) $comment;
 	}
 
 	// Check comment depth and disable if depth is too large.
-	if ( isset( buddypress()->blogs->thread_depth[ $comment->item_id ] ) ) {
-		if ( bp_activity_get_comment_depth( $comment ) >= buddypress()->blogs->thread_depth[ $comment->item_id ] ) {
+	if ( isset( bboss()->blogs->thread_depth[ $comment->item_id ] ) ) {
+		if ( bboss_activity_get_comment_depth( $comment ) >= bboss()->blogs->thread_depth[ $comment->item_id ] ) {
 			$retval = false;
 		}
 	}
 
 	// Check if we should disable activity replies based on the parent activity.
-	if ( isset( buddypress()->blogs->allow_comments[ $comment->item_id ] ) ) {
+	if ( isset( bboss()->blogs->allow_comments[ $comment->item_id ] ) ) {
 		// The blog post has closed off commenting, so we should disable all activity
 		// comments under the parent 'new_blog_post' activity entry.
-		if ( empty( buddypress()->blogs->allow_comments[ $comment->item_id ] ) ) {
+		if ( empty( bboss()->blogs->allow_comments[ $comment->item_id ] ) ) {
 			$retval = false;
 		}
 	}
 
 	// If comments need moderation, disable activity commenting.
-	if ( ! empty( buddypress()->blogs->comment_moderation[ $comment->item_id ] ) ) {
+	if ( ! empty( bboss()->blogs->comment_moderation[ $comment->item_id ] ) ) {
 		$retval = false;
 	}
 
@@ -1473,7 +1473,7 @@ add_filter( 'bp_activity_can_comment_reply', 'bp_blogs_can_comment_reply', 10, 2
  * @param string $retval The activity comment permalink.
  * @return string
  */
-function bp_blogs_activity_comment_permalink( $retval = '' ) {
+function bboss_blogs_activity_comment_permalink( $retval = '' ) {
 	global $activities_template;
 
 	// Get the current comment ID.
@@ -1482,7 +1482,7 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 		: false;
 
 	// Maybe adjust the link if item ID exists.
-	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
+	if ( ( false !== $item_id ) && isset( bboss()->blogs->allow_comments[ $item_id ] ) ) {
 		// Unsynced comments (e.g. made before the post type supported comments) have no post comment link.
 		$activity_permalink = $retval;
 		$retval             = $activities_template->activity->current_comment->primary_link;
@@ -1492,7 +1492,7 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 				$comment_post_type = $activities_template->activity->secondary_item_id;
 				$post_type         = get_post_type( $comment_post_type );
 			}
-			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$comment_id = bboss_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_' . $post_type . '_comment_id' );
 			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
 		}
 
@@ -1514,23 +1514,23 @@ add_filter( 'bp_get_activity_comment_permalink', 'bp_blogs_activity_comment_perm
  * @since BuddyBoss 3.7.0 Falls back to the activity comment permalink when no synced post comment exists.
  *
  * @param string               $retval   The activity permalink.
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  * @return string
  */
-function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
+function bboss_blogs_activity_comment_single_permalink( $retval, $activity ) {
 	if ( 'activity_comment' !== $activity->type ) {
 		return $retval;
 	}
 
-	if ( bp_disable_blogforum_comments() ) {
+	if ( bboss_disable_blogforum_comments() ) {
 		return $retval;
 	}
 
 	// Unsynced comments (e.g. post type without comments support) have no post comment link.
 	$activity_permalink = $retval;
-	$parent_activity    = new BP_Activity_Activity( $activity->item_id );
+	$parent_activity    = new BBoss_Activity_Activity( $activity->item_id );
 
-	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
+	if ( isset( $parent_activity->type ) && bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
 		if ( empty( $retval ) ) {
 			$post_type = str_replace( 'new_blog_', '', $parent_activity->type );
@@ -1538,7 +1538,7 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 				$comment_post_type = $parent_activity->secondary_item_id;
 				$post_type         = get_post_type( $comment_post_type );
 			}
-			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$comment_id = bboss_activity_get_meta( $activity->id, 'bp_blogs_' . $post_type . '_comment_id' );
 			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
 		}
 
@@ -1559,37 +1559,37 @@ add_filter( 'bp_activity_get_permalink', 'bp_blogs_activity_comment_single_perma
  * @since BuddyPress 2.0.1
  *
  * @param string               $retval   The activity action.
- * @param BP_Activity_Activity $activity Activity object.
+ * @param BBoss_Activity_Activity $activity Activity object.
  * @return string
  */
-function bp_blogs_activity_comment_single_action( $retval, $activity ) {
+function bboss_blogs_activity_comment_single_action( $retval, $activity ) {
 	if ( 'activity_comment' !== $activity->type ) {
 		return $retval;
 	}
 
-	if ( bp_disable_blogforum_comments() ) {
+	if ( bboss_disable_blogforum_comments() ) {
 		return $retval;
 	}
 
-	$parent_activity = new BP_Activity_Activity( $activity->item_id );
+	$parent_activity = new BBoss_Activity_Activity( $activity->item_id );
 
 	if ( ! isset( $parent_activity->type ) ) {
 		return $retval;
 	}
 
-	$post_type = bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' );
+	$post_type = bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' );
 
 	if ( ! $post_type ) {
 		return $retval;
 	}
 
-	$blog_comment_id = bp_activity_get_meta( $activity->id, "bp_blogs_{$post_type}_comment_id" );
+	$blog_comment_id = bboss_activity_get_meta( $activity->id, "bp_blogs_{$post_type}_comment_id" );
 
 	if ( ! empty( $blog_comment_id ) ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Check if a comment action id is set for the parent activity
-		$comment_action_id = bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'comment_action_id' );
+		$comment_action_id = bboss_activity_post_type_get_tracking_arg( $parent_activity->type, 'comment_action_id' );
 
 		// Use the action string callback for the activity type
 		if ( ! empty( $comment_action_id ) ) {
@@ -1606,7 +1606,7 @@ function bp_blogs_activity_comment_single_action( $retval, $activity ) {
 			$object->secondary_item_id = $blog_comment_id;
 
 			// Get the format callback for this activity comment
-			$format_callback = bp_activity_post_type_get_tracking_arg( $comment_action_id, 'format_callback' );
+			$format_callback = bboss_activity_post_type_get_tracking_arg( $comment_action_id, 'format_callback' );
 
 			// now format the activity action using the 'new_{post_type}_comment' action callback
 			if ( is_callable( $format_callback ) ) {
@@ -1628,16 +1628,16 @@ add_filter( 'bp_get_activity_action_pre_meta', 'bp_blogs_activity_comment_single
  * @param object $activity Activity data object.
  * @return string Constructed activity action.
  */
-function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $activity ) {
-	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
-	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
+function bboss_blogs_format_activity_action_new_custom_post_type_feed( $action, $activity ) {
+	$blog_url  = bboss_blogs_get_blogmeta( $activity->item_id, 'url' );
+	$blog_name = bboss_blogs_get_blogmeta( $activity->item_id, 'name' );
 
 	if ( empty( $blog_url ) || empty( $blog_name ) ) {
 		$blog_url  = get_home_url( $activity->item_id );
 		$blog_name = get_blog_option( $activity->item_id, 'blogname' );
 
-		bp_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
-		bp_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
+		bboss_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
+		bboss_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
 	}
 
 	/**
@@ -1667,7 +1667,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		// If activity already exists try to get the post title from activity meta.
 	} elseif ( ! empty( $activity->id ) ) {
-		$post_title = bp_activity_get_meta( $activity->id, 'post_title' );
+		$post_title = bboss_activity_get_meta( $activity->id, 'post_title' );
 	}
 
 	/**
@@ -1689,7 +1689,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 			// Make sure the activity exists before saving the post title in activity meta.
 			if ( ! empty( $activity->id ) ) {
-				bp_activity_update_meta( $activity->id, 'post_title', $post_title );
+				bboss_activity_update_meta( $activity->id, 'post_title', $post_title );
 			}
 		}
 
@@ -1699,12 +1699,12 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	// Build the 'post link' part of the activity action string.
 	$post_link = '<span class="bb-post-singular">' . $post_title . '</span>';
 
-	$user_link = bp_core_get_userlink( $activity->user_id );
+	$user_link = bboss_core_get_userlink( $activity->user_id );
 
 	// Get post type by id
 	$post_type = get_post_type( $activity->secondary_item_id );
 
-	$enabled = bp_is_post_type_feed_enable( $post_type );
+	$enabled = bboss_is_post_type_feed_enable( $post_type );
 	if ( $enabled ) {
 
 		$args = array(
@@ -1774,7 +1774,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
  *
  * @return string The filter sql.
  */
-function bb_filter_activity_get_filter_sql( $filter_sql, $filter_array ) {
+function bboss_filter_activity_get_filter_sql( $filter_sql, $filter_array ) {
 	global $wpdb, $bp;
 
 	// Handle the blog activity comment compatibility.
@@ -1782,14 +1782,14 @@ function bb_filter_activity_get_filter_sql( $filter_sql, $filter_array ) {
 		$action_array = explode( ',', $filter_array['action'] );
 		if (
 			in_array( 'new_blog_comment', $action_array, true ) &&
-			! bp_disable_blogforum_comments() &&
+			! bboss_disable_blogforum_comments() &&
 			count( $action_array ) > 1 &&
 			! empty( $bp->activity->table_name_meta )
 		) {
 
 			// Get the associated post type.
-			$post_type = bp_activity_post_type_get_tracking_arg( 'new_blog_comment', 'post_type' );
-			if ( ! empty( $post_type ) && ! bp_activity_post_type_get_tracking_arg( 'new_blog_comment', 'comment_action_id' ) ) {
+			$post_type = bboss_activity_post_type_get_tracking_arg( 'new_blog_comment', 'post_type' );
+			if ( ! empty( $post_type ) && ! bboss_activity_post_type_get_tracking_arg( 'new_blog_comment', 'comment_action_id' ) ) {
 				$filter_blog_comment = 'a.id IN (SELECT activity_id FROM ' . $bp->activity->table_name_meta . ' WHERE meta_key = "bp_blogs_' . $post_type . '_comment_id")';
 				return '( ' . $filter_blog_comment . ' OR ' . $filter_sql . ' )';
 			}

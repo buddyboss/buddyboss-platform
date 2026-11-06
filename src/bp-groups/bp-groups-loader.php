@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-function bp_setup_groups() {
-	buddypress()->groups = new BP_Groups_Component();
+function bboss_setup_groups() {
+	bboss()->groups = new BBoss_Groups_Component();
 }
 add_action( 'bp_setup_components', 'bp_setup_groups', 6 );

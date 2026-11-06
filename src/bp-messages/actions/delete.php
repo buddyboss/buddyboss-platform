@@ -14,28 +14,28 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool False on failure.
  */
-function messages_action_delete_message() {
+function bboss_messages_action_delete_message() {
 
-	if ( ! bp_is_messages_component() || bp_is_current_action( 'notices' ) || ! bp_is_action_variable( 'delete', 0 ) ) {
+	if ( ! bboss_is_messages_component() || bboss_is_current_action( 'notices' ) || ! bboss_is_action_variable( 'delete', 0 ) ) {
 		return false;
 	}
 
-	$thread_id = bp_action_variable( 1 );
+	$thread_id = bboss_action_variable( 1 );
 
-	if ( ! $thread_id || ! is_numeric( $thread_id ) || ! messages_check_thread_access( $thread_id ) ) {
-		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() ) );
+	if ( ! $thread_id || ! is_numeric( $thread_id ) || ! bboss_messages_check_thread_access( $thread_id ) ) {
+		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() ) );
 	} else {
 		if ( ! check_admin_referer( 'messages_delete_thread' ) ) {
 			return false;
 		}
 
 		// Delete message.
-		if ( ! messages_delete_thread( $thread_id ) ) {
-			bp_core_add_message( __( 'There was an error deleting that message.', 'buddyboss' ), 'error' );
+		if ( ! bboss_messages_delete_thread( $thread_id ) ) {
+			bboss_core_add_message( __( 'There was an error deleting that message.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Message deleted.', 'buddyboss' ) );
+			bboss_core_add_message( __( 'Message deleted.', 'buddyboss' ) );
 		}
-		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() ) );
+		bboss_core_redirect( trailingslashit( bboss_displayed_user_domain() . bboss_get_messages_slug() . '/' . bboss_current_action() ) );
 	}
 }
 add_action( 'bp_actions', 'messages_action_delete_message' );

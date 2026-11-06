@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.3
  */
-class BP_Core_Whos_Online_Widget extends WP_Widget {
+class BBoss_Core_Whos_Online_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -88,24 +88,24 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				'max'             => $settings['max_members'],
 				'populate_extras' => true,
 				'search_terms'    => false,
-				'exclude'         => bp_loggedin_user_id(),
+				'exclude'         => bboss_loggedin_user_id(),
 			);
 
 			ob_start();
-			if ( bp_has_members( $online_args ) && apply_filters( 'bb_show_online_users', true ) ) {
+			if ( bboss_has_members( $online_args ) && apply_filters( 'bb_show_online_users', true ) ) {
 				?>
 
 				<div class="avatar-block who-is-online-widget-parent-users">
 
 					<?php
-					while ( bp_members() ) :
-						bp_the_member();
+					while ( bboss_members() ) :
+						bboss_the_member();
 						?>
 
-						<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-								<?php bp_member_avatar(); ?>
-								<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
+						<div class="item-avatar item-avatar-<?php echo esc_attr( bboss_get_member_user_id() ); ?>">
+							<a href="<?php bboss_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_get_member_name() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+								<?php bboss_member_avatar(); ?>
+								<?php bboss_user_presence_html( bboss_get_member_user_id() ); ?>
 							</a>
 						</div>
 
@@ -117,7 +117,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				$online_count = $members_template->total_member_count;
 				if ( $online_count > (int) $settings['max_members'] ) {
 					?>
-					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+					<div class="more-block"><a href="<?php bboss_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 					<?php
 				}
 			} else {
@@ -134,35 +134,35 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		if ( $is_fetch_data ) {
 			$connection_args = array(
-				'user_id'         => bp_loggedin_user_id(),
+				'user_id'         => bboss_loggedin_user_id(),
 				'scope'           => 'personal',
 				'type'            => 'online',
 				'per_page'        => $settings['max_members'],
 				'max'             => $settings['max_members'],
 				'populate_extras' => true,
 				'search_terms'    => false,
-				'exclude'         => bp_loggedin_user_id(),
+				'exclude'         => bboss_loggedin_user_id(),
 			);
 
 			ob_start();
-			if ( bp_has_members( $connection_args ) && apply_filters( 'bb_show_online_users', true ) ) {
+			if ( bboss_has_members( $connection_args ) && apply_filters( 'bb_show_online_users', true ) ) {
 
 				?>
 
 				<div class="avatar-block who-is-online-widget-parent-connection">
 
 					<?php
-					while ( bp_members() ) :
-						bp_the_member();
+					while ( bboss_members() ) :
+						bboss_the_member();
 
-						$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
-						$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+						$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( bboss_get_member_user_id() ) ? 'bp-user-suspended' : '';
+						$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( bboss_get_member_user_id() ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 						?>
 
-						<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-								<?php bp_member_avatar(); ?>
-								<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
+						<div class="item-avatar item-avatar-<?php echo esc_attr( bboss_get_member_user_id() ); ?>">
+							<a href="<?php bboss_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_get_member_name() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+								<?php bboss_member_avatar(); ?>
+								<?php bboss_user_presence_html( bboss_get_member_user_id() ); ?>
 							</a>
 						</div>
 
@@ -174,7 +174,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				$connection_count = $members_template->total_member_count;
 				if ( $connection_count > (int) $settings['max_members'] ) {
 					?>
-					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+					<div class="more-block"><a href="<?php bboss_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 				<?php } ?>
 
 			<?php } else { ?>
@@ -202,7 +202,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				<span class="widget-num-count"><?php echo esc_html( $online_count ); ?></span>
 			</a>
 			<?php
-			if ( is_user_logged_in() && bp_is_active( 'friends' ) ) :
+			if ( is_user_logged_in() && bboss_is_active( 'friends' ) ) :
 				?>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections" class="online-friends-count">
@@ -218,7 +218,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		</div>
 
 		<?php
-		if ( is_user_logged_in() && bp_is_active( 'friends' ) ) {
+		if ( is_user_logged_in() && bboss_is_active( 'friends' ) ) {
 			?>
 			<div class="widget-content bb-online-status-who-is-online-connection-tab" id="boss_whos_online_widget_connections" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
 				<?php echo wp_kses_post( $connection_html ); ?>
@@ -291,7 +291,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
-		return bp_parse_args(
+		return bboss_parse_args(
 			$instance,
 			array(
 				'title'       => __( "Who's Online", 'buddyboss' ),
@@ -302,13 +302,13 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	}
 }
 
-if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
+if ( ! function_exists( 'bboss_get_total_online_member_count' ) ) {
 	/**
 	 * Get total number of members currently online.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	function bp_get_total_online_member_count() {
+	function bboss_get_total_online_member_count() {
 
 		global $members_template;
 
@@ -320,11 +320,11 @@ if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
 			'max'             => 9999999,
 			'populate_extras' => false,
 			'search_terms'    => false,
-			'exclude'         => bp_loggedin_user_id(),
+			'exclude'         => bboss_loggedin_user_id(),
 		);
 
 		$old_members_template = $members_template;
-		if ( bp_has_members( $members_args ) ) {
+		if ( bboss_has_members( $members_args ) ) {
 			$total = $members_template->total_member_count;
 		}
 		$members_template = $old_members_template;
@@ -370,29 +370,29 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		'max'             => $number,
 		'populate_extras' => true,
 		'search_terms'    => false,
-		'exclude'         => bp_loggedin_user_id(),
+		'exclude'         => bboss_loggedin_user_id(),
 	);
 
 	$online_count     = 0;
 	$connection_count = 0;
 
 	ob_start();
-	if ( bp_has_members( $online_args ) ) {
+	if ( bboss_has_members( $online_args ) ) {
 		?>
 		<div class="avatar-block who-is-online-widget-parent-users">
 
 			<?php
-			while ( bp_members() ) :
-				bp_the_member();
+			while ( bboss_members() ) :
+				bboss_the_member();
 
-				$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
-				$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? 'bp-user-blocked' : $moderation_class;
+				$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( bboss_get_member_user_id() ) ? 'bp-user-suspended' : '';
+				$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( bboss_get_member_user_id() ) ? 'bp-user-blocked' : $moderation_class;
 				?>
 
-				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-						<?php bp_member_avatar(); ?>
-						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
+				<div class="item-avatar item-avatar-<?php echo esc_attr( bboss_get_member_user_id() ); ?>">
+					<a href="<?php bboss_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_get_member_name() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+						<?php bboss_member_avatar(); ?>
+						<?php bboss_user_presence_html( bboss_get_member_user_id() ); ?>
 					</a>
 				</div>
 			<?php endwhile; ?>
@@ -403,7 +403,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		$online_count = $members_template->total_member_count;
 		if ( $online_count > $number ) {
 			?>
-			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<div class="more-block"><a href="<?php bboss_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php
 		}
 	} else {
@@ -416,34 +416,34 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 	$online_html = ob_get_clean();
 
 	$connection_args = array(
-		'user_id'         => bp_loggedin_user_id(),
+		'user_id'         => bboss_loggedin_user_id(),
 		'scope'           => 'personal',
 		'type'            => 'online',
 		'per_page'        => $number,
 		'max'             => $number,
 		'populate_extras' => true,
 		'search_terms'    => false,
-		'exclude'         => bp_loggedin_user_id(),
+		'exclude'         => bboss_loggedin_user_id(),
 	);
 
 	ob_start();
-	if ( bp_has_members( $connection_args ) && apply_filters( 'bb_show_online_users', true ) ) {
+	if ( bboss_has_members( $connection_args ) && apply_filters( 'bb_show_online_users', true ) ) {
 		?>
 
 		<div class="avatar-block who-is-online-widget-parent-connection">
 
 			<?php
-			while ( bp_members() ) :
-				bp_the_member();
+			while ( bboss_members() ) :
+				bboss_the_member();
 
-				$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( bp_get_member_user_id() ) ? 'bp-user-suspended' : '';
-				$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( bp_get_member_user_id() ) ? 'bp-user-blocked' : $moderation_class;
+				$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( bboss_get_member_user_id() ) ? 'bp-user-suspended' : '';
+				$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( bboss_get_member_user_id() ) ? 'bp-user-blocked' : $moderation_class;
 				?>
 
-				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-						<?php bp_member_avatar(); ?>
-						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
+				<div class="item-avatar item-avatar-<?php echo esc_attr( bboss_get_member_user_id() ); ?>">
+					<a href="<?php bboss_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bboss_get_member_name() ); ?>"<?php echo bboss_get_hover_card_profile_attr( bboss_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+						<?php bboss_member_avatar(); ?>
+						<?php bboss_user_presence_html( bboss_get_member_user_id() ); ?>
 					</a>
 				</div>
 
@@ -455,7 +455,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		$connection_count = $members_template->total_member_count;
 		if ( $connection_count > $number ) {
 			?>
-			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<div class="more-block"><a href="<?php bboss_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php
 		}
 	} else {

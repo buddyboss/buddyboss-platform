@@ -1,6 +1,6 @@
 <?php
 /**
- * BP REST: BB_REST_Forums_Link_Preview_Endpoint class
+ * BP REST: BBoss_REST_Forums_Link_Preview_Endpoint class
  *
  * @package BuddyBoss
  * @since 2.3.60
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 2.3.60
  */
-class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
+class BBoss_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
@@ -21,7 +21,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @since 2.3.60
 	 */
 	public function __construct() {
-		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->namespace = bboss_rest_namespace() . '/' . bboss_rest_version();
 		$this->rest_base = 'forums';
 	}
 
@@ -97,7 +97,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 		);
 
 		// Get URL parsed data.
-		$parse_url_data = ( function_exists( 'bp_core_parse_url' ) ? bp_core_parse_url( $url ) : '' );
+		$parse_url_data = ( function_exists( 'bboss_core_parse_url' ) ? bboss_core_parse_url( $url ) : '' );
 
 		// If empty data then send error.
 		if ( empty( $parse_url_data ) ) {
@@ -145,11 +145,11 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bboss_is_active( 'forums' ) ) {
 			$retval = true;
 		}
 
-		if ( true === $retval && ! ( is_user_logged_in() || bbp_allow_anonymous() ) ) {
+		if ( true === $retval && ! ( is_user_logged_in() || bboss_bbp_allow_anonymous() ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to generate link preview in the forums.', 'buddyboss' ),
@@ -159,7 +159,7 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && function_exists( 'bbp_use_autoembed' ) && true !== bbp_use_autoembed() ) {
+		if ( true === $retval && function_exists( 'bboss_bbp_use_autoembed' ) && true !== bboss_bbp_use_autoembed() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, Link Previews is disabled.', 'buddyboss' ),
@@ -238,3 +238,11 @@ class BB_REST_Forums_Link_Preview_Endpoint extends WP_REST_Controller {
 	}
 
 }
+
+// @bbwt-com-start compat-layer
+// bbwt-rename:compat-shared — old names for symbols another BuddyBoss product may also declare;
+// defined only when this file's renamed declaration exists (same timing as before the rename).
+if ( ( class_exists( 'BBoss_REST_Forums_Link_Preview_Endpoint', false ) || interface_exists( 'BBoss_REST_Forums_Link_Preview_Endpoint', false ) || trait_exists( 'BBoss_REST_Forums_Link_Preview_Endpoint', false ) ) && ! class_exists( 'BB_REST_Forums_Link_Preview_Endpoint', false ) && ! interface_exists( 'BB_REST_Forums_Link_Preview_Endpoint', false ) ) {
+	class_alias( 'BBoss_REST_Forums_Link_Preview_Endpoint', 'BB_REST_Forums_Link_Preview_Endpoint' ); // Backward-compatible name (also declared by another BuddyBoss product).
+}
+// @bbwt-com-end compat-layer

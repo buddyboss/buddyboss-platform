@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.3.0
  */
-function bp_messages_star_screen() {
+function bboss_messages_star_screen() {
 	add_action( 'bp_template_content', 'bp_messages_star_content' );
 
 	/**
@@ -24,7 +24,7 @@ function bp_messages_star_screen() {
 	 */
 	do_action( 'bp_messages_screen_star' );
 
-	bp_core_load_template( 'members/single/plugins' );
+	bboss_core_load_template( 'members/single/plugins' );
 }
 
 /**
@@ -32,12 +32,12 @@ function bp_messages_star_screen() {
  *
  * @since BuddyPress 2.3.0
  */
-function bp_messages_star_content() {
+function bboss_messages_star_content() {
 	// Add our message thread filter.
 	add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 
 	// Load the message loop template part.
-	bp_get_template_part( 'members/single/messages/messages-loop' );
+	bboss_get_template_part( 'members/single/messages/messages-loop' );
 
 	// Remove our filter.
 	remove_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );

@@ -26,10 +26,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string|array Formatted notifications.
  */
-function messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
+function bboss_messages_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 	$total_items = (int) $total_items;
 	$text        = '';
-	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
+	$link        = trailingslashit( bboss_loggedin_user_domain() . bboss_get_messages_slug() . '/inbox' );
 	$title       = __( 'Messages', 'buddyboss' );
 	$amount      = 'single';
 
@@ -44,75 +44,75 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 
 		} else {
 			// Get message thread ID.
-			$message   = new BP_Messages_Message( $item_id );
+			$message   = new BBoss_Messages_Message( $item_id );
 			$thread_id = $message->thread_id;
 			$link      = ( ! empty( $thread_id ) )
-				? bp_get_message_thread_view_link( $thread_id )
+				? bboss_get_message_thread_view_link( $thread_id )
 				: false;
 
 			if ( ! empty( $secondary_item_id ) ) {
 
-				if ( bp_is_active( 'groups' ) && true === bp_disable_group_messages() ) {
+				if ( bboss_is_active( 'groups' ) && true === bboss_disable_group_messages() ) {
 
-					$group         = bp_messages_get_meta( $item_id, 'group_id', true ); // group id.
-					$message_users = bp_messages_get_meta( $item_id, 'group_message_users', true ); // all - individual.
-					$message_type  = bp_messages_get_meta( $item_id, 'group_message_type', true ); // open - private.
-					$message_from  = bp_messages_get_meta( $item_id, 'message_from', true ); // group.
-					$group_name    = bp_get_group_name( groups_get_group( $group ) );
+					$group         = bboss_messages_get_meta( $item_id, 'group_id', true ); // group id.
+					$message_users = bboss_messages_get_meta( $item_id, 'group_message_users', true ); // all - individual.
+					$message_type  = bboss_messages_get_meta( $item_id, 'group_message_type', true ); // open - private.
+					$message_from  = bboss_messages_get_meta( $item_id, 'message_from', true ); // group.
+					$group_name    = bboss_get_group_name( bboss_groups_get_group( $group ) );
 
 					if ( empty( $message_from ) ) {
 						$text = sprintf(
 							/* translators: %s user name */
 							__( '%s sent you a new private message', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id )
+							bboss_core_get_user_displayname( $secondary_item_id )
 						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
 							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id ),
+							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
 							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id ),
+							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
 							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id ),
+							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
-					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
+					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bboss_core_get_user_displayname( $secondary_item_id ) ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
 							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id ),
+							bboss_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} else {
 						$text = sprintf(
 							/* translators: %s user name */
 							__( '%s sent you a new private message', 'buddyboss' ),
-							bp_core_get_user_displayname( $secondary_item_id )
+							bboss_core_get_user_displayname( $secondary_item_id )
 						);
 					}
 				} else {
 					$text = sprintf(
 						/* translators: %s user name */
 						__( '%s sent you a new private message', 'buddyboss' ),
-						bp_core_get_user_displayname( $secondary_item_id )
+						bboss_core_get_user_displayname( $secondary_item_id )
 					);
 				}
 			} else {
 				$text = sprintf(
 					/* translators: Number of total private messages */
 					_n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ),
-					bp_core_number_format( $total_items )
+					bboss_core_number_format( $total_items )
 				);
 			}
 		}
@@ -219,16 +219,16 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
  *
  * @since BuddyPress 1.9.0
  *
- * @param BP_Messages_Message $message Message object.
+ * @param BBoss_Messages_Message $message Message object.
  */
-function bp_messages_message_sent_add_notification( $message ) {
+function bboss_messages_message_sent_add_notification( $message ) {
 	if ( ! empty( $message->recipients ) ) {
 
-		$message_from = bp_messages_get_meta( $message->id, 'message_from', true ); // group.
-		$group        = bp_messages_get_meta( $message->id, 'group_id', true ); // group_id.
+		$message_from = bboss_messages_get_meta( $message->id, 'message_from', true ); // group.
+		$group        = bboss_messages_get_meta( $message->id, 'group_id', true ); // group_id.
 		$action       = 'new_message';
 
-		if ( ! bb_enabled_legacy_email_preference() ) {
+		if ( ! bboss_enabled_legacy_email_preference() ) {
 			$action = 'bb_messages_new';
 			if ( 'group' === $message_from ) {
 				$action = 'bb_groups_new_message';
@@ -244,8 +244,8 @@ function bp_messages_message_sent_add_notification( $message ) {
 
 		$min_count = (int) apply_filters( 'bb_new_message_notifications_count', 20 );
 		if (
-			function_exists( 'bb_notifications_background_enabled' ) &&
-			true === bb_notifications_background_enabled() &&
+			function_exists( 'bboss_notifications_background_enabled' ) &&
+			true === bboss_notifications_background_enabled() &&
 			count( $message->recipients ) > $min_count
 		) {
 			global $bb_background_updater;
@@ -257,14 +257,14 @@ function bp_messages_message_sent_add_notification( $message ) {
 					'group'    => 'group_messages_new_message_notification',
 					'data_id'  => $group,
 					'priority' => 5,
-					'callback' => 'bb_add_background_notifications',
+					'callback' => 'bboss_add_background_notifications',
 					'args'     => array(
 						$user_ids,
 						$message->id,
 						$message->sender_id,
-						buddypress()->messages->id,
+						bboss()->messages->id,
 						$action,
-						bp_core_current_time(),
+						bboss_core_current_time(),
 						true,
 						$message->sender_id,
 						$group,
@@ -276,10 +276,10 @@ function bp_messages_message_sent_add_notification( $message ) {
 			foreach ( (array) $message->recipients as $recipient ) {
 				// Check the sender is blocked by/blocked/suspended/deleted recipient or not.
 				if (
-					function_exists( 'bb_moderation_allowed_specific_notification' ) &&
-					bb_moderation_allowed_specific_notification(
+					function_exists( 'bboss_moderation_allowed_specific_notification' ) &&
+					bboss_moderation_allowed_specific_notification(
 						array(
-							'type'              => buddypress()->messages->id,
+							'type'              => bboss()->messages->id,
 							'group_id'          => $group,
 							'recipient_user_id' => $recipient->user_id,
 						)
@@ -287,14 +287,14 @@ function bp_messages_message_sent_add_notification( $message ) {
 				) {
 					continue;
 				}
-				bp_notifications_add_notification(
+				bboss_notifications_add_notification(
 					array(
 						'user_id'           => $recipient->user_id,
 						'item_id'           => $message->id,
 						'secondary_item_id' => $message->sender_id,
-						'component_name'    => buddypress()->messages->id,
+						'component_name'    => bboss()->messages->id,
 						'component_action'  => $action,
-						'date_notified'     => bp_core_current_time(),
+						'date_notified'     => bboss_core_current_time(),
 						'is_new'            => 1,
 					)
 				);
@@ -309,22 +309,22 @@ add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification'
  *
  * @since BuddyPress 1.9.0
  */
-function bp_messages_screen_conversation_mark_notifications() {
+function bboss_messages_screen_conversation_mark_notifications() {
 	global $thread_template;
 
 	/*
 	 * Only run on the logged-in user's profile.
 	 * If an admin visits a thread, it shouldn't change the read status.
 	 */
-	if ( ! bp_is_my_profile() ) {
+	if ( ! bboss_is_my_profile() ) {
 		return;
 	}
 
 	// Get unread PM notifications for the user.
-	$new_pm_notifications = BP_Notifications_Notification::get(
+	$new_pm_notifications = BBoss_Notifications_Notification::get(
 		array(
-			'user_id'          => bp_loggedin_user_id(),
-			'component_name'   => buddypress()->messages->id,
+			'user_id'          => bboss_loggedin_user_id(),
+			'component_name'   => bboss()->messages->id,
 			'component_action' => array( 'new_message', 'bb_groups_new_message', 'bb_messages_new' ),
 			'is_new'           => 1,
 		)
@@ -341,9 +341,9 @@ function bp_messages_screen_conversation_mark_notifications() {
 
 	// Mark each notification for each PM message as read.
 	foreach ( $message_ids as $message_id ) {
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), (int) $message_id, bboss()->messages->id, 'new_message' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), (int) $message_id, bboss()->messages->id, 'bb_messages_new' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), (int) $message_id, bboss()->messages->id, 'bb_groups_new_message' );
 	}
 }
 add_action( 'thread_loop_start', 'bp_messages_screen_conversation_mark_notifications', 10 );
@@ -357,13 +357,13 @@ add_action( 'thread_loop_start', 'bp_messages_screen_conversation_mark_notificat
  *
  * @param int $thread_id ID of the thread being marked as read.
  */
-function bp_messages_mark_notification_on_mark_thread( $thread_id ) {
-	$thread_messages = BP_Messages_Thread::get_messages( $thread_id );
+function bboss_messages_mark_notification_on_mark_thread( $thread_id ) {
+	$thread_messages = BBoss_Messages_Thread::get_messages( $thread_id );
 
 	foreach ( $thread_messages as $thread_message ) {
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $thread_message->id, buddypress()->messages->id, 'new_message' );
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $thread_message->id, buddypress()->messages->id, 'bb_messages_new' );
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $thread_message->id, buddypress()->messages->id, 'bb_groups_new_message' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $thread_message->id, bboss()->messages->id, 'new_message' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $thread_message->id, bboss()->messages->id, 'bb_messages_new' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $thread_message->id, bboss()->messages->id, 'bb_groups_new_message' );
 	}
 }
 add_action( 'messages_thread_mark_as_read', 'bp_messages_mark_notification_on_mark_thread' );
@@ -376,14 +376,14 @@ add_action( 'messages_thread_mark_as_read', 'bp_messages_mark_notification_on_ma
  * @param int   $thread_id   ID of the thread.
  * @param array $message_ids IDs of the messages.
  */
-function bp_messages_message_delete_notifications( $thread_id, $message_ids ) {
+function bboss_messages_message_delete_notifications( $thread_id, $message_ids ) {
 	// For each recipient, delete notifications corresponding to each message.
-	$thread = new BP_Messages_Thread( $thread_id );
+	$thread = new BBoss_Messages_Thread( $thread_id );
 	foreach ( $thread->get_recipients() as $recipient ) {
 		foreach ( $message_ids as $message_id ) {
-			bp_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, buddypress()->messages->id, 'new_message' );
-			bp_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, buddypress()->messages->id, 'bb_messages_new' );
-			bp_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, buddypress()->messages->id, 'bb_groups_new_message' );
+			bboss_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, bboss()->messages->id, 'new_message' );
+			bboss_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, bboss()->messages->id, 'bb_messages_new' );
+			bboss_notifications_delete_notifications_by_item_id( $recipient->user_id, (int) $message_id, bboss()->messages->id, 'bb_groups_new_message' );
 		}
 	}
 }

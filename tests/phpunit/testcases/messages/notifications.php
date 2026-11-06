@@ -32,7 +32,7 @@ class BP_Tests_Messages_Notifications extends BP_UnitTestCase {
 		) );
 
 		add_filter( 'bp_messages_multiple_new_message_notification', array( $this, 'notification_filter_callback' ) );
-		$n = messages_format_notifications( 'new_message', $n, '', 2, 'array' );
+		$n = bboss_messages_format_notifications( 'new_message', $n, '', 2, 'array' );
 		remove_filter( 'bp_messages_multiple_new_message_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_messages_multiple_new_message_notification', $this->filter_fired );
@@ -56,7 +56,7 @@ class BP_Tests_Messages_Notifications extends BP_UnitTestCase {
 		) );
 
 		add_filter( 'bp_messages_single_new_message_notification', array( $this, 'notification_filter_callback' ) );
-		$n = messages_format_notifications( 'new_message', $n, '', 1, 'array' );
+		$n = bboss_messages_format_notifications( 'new_message', $n, '', 1, 'array' );
 		remove_filter( 'bp_messages_single_new_message_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_messages_single_new_message_notification', $this->filter_fired );
@@ -80,7 +80,7 @@ class BP_Tests_Messages_Notifications extends BP_UnitTestCase {
 		) );
 
 		add_filter( 'bp_messages_multiple_new_message_notification', array( $this, 'notification_filter_callback' ) );
-		$n = messages_format_notifications( 'new_message', $n, '', 2 );
+		$n = bboss_messages_format_notifications( 'new_message', $n, '', 2 );
 		remove_filter( 'bp_messages_multiple_new_message_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_messages_multiple_new_message_notification', $this->filter_fired );
@@ -104,7 +104,7 @@ class BP_Tests_Messages_Notifications extends BP_UnitTestCase {
 		) );
 
 		add_filter( 'bp_messages_single_new_message_notification', array( $this, 'notification_filter_callback' ) );
-		$n = messages_format_notifications( 'new_message', $n, '', 1 );
+		$n = bboss_messages_format_notifications( 'new_message', $n, '', 1 );
 		remove_filter( 'bp_messages_single_new_message_notification', array( $this, 'notification_filter_callback' ) );
 
 		$this->assertSame( 'bp_messages_single_new_message_notification', $this->filter_fired );
@@ -114,14 +114,14 @@ class BP_Tests_Messages_Notifications extends BP_UnitTestCase {
 	 * @ticket BP6329
 	 */
 	public function test_messages_notifications_should_be_deleted_when_corresponding_message_is_deleted() {
-		if ( ! bp_is_active( 'messages' ) ) {
+		if ( ! bboss_is_active( 'messages' ) ) {
 			$this->markTestSkipped( __METHOD__ . ' requires the Messages component.' );
 		}
 
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 
-		$t1 = messages_new_message( array(
+		$t1 = bboss_messages_new_message( array(
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'A new message',
@@ -129,15 +129,15 @@ class BP_Tests_Messages_Notifications extends BP_UnitTestCase {
 		) );
 
 		// Verify that a notification has been created for the message.
-		$n1 = BP_Notifications_Notification::get( array(
+		$n1 = BBoss_Notifications_Notification::get( array(
 			'component' => 'messages',
 			'user_id' => $u2,
 		) );
 		$this->assertNotEmpty( $n1 );
 
-		$this->assertTrue( messages_delete_thread( $t1 ) );
+		$this->assertTrue( bboss_messages_delete_thread( $t1 ) );
 
-		$n2 = BP_Notifications_Notification::get( array(
+		$n2 = BBoss_Notifications_Notification::get( array(
 			'component' => 'messages',
 			'user_id' => $u2,
 		) );

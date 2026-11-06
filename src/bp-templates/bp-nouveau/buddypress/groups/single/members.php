@@ -11,15 +11,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$is_send_ajax_request = bb_is_send_ajax_request();
-bp_get_template_part( 'groups/single/parts/members-subnav' );
-$enable_count = bb_enable_content_counts();
+$is_send_ajax_request = bboss_is_send_ajax_request();
+bboss_get_template_part( 'groups/single/parts/members-subnav' );
+$enable_count = bboss_enable_content_counts();
 if ( $enable_count ) {
 	?>
 		<div class="bb-item-count bb-group-members-count">
 			<?php
 			if ( ! $is_send_ajax_request ) {
-				$count = groups_get_total_member_count( bp_get_current_group_id() );
+				$count = bboss_groups_get_total_member_count( bboss_get_current_group_id() );
 
 				printf(
 					wp_kses(
@@ -40,22 +40,22 @@ if ( $enable_count ) {
 			?>
 		</div>
 	<?php
-	bp_nouveau_search_form();
+	bboss_nouveau_search_form();
 }
 ?>
 <div class="subnav-filters filters clearfix no-subnav">
 	<?php
 	if ( ! $enable_count ) {
-		bp_nouveau_search_form();
+		bboss_nouveau_search_form();
 	}
 	unset( $enable_count );
-	bp_get_template_part( 'common/filters/groups-screens-filters' );
-	bp_get_template_part( 'common/filters/grid-filters' );
+	bboss_get_template_part( 'common/filters/groups-screens-filters' );
+	bboss_get_template_part( 'common/filters/grid-filters' );
 	?>
 </div>
 
 <?php
-switch ( bp_action_variable( 0 ) ) :
+switch ( bboss_action_variable( 0 ) ) :
 
 	// Groups/All Members
 	case 'all-members':
@@ -64,10 +64,10 @@ switch ( bp_action_variable( 0 ) ) :
 			<?php
 			if ( $is_send_ajax_request ) {
 				?>
-				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-members-loading' ); ?></div>
+				<div id="bp-ajax-loader"><?php bboss_nouveau_user_feedback( 'group-members-loading' ); ?></div>
 				<?php
 			} else {
-				bp_get_template_part( 'groups/single/members-loop' );
+				bboss_get_template_part( 'groups/single/members-loop' );
 			}
 			?>
 		</div>
@@ -80,11 +80,11 @@ switch ( bp_action_variable( 0 ) ) :
 			<?php
 			if ( $is_send_ajax_request ) {
 				?>
-				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-leaders-loading' ); ?></div>
+				<div id="bp-ajax-loader"><?php bboss_nouveau_user_feedback( 'group-leaders-loading' ); ?></div>
 				?>
 				<?php
 			} else {
-				bp_get_template_part( 'groups/single/members-loop' );
+				bboss_get_template_part( 'groups/single/members-loop' );
 			}
 			?>
 		</div>
@@ -93,6 +93,6 @@ switch ( bp_action_variable( 0 ) ) :
 
 	// Any other
 	default:
-		bp_get_template_part( 'members/single/plugins' );
+		bboss_get_template_part( 'members/single/plugins' );
 		break;
 endswitch;

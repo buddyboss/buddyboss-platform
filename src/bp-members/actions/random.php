@@ -14,17 +14,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
-function bp_core_get_random_member() {
+function bboss_core_get_random_member() {
 	if ( ! isset( $_GET['random-member'] ) ) {
 		return;
 	}
 
-	$user = bp_core_get_users(
+	$user = bboss_core_get_users(
 		array(
 			'type'     => 'random',
 			'per_page' => 1,
 		)
 	);
-	bp_core_redirect( bp_core_get_user_domain( $user['users'][0]->id ) );
+	bboss_core_redirect( bboss_core_get_user_domain( $user['users'][0]->id ) );
 }
 add_action( 'bp_actions', 'bp_core_get_random_member' );

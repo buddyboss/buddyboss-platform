@@ -14,7 +14,7 @@
  * There are a few common places that additional filters can currently be found
  *
  *  - Forums: In {@link bbPress::setup_actions()} in bbpress.php
- *  - Admin: More in {@link BBP_Admin::setup_actions()} in admin.php
+ *  - Admin: More in {@link BBoss_BBP_Admin::setup_actions()} in admin.php
  *
  * @see /core/actions.php
  */
@@ -76,7 +76,7 @@ add_filter( 'bbp_request', 'bbp_request_feed_trap' );
  *
  * If you want to completely bypass this and manage your own custom Forums
  * template hierarchy, start here by removing this filter, then look at how
- * bbp_template_include() works and do something similar. :)
+ * bboss_bbp_template_include() works and do something similar. :)
  */
 add_filter( 'bbp_template_include', 'bbp_template_include_theme_supports', 2, 1 );
 add_filter( 'bbp_template_include', 'bbp_template_include_theme_compat', 4, 2 );
@@ -319,7 +319,7 @@ add_filter( 'posts_clauses', 'bb_modify_topics_query_for_sticky', 10, 2 );
 /**
  * The following filters are deprecated.
  *
- * These filters were most likely replaced by bbp_parse_args(), which includes
+ * These filters were most likely replaced by bboss_bbp_parse_args(), which includes
  * both passive and aggressive filters anywhere parse_args is used to compare
  * default arguments to passed arguments, without needing to litter the
  * codebase with _before_ and _after_ filters everywhere.
@@ -333,10 +333,10 @@ add_filter( 'posts_clauses', 'bb_modify_topics_query_for_sticky', 10, 2 );
  * @param string $locale
  * @return string  $domain
  */
-function _bbp_filter_locale( $locale = '', $domain = '' ) {
+function bboss__bbp_filter_locale( $locale = '', $domain = '' ) {
 
 	// Only apply to the Forums text-domain
-	if ( bbpress()->domain !== $domain ) {
+	if ( bboss_forums()->domain !== $domain ) {
 		return $locale;
 	}
 
@@ -351,7 +351,7 @@ add_filter( 'bbp_plugin_locale', '_bbp_filter_locale', 10, 1 );
  * @param array $args
  * @return array
  */
-function _bbp_has_forums_query( $args = array() ) {
+function bboss__bbp_has_forums_query( $args = array() ) {
 	return apply_filters( 'bbp_has_forums_query', $args );
 }
 add_filter( 'bbp_after_has_forums_parse_args', '_bbp_has_forums_query' );
@@ -363,7 +363,7 @@ add_filter( 'bbp_after_has_forums_parse_args', '_bbp_has_forums_query' );
  * @param array $args
  * @return array
  */
-function _bbp_has_topics_query( $args = array() ) {
+function bboss__bbp_has_topics_query( $args = array() ) {
 	return apply_filters( 'bbp_has_topics_query', $args );
 }
 add_filter( 'bbp_after_has_topics_parse_args', '_bbp_has_topics_query' );
@@ -375,7 +375,7 @@ add_filter( 'bbp_after_has_topics_parse_args', '_bbp_has_topics_query' );
  * @param array $args
  * @return array
  */
-function _bbp_has_replies_query( $args = array() ) {
+function bboss__bbp_has_replies_query( $args = array() ) {
 	return apply_filters( 'bbp_has_replies_query', $args );
 }
 add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
@@ -390,20 +390,20 @@ add_filter( 'bbp_after_has_replies_parse_args', '_bbp_has_replies_query' );
  *
  * @return mixed|string
  */
-function bb_forum_search_by_topic_tags( $where, $wp_query ) {
+function bboss_forum_search_by_topic_tags( $where, $wp_query ) {
 	global $wpdb;
 
 	// If search component is not enabled, return.
-	if ( ! bp_is_active( 'search' ) ) {
+	if ( ! bboss_is_active( 'search' ) ) {
 		return $where;
 	}
 
 	// Get query post types array .
 	$post_types      = (array) $wp_query->get( 'post_type' );
-	$topic_post_type = bbp_get_topic_post_type();
-	$topic_taxonomy  = bbp_get_topic_tag_tax_id();
+	$topic_post_type = bboss_bbp_get_topic_post_type();
+	$topic_taxonomy  = bboss_bbp_get_topic_tag_tax_id();
 
-	if ( ! is_admin() && array_intersect( array( $topic_post_type, bbp_get_reply_post_type() ), $post_types ) && ! empty( $wp_query->get( 's' ) ) && bp_is_search_post_type_taxonomy_enable( $topic_taxonomy, $topic_post_type ) ) {
+	if ( ! is_admin() && array_intersect( array( $topic_post_type, bboss_bbp_get_reply_post_type() ), $post_types ) && ! empty( $wp_query->get( 's' ) ) && bboss_is_search_post_type_taxonomy_enable( $topic_taxonomy, $topic_post_type ) ) {
 
 		$matching_terms = get_terms(
 			array(
@@ -430,8 +430,8 @@ function bb_forum_search_by_topic_tags( $where, $wp_query ) {
  * @param string  $old_status Old post status.
  * @param WP_Post $post       Post object.
  */
-function bb_forums_update_subscription_status( $new_status, $old_status, $post ) {
-	if ( $new_status !== $old_status && ! empty( $post->post_type ) && in_array( $post->post_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ), true ) ) {
+function bboss_forums_update_subscription_status( $new_status, $old_status, $post ) {
+	if ( $new_status !== $old_status && ! empty( $post->post_type ) && in_array( $post->post_type, array( bboss_bbp_get_forum_post_type(), bboss_bbp_get_topic_post_type() ), true ) ) {
 
 		$blog_id = 0;
 		if ( is_multisite() ) {
@@ -439,16 +439,16 @@ function bb_forums_update_subscription_status( $new_status, $old_status, $post )
 		}
 
 		$subscription_status = 1;
-		if ( ! empty( $new_status ) && in_array( $new_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true ) ) {
+		if ( ! empty( $new_status ) && in_array( $new_status, array( bboss_bbp_get_spam_status_id(), bboss_bbp_get_trash_status_id(), bboss_bbp_get_pending_status_id() ), true ) ) {
 			$subscription_status = 0;
 		}
 
 		$subscription_type = 'topic';
-		if ( bbp_get_forum_post_type() === $post->post_type ) {
+		if ( bboss_bbp_get_forum_post_type() === $post->post_type ) {
 			$subscription_type = 'forum';
 		}
 
-		bb_subscriptions_update_subscriptions_status( $subscription_type, $post->ID, $subscription_status, $blog_id );
+		bboss_subscriptions_update_subscriptions_status( $subscription_type, $post->ID, $subscription_status, $blog_id );
 	}
 }
 
@@ -465,13 +465,13 @@ add_action( 'transition_post_status', 'bb_forums_update_subscription_status', 99
  *
  * @return void
  */
-function bb_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $meta_key, $meta_value ) {
+function bboss_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $meta_key, $meta_value ) {
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' )
+		bboss_is_active( 'forums' )
 	) {
-		bb_delete_group_forum_topic_subscriptions( $group_id );
+		bboss_delete_group_forum_topic_subscriptions( $group_id );
 	}
 }
 add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions_add_group_meta', 10, 3 );
@@ -488,13 +488,13 @@ add_action( 'add_group_meta', 'bb_remove_group_forum_topic_subscriptions_add_gro
  *
  * @return void
  */
-function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, $group_id, $meta_key, $meta_value ) {
+function bboss_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, $group_id, $meta_key, $meta_value ) {
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' )
+		bboss_is_active( 'forums' )
 	) {
-		bb_delete_group_forum_topic_subscriptions( $group_id );
+		bboss_delete_group_forum_topic_subscriptions( $group_id );
 	}
 }
 add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_update_group_meta', 10, 4 );
@@ -508,7 +508,7 @@ add_action( 'updated_group_meta', 'bb_remove_group_forum_topic_subscriptions_upd
  *
  * @return string $content Topic and reply content
  */
-function bb_filter_empty_editor_content( $content = '' ) {
+function bboss_filter_empty_editor_content( $content = '' ) {
 	if ( preg_match( '/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $content ) ) {
 		$content = '';
 	}
@@ -531,7 +531,7 @@ add_filter( 'bbp_edit_reply_pre_content', 'bb_filter_empty_editor_content', 1 );
  *
  * @return string
  */
-function bb_forums_link_preview( $content, $post_id ) {
+function bboss_forums_link_preview( $content, $post_id ) {
 
 	$preview_data = get_post_meta( $post_id, '_link_preview_data', true );
 
@@ -539,7 +539,7 @@ function bb_forums_link_preview( $content, $post_id ) {
 		return $content;
 	}
 
-	$preview_data = bp_parse_args(
+	$preview_data = bboss_parse_args(
 		$preview_data,
 		array(
 			'title'       => '',
@@ -593,9 +593,9 @@ function bb_forums_link_preview( $content, $post_id ) {
  *
  * @return string $template Template file to use.
  */
-function bb_single_topic_no_replies_redirect_to_404( $template ) {
-	if ( bbp_is_single_topic() && ! bp_is_activity_component() ) {
-		if ( ! bbp_has_replies() && bbp_get_paged() > 1 ) {
+function bboss_single_topic_no_replies_redirect_to_404( $template ) {
+	if ( bboss_bbp_is_single_topic() && ! bboss_is_activity_component() ) {
+		if ( ! bboss_bbp_has_replies() && bboss_bbp_get_paged() > 1 ) {
 			$template_404 = locate_template( '404.php' );
 			if ( ! empty( $template_404 ) ) {
 				global $wp_query;
@@ -620,7 +620,7 @@ add_filter( 'template_include', 'bb_single_topic_no_replies_redirect_to_404' );
  *
  * @return string
  */
-function bb_forums_hide_single_url( $content ) {
+function bboss_forums_hide_single_url( $content ) {
 	if ( empty( $content ) ) {
 		return $content;
 	}
@@ -664,9 +664,9 @@ function bb_forums_hide_single_url( $content ) {
  *
  * @return string
  */
-function bb_pretty_link_trash_topics( $permalink, $post ) {
-	if ( 'topic' === $post->post_type && ( bbp_is_topic_trash( $post->ID ) || bbp_is_topic_spam( $post->ID ) ) ) {
-		$url = trailingslashit( trailingslashit( bbp_get_topic_slug() ) . get_post_field( 'post_name', $post->ID ) );
+function bboss_pretty_link_trash_topics( $permalink, $post ) {
+	if ( 'topic' === $post->post_type && ( bboss_bbp_is_topic_trash( $post->ID ) || bboss_bbp_is_topic_spam( $post->ID ) ) ) {
+		$url = trailingslashit( trailingslashit( bboss_bbp_get_topic_slug() ) . get_post_field( 'post_name', $post->ID ) );
 
 		// Force pretty permalink even for spam and trashed topics.
 		$permalink = home_url( $url );
@@ -685,19 +685,19 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
  *
  * @return array Modified query clauses.
  */
-function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
+function bboss_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	global $wpdb;
 
 	if (
 		! isset( $wp_query->query_vars['post_type'] ) ||
 		empty( $wp_query->query_vars['show_stickies'] ) ||
-		bbp_get_topic_post_type() !== $wp_query->query_vars['post_type']
+		bboss_bbp_get_topic_post_type() !== $wp_query->query_vars['post_type']
 	) {
 		return $clauses;
 	}
 
-	$super_stickies = bbp_get_super_stickies();
-	$stickies       = ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ? bbp_get_stickies( $wp_query->query_vars['post_parent'] ) : array();
+	$super_stickies = bboss_bbp_get_super_stickies();
+	$stickies       = ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ? bboss_bbp_get_stickies( $wp_query->query_vars['post_parent'] ) : array();
 
 	// Merge and sanitize sticky topic IDs.
 	$sticky_ids = array_unique( array_merge( (array) $super_stickies, (array) $stickies ) );
@@ -735,7 +735,7 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	}
 
 	// Add spam status for sticky topics if not already present.
-	$spam_status = bbp_get_spam_status_id();
+	$spam_status = bboss_bbp_get_spam_status_id();
 	if ( ! empty( $spam_status ) ) {
 		/**
 		 * Capture topic section to check if spam already exists.

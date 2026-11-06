@@ -10,7 +10,7 @@ class BP_Tests_Groups_Avatars extends BP_UnitTestCase {
 	 */
 	public function test_bp_get_group_has_avatar_no_avatar_uploaded() {
 		$g = self::factory()->group->create();
-		$this->assertFalse( bp_get_group_has_avatar( $g ) );
+		$this->assertFalse( bboss_get_group_has_avatar( $g ) );
 	}
 
 	/**
@@ -22,7 +22,7 @@ class BP_Tests_Groups_Avatars extends BP_UnitTestCase {
 		// Fake it
 		add_filter( 'bp_core_fetch_avatar_url', array( $this, 'avatar_cb' ) );
 
-		$this->assertTrue( bp_get_group_has_avatar( $g ) );
+		$this->assertTrue( bboss_get_group_has_avatar( $g ) );
 
 		remove_filter( 'bp_core_fetch_avatar_url', array( $this, 'avatar_cb' ) );
 	}

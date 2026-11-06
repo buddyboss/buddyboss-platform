@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_remove_avatar_settings_from_options_discussion_page() {
+function bboss_remove_avatar_settings_from_options_discussion_page() {
 
 	_deprecated_function( __FUNCTION__, '1.8.6' );
 
@@ -47,12 +47,12 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
  * @param array  $params Avatar params.
  * @return string
  */
-function bp_groups_default_avatar( $avatar, $params ) {
+function bboss_groups_default_avatar( $avatar, $params ) {
 
 	_deprecated_function( __FUNCTION__, '1.8.6', 'bb_attachments_get_default_profile_group_avatar_image' );
 
 	$params['object'] = 'group';
-	return bb_attachments_get_default_profile_group_avatar_image( $params );
+	return bboss_attachments_get_default_profile_group_avatar_image( $params );
 }
 
 /**
@@ -63,10 +63,10 @@ function bp_groups_default_avatar( $avatar, $params ) {
  * @since BuddyPress 2.1.0
  * @deprecated BuddyBoss 1.8.6
  *
- * @see bp_activity_mentions_script()
+ * @see bboss_activity_mentions_script()
  */
-function bp_friends_prime_mentions_results() {
+function bboss_friends_prime_mentions_results() {
 	_deprecated_function( __FUNCTION__, '1.8.6', 'bp_friends_prime_mentions_results' );
 
-	return bb_core_prime_mentions_results();
+	return bboss_core_prime_mentions_results();
 }

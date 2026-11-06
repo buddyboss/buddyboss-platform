@@ -12,10 +12,10 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 	public function test_bp_has_groups_with_meta_query() {
 		$g1 = self::factory()->group->create();
 		$g2 = self::factory()->group->create();
-		groups_update_groupmeta( $g1, 'foo', 'bar' );
+		bboss_groups_update_groupmeta( $g1, 'foo', 'bar' );
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'meta_query' => array(
 				array(
 					'key' => 'foo',
@@ -53,7 +53,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		) );
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'order' => 'ASC',
 			'orderby' => 'name',
 		) );
@@ -86,14 +86,14 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		) );
 
 		global $groups_template;
-		bp_has_groups();
+		bboss_has_groups();
 
 		$ids = wp_parse_id_list( wp_list_pluck( $groups_template->groups, 'id' ) );
 		$this->assertEquals( array( $g1, $g3, $g2, ), $ids );
 	}
 
 	/**
-	 * Test using the 'slug' parameter in bp_has_groups()
+	 * Test using the 'slug' parameter in bboss_has_groups()
 	 *
 	 * Note: The 'slug' parameter currently also requires the 'type' to be set
 	 * to 'single-group'.
@@ -108,7 +108,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		) );
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'type' => 'single-group',
 			'slug' => 'test-group',
 		) );
@@ -120,7 +120,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 	}
 
 	/**
-	* Test using the 'status' parameter in bp_has_groups()
+	* Test using the 'status' parameter in bboss_has_groups()
 	*
 	* @group bp_has_groups
 	*/
@@ -136,7 +136,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		) );
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'status' => 'private',
 		) );
 
@@ -160,7 +160,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$g4 = self::factory()->group->create();
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'parent_id' => $g1,
 		) );
 
@@ -182,7 +182,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$g4 = self::factory()->group->create();
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'parent_id' => array( $g1, $g2 ),
 		) );
 
@@ -204,7 +204,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$g4 = self::factory()->group->create();
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'parent_id' => "{$g1},{$g2}",
 		) );
 
@@ -226,7 +226,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$g4 = self::factory()->group->create();
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'parent_id' => null,
 		) );
 
@@ -248,7 +248,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$g4 = self::factory()->group->create();
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'parent_id' => 0,
 		) );
 
@@ -270,7 +270,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$g4 = self::factory()->group->create();
 
 		global $groups_template;
-		bp_has_groups( array(
+		bboss_has_groups( array(
 			'parent_id' => false,
 		) );
 
@@ -291,7 +291,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$this->add_user_to_group( $u1, $g );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude_admins_mods' => false,
 		) );
@@ -301,10 +301,10 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Switching from BP_Groups_Member to BP_Group_Member_Query meant a
+	 * Switching from BBoss_Groups_Member to BBoss_Group_Member_Query meant a
 	 * change in the format of the values returned from the query. For
 	 * backward compatibility, we translate some of the return values
-	 * of BP_Group_Member_Query to the older format. This test makes sure
+	 * of BBoss_Group_Member_Query to the older format. This test makes sure
 	 * that the translation happens properly.
 	 *
 	 * @group bp_group_has_members
@@ -319,7 +319,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$this->add_user_to_group( $u1, $g, array( 'date_modified' => $date_modified ) );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 		) );
 
@@ -370,7 +370,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$expected = array_slice( $expected, 0, 2 );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'per_page' => 2,
 		) );
@@ -402,7 +402,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		}
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'max' => 1,
 		) );
@@ -422,7 +422,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude' => $u1,
 		) );
@@ -444,13 +444,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$this->add_user_to_group( $u2, $g );
 		$this->add_user_to_group( $u3, $g );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude_admins_mods' => 1,
 		) );
@@ -478,13 +478,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 			'date_modified' => date( 'Y-m-d H:i:s', $now - 60*60 ),
 		) );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->promote( 'admin' );
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->promote( 'mod' );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude_admins_mods' => 0,
 		) );
@@ -504,11 +504,11 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$this->add_user_to_group( $u1, $g );
 		$this->add_user_to_group( $u2, $g );
 
-		$m1 = new BP_Groups_Member( $u1, $g );
+		$m1 = new BBoss_Groups_Member( $u1, $g );
 		$m1->ban();
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude_banned' => 1,
 		) );
@@ -537,11 +537,11 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 			'date_modified' => gmdate( 'Y-m-d H:i:s', $now - 60*60*12 ),
 		) );
 
-		$m2 = new BP_Groups_Member( $u2, $g );
+		$m2 = new BBoss_Groups_Member( $u2, $g );
 		$m2->ban();
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude_banned' => 0,
 			'exclude_admins_mods' => false,
@@ -582,7 +582,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		) );
 
 		global $members_template;
-		bp_group_has_members( array(
+		bboss_group_has_members( array(
 			'group_id' => $g,
 			'exclude_banned' => 0,
 			'exclude_admins_mods' => false,
@@ -594,7 +594,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group bp_group_has_invites
-	 * @group BP_Groups_Invite_Template
+	 * @group BBoss_Groups_Invite_Template
 	 */
 	public function test_bp_group_has_invites_template_structure() {
 		$now = time();
@@ -638,7 +638,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		) );
 
 		// Populate the global
-		bp_group_has_invites( array(
+		bboss_group_has_invites( array(
 			'group_id' => $g,
 			'user_id' => $u1,
 		) );
@@ -655,10 +655,10 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 		// Make sure user is set when loop starts
 		$counter = 0;
-		while ( bp_group_invites() ) : bp_group_the_invite();
+		while ( bboss_group_invites() ) : bboss_group_the_invite();
 			$this->assertEquals( $g, $invites_template->invite->group_id );
 
-			$this_user = new BP_Core_User( $found_users[ $counter ] );
+			$this_user = new BBoss_Core_User( $found_users[ $counter ] );
 			foreach ( get_object_vars( $this_user ) as $k => $v ) {
 				// Doesn't matter if the backpat provides *more*
 				// details than the old method, so we skip cases
@@ -675,7 +675,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group bp_group_has_invites
-	 * @group BP_Groups_Invite_Template
+	 * @group BBoss_Groups_Invite_Template
 	 */
 	public function test_bp_group_has_invites_pagination() {
 		$u1 = self::factory()->user->create( array(
@@ -702,7 +702,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		}
 
 		// Populate the global
-		bp_group_has_invites( array(
+		bboss_group_has_invites( array(
 			'group_id' => $g,
 			'user_id' => $u1,
 			'page' => 2,
@@ -762,7 +762,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$groups_template->group->id = $g;
 
 		// Populate the global
-		bp_group_has_membership_requests( array(
+		bboss_group_has_membership_requests( array(
 			'group_id' => $g,
 			'per_page' => 3,
 		) );
@@ -822,7 +822,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$groups_template->group->id = $g;
 
 		// Populate the global
-		bp_group_has_membership_requests( array(
+		bboss_group_has_membership_requests( array(
 			'group_id' => $g,
 			'per_page' => 1,
 			'max' => 1,
@@ -886,13 +886,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		// Fool the admin check
 		$old_user = get_current_user_id();
 		$this->set_current_user( $u2 );
-		buddypress()->is_item_admin = true;
-		groups_ban_member( $u1, $g2 );
+		bboss()->is_item_admin = true;
+		bboss_groups_ban_member( $u1, $g2 );
 
 		// Start the groups loop
 		$this->set_current_user( $u1 );
-		if ( bp_has_groups() ) : while ( bp_groups() ) : bp_the_group();
-			$found[] = bp_group_is_user_banned();
+		if ( bboss_has_groups() ) : while ( bboss_groups() ) : bboss_the_group();
+			$found[] = bboss_group_is_user_banned();
 		endwhile; endif;
 
 		// Assert
@@ -932,16 +932,16 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		// Fool the admin check
 		$old_user = get_current_user_id();
 		$this->set_current_user( $u2 );
-		buddypress()->is_item_admin = true;
-		groups_ban_member( $u1, $g2 );
+		bboss()->is_item_admin = true;
+		bboss_groups_ban_member( $u1, $g2 );
 
 		// Do group ban checks
-		$group1 = new BP_Groups_Group( $g1 );
-		$group2 = new BP_Groups_Group( $g2 );
+		$group1 = new BBoss_Groups_Group( $g1 );
+		$group2 = new BBoss_Groups_Group( $g2 );
 
 		$found = array();
-		$found[] = bp_group_is_user_banned( $group1, $u1 );
-		$found[] = bp_group_is_user_banned( $group2, $u1 );
+		$found[] = bboss_group_is_user_banned( $group1, $u1 );
+		$found[] = bboss_group_is_user_banned( $group2, $u1 );
 
 		// Assert
 		$expected = array( false, true );
@@ -961,7 +961,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$groups_template->group = new stdClass;
 		$groups_template->group->total_member_count = 0;
 
-		$found = bp_get_group_member_count();
+		$found = bboss_get_group_member_count();
 
 		$groups_template = $gt;
 
@@ -978,7 +978,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$groups_template->group = new stdClass;
 		$groups_template->group->total_member_count = 1;
 
-		$found = bp_get_group_member_count();
+		$found = bboss_get_group_member_count();
 
 		$groups_template = $gt;
 
@@ -995,7 +995,7 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 		$groups_template->group = new stdClass;
 		$groups_template->group->total_member_count = 2;
 
-		$found = bp_get_group_member_count();
+		$found = bboss_get_group_member_count();
 
 		$groups_template = $gt;
 
@@ -1004,13 +1004,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Template
+	 * @group BBoss_Groups_Template
 	 */
 	public function test_bp_groups_template_should_give_precedence_to_grpage_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['grpage'] = '5';
 
-		$at = new BP_Groups_Template( array(
+		$at = new BBoss_Groups_Template( array(
 			'page' => 8,
 		) );
 
@@ -1021,13 +1021,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Template
+	 * @group BBoss_Groups_Template
 	 */
 	public function test_bp_groups_template_should_reset_0_pag_page_URL_param_to_default_pag_page_value() {
 		$request = $_REQUEST;
 		$_REQUEST['grpage'] = '0';
 
-		$at = new BP_Groups_Template( array(
+		$at = new BBoss_Groups_Template( array(
 			'page' => 8,
 		) );
 
@@ -1038,13 +1038,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Template
+	 * @group BBoss_Groups_Template
 	 */
 	public function test_bp_groups_template_should_give_precedence_to_num_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '14';
 
-		$at = new BP_Groups_Template( array(
+		$at = new BBoss_Groups_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1055,13 +1055,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Template
+	 * @group BBoss_Groups_Template
 	 */
 	public function test_bp_groups_template_should_reset_0_pag_num_URL_param_to_default_pag_num_value() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '0';
 
-		$at = new BP_Groups_Template( array(
+		$at = new BBoss_Groups_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1072,13 +1072,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Group_Members_Template
+	 * @group BBoss_Groups_Group_Members_Template
 	 */
 	public function test_bp_groups_group_members_template_should_give_precedence_to_mlpage_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['mlpage'] = '5';
 
-		$at = new BP_Groups_Group_Members_Template( array(
+		$at = new BBoss_Groups_Group_Members_Template( array(
 			'page' => 8,
 		) );
 
@@ -1089,13 +1089,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Group_Members_Template
+	 * @group BBoss_Groups_Group_Members_Template
 	 */
 	public function test_bp_groups_group_members_template_should_reset_0_pag_page_URL_param_to_default_pag_page_value() {
 		$request = $_REQUEST;
 		$_REQUEST['mlpage'] = '0';
 
-		$at = new BP_Groups_Group_Members_Template( array(
+		$at = new BBoss_Groups_Group_Members_Template( array(
 			'page' => 8,
 		) );
 
@@ -1106,13 +1106,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Group_Members_Template
+	 * @group BBoss_Groups_Group_Members_Template
 	 */
 	public function test_bp_groups_group_members_template_should_give_precedence_to_num_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '14';
 
-		$at = new BP_Groups_Group_Members_Template( array(
+		$at = new BBoss_Groups_Group_Members_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1123,13 +1123,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Group_Members_Template
+	 * @group BBoss_Groups_Group_Members_Template
 	 */
 	public function test_bp_groups_group_members_template_should_reset_0_pag_num_URL_param_to_default_pag_num_value() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '0';
 
-		$at = new BP_Groups_Group_Members_Template( array(
+		$at = new BBoss_Groups_Group_Members_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1140,13 +1140,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Membership_Requests_Template
+	 * @group BBoss_Groups_Membership_Requests_Template
 	 */
 	public function test_bp_groups_membership_requests_template_should_give_precedence_to_mrpage_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['mrpage'] = '5';
 
-		$at = new BP_Groups_Membership_Requests_Template( array(
+		$at = new BBoss_Groups_Membership_Requests_Template( array(
 			'page' => 8,
 		) );
 
@@ -1157,13 +1157,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Membership_Requests_Template
+	 * @group BBoss_Groups_Membership_Requests_Template
 	 */
 	public function test_bp_groups_membership_requests_template_should_reset_0_pag_page_URL_param_to_default_pag_page_value() {
 		$request = $_REQUEST;
 		$_REQUEST['mrpage'] = '0';
 
-		$at = new BP_Groups_Membership_Requests_Template( array(
+		$at = new BBoss_Groups_Membership_Requests_Template( array(
 			'page' => 8,
 		) );
 
@@ -1174,13 +1174,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Membership_Requests_Template
+	 * @group BBoss_Groups_Membership_Requests_Template
 	 */
 	public function test_bp_groups_membership_requests_template_should_give_precedence_to_num_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '14';
 
-		$at = new BP_Groups_Membership_Requests_Template( array(
+		$at = new BBoss_Groups_Membership_Requests_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1191,13 +1191,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Membership_Requests_Template
+	 * @group BBoss_Groups_Membership_Requests_Template
 	 */
 	public function test_bp_groups_membership_requests_template_should_reset_0_pag_num_URL_param_to_default_pag_num_value() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '0';
 
-		$at = new BP_Groups_Membership_Requests_Template( array(
+		$at = new BBoss_Groups_Membership_Requests_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1208,13 +1208,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Invite_Template
+	 * @group BBoss_Groups_Invite_Template
 	 */
 	public function test_bp_groups_invite_template_should_give_precedence_to_invitepage_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['invitepage'] = '5';
 
-		$at = new BP_Groups_Invite_Template( array(
+		$at = new BBoss_Groups_Invite_Template( array(
 			'page' => 8,
 		) );
 
@@ -1225,13 +1225,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Invite_Template
+	 * @group BBoss_Groups_Invite_Template
 	 */
 	public function test_bp_groups_invite_template_should_reset_0_pag_page_URL_param_to_default_pag_page_value() {
 		$request = $_REQUEST;
 		$_REQUEST['invitepage'] = '0';
 
-		$at = new BP_Groups_Invite_Template( array(
+		$at = new BBoss_Groups_Invite_Template( array(
 			'page' => 8,
 		) );
 
@@ -1242,13 +1242,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Invite_Template
+	 * @group BBoss_Groups_Invite_Template
 	 */
 	public function test_bp_groups_invite_template_should_give_precedence_to_num_URL_param() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '14';
 
-		$at = new BP_Groups_Invite_Template( array(
+		$at = new BBoss_Groups_Invite_Template( array(
 			'per_page' => 13,
 		) );
 
@@ -1259,13 +1259,13 @@ class BP_Tests_Groups_Template extends BP_UnitTestCase {
 
 	/**
 	 * @group pagination
-	 * @group BP_Groups_Invite_Template
+	 * @group BBoss_Groups_Invite_Template
 	 */
 	public function test_bp_groups_invite_template_should_reset_0_pag_num_URL_param_to_default_pag_num_value() {
 		$request = $_REQUEST;
 		$_REQUEST['num'] = '0';
 
-		$at = new BP_Groups_Invite_Template( array(
+		$at = new BBoss_Groups_Invite_Template( array(
 			'per_page' => 13,
 		) );
 

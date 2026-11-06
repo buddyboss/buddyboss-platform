@@ -74,12 +74,12 @@ class Message extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'to'        => '',
 				'thread-id' => false,
-				'date-sent' => bp_core_current_time(),
+				'date-sent' => bboss_core_current_time(),
 			)
 		);
 
@@ -93,7 +93,7 @@ class Message extends BuddypressCommand {
 		// Existing thread recipients will be assumed.
 		$recipient = ( ! empty( $r['thread_id'] ) ) ? array() : array( $recipient->ID );
 
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $user->ID,
 				'thread_id'  => $r['thread-id'],
@@ -159,12 +159,12 @@ class Message extends BuddypressCommand {
 			function( $thread_id ) {
 
 				// Check if it is a valid thread before deleting.
-				if ( ! messages_is_valid_thread( $thread_id ) ) {
+				if ( ! bboss_messages_is_valid_thread( $thread_id ) ) {
 					WP_CLI::error( 'This is not a valid thread ID.' );
 				}
 
 				// Actually, delete it.
-				if ( messages_delete_thread( $thread_id, $user->ID ) ) {
+				if ( bboss_messages_delete_thread( $thread_id, $user->ID ) ) {
 					return array( 'success', 'Thread successfully deleted.' );
 				} else {
 					return array( 'error', 'Could not delete the thread.' );
@@ -202,7 +202,7 @@ class Message extends BuddypressCommand {
 	 * @alias see
 	 */
 	public function get( $args, $assoc_args ) {
-		$message     = new \BP_Messages_Message( $args[0] );
+		$message     = new \BBoss_Messages_Message( $args[0] );
 		$message_arr = get_object_vars( $message );
 
 		if ( empty( $assoc_args['fields'] ) ) {
@@ -259,7 +259,7 @@ class Message extends BuddypressCommand {
 	public function _list( $_, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$assoc_args,
 			array(
 				'box'    => 'sentbox',
@@ -273,7 +273,7 @@ class Message extends BuddypressCommand {
 		$type = ( ! in_array( $r['type'], $this->message_types(), true ) ) ? 'all' : $r['type'];
 		$box  = ( ! in_array( $r['box'], $this->message_boxes(), true ) ) ? 'sentbox' : $r['box'];
 
-		$inbox = new \BP_Messages_Box_Template(
+		$inbox = new \BBoss_Messages_Box_Template(
 			array(
 				'user_id'      => $user->ID,
 				'box'          => $box,
@@ -362,7 +362,7 @@ class Message extends BuddypressCommand {
 		$user_id = $user->ID;
 		$msg_id  = (int) $args[0];
 
-		if ( bp_messages_is_message_starred( $msg_id, $user_id ) ) {
+		if ( bboss_messages_is_message_starred( $msg_id, $user_id ) ) {
 			WP_CLI::error( 'The message is already starred.' );
 		}
 
@@ -372,7 +372,7 @@ class Message extends BuddypressCommand {
 			'user_id'    => $user_id,
 		);
 
-		if ( bp_messages_star_set_action( $star_args ) ) {
+		if ( bboss_messages_star_set_action( $star_args ) ) {
 			WP_CLI::success( 'Message was successfully starred.' );
 		} else {
 			WP_CLI::error( 'Message was not starred.' );
@@ -401,7 +401,7 @@ class Message extends BuddypressCommand {
 		$msg_id  = (int) $args[0];
 
 		// Check if the message is starred first.
-		if ( ! bp_messages_is_message_starred( $msg_id, $user_id ) ) {
+		if ( ! bboss_messages_is_message_starred( $msg_id, $user_id ) ) {
 			WP_CLI::error( 'You need to star a message first before unstarring it.' );
 		}
 
@@ -411,7 +411,7 @@ class Message extends BuddypressCommand {
 			'user_id'    => $user_id,
 		);
 
-		if ( bp_messages_star_set_action( $star_args ) ) {
+		if ( bboss_messages_star_set_action( $star_args ) ) {
 			WP_CLI::success( 'Message was successfully unstarred.' );
 		} else {
 			WP_CLI::error( 'Message was not unstarred.' );
@@ -441,12 +441,12 @@ class Message extends BuddypressCommand {
 		$thread_id = (int) $args[0];
 
 		// Check if it is a valid thread.
-		if ( ! messages_is_valid_thread( $thread_id ) ) {
+		if ( ! bboss_messages_is_valid_thread( $thread_id ) ) {
 			WP_CLI::error( 'This is not a valid thread ID.' );
 		}
 
 		// Check if the user has access to this thread.
-		$id = messages_check_thread_access( $thread_id, $user->ID );
+		$id = bboss_messages_check_thread_access( $thread_id, $user->ID );
 		if ( ! is_numeric( $id ) ) {
 			WP_CLI::error( 'User has no access to this thread.' );
 		}
@@ -458,7 +458,7 @@ class Message extends BuddypressCommand {
 			'bulk'      => true,
 		);
 
-		if ( bp_messages_star_set_action( $star_args ) ) {
+		if ( bboss_messages_star_set_action( $star_args ) ) {
 			WP_CLI::success( 'Thread was successfully starred.' );
 		} else {
 			WP_CLI::error( 'Something wrong while trying to star the thread.' );
@@ -488,12 +488,12 @@ class Message extends BuddypressCommand {
 		$thread_id = (int) $args[0];
 
 		// Check if it is a valid thread.
-		if ( ! messages_is_valid_thread( $thread_id ) ) {
+		if ( ! bboss_messages_is_valid_thread( $thread_id ) ) {
 			WP_CLI::error( 'This is not a valid thread ID.' );
 		}
 
 		// Check if the user has access to this thread.
-		$id = messages_check_thread_access( $thread_id, $user->ID );
+		$id = bboss_messages_check_thread_access( $thread_id, $user->ID );
 		if ( ! is_numeric( $id ) ) {
 			WP_CLI::error( 'User has no access to this thread.' );
 		}
@@ -505,7 +505,7 @@ class Message extends BuddypressCommand {
 			'bulk'      => true,
 		);
 
-		if ( bp_messages_star_set_action( $star_args ) ) {
+		if ( bboss_messages_star_set_action( $star_args ) ) {
 			WP_CLI::success( 'Thread was successfully unstarred.' );
 		} else {
 			WP_CLI::error( 'Something wrong while trying to unstar the thread.' );
@@ -531,10 +531,10 @@ class Message extends BuddypressCommand {
 	 * @alias send-notice
 	 */
 	public function send_notice( $args, $assoc_args ) {
-		$notice            = new \BP_Messages_Notice();
+		$notice            = new \BBoss_Messages_Notice();
 		$notice->subject   = $assoc_args['subject'];
 		$notice->message   = $assoc_args['content'];
-		$notice->date_sent = bp_core_current_time();
+		$notice->date_sent = bboss_core_current_time();
 		$notice->is_active = 1;
 
 		// Send it.

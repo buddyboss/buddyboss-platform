@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Social_Networks extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the social networks field type.
@@ -32,11 +32,11 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		$this->set_format( '/^.+$/', 'replace' );
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Social_Networks class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Social_Networks class.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_Social_Networks $this Current instance of
+		 * @param BBoss_XProfile_Field_Type_Social_Networks $this Current instance of
 		 *                                               the field type select box.
 		 */
 		do_action( 'bp_xprofile_field_type_selectbox_social_networks', $this );
@@ -45,7 +45,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -61,28 +61,28 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 			$user_id = (int) $raw_properties['user_id'];
 			unset( $raw_properties['user_id'] );
 		} else {
-			$user_id = bp_displayed_user_id();
+			$user_id = bboss_displayed_user_id();
 		} ?>
 
-		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-			<?php bp_the_profile_field_name(); ?>
-			<?php if ( bp_is_register_page() ) : ?>
-				<?php bp_the_profile_field_optional_label(); ?>
+		<legend id="<?php bboss_the_profile_field_input_name(); ?>-1">
+			<?php bboss_the_profile_field_name(); ?>
+			<?php if ( bboss_is_register_page() ) : ?>
+				<?php bboss_the_profile_field_optional_label(); ?>
 			<?php else : ?>
-				<?php bp_the_profile_field_required_label(); ?>
+				<?php bboss_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 
-		<?php if ( bp_get_the_profile_field_description() ) : ?>
-			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
+		<?php if ( bboss_get_the_profile_field_description() ) : ?>
+			<p class="description" id="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() );
+		do_action( bboss_get_the_profile_field_errors_action() );
 
-		bp_the_profile_field_options( array( 'user_id' => $user_id ) );
+		bboss_the_profile_field_options( array( 'user_id' => $user_id ) );
 
 	}
 
@@ -92,17 +92,17 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	 * BuddyPress considers a field's "options" to be, for example, the items in a selectbox.
 	 * These are stored separately in the database, and their templating is handled separately.
 	 *
-	 * This templating is separate from {@link BP_XProfile_Field_Type::edit_field_html()} because
+	 * This templating is separate from {@link BBoss_XProfile_Field_Type::edit_field_html()} because
 	 * it's also used in the wp-admin screens when creating new fields, and for backwards compatibility.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
+	 * @param array $args Optional. The arguments passed to {@link bboss_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {
-		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
+		$original_option_values = bboss_xprofile_safe_unserialize( BBoss_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		$options = $this->field_obj->get_children();
 		$html    = '';
@@ -114,8 +114,8 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
-		$providers     = bp_xprofile_social_network_provider();
-		$field_name    = bp_get_the_profile_field_input_name();
+		$providers     = bboss_xprofile_social_network_provider();
+		$field_name    = bboss_get_the_profile_field_input_name();
 		foreach ( $options as $option ) {
 
 			$social_value = ( isset( $original_option_values ) && isset( $original_option_values[ $option->name ] ) ) ? $original_option_values[ $option->name ] : '';
@@ -131,7 +131,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				)
 			);
 
-			$key   = bp_social_network_search_key( $option->name, $providers );
+			$key   = bboss_social_network_search_key( $option->name, $providers );
 			$html .= '<div class="editfield"><legend id="field_' . esc_attr( $option->id ) . '-1">' . esc_html( $providers[ $key ]->name ) . '</legend>
 						<input ' . $field . '></div>';
 		}
@@ -142,7 +142,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -151,14 +151,14 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
 																esc_html_e( 'Select', 'buddyboss' );
 																?>
 			</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via bp_get_form_field_attributes(). ?>>
-			<?php bp_the_profile_field_options(); ?>
+			<?php bboss_the_profile_field_options(); ?>
 		</select>
 
 		<?php
@@ -167,22 +167,22 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type's children options on the wp-admin Profile Fields "Add Field" and "Edit Field" screens.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = 'radio' ) {
-		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = 'radio' ) {
+		$type = array_search( get_class( $this ), bboss_xprofile_get_field_types() );
 		if ( false === $type ) {
 			return;
 		}
 
 		$class            = $current_field->type != $type ? 'display: none;' : '';
-		$current_type_obj = bp_xprofile_create_field_type( $type );
+		$current_type_obj = bboss_xprofile_create_field_type( $type );
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
@@ -205,10 +205,10 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 
 				if ( empty( $options ) ) {
 					$default_options = apply_filters( 'social_network_default_options', array( 'facebook', 'twitter', 'linkedIn' ) );
-					$all_options     = bp_xprofile_social_network_provider();
+					$all_options     = bboss_xprofile_social_network_provider();
 					$options         = array();
 					if ( empty( $default_options ) ) {
-						$options = bp_xprofile_social_network_provider();
+						$options = bboss_xprofile_social_network_provider();
 					} else {
 						foreach ( $all_options as $opt ) {
 							if ( in_array( $opt->value, $default_options ) ) {
@@ -283,7 +283,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 								</label>
 							<select class="select-social-networks" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
 								<?php
-								foreach ( bp_xprofile_social_network_provider() as $option ) {
+								foreach ( bboss_xprofile_social_network_provider() as $option ) {
 									$compare = ( true === $fresh_setup ) ? $options[ $i ]->value : $options[ $i ]->name;
 									?>
 									<option class="<?php echo esc_attr( $options[ $i ]->name . ' ' . $option->value ); ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php echo esc_html( $option->name ); ?></option>
@@ -309,7 +309,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				<?php } ?>
 
 				<?php
-				if ( $options < bp_xprofile_social_network_provider() ) {
+				if ( $options < bboss_xprofile_social_network_provider() ) {
 					?>
 					<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>					<p>
 					<a class="social_networks_add_more" href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss' ); ?></a></p>
@@ -324,7 +324,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				 *
 				 * @since BuddyBoss 1.0.0
 				 *
-				 * @param BP_XProfile_Field $current_field Current field being rendered.
+				 * @param BBoss_XProfile_Field $current_field Current field being rendered.
 				 */
 				do_action( 'bp_xprofile_admin_new_field_additional_settings_social_networks', $current_field )
 				?>

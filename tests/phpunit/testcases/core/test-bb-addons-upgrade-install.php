@@ -33,11 +33,11 @@ class BB_Addons_Upgrade_Install_Test extends WP_UnitTestCase {
 	 */
 	public function test_entitlement_pre_filter_override() {
 		add_filter( 'bb_pre_is_entitled_to_addons', '__return_true' );
-		$this->assertTrue( bb_is_entitled_to_addons(), 'pre-filter true must force entitled' );
+		$this->assertTrue( bboss_is_entitled_to_addons(), 'pre-filter true must force entitled' );
 		remove_filter( 'bb_pre_is_entitled_to_addons', '__return_true' );
 
 		add_filter( 'bb_pre_is_entitled_to_addons', '__return_false' );
-		$this->assertFalse( bb_is_entitled_to_addons(), 'pre-filter false must force not-entitled' );
+		$this->assertFalse( bboss_is_entitled_to_addons(), 'pre-filter false must force not-entitled' );
 		remove_filter( 'bb_pre_is_entitled_to_addons', '__return_false' );
 	}
 
@@ -60,7 +60,7 @@ class BB_Addons_Upgrade_Install_Test extends WP_UnitTestCase {
 			add_filter( "pre_add_option_{$key}", $cb );
 		}
 
-		bb_install_addons_bundle_on_upgrade();
+		bboss_install_addons_bundle_on_upgrade();
 
 		foreach ( $this->guarded_keys as $key ) {
 			remove_filter( "pre_update_option_{$key}", $callbacks[ $key ] );
@@ -78,7 +78,7 @@ class BB_Addons_Upgrade_Install_Test extends WP_UnitTestCase {
 		delete_option( 'active_plugins' );
 		add_filter( 'bb_pre_is_entitled_to_addons', '__return_false' );
 
-		bb_install_addons_bundle_on_upgrade();
+		bboss_install_addons_bundle_on_upgrade();
 
 		remove_filter( 'bb_pre_is_entitled_to_addons', '__return_false' );
 

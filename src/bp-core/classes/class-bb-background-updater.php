@@ -9,16 +9,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Background_Process' ) ) {
-	include_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-background-process.php';
+if ( ! class_exists( 'BBoss_BB_Background_Process' ) ) {
+	include_once bboss()->plugin_dir . 'bp-core/classes/class-bb-background-process.php';
 }
 
-if ( ! class_exists( 'BB_Background_Updater' ) ) {
+if ( ! class_exists( 'BBoss_BB_Background_Updater' ) ) {
 
 	/**
-	 * BB_Background_Updater class.
+	 * BBoss_BB_Background_Updater class.
 	 */
-	class BB_Background_Updater extends BB_Background_Process {
+	class BBoss_BB_Background_Updater extends BBoss_BB_Background_Process {
 
 		/**
 		 * Processes the task.
@@ -40,7 +40,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 			if ( is_callable( $callback ) ) {
 				// phpcs:ignore
-				bb_error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
+				bboss_error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
 
 				if ( empty( $args ) ) {
 					$result = (bool) call_user_func( $callback, $this );
@@ -50,10 +50,10 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 				if ( $result ) {
 					// phpcs:ignore
-					bb_error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
+					bboss_error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
 				} else {
 					// phpcs:ignore
-					bb_error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
+					bboss_error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
 				}
 			} else {
 				// phpcs:ignore

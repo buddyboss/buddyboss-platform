@@ -68,7 +68,7 @@ do_action( base\SLUG_KEY . '_classroom_start_instructor' );
 			<?php
 			global $authordata;
 			if ( isset( $authordata->ID ) && function_exists( 'bb_meprlms_enable' ) && bb_meprlms_enable() ) {
-				$profile_url = bp_core_get_user_domain( $authordata->ID );
+				$profile_url = bboss_core_get_user_domain( $authordata->ID );
 				?>
 				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-button--instructor" href="<?php echo esc_url( $profile_url ); ?>"><?php esc_html_e( 'View profile', 'buddyboss' ); ?></a>
 				<?php

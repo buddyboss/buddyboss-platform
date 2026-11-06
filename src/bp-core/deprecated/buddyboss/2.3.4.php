@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return int|void
  */
-function bp_activity_media_sideload_attachment( $file ) {
+function bboss_activity_media_sideload_attachment( $file ) {
 
 	_deprecated_function( __FUNCTION__, '2.3.60', 'bb_media_sideload_attachment' );
 
-	return bb_media_sideload_attachment( $file );
+	return bboss_bb_media_sideload_attachment( $file );
 }
 
 /**
@@ -36,9 +36,9 @@ function bp_activity_media_sideload_attachment( $file ) {
  *
  * @return int|object The ID of the attachment or a WP_Error on failure
  */
-function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) {
+function bboss_activity_media_handle_sideload( $file_array, $post_data = array() ) {
 
 	_deprecated_function( __FUNCTION__, '2.3.60', 'bb_media_handle_sideload' );
 
-	return bb_media_handle_sideload( $file_array, $post_data );
+	return bboss_bb_media_handle_sideload( $file_array, $post_data );
 }

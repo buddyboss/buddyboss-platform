@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<?php if ( bp_is_group_create() ) : ?>
+<?php if ( bboss_is_group_create() ) : ?>
 
 	<h3 class="bp-screen-title creation-step-name">
 		<?php esc_html_e( 'Invite Members', 'buddyboss' ); ?>
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 
 <div id="group-invites-container">
 
-	<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group invitations menu', 'buddyboss' ); ?>"></nav>
+	<nav class="<?php bboss_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group invitations menu', 'buddyboss' ); ?>"></nav>
 
 	<div class="group-invites-column">
 		<div class="subnav-filters group-subnav-filters bp-invites-filters"></div>

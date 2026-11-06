@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 2.9.00
  */
-class BB_Block {
+class BBoss_Block {
 
 	/**
 	 * WP Block Type object.
@@ -83,7 +83,7 @@ class BB_Block {
 			_doing_it_wrong( __METHOD__, esc_html__( 'BB Blocks needs to be registered hooking `bb_blocks_init`', 'buddyboss' ), '2.9.00' );
 		}
 
-		$min          = bp_core_get_minified_asset_suffix();
+		$min          = bboss_core_get_minified_asset_suffix();
 		$metadata_map = array(
 			'ancestor'        => 'ancestor',
 			'apiVersion'      => 'api_version',
@@ -164,7 +164,7 @@ class BB_Block {
 
 			// Register the scripts.
 			$this->registered_scripts = array();
-			$version                  = bp_get_version();
+			$version                  = bboss_get_version();
 			if ( isset( $wp_args['version'] ) && $wp_args['version'] ) {
 				$version = $wp_args['version'];
 			}

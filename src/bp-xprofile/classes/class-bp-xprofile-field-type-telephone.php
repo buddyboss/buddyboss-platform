@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Telephone extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the telephone number field type.
@@ -32,11 +32,11 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		$this->do_settings_section = true;
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Telephone class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Telephone class.
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_Telephone $this Current instance of the field type.
+		 * @param BBoss_XProfile_Field_Type_Telephone $this Current instance of the field type.
 		 */
 		do_action( 'bp_xprofile_field_type_telephone', $this );
 	}
@@ -44,7 +44,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
@@ -61,7 +61,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			unset( $raw_properties['user_id'] );
 		}
 
-		$selected_format = bp_xprofile_get_meta( bp_get_the_profile_field_id(), 'field', 'phone_format', true );
+		$selected_format = bboss_xprofile_get_meta( bboss_get_the_profile_field_id(), 'field', 'phone_format', true );
 		if ( empty( $selected_format ) ) {
 			$selected_format = 'international';
 		}
@@ -72,37 +72,37 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		$placeholder = isset( $selected_format_details['placeholder'] ) && ! empty( $selected_format_details['placeholder'] ) ? $selected_format_details['placeholder'] : '';
 		$mask        = isset( $selected_format_details['mask'] ) && ! empty( $selected_format_details['mask'] ) ? $selected_format_details['mask'] : '';
 
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$raw_properties,
 			array(
 				'type'        => 'tel',
-				'value'       => wp_strip_all_tags( html_entity_decode( bp_get_the_profile_field_edit_value(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ),
+				'value'       => wp_strip_all_tags( html_entity_decode( bboss_get_the_profile_field_edit_value(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ),
 				'placeholder' => $placeholder,
 			)
 		); ?>
 
-		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-			<?php bp_the_profile_field_name(); ?>
-			<?php if ( bp_is_register_page() ) : ?>
-				<?php bp_the_profile_field_optional_label(); ?>
+		<legend id="<?php bboss_the_profile_field_input_name(); ?>-1">
+			<?php bboss_the_profile_field_name(); ?>
+			<?php if ( bboss_is_register_page() ) : ?>
+				<?php bboss_the_profile_field_optional_label(); ?>
 			<?php else : ?>
-				<?php bp_the_profile_field_required_label(); ?>
+				<?php bboss_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 		
-		<?php if ( bp_get_the_profile_field_description() ) : ?>
-			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
+		<?php if ( bboss_get_the_profile_field_description() ) : ?>
+			<p class="description" id="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() );
+		do_action( bboss_get_the_profile_field_errors_action() );
 		?>
 
-		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bboss_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-3">
 
-		<span class="input_mask_details" data-field_id="<?php echo esc_attr( bp_get_the_profile_field_input_name() ); ?>" data-val="<?php echo esc_attr( $mask ); ?>"></span>
+		<span class="input_mask_details" data-field_id="<?php echo esc_attr( bboss_get_the_profile_field_input_name() ); ?>" data-val="<?php echo esc_attr( $mask ); ?>"></span>
 			
 		<?php
 
@@ -111,14 +111,14 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
 	public function admin_field_html( array $raw_properties = array() ) {
-		$r = bp_parse_args(
+		$r = bboss_parse_args(
 			$raw_properties,
 			array(
 				'type' => 'tel',
@@ -126,7 +126,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		);
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+		<label for="<?php bboss_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
 																esc_html_e( 'Phone', 'buddyboss' );
@@ -145,12 +145,12 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the
 	 *                                         current field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {
-		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = '' ) {
+		$type = array_search( get_class( $this ), bboss_xprofile_get_field_types() );
 
 		if ( false === $type ) {
 			return;
@@ -216,17 +216,17 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param BP_XProfile_Field $field
+	 * @param BBoss_XProfile_Field $field
 	 * @return array
 	 */
-	public function get_field_settings( BP_XProfile_Field $field ) {
+	public function get_field_settings( BBoss_XProfile_Field $field ) {
 		$defaults = array(
 			'phone_format' => 'international',
 		);
 
 		$settings = array();
 		foreach ( $defaults as $key => $value ) {
-			$saved = bp_xprofile_get_meta( $field->id, 'field', $key, true );
+			$saved = bboss_xprofile_get_meta( $field->id, 'field', $key, true );
 
 			if ( $saved ) {
 				$settings[ $key ] = $saved;
@@ -270,7 +270,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		}
 
 		foreach ( $saved_settings as $setting_key => $setting_value ) {
-			bp_xprofile_update_meta( $field_id, 'field', $setting_key, $setting_value );
+			bboss_xprofile_update_meta( $field_id, 'field', $setting_key, $setting_value );
 		}
 
 		return true;
@@ -280,11 +280,11 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 * Prints the jquery input mask script
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @param BP_XProfile_Field $current_field
+	 * @param BBoss_XProfile_Field $current_field
 	 * @return void
 	 */
-	public function input_mask_script( BP_XProfile_Field $current_field ) {
-		$selected_format = bp_xprofile_get_meta( $current_field->id, 'field', 'phone_format', true );
+	public function input_mask_script( BBoss_XProfile_Field $current_field ) {
+		$selected_format = bboss_xprofile_get_meta( $current_field->id, 'field', 'phone_format', true );
 		if ( empty( $selected_format ) ) {
 			$selected_format = 'international';
 		}

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.3
  */
-class BP_Core_Members_Widget extends WP_Widget {
+class BBoss_Core_Members_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
@@ -79,7 +79,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		 * @param string $id_base  Root ID for all widgets of this type.
 		 */
 		$title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
-		$title = $settings['link_title'] ? '<a href="' . bp_get_members_directory_permalink() . '">' . $title . '</a>' : $title;
+		$title = $settings['link_title'] ? '<a href="' . bboss_get_members_directory_permalink() . '">' . $title . '</a>' : $title;
 
 		/**
 		 * Filters the separator of the member widget links.
@@ -101,7 +101,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 			'max'             => false,
 			'populate_extras' => true,
 			'search_terms'    => false,
-			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
+			'exclude'         => ( function_exists( 'bboss_get_users_of_removed_member_types' ) && ! empty( bboss_get_users_of_removed_member_types() ) ) ? bboss_get_users_of_removed_member_types() : '',
 		);
 
 		if ( empty( $members_args['max'] ) && false !== $members_args['max'] ) {
@@ -113,24 +113,24 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 		?>
 
-		<?php if ( bp_has_members( $members_args ) ) : ?>
+		<?php if ( bboss_has_members( $members_args ) ) : ?>
 
 			<div class="item-options" id="members-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-members"
+				<a href="<?php bboss_members_directory_permalink(); ?>" id="newest-members"
 					<?php
 					if ( 'newest' === $settings['member_default'] ) :
 						?>
 						class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>"
+				<a href="<?php bboss_members_directory_permalink(); ?>" id="recently-active-members" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>"
 					<?php
 					if ( 'active' === $settings['member_default'] ) :
 						?>
 						class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
 
-				<?php if ( bp_is_active( 'friends' ) ) : ?>
+				<?php if ( bboss_is_active( 'friends' ) ) : ?>
 					<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-					<a href="<?php bp_members_directory_permalink(); ?>" id="popular-members"
+					<a href="<?php bboss_members_directory_permalink(); ?>" id="popular-members"
 						<?php
 						if ( 'popular' === $settings['member_default'] ) :
 							?>
@@ -143,33 +143,33 @@ class BP_Core_Members_Widget extends WP_Widget {
 			<ul id="members-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 
 				<?php
-				while ( bp_members() ) :
-					bp_the_member();
+				while ( bboss_members() ) :
+					bboss_the_member();
 
-					$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
-					$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+					$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
+					$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 					?>
 
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>"<?php echo bb_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-								<?php bp_member_avatar(); ?>
-								<?php bb_user_presence_html( $members_template->member->id ); ?>
+							<a href="<?php bboss_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>"<?php echo bboss_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+								<?php bboss_member_avatar(); ?>
+								<?php bboss_user_presence_html( $members_template->member->id ); ?>
 							</a>
 						</div>
 
 						<div class="item">
 							<div class="item-title fn"><a
-										href="<?php bp_member_permalink(); ?>"<?php echo bb_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_name(); ?></a></div>
+										href="<?php bboss_member_permalink(); ?>"<?php echo bboss_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bboss_member_name(); ?></a></div>
 							<div class="item-meta">
 								<?php if ( 'newest' == $settings['member_default'] ) : ?>
 									<span class="activity"
-										  data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
+										  data-livestamp="<?php bboss_core_iso8601_date( bboss_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bboss_member_registered(); ?></span>
 								<?php elseif ( 'active' == $settings['member_default'] ) : ?>
 									<span class="activity"
-										  data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
-								<?php elseif ( bp_is_active( 'friends' ) ) : ?>
-									<span class="activity"><?php bp_member_total_friend_count(); ?></span>
+										  data-livestamp="<?php bboss_core_iso8601_date( bboss_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bboss_member_last_active(); ?></span>
+								<?php elseif ( bboss_is_active( 'friends' ) ) : ?>
+									<span class="activity"><?php bboss_member_total_friend_count(); ?></span>
 								<?php endif; ?>
 							</div>
 						</div>
@@ -185,7 +185,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 				   value="<?php echo esc_attr( $settings['max_members'] ); ?>"/>
 
 			<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : 'bp-hide'; ?>">
-				<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
+				<a href="<?php bboss_members_directory_permalink(); ?>" class="count-more">
 					<?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
 				</a>
 			</div>
@@ -297,7 +297,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
-		return bp_parse_args(
+		return bboss_parse_args(
 			$instance,
 			array(
 				'title'          => __( 'Members', 'buddyboss' ),
@@ -339,31 +339,31 @@ function buddyboss_members_widget_active_heartbeat( $response = array(), $data =
 		'max'             => $max_members,
 		'populate_extras' => true,
 		'search_terms'    => false,
-		'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
+		'exclude'         => ( function_exists( 'bboss_get_users_of_removed_member_types' ) && ! empty( bboss_get_users_of_removed_member_types() ) ) ? bboss_get_users_of_removed_member_types() : '',
 	);
 
 	ob_start();
-	if ( bp_has_members( $members_args ) ) :
-		while ( bp_members() ) :
-			bp_the_member();
+	if ( bboss_has_members( $members_args ) ) :
+		while ( bboss_members() ) :
+			bboss_the_member();
 
-			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
-			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+			$moderation_class = function_exists( 'bboss_moderation_is_user_suspended' ) && bboss_moderation_is_user_suspended( $members_template->member->id ) ? 'bp-user-suspended' : '';
+			$moderation_class = function_exists( 'bboss_moderation_is_user_blocked' ) && bboss_moderation_is_user_blocked( $members_template->member->id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>"<?php echo bb_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
-						<?php bp_member_avatar(); ?>
-						<?php bb_user_presence_html( $members_template->member->id ); ?>
+					<a href="<?php bboss_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>"<?php echo bboss_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
+						<?php bboss_member_avatar(); ?>
+						<?php bboss_user_presence_html( $members_template->member->id ); ?>
 					</a>
 				</div>
 
 				<div class="item">
 					<div class="item-title fn">
-						<a href="<?php bp_member_permalink(); ?>"<?php echo bb_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_name(); ?></a>
+						<a href="<?php bboss_member_permalink(); ?>"<?php echo bboss_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bboss_member_name(); ?></a>
 					</div>
 					<div class="item-meta">
-						<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
+						<span class="activity" data-livestamp="<?php bboss_core_iso8601_date( bboss_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bboss_member_last_active(); ?></span>
 					</div>
 				</div>
 			</li>

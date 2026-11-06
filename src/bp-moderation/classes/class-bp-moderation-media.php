@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Media extends BP_Moderation_Abstract {
+class BBoss_Moderation_Media extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	public static $moderation_type = 'media';
 
 	/**
-	 * BP_Moderation_Media constructor.
+	 * BBoss_Moderation_Media constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -49,7 +49,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
-		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+		if ( ! bboss_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
 			return;
 		}
 
@@ -67,12 +67,12 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		add_filter( "bp_moderation_{$this->item_type}_report_content_type", array( $this, 'report_content_type' ), 10, 2 );
 
 		// Prepare report button for media when activity moderation is disabled.
-		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity::$moderation_type ) ) {
+		if ( bboss_is_active( 'activity' ) && ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Activity::$moderation_type ) ) {
 			add_filter( 'bp_activity_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
 
 		// Prepare report button for media when activity comment moderation is disabled.
-		if ( bp_is_active( 'activity' ) && ! bp_is_moderation_content_reporting_enable( 0, BP_Moderation_Activity_Comment::$moderation_type ) ) {
+		if ( bboss_is_active( 'activity' ) && ! bboss_is_moderation_content_reporting_enable( 0, BBoss_Moderation_Activity_Comment::$moderation_type ) ) {
 			add_filter( 'bp_activity_comment_get_report_link', array( $this, 'update_report_button_args' ), 10, 2 );
 		}
 	}
@@ -87,8 +87,8 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return string|void
 	 */
 	public static function get_permalink( $media_id ) {
-		$media = new BP_Media( $media_id );
-		return bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-medium' );
+		$media = new BBoss_Media( $media_id );
+		return bboss_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-album-directory-image-medium' );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return int
 	 */
 	public static function get_content_owner_id( $media_id ) {
-		$media = new BP_Media( $media_id );
+		$media = new BBoss_Media( $media_id );
 
 		return ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
 	}
@@ -147,7 +147,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 				$where['moderation_where'] .= ' AND ';
 			}
-			$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( m.privacy = "comment" OR m.privacy = "forums" ) )';
+			$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) OR ( m.privacy = "comment" OR m.privacy = "forums" ) )';
 		}
 		return $where;
 	}
@@ -163,7 +163,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_button_args( $args, $item_id ) {
-		$media = new BP_Media( $item_id );
+		$media = new BBoss_Media( $item_id );
 
 		// Remove report button if forum is group forums.
 		if ( ! empty( $media->id ) && ! empty( $media->privacy ) && in_array( $media->privacy, array( 'comment', 'forums' ), true ) ) {
@@ -188,7 +188,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		$media = new BP_Media( (int) $item_id );
+		$media = new BBoss_Media( (int) $item_id );
 
 		if ( empty( $media ) || empty( $media->id ) ) {
 			return false;
@@ -237,14 +237,14 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public function update_report_button_args( $report_button, $args ) {
 
-		$activity = new BP_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
+		$activity = new BBoss_Activity_Activity( $args['button_attr']['data-bp-content-id'] );
 
 		if ( empty( $activity->id ) ) {
 			return $report_button;
 		}
 
-		$media_id  = bp_activity_get_meta( $activity->id, 'bp_media_id', true );
-		$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+		$media_id  = bboss_activity_get_meta( $activity->id, 'bp_media_id', true );
+		$media_ids = bboss_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 		if (
 			(
@@ -270,7 +270,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 				$args['button_attr']['data-bp-content-id']   = current( $explode_medias );
 				$args['button_attr']['data-bp-content-type'] = self::$moderation_type;
 			}
-			$report_button = bp_moderation_get_report_button( $args, false );
+			$report_button = bboss_moderation_get_report_button( $args, false );
 		}
 
 		return $report_button;

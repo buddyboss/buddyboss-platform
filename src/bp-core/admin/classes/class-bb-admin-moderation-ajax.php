@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Admin_Moderation_Ajax
+ * Class BBoss_Admin_Moderation_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Admin_Moderation_Ajax {
+class BBoss_Admin_Moderation_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -82,7 +82,7 @@ class BB_Admin_Moderation_Ajax {
 	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
 				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ),
 				403
@@ -128,8 +128,8 @@ class BB_Admin_Moderation_Ajax {
 		// Also return the "show when" options for the modal select.
 		// Labels may contain HTML entities from esc_html__(), decode for React.
 		$show_when_options = array();
-		if ( function_exists( 'bb_moderation_get_reporting_category_fields_array' ) ) {
-			$raw = bb_moderation_get_reporting_category_fields_array();
+		if ( function_exists( 'bboss_moderation_get_reporting_category_fields_array' ) ) {
+			$raw = bboss_moderation_get_reporting_category_fields_array();
 			foreach ( $raw as $value => $label ) {
 				$show_when_options[] = array(
 					'label' => wp_specialchars_decode( $label, ENT_QUOTES ),
@@ -285,7 +285,7 @@ class BB_Admin_Moderation_Ajax {
 	 * @return string Label.
 	 */
 	private function bb_get_show_when_label( $value ) {
-		$options = bb_moderation_get_reporting_category_fields_array();
+		$options = bboss_moderation_get_reporting_category_fields_array();
 
 		return isset( $options[ $value ] ) ? $options[ $value ] : __( 'Content', 'buddyboss' );
 	}
@@ -312,4 +312,4 @@ class BB_Admin_Moderation_Ajax {
 }
 
 // Initialize.
-new BB_Admin_Moderation_Ajax();
+new BBoss_Admin_Moderation_Ajax();

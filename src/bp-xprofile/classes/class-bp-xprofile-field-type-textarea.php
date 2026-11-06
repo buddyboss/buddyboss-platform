@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.0.0
  */
-class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
+class BBoss_XProfile_Field_Type_Textarea extends BBoss_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the textarea field type.
@@ -31,11 +31,11 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 		$this->set_format( '/^.*$/m', 'replace' );
 
 		/**
-		 * Fires inside __construct() method for BP_XProfile_Field_Type_Textarea class.
+		 * Fires inside __construct() method for BBoss_XProfile_Field_Type_Textarea class.
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_Textarea $this Current instance of
+		 * @param BBoss_XProfile_Field_Type_Textarea $this Current instance of
 		 *                                              the field type textarea.
 		 */
 		do_action( 'bp_xprofile_field_type_textarea', $this );
@@ -44,7 +44,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 	/**
 	 * Output the edit field HTML for this field type.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
@@ -60,27 +60,27 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			unset( $raw_properties['user_id'] );
 		}
 
-		$richtext_enabled = bp_xprofile_is_richtext_enabled_for_field(); ?>
+		$richtext_enabled = bboss_xprofile_is_richtext_enabled_for_field(); ?>
 
-		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-			<?php bp_the_profile_field_name(); ?>
-			<?php if ( bp_is_register_page() ) : ?>
-				<?php bp_the_profile_field_optional_label(); ?>
+		<legend id="<?php bboss_the_profile_field_input_name(); ?>-1">
+			<?php bboss_the_profile_field_name(); ?>
+			<?php if ( bboss_is_register_page() ) : ?>
+				<?php bboss_the_profile_field_optional_label(); ?>
 			<?php else : ?>
-				<?php bp_the_profile_field_required_label(); ?>
+				<?php bboss_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 
-		<?php if ( bp_get_the_profile_field_description() ) : ?>
-			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
+		<?php if ( bboss_get_the_profile_field_description() ) : ?>
+			<p class="description" id="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_description(); ?></p>
 			<?php
 		endif;
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() );
+		do_action( bboss_get_the_profile_field_errors_action() );
 
 		if ( ! $richtext_enabled ) {
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$raw_properties,
 				array(
 					'cols' => 40,
@@ -90,7 +90,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 
 			?>
 
-			<textarea <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_edit_value(); ?></textarea>
+			<textarea <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?> aria-labelledby="<?php bboss_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bboss_the_profile_field_input_name(); ?>-3"><?php bboss_the_profile_field_edit_value(); ?></textarea>
 
 			<?php
 
@@ -160,8 +160,8 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			);
 
 			wp_editor(
-				bp_get_the_profile_field_edit_value(),
-				bp_get_the_profile_field_input_name(),
+				bboss_get_the_profile_field_edit_value(),
+				bboss_get_the_profile_field_input_name(),
 				$editor_args
 			);
 		}
@@ -171,18 +171,18 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 * Must be used inside the {@link bboss_profile_fields()} template loop.
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
 	public function admin_field_html( array $raw_properties = array() ) {
-		$richtext_enabled = bp_xprofile_is_richtext_enabled_for_field();
+		$richtext_enabled = bboss_xprofile_is_richtext_enabled_for_field();
 
 		if ( ! $richtext_enabled ) {
 
-			$r = bp_parse_args(
+			$r = bboss_parse_args(
 				$raw_properties,
 				array(
 					'cols' => 40,
@@ -210,7 +210,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 
 			wp_editor(
 				'',
-				'xprofile_textarea_' . bp_get_the_profile_field_id(),
+				'xprofile_textarea_' . bboss_get_the_profile_field_id(),
 				$editor_args
 			);
 		}
@@ -222,9 +222,9 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 2.0.0
 	 *
-	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param BBoss_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
 	 *                                         field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {}
+	public function admin_new_field_html( BBoss_XProfile_Field $current_field, $control_type = '' ) {}
 }

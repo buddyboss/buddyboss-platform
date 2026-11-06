@@ -4,7 +4,7 @@
  * PROD-10649: an activity comment is readable only when its root activity is.
  *
  * A comment is stored with component 'activity' and no group of its own, so
- * bp_activity_user_can_read() checks the group of its root activity (item_id).
+ * bboss_activity_user_can_read() checks the group of its root activity (item_id).
  *
  * @group activity
  * @group bp_activity_user_can_read
@@ -38,7 +38,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 		$root = self::factory()->activity->create(
 			array(
-				'component'     => buddypress()->groups->id,
+				'component'     => bboss()->groups->id,
 				'type'          => 'activity_update',
 				'user_id'       => $this->author,
 				'item_id'       => $g,
@@ -46,7 +46,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $root,
@@ -54,7 +54,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$reply = bp_activity_new_comment(
+		$reply = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $root,
@@ -69,7 +69,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	protected function can_read( $activity_id, $user_id ) {
 		$this->set_current_user( $user_id );
 
-		return bp_activity_user_can_read( new BP_Activity_Activity( $activity_id ), $user_id );
+		return bboss_activity_user_can_read( new BBoss_Activity_Activity( $activity_id ), $user_id );
 	}
 
 	public function test_comment_and_reply_in_private_group_are_refused_to_non_member() {
@@ -102,7 +102,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 		$banned = self::factory()->user->create();
 		self::add_user_to_group( $banned, $g );
-		$member = new BP_Groups_Member( $banned, $g );
+		$member = new BBoss_Groups_Member( $banned, $g );
 		$member->ban();
 
 		$this->assertFalse( $this->can_read( $comment, $banned ) );
@@ -126,7 +126,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 	public function test_comment_on_profile_post_is_readable_by_others() {
 		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $root,
@@ -139,7 +139,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 	public function test_comment_on_spammed_root_is_refused() {
 		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $root,
@@ -147,8 +147,8 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$root_activity = new BP_Activity_Activity( $root );
-		bp_activity_mark_as_spam( $root_activity );
+		$root_activity = new BBoss_Activity_Activity( $root );
+		bboss_activity_mark_as_spam( $root_activity );
 		$root_activity->save();
 
 		$this->assertFalse( $this->can_read( $comment, $this->stranger ) );
@@ -156,7 +156,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 	public function test_comment_whose_root_is_missing_is_refused() {
 		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $root,
@@ -164,14 +164,14 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$comment_activity = new BP_Activity_Activity( $comment );
+		$comment_activity = new BBoss_Activity_Activity( $comment );
 
 		// Remove only the root row, as orphaned data would look.
-		BP_Activity_Activity::delete( array( 'id' => $root ) );
+		BBoss_Activity_Activity::delete( array( 'id' => $root ) );
 		wp_cache_delete( $root, 'bp_activity' );
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bp_activity_user_can_read( $comment_activity, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_read( $comment_activity, $this->stranger ) );
 	}
 
 	/**
@@ -184,11 +184,11 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		self::add_user_to_group( $member, $g );
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $root ), $this->stranger ) );
-		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $reply ), $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( new BBoss_Activity_Activity( $root ), $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( new BBoss_Activity_Activity( $reply ), $this->stranger ) );
 
 		$this->set_current_user( $member );
-		$this->assertTrue( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), $member ) );
+		$this->assertTrue( bboss_activity_user_can_view( new BBoss_Activity_Activity( $comment ), $member ) );
 	}
 
 	/**
@@ -196,7 +196,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	 */
 	public function test_view_follows_photo_of_friends_only_post() {
 		$friend = self::factory()->user->create();
-		friends_add_friend( $this->author, $friend, true );
+		bboss_friends_add_friend( $this->author, $friend, true );
 
 		$post = self::factory()->activity->create(
 			array(
@@ -215,7 +215,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $photo,
@@ -224,11 +224,11 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		);
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $photo ), $this->stranger ) );
-		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( new BBoss_Activity_Activity( $photo ), $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( new BBoss_Activity_Activity( $comment ), $this->stranger ) );
 
 		$this->set_current_user( $friend );
-		$this->assertTrue( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), $friend ) );
+		$this->assertTrue( bboss_activity_user_can_view( new BBoss_Activity_Activity( $comment ), $friend ) );
 	}
 
 	/**
@@ -236,7 +236,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	 */
 	public function test_view_allows_comment_on_public_post_for_guest() {
 		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $root,
@@ -245,7 +245,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		);
 
 		$this->set_current_user( 0 );
-		$this->assertTrue( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), 0 ) );
+		$this->assertTrue( bboss_activity_user_can_view( new BBoss_Activity_Activity( $comment ), 0 ) );
 	}
 
 	/**
@@ -255,7 +255,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		list( , , $comment ) = $this->group_thread( 'private' );
 
 		// AJAX handlers hold a row from bp_activity_get_specific(), not a BP_Activity_Activity.
-		$row = bp_activity_get_specific(
+		$row = bboss_activity_get_specific(
 			array(
 				'activity_ids'     => $comment,
 				'display_comments' => 'stream',
@@ -263,12 +263,12 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		)['activities'][0];
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_view( $comment, $this->stranger ) );
-		$this->assertFalse( bb_activity_user_can_view( $row, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( $comment, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( $row, $this->stranger ) );
 
 		$this->set_current_user( $this->author );
-		$this->assertTrue( bb_activity_user_can_view( $comment, $this->author ) );
-		$this->assertTrue( bb_activity_user_can_view( $row, $this->author ) );
+		$this->assertTrue( bboss_activity_user_can_view( $comment, $this->author ) );
+		$this->assertTrue( bboss_activity_user_can_view( $row, $this->author ) );
 	}
 
 	/**
@@ -282,7 +282,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $post,
@@ -293,10 +293,10 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_view( $comment, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( $comment, $this->stranger ) );
 
 		$this->set_current_user( $admin );
-		$this->assertTrue( bb_activity_user_can_view( $comment, $admin ) );
+		$this->assertTrue( bboss_activity_user_can_view( $comment, $admin ) );
 	}
 
 	/**
@@ -307,7 +307,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 		add_filter( 'bb_activity_user_can_view', '__return_true' );
 		$this->set_current_user( $this->stranger );
-		$can_view = bb_activity_user_can_view( $comment, $this->stranger );
+		$can_view = bboss_activity_user_can_view( $comment, $this->stranger );
 		remove_filter( 'bb_activity_user_can_view', '__return_true' );
 
 		$this->assertTrue( $can_view );
@@ -321,8 +321,8 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	public function test_view_follows_post_author_for_others_comment_on_friends_only_post() {
 		$commenter     = self::factory()->user->create();
 		$author_friend = self::factory()->user->create();
-		friends_add_friend( $this->author, $commenter, true );
-		friends_add_friend( $this->author, $author_friend, true );
+		bboss_friends_add_friend( $this->author, $commenter, true );
+		bboss_friends_add_friend( $this->author, $author_friend, true );
 
 		$post = self::factory()->activity->create(
 			array(
@@ -331,7 +331,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $commenter,
 				'activity_id' => $post,
@@ -339,7 +339,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$reply = bp_activity_new_comment(
+		$reply = bboss_activity_new_comment(
 			array(
 				'user_id'     => $this->author,
 				'activity_id' => $post,
@@ -350,12 +350,12 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 		// A friend of the author, not of the commenter.
 		$this->set_current_user( $author_friend );
-		$this->assertTrue( bb_activity_user_can_view( $comment, $author_friend ) );
-		$this->assertTrue( bb_activity_user_can_view( $reply, $author_friend ) );
+		$this->assertTrue( bboss_activity_user_can_view( $comment, $author_friend ) );
+		$this->assertTrue( bboss_activity_user_can_view( $reply, $author_friend ) );
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_view( $comment, $this->stranger ) );
-		$this->assertFalse( bb_activity_user_can_view( $reply, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( $comment, $this->stranger ) );
+		$this->assertFalse( bboss_activity_user_can_view( $reply, $this->stranger ) );
 	}
 
 	/**
@@ -371,7 +371,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 			)
 		);
 
-		$comment = bp_activity_new_comment(
+		$comment = bboss_activity_new_comment(
 			array(
 				'user_id'     => $commenter,
 				'activity_id' => $post,
@@ -381,15 +381,15 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 
 		// The author narrows the post afterwards; saving it copies onlyme to its comments,
 		// which stay owned by the commenter.
-		$root          = new BP_Activity_Activity( $post );
+		$root          = new BBoss_Activity_Activity( $post );
 		$root->privacy = 'onlyme';
 		$root->save();
-		$this->assertSame( 'onlyme', ( new BP_Activity_Activity( $comment ) )->privacy );
+		$this->assertSame( 'onlyme', ( new BBoss_Activity_Activity( $comment ) )->privacy );
 
 		$this->set_current_user( $this->author );
-		$this->assertTrue( bb_activity_user_can_view( $comment, $this->author ) );
+		$this->assertTrue( bboss_activity_user_can_view( $comment, $this->author ) );
 
 		$this->set_current_user( $commenter );
-		$this->assertFalse( bb_activity_user_can_view( $comment, $commenter ) );
+		$this->assertFalse( bboss_activity_user_can_view( $comment, $commenter ) );
 	}
 }

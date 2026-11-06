@@ -26,7 +26,7 @@ get_header(); ?>
 
 				<?php the_content(); ?>
 
-				<?php bbp_get_template_part( 'form', 'topic' ); ?>
+				<?php bboss_bbp_get_template_part( 'form', 'topic' ); ?>
 
 			</div>
 		</div><!-- #bbp-new-topic -->

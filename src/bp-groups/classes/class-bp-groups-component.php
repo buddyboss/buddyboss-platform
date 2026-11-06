@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 #[\AllowDynamicProperties]
-class BP_Groups_Component extends BP_Component {
+class BBoss_Groups_Component extends BBoss_Component {
 
 	/**
 	 * Auto-join group when non group member performs group activity.
@@ -29,7 +29,7 @@ class BP_Groups_Component extends BP_Component {
 	 * The group being currently accessed.
 	 *
 	 * @since BuddyPress 1.5.0
-	 * @var BP_Groups_Group
+	 * @var BBoss_Groups_Group
 	 */
 	public $current_group;
 
@@ -77,7 +77,7 @@ class BP_Groups_Component extends BP_Component {
 	/**
 	 * Group types.
 	 *
-	 * @see bp_groups_register_group_type()
+	 * @see bboss_groups_register_group_type()
 	 *
 	 * @since BuddyPress 2.6.0
 	 * @var array
@@ -87,7 +87,7 @@ class BP_Groups_Component extends BP_Component {
 	/**
 	 * Current directory group type.
 	 *
-	 * @see groups_directory_groups_setup()
+	 * @see bboss_groups_directory_groups_setup()
 	 *
 	 * @since BuddyPress 2.7.0
 	 * @var string
@@ -103,7 +103,7 @@ class BP_Groups_Component extends BP_Component {
 		parent::start(
 			'groups',
 			'Social Groups',
-			buddypress()->plugin_dir,
+			bboss()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 70,
 				'search_query_arg'         => 'groups_search',
@@ -116,9 +116,9 @@ class BP_Groups_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::includes() for a description of arguments.
+	 * @see BBoss_Component::includes() for a description of arguments.
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
+	 * @param array $includes See BBoss_Component::includes() for a description.
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
@@ -132,7 +132,7 @@ class BP_Groups_Component extends BP_Component {
 		);
 
 		// Conditional includes.
-		if ( bp_is_active( 'activity' ) ) {
+		if ( bboss_is_active( 'activity' ) ) {
 			$includes[] = 'activity';
 		}
 		if ( is_admin() ) {
@@ -155,16 +155,16 @@ class BP_Groups_Component extends BP_Component {
 			return;
 		}
 
-		if ( bp_is_groups_component() ) {
+		if ( bboss_is_groups_component() ) {
 			// Authenticated actions.
 			if ( is_user_logged_in() &&
-				in_array( bp_current_action(), array( 'create', 'join', 'leave-group' ), true )
+				in_array( bboss_current_action(), array( 'create', 'join', 'leave-group' ), true )
 			) {
-				require $this->path . 'bp-groups/actions/' . bp_current_action() . '.php';
+				require $this->path . 'bp-groups/actions/' . bboss_current_action() . '.php';
 			}
 
 			// Actions - RSS feed handler.
-			if ( bp_is_active( 'activity' ) && bp_is_current_action( 'feed' ) ) {
+			if ( bboss_is_active( 'activity' ) && bboss_is_current_action( 'feed' ) ) {
 				require $this->path . 'bp-groups/actions/feed.php';
 			}
 
@@ -175,13 +175,13 @@ class BP_Groups_Component extends BP_Component {
 
 			// Screens - Directory.
 			if (
-				bp_is_groups_directory() &&
+				bboss_is_groups_directory() &&
 				(
-					! bp_is_current_action( 'type' ) ||
+					! bboss_is_current_action( 'type' ) ||
 					(
-						bp_is_current_action( 'type' ) &&
-						! empty( bp_action_variable( 0 ) ) &&
-						bp_group_get_group_type_id( bp_action_variable( 0 ) )
+						bboss_is_current_action( 'type' ) &&
+						! empty( bboss_action_variable( 0 ) ) &&
+						bboss_group_get_group_type_id( bboss_action_variable( 0 ) )
 					)
 				)
 			) {
@@ -189,48 +189,48 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			// Screens - User profile integration.
-			if ( bp_is_user() ) {
+			if ( bboss_is_user() ) {
 				require $this->path . 'bp-groups/screens/user/my-groups.php';
 
-				if ( bp_is_current_action( 'invites' ) ) {
+				if ( bboss_is_current_action( 'invites' ) ) {
 					require $this->path . 'bp-groups/screens/user/invites.php';
 				}
 			}
 
 			// Single group.
-			if ( bp_is_group() ) {
+			if ( bboss_is_group() ) {
 				// Actions - Access protection.
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups' ), true ) ) {
-					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
+				if ( in_array( bboss_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups' ), true ) ) {
+					require $this->path . 'bp-groups/screens/single/' . bboss_current_action() . '.php';
 				}
 
-				if ( in_array( bp_get_group_current_members_tab(), array( 'all-members', 'leaders' ), true ) ) {
-					require $this->path . 'bp-groups/screens/single/members/' . bp_get_group_current_members_tab() . '.php';
+				if ( in_array( bboss_get_group_current_members_tab(), array( 'all-members', 'leaders' ), true ) ) {
+					require $this->path . 'bp-groups/screens/single/members/' . bboss_get_group_current_members_tab() . '.php';
 				}
 
-				if ( bp_is_group_invites() && is_user_logged_in() ) {
+				if ( bboss_is_group_invites() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/invite.php';
 				}
 
-				if ( bp_is_group_messages() && is_user_logged_in() ) {
+				if ( bboss_is_group_messages() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/messages.php';
 				}
 
 				// Admin nav items.
-				if ( bp_is_item_admin() && is_user_logged_in() ) {
+				if ( bboss_is_item_admin() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/admin.php';
 
-					if ( in_array( bp_get_group_current_admin_tab(), array( 'edit-details', 'group-settings', 'group-avatar', 'group-cover-image', 'manage-members', 'membership-requests', 'delete-group' ), true ) ) {
-						require $this->path . 'bp-groups/screens/single/admin/' . bp_get_group_current_admin_tab() . '.php';
+					if ( in_array( bboss_get_group_current_admin_tab(), array( 'edit-details', 'group-settings', 'group-avatar', 'group-cover-image', 'manage-members', 'membership-requests', 'delete-group' ), true ) ) {
+						require $this->path . 'bp-groups/screens/single/admin/' . bboss_get_group_current_admin_tab() . '.php';
 					}
 				}
 			}
 
 			// Theme compatibility.
-			new BP_Groups_Theme_Compat();
+			new BBoss_Groups_Theme_Compat();
 		}
 	}
 
@@ -242,16 +242,16 @@ class BP_Groups_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_globals() for a description of arguments.
+	 * @see BBoss_Component::setup_globals() for a description of arguments.
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
+	 * @param array $args See BBoss_Component::setup_globals() for a description.
 	 */
 	public function setup_globals( $args = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Define a slug, if necessary.
-		if ( ! defined( 'BP_GROUPS_SLUG' ) ) {
-			define( 'BP_GROUPS_SLUG', $this->id );
+		if ( ! defined( 'BBOSS_GROUPS_SLUG' ) ) {
+			define( 'BBOSS_GROUPS_SLUG', $this->id );
 		}
 
 		// Global tables for groups component.
@@ -269,17 +269,17 @@ class BP_Groups_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_titles = bboss_core_get_directory_page_default_titles();
 		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for groups component.
 		// Note that global_tables is included in this array.
 		$args = array(
-			'slug'                  => BP_GROUPS_SLUG,
-			'root_slug'             => isset( $bp->pages->groups->slug ) ? $bp->pages->groups->slug : BP_GROUPS_SLUG,
+			'slug'                  => BBOSS_GROUPS_SLUG,
+			'root_slug'             => isset( $bp->pages->groups->slug ) ? $bp->pages->groups->slug : BBOSS_GROUPS_SLUG,
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->groups->title ) ? $bp->pages->groups->title : $default_directory_title,
-			'notification_callback' => 'groups_format_notifications',
+			'notification_callback' => 'bboss_groups_format_notifications',
 			'search_string'         => __( 'Search Groups&hellip;', 'buddyboss' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
@@ -290,9 +290,9 @@ class BP_Groups_Component extends BP_Component {
 		/* Single Group Globals **********************************************/
 
 		// Are we viewing a single group?
-		if ( bp_is_groups_component()
-			&& ( ( $group_id = BP_Groups_Group::group_exists( bp_current_action() ) )
-				|| ( $group_id = BP_Groups_Group::get_id_by_previous_slug( bp_current_action() ) ) )
+		if ( bboss_is_groups_component()
+			&& ( ( $group_id = BBoss_Groups_Group::group_exists( bboss_current_action() ) )
+				|| ( $group_id = BBoss_Groups_Group::get_id_by_previous_slug( bboss_current_action() ) ) )
 			) {
 			$bp->is_single_item = true;
 
@@ -306,7 +306,7 @@ class BP_Groups_Component extends BP_Component {
 			$current_group_class = apply_filters( 'bp_groups_current_group_class', 'BP_Groups_Group' );
 
 			if ( $current_group_class == 'BP_Groups_Group' ) {
-				$this->current_group = groups_get_group( $group_id );
+				$this->current_group = bboss_groups_get_group( $group_id );
 
 			} else {
 
@@ -322,27 +322,27 @@ class BP_Groups_Component extends BP_Component {
 
 			// When in a single group, the first action is bumped down one because of the
 			// group name, so we need to adjust this and set the group name to current_item.
-			$bp->current_item   = bp_current_action();
-			$bp->current_action = bp_action_variable( 0 );
+			$bp->current_item   = bboss_current_action();
+			$bp->current_action = bboss_action_variable( 0 );
 			array_shift( $bp->action_variables );
 
 			// Using "item" not "group" for generic support in other components.
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
-				bp_update_is_item_admin( true, 'groups' );
+			if ( bboss_current_user_can( 'bp_moderate' ) ) {
+				bboss_update_is_item_admin( true, 'groups' );
 			} else {
-				bp_update_is_item_admin( groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id ), 'groups' );
+				bboss_update_is_item_admin( bboss_groups_is_user_admin( bboss_loggedin_user_id(), $this->current_group->id ), 'groups' );
 			}
 
 			// If the user is not an admin, check if they are a moderator.
-			if ( ! bp_is_item_admin() ) {
-				bp_update_is_item_mod( groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id ), 'groups' );
+			if ( ! bboss_is_item_admin() ) {
+				bboss_update_is_item_mod( bboss_groups_is_user_mod( bboss_loggedin_user_id(), $this->current_group->id ), 'groups' );
 			}
 
 			// Check once if the current group has a custom front template.
-			$this->current_group->front_template = bp_groups_get_front_template( $this->current_group );
+			$this->current_group->front_template = bboss_groups_get_front_template( $this->current_group );
 
 			// Initialize the nav for the groups component.
-			$this->nav = new BP_Core_Nav( $this->current_group->id );
+			$this->nav = new BBoss_Core_Nav( $this->current_group->id );
 
 			// Set current_group to 0 to prevent debug errors.
 		} else {
@@ -350,17 +350,17 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		// Set group type if available.
-		if ( bp_is_groups_directory() && bp_is_current_action( bp_get_groups_group_type_base() ) && bp_action_variable() ) {
-			$matched_types = bp_groups_get_group_types(
+		if ( bboss_is_groups_directory() && bboss_is_current_action( bboss_get_groups_group_type_base() ) && bboss_action_variable() ) {
+			$matched_types = bboss_groups_get_group_types(
 				array(
 					'has_directory'  => true,
-					'directory_slug' => bp_action_variable(),
+					'directory_slug' => bboss_action_variable(),
 				)
 			);
 
 			// Set 404 if we do not have a valid group type.
 			if ( empty( $matched_types ) ) {
-				bp_do_404();
+				bboss_do_404();
 				return;
 			}
 
@@ -369,7 +369,7 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		// Set up variables specific to the group creation process.
-		if ( bp_is_groups_component() && bp_is_current_action( 'create' ) && bp_user_can_create_groups() && isset( $_COOKIE['bp_new_group_id'] ) ) {
+		if ( bboss_is_groups_component() && bboss_is_current_action( 'create' ) && bboss_user_can_create_groups() && isset( $_COOKIE['bp_new_group_id'] ) ) {
 			$bp->groups->new_group_id = (int) $_COOKIE['bp_new_group_id'];
 		}
 
@@ -403,8 +403,8 @@ class BP_Groups_Component extends BP_Component {
 		);
 
 		// If the user was attempting to access a group, but no group by that name was found, 404.
-		if ( bp_is_groups_component() && empty( $this->current_group ) && empty( $this->current_directory_type ) && bp_current_action() && ! in_array( bp_current_action(), $this->forbidden_names ) ) {
-			bp_do_404();
+		if ( bboss_is_groups_component() && empty( $this->current_group ) && empty( $this->current_directory_type ) && bboss_current_action() && ! in_array( bboss_current_action(), $this->forbidden_names ) ) {
+			bboss_do_404();
 			return;
 		}
 
@@ -430,7 +430,7 @@ class BP_Groups_Component extends BP_Component {
 		);
 
 		// If avatar uploads are not disabled, add avatar option.
-		$disabled_avatar_uploads = (int) bp_disable_group_avatar_uploads();
+		$disabled_avatar_uploads = (int) bboss_disable_group_avatar_uploads();
 		if ( ! $disabled_avatar_uploads && $bp->avatar->show_avatars ) {
 			$this->group_creation_steps['group-avatar'] = array(
 				'name'     => __( 'Photo', 'buddyboss' ),
@@ -438,7 +438,7 @@ class BP_Groups_Component extends BP_Component {
 			);
 		}
 
-		if ( bp_group_use_cover_image_header() ) {
+		if ( bboss_group_use_cover_image_header() ) {
 			$this->group_creation_steps['group-cover-image'] = array(
 				'name'     => __( 'Cover Photo', 'buddyboss' ),
 				'position' => 25,
@@ -446,7 +446,7 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		// If friends component is active, add invitations.
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bboss_is_active( 'friends' ) ) {
 			$this->group_creation_steps['group-invites'] = array(
 				'name'     => __( 'Invites', 'buddyboss' ),
 				'position' => 30,
@@ -479,7 +479,7 @@ class BP_Groups_Component extends BP_Component {
 	 * @since BuddyPress 2.1.0
 	 */
 	public function setup_canonical_stack() {
-		if ( ! bp_is_groups_component() ) {
+		if ( ! bboss_is_groups_component() ) {
 			return;
 		}
 
@@ -490,23 +490,23 @@ class BP_Groups_Component extends BP_Component {
 		$customizer_option = 'group_default_tab';
 		$default_tab       = '';
 
-		if ( function_exists( 'bp_nouveau_get_temporary_setting' ) && function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+		if ( function_exists( 'bboss_nouveau_get_temporary_setting' ) && function_exists( 'bboss_nouveau_get_appearance_settings' ) ) {
+			$default_tab = bboss_nouveau_get_temporary_setting( $customizer_option, bboss_nouveau_get_appearance_settings( $customizer_option ) );
 		}
 
 		if ( in_array( $default_tab, array( 'photos', 'albums', 'documents', 'videos' ), true ) ) {
 			$default_tab = $this->bb_is_media_default_tab_available( $default_tab ) ? $default_tab : 'members';
 		} else {
-			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
+			$default_tab = bboss_is_active( $default_tab ) ? $default_tab : 'members';
 		}
 
 		// Check if the default tab is hidden by admin in Navigation Order settings.
-		if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-			$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
+		if ( function_exists( 'bboss_nouveau_get_appearance_settings' ) ) {
+			$hidden_tabs = bboss_nouveau_get_appearance_settings( 'group_nav_hide' );
 			if ( is_array( $hidden_tabs ) && in_array( $default_tab, $hidden_tabs, true ) ) {
 				// Fall back to the first visible tab in saved order, or 'members' as last resort.
 				$default_tab = 'members';
-				$nav_order   = bp_nouveau_get_appearance_settings( 'group_nav_order' );
+				$nav_order   = bboss_nouveau_get_appearance_settings( 'group_nav_order' );
 				if ( is_array( $nav_order ) ) {
 					foreach ( $nav_order as $slug ) {
 						// Skip media tabs whose component or group support is unavailable.
@@ -537,7 +537,7 @@ class BP_Groups_Component extends BP_Component {
 		$default_tab             = ( '' === $default_tab ) ? 'members' : $default_tab;
 		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : $default_tab );
 
-		$bp = buddypress();
+		$bp = bboss();
 
 		$user_has_access = $this->current_group->user_has_access;
 		$is_visible      = $this->current_group->is_visible;
@@ -547,25 +547,25 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		// members are displayed in the front nav.
-		if ( bp_is_current_action( 'home' ) || ! bp_current_action() ) {
+		if ( bboss_is_current_action( 'home' ) || ! bboss_current_action() ) {
 			$bp->current_action = $this->default_extension;
 		}
 
 		// Prepare for a redirect to the canonical URL.
-		$bp->canonical_stack['base_url'] = bp_get_group_permalink( $this->current_group );
+		$bp->canonical_stack['base_url'] = bboss_get_group_permalink( $this->current_group );
 
-		if ( bp_current_action() ) {
-			$bp->canonical_stack['action'] = bp_current_action();
+		if ( bboss_current_action() ) {
+			$bp->canonical_stack['action'] = bboss_current_action();
 		}
 
 		if ( ! empty( $bp->action_variables ) ) {
-			$bp->canonical_stack['action_variables'] = bp_action_variables();
+			$bp->canonical_stack['action_variables'] = bboss_action_variables();
 		}
 
 		// When viewing the default extension, the canonical URL should not have
 		// that extension's slug, unless more has been tacked onto the URL via
 		// action variables.
-		if ( bp_is_current_action( $this->default_extension ) && empty( $bp->action_variables ) ) {
+		if ( bboss_is_current_action( $this->default_extension ) && empty( $bp->action_variables ) ) {
 			unset( $bp->canonical_stack['action'] );
 		}
 	}
@@ -584,19 +584,19 @@ class BP_Groups_Component extends BP_Component {
 	 * @return bool True when the tab's sub-nav is registered for groups.
 	 */
 	private function bb_is_media_default_tab_available( $tab ) {
-		if ( ! bp_is_active( 'media' ) ) {
+		if ( ! bboss_is_active( 'media' ) ) {
 			return false;
 		}
 
 		switch ( $tab ) {
 			case 'photos':
-				return bp_is_group_media_support_enabled();
+				return bboss_is_group_media_support_enabled();
 			case 'albums':
-				return bp_is_group_media_support_enabled() && bp_is_group_albums_support_enabled();
+				return bboss_is_group_media_support_enabled() && bboss_is_group_albums_support_enabled();
 			case 'documents':
-				return bp_is_active( 'document' ) && bp_is_group_document_support_enabled();
+				return bboss_is_active( 'document' ) && bboss_is_group_document_support_enabled();
 			case 'videos':
-				return bp_is_active( 'video' ) && bp_is_group_video_support_enabled();
+				return bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled();
 		}
 
 		return false;
@@ -607,39 +607,39 @@ class BP_Groups_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
+	 * @see BBoss_Component::setup_nav() for a description of arguments.
 	 *
-	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
-	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
+	 * @param array $main_nav Optional. See BBoss_Component::setup_nav() for description.
+	 * @param array $sub_nav  Optional. See BBoss_Component::setup_nav() for description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
-		$bp = buddypress();
+		$bp = bboss();
 
 		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
+		if ( bboss_displayed_user_domain() ) {
+			$user_domain = bboss_displayed_user_domain();
+		} elseif ( bboss_loggedin_user_domain() ) {
+			$user_domain = bboss_loggedin_user_domain();
 		} else {
 			$user_domain = false;
 		}
 
 		$nav_name = __( 'Groups', 'buddyboss' );
 
-		$slug = bp_get_groups_slug();
+		$slug = bboss_get_groups_slug();
 
 		// Add 'Groups' to the main navigation.
 		$main_nav = array(
 			'name'                => $nav_name,
 			'slug'                => $slug,
 			'position'            => 70,
-			'screen_function'     => 'groups_screen_my_groups',
+			'screen_function'     => 'bboss_groups_screen_my_groups',
 			'default_subnav_slug' => 'my-groups',
 			'item_css_id'         => $this->id,
 		);
 
 		if ( ! empty( $user_domain ) ) {
-			$access      = bp_core_can_edit_settings();
+			$access      = bboss_core_can_edit_settings();
 			$groups_link = trailingslashit( $user_domain . $slug );
 
 			// Add the My Groups nav item.
@@ -648,7 +648,7 @@ class BP_Groups_Component extends BP_Component {
 				'slug'            => 'my-groups',
 				'parent_url'      => $groups_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'groups_screen_my_groups',
+				'screen_function' => 'bboss_groups_screen_my_groups',
 				'position'        => 10,
 				'item_css_id'     => 'groups-my-groups',
 			);
@@ -659,7 +659,7 @@ class BP_Groups_Component extends BP_Component {
 				'slug'            => 'invites',
 				'parent_url'      => $groups_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'groups_screen_group_invites',
+				'screen_function' => 'bboss_groups_screen_group_invites',
 				'user_has_access' => $access,
 				'position'        => 30,
 			);
@@ -667,7 +667,7 @@ class BP_Groups_Component extends BP_Component {
 			parent::setup_nav( $main_nav, $sub_nav );
 		}
 
-		if ( bp_is_groups_component() && bp_is_single_item() ) {
+		if ( bboss_is_groups_component() && bboss_is_single_item() ) {
 
 			// Reset sub nav.
 			$sub_nav = array();
@@ -676,26 +676,26 @@ class BP_Groups_Component extends BP_Component {
 			 * The top-level Groups item is called 'Memberships' for legacy reasons.
 			 * It does not appear in the interface.
 			 */
-			bp_core_new_nav_item(
+			bboss_core_new_nav_item(
 				array(
 					'name'                => __( 'My Groups', 'buddyboss' ),
 					'slug'                => $this->current_group->slug,
 					'position'            => -1, // Do not show in BuddyBar.
-					'screen_function'     => 'groups_screen_group_home',
+					'screen_function'     => 'bboss_groups_screen_group_home',
 					'default_subnav_slug' => $this->default_extension,
 					'item_css_id'         => $this->id,
 				),
 				'groups'
 			);
 
-			$group_link = bp_get_group_permalink( $this->current_group );
+			$group_link = bboss_get_group_permalink( $this->current_group );
 
 			$sub_nav[] = array(
 				'name'            => apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ),
 				'slug'            => 'members',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
-				'screen_function' => 'groups_screen_group_members',
+				'screen_function' => 'bboss_groups_screen_group_members',
 				'user_has_access' => $this->current_group->user_has_access,
 				'position'        => 10,
 				'item_css_id'     => 'members',
@@ -707,7 +707,7 @@ class BP_Groups_Component extends BP_Component {
 			$default_params = array(
 				'parent_url'        => $members_link,
 				'parent_slug'       => $this->current_group->slug . '_members',
-				'screen_function'   => 'groups_screen_group_members',
+				'screen_function'   => 'bboss_groups_screen_group_members',
 				'user_has_access'   => $this->current_group->user_has_access,
 				'show_in_admin_bar' => true,
 			);
@@ -724,13 +724,13 @@ class BP_Groups_Component extends BP_Component {
 			// 'position'          => 10,
 			// ), $default_params );
 
-			if ( bp_is_active( 'activity' ) ) {
+			if ( bboss_is_active( 'activity' ) ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Feed', 'buddyboss' ),
 					'slug'            => 'activity',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
-					'screen_function' => 'groups_screen_group_activity',
+					'screen_function' => 'bboss_groups_screen_group_activity',
 					'position'        => 20,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'activity',
@@ -738,8 +738,8 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_enable_group_hierarchies() ) {
-				$descendant_groups = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
+			if ( bboss_enable_group_hierarchies() ) {
+				$descendant_groups = bboss_get_descendent_groups( bboss_get_current_group_id(), bboss_loggedin_user_id() );
 				if ( $total_descendant = count( $descendant_groups ) ) {
 					$sub_nav[] = array(
 						'name'            => sprintf( __( 'Subgroups', 'buddyboss' ), '<span>' . number_format( $total_descendant ) . '</span>' ),
@@ -758,24 +758,24 @@ class BP_Groups_Component extends BP_Component {
 			// If this is a private group, and the user is not a
 			// member and does not have an outstanding invitation,
 			// show a "Request Membership" nav item.
-			if ( groups_check_for_membership_request( bp_loggedin_user_id(), $this->current_group->id ) || bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
+			if ( bboss_groups_check_for_membership_request( bboss_loggedin_user_id(), $this->current_group->id ) || bboss_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Request Access', 'buddyboss' ),
 					'slug'            => 'request-membership',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
-					'screen_function' => 'groups_screen_group_request_membership',
+					'screen_function' => 'bboss_groups_screen_group_request_membership',
 					'position'        => 30,
 				);
 			}
 
-			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
+			if ( bboss_is_active( 'friends' ) && bboss_groups_user_can_send_invites() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Send Invites', 'buddyboss' ),
 					'slug'            => 'invite',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
-					'screen_function' => 'groups_screen_group_invite',
+					'screen_function' => 'bboss_groups_screen_group_invite',
 					'item_css_id'     => 'invite',
 					'position'        => 30,
 					'user_has_access' => $this->current_group->user_has_access,
@@ -787,7 +787,7 @@ class BP_Groups_Component extends BP_Component {
 				$default_params_invite = array(
 					'parent_url'        => $admin_link_invite,
 					'parent_slug'       => $this->current_group->slug . '_invite',
-					'screen_function'   => 'groups_screen_group_invite',
+					'screen_function'   => 'bboss_groups_screen_group_invite',
 					'user_has_access'   => $this->current_group->user_has_access,
 					'show_in_admin_bar' => true,
 				);
@@ -811,7 +811,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_group_media_support_enabled() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Photos', 'buddyboss' ),
 					'slug'            => 'photos',
@@ -824,7 +824,7 @@ class BP_Groups_Component extends BP_Component {
 					'no_access_url'   => $group_link,
 				);
 
-				if ( bp_is_group_albums_support_enabled() ) {
+				if ( bboss_is_group_albums_support_enabled() ) {
 					$sub_nav[] = array(
 						'name'            => __( 'Albums', 'buddyboss' ),
 						'slug'            => 'albums',
@@ -839,7 +839,7 @@ class BP_Groups_Component extends BP_Component {
 				}
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && bp_is_group_document_support_enabled() ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_active( 'document' ) && bboss_is_group_document_support_enabled() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Documents', 'buddyboss' ),
 					'slug'            => 'documents',
@@ -853,7 +853,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
+			if ( bboss_is_active( 'media' ) && bboss_is_active( 'video' ) && bboss_is_group_video_support_enabled() ) {
 				// Checked if order already set before, New menu(video) will be added at last
 				$video_menu_position = 22;
 				$orders              = get_option( 'bp_nouveau_appearance' );
@@ -873,28 +873,28 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			$message_status = bp_group_get_message_status( $this->current_group->id );
+			$message_status = bboss_group_get_message_status( $this->current_group->id );
 			$show           = false;
 			if ( 'mods' === $message_status ) {
-				$admin     = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
-				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
+				$admin     = bboss_groups_is_user_admin( bboss_loggedin_user_id(), $this->current_group->id );
+				$moderator = bboss_groups_is_user_mod( bboss_loggedin_user_id(), $this->current_group->id );
 				if ( $admin || $moderator ) {
 					$show = true;
 				}
 			} elseif ( 'members' === $message_status ) {
-				$member    = groups_is_user_member( bp_loggedin_user_id(), $this->current_group->id );
-				$admin     = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
-				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
+				$member    = bboss_groups_is_user_member( bboss_loggedin_user_id(), $this->current_group->id );
+				$admin     = bboss_groups_is_user_admin( bboss_loggedin_user_id(), $this->current_group->id );
+				$moderator = bboss_groups_is_user_mod( bboss_loggedin_user_id(), $this->current_group->id );
 				if ( $member || $admin || $moderator ) {
 					$show = true;
 				}
 			} else {
-				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$admin = bboss_groups_is_user_admin( bboss_loggedin_user_id(), $this->current_group->id );
 				if ( $admin ) {
 					$show = true;
 				}
 			}
-			if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) && $show ) {
+			if ( true === bboss_disable_group_messages() && bboss_is_active( 'messages' ) && $show ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Send Messages', 'buddyboss' ),
 					'slug'            => 'messages',
@@ -937,13 +937,13 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			// If the user is a group admin, then show the group admin nav item.
-			if ( bp_is_item_admin() ) {
+			if ( bboss_is_item_admin() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Manage', 'buddyboss' ),
 					'slug'            => 'admin',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
-					'screen_function' => 'groups_screen_group_admin',
+					'screen_function' => 'bboss_groups_screen_group_admin',
 					'position'        => 1000,
 					'user_has_access' => true,
 					'item_css_id'     => 'admin',
@@ -956,8 +956,8 @@ class BP_Groups_Component extends BP_Component {
 				$default_params = array(
 					'parent_url'        => $admin_link,
 					'parent_slug'       => $this->current_group->slug . '_manage',
-					'screen_function'   => 'groups_screen_group_admin',
-					'user_has_access'   => bp_is_item_admin(),
+					'screen_function'   => 'bboss_groups_screen_group_admin',
+					'user_has_access'   => bboss_is_item_admin(),
 					'show_in_admin_bar' => true,
 				);
 
@@ -979,7 +979,7 @@ class BP_Groups_Component extends BP_Component {
 					$default_params
 				);
 
-				if ( ! bp_disable_group_avatar_uploads() && buddypress()->avatar->show_avatars ) {
+				if ( ! bboss_disable_group_avatar_uploads() && bboss()->avatar->show_avatars ) {
 					$sub_nav[] = array_merge(
 						array(
 							'name'     => __( 'Photo', 'buddyboss' ),
@@ -990,7 +990,7 @@ class BP_Groups_Component extends BP_Component {
 					);
 				}
 
-				if ( bp_group_use_cover_image_header() ) {
+				if ( bboss_group_use_cover_image_header() ) {
 					$sub_nav[] = array_merge(
 						array(
 							'name'     => __( 'Cover Photo', 'buddyboss' ),
@@ -1032,7 +1032,7 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			foreach ( $sub_nav as $nav ) {
-				bp_core_new_subnav_item( $nav, 'groups' );
+				bboss_core_new_subnav_item( $nav, 'groups' );
 			}
 		}
 
@@ -1058,10 +1058,10 @@ class BP_Groups_Component extends BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 * @see BBoss_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
 	 *
-	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a description.
+	 * @param array $wp_admin_nav See BBoss_Component::setup_admin_bar() for a description.
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 
@@ -1069,10 +1069,10 @@ class BP_Groups_Component extends BP_Component {
 		if ( is_user_logged_in() ) {
 
 			// Setup the logged in user variables.
-			$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
+			$groups_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() );
 
 			// Pending group invites.
-			$count   = groups_get_invite_count_for_user();
+			$count   = bboss_groups_get_invite_count_for_user();
 			$title   = __( 'Groups', 'buddyboss' );
 			$pending = __( 'No Pending Invites', 'buddyboss' );
 
@@ -1080,19 +1080,19 @@ class BP_Groups_Component extends BP_Component {
 				$title = sprintf(
 					/* translators: %s: Group invitation count for the current user */
 					__( 'Groups %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
+					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 
 				$pending = sprintf(
 					/* translators: %s: Group invitation count for the current user */
 					__( 'Pending Invites %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
+					'<span class="count">' . bboss_core_number_format( $count ) . '</span>'
 				);
 			}
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
+				'parent' => bboss()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => $title,
 				'href'   => $groups_link,
@@ -1117,12 +1117,12 @@ class BP_Groups_Component extends BP_Component {
 			);
 
 			// Create a Group.
-			if ( bp_user_can_create_groups() ) {
+			if ( bboss_user_can_create_groups() ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-create',
 					'title'    => __( 'Create Group', 'buddyboss' ),
-					'href'     => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
+					'href'     => trailingslashit( bboss_get_groups_directory_permalink() . 'create' ),
 					'position' => 90,
 				);
 			}
@@ -1138,28 +1138,28 @@ class BP_Groups_Component extends BP_Component {
 	 */
 	public function setup_title() {
 
-		if ( bp_is_groups_component() ) {
-			$bp = buddypress();
+		if ( bboss_is_groups_component() ) {
+			$bp = bboss();
 
-			if ( bp_is_my_profile() && ! bp_is_single_item() ) {
+			if ( bboss_is_my_profile() && ! bboss_is_single_item() ) {
 				$bp->bp_options_title = __( 'My Groups', 'buddyboss' );
 
-			} elseif ( ! bp_is_my_profile() && ! bp_is_single_item() ) {
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+			} elseif ( ! bboss_is_my_profile() && ! bboss_is_single_item() ) {
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
-						'item_id' => bp_displayed_user_id(),
+						'item_id' => bboss_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bboss_get_displayed_user_fullname() ),
 					)
 				);
-				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+				$bp->bp_options_title  = bboss_get_displayed_user_fullname();
 
 				// We are viewing a single group, so set up the
 				// group navigation menu using the $this->current_group global.
-			} elseif ( bp_is_single_item() ) {
+			} elseif ( bboss_is_single_item() ) {
 				$bp->bp_options_title  = $this->current_group->name;
-				$bp->bp_options_avatar = bp_core_fetch_avatar(
+				$bp->bp_options_avatar = bboss_core_fetch_avatar(
 					array(
 						'item_id'    => $this->current_group->id,
 						'object'     => 'group',
@@ -1170,7 +1170,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 
 				if ( empty( $bp->bp_options_avatar ) ) {
-					$bp->bp_options_avatar = '<img src="' . esc_url( bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group', 'type' => 'thumb' ) ) ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
+					$bp->bp_options_avatar = '<img src="' . esc_url( bboss_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group', 'type' => 'thumb' ) ) ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
 				}
 			}
 		}
@@ -1225,25 +1225,25 @@ class BP_Groups_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
-	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 * @param array $controllers Optional. See BBoss_Component::rest_api_init() for description.
 	 *
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
 		$controllers = array(
-			'BP_REST_Groups_Endpoint',
-			'BP_REST_Groups_Details_Endpoint',
-			'BP_REST_Group_Membership_Endpoint',
-			'BP_REST_Group_Settings_Endpoint',
-			'BP_REST_Group_Invites_Endpoint',
-			'BP_REST_Group_Membership_Request_Endpoint',
-			'BP_REST_Groups_Types_Endpoint',
-			'BP_REST_Attachments_Group_Avatar_Endpoint',
+			'BBoss_REST_Groups_Endpoint',
+			'BBoss_REST_Groups_Details_Endpoint',
+			'BBoss_REST_Group_Membership_Endpoint',
+			'BBoss_REST_Group_Settings_Endpoint',
+			'BBoss_REST_Group_Invites_Endpoint',
+			'BBoss_REST_Group_Membership_Request_Endpoint',
+			'BBoss_REST_Groups_Types_Endpoint',
+			'BBoss_REST_Attachments_Group_Avatar_Endpoint',
 		);
 
 		// Support to Group Cover.
-		if ( bp_is_active( 'groups', 'cover_image' ) ) {
-			$controllers[] = 'BP_REST_Attachments_Group_Cover_Endpoint';
+		if ( bboss_is_active( 'groups', 'cover_image' ) ) {
+			$controllers[] = 'BBoss_REST_Attachments_Group_Cover_Endpoint';
 		}
 
 		parent::rest_api_init( $controllers );
@@ -1254,7 +1254,7 @@ class BP_Groups_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.9.00
 	 *
-	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 * @param array $blocks Optional. See BBoss_Component::blocks_init() for description.
 	 */
 	public function blocks_init( $blocks = array() ) {
 		parent::blocks_init( array() );

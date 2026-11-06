@@ -10,7 +10,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-class BP_Core_Members_Switching {
+class BBoss_Core_Members_Switching {
 
 	/**
 	 * The name used to identify the application during a WordPress redirect.
@@ -56,18 +56,18 @@ class BP_Core_Members_Switching {
 	public function action_plugins_loaded() {
 
 		// Member Switching's auth_cookie
-		if ( ! defined( 'BP_MEMBER_SWITCHING_COOKIE' ) ) {
-			define( 'BP_MEMBER_SWITCHING_COOKIE', 'buddyboss_user_sw_' . COOKIEHASH );
+		if ( ! defined( 'BBOSS_MEMBER_SWITCHING_COOKIE' ) ) {
+			define( 'BBOSS_MEMBER_SWITCHING_COOKIE', 'buddyboss_user_sw_' . COOKIEHASH );
 		}
 
 		// Member Switching's secure_auth_cookie
-		if ( ! defined( 'BP_MEMBER_SWITCHING_SECURE_COOKIE' ) ) {
-			define( 'BP_MEMBER_SWITCHING_SECURE_COOKIE', 'buddyboss_user_sw_secure_' . COOKIEHASH );
+		if ( ! defined( 'BBOSS_MEMBER_SWITCHING_SECURE_COOKIE' ) ) {
+			define( 'BBOSS_MEMBER_SWITCHING_SECURE_COOKIE', 'buddyboss_user_sw_secure_' . COOKIEHASH );
 		}
 
 		// Member Switching's logged_in_cookie
-		if ( ! defined( 'BP_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ) {
-			define( 'BP_MEMBER_SWITCHING_OLDUSER_COOKIE', 'buddyboss_user_sw_olduser_' . COOKIEHASH );
+		if ( ! defined( 'BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ) {
+			define( 'BBOSS_MEMBER_SWITCHING_OLDUSER_COOKIE', 'buddyboss_user_sw_olduser_' . COOKIEHASH );
 		}
 	}
 
@@ -136,7 +136,7 @@ class BP_Core_Members_Switching {
 				}
 
 				// Check authentication:
-				$old_user = bp_current_member_switched();
+				$old_user = bboss_current_member_switched();
 				if ( ! current_user_can( 'switch_to_user', $user_id ) && ( ! $old_user || ! user_can( $old_user, 'switch_to_user' ) ) ) {
 					wp_die( esc_html__( 'Could not switch users.', 'buddyboss' ) );
 				}
@@ -145,7 +145,7 @@ class BP_Core_Members_Switching {
 				check_admin_referer( "switch_to_user_{$user_id}" );
 
 				// Switch user:
-				$user = bp_member_switch_to( $user_id, self::remember() );
+				$user = bboss_member_switch_to( $user_id, self::remember() );
 				if ( $user ) {
 					$redirect_to = ( ! empty( $_GET['redirect_to'] ) ) ? $_GET['redirect_to'] : self::get_redirect( $user, $current_user );
 
@@ -184,7 +184,7 @@ class BP_Core_Members_Switching {
 				check_admin_referer( "switch_to_olduser_{$old_user->ID}" );
 
 				// Switch user:
-				if ( bp_member_switch_to( $old_user->ID, self::remember(), false ) ) {
+				if ( bboss_member_switch_to( $old_user->ID, self::remember(), false ) ) {
 
 					if ( ! empty( $_REQUEST['interim-login'] ) ) {
 						$GLOBALS['interim_login'] = 'success'; // @codingStandardsIgnoreLine
@@ -225,9 +225,9 @@ class BP_Core_Members_Switching {
 	protected static function get_redirect( ?WP_User $new_user = null, ?WP_User $old_user = null ) {
 
 		if ( ! $new_user ) {
-			$redirect_to = bp_core_get_user_domain( $old_user->ID );
+			$redirect_to = bboss_core_get_user_domain( $old_user->ID );
 		} else {
-			$redirect_to = bp_core_get_user_domain( $new_user->ID );
+			$redirect_to = bboss_core_get_user_domain( $new_user->ID );
 		}
 
 		return $redirect_to;
@@ -335,7 +335,7 @@ class BP_Core_Members_Switching {
 	 * @return false|WP_User False if there's no old user cookie or it's invalid, WP_User object if it's present and valid.
 	 */
 	public static function get_old_user() {
-		$cookie = bp_member_switching_get_olduser_cookie();
+		$cookie = bboss_member_switching_get_olduser_cookie();
 		if ( ! empty( $cookie ) ) {
 			$old_user_id = wp_validate_auth_cookie( $cookie, 'logged_in' );
 
@@ -357,7 +357,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Whether verification with the auth cookie passed.
 	 */
 	public static function authenticate_old_user( WP_User $user ) {
-		$cookie = bp_member_switching_get_auth_cookie();
+		$cookie = bboss_member_switching_get_auth_cookie();
 		if ( ! empty( $cookie ) ) {
 			if ( self::secure_auth_cookie() ) {
 				$scheme = 'secure_auth';
@@ -547,10 +547,10 @@ class BP_Core_Members_Switching {
 	public function action_bp_button() {
 		$user = null;
 
-		if ( bp_is_user() ) {
-			$user = get_userdata( bp_displayed_user_id() );
-		} elseif ( bp_is_members_directory() ) {
-			$user = get_userdata( bp_get_member_user_id() );
+		if ( bboss_is_user() ) {
+			$user = get_userdata( bboss_displayed_user_id() );
+		} elseif ( bboss_is_members_directory() ) {
+			$user = get_userdata( bboss_get_member_user_id() );
 		}
 
 		if ( ! $user ) {
@@ -565,14 +565,14 @@ class BP_Core_Members_Switching {
 
 		$link = add_query_arg(
 			array(
-				'redirect_to' => urlencode( bp_core_get_user_domain( $user->ID ) ),
+				'redirect_to' => urlencode( bboss_core_get_user_domain( $user->ID ) ),
 			),
 			$link
 		);
 
-		$components = array_keys( buddypress()->active_components );
+		$components = array_keys( bboss()->active_components );
 
-		echo wp_kses_post( bp_get_button(
+		echo wp_kses_post( bboss_get_button(
 			array(
 				'id'         => 'bp_member_switching',
 				'component'  => reset( $components ),
@@ -589,7 +589,7 @@ class BP_Core_Members_Switching {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_bbpress_button() {
-		$user = get_userdata( bbp_get_user_id() );
+		$user = get_userdata( bboss_bbp_get_user_id() );
 
 		if ( ! $user ) {
 			return;
@@ -603,7 +603,7 @@ class BP_Core_Members_Switching {
 
 		$link = add_query_arg(
 			array(
-				'redirect_to' => urlencode( bbp_get_user_profile_url( $user->ID ) ),
+				'redirect_to' => urlencode( bboss_bbp_get_user_profile_url( $user->ID ) ),
 			),
 			$link
 		);
@@ -648,7 +648,7 @@ class BP_Core_Members_Switching {
 	public static function maybe_switch_url( WP_User $user ) {
 		$old_user = self::get_old_user();
 
-		if ( $old_user && ( $old_user->ID === $user->ID || bp_is_my_profile() ) ) {
+		if ( $old_user && ( $old_user->ID === $user->ID || bboss_is_my_profile() ) ) {
 			return self::switch_back_url( $old_user );
 		} elseif ( current_user_can( 'switch_to_user', $user->ID ) || user_can( $old_user, 'switch_to_user', $user->ID ) ) {
 			return self::switch_to_url( $user );
@@ -947,7 +947,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @return BP_Core_Members_Switching Member Switching instance.
+	 * @return BBoss_Core_Members_Switching Member Switching instance.
 	 */
 	public static function get_instance() {
 		static $instance;
@@ -969,5 +969,5 @@ class BP_Core_Members_Switching {
 
 }
 
-$GLOBALS['bp_members_switching'] = BP_Core_Members_Switching::get_instance();
+$GLOBALS['bp_members_switching'] = BBoss_Core_Members_Switching::get_instance();
 $GLOBALS['bp_members_switching']->init_hooks();

@@ -9,17 +9,17 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_user_subnav() {
-		$bp_options_nav = buddypress()->bp_options_nav;
+		$bp_options_nav = bboss()->bp_options_nav;
 
 		$u = self::factory()->user->create();
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
-		$user_domain = bp_core_get_user_domain( $u );
+		$user_domain = bboss_core_get_user_domain( $u );
 
 		$this->go_to( $user_domain );
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name'            => 'Foo Parent',
 			'slug'            => 'foo-parent',
 			'link'            => trailingslashit( $user_domain . 'foo-parent' ),
@@ -27,7 +27,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'position'        => 10,
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name'            => 'Foo',
 			'slug'            => 'foo',
 			'parent_url'      => trailingslashit( $user_domain . 'foo-parent' ),
@@ -49,17 +49,17 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		);
 
 		foreach ( $expected as $k => $v ) {
-			$this->assertSame( $v, buddypress()->bp_options_nav['foo-parent']['foo'][ $k ] );
+			$this->assertSame( $v, bboss()->bp_options_nav['foo-parent']['foo'][ $k ] );
 		}
 
 		// Clean up
-		buddypress()->bp_options_nav = $bp_options_nav;
+		bboss()->bp_options_nav = $bp_options_nav;
 		$this->set_current_user( $old_current_user );
 	}
 
 	public function test_required_params() {
 		// 'name'
-		$this->assertFalse( bp_core_new_subnav_item( array(
+		$this->assertFalse( bboss_core_new_subnav_item( array(
 			'slug' => 'foo',
 			'parent_slug' => 'foo',
 			'parent_url' => 'foo',
@@ -67,7 +67,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		) ) );
 
 		// 'slug'
-		$this->assertFalse( bp_core_new_subnav_item( array(
+		$this->assertFalse( bboss_core_new_subnav_item( array(
 			'name' => 'foo',
 			'parent_slug' => 'foo',
 			'parent_url' => 'foo',
@@ -75,7 +75,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		) ) );
 
 		// 'parent_slug'
-		$this->assertFalse( bp_core_new_subnav_item( array(
+		$this->assertFalse( bboss_core_new_subnav_item( array(
 			'name' => 'foo',
 			'slug' => 'foo',
 			'parent_url' => 'foo',
@@ -83,7 +83,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		) ) );
 
 		// 'parent_url'
-		$this->assertFalse( bp_core_new_subnav_item( array(
+		$this->assertFalse( bboss_core_new_subnav_item( array(
 			'name' => 'foo',
 			'slug' => 'foo',
 			'parent_slug' => 'foo',
@@ -91,7 +91,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		) ) );
 
 		// 'screen_function'
-		$this->assertFalse( bp_core_new_subnav_item( array(
+		$this->assertFalse( bboss_core_new_subnav_item( array(
 			'name' => 'foo',
 			'slug' => 'foo',
 			'parent_slug' => 'foo',
@@ -103,7 +103,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( 0 );
 
-		$this->assertFalse( bp_core_new_subnav_item( array(
+		$this->assertFalse( bboss_core_new_subnav_item( array(
 			'name' => 'foo',
 			'slug' => 'foo',
 			'parent_slug' => 'foo',
@@ -119,16 +119,16 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_link_provided() {
-		$bp_options_nav = buddypress()->bp_options_nav;
+		$bp_options_nav = bboss()->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 			'link' => 'https://buddypress.org/',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -137,25 +137,25 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'link' => 'https://buddypress.org/',
 		) );
 
-		$this->assertSame( 'https://buddypress.org/', buddypress()->bp_options_nav['foo']['bar']['link'] );
+		$this->assertSame( 'https://buddypress.org/', bboss()->bp_options_nav['foo']['bar']['link'] );
 
-		buddypress()->bp_options_nav = $bp_options_nav;
+		bboss()->bp_options_nav = $bp_options_nav;
 	}
 
 	/**
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_link_built_from_parent_url_and_slug() {
-		$bp_options_nav = buddypress()->bp_options_nav;
+		$bp_options_nav = bboss()->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 			'link' => 'https://buddypress.org/',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -163,26 +163,26 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'screen_function' => 'foo',
 		) );
 
-		$this->assertSame( 'http://example.com/foo/bar/', buddypress()->bp_options_nav['foo']['bar']['link'] );
+		$this->assertSame( 'http://example.com/foo/bar/', bboss()->bp_options_nav['foo']['bar']['link'] );
 
-		buddypress()->bp_options_nav = $bp_options_nav;
+		bboss()->bp_options_nav = $bp_options_nav;
 	}
 
 	/**
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_link_built_from_parent_url_and_slug_where_slug_is_default() {
-		$bp_nav = buddypress()->bp_nav;
-		$bp_options_nav = buddypress()->bp_options_nav;
+		$bp_nav = bboss()->bp_nav;
+		$bp_options_nav = bboss()->bp_options_nav;
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 			'default_subnav_slug' => 'bar',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -190,58 +190,58 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'screen_function' => 'foo',
 		) );
 
-		$this->assertSame( 'http://example.com/foo/', buddypress()->bp_options_nav['foo']['bar']['link'] );
+		$this->assertSame( 'http://example.com/foo/', bboss()->bp_options_nav['foo']['bar']['link'] );
 
 		// clean up
-		buddypress()->bp_nav = $bp_nav;
-		buddypress()->bp_options_nav = $bp_options_nav;
+		bboss()->bp_nav = $bp_nav;
+		bboss()->bp_options_nav = $bp_options_nav;
 	}
 
 	/**
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_should_trailingslash_link_when_link_is_autogenerated_using_slug() {
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 			'link' => 'https://buddypress.org/',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
-			'parent_url' => bp_get_root_domain() . 'foo/',
+			'parent_url' => bboss_get_root_domain() . 'foo/',
 			'screen_function' => 'foo',
 		) );
 
-		$expected = bp_get_root_domain() . 'foo/bar/';
-		$this->assertSame( $expected, buddypress()->bp_options_nav['foo']['bar']['link'] );
+		$expected = bboss_get_root_domain() . 'foo/bar/';
+		$this->assertSame( $expected, bboss()->bp_options_nav['foo']['bar']['link'] );
 	}
 
 	/**
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_should_trailingslash_link_when_link_is_autogenerated_not_using_slug() {
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'foo',
 			'slug' => 'foo-parent',
-			'link' => bp_get_root_domain() . 'foo-parent/',
+			'link' => bboss_get_root_domain() . 'foo-parent/',
 			'default_subnav_slug' => 'bar',
 			'screen_function' => 'foo',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo-parent',
-			'parent_url' => bp_get_root_domain() . '/foo-parent/',
+			'parent_url' => bboss_get_root_domain() . '/foo-parent/',
 			'screen_function' => 'bar',
 		) );
 
-		$expected = bp_get_root_domain() . '/foo-parent/';
-		$this->assertSame( $expected, buddypress()->bp_options_nav['foo-parent']['bar']['link'] );
+		$expected = bboss_get_root_domain() . '/foo-parent/';
+		$this->assertSame( $expected, bboss()->bp_options_nav['foo-parent']['bar']['link'] );
 	}
 
 	/**
@@ -251,14 +251,14 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 	public function test_link_should_not_trailingslash_link_explicit_link() {
 		$link = 'http://example.com/foo/bar/blah/?action=edit&id=30';
 
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 			'link' => 'http://example.com/foo/',
 		) );
 
-		bp_core_new_subnav_item( array(
+		bboss_core_new_subnav_item( array(
 			'name' => 'bar',
 			'slug' => 'bar',
 			'parent_slug' => 'foo',
@@ -267,35 +267,35 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'link' => $link,
 		) );
 
-		$this->assertSame( $link, buddypress()->bp_options_nav['foo']['bar']['link'] );
+		$this->assertSame( $link, bboss()->bp_options_nav['foo']['bar']['link'] );
 	}
 
 	public function test_should_return_false_if_site_admin_only_and_current_user_cannot_bp_moderate() {
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'screen_function' => 'foo',
 		) );
 
 		// Should already be set to a 0 user.
-		$this->assertFalse( bp_current_user_can( 'bp_moderate' ) );
+		$this->assertFalse( bboss_current_user_can( 'bp_moderate' ) );
 		$args = array(
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'parent_slug' => 'parent',
-			'parent_url' => bp_get_root_domain() . '/parent/',
+			'parent_url' => bboss_get_root_domain() . '/parent/',
 			'screen_function' => 'foo',
 			'site_admin_only' => true,
 		);
 
-		$this->assertFalse( bp_core_new_subnav_item( $args ) );
+		$this->assertFalse( bboss_core_new_subnav_item( $args ) );
 	}
 
 	/**
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_css_id_should_fall_back_on_slug() {
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Parent',
 			'slug' => 'parent',
 			'screen_function' => 'foo',
@@ -305,19 +305,19 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'parent_slug' => 'parent',
-			'parent_url' => bp_get_root_domain() . '/parent/',
+			'parent_url' => bboss_get_root_domain() . '/parent/',
 			'screen_function' => 'foo',
 		);
-		bp_core_new_subnav_item( $args );
+		bboss_core_new_subnav_item( $args );
 
-		$this->assertSame( 'foo', buddypress()->bp_options_nav['parent']['foo']['css_id'] );
+		$this->assertSame( 'foo', bboss()->bp_options_nav['parent']['foo']['css_id'] );
 	}
 
 	/**
 	 * @expectedIncorrectUsage bp_nav
 	 */
 	public function test_css_id_should_be_respected() {
-		bp_core_new_nav_item( array(
+		bboss_core_new_nav_item( array(
 			'name' => 'Parent',
 			'slug' => 'parent',
 			'screen_function' => 'foo',
@@ -327,13 +327,13 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			'name' => 'Foo',
 			'slug' => 'foo',
 			'parent_slug' => 'parent',
-			'parent_url' => bp_get_root_domain() . '/parent/',
+			'parent_url' => bboss_get_root_domain() . '/parent/',
 			'screen_function' => 'foo',
 			'item_css_id' => 'bar',
 		);
-		bp_core_new_subnav_item( $args );
+		bboss_core_new_subnav_item( $args );
 
-		$this->assertSame( 'bar', buddypress()->bp_options_nav['parent']['foo']['css_id'] );
+		$this->assertSame( 'bar', bboss()->bp_options_nav['parent']['foo']['css_id'] );
 	}
 
 	/**
@@ -344,7 +344,7 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 		$old_current_user = get_current_user_id();
 		$this->set_current_user( $u );
 
-		$user_domain = bp_core_get_user_domain( $u );
+		$user_domain = bboss_core_get_user_domain( $u );
 
 		// Register a subnav on 'bp_setup_nav' hook early (at priority zero).
 		add_action( 'bp_setup_nav', function() use ( $user_domain ) {
@@ -354,22 +354,22 @@ class BP_Tests_Core_Nav_BpCoreNewSubnavItem extends BP_UnitTestCase {
 			 * The bp_core_load_template() call is imperative for our 404 check to work!
 			 */
 			$screen = function() {
-				bp_core_load_template ('members/single/plugins');
+				bboss_core_load_template ('members/single/plugins');
 			};
 
 			// Register the subnav.
-			bp_core_new_subnav_item( array (
+			bboss_core_new_subnav_item( array (
 				'name'            => 'Testing',
 				'slug'            => 'testing',
-				'parent_url'      => $user_domain . bp_get_profile_slug (). '/',
-				'parent_slug'     => bp_get_profile_slug (),
+				'parent_url'      => $user_domain . bboss_get_profile_slug (). '/',
+				'parent_slug'     => bboss_get_profile_slug (),
 				'screen_function' => $screen,
 				'position'        => 20
 			) );
 		}, 0 );
 
 		// Emulate visit to our new subnav page.
-		$this->go_to( $user_domain . bp_get_profile_slug () . '/testing/' );
+		$this->go_to( $user_domain . bboss_get_profile_slug () . '/testing/' );
 
 		// Assert that subnav page does not 404.
 		$this->assertFalse( is_404() );

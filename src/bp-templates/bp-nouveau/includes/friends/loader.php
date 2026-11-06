@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_Friends {
+class BBoss_Nouveau_Friends {
 	/**
 	 * Constructor
 	 *
@@ -50,7 +50,7 @@ class BP_Nouveau_Friends {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'friends_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'friends_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );
@@ -97,7 +97,7 @@ class BP_Nouveau_Friends {
 	 */
 	public function notification_filters() {
 
-		if ( ! bb_enabled_legacy_email_preference() ) {
+		if ( ! bboss_enabled_legacy_email_preference() ) {
 			return;
 		}
 
@@ -115,7 +115,7 @@ class BP_Nouveau_Friends {
 		);
 
 		foreach ( $notifications as $notification ) {
-			bp_nouveau_notifications_register_filter( $notification );
+			bboss_nouveau_notifications_register_filter( $notification );
 		}
 	}
 }
@@ -125,11 +125,11 @@ class BP_Nouveau_Friends {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_friends( $bp_nouveau = null ) {
+function bboss_nouveau_friends( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->friends = new BP_Nouveau_Friends();
+	$bp_nouveau->friends = new BBoss_Nouveau_Friends();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_friends', 10, 1 );

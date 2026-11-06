@@ -6,7 +6,7 @@
  * group information, meta data, and action buttons.
  *
  * @package BuddyBoss\Template
- * @subpackage BP_Nouveau\ReadyLaunch
+ * @subpackage BBoss_Nouveau\ReadyLaunch
  * @since BuddyBoss 2.9.00
  * @version 1.0.0
  */
@@ -14,44 +14,44 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$group_link       = bp_get_group_permalink();
+$group_link       = bboss_get_group_permalink();
 $admin_link       = trailingslashit( $group_link . 'admin' );
 $group_avatar     = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
-$tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
+$tooltip_position = bboss_disable_group_cover_image_uploads() ? 'down' : 'up';
 
 add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 ?>
-<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( bb_platform_group_header_style() ); ?>">
+<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( bboss_platform_group_header_style() ); ?>">
 
-	<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
+	<div id="item-header-cover-image" class="<?php echo esc_attr( bboss_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
 
-		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
+		<?php if ( ! bboss_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
-				<?php if ( bp_is_item_admin() ) { ?>
+				<?php if ( bboss_is_item_admin() ) { ?>
 					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 				<?php } ?>
-				<?php bp_group_avatar(); ?>
+				<?php bboss_group_avatar(); ?>
 			</div><!-- #item-header-avatar -->
 		<?php endif; ?>
 
-		<?php if ( ! bp_nouveau_groups_front_page_description() ) : ?>
+		<?php if ( ! bboss_nouveau_groups_front_page_description() ) : ?>
 			<div id="item-header-content">
 
 				<?php
-				$current_group_name = bp_get_group_name();
-				if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) {
-					$parent_id = bp_get_parent_group_id();
+				$current_group_name = bboss_get_group_name();
+				if ( function_exists( 'bboss_enable_group_hierarchies' ) && bboss_enable_group_hierarchies() ) {
+					$parent_id = bboss_get_parent_group_id();
 					if ( 0 !== $parent_id ) {
-						$parent_group = groups_get_group( $parent_id );
+						$parent_group = bboss_groups_get_group( $parent_id );
 						?>
 						<div class="bp-group-parent-wrap flex align-items-center">
-							<?php bp_group_list_parents(); ?>
+							<?php bboss_group_list_parents(); ?>
 							<div class="bp-parent-group-title-wrap">
-								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( $parent_group ) ); ?>"><?php echo wp_kses_post( bp_get_group_name( $parent_group ) ); ?></a>
+								<a class="bp-parent-group-title" href="<?php echo esc_url( bboss_get_group_permalink( $parent_group ) ); ?>"><?php echo wp_kses_post( bboss_get_group_name( $parent_group ) ); ?></a>
 								<i class="bb-icon-l bb-icon-angle-right"></i>
 								<span class="bp-current-group-title"><?php echo wp_kses_post( $current_group_name ); ?></span>
 							</div>
@@ -63,9 +63,9 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 				<div class="flex align-items-center bp-group-title-wrap">
 					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( $current_group_name ); ?></h2>
-					<?php if ( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
+					<?php if ( bboss_platform_group_headers_element_enable( 'group-type' ) ) : ?>
 						<p class="bp-group-meta bp-group-type">
-							<?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?>
+							<?php echo wp_kses( bboss_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?>
 						</p>
 					<?php endif; ?>
 				</div>
@@ -73,33 +73,33 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				<?php
 				do_action( 'bb_group_single_top_header_action' );
 
-				echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : '';
+				echo isset( bboss_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bboss_nouveau_group_meta()->group_type_list ) : '';
 
-				bp_nouveau_group_hook( 'before', 'header_meta' );
+				bboss_nouveau_group_hook( 'before', 'header_meta' );
 
-				if ( bp_nouveau_group_has_meta_extra() ) :
+				if ( bboss_nouveau_group_has_meta_extra() ) :
 					?>
 					<div class="item-meta">
-						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
+						<?php echo wp_kses_post( bboss_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
 				<?php endif; ?>
 
 				<div class="bp-group-meta-wrap flex align-items-center">
 					<?php
-					if ( function_exists( 'bp_get_group_status_description' ) && bb_platform_group_headers_element_enable( 'group-privacy' ) ) :
+					if ( function_exists( 'bboss_get_group_status_description' ) && bboss_platform_group_headers_element_enable( 'group-privacy' ) ) :
 						?>
-							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bboss_get_group_status_description() ); ?>"><?php echo wp_kses( bboss_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 						<?php
 					endif;
 
-					if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
+					if ( bboss_platform_group_headers_element_enable( 'group-activity' ) ) :
 						?>
 						<p class="last-activity item-meta">
 							<?php
 							printf(
 								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
 								esc_html__( 'Active %s', 'buddyboss' ),
-								wp_kses_post( bp_get_group_last_active() )
+								wp_kses_post( bboss_get_group_last_active() )
 							);
 							?>
 						</p>
@@ -108,25 +108,25 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 				<?php
 				if (
-					! bp_nouveau_groups_front_page_description() &&
-					bp_nouveau_group_has_meta( 'description' ) &&
-					bb_platform_group_headers_element_enable( 'group-description' )
+					! bboss_nouveau_groups_front_page_description() &&
+					bboss_nouveau_group_has_meta( 'description' ) &&
+					bboss_platform_group_headers_element_enable( 'group-description' )
 				) :
 					?>
 					<div class="group-description">
-						<?php bp_group_description_excerpt(); ?>
+						<?php bboss_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
 					<?php
 				endif;
 
-				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) :
+				if ( bboss_platform_group_headers_element_enable( 'group-type' ) ) :
 					?>
-					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bboss_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 				<?php endif; ?>
 
 				<div class="group-actions-wrap" >
 					<?php
-						bp_get_template_part( 'groups/single/parts/header-item-actions' );
+						bboss_get_template_part( 'groups/single/parts/header-item-actions' );
 						do_action( 'bb_group_single_bottom_header_action' );
 					?>
 				</div>
@@ -151,7 +151,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						</a>
 					</header>
 					<div class="bb-action-popup-content">
-						<p><?php bp_group_description(); ?></p>
+						<p><?php bboss_group_description(); ?></p>
 					</div>
 				</div>
 			</div>

@@ -20,8 +20,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! function_exists( 'bb_messages_reschedule_cron_after_save' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/settings/messages/callbacks.php';
+		if ( ! function_exists( 'bboss_messages_reschedule_cron_after_save' ) ) {
+			require_once bboss()->plugin_dir . 'bp-core/admin/settings/messages/callbacks.php';
 		}
 
 		$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
@@ -29,12 +29,12 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 			wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
 		}
 
-		$this->declared_crons = bp_core_cron()->crons;
-		bp_core_cron()->crons = array();
+		$this->declared_crons = bboss_core_cron()->crons;
+		bboss_core_cron()->crons = array();
 	}
 
 	/**
-	 * Crons declared to BP_Core_Cron before the test.
+	 * Crons declared to BBoss_Core_Cron before the test.
 	 *
 	 * @var array
 	 */
@@ -45,7 +45,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 */
 	public function tearDown(): void {
 		wp_clear_scheduled_hook( 'bb_digest_email_notifications_hook' );
-		bp_core_cron()->crons = $this->declared_crons;
+		bboss_core_cron()->crons = $this->declared_crons;
 		unset( $_POST['time_delay_email_notification'] );
 		remove_filter( 'bb_enable_legacy_notification_preference', '__return_true' );
 		remove_filter( 'bp_get_root_blog_id', array( $this, 'other_root_blog_id' ) );
@@ -59,11 +59,11 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * Run the load-time repair the way a request does (`bp_init` priority 11).
 	 */
 	protected function run_load_time_schedule() {
-		bb_messages_maybe_schedule_digest_email_notifications();
+		bboss_messages_maybe_schedule_digest_email_notifications();
 	}
 
 	/**
-	 * Veto the digest event through the BP_Core_Cron per-hook filter.
+	 * Veto the digest event through the BBoss_Core_Cron per-hook filter.
 	 *
 	 * @return bool
 	 */
@@ -100,26 +100,26 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	}
 
 	/**
-	 * Repair — it schedules the event itself and declares nothing to BP_Core_Cron, so the cron
+	 * Repair — it schedules the event itself and declares nothing to BBoss_Core_Cron, so the cron
 	 * singleton is not built earlier than on release (that would start scheduling unrelated
 	 * declared crons, e.g. the media/document/video symlink deleters).
 	 */
 	public function test_digest_repair_does_not_declare_crons_to_bp_core_cron() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 
 		$this->run_load_time_schedule();
 
 		$this->assertNotFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ), 'precondition: the repair ran' );
-		$this->assertSame( array(), bp_core_cron()->crons, 'nothing declared to BP_Core_Cron' );
+		$this->assertSame( array(), bboss_core_cron()->crons, 'nothing declared to BP_Core_Cron' );
 	}
 
 	/**
-	 * Repair — honours the same per-hook veto BP_Core_Cron::schedule() applies.
+	 * Repair — honours the same per-hook veto BBoss_Core_Cron::schedule() applies.
 	 */
 	public function test_no_digest_event_on_load_when_the_cron_filter_vetoes_it() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 		add_filter( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', array( $this, 'veto_digest_event' ) );
 
 		$this->run_load_time_schedule();
@@ -133,8 +133,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * on the next load, with the saved interval.
 	 */
 	public function test_missing_digest_event_is_recreated_on_load() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 30 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 30 );
 		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ), 'precondition: event missing' );
 
 		$this->run_load_time_schedule();
@@ -148,8 +148,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * Repair — an existing event is left exactly as it is (no second event, no new time).
 	 */
 	public function test_existing_digest_event_is_not_changed_on_load() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 30 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 30 );
 		$when = time() + 600;
 		wp_schedule_event( $when, 'bb_schedule_15min', 'bb_digest_email_notifications_hook' );
 
@@ -166,8 +166,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * digest event has nothing to deliver.
 	 */
 	public function test_no_digest_event_on_load_when_delay_is_disabled() {
-		bp_update_option( 'delay_email_notification', 0 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 0 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 
 		$this->run_load_time_schedule();
 
@@ -178,8 +178,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * Repair — no event with the legacy notification preferences (delayed emails do not apply).
 	 */
 	public function test_no_digest_event_on_load_with_legacy_notification_preferences() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 		add_filter( 'bb_enable_legacy_notification_preference', '__return_true' );
 
 		$this->run_load_time_schedule();
@@ -189,12 +189,12 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 
 	/**
 	 * Repair — during a legacy settings save the stored option is stale (the save runs later),
-	 * so the declaration must leave that request to bb_schedule_event_on_update_notification_settings().
+	 * so the declaration must leave that request to bboss_schedule_event_on_update_notification_settings().
 	 * Without this, turning the delay off through the legacy form would re-create the event.
 	 */
 	public function test_no_digest_event_on_load_during_a_legacy_settings_save() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 		$_POST['time_delay_email_notification'] = '15';
 
 		$this->run_load_time_schedule();
@@ -207,12 +207,12 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * must be scheduled in the same request (release: unscheduled, never rescheduled).
 	 */
 	public function test_settings_2_0_save_schedules_the_digest_event() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 30 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 30 );
 
 		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ), 'precondition: not scheduled' );
 
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 30 ) );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 30 ) );
 
 		$next = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
 		$this->assertNotFalse( $next, 'digest event must be scheduled by the save callback itself' );
@@ -224,13 +224,13 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * S2 — a second save with a new interval replaces the schedule instead of stacking events.
 	 */
 	public function test_settings_2_0_save_replaces_the_digest_schedule() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
 		$this->assertSame( 'bb_schedule_15min', wp_get_schedule( 'bb_digest_email_notifications_hook' ) );
 
-		bp_update_option( 'time_delay_email_notification', 60 );
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 60 ) );
+		bboss_update_option( 'time_delay_email_notification', 60 );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 60 ) );
 		$this->assertSame( 'bb_schedule_1hour', wp_get_schedule( 'bb_digest_email_notifications_hook' ) );
 
 		$events = _get_cron_array();
@@ -247,13 +247,13 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * S2 — disabling the delay unschedules the event (negative case).
 	 */
 	public function test_settings_2_0_save_with_delay_disabled_unschedules_the_digest_event() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
 		$this->assertNotFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) );
 
-		bp_update_option( 'delay_email_notification', 0 );
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 0 ) );
+		bboss_update_option( 'delay_email_notification', 0 );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 0 ) );
 		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) );
 	}
 
@@ -273,10 +273,10 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * off, on top of the immediate emails.
 	 */
 	public function test_no_digest_event_on_load_outside_the_root_blog() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 		add_filter( 'bp_get_root_blog_id', array( $this, 'other_root_blog_id' ) );
-		$this->assertFalse( bp_is_root_blog(), 'precondition: this request is not on the root blog' );
+		$this->assertFalse( bboss_is_root_blog(), 'precondition: this request is not on the root blog' );
 
 		$this->run_load_time_schedule();
 
@@ -286,21 +286,21 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	/**
 	 * Settings 2.0 save — no event while delayed emails are not in effect, even though the
 	 * stored option is on. The immediate message emails stand down only when
-	 * bb_check_delay_email_notification() is true (it is false, or undefined, with the
+	 * bboss_check_delay_email_notification() is true (it is false, or undefined, with the
 	 * Notifications component off), so an event here would email every message twice.
 	 */
 	public function test_settings_2_0_save_does_not_schedule_when_delay_is_not_in_effect() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 
 		// Positive control: the same save schedules while delay is in effect.
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 1 ) );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 1 ) );
 		$this->assertNotFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ), 'precondition: the save schedules while delay is in effect' );
 
 		add_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
-		$this->assertFalse( bb_check_delay_email_notification(), 'precondition: delay is not in effect' );
+		$this->assertFalse( bboss_check_delay_email_notification(), 'precondition: delay is not in effect' );
 
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 1 ) );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 1 ) );
 
 		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) );
 	}
@@ -315,7 +315,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	/**
 	 * Capture an email handed to `bp_send_email`.
 	 *
-	 * @param BP_Email $email      Email object.
+	 * @param BBoss_Email $email      Email object.
 	 * @param string   $email_type Email type.
 	 * @param mixed    $to         Recipient.
 	 */
@@ -329,8 +329,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * went out because delayed emails are not in effect.
 	 */
 	public function test_digest_sends_nothing_when_delay_is_not_in_effect() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 
 		$sender    = self::factory()->user->create();
 		$recipient = self::factory()->user->create();
@@ -339,7 +339,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
 
 		// While the delay is in effect the send is suppressed and the message waits for the digest.
-		messages_new_message(
+		bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -350,13 +350,13 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
 
 		// Positive control: the digest delivers it.
-		bb_digest_message_email_notifications();
+		bboss_digest_message_email_notifications();
 		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'precondition: the digest emails the waiting message' );
 
 		// Delay is no longer in effect, so the next message is emailed at once.
 		add_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
 		$this->sent = array();
-		$thread_id  = messages_new_message(
+		$thread_id  = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -365,13 +365,13 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 			)
 		);
 		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'precondition: the immediate email went out' );
-		$message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$message_id = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 
 		$this->sent = array();
-		bb_digest_message_email_notifications();
+		bboss_digest_message_email_notifications();
 
 		$this->assertSame( array(), $this->sent, 'the digest must not email it a second time' );
-		$this->assertEmpty( bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ), 'the message is left untouched' );
+		$this->assertEmpty( bboss_messages_get_meta( $message_id, 'bb_sent_digest_email' ), 'the message is left untouched' );
 	}
 
 	/**
@@ -380,20 +380,20 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	public function test_turning_the_delay_off_and_on_records_each_edge() {
 		$datetime = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
 
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
-		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bboss_delete_option( 'bb_delay_email_notification_disabled_at' );
 
-		bp_update_option( 'delay_email_notification', 0 );
-		$this->assertSame( 1, preg_match( $datetime, (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) ), 'turning the delay off records a UTC datetime' );
-		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ), 'turning the delay off does not record an on edge' );
+		bboss_update_option( 'delay_email_notification', 0 );
+		$this->assertSame( 1, preg_match( $datetime, (string) bboss_get_option( 'bb_delay_email_notification_disabled_at', '' ) ), 'turning the delay off records a UTC datetime' );
+		$this->assertSame( '', (string) bboss_get_option( 'bb_delay_email_notification_enabled_at', '' ), 'turning the delay off does not record an on edge' );
 
-		bp_update_option( 'delay_email_notification', 1 );
-		$this->assertSame( 1, preg_match( $datetime, (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) ), 'turning the delay back on records a UTC datetime' );
+		bboss_update_option( 'delay_email_notification', 1 );
+		$this->assertSame( 1, preg_match( $datetime, (string) bboss_get_option( 'bb_delay_email_notification_enabled_at', '' ) ), 'turning the delay back on records a UTC datetime' );
 
-		bp_update_option( 'bb_delay_email_notification_enabled_at', '2000-01-01 00:00:00' );
-		bp_update_option( 'time_delay_email_notification', 30 );
-		$this->assertSame( '2000-01-01 00:00:00', bp_get_option( 'bb_delay_email_notification_enabled_at' ), 'other delay changes leave the markers alone' );
+		bboss_update_option( 'bb_delay_email_notification_enabled_at', '2000-01-01 00:00:00' );
+		bboss_update_option( 'time_delay_email_notification', 30 );
+		$this->assertSame( '2000-01-01 00:00:00', bboss_get_option( 'bb_delay_email_notification_enabled_at' ), 'other delay changes leave the markers alone' );
 	}
 
 	/**
@@ -401,17 +401,17 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * effective setting never changed and no message was emailed at once.
 	 */
 	public function test_no_marker_when_the_filter_forces_the_delay_on() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
-		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bboss_delete_option( 'bb_delay_email_notification_disabled_at' );
 		add_filter( 'bb_delay_email_notifications_enabled', '__return_true' );
 
-		bp_update_option( 'delay_email_notification', 0 );
-		bp_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'delay_email_notification', 0 );
+		bboss_update_option( 'delay_email_notification', 1 );
 
 		remove_filter( 'bb_delay_email_notifications_enabled', '__return_true' );
-		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
-		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
+		$this->assertSame( '', (string) bboss_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
+		$this->assertSame( '', (string) bboss_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
 	}
 
 	/**
@@ -421,8 +421,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	public function test_digest_still_sends_a_message_that_was_waiting_when_the_delay_was_toggled() {
 		global $wpdb;
 
-		bp_update_option( 'time_delay_email_notification', 15 );
-		bp_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
 
 		$sender    = self::factory()->user->create();
 		$recipient = self::factory()->user->create();
@@ -431,7 +431,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
 
 		// Delay on: the message waits for the digest.
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -442,20 +442,20 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
 
 		// Sent two minutes ago, before the delay is turned off and on again.
-		$message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$message_id = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
-			buddypress()->messages->table_name_messages,
+			bboss()->messages->table_name_messages,
 			array( 'date_sent' => gmdate( 'Y-m-d H:i:s', time() - 2 * MINUTE_IN_SECONDS ) ),
 			array( 'id' => $message_id )
 		);
-		bp_update_option( 'bb_delay_email_notification_disabled_at', gmdate( 'Y-m-d H:i:s', time() - MINUTE_IN_SECONDS ) );
-		bp_update_option( 'bb_delay_email_notification_enabled_at', bp_core_current_time() );
+		bboss_update_option( 'bb_delay_email_notification_disabled_at', gmdate( 'Y-m-d H:i:s', time() - MINUTE_IN_SECONDS ) );
+		bboss_update_option( 'bb_delay_email_notification_enabled_at', bboss_core_current_time() );
 
-		bb_digest_message_email_notifications();
+		bboss_digest_message_email_notifications();
 
 		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'the waiting message is still emailed' );
-		$this->assertSame( 'yes', bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ) );
+		$this->assertSame( 'yes', bboss_messages_get_meta( $message_id, 'bb_sent_digest_email' ) );
 	}
 
 	/**
@@ -465,13 +465,13 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	public function test_digest_skips_messages_emailed_while_the_delay_was_off() {
 		global $wpdb;
 
-		bp_update_option( 'time_delay_email_notification', 15 );
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'delay_email_notification', 0 );
-		$this->assertNotSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ), 'precondition: the off edge is recorded' );
+		bboss_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'delay_email_notification', 0 );
+		$this->assertNotSame( '', (string) bboss_get_option( 'bb_delay_email_notification_disabled_at', '' ), 'precondition: the off edge is recorded' );
 
 		// Turned off two minutes ago, so the message below falls inside the off period.
-		bp_update_option( 'bb_delay_email_notification_disabled_at', gmdate( 'Y-m-d H:i:s', time() - 2 * MINUTE_IN_SECONDS ) );
+		bboss_update_option( 'bb_delay_email_notification_disabled_at', gmdate( 'Y-m-d H:i:s', time() - 2 * MINUTE_IN_SECONDS ) );
 
 		$sender    = self::factory()->user->create();
 		$recipient = self::factory()->user->create();
@@ -480,7 +480,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
 
 		// Delay off: the message is emailed at once.
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -491,19 +491,19 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'precondition: the immediate email went out' );
 
 		// Sent a minute ago, so it is inside the 15 minute window but before the delay comes back.
-		$old_message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$old_message_id = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
-			buddypress()->messages->table_name_messages,
+			bboss()->messages->table_name_messages,
 			array( 'date_sent' => gmdate( 'Y-m-d H:i:s', time() - MINUTE_IN_SECONDS ) ),
 			array( 'id' => $old_message_id )
 		);
 
-		bp_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'delay_email_notification', 1 );
 
 		// Positive control: a message sent after the delay is back waits for the digest.
 		$this->sent = array();
-		messages_new_message(
+		bboss_messages_new_message(
 			array(
 				'sender_id' => $sender,
 				'thread_id' => $thread_id,
@@ -512,10 +512,10 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		);
 		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
 
-		bb_digest_message_email_notifications();
+		bboss_digest_message_email_notifications();
 
 		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'exactly one email: the new message' );
-		$this->assertEmpty( bp_messages_get_meta( $old_message_id, 'bb_sent_digest_email' ), 'the already-emailed message is not picked up' );
+		$this->assertEmpty( bboss_messages_get_meta( $old_message_id, 'bb_sent_digest_email' ), 'the already-emailed message is not picked up' );
 	}
 
 	/**
@@ -523,15 +523,15 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	 * concurrent repairs, a third-party scheduler) cannot survive it.
 	 */
 	public function test_settings_2_0_save_clears_duplicate_digest_events() {
-		bp_update_option( 'delay_email_notification', 1 );
-		bp_update_option( 'time_delay_email_notification', 15 );
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'time_delay_email_notification', 15 );
 
 		// Two stale events on an old interval.
 		wp_schedule_event( time(), 'bb_schedule_1hour', 'bb_digest_email_notifications_hook' );
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_1hour', 'bb_digest_email_notifications_hook' );
 		$this->assertSame( 2, $this->count_digest_events(), 'precondition: two digest events' );
 
-		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
+		bboss_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
 
 		$this->assertSame( 1, $this->count_digest_events() );
 		$this->assertSame( 'bb_schedule_15min', wp_get_schedule( 'bb_digest_email_notifications_hook' ), 'the remaining event is the fresh one on the saved interval, not a stale leftover' );
@@ -546,11 +546,11 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	public function test_turning_off_a_never_stored_delay_records_the_off_edge() {
 		global $wpdb;
 
-		bp_update_option( 'time_delay_email_notification', 15 );
-		bp_delete_option( 'delay_email_notification' );
-		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
-		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
-		$this->assertTrue( bb_check_delay_email_notification(), 'precondition: the missing option defaults to delay on' );
+		bboss_update_option( 'time_delay_email_notification', 15 );
+		bboss_delete_option( 'delay_email_notification' );
+		bboss_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bboss_delete_option( 'bb_delay_email_notification_disabled_at' );
+		$this->assertTrue( bboss_check_delay_email_notification(), 'precondition: the missing option defaults to delay on' );
 
 		$sender    = self::factory()->user->create();
 		$recipient = self::factory()->user->create();
@@ -559,7 +559,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
 
 		// Delay on by default: the message waits for the digest.
-		$thread_id = messages_new_message(
+		$thread_id = bboss_messages_new_message(
 			array(
 				'sender_id'  => $sender,
 				'recipients' => array( $recipient ),
@@ -570,36 +570,36 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
 
 		// Sent five minutes ago, before the delay is turned off.
-		$message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		$message_id = (int) BBoss_Messages_Thread::get_last_message( (int) $thread_id )->id;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
-			buddypress()->messages->table_name_messages,
+			bboss()->messages->table_name_messages,
 			array( 'date_sent' => gmdate( 'Y-m-d H:i:s', time() - 5 * MINUTE_IN_SECONDS ) ),
 			array( 'id' => $message_id )
 		);
 
 		// First ever save of the option: added, not updated.
-		bp_update_option( 'delay_email_notification', 0 );
-		$this->assertNotSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ), 'adding the option as off records the off edge' );
+		bboss_update_option( 'delay_email_notification', 0 );
+		$this->assertNotSame( '', (string) bboss_get_option( 'bb_delay_email_notification_disabled_at', '' ), 'adding the option as off records the off edge' );
 
-		bp_update_option( 'delay_email_notification', 1 );
-		bb_digest_message_email_notifications();
+		bboss_update_option( 'delay_email_notification', 1 );
+		bboss_digest_message_email_notifications();
 
 		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'the waiting message is still emailed' );
-		$this->assertSame( 'yes', bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ) );
+		$this->assertSame( 'yes', bboss_messages_get_meta( $message_id, 'bb_sent_digest_email' ) );
 	}
 
 	/**
 	 * Adding the delay option as on (its default) is not a change, so nothing is recorded.
 	 */
 	public function test_adding_the_delay_option_as_on_records_nothing() {
-		bp_delete_option( 'delay_email_notification' );
-		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
-		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+		bboss_delete_option( 'delay_email_notification' );
+		bboss_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bboss_delete_option( 'bb_delay_email_notification_disabled_at' );
 
-		bp_update_option( 'delay_email_notification', 1 );
+		bboss_update_option( 'delay_email_notification', 1 );
 
-		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
-		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
+		$this->assertSame( '', (string) bboss_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
+		$this->assertSame( '', (string) bboss_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
 	}
 }

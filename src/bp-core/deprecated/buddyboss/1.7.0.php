@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
  * @return mixed|void
  * @since BuddyBoss 1.4.0
  */
-function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
+function bboss_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
 	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
-	$data = bb_media_user_can_access( $folder_id, 'folder' );
+	$data = bboss_media_user_can_access( $folder_id, 'folder' );
 
 	if ( isset( $data['can_edit'] ) ) {
 		$data['can_manage'] = $data['can_edit'];
@@ -49,11 +49,11 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
  * @return mixed|void
  * @since BuddyBoss 1.4.0
  */
-function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
+function bboss_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
 
 	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
-	$data = bb_media_user_can_access( $document_id, 'document' );
+	$data = bboss_media_user_can_access( $document_id, 'document' );
 
 	if ( isset( $data['can_edit'] ) ) {
 		$data['can_manage'] = $data['can_edit'];
@@ -81,11 +81,11 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
  * @return mixed|void
  * @since BuddyBoss 1.4.7
  */
-function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
+function bboss_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
 	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
-	$data = bb_media_user_can_access( $album_id, 'album' );
+	$data = bboss_media_user_can_access( $album_id, 'album' );
 
 	if ( isset( $data['can_edit'] ) ) {
 		$data['can_manage'] = $data['can_edit'];
@@ -112,11 +112,11 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  * @return mixed|void
  * @since BuddyBoss 1.4.4
  */
-function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
+function bboss_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 
 	_deprecated_function( __FUNCTION__, '1.7.0', 'bb_media_user_can_access' );
 
-	$data = bb_media_user_can_access( $media_id, 'photo' );
+	$data = bboss_media_user_can_access( $media_id, 'photo' );
 
 	if ( isset( $data['can_edit'] ) ) {
 		$data['can_manage'] = $data['can_edit'];
@@ -140,7 +140,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
  * @param int $attachment_id Attachment id.
  * @since BuddyBoss 1.4.1
  */
-function bp_document_scaled_image_path( $attachment_id ) {
+function bboss_document_scaled_image_path( $attachment_id ) {
 	$is_image         = wp_attachment_is_image( $attachment_id );
 	$img_url          = get_attached_file( $attachment_id );
 	$meta             = wp_get_attachment_metadata( $attachment_id );
@@ -165,7 +165,7 @@ function bp_document_scaled_image_path( $attachment_id ) {
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
+function bboss_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
 
 	_deprecated_function( __FUNCTION__, '1.7.0', 'bp_document_get_preview_url' );
 

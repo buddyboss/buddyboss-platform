@@ -6,13 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * BB_AS3CF_Plugin_Compatibility Class
+ * BBoss_AS3CF_Plugin_Compatibility Class
  *
  * This class handles compatibility code for third party plugins used in conjunction with Platform
  *
  * @since BuddyBoss 1.7.4
  */
-class BB_AS3CF_Plugin_Compatibility {
+class BBoss_AS3CF_Plugin_Compatibility {
 
 	/**
 	 * The single instance of the class.
@@ -24,7 +24,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	private static $instance = null;
 
 	/**
-	 * BB_AS3CF_Plugin_Compatibility constructor.
+	 * BBoss_AS3CF_Plugin_Compatibility constructor.
 	 */
 	public function __construct() {
 
@@ -85,7 +85,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @since BuddyBoss 1.8.0
 	 */
 	public function bb_media_check_default_access_access( $bypass ) {
-		$wp_offload_media = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$wp_offload_media = bboss_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 
 		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
 		$remove_local_file = ( isset( $wp_offload_media ) && isset( $wp_offload_media['remove-local-file'] ) && (bool) $wp_offload_media['remove-local-file'] );
@@ -135,7 +135,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function bb_offload_do_symlink( $can, $id, $attachment_id, $size ) {
 
-		$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$remove_local_files_setting = bboss_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		$server_from_local          = ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['serve-from-s3'] ) && (bool) $remove_local_files_setting['serve-from-s3'] );
 
 		if ( ! $server_from_local ) {
@@ -219,7 +219,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	public function bp_media_offload_get_preview_url( $attachment_url, $media_id, $attachment_id, $size, $symlink ) {
 
 		if ( ! $symlink ) {
-			$media        = new BP_Media( $media_id );
+			$media        = new BBoss_Media( $media_id );
 			$get_metadata = wp_get_attachment_metadata( $media->attachment_id );
 			if ( ! empty( $get_metadata ) && isset( $get_metadata['sizes'] ) && isset( $get_metadata['sizes'][ $size ] ) ) {
 				$attachment_url = wp_get_attachment_image_url( $media->attachment_id, $size );
@@ -325,7 +325,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function bb_media_offload_delivered( $is_offloaded ) {
 
-		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$wp_offload_media  = bboss_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		$offload_media     = ( isset( $wp_offload_media ) && isset( $wp_offload_media['copy-to-s3'] ) && (bool) $wp_offload_media['copy-to-s3'] );
 		$serve_from_server = ( isset( $wp_offload_media ) && isset( $wp_offload_media['serve-from-s3'] ) && (bool) $wp_offload_media['serve-from-s3'] );
 		$is_offloaded      = ( $offload_media && $serve_from_server );
@@ -344,7 +344,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	 */
 	public function bb_media_offload_delivery_provider( $delivery_provider ) {
 
-		$wp_offload_media  = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+		$wp_offload_media  = bboss_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 		$delivery_provider = ! empty( $wp_offload_media['delivery-provider'] ) && 'storage' !== $wp_offload_media['delivery-provider'] ? ucwords( $wp_offload_media['delivery-provider'] ) : __( 'Amazon S3', 'buddyboss' );
 
 		return $delivery_provider;
@@ -360,11 +360,11 @@ class BB_AS3CF_Plugin_Compatibility {
 	 * @return array
 	 */
 	public function bb_offload_localize_scripts( $params = array() ) {
-		if ( bp_is_active( 'activity' ) && bp_is_active( 'media' ) ) {
+		if ( bboss_is_active( 'activity' ) && bboss_is_active( 'media' ) ) {
 			$params['is_as3cf_active'] = true;
 		}
 		return $params;
 	}
 }
 
-BB_AS3CF_Plugin_Compatibility::instance();
+BBoss_AS3CF_Plugin_Compatibility::instance();

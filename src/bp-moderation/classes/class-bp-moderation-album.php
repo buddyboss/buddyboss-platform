@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-class BP_Moderation_Album extends BP_Moderation_Abstract {
+class BBoss_Moderation_Album extends BBoss_Moderation_Abstract {
 
 	/**
 	 * Item type
@@ -24,7 +24,7 @@ class BP_Moderation_Album extends BP_Moderation_Abstract {
 	public static $moderation_type = 'media_album';
 
 	/**
-	 * BP_Moderation_Album constructor.
+	 * BBoss_Moderation_Album constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -97,7 +97,7 @@ class BP_Moderation_Album extends BP_Moderation_Abstract {
 		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
 			$where['moderation_where'] .= ' AND ';
 		}
-		$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+		$where['moderation_where'] .= '( m.user_id NOT IN ( ' . bboss_moderation_get_blocked_by_sql() . ' ) )';
 
 		return $where;
 	}
@@ -117,7 +117,7 @@ class BP_Moderation_Album extends BP_Moderation_Abstract {
 			return $retval;
 		}
 
-		$media_album = new BP_Media_Album( (int) $item_id );
+		$media_album = new BBoss_Media_Album( (int) $item_id );
 
 		if ( empty( $media_album ) || empty( $media_album->id ) ) {
 			return false;

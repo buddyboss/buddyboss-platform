@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function bp_notifications_action_delete() {
+function bboss_notifications_action_delete() {
 
 	// Bail if not the read or unread screen.
-	if ( ! bp_is_notifications_component() || ! ( bp_is_current_action( 'read' ) || bp_is_current_action( 'unread' ) ) ) {
+	if ( ! bboss_is_notifications_component() || ! ( bboss_is_current_action( 'read' ) || bboss_is_current_action( 'unread' ) ) ) {
 		return false;
 	}
 
@@ -34,13 +34,13 @@ function bp_notifications_action_delete() {
 	}
 
 	// Check the nonce and delete the notification.
-	if ( bp_verify_nonce_request( 'bp_notification_delete_' . $id ) && bp_notifications_delete_notification( $id ) ) {
-		bp_core_add_message( __( 'Notification successfully deleted.', 'buddyboss' ) );
+	if ( bboss_verify_nonce_request( 'bp_notification_delete_' . $id ) && bboss_notifications_delete_notification( $id ) ) {
+		bboss_core_add_message( __( 'Notification successfully deleted.', 'buddyboss' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss' ), 'error' );
+		bboss_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss' ), 'error' );
 	}
 
 	// Redirect.
-	bp_core_redirect( bp_displayed_user_domain() . bp_get_notifications_slug() . '/' . bp_current_action() . '/' );
+	bboss_core_redirect( bboss_displayed_user_domain() . bboss_get_notifications_slug() . '/' . bboss_current_action() . '/' );
 }
 add_action( 'bp_actions', 'bp_notifications_action_delete' );

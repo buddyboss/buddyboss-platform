@@ -15,19 +15,19 @@ add_filter( 'bp_ps_add_fields', 'bp_ps_xprofile_setup' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_xprofile_setup( $fields ) {
+function bboss_ps_xprofile_setup( $fields ) {
 	global $group, $field;
 
 	$args = array(
 		'hide_empty_fields' => false,
-		'member_type'       => bp_get_member_types(),
+		'member_type'       => bboss_get_member_types(),
 	);
-	if ( bp_has_profile( $args ) ) {
-		while ( bp_profile_groups() ) {
-			bp_the_profile_group();
+	if ( bboss_has_profile( $args ) ) {
+		while ( bboss_profile_groups() ) {
+			bboss_the_profile_group();
 			$group_name = str_replace( '&amp;', '&', stripslashes( $group->name ) );
-			while ( bp_profile_fields() ) {
-				bp_the_profile_field();
+			while ( bboss_profile_fields() ) {
+				bboss_the_profile_field();
 				$f = new stdClass();
 
 				$f->group       = $group_name;
@@ -39,12 +39,12 @@ function bp_ps_xprofile_setup( $fields ) {
 				$f->description = str_replace( '&amp;', '&', stripslashes( $field->description ) );
 				$f->description = $f->description;
 				$f->type        = $field->type;
-				$f->format         = bp_ps_xprofile_format( $field->type, $field->id );
+				$f->format         = bboss_ps_xprofile_format( $field->type, $field->id );
 				$f->search         = 'bp_ps_xprofile_search';
 				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
 				$f->get_value      = 'bp_ps_xprofile_get_value';
 
-				$f->options = bp_ps_xprofile_options( $field->id );
+				$f->options = bboss_ps_xprofile_options( $field->id );
 				foreach ( $f->options as $key => $label ) {
 					$f->options[ $key ] = $label;
 				}
@@ -75,7 +75,7 @@ function bp_ps_xprofile_setup( $fields ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_xprofile_search( $f ) {
+function bboss_ps_xprofile_search( $f ) {
 	global $bp, $wpdb;
 
 	$value  = $f->value;
@@ -87,7 +87,7 @@ function bp_ps_xprofile_search( $f ) {
 	);
 	$sql['select'] = "SELECT DISTINCT xpd.user_id FROM {$bp->profile->table_name_data} xpd";
 
-	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+	if ( 'on' === bboss_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
 		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
 	} else {
 		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
@@ -99,10 +99,10 @@ function bp_ps_xprofile_search( $f ) {
 		$friend_ids_sql   = '';
 
 		if ( is_user_logged_in() ) {
-			$loggin_user_id     = bp_loggedin_user_id();
+			$loggin_user_id     = bboss_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- only the friends table name ($bp->friends->table_name, from the component globals) is concatenated; the logged-in user id is bound with %d.
 				$friend_ids_sql = $wpdb->prepare(
 					'SELECT CASE
@@ -192,14 +192,14 @@ function bp_ps_xprofile_search( $f ) {
 				$parts  = array();
 				foreach ( $values as $v ) {
 					$v       = str_replace( '&', '&amp;', $v );
-					$escaped = '%' . bp_ps_esc_like( $v ) . '%';
+					$escaped = '%' . bboss_ps_esc_like( $v ) . '%';
 					$parts[] = $wpdb->prepare( 'value LIKE %s', $escaped );
 				}
 				$match                   = ' OR ';
 				$sql['where'][ $filter ] = '(' . implode( $match, $parts ) . ')';
 			} else {
 				$value                   = str_replace( '&', '&amp;', $value );
-				$escaped                 = '%' . bp_ps_esc_like( $value ) . '%';
+				$escaped                 = '%' . bboss_ps_esc_like( $value ) . '%';
 				$sql['where'][ $filter ] = $wpdb->prepare( 'value LIKE %s', $escaped );
 			}
 			break;
@@ -246,7 +246,7 @@ function bp_ps_xprofile_search( $f ) {
 			$parts  = array();
 			foreach ( $values as $value ) {
 				$value   = str_replace( '&', '&amp;', $value );
-				$escaped = '%:"' . bp_ps_esc_like( $value ) . '";%';
+				$escaped = '%:"' . bboss_ps_esc_like( $value ) . '";%';
 				$parts[] = $wpdb->prepare( 'value LIKE %s', $escaped );
 			}
 			$match                   = ( $filter == 'set_match_any' ) ? ' OR ' : ' AND ';
@@ -269,7 +269,7 @@ function bp_ps_xprofile_search( $f ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
+function bboss_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
 	global $bp, $wpdb;
 
 	$object->uid_name  = 'user_id';
@@ -290,15 +290,15 @@ function bp_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_xprofile_get_value( $f ) {
+function bboss_ps_xprofile_get_value( $f ) {
 	global $members_template;
 
 	if ( $members_template->current_member == 0 ) {
 		$users = wp_list_pluck( $members_template->members, 'ID' );
-		BP_XProfile_ProfileData::get_value_byid( $f->id, $users );
+		BBoss_XProfile_ProfileData::get_value_byid( $f->id, $users );
 	}
 
-	$value = BP_XProfile_ProfileData::get_value_byid( $f->id, $members_template->member->ID );
+	$value = BBoss_XProfile_ProfileData::get_value_byid( $f->id, $members_template->member->ID );
 	return stripslashes( $value );
 }
 
@@ -307,7 +307,7 @@ function bp_ps_xprofile_get_value( $f ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_xprofile_format( $type, $field_id ) {
+function bboss_ps_xprofile_format( $type, $field_id ) {
 	$formats = array(
 		'textbox'        => array( 'text', 'decimal' ),
 		'number'         => array( 'integer' ),
@@ -337,8 +337,8 @@ function bp_ps_xprofile_format( $type, $field_id ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_xprofile_options( $field_id ) {
-	$field = new BP_XProfile_Field( $field_id );
+function bboss_ps_xprofile_options( $field_id ) {
+	$field = new BBoss_XProfile_Field( $field_id );
 	if ( empty( $field->id ) ) {
 		return array();
 	}
@@ -360,7 +360,7 @@ add_filter( 'bp_ps_add_fields', 'bp_ps_anyfield_setup', 12 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_anyfield_setup( $fields ) {
+function bboss_ps_anyfield_setup( $fields ) {
 	$f              = new stdClass();
 	$f->group       = __( 'Other', 'buddyboss' );
 	$f->code        = 'field_any';
@@ -391,7 +391,7 @@ function bp_ps_anyfield_setup( $fields ) {
  *
  * @return array
  */
-function bp_ps_gender_setup( $fields ) {
+function bboss_ps_gender_setup( $fields ) {
 
 	global $wpdb;
 	global $bp;
@@ -400,14 +400,14 @@ function bp_ps_gender_setup( $fields ) {
 
 	if ( $exists_gender[0]->count > 0 ) {
 
-		$field = new BP_XProfile_Field( $exists_gender[0]->id );
+		$field = new BBoss_XProfile_Field( $exists_gender[0]->id );
 		if ( empty( $field->id ) ) {
 			return $fields;
 		}
 
 		$options = array();
 		$rows    = $field->get_children();
-		$order   = bp_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
+		$order   = bboss_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
 		$order   = ! empty( $order ) ? $order : array();
 
 		if ( is_array( $rows ) ) {
@@ -433,7 +433,7 @@ function bp_ps_gender_setup( $fields ) {
 			$f->name        = __( 'Gender', 'buddyboss' );
 			$f->description = __( 'Gender', 'buddyboss' );
 			$f->type        = 'selectbox';
-			$f->format      = bp_ps_xprofile_format( 'selectbox', 'xprofile_gender' );
+			$f->format      = bboss_ps_xprofile_format( 'selectbox', 'xprofile_gender' );
 			$f->options     = $options;
 			$f->search      = 'bp_ps_xprofile_gender_users_search';
 
@@ -457,12 +457,12 @@ add_filter( 'bp_ps_add_fields', 'bp_ps_gender_setup' );
  *
  * @return array
  */
-function bp_ps_xprofile_gender_users_search( $f ) {
+function bboss_ps_xprofile_gender_users_search( $f ) {
 
 	global $wpdb, $bp;
 
-	$table_profile_fields = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-	$table_profile_data   = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$table_profile_fields = bboss_core_get_table_prefix() . 'bp_xprofile_fields';
+	$table_profile_data   = bboss_core_get_table_prefix() . 'bp_xprofile_data';
 
 	$gender = $f->value;
 	if ( isset( $gender ) && ! empty( $gender ) ) {
@@ -514,7 +514,7 @@ function bp_ps_xprofile_gender_users_search( $f ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_anyfield_search( $f ) {
+function bboss_ps_anyfield_search( $f ) {
 	global $bp, $wpdb;
 
 	$filter = $f->filter;
@@ -533,10 +533,10 @@ function bp_ps_anyfield_search( $f ) {
 		$friend_ids_sql   = '';
 
 		if ( is_user_logged_in() ) {
-			$loggin_user_id     = bp_loggedin_user_id();
+			$loggin_user_id     = bboss_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
 
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bboss_is_active( 'friends' ) ) {
 				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- only the friends table name ($bp->friends->table_name, from the component globals) is concatenated; the logged-in user id is bound with %d.
 				$friend_ids_sql = $wpdb->prepare(
 					'SELECT CASE
@@ -572,7 +572,7 @@ function bp_ps_anyfield_search( $f ) {
 	switch ( $filter ) {
 		case 'contains':
 		case 'like':
-			$search_term_array = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
+			$search_term_array = bboss_search_get_search_keywords_by_term( $value, 'anyfield' );
 			if ( ! empty( $search_term_array ) ) {
 				$every_word_clauses = array();
 				$query_placeholder  = array();
@@ -583,7 +583,7 @@ function bp_ps_anyfield_search( $f ) {
 						$term                = str_replace( '\\\\_', '\\_', $term );
 						$query_placeholder[] = '%' . $term . '%';
 					} else {
-						$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
+						$query_placeholder[] = '%' . bboss_ps_esc_like( $term ) . '%';
 					}
 				}
 				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- every clause is the literal '( xpd.value LIKE %s )'; each search term is bound as a %s value.
@@ -605,7 +605,7 @@ function bp_ps_anyfield_search( $f ) {
 	$user_ids = array();
 	if ( ! empty( $results ) ) {
 		// Exclude repeater fields.
-		$group_ids    = bp_xprofile_get_groups(
+		$group_ids    = bboss_xprofile_get_groups(
 			array(
 				'repeater_show_main_fields_only' => true,
 				'fetch_fields'                   => true,
@@ -617,7 +617,7 @@ function bp_ps_anyfield_search( $f ) {
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_value ) {
 				if ( ! empty( $group_value->id ) ) {
-					$repeater_enabled = bp_xprofile_get_meta( $group_value->id, 'group', 'is_repeater_enabled', true );
+					$repeater_enabled = bboss_xprofile_get_meta( $group_value->id, 'group', 'is_repeater_enabled', true );
 					if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled && ! empty( $group_value->fields ) ) {
 						$fields_array = array_merge( $fields_array, wp_list_pluck( $group_value->fields, 'id' ) );
 					}
@@ -647,7 +647,7 @@ add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_heading_field_setup( $fields ) {
+function bboss_ps_heading_field_setup( $fields ) {
 	$f              = new stdClass();
 	$f->group       = __( 'Other', 'buddyboss' );
 	$f->code        = 'heading';
@@ -667,7 +667,7 @@ function bp_ps_heading_field_setup( $fields ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_search_dummy_fields( $f ) {
+function bboss_ps_search_dummy_fields( $f ) {
 	return array();
 }
 
@@ -680,7 +680,7 @@ function bp_ps_search_dummy_fields( $f ) {
  *
  * @return array
  */
-function bb_ps_email_setup( $fields ) {
+function bboss_ps_email_setup( $fields ) {
 
 	$f              = new stdClass();
 	$f->group       = __( 'General Information', 'buddyboss' );
@@ -689,7 +689,7 @@ function bb_ps_email_setup( $fields ) {
 	$f->name        = __( 'Email Address', 'buddyboss' );
 	$f->description = __( 'Email Address', 'buddyboss' );
 	$f->type        = 'textbox';
-	$f->format      = bp_ps_xprofile_format( 'textbox', 'xprofile_email' );
+	$f->format      = bboss_ps_xprofile_format( 'textbox', 'xprofile_email' );
 	$f->search      = 'bb_ps_xprofile_email_users_search';
 
 	$fields[] = $f;
@@ -709,7 +709,7 @@ add_filter( 'bp_ps_add_fields', 'bb_ps_email_setup' );
  *
  * @return array
  */
-function bb_ps_xprofile_email_users_search( $f ) {
+function bboss_ps_xprofile_email_users_search( $f ) {
 	global $wpdb;
 
 	$value  = $f->value;
@@ -720,7 +720,7 @@ function bb_ps_xprofile_email_users_search( $f ) {
 
 	switch ( $filter ) {
 		case 'text_contains':
-			$escaped    = '%' . bp_ps_esc_like( $value ) . '%';
+			$escaped    = '%' . bboss_ps_esc_like( $value ) . '%';
 			$sql_query .= $wpdb->prepare( 'user_email LIKE %s', $escaped );
 			break;
 

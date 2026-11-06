@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class BB_Email_Templates_Admin_Ajax
+ * Class BBoss_Email_Templates_Admin_Ajax
  *
  * @since BuddyBoss 3.0.0
  */
-class BB_Email_Templates_Admin_Ajax {
+class BBoss_Email_Templates_Admin_Ajax {
 
 	/**
-	 * Nonce action (shared with BB_Admin_Settings_Ajax).
+	 * Nonce action (shared with BBoss_Admin_Settings_Ajax).
 	 *
 	 * @since BuddyBoss 3.0.0
 	 *
@@ -82,7 +82,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function get_email_templates() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$page          = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
@@ -105,7 +105,7 @@ class BB_Email_Templates_Admin_Ajax {
 
 		// Build WP_Query args.
 		$query_args = array(
-			'post_type'      => bp_get_email_post_type(),
+			'post_type'      => bboss_get_email_post_type(),
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
 			'post_status'    => 'any',
@@ -140,12 +140,12 @@ class BB_Email_Templates_Admin_Ajax {
 
 		// Pre-fetch email type taxonomy terms for all posts to avoid N+1 queries.
 		$post_ids      = wp_list_pluck( $posts, 'ID' );
-		$taxonomy      = bp_get_email_tax_type();
+		$taxonomy      = bboss_get_email_tax_type();
 		$term_cache    = array();
 
 		if ( ! empty( $post_ids ) ) {
 			// Prime the term cache for all posts at once.
-			update_object_term_cache( $post_ids, bp_get_email_post_type() );
+			update_object_term_cache( $post_ids, bboss_get_email_post_type() );
 
 			foreach ( $post_ids as $post_id ) {
 				$terms = get_the_terms( $post_id, $taxonomy );
@@ -240,7 +240,7 @@ class BB_Email_Templates_Admin_Ajax {
 		ob_end_clean();
 
 		// Status counts for filter dropdown.
-		$email_post_type_name = bp_get_email_post_type();
+		$email_post_type_name = bboss_get_email_post_type();
 		$status_counts        = wp_count_posts( $email_post_type_name );
 
 		$response = array(
@@ -265,7 +265,7 @@ class BB_Email_Templates_Admin_Ajax {
 			);
 
 			// Provide registered field definitions for the create modal.
-			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+			$response['create_fields'] = bboss_admin_meta_field_registry()->get_fields_data(
 				'emails',
 				(object) array(
 					'ID'            => 0,
@@ -318,7 +318,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function email_template_bulk_action() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$raw_ids   = isset( $_POST['email_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['email_ids'] ) ) : '';
@@ -343,7 +343,7 @@ class BB_Email_Templates_Admin_Ajax {
 		// Cap bulk operations to prevent timeout.
 		$email_ids = array_slice( $email_ids, 0, self::BULK_CAP );
 
-		$email_post_type = bp_get_email_post_type();
+		$email_post_type = bboss_get_email_post_type();
 		$processed       = 0;
 		$failed          = 0;
 
@@ -397,7 +397,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Get a single email template for the edit modal.
 	 *
-	 * Uses BB_Admin_Meta_Field_Registry to provide registered_fields,
+	 * Uses BBoss_Admin_Meta_Field_Registry to provide registered_fields,
 	 * following the same pattern as Groups and Activity edit modals.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -405,7 +405,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function bb_admin_get_email_template() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$email_id = isset( $_POST['email_id'] ) ? absint( wp_unslash( $_POST['email_id'] ) ) : 0;
@@ -415,7 +415,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		$post = get_post( $email_id );
-		if ( ! $post || bp_get_email_post_type() !== $post->post_type ) {
+		if ( ! $post || bboss_get_email_post_type() !== $post->post_type ) {
 			wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss' ) ) );
 		}
 
@@ -434,7 +434,7 @@ class BB_Email_Templates_Admin_Ajax {
 
 		$response = array(
 			'id'                => $email_id,
-			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'emails', $post ),
+			'registered_fields' => bboss_admin_meta_field_registry()->get_fields_data( 'emails', $post ),
 			'custom_meta'       => $custom_meta,
 		);
 
@@ -454,7 +454,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Create or update an email template.
 	 *
-	 * Uses BB_Admin_Meta_Field_Registry for field handling, following
+	 * Uses BBoss_Admin_Meta_Field_Registry for field handling, following
 	 * the same pattern as Groups and Activity save handlers.
 	 * Uses wp_insert_post / wp_update_post to preserve save_post_bp-email hook.
 	 *
@@ -463,7 +463,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function bb_admin_save_email_template() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$email_id = isset( $_POST['email_id'] ) ? absint( wp_unslash( $_POST['email_id'] ) ) : 0;
@@ -471,8 +471,8 @@ class BB_Email_Templates_Admin_Ajax {
 		$raw_meta = is_array( $raw_meta ) ? $raw_meta : array();
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		$registry       = bb_admin_meta_field_registry();
-		$email_post_type = bp_get_email_post_type();
+		$registry       = bboss_admin_meta_field_registry();
+		$email_post_type = bboss_get_email_post_type();
 
 		if ( $email_id > 0 ) {
 			// Update existing — load post as object for registry to modify.
@@ -656,7 +656,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function bb_admin_delete_email_templates() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$raw_ids = isset( $_POST['email_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['email_ids'] ) ) : '';
@@ -667,7 +667,7 @@ class BB_Email_Templates_Admin_Ajax {
 
 		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 		$email_ids       = array_slice( $email_ids, 0, self::BULK_CAP );
-		$email_post_type = bp_get_email_post_type();
+		$email_post_type = bboss_get_email_post_type();
 		$deleted         = 0;
 
 		// Prime post cache to avoid N+1 queries in the loop.
@@ -716,7 +716,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function bb_admin_bulk_edit_email_templates() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$raw_ids    = isset( $_POST['email_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['email_ids'] ) ) : '';
@@ -730,7 +730,7 @@ class BB_Email_Templates_Admin_Ajax {
 
 		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 		$email_ids       = array_slice( $email_ids, 0, self::BULK_CAP );
-		$email_post_type = bp_get_email_post_type();
+		$email_post_type = bboss_get_email_post_type();
 
 		// Validate status if provided.
 		$allowed_statuses = array( 'publish', 'draft', 'pending', 'private' );
@@ -739,7 +739,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		$updated  = 0;
-		$taxonomy = bp_get_email_tax_type();
+		$taxonomy = bboss_get_email_tax_type();
 
 		// Validate email_type term exists before the loop (avoid N+1 term_exists queries).
 		$valid_email_type = ! empty( $email_type ) && term_exists( $email_type, $taxonomy );
@@ -807,7 +807,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Get all email situations (taxonomy terms) grouped by category.
 	 *
-	 * Categories are resolved from the 'group' key in bp_email_get_type_schema().
+	 * Categories are resolved from the 'group' key in bboss_email_get_type_schema().
 	 * Terms not in the schema fall back to the 'other' group.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -815,9 +815,9 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function bb_admin_get_email_situations() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
-		$taxonomy = bp_get_email_tax_type();
+		$taxonomy = bboss_get_email_tax_type();
 		$terms    = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
@@ -836,7 +836,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		// Get group definitions and build empty structure.
-		$group_labels = bb_email_get_type_groups();
+		$group_labels = bboss_email_get_type_groups();
 		$grouped      = array();
 		foreach ( $group_labels as $group_key => $group_label ) {
 			$grouped[ $group_key ] = array(
@@ -848,7 +848,7 @@ class BB_Email_Templates_Admin_Ajax {
 		// Resolve group for each term and persist to term meta if missing.
 		// Inline the resolution logic from bb_email_get_type_group() to avoid
 		// redundant get_term_by() queries — we already have $term objects and $schema.
-		$schema = bp_email_get_type_schema( 'all' );
+		$schema = bboss_email_get_type_schema( 'all' );
 		foreach ( $terms as $term ) {
 			// 1. Schema group key (active components only).
 			$category = isset( $schema[ $term->slug ]['group'] ) ? $schema[ $term->slug ]['group'] : '';
@@ -916,7 +916,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * @return void
 	 */
 	public function bb_admin_get_email_meta_keys() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+		bboss_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		global $wpdb;
 
@@ -960,7 +960,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Get list of missing email templates.
 	 *
-	 * Compares registered email types from bp_email_get_schema() against
+	 * Compares registered email types from bboss_email_get_schema() against
 	 * published bp-email posts to find which ones are missing.
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -970,8 +970,8 @@ class BB_Email_Templates_Admin_Ajax {
 	private function bb_get_missing_email_templates() {
 		global $wpdb;
 
-		$schema       = bp_email_get_schema();
-		$descriptions = bp_email_get_type_schema( 'description' );
+		$schema       = bboss_email_get_schema();
+		$descriptions = bboss_email_get_type_schema( 'description' );
 
 		// Single query to get all taxonomy term slugs that have at least one published bp-email post.
 		// This avoids fetching post objects entirely — only term slugs are returned.
@@ -986,8 +986,8 @@ class BB_Email_Templates_Admin_Ajax {
 				WHERE tt.taxonomy = %s
 				AND p.post_type = %s
 				AND p.post_status = 'publish'",
-				bp_get_email_tax_type(),
-				bp_get_email_post_type()
+				bboss_get_email_tax_type(),
+				bboss_get_email_post_type()
 			)
 		);
 
@@ -1013,4 +1013,4 @@ class BB_Email_Templates_Admin_Ajax {
 }
 
 // Initialize.
-new BB_Email_Templates_Admin_Ajax();
+new BBoss_Email_Templates_Admin_Ajax();

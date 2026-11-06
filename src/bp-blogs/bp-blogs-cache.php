@@ -22,16 +22,16 @@ defined( 'ABSPATH' ) || exit;
  * @param int|string|array|bool $blog_ids Accepts a single blog ID, or a comma-
  *                                        separated list or array of blog IDs.
  */
-function bp_blogs_update_meta_cache( $blog_ids = false ) {
+function bboss_blogs_update_meta_cache( $blog_ids = false ) {
 	$cache_args = array(
 		'object_ids'    => $blog_ids,
-		'object_type'   => buddypress()->blogs->id,
+		'object_type'   => bboss()->blogs->id,
 		'object_column' => 'blog_id',
 		'cache_group'   => 'bp_blog_meta',
-		'meta_table'    => buddypress()->blogs->table_name_blogmeta,
+		'meta_table'    => bboss()->blogs->table_name_blogmeta,
 	);
 
-	bp_update_meta_cache( $cache_args );
+	bboss_update_meta_cache( $cache_args );
 }
 /**
  * Clear the blog object cache.
@@ -41,7 +41,7 @@ function bp_blogs_update_meta_cache( $blog_ids = false ) {
  * @param int $blog_id ID of the current blog.
  * @param int $user_id ID of the user whose blog cache should be cleared.
  */
-function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
+function bboss_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
 	if ( ! empty( $user_id ) ) {
 		wp_cache_delete( 'bp_blogs_of_user_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_total_blogs_for_user_' . $user_id, 'bp' );
@@ -72,9 +72,9 @@ add_action( 'bp_blogs_remove_data', 'bp_core_clear_cache' );
  *
  * @since BuddyBoss 1.9.0
  *
- * @param BP_Blogs_Blog $blog Instance of the class.
+ * @param BBoss_Blogs_Blog $blog Instance of the class.
  */
-function bb_blogs_clear_cache( $blog ) {
+function bboss_blogs_clear_cache( $blog ) {
 	if ( ! empty( $blog->user_id ) ) {
 		wp_cache_delete( 'bp_blogs_of_user_' . $blog->user_id, 'bp' );
 		wp_cache_delete( 'bp_total_blogs_for_user_' . $blog->user_id, 'bp' );

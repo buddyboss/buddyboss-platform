@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  */
-function bp_core_moment_js_config() {
+function bboss_core_moment_js_config() {
 	_deprecated_function( __FUNCTION__, '2.3.90' );
 
 	return '';

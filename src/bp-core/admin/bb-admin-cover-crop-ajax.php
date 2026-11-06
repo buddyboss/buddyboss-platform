@@ -29,7 +29,7 @@
  *   - `wp_ajax_bb_admin_cover_image_set`
  *       → Accepts the temp URL + crop coords. Loads the temp file via
  *         `wp_get_image_editor`, applies the user crop, runs the existing
- *         `bp_attachments_cover_image_generate_file()` pipeline for the final
+ *         `bboss_attachments_cover_image_generate_file()` pipeline for the final
  *         feature-dimension fit, fires the `*_cover_image_uploaded` action
  *         (so `bb_save_profile_group_cover_options_on_upload_custom_cover`
  *         stores the URL into `bp-default-custom-{profile,group}-cover` exactly
@@ -47,19 +47,19 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Allowed objects for the admin cover-crop pipeline. Mirrors
- * `bb_validate_custom_profile_group_avatar_ajax_reuqest()` in scope —
+ * `bboss_validate_custom_profile_group_avatar_ajax_reuqest()` in scope —
  * default profile cover is `user`, default group cover is `group`.
  *
  * @since BuddyBoss 3.0.0
  */
-const BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS = array( 'user', 'group' );
+const BBOSS_ADMIN_COVER_CROP_ALLOWED_OBJECTS = array( 'user', 'group' );
 
 /**
  * Resolve the (basedir, baseurl, subdir) tuple for the default-cover
  * upload destination, given an `object`. Returns null when the object is not
  * one we manage.
  *
- * The subdir mirrors `bb_default_custom_profile_group_cover_image_upload_dir()`
+ * The subdir mirrors `bboss_default_custom_profile_group_cover_image_upload_dir()`
  * in `bp-core/bp-core-filters.php` — same admin-default location the legacy
  * single-step upload writes to, so anything reading the option after the fact
  * sees the same path layout.
@@ -69,12 +69,12 @@ const BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS = array( 'user', 'group' );
  * @param string $object Either 'user' or 'group'.
  * @return ?array{basedir:string, baseurl:string, subdir:string, dir:string, url:string}
  */
-function bb_admin_cover_crop_resolve_dir( $object ) {
-	if ( ! in_array( $object, BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS, true ) ) {
+function bboss_admin_cover_crop_resolve_dir( $object ) {
+	if ( ! in_array( $object, BBOSS_ADMIN_COVER_CROP_ALLOWED_OBJECTS, true ) ) {
 		return null;
 	}
 
-	$bp_uploads = bp_attachments_cover_image_upload_dir();
+	$bp_uploads = bboss_attachments_cover_image_upload_dir();
 	if ( empty( $bp_uploads['basedir'] ) || empty( $bp_uploads['baseurl'] ) ) {
 		return null;
 	}
@@ -114,7 +114,7 @@ function bb_admin_cover_crop_resolve_dir( $object ) {
  *
  * @return array{object:string} Sanitized params.
  */
-function bb_admin_cover_crop_validate_request() {
+function bboss_admin_cover_crop_validate_request() {
 	if ( ! is_admin() ) {
 		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ), 403 );
 	}
@@ -127,7 +127,7 @@ function bb_admin_cover_crop_validate_request() {
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 	$object = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
-	if ( ! in_array( $object, BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS, true ) ) {
+	if ( ! in_array( $object, BBOSS_ADMIN_COVER_CROP_ALLOWED_OBJECTS, true ) ) {
 		wp_send_json_error( array( 'message' => __( 'Invalid object.', 'buddyboss' ) ), 400 );
 	}
 
@@ -150,8 +150,8 @@ function bb_admin_cover_crop_validate_request() {
  *
  * @return void Always exits via wp_send_json_*.
  */
-function bb_admin_cover_image_upload_temp_ajax() {
-	$validated = bb_admin_cover_crop_validate_request();
+function bboss_admin_cover_image_upload_temp_ajax() {
+	$validated = bboss_admin_cover_crop_validate_request();
 	$object    = $validated['object'];
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified inside bb_admin_cover_crop_validate_request().
@@ -159,7 +159,7 @@ function bb_admin_cover_image_upload_temp_ajax() {
 		wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ), 400 );
 	}
 
-	$paths = bb_admin_cover_crop_resolve_dir( $object );
+	$paths = bboss_admin_cover_crop_resolve_dir( $object );
 	if ( null === $paths ) {
 		wp_send_json_error( array( 'message' => __( 'Could not resolve upload directory.', 'buddyboss' ) ), 500 );
 	}
@@ -288,11 +288,11 @@ add_action( 'wp_ajax_bb_admin_cover_image_upload_temp', 'bb_admin_cover_image_up
  *
  * @return void Always exits via wp_send_json_*.
  */
-function bb_admin_cover_image_set_ajax() {
-	$validated = bb_admin_cover_crop_validate_request();
+function bboss_admin_cover_image_set_ajax() {
+	$validated = bboss_admin_cover_crop_validate_request();
 	$object    = $validated['object'];
 
-	$paths = bb_admin_cover_crop_resolve_dir( $object );
+	$paths = bboss_admin_cover_crop_resolve_dir( $object );
 	if ( null === $paths ) {
 		wp_send_json_error( array( 'message' => __( 'Could not resolve upload directory.', 'buddyboss' ) ), 500 );
 	}
@@ -413,7 +413,7 @@ function bb_admin_cover_image_set_ajax() {
 	// `BP_Attachment_Cover_Image::generate_filename()`,
 	// - removes any sibling files in the cover-image dir EXCEPT the new
 	// cover and our temp/cropped (we delete those explicitly below).
-	$cover = bp_attachments_cover_image_generate_file(
+	$cover = bboss_attachments_cover_image_generate_file(
 		array(
 			'file'            => $cropped_path,
 			'component'       => $component,
@@ -433,7 +433,7 @@ function bb_admin_cover_image_set_ajax() {
 		}
 
 		$message = __( 'Could not generate the cover image.', 'buddyboss' );
-		if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+		if ( ! bboss_is_gd_or_imagick_library_enabled() ) {
 			$message = __( 'Image editor is missing. Please enable GD or Imagick.', 'buddyboss' );
 		}
 
@@ -518,7 +518,7 @@ function bb_admin_cover_image_set_ajax() {
 	// Give 3rd-party plugins (e.g. cloud-storage offload) a chance to compute
 	// the canonical URL for item_id=0 / default. Mirrors the same hook the
 	// legacy single-step flow exposes.
-	$return_url = bp_attachments_get_attachment(
+	$return_url = bboss_attachments_get_attachment(
 		'url',
 		array(
 			'object_dir' => ( 'group' === $object ) ? 'groups' : 'members',

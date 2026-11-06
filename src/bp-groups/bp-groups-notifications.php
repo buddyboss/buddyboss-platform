@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  *
  * @param int                  $group_id  ID of the group.
- * @param BP_Groups_Group|null $old_group Group before new details were saved.
+ * @param BBoss_Groups_Group|null $old_group Group before new details were saved.
  */
-function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
-	$group = groups_get_group( $group_id );
+function bboss_groups_notification_group_updated( $group_id = 0, $old_group = null ) {
+	$group = bboss_groups_get_group( $group_id );
 
-	if ( $old_group instanceof BP_Groups_Group ) {
+	if ( $old_group instanceof BBoss_Groups_Group ) {
 		$changed = array();
 
 		if ( $group->name !== $old_group->name ) {
@@ -50,8 +50,8 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 			$changed[] = sprintf(
 				/* translators: 1: old group permalink, 2: new group permalink. */
 				__( '* Permalink changed from "%1$s" to "%2$s".', 'buddyboss' ),
-				esc_url( bp_get_group_permalink( $old_group ) ),
-				esc_url( bp_get_group_permalink( $group ) )
+				esc_url( bboss_get_group_permalink( $old_group ) ),
+				esc_url( bboss_get_group_permalink( $group ) )
 			);
 		}
 	}
@@ -70,21 +70,21 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 		$changed_text = implode( "\n", $changed );
 	}
 
-	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
+	$user_ids = BBoss_Groups_Member::get_group_member_ids( $group->id );
 
 	$type_key = 'notification_groups_group_updated';
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	if ( ! bboss_enabled_legacy_email_preference() ) {
+		$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 	}
 
 	$background_process = false;
-	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && 1 < count( (array) $user_ids ) ) {
+	if ( function_exists( 'bboss_is_email_queue' ) && bboss_is_email_queue() && 1 < count( (array) $user_ids ) ) {
 		$background_process = true;
 	}
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Continue if member opted out of receiving this email.
-		if ( false === bb_is_notification_enabled( (int) $user_id, $type_key ) ) {
+		if ( false === bboss_is_notification_enabled( (int) $user_id, $type_key ) ) {
 			continue;
 		}
 
@@ -98,21 +98,21 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 				'changed_text' => $changed_text,
 				'group'        => $group,
 				'group.id'     => $group_id,
-				'group.url'    => esc_url( bp_get_group_permalink( $group ) ),
+				'group.url'    => esc_url( bboss_get_group_permalink( $group ) ),
 				'group.name'   => $group->name,
-				'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				'unsubscribe'  => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
 		if ( true === $background_process ) {
-			bb_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
+			bboss_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
 		} else {
-			bp_send_email( 'groups-details-updated', (int) $user_id, $args );
+			bboss_send_email( 'groups-details-updated', (int) $user_id, $args );
 		}
 	}
 
 	if ( true === $background_process ) {
 		// call email background process.
-		bb_email_queue()->bb_email_background_process();
+		bboss_email_queue()->bb_email_background_process();
 	}
 
 	/**
@@ -141,35 +141,35 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
  * @param int $group_id           ID of the group.
  * @param int $membership_id      ID of the group membership object.
  */
-function groups_notification_new_membership_request( $requesting_user_id = 0, $admin_id = 0, $group_id = 0, $membership_id = 0 ) {
+function bboss_groups_notification_new_membership_request( $requesting_user_id = 0, $admin_id = 0, $group_id = 0, $membership_id = 0 ) {
 
 	// Trigger a BuddyPress Notification.
-	if ( bp_is_active( 'notifications' ) ) {
+	if ( bboss_is_active( 'notifications' ) ) {
 
 		$action = 'new_membership_request';
 
-		if ( ! bb_enabled_legacy_email_preference() ) {
+		if ( ! bboss_enabled_legacy_email_preference() ) {
 			$action = 'bb_groups_new_request';
 		}
 
-		bp_notifications_add_notification(
+		bboss_notifications_add_notification(
 			array(
 				'user_id'           => $admin_id,
 				'item_id'           => $group_id,
 				'secondary_item_id' => $requesting_user_id,
-				'component_name'    => buddypress()->groups->id,
+				'component_name'    => bboss()->groups->id,
 				'component_action'  => $action,
 			)
 		);
 	}
 
 	$type_key = 'notification_groups_membership_request';
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	if ( ! bboss_enabled_legacy_email_preference() ) {
+		$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 	}
 
 	// Bail if member opted out of receiving this email.
-	if ( false === bb_is_notification_enabled( (int) $admin_id, $type_key ) ) {
+	if ( false === bboss_is_notification_enabled( (int) $admin_id, $type_key ) ) {
 		return;
 	}
 
@@ -179,7 +179,7 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 	);
 
 	$request_message = '';
-	$requests        = groups_get_requests(
+	$requests        = bboss_groups_get_requests(
 		$args        = array(
 			'user_id' => $requesting_user_id,
 			'item_id' => $group_id,
@@ -189,27 +189,27 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 		$request_message = current( $requests )->content;
 	}
 
-	$group = groups_get_group( $group_id );
+	$group = bboss_groups_get_group( $group_id );
 	$args  = array(
 		'tokens' => array(
 			'admin.id'             => $admin_id,
 			'group'                => $group,
 			'group.name'           => $group->name,
 			'group.id'             => $group_id,
-			'group.url'            => esc_url( bp_get_group_permalink( $group ) ),
-			'group-requests.url'   => esc_url( bp_get_group_permalink( $group ) . 'admin/membership-requests' ),
+			'group.url'            => esc_url( bboss_get_group_permalink( $group ) ),
+			'group-requests.url'   => esc_url( bboss_get_group_permalink( $group ) . 'admin/membership-requests' ),
 			'membership.id'        => $membership_id,
-			'profile.url'          => esc_url( bp_core_get_user_domain( $requesting_user_id ) ),
+			'profile.url'          => esc_url( bboss_core_get_user_domain( $requesting_user_id ) ),
 			'requesting-user.id'   => $requesting_user_id,
 			// Resolved for the ADMIN who receives this email, not the member who triggered it - a
 			// name resolved with the requester as viewer is never redacted, because nobody is denied
 			// their own name.
-			'requesting-user.name' => bp_core_get_user_displayname( $requesting_user_id, $admin_id ),
+			'requesting-user.name' => bboss_core_get_user_displayname( $requesting_user_id, $admin_id ),
 			'request.message'      => $request_message,
-			'unsubscribe'          => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+			'unsubscribe'          => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	bp_send_email( 'groups-membership-request', (int) $admin_id, $args );
+	bboss_send_email( 'groups-membership-request', (int) $admin_id, $args );
 }
 
 /**
@@ -222,23 +222,23 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
  * @param bool $accepted           Optional. Whether the membership request was accepted.
  *                                 Default: true.
  */
-function groups_notification_membership_request_completed( $requesting_user_id = 0, $group_id = 0, $accepted = true ) {
+function bboss_groups_notification_membership_request_completed( $requesting_user_id = 0, $group_id = 0, $accepted = true ) {
 
 	// Trigger a BuddyPress Notification.
-	if ( bp_is_active( 'notifications' ) ) {
+	if ( bboss_is_active( 'notifications' ) ) {
 
 		// What type of acknowledgement.
 		$type = ! empty( $accepted ) ? 'membership_request_accepted' : 'membership_request_rejected';
 
-		if ( ! bb_enabled_legacy_email_preference() ) {
+		if ( ! bboss_enabled_legacy_email_preference() ) {
 			$type = ! empty( $accepted ) ? 'bb_groups_request_accepted' : 'bb_groups_request_rejected';
 		}
 
-		bp_notifications_add_notification(
+		bboss_notifications_add_notification(
 			array(
 				'user_id'          => $requesting_user_id,
 				'item_id'          => $group_id,
-				'component_name'   => buddypress()->groups->id,
+				'component_name'   => bboss()->groups->id,
 				'component_action' => $type,
 			)
 		);
@@ -246,23 +246,23 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 
 	$type_key = 'notification_membership_request_completed';
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$action   = ! empty( $accepted ) ? '0' : '1';
-		$type_key = bb_get_prefences_key( 'legacy', $type_key, $action );
+		$type_key = bboss_get_prefences_key( 'legacy', $type_key, $action );
 	}
 
 	// Bail if member opted out of receiving this email.
-	if ( false === bb_is_notification_enabled( $requesting_user_id, $type_key ) ) {
+	if ( false === bboss_is_notification_enabled( $requesting_user_id, $type_key ) ) {
 		return;
 	}
 
-	$group = groups_get_group( $group_id );
+	$group = bboss_groups_get_group( $group_id );
 	$args  = array(
 		'tokens' => array(
 			'group'              => $group,
 			'group.id'           => $group_id,
 			'group.name'         => $group->name,
-			'group.url'          => esc_url( bp_get_group_permalink( $group ) ),
+			'group.url'          => esc_url( bboss_get_group_permalink( $group ) ),
 			'requesting-user.id' => $requesting_user_id,
 		),
 	);
@@ -274,9 +274,9 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 			'notification_type' => 'groups-membership-request-accepted',
 		);
 
-		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		$args['tokens']['unsubscribe'] = esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) );
 
-		bp_send_email( 'groups-membership-request-accepted', (int) $requesting_user_id, $args );
+		bboss_send_email( 'groups-membership-request-accepted', (int) $requesting_user_id, $args );
 
 	} else {
 
@@ -285,9 +285,9 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 			'notification_type' => 'groups-membership-request-rejected',
 		);
 
-		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+		$args['tokens']['unsubscribe'] = esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) );
 
-		bp_send_email( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
+		bboss_send_email( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
 	}
 }
 add_action( 'groups_membership_accepted', 'groups_notification_membership_request_completed', 10, 3 );
@@ -301,31 +301,31 @@ add_action( 'groups_membership_rejected', 'groups_notification_membership_reques
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
  */
-function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
+function bboss_groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
 	// What type of promotion is this?
-	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
+	if ( bboss_groups_is_user_admin( $user_id, $group_id ) ) {
+		$promoted_to = bboss_get_group_role_label( $group_id, 'organizer_singular_label_name' );
 		$type        = 'member_promoted_to_admin';
 	} else {
-		$promoted_to = get_group_role_label( $group_id, 'moderator_singular_label_name' );
+		$promoted_to = bboss_get_group_role_label( $group_id, 'moderator_singular_label_name' );
 		$type        = 'member_promoted_to_mod';
 	}
 
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! bboss_enabled_legacy_email_preference() ) {
 		$type = 'bb_groups_promoted';
 	}
 
 	// Trigger a BuddyPress Notification.
-	if ( bp_is_active( 'notifications' ) ) {
+	if ( bboss_is_active( 'notifications' ) ) {
 
 		add_action( 'bp_notification_after_save', 'bb_groups_add_notification_metas', 5 );
 
-		bp_notifications_add_notification(
+		bboss_notifications_add_notification(
 			array(
 				'user_id'          => $user_id,
 				'item_id'          => $group_id,
-				'component_name'   => buddypress()->groups->id,
+				'component_name'   => bboss()->groups->id,
 				'component_action' => $type,
 			)
 		);
@@ -334,12 +334,12 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 	}
 
 	$type_key = 'notification_groups_admin_promotion';
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	if ( ! bboss_enabled_legacy_email_preference() ) {
+		$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 	}
 
 	// Bail if admin opted out of receiving this email.
-	if ( false === bb_is_notification_enabled( (int) $user_id, $type_key ) ) {
+	if ( false === bboss_is_notification_enabled( (int) $user_id, $type_key ) ) {
 		return;
 	}
 
@@ -348,19 +348,19 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 		'notification_type' => 'groups-member-promoted',
 	);
 
-	$group = groups_get_group( $group_id );
+	$group = bboss_groups_get_group( $group_id );
 	$args  = array(
 		'tokens' => array(
 			'group'       => $group,
 			'group.id'    => $group_id,
-			'group.url'   => esc_url( bp_get_group_permalink( $group ) ),
+			'group.url'   => esc_url( bboss_get_group_permalink( $group ) ),
 			'group.name'  => $group->name,
 			'promoted_to' => $promoted_to,
 			'user.id'     => $user_id,
-			'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+			'unsubscribe' => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	bp_send_email( 'groups-member-promoted', (int) $user_id, $args );
+	bboss_send_email( 'groups-member-promoted', (int) $user_id, $args );
 }
 add_action( 'groups_promoted_member', 'groups_notification_promoted_member', 10, 2 );
 
@@ -369,16 +369,16 @@ add_action( 'groups_promoted_member', 'groups_notification_promoted_member', 10,
  *
  * @since BuddyPress 1.0.0
  *
- * @param BP_Groups_Group  $group           Group object.
- * @param BP_Groups_Member $member          Member object.
+ * @param BBoss_Groups_Group  $group           Group object.
+ * @param BBoss_Groups_Member $member          Member object.
  * @param int              $inviter_user_id ID of the user who sent the invite.
  */
-function groups_notification_group_invites( &$group, &$member, $inviter_user_id ) {
+function bboss_groups_notification_group_invites( &$group, &$member, $inviter_user_id ) {
 
 	// @todo $inviter_ud may be used for caching, test without it
-	$inviter_ud = bp_core_get_core_userdata( $inviter_user_id );
+	$inviter_ud = bboss_core_get_core_userdata( $inviter_user_id );
 
-	if ( $member instanceof BP_Groups_Member ) {
+	if ( $member instanceof BBoss_Groups_Member ) {
 		$invited_user_id = $member->user_id;
 	} elseif ( is_int( $member ) ) {
 		$invited_user_id = $member;
@@ -395,35 +395,35 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 	}
 
 	// Trigger a BuddyPress Notification.
-	if ( bp_is_active( 'notifications' ) ) {
+	if ( bboss_is_active( 'notifications' ) ) {
 
 		$action = 'group_invite';
 
-		if ( ! bb_enabled_legacy_email_preference() ) {
+		if ( ! bboss_enabled_legacy_email_preference() ) {
 			$action = 'bb_groups_new_invite';
 		}
 
-		bp_notifications_add_notification(
+		bboss_notifications_add_notification(
 			array(
 				'user_id'          => $invited_user_id,
 				'item_id'          => $group->id,
-				'component_name'   => buddypress()->groups->id,
+				'component_name'   => bboss()->groups->id,
 				'component_action' => $action,
 			)
 		);
 	}
 
 	$type_key = 'notification_groups_invite';
-	if ( ! bb_enabled_legacy_email_preference() ) {
-		$type_key = bb_get_prefences_key( 'legacy', $type_key );
+	if ( ! bboss_enabled_legacy_email_preference() ) {
+		$type_key = bboss_get_prefences_key( 'legacy', $type_key );
 	}
 
 	// Bail if member opted out of receiving this email.
-	if ( false === bb_is_notification_enabled( $invited_user_id, $type_key ) ) {
+	if ( false === bboss_is_notification_enabled( $invited_user_id, $type_key ) ) {
 		return;
 	}
 
-	$invited_link = bp_core_get_user_domain( $invited_user_id ) . bp_get_groups_slug();
+	$invited_link = bboss_core_get_user_domain( $invited_user_id ) . bboss_get_groups_slug();
 
 	$unsubscribe_args = array(
 		'user_id'           => $invited_user_id,
@@ -431,7 +431,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 	);
 
 	$invite_message = '';
-	$invitations    = groups_get_invites(
+	$invitations    = bboss_groups_get_invites(
 		$args       = array(
 			'user_id'    => $invited_user_id,
 			'item_id'    => $group->id,
@@ -445,21 +445,21 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 	$args = array(
 		'tokens' => array(
 			'group'          => $group,
-			'group.url'      => bp_get_group_permalink( $group ),
+			'group.url'      => bboss_get_group_permalink( $group ),
 			'group.name'     => $group->name,
 			// bp_core_get_userlink() takes no viewer, so it resolved the inviter's name in the
 			// inviter's own request context - never redacted. Resolve for the invitee who receives
 			// this email instead.
-			'inviter.name'   => bp_core_get_user_displayname( $inviter_user_id, $invited_user_id ),
-			'inviter.url'    => bp_core_get_user_domain( $inviter_user_id ),
+			'inviter.name'   => bboss_core_get_user_displayname( $inviter_user_id, $invited_user_id ),
+			'inviter.url'    => bboss_core_get_user_domain( $inviter_user_id ),
 			'inviter.id'     => $inviter_user_id,
 			'invited.id'     => $invited_user_id,
 			'invites.url'    => esc_url( $invited_link . '/invites/' ),
 			'invite.message' => $invite_message,
-			'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+			'unsubscribe'    => esc_url( bboss_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
-	bp_send_email( 'groups-invitation', (int) $invited_user_id, $args );
+	bboss_send_email( 'groups-invitation', (int) $invited_user_id, $args );
 }
 
 /** Notifications *************************************************************/
@@ -482,15 +482,15 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
  *
  * @return string
  */
-function groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
+function bboss_groups_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $notification_id = 0, $screen = 'web' ) {
 
 	switch ( $action ) {
 		case 'new_membership_request':
 			$group_id           = $item_id;
 			$requesting_user_id = $secondary_item_id;
 
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
 			// Set up the string and the filter
@@ -551,7 +551,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
-				$user_fullname     = bp_core_get_user_displayname( $requesting_user_id );
+				$user_fullname     = bboss_core_get_user_displayname( $requesting_user_id );
 				/* translators: 1: requesting user full name, 2: group name. */
 				$text              = sprintf( __( '%1$s requests membership for the group: %2$s', 'buddyboss' ), $user_fullname, $group->name );
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
@@ -611,15 +611,15 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 		case 'membership_request_accepted':
 			$group_id = $item_id;
 
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				/* translators: %d: number of accepted group membership requests. */
 				$text              = sprintf( __( '%d accepted group membership requests', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
-				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+				$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() ) . '?n=1';
 
 				if ( 'string' == $format ) {
 
@@ -716,15 +716,15 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 		case 'membership_request_rejected':
 			$group_id = $item_id;
 
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				/* translators: %d: number of rejected group membership requests. */
 				$text              = sprintf( __( '%d rejected group membership requests', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
-				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+				$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() ) . '?n=1';
 
 				if ( 'string' == $format ) {
 
@@ -820,15 +820,15 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 		case 'member_promoted_to_admin':
 			$group_id = $item_id;
 
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				/* translators: 1: group organizer role label, 2: number of groups. */
-				$text              = sprintf( __( 'You were promoted to the role of %1$s in %2$d groups', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), (int) $total_items );
+				$text              = sprintf( __( 'You were promoted to the role of %1$s in %2$d groups', 'buddyboss' ), strtolower( bboss_get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), (int) $total_items );
 				$amount            = 'multiple';
-				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+				$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() ) . '?n=1';
 
 				if ( 'string' == $format ) {
 					/**
@@ -868,7 +868,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 				}
 			} else {
 				/* translators: 1: group organizer role label, 2: group name. */
-				$text              = sprintf( __( 'You were promoted to the role of %1$s in the group "%2$s"', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), $group->name );
+				$text              = sprintf( __( 'You were promoted to the role of %1$s in the group "%2$s"', 'buddyboss' ), strtolower( bboss_get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
 				if ( 'string' == $format ) {
@@ -917,15 +917,15 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 		case 'member_promoted_to_mod':
 			$group_id = $item_id;
 
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				/* translators: 1: group moderator role label, 2: number of groups. */
-				$text              = sprintf( __( 'You were promoted to a %1$s in %2$d groups', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), (int) $total_items );
+				$text              = sprintf( __( 'You were promoted to a %1$s in %2$d groups', 'buddyboss' ), strtolower( bboss_get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), (int) $total_items );
 				$amount            = 'multiple';
-				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
+				$notification_link = trailingslashit( bboss_loggedin_user_domain() . bboss_get_groups_slug() ) . '?n=1';
 
 				if ( 'string' == $format ) {
 					/**
@@ -965,7 +965,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 				}
 			} else {
 				/* translators: 1: group moderator role label, 2: group name. */
-				$text              = sprintf( __( 'You were promoted to a %1$s in the group "%2$s"', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), $group->name );
+				$text              = sprintf( __( 'You were promoted to a %1$s in the group "%2$s"', 'buddyboss' ), strtolower( bboss_get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
 				if ( 'string' == $format ) {
@@ -1013,11 +1013,11 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 
 		case 'group_invite':
 			$group_id   = $item_id;
-			$group      = groups_get_group( $group_id );
-			$group_link = bp_get_group_permalink( $group );
+			$group      = bboss_groups_get_group( $group_id );
+			$group_link = bboss_get_group_permalink( $group );
 			$amount     = 'single';
 
-			$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
+			$notification_link = bboss_loggedin_user_domain() . bboss_get_groups_slug() . '/invites/?n=1';
 
 			if ( (int) $total_items > 1 ) {
 				/* translators: %d: number of new group invitations. */
@@ -1161,9 +1161,9 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
  *
  * @param int $group_id ID of the group.
  */
-function bp_groups_delete_group_delete_all_notifications( $group_id ) {
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_delete_all_notifications_by_type( $group_id, buddypress()->groups->id );
+function bboss_groups_delete_group_delete_all_notifications( $group_id ) {
+	if ( bboss_is_active( 'notifications' ) ) {
+		bboss_notifications_delete_all_notifications_by_type( $group_id, bboss()->groups->id );
 	}
 }
 add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_notifications', 10 );
@@ -1177,13 +1177,13 @@ add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_notificati
  * @param int $group_id ID of the group being uninvited from.
  * @param int $user_id  ID of the user being uninvited.
  */
-function bp_groups_uninvite_user_delete_group_invite_notification( $group_id = 0, $user_id = 0 ) {
-	if ( ! bp_is_active( 'notifications' ) || ! $group_id || ! $user_id ) {
+function bboss_groups_uninvite_user_delete_group_invite_notification( $group_id = 0, $user_id = 0 ) {
+	if ( ! bboss_is_active( 'notifications' ) || ! $group_id || ! $user_id ) {
 		return;
 	}
 
-	bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'group_invite' );
-	bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_invite' );
+	bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'group_invite' );
+	bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_new_invite' );
 }
 add_action( 'groups_uninvite_user', 'bp_groups_uninvite_user_delete_group_invite_notification', 10, 2 );
 
@@ -1195,10 +1195,10 @@ add_action( 'groups_uninvite_user', 'bp_groups_uninvite_user_delete_group_invite
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
  */
-function bp_groups_delete_promotion_notifications( $user_id = 0, $group_id = 0 ) {
-	if ( bp_is_active( 'notifications' ) && ! empty( $group_id ) && ! empty( $user_id ) ) {
-		bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'member_promoted_to_admin' );
-		bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'member_promoted_to_mod' );
+function bboss_groups_delete_promotion_notifications( $user_id = 0, $group_id = 0 ) {
+	if ( bboss_is_active( 'notifications' ) && ! empty( $group_id ) && ! empty( $user_id ) ) {
+		bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'member_promoted_to_admin' );
+		bboss_notifications_delete_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'member_promoted_to_mod' );
 	}
 }
 add_action( 'groups_demoted_member', 'bp_groups_delete_promotion_notifications', 10, 2 );
@@ -1211,10 +1211,10 @@ add_action( 'groups_demoted_member', 'bp_groups_delete_promotion_notifications',
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
  */
-function bp_groups_accept_invite_mark_notifications( $user_id, $group_id ) {
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'group_invite' );
-		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_new_invite' );
+function bboss_groups_accept_invite_mark_notifications( $user_id, $group_id ) {
+	if ( bboss_is_active( 'notifications' ) ) {
+		bboss_notifications_mark_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'group_invite' );
+		bboss_notifications_mark_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_new_invite' );
 	}
 }
 add_action( 'groups_accept_invite', 'bp_groups_accept_invite_mark_notifications', 10, 2 );
@@ -1229,11 +1229,11 @@ add_action( 'groups_delete_invite', 'bp_groups_accept_invite_mark_notifications'
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
  */
-function bp_groups_accept_request_mark_notifications( $user_id, $group_id ) {
-	if ( bp_is_active( 'notifications' ) ) {
+function bboss_groups_accept_request_mark_notifications( $user_id, $group_id ) {
+	if ( bboss_is_active( 'notifications' ) ) {
 		// First null parameter marks read for all admins.
-		bp_notifications_mark_notifications_by_item_id( null, $group_id, buddypress()->groups->id, 'new_membership_request', $user_id );
-		bp_notifications_mark_notifications_by_item_id( null, $group_id, buddypress()->groups->id, 'bb_groups_new_request', $user_id );
+		bboss_notifications_mark_notifications_by_item_id( null, $group_id, bboss()->groups->id, 'new_membership_request', $user_id );
+		bboss_notifications_mark_notifications_by_item_id( null, $group_id, bboss()->groups->id, 'bb_groups_new_request', $user_id );
 	}
 }
 add_action( 'groups_membership_accepted', 'bp_groups_accept_request_mark_notifications', 10, 2 );
@@ -1244,22 +1244,22 @@ add_action( 'groups_membership_rejected', 'bp_groups_accept_request_mark_notific
  *
  * @since BuddyPress 1.9.0
  */
-function bp_groups_screen_my_groups_mark_notifications() {
+function bboss_groups_screen_my_groups_mark_notifications() {
 
 	// Delete group request notifications for the user.
-	if ( isset( $_GET['n'] ) && bp_is_active( 'notifications' ) ) {
+	if ( isset( $_GET['n'] ) && bboss_is_active( 'notifications' ) ) {
 
 		// Get the necessary ID's.
-		$group_id = buddypress()->groups->id;
-		$user_id  = bp_loggedin_user_id();
+		$group_id = bboss()->groups->id;
+		$user_id  = bboss_loggedin_user_id();
 
 		// Mark notifications read.
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'membership_request_accepted' );
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'membership_request_rejected' );
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'member_promoted_to_mod' );
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'member_promoted_to_admin' );
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_accepted' );
-		bp_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_rejected' );
+		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'membership_request_accepted' );
+		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'membership_request_rejected' );
+		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'member_promoted_to_mod' );
+		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'member_promoted_to_admin' );
+		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_accepted' );
+		bboss_notifications_mark_notifications_by_type( $user_id, $group_id, 'bb_groups_request_rejected' );
 	}
 }
 add_action( 'groups_screen_my_groups', 'bp_groups_screen_my_groups_mark_notifications', 10 );
@@ -1275,10 +1275,10 @@ add_action( 'groups_screen_group_request_membership', 'bp_groups_screen_my_group
  *
  * @since BuddyPress 1.9.0
  */
-function bp_groups_screen_invites_mark_notifications() {
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->groups->id, 'group_invite' );
-		bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->groups->id, 'bb_groups_new_invite' );
+function bboss_groups_screen_invites_mark_notifications() {
+	if ( bboss_is_active( 'notifications' ) ) {
+		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->groups->id, 'group_invite' );
+		bboss_notifications_mark_notifications_by_type( bboss_loggedin_user_id(), bboss()->groups->id, 'bb_groups_new_invite' );
 	}
 }
 add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifications', 10 );
@@ -1288,11 +1288,11 @@ add_action( 'groups_screen_group_invites', 'bp_groups_screen_invites_mark_notifi
  *
  * @since BuddyPress 1.9.0
  */
-function bp_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
-	if ( bp_is_active( 'notifications' ) && ! empty( $group_id ) ) {
+function bboss_groups_screen_group_admin_requests_mark_notifications( $group_id ) {
+	if ( bboss_is_active( 'notifications' ) && ! empty( $group_id ) ) {
 		// Mark as read group join requests notification.
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'new_membership_request' );
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), $group_id, buddypress()->groups->id, 'bb_groups_new_request' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $group_id, bboss()->groups->id, 'new_membership_request' );
+		bboss_notifications_mark_notifications_by_item_id( bboss_loggedin_user_id(), $group_id, bboss()->groups->id, 'bb_groups_new_request' );
 	}
 }
 add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_requests_mark_notifications', 10 );
@@ -1304,10 +1304,10 @@ add_action( 'groups_screen_group_admin_requests', 'bp_groups_screen_group_admin_
  *
  * @param int $user_id ID of the user.
  */
-function bp_groups_remove_data_for_user_notifications( $user_id ) {
-	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_delete_notifications_from_user( $user_id, buddypress()->groups->id, 'new_membership_request' );
-		bp_notifications_delete_notifications_from_user( $user_id, buddypress()->groups->id, 'bb_groups_new_request' );
+function bboss_groups_remove_data_for_user_notifications( $user_id ) {
+	if ( bboss_is_active( 'notifications' ) ) {
+		bboss_notifications_delete_notifications_from_user( $user_id, bboss()->groups->id, 'new_membership_request' );
+		bboss_notifications_delete_notifications_from_user( $user_id, bboss()->groups->id, 'bb_groups_new_request' );
 	}
 }
 add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notifications', 10 );
@@ -1317,35 +1317,35 @@ add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notif
  *
  * @since BuddyPress 1.0.0
  */
-function groups_screen_notification_settings() {
+function bboss_groups_screen_notification_settings() {
 
 	// Bail out if legacy method not enabled.
-	if ( false === bb_enabled_legacy_email_preference() ) {
+	if ( false === bboss_enabled_legacy_email_preference() ) {
 		return;
 	}
 
-	if ( ! $group_invite = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_invite', true ) ) {
+	if ( ! $group_invite = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_groups_invite', true ) ) {
 		$group_invite = 'yes';
 	}
 
-	if ( ! $group_update = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_group_updated', true ) ) {
+	if ( ! $group_update = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_groups_group_updated', true ) ) {
 		$group_update = 'yes';
 	}
 
-	if ( ! $group_promo = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_admin_promotion', true ) ) {
+	if ( ! $group_promo = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_groups_admin_promotion', true ) ) {
 		$group_promo = 'yes';
 	}
 
-	if ( ! $group_request = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_membership_request', true ) ) {
+	if ( ! $group_request = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_groups_membership_request', true ) ) {
 		$group_request = 'yes';
 	}
 
-	if ( ! $group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
+	if ( ! $group_request_completed = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
 		$group_request_completed = 'yes';
 	}
 
-	if ( true === bp_disable_group_messages() ) {
-		if ( ! $group_message = bp_get_user_meta( bp_displayed_user_id(), 'notification_group_messages_new_message', true ) ) {
+	if ( true === bboss_disable_group_messages() ) {
+		if ( ! $group_message = bboss_get_user_meta( bboss_displayed_user_id(), 'notification_group_messages_new_message', true ) ) {
 			$group_message = 'yes';
 		}
 	}
@@ -1444,7 +1444,7 @@ function groups_screen_notification_settings() {
 		</tr>
 
 		<?php
-		if ( true === bp_disable_group_messages() ) {
+		if ( true === bboss_disable_group_messages() ) {
 			?>
 			<tr id="groups-notification-settings-request-messages">
 				<td></td>
@@ -1494,22 +1494,22 @@ add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );
  *
  * @return void
  */
-function bb_groups_notification_groups_updated( $group_id = 0 ) {
+function bboss_groups_notification_groups_updated( $group_id = 0 ) {
 	if ( empty( $group_id ) ) {
-		$group_id = bp_get_current_group_id();
+		$group_id = bboss_get_current_group_id();
 	}
 
-	if ( ! bp_is_active( 'notifications' ) ) {
+	if ( ! bboss_is_active( 'notifications' ) ) {
 		return;
 	}
 
-	$user_ids = (array) BP_Groups_Member::get_group_member_ids( $group_id );
+	$user_ids = (array) BBoss_Groups_Member::get_group_member_ids( $group_id );
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	$sender_id = bp_loggedin_user_id();
+	$sender_id = bboss_loggedin_user_id();
 
 	// Remove sender from the group member list.
 	$unset_sender_key = array_search( $sender_id, $user_ids, true );
@@ -1519,8 +1519,8 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 
 	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 10 );
 	if (
-		function_exists( 'bb_notifications_background_enabled' ) &&
-		true === bb_notifications_background_enabled() &&
+		function_exists( 'bboss_notifications_background_enabled' ) &&
+		true === bboss_notifications_background_enabled() &&
 		count( $user_ids ) > $min_count
 	) {
 		global $bb_background_updater;
@@ -1534,14 +1534,14 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 						'group'    => 'groups_updated_notification',
 						'data_id'  => $group_id,
 						'priority' => 5,
-						'callback' => 'bb_add_background_notifications',
+						'callback' => 'bboss_add_background_notifications',
 						'args'     => array(
 							$chunk_user_id,
 							$group_id,
 							$sender_id,
-							buddypress()->groups->id,
+							bboss()->groups->id,
 							'bb_groups_details_updated',
-							bp_core_current_time(),
+							bboss_core_current_time(),
 							true,
 						),
 					),
@@ -1552,14 +1552,14 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		$bb_background_updater->dispatch();
 	} else {
 		foreach ( $user_ids  as $user_id ) {
-			bp_notifications_add_notification(
+			bboss_notifications_add_notification(
 				array(
 					'user_id'           => $user_id,
 					'item_id'           => $group_id,
 					'secondary_item_id' => $sender_id,
-					'component_name'    => buddypress()->groups->id,
+					'component_name'    => bboss()->groups->id,
 					'component_action'  => 'bb_groups_details_updated',
-					'date_notified'     => bp_core_current_time(),
+					'date_notified'     => bboss_core_current_time(),
 					'is_new'            => 1,
 				)
 			);
@@ -1572,16 +1572,16 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_groups_group_details_update_mark_notifications() {
-	if ( isset( $_GET['n'] ) && bp_is_active( 'notifications' ) && bp_is_group_single() ) {
+function bboss_groups_group_details_update_mark_notifications() {
+	if ( isset( $_GET['n'] ) && bboss_is_active( 'notifications' ) && bboss_is_group_single() ) {
 
 		// Get the necessary ID's.
-		$group_id = bp_get_current_group_id();
-		$user_id  = bp_loggedin_user_id();
+		$group_id = bboss_get_current_group_id();
+		$user_id  = bboss_loggedin_user_id();
 
 		// Mark notifications read.
-		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_details_updated' );
-		bp_notifications_mark_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'bb_groups_promoted' );
+		bboss_notifications_mark_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_details_updated' );
+		bboss_notifications_mark_notifications_by_item_id( $user_id, $group_id, bboss()->groups->id, 'bb_groups_promoted' );
 	}
 }
 
@@ -1594,9 +1594,9 @@ add_action( 'bp_template_redirect', 'bb_groups_group_details_update_mark_notific
  *
  * @param object $notification Notification object.
  */
-function bb_groups_add_notification_metas( $notification ) {
+function bboss_groups_add_notification_metas( $notification ) {
 	if (
-		bb_enabled_legacy_email_preference() ||
+		bboss_enabled_legacy_email_preference() ||
 		empty( $notification->id ) ||
 		empty( $notification->item_id ) ||
 		empty( $notification->user_id ) ||
@@ -1609,11 +1609,11 @@ function bb_groups_add_notification_metas( $notification ) {
 	$group_id = $notification->item_id;
 	$user_id  = $notification->user_id;
 
-	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$promoted_to = get_group_role_label( $group_id, 'organizer_singular_label_name' );
+	if ( bboss_groups_is_user_admin( $user_id, $group_id ) ) {
+		$promoted_to = bboss_get_group_role_label( $group_id, 'organizer_singular_label_name' );
 	} else {
-		$promoted_to = get_group_role_label( $group_id, 'moderator_singular_label_name' );
+		$promoted_to = bboss_get_group_role_label( $group_id, 'moderator_singular_label_name' );
 	}
 
-	bp_notifications_update_meta( $notification->id, 'promoted_to', $promoted_to );
+	bboss_notifications_update_meta( $notification->id, 'promoted_to', $promoted_to );
 }

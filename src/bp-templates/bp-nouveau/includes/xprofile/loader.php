@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 #[\AllowDynamicProperties]
-class BP_Nouveau_xProfile {
+class BBoss_Nouveau_xProfile {
 	/**
 	 * Constructor
 	 *
@@ -53,7 +53,7 @@ class BP_Nouveau_xProfile {
 			// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'xprofile_' ) ) {
+				if ( defined( 'BBOSS_DOING_AJAX' ) && true === BBOSS_DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'xprofile_' ) ) {
 					require trailingslashit( $this->dir ) . 'ajax.php';
 				}
 			} );
@@ -84,11 +84,11 @@ class BP_Nouveau_xProfile {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_xprofile( $bp_nouveau = null ) {
+function bboss_nouveau_xprofile( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
 		return;
 	}
 
-	$bp_nouveau->xprofile = new BP_Nouveau_xProfile();
+	$bp_nouveau->xprofile = new BBoss_Nouveau_xProfile();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_xprofile', 10, 1 );

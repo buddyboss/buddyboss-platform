@@ -17,14 +17,14 @@ defined( 'ABSPATH' ) || exit;
 	<div class="pag-count top">
 		<p class="pag-data">
 
-			<?php bbp_forum_pagination_count(); ?>
+			<?php bboss_bbp_forum_pagination_count(); ?>
 
 		</p>
 	</div>
 
 	<div class="bbp-pagination-links">
 
-		<?php bbp_forum_pagination_links(); ?>
+		<?php bboss_bbp_forum_pagination_links(); ?>
 
 	</div>
 </div>
