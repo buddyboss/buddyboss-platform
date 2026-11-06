@@ -3483,9 +3483,16 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
 
+			/*
+			 * Translate at render time: the progress array is cached per user without a language,
+			 * so the cache keeps the raw group name and each request filters it in its own language.
+			 */
+			/* This filter is documented in bp-xprofile/bp-xprofile-template.php */
+			$group_label = apply_filters( 'bp_get_the_profile_group_name', $group_details['group_name'] );
+
 			$user_prgress_formatted['groups'][] = array(
 				'number'             => $listing_number,
-				'label'              => $group_details['group_name'],
+				'label'              => $group_label,
 				'link'               => $group_link,
 				'is_group_completed' => ( $group_details['group_total_fields'] === $group_details['group_completed_fields'] ) ? true : false,
 				'total'              => $group_details['group_total_fields'],
@@ -3504,7 +3511,8 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 		$user_prgress_formatted['groups'][] = array(
 			'number'             => $listing_number,
-			'label'              => $user_progress_arr['photo_type']['profile_photo']['name'],
+			// Translated here, not from the cached name, so the label follows the current language.
+			'label'              => __( 'Profile Photo', 'buddyboss' ),
 			'link'               => $change_avatar_link,
 			'is_group_completed' => ( $is_profile_uploaded ) ? true : false,
 			'total'              => 1,
@@ -3522,7 +3530,8 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 		$user_prgress_formatted['groups'][] = array(
 			'number'             => $listing_number,
-			'label'              => $user_progress_arr['photo_type']['cover_photo']['name'],
+			// Translated here, not from the cached name, so the label follows the current language.
+			'label'              => __( 'Cover Photo', 'buddyboss' ),
 			'link'               => $change_cover_link,
 			'is_group_completed' => ( $is_cover_uploaded ) ? true : false,
 			'total'              => 1,
