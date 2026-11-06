@@ -137,7 +137,7 @@ function bb_admin_integrations_page() {
 	// the Settings app's bbAdminData) so the two standalone bundles stay isolated.
 	// Keys: apiUrl (buddyboss/v1 REST root, for the integrations/proxy URL), nonce
 	// (wp_rest), adminUrl, version (busts the client localStorage cache on upgrade),
-	// logoUrl (shared header; ipnRootId on buddyboss.com builds), and ajaxUrl + searchNonce + settingsUrl
+	// logoUrl (shared header), and ajaxUrl + searchNonce + settingsUrl
 	// (shared header's global "Search for settings" → Settings search AJAX).
 	$api_namespace = function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' )
 		? bp_rest_namespace() . '/' . bp_rest_version() . '/'
