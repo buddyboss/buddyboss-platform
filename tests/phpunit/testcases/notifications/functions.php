@@ -128,6 +128,39 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 	}
 
 	/**
+	 * @group cache
+	 */
+	public function test_cache_invalidation_single_notification_on_update_item_id() {
+		$u  = self::factory()->user->create();
+		$n1 = self::factory()->notification->create( array(
+			'component_name'   => 'groups',
+			'component_action' => 'group_invite',
+			'item_id'          => 42,
+			'user_id'          => $u,
+		) );
+		$n2 = self::factory()->notification->create( array(
+			'component_name'   => 'groups',
+			'component_action' => 'group_invite',
+			'item_id'          => 43,
+			'user_id'          => $u,
+		) );
+
+		// Prime the per-notification cache.
+		$this->assertEquals( 1, bp_notifications_get_notification( $n1 )->is_new );
+		bp_notifications_get_notification( $n2 );
+
+		// Mark read by item, as accepting an invite or connection does.
+		bp_notifications_mark_notifications_by_item_id( $u, 42, 'groups', 'group_invite' );
+
+		$this->assertFalse( wp_cache_get( $n1, 'bp_notifications' ) );
+		$this->assertEquals( 0, bp_notifications_get_notification( $n1 )->is_new );
+
+		// Rows the update did not match keep their cache.
+		$this->assertNotFalse( wp_cache_get( $n2, 'bp_notifications' ) );
+		$this->assertEquals( 1, bp_notifications_get_notification( $n2 )->is_new );
+	}
+
+	/**
 	 * @group bp_notifications_update_meta_cache
 	 */
 	public function test_bp_notifications_update_meta_cache() {

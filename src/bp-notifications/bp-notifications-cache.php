@@ -108,6 +108,8 @@ function bp_notifications_clear_all_for_user_cache_before_update( $update_args, 
 		if ( ! empty( $where_args['id'] ) ) {
 			wp_cache_delete( $where_args['id'], 'bp_notifications' );
 			wp_cache_delete( 'bp_notifications_check_access_' . $where_args['user_id'] . '_' . $where_args['id'], 'bp_notifications' );
+		} else {
+			bb_notifications_clear_item_cache_before_update( $where_args );
 		}
 
 		// Get user ID from Notification ID.
@@ -116,6 +118,53 @@ function bp_notifications_clear_all_for_user_cache_before_update( $update_args, 
 		bp_notifications_clear_all_for_user_cache( $n->user_id );
 		wp_cache_delete( $n->id, 'bp_notifications' );
 		wp_cache_delete( 'bp_notifications_check_access_' . $n->user_id . '_' . $n->id, 'bp_notifications' );
+	} else {
+		bb_notifications_clear_item_cache_before_update( $where_args );
 	}
 }
 add_action( 'bp_notification_before_update', 'bp_notifications_clear_all_for_user_cache_before_update', 10, 2 );
+
+/**
+ * Invalidates the per-notification caches of every row an update without an ID will change.
+ *
+ * Updates such as bp_notifications_mark_notifications_by_item_id() match rows by user, item
+ * and action instead of ID, so the rows they change are looked up first. Otherwise a cached
+ * copy keeps the old 'is_new' value after the row is marked read.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where_args See BP_Notifications_Notification::update() for description.
+ */
+function bb_notifications_clear_item_cache_before_update( $where_args ) {
+	if ( empty( $where_args ) || ! is_array( $where_args ) ) {
+		return;
+	}
+
+	$notifications = BP_Notifications_Notification::get(
+		array_merge(
+			array(
+				// Match read and unread rows, and every action, like the update itself does.
+				'is_new'            => 'both',
+				'component_name'    => false,
+				'excluded_action'   => false,
+				'update_meta_cache' => false,
+			),
+			$where_args
+		)
+	);
+
+	if ( empty( $notifications ) ) {
+		return;
+	}
+
+	$user_ids = array();
+	foreach ( $notifications as $notification ) {
+		$user_ids[ $notification->user_id ] = $notification->user_id;
+		wp_cache_delete( $notification->id, 'bp_notifications' );
+		wp_cache_delete( 'bp_notifications_check_access_' . $notification->user_id . '_' . $notification->id, 'bp_notifications' );
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		bp_notifications_clear_all_for_user_cache( $user_id );
+	}
+}
