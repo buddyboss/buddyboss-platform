@@ -51,4 +51,13 @@
 		</properties>
 	</rule>
 
+	<!-- The generated editions rename classes (BP_Foo -> BBoss_Foo) but keep the file names: the
+	     autoloader maps class names to files through src/bp-core/bb-class-legacy-map.php, so
+	     class-bp-foo.php stays. File names must still be lowercase-hyphenated. -->
+	<rule ref="WordPress.Files.FileName">
+		<properties>
+			<property name="strict_class_file_names" value="false" />
+		</properties>
+	</rule>
+
 </ruleset>
