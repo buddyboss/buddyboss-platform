@@ -811,9 +811,7 @@
 
 			@media (max-width: 680px) {
 				left: 50%;
-				// emojionearea's calcButtonPosition() writes an inline `right`
-				// value for the floating picker, so this one must override it.
-				right: auto !important;
+				right: auto;
 				transform: translateX(-50%);
 			}
 
