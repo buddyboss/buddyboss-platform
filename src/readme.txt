@@ -95,6 +95,16 @@ BuddyBoss Platform connects to the services below only in the situations describ
 * **What and when:** when an administrator opens the Help screen or the Integrations list in BuddyBoss > Settings, the site requests the help articles or the list of available integrations from `https://buddyboss.com`. The request carries the site's URL and the Platform version in its user agent, and nothing else.
 * **Who provides it:** BuddyBoss. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
 
+= "Chat with Buddy" support assistant (admin only, on click) =
+
+* **What and when:** the Help screen in BuddyBoss > Settings has a "Chat with Buddy" button. Nothing is loaded until an administrator clicks it; then the browser loads the chat widget script from `https://widget.docsbot.ai/chat.js` and the questions typed into the chat are sent to DocsBot AI to generate answers from the BuddyBoss documentation. No site data is sent automatically.
+* **Who provides it:** DocsBot AI (Insight Studio LLC). [Terms of Service](https://docsbot.ai/legal/terms-of-service), [Privacy Policy](https://docsbot.ai/legal/privacy-policy).
+
+= Emoji images (jsDelivr CDN) =
+
+* **What and when:** the emoji picker and emoji rendering use the bundled EmojiOne library, but the emoji artwork itself is not included in the plugin. When a page shows an emoji inserted with the picker, the visitor's browser requests that emoji's image from `https://cdn.jsdelivr.net/emojione/assets/`. The request carries only the image URL, as for any image on the page.
+* **Who provides it:** jsDelivr, operated by Prospect One. [Terms of Use](https://www.jsdelivr.com/terms), [Privacy Policy](https://www.jsdelivr.com/privacy-policy-jsdelivr-net).
+
 == Changelog ==
 
 = 3.7.1 =
