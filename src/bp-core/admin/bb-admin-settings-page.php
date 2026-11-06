@@ -239,12 +239,6 @@ function bboss_admin_settings_page() {
 	if ( 0 === $groups_per_page ) {
 		$groups_per_page = 20;
 	}
-	// Resolve the Mothership IPN root element ID. The prefix is derived from
-	// the active plugin_id (free / plus / pro / per-site editions all produce
-	// different IDs), so we ask the IPN View service for the actual ID it
-	// will render. The React Header reads this via bbAdminData.ipnRootId to
-	// locate and relocate the live IPN node.
-	$ipn_root_id = '';
 
 	$localize_data = array(
 		'apiUrl'                    => rest_url( bboss_rest_namespace() . '/' . bboss_rest_version() . '/' ),
@@ -292,8 +286,6 @@ function bboss_admin_settings_page() {
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
 		'groupsPerPage'             => $groups_per_page,
-		// Mothership IPN root element ID — prefix is dynamic per plugin_id.
-		'ipnRootId'                 => $ipn_root_id,
 	);
 
 	// Component active status for conditional UI in React.
@@ -607,19 +599,9 @@ function bboss_admin_settings_page() {
 		<div id="bb-admin-settings"></div>
 		<?php
 		/*
-		 * Mothership IPN inbox — render outside the React tree.
-		 *
-		 * The IPN service (Caseproof GroundLevel) attaches a Shadow DOM to
-		 * its root <div> synchronously when ipn-inbox.js loads. If we render
-		 * the root inside the React Header tree, React mounts asynchronously
-		 * AFTER the bundle runs, so getElementById() returns null and the
-		 * IPN throws "Cannot read properties of null (reading 'attachShadow')".
-		 *
-		 * Instead, fire bb_admin_header_actions outside the React tree (here,
-		 * inside .wrap but next to the React mount). This emits the standard
-		 * IPN <div id="bb-web-plus_ipn_root"> + <script>. The IPN attaches
-		 * cleanly. Then the React Header relocates the live IPN node into
-		 * its bell slot via appendChild — preserving the Shadow DOM.
+		 * Header actions, fired outside the React tree (inside .wrap, next to
+		 * the React mount) so a callback can render a root <div> + <script>
+		 * synchronously and the React Header can relocate the live node.
 		 */
 		do_action( 'bb_admin_header_actions' );
 		?>
