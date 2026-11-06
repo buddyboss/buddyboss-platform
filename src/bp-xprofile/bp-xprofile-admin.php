@@ -129,28 +129,3 @@ function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 	bp_delete_option( 'xprofile_group_' . $xprofile->id );
 }
 add_action( 'xprofile_group_after_save', 'bb_xprofile_migrate_simple_to_repeater_fields_data', 11, 1 );
-
-/**
- * Prepare data to insert into repeater fields.
- *
- * @since BuddyBoss 2.3.70
- *
- * @param array $user_ids Array of user ID's.
- * @param int   $group_id Xprofile group ID.
- */
-function bb_xprofile_mapping_simple_to_repeater_fields_data( $user_ids, $group_id ) {
-	if ( ! empty( $user_ids ) ) {
-		foreach ( $user_ids as $user_id ) {
-			$clone_fields = bp_get_repeater_clone_field_ids_subset( $group_id, 1 );
-			if ( ! empty( $clone_fields ) ) {
-				foreach ( $clone_fields as $clone_field_id ) {
-					$data              = xprofile_get_field_data( $clone_field_id, $user_id );
-					$template_field_id = bp_xprofile_get_meta( $clone_field_id, 'field', '_cloned_from', true );
-					if ( empty( $data ) && ! empty( $template_field_id ) && null !== bb_xprofile_get_field_type( $template_field_id ) ) {
-						xprofile_set_field_data( $clone_field_id, $user_id, xprofile_get_field_data( $template_field_id, $user_id ) );
-					}
-				}
-			}
-		}
-	}
-}
