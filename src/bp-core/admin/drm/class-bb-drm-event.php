@@ -76,6 +76,17 @@ class BB_DRM_Event {
 	public $created_at = null;
 
 	/**
+	 * Per-request cache of latest() results, keyed by event name.
+	 *
+	 * A null value means "no row" and is cached too.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	private static $latest_cache = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss 2.16.0
@@ -181,6 +192,8 @@ class BB_DRM_Event {
 				array( '%d' )
 			);
 
+			self::flush_latest_cache( $this->event );
+
 			do_action( 'bb_drm_event_update', $this );
 			return $this->id;
 		} else {
@@ -220,6 +233,8 @@ class BB_DRM_Event {
 						array( '%d' )
 					);
 
+					self::flush_latest_cache( $this->event );
+
 					do_action( 'bb_drm_event_update', $this );
 					return $this->id;
 				}
@@ -229,6 +244,8 @@ class BB_DRM_Event {
 			if ( $result ) {
 				$this->id         = $wpdb->insert_id;
 				$this->created_at = $data['created_at'];
+
+				self::flush_latest_cache( $this->event );
 
 				do_action( 'bb_drm_event_create', $this );
 				do_action( 'bb_drm_event', $this );
@@ -265,6 +282,10 @@ class BB_DRM_Event {
 			array( 'id' => $this->id ),
 			array( '%d' )
 		);
+
+		if ( $result ) {
+			self::flush_latest_cache( $this->event );
+		}
 
 		return (bool) $result;
 	}
@@ -328,6 +349,11 @@ class BB_DRM_Event {
 	/**
 	 * Get the latest event for a given event name.
 	 *
+	 * The result is cached for the current request, because the DRM feature
+	 * checks call this many times per page load. Every write in this class
+	 * flushes the cache; code that writes the table directly must call
+	 * flush_latest_cache().
+	 *
 	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $event Event name.
@@ -335,6 +361,10 @@ class BB_DRM_Event {
 	 */
 	public static function latest( $event ) {
 		global $wpdb;
+
+		if ( array_key_exists( $event, self::$latest_cache ) ) {
+			return self::$latest_cache[ $event ];
+		}
 
 		$table_name = self::get_table_name();
 		$result     = $wpdb->get_row(
@@ -344,11 +374,29 @@ class BB_DRM_Event {
 			)
 		);
 
-		if ( $result ) {
-			return new self( $result );
+		// Do not cache a failed read (e.g. missing table), only a real result or "no row".
+		if ( ! empty( $wpdb->last_error ) ) {
+			return $result ? new self( $result ) : null;
 		}
 
-		return null;
+		self::$latest_cache[ $event ] = $result ? new self( $result ) : null;
+
+		return self::$latest_cache[ $event ];
+	}
+
+	/**
+	 * Flush the per-request latest() cache.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $event Optional. Event name to flush. Default empty, flushes all events.
+	 */
+	public static function flush_latest_cache( $event = '' ) {
+		if ( '' === $event ) {
+			self::$latest_cache = array();
+		} else {
+			unset( self::$latest_cache[ $event ] );
+		}
 	}
 
 	/**
@@ -603,6 +651,8 @@ class BB_DRM_Event {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
+		self::flush_latest_cache();
+
 		// Check if table was created successfully.
 		return $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
 	}
@@ -633,6 +683,10 @@ class BB_DRM_Event {
 		global $wpdb;
 
 		$table_name = self::get_table_name();
-		return (bool) $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
+		$result     = (bool) $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
+
+		self::flush_latest_cache();
+
+		return $result;
 	}
 }
