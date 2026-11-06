@@ -8,6 +8,9 @@
  * @version 1.5.7
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $is_media_active     = bp_is_active( 'media' );
 $args                = array(
@@ -40,6 +43,7 @@ if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 }
 
 if ( $total_count > 0 ) {
+	/* translators: %s: number. */
 	$all_text = sprintf( _n( '%s Member', '%s Members', $total_count, 'buddyboss' ), $total_count );
 }
 

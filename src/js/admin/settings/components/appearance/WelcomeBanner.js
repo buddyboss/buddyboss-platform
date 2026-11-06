@@ -58,7 +58,9 @@ const WIZARD_PARAM   = 'bb_wizard_activation';
 const WIZARD_VALUE   = 'rl_onboarding';
 const CSS_LINK_ID    = 'bb-rl-onboarding-css';
 const JS_SCRIPT_ID   = 'bb-rl-onboarding-js';
-const BUY_THEME_URL  = 'https://buddyboss.com/pricing/';
+// From the server (`bbAdminData.pricingUrls`); empty on a build without
+// pricing links, which hides the "Buy Theme" button.
+const BUY_THEME_URL  = ( window.bbAdminData && window.bbAdminData.pricingUrls && window.bbAdminData.pricingUrls.buyTheme ) || '';
 const ACTIVATE_THEME_ACTION = 'bb_admin_activate_buddyboss_theme';
 
 /**
@@ -418,7 +420,7 @@ export function WelcomeBanner( props ) {
 								}
 							</Button>
 						) }
-						{ ! isThemeActive && ! isThemeInstalled && (
+						{ ! isThemeActive && ! isThemeInstalled && !! BUY_THEME_URL && (
 							<Button
 								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--primary"
 								variant="primary"

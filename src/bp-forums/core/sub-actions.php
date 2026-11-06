@@ -17,6 +17,9 @@
  * @todo use anonymous functions when PHP minimun requirement allows (5.3)
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /** Activation Actions ********************************************************/
 
 /**

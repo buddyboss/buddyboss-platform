@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_displayed_user_id     = bp_displayed_user_id();
 $has_cover_image          = '';
 $has_cover_image_position = '';

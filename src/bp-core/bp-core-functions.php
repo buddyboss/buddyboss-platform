@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 function bp_version() {
-	echo bp_get_version();
+	echo esc_html( bp_get_version() );
 }
 	/**
 	 * Return the BuddyPress version.
@@ -36,7 +36,7 @@ function bp_get_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version() {
-	echo bp_get_db_version();
+	echo esc_html( bp_get_db_version() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -55,7 +55,7 @@ function bp_get_db_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version_raw() {
-	echo bp_get_db_version_raw();
+	echo esc_html( bp_get_db_version_raw() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -1381,6 +1381,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 						$output = $right_now_text;
 					} else {
 						$output = sprintf(
+							/* translators: %s: number of seconds. */
 							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
 							$count
 						);
@@ -1421,7 +1422,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
  * @return string|null
  */
 function bp_core_iso8601_date( $timestamp = '' ) {
-	echo bp_core_get_iso8601_date( $timestamp );
+	echo esc_html( bp_core_get_iso8601_date( $timestamp ) );
 }
 	/**
 	 * Return an ISO-8601 date from a date string.
@@ -1476,7 +1477,7 @@ function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
  * @return string|null
  */
 function bp_core_format_date( $date = '', $format = '' ) {
-	echo bp_core_get_format_date( $date, $format );
+	echo esc_html( bp_core_get_format_date( $date, $format ) );
 }
 
 /**
@@ -1606,7 +1607,7 @@ function bp_core_render_message() {
 
 		<div id="message" class="bp-template-notice <?php echo esc_attr( $type ); ?>">
 
-			<?php echo $content; ?>
+			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- template message built from translated strings and escaped parts, filtered by bp_core_render_message_content; may carry links. ?>
 
 		</div>
 
@@ -1680,8 +1681,7 @@ function bp_core_record_activity() {
 	}
 
 	// updated users last activity on each page refresh.
-	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
-
+	bp_update_user_last_activity( $user_id, gmdate( 'Y-m-d H:i:s', $current_time ) );
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -2306,7 +2306,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	// Parse home_url() into pieces to remove query-strings, strange characters,
 	// and other funny things that plugins might to do to it.
-	$parsed_home = parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
+	$parsed_home = wp_parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
 
 	// Maybe include the port, if it's included in home_url().
 	if ( isset( $parsed_home['port'] ) ) {
@@ -3401,7 +3401,7 @@ function bp_upload_dir() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_post_type() {
-	echo bp_get_email_post_type();
+	echo esc_attr( bp_get_email_post_type() );
 }
 	/**
 	 * Returns the name of the email post type.
@@ -3498,7 +3498,7 @@ function bp_get_email_post_type_supports() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_tax_type() {
-	echo bp_get_email_tax_type();
+	echo esc_attr( bp_get_email_tax_type() );
 }
 	/**
 	 * Return the name of the email type taxonomy.
@@ -5808,12 +5808,12 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 				if ( 'dir' === filetype( $directory . '/' . $object ) ) {
 					bp_core_remove_temp_directory( $directory . '/' . $object );
 				} else {
-					unlink( $directory . '/' . $object );
+					wp_delete_file( $directory . '/' . $object );
 				}
 			}
 		}
 		reset( $objects );
-		rmdir( $directory );
+		rmdir( $directory ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- recursive removal of the plugin's own temporary directory inside uploads.
 	}
 }
 
@@ -9011,7 +9011,7 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
 		 * will return 'something'. wp_strip_all_tags will return ''
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'wp_strip_all_tags', $string ) : wp_strip_all_tags( $string );
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
@@ -9054,7 +9054,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
 		 * will return 'something'. wp_strip_all_tags will return ''
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'wp_strip_all_tags', $string ) : wp_strip_all_tags( $string );
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
@@ -10024,12 +10024,13 @@ function bb_generate_default_avatar( $args ) {
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
+	$item_ids     = wp_parse_id_list( $item_ids );
+	$delete_query = $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= $wpdb->prepare( ' AND user_id IN (' . implode( ',', array_fill( 0, count( $item_ids ), '%d' ) ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %d per id.
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- both parts are $wpdb->prepare()'d above (meta_key %s, one %d per user id).
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem   = bb_wp_filesystem();
@@ -10059,12 +10060,13 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $bp;
 
+	$item_ids     = wp_parse_id_list( $item_ids );
 	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= $wpdb->prepare( ' AND group_id IN (' . implode( ',', array_fill( 0, count( $item_ids ), '%d' ) ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %d per id.
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- both parts are $wpdb->prepare()'d above (meta_key %s, one %d per group id).
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem    = bb_wp_filesystem();
@@ -10609,9 +10611,14 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 			? __( 'UPGRADE LAUNCH', 'buddyboss' )
 			: __( 'LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
-		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
+		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
+	// @bbwt-com-start pricing-links
+	if ( $is_section ) {
+		$data['link_url'] = 'https://www.buddyboss.com/pricing/';
+	}
+	// @bbwt-com-end pricing-links
 
 	$is_pro_locked = false;
 
@@ -11295,17 +11302,58 @@ function bb_get_tool_usage() {
 }
 
 /**
+ * Admin URL of the BuddyBoss licence screen.
+ *
+ * Builds without the BuddyBoss licence screen (the WordPress.org edition) return an
+ * empty string; callers then leave the link or button out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL, or '' when the screen does not exist.
+ */
+function bb_admin_license_screen_url() {
+	$url = '';
+	// @bbwt-com-start mothership-hub
+	$url = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+	// @bbwt-com-end mothership-hub
+
+	return $url;
+}
+
+/**
+ * Admin URL of the BuddyBoss add-ons screen.
+ *
+ * Builds without the BuddyBoss add-ons screen (the WordPress.org edition) return an
+ * empty string; callers then leave the link or button out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL, or '' when the screen does not exist.
+ */
+function bb_admin_addons_screen_url() {
+	$url = '';
+	// @bbwt-com-start mothership-hub
+	$url = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+	// @bbwt-com-end mothership-hub
+
+	return $url;
+}
+
+/**
  * Check whether this site has any paid BuddyBoss product.
  *
  * Deliberately broader than `function_exists( 'bb_platform_pro' )`: a Plus
  * customer, or a site running a licensed add-on without the Pro plugin, is
- * still a paid site. Used to decide whether telemetry is forced to "complete"
- * and whether the Telemetry settings panel is shown.
+ * still a paid site. Used to decide whether the Telemetry settings panel is
+ * shown and, in builds that offer "complete" reporting (not the WordPress.org
+ * edition), whether telemetry is forced to "complete".
  *
+ * @bbwt-com-start drm
  * Detection is DRM-based, with one deliberate exception for the theme. Plugin
  * activation state is not inspected: an add-on only reaches
  * `BB_DRM_Registry::register_addon()` when it is active, so the registry
  * already carries that meaning.
+ * @bbwt-com-end drm
  *
  * 1. The BuddyBoss Theme is active, or is the parent of the active child theme.
  *    The exception, because DRM cannot see it: the theme never calls
@@ -11334,6 +11382,7 @@ function bb_has_paid_product() {
 		// The BuddyBoss Theme, including when it is the parent of a child theme.
 		$detected = ( 'buddyboss-theme' === get_template() );
 
+		// @bbwt-com-start drm
 		// A paid add-on registered itself for DRM.
 		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
 			$registered_addons = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
@@ -11349,6 +11398,7 @@ function bb_has_paid_product() {
 				$detected = false;
 			}
 		}
+		// @bbwt-com-end drm
 
 		// Licence data from before the Mothership migration. Multisite stored
 		// this network-wide, so mirror the migration loader's site-option

@@ -252,6 +252,10 @@ function bb_moved_media_features_is_entitled_from_cache() {
  * @return string
  */
 function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
+	// Builds without pricing links (the wordpress.org edition) return an empty URL;
+	// callers then leave the link out.
+	$url = '';
+	// @bbwt-com-start pricing-links
 	$url = add_query_arg(
 		array(
 			'utm_source'   => 'product',
@@ -261,6 +265,7 @@ function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
 		),
 		'https://www.buddyboss.com/pricing/'
 	);
+	// @bbwt-com-end pricing-links
 
 	/**
 	 * Filters the pricing URL of the moved media features upsells.
@@ -334,7 +339,11 @@ function bb_moved_media_features_render_notice() {
 
 	$state       = bb_moved_media_features_get_addons_state();
 	$upgrade_url = bb_moved_media_features_get_upgrade_url();
-	$addons_url  = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+
+	// Empty in builds without the BuddyBoss licence and add-ons screens (the wordpress.org
+	// edition); the buttons that use them are then not shown.
+	$addons_url  = bb_admin_addons_screen_url();
+	$license_url = bb_admin_license_screen_url();
 
 	if ( 'inactive' === $state ) {
 		$message   = __( 'Activate the BuddyBoss Add-ons plugin to show them to your members again.', 'buddyboss' );
@@ -363,7 +372,7 @@ function bb_moved_media_features_render_notice() {
 		);
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
-			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+			'url'   => $license_url,
 		);
 	} elseif ( 'active' === $state ) {
 		$message   = __( 'Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again.', 'buddyboss' );
@@ -374,7 +383,7 @@ function bb_moved_media_features_render_notice() {
 		);
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
-			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+			'url'   => $license_url,
 		);
 	} elseif ( bb_moved_media_features_is_entitled_from_cache() ) {
 		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss' );
@@ -423,28 +432,39 @@ function bb_moved_media_features_render_notice() {
 			?>
 		</p>
 		<p>
+			<?php if ( ! empty( $primary['url'] ) ) : ?>
 			<a href="<?php echo esc_url( $primary['url'] ); ?>" class="button button-primary" <?php echo ! empty( $primary['external'] ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $primary['label'] ); ?></a>
+			<?php endif; ?>
+			<?php if ( ! empty( $secondary['url'] ) ) : ?>
 			<a href="<?php echo esc_url( $secondary['url'] ); ?>" class="button" <?php echo ! empty( $secondary['external'] ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $secondary['label'] ); ?></a>
+			<?php endif; ?>
 		</p>
 	</div>
-	<script>
-		( function () {
-			var notice = document.querySelector( '.bb-moved-media-features-notice' );
-			if ( ! notice ) {
-				return;
-			}
-			notice.addEventListener( 'click', function ( event ) {
-				if ( ! event.target.classList.contains( 'notice-dismiss' ) ) {
-					return;
-				}
-				var data = new FormData();
-				data.append( 'action', 'bb_dismiss_moved_media_features_notice' );
-				data.append( 'nonce', notice.getAttribute( 'data-nonce' ) );
-				window.fetch( <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, { method: 'POST', credentials: 'same-origin', body: data } );
-			} );
-		} )();
-	</script>
 	<?php
+	// Dismiss handler, printed right after the notice through the script API (was a raw <script>).
+	$inline_js = <<<'JS'
+( function () {
+	var notice = document.querySelector( '.bb-moved-media-features-notice' );
+	if ( ! notice ) {
+		return;
+	}
+	notice.addEventListener( 'click', function ( event ) {
+		if ( ! event.target.classList.contains( 'notice-dismiss' ) ) {
+			return;
+		}
+		var data = new FormData();
+		data.append( 'action', 'bb_dismiss_moved_media_features_notice' );
+		data.append( 'nonce', notice.getAttribute( 'data-nonce' ) );
+		window.fetch( %s, { method: 'POST', credentials: 'same-origin', body: data } );
+	} );
+} )();
+JS;
+	$inline_js = sprintf( $inline_js, wp_json_encode( admin_url( 'admin-ajax.php' ) ) );
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal with a wp_json_encode()'d URL. WordPress < 5.7 only.
+	}
 }
 add_action( 'admin_notices', 'bb_moved_media_features_render_notice' );
 

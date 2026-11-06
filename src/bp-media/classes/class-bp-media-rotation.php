@@ -94,7 +94,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 				'name'          => esc_attr( $name ),
 			);
 
-			echo htmlspecialchars( json_encode( $result ), ENT_NOQUOTES );
+			echo htmlspecialchars( json_encode( $result ), ENT_NOQUOTES ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON for the browser, encoded with htmlspecialchars().
 			exit( 0 );
 		}
 

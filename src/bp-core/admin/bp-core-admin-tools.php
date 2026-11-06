@@ -187,11 +187,12 @@ function bp_admin_repair_friend_count() {
 		return;
 	}
 
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_delete is a static literal: usermeta table name from $wpdb, fixed meta_key, no variable input.
 		return array( 1, sprintf( $statement, $result ) );
 	}
 
@@ -248,11 +249,12 @@ function bp_admin_repair_group_count() {
 		return;
 	}
 
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total groups count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_delete is a static literal: usermeta table name from $wpdb, fixed meta_key, no variable input.
 		return array( 1, sprintf( $statement, $result ) );
 	}
 
@@ -294,6 +296,7 @@ function bp_admin_repair_group_count() {
 function bp_admin_repair_blog_records() {
 
 	// Description of this tool, displayed to the user.
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss' );
 
 	// Default to failure text.
@@ -325,6 +328,7 @@ function bp_admin_repair_blog_records() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_repair_count_members() {
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total members count &hellip; %s', 'buddyboss' );
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
@@ -343,6 +347,7 @@ function bp_admin_repair_count_members() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_repair_last_activity() {
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing member "last activity" data &hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
 
@@ -394,17 +399,18 @@ function repair_default_profiles_fields() {
 	$nick_name = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'Nickname', 'textbox', $nickname_id );
 
 	// Remove all duplicate first name fields.
-	$wpdb->query( $first_name );
+	$wpdb->query( $first_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $first_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Remove all duplicate last name fields.
-	$wpdb->query( $last_name );
+	$wpdb->query( $last_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $last_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Remove all duplicate nick name fields.
-	$wpdb->query( $nick_name );
+	$wpdb->query( $nick_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $nick_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Clear profile completion data
 	bp_core_xprofile_clear_all_user_progress_cache();
 
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing default profile set and fields &hellip; %s', 'buddyboss' );
 
 	return array(
@@ -483,6 +489,7 @@ function resync_xprofile_wordpress_fields() {
 			$offset++;
 		}
 
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -490,6 +497,7 @@ function resync_xprofile_wordpress_fields() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -534,6 +542,7 @@ function resync_wordpress_xprofile_fields() {
 			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -541,6 +550,7 @@ function resync_wordpress_xprofile_fields() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -579,6 +589,7 @@ function xprofile_update_display_names() {
 			);
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -586,6 +597,7 @@ function xprofile_update_display_names() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Updating display name to selected format in profile settings &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -632,7 +644,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
 	$lambda  = function () use ( $message ) {
-		echo $message;
+		echo wp_kses_post( $message );
 	};
 
 	add_action( bp_core_do_network_admin() ? 'network_admin_notices' : 'admin_notices', $lambda );
@@ -684,7 +696,7 @@ function bp_core_admin_available_tools_intro() {
 		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ); ?></h2>
 		<p>
 			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
-			<?php printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ); ?>
+			<?php /* translators: %s: link to the repair tool. */ printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss' ), wp_kses_post( '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ) ); ?>
 		</p>
 	</div>
 	<?php
@@ -847,8 +859,8 @@ function bp_admin_reinstall_emails() {
 
 	// Make sure we have no orphaned email type terms.
 	$email_types = get_terms(
-		bp_get_email_tax_type(),
 		array(
+			'taxonomy'               => bp_get_email_tax_type(),
 			'fields'                 => 'ids',
 			'hide_empty'             => false,
 			'update_term_meta_cache' => false,
@@ -923,7 +935,7 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 		return;
 	}
 
-	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
+	echo '<div class="error"><p>' . esc_html__( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
 }
 
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );
@@ -968,6 +980,7 @@ function bp_admin_assign_member_type() {
 			}
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -976,6 +989,7 @@ function bp_admin_assign_member_type() {
 		);
 	} else {
 		// Description of this tool, displayed to the user.
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
 		$result    = __( 'Complete!', 'buddyboss' );
 		// All done!
@@ -1011,6 +1025,7 @@ function bp_admin_repair_nickname_value() {
 			}
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -1019,6 +1034,7 @@ function bp_admin_repair_nickname_value() {
 		);
 	} else {
 		// Description of this tool, displayed to the user.
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Repair Nickname&hellip; %s', 'buddyboss' );
 		$result    = __( 'Complete!', 'buddyboss' );
 
@@ -1234,10 +1250,11 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 
+				$user_reaction_table   = $reaction::$user_reaction_table;
 				$migrated_fav_user_ids = $wpdb->get_col(
 					$wpdb->prepare(
-						'SELECT user_id FROM ' . $reaction::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
-						$item_id
+						"SELECT user_id FROM {$user_reaction_table} WHERE item_id = %d AND user_id IN (" . implode( ',', array_fill( 0, count( $fav_user_ids ), '%d' ) ) . ')', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is BB_Reaction::$user_reaction_table (bp_core_get_table_prefix() . 'bb_user_reactions'); item id and every user id bound as %d.
+						array_merge( array( $item_id ), array_values( $fav_user_ids ) )
 					)
 				);
 
@@ -1259,6 +1276,7 @@ function bp_admin_update_activity_favourite() {
 				++$offset;
 			}
 
+			/* translators: %s: number of activity favorites updated. */
 			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 			return array(
@@ -1268,6 +1286,7 @@ function bp_admin_update_activity_favourite() {
 			);
 		} else {
 			bp_update_option( 'bp_activity_reactions', true );
+			/* translators: %s: the result of the action performed by the repair tool. */
 			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 			return array(
@@ -1276,6 +1295,7 @@ function bp_admin_update_activity_favourite() {
 			);
 		}
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 		return array(
@@ -1368,7 +1388,7 @@ function bp_admin_invitations_table() {
 	// Check for existence of invitations table.
 	$table_name = BP_Invitation_Manager::get_table_name();
 	$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
-	if ( ! $wpdb->get_var( $query ) == $table_name ) {
+	if ( ! $wpdb->get_var( $query ) == $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is the return of $wpdb->prepare() above (table name bound as %s via esc_like()).
 		return array(
 			'status'  => 2,
 			'message' => sprintf( $statement, $result ),
@@ -1479,6 +1499,7 @@ function bb_sync_profile_completion_widget() {
 			$offset++;
 		}
 
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -1486,6 +1507,7 @@ function bb_sync_profile_completion_widget() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -1584,6 +1606,7 @@ function bp_admin_repair_group_member_count() {
 		);
 	}
 
+	/* translators: %s: progress text. */
 	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
 
 	return array(

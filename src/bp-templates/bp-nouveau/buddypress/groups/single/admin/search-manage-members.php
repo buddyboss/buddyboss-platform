@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $group = groups_get_current_group();
 if ( ! empty( $group->id ) ) {
 	$groups_template = new BP_Groups_Template(

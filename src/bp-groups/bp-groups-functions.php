@@ -255,7 +255,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '2.9.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'group_id',
@@ -559,12 +560,12 @@ function groups_check_slug( $slug ) {
 	}
 
 	if ( in_array( $slug, (array) $bp->groups->forbidden_names ) ) {
-		$slug = $slug . '-' . rand();
+		$slug = $slug . '-' . wp_rand();
 	}
 
 	if ( BP_Groups_Group::check_slug( $slug ) ) {
 		do {
-			$slug = $slug . '-' . rand();
+			$slug = $slug . '-' . wp_rand();
 		} while ( BP_Groups_Group::check_slug( $slug ) );
 	}
 
@@ -853,7 +854,8 @@ function groups_get_group_members( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '2.0.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'group_id',
@@ -2195,7 +2197,8 @@ function groups_send_invites( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'inviter_id',
@@ -2578,7 +2581,8 @@ function groups_send_membership_request( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'user_id',
@@ -2676,7 +2680,8 @@ function groups_send_membership_request( $args = array() ) {
 function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( ! $user_id || ! $group_id ) {
@@ -2709,7 +2714,8 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( ! groups_delete_membership_request( false, $user_id, $group_id ) ) {
@@ -2746,7 +2752,8 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  */
 function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( empty( $user_id ) || empty( $group_id ) ) {
@@ -2873,7 +2880,7 @@ function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
 	}
 
 	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups' AND privacy = 'public' ", $status, $group_id );
-	if ( false === $wpdb->query( $q ) ) {
+	if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is $wpdb->prepare()'d above ($status, $group_id as %d); table name from $bp->activity.
 		return false;
 	}
 
@@ -2948,8 +2955,8 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->groups->table_name_groupmeta;
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE group_id = %d";
-		$query      = $wpdb->prepare( $sql, $group_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $group_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is a literal with a %d placeholder; $table_name is buddypress()->groups->table_name_groupmeta.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d on the previous line.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -3059,8 +3066,8 @@ function groups_delete_membermeta( $member_id, $meta_key = false, $meta_value = 
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->groups->table_name_membermeta;
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE member_id = %d";
-		$query      = $wpdb->prepare( $sql, $member_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $member_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is a literal with a %d placeholder; $table_name is buddypress()->groups->table_name_membermeta.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d on the previous line.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -3790,7 +3797,7 @@ add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite'
  * @return string   custom post type of group type.
  */
 function bp_groups_group_type_post_type() {
-	echo bp_groups_get_group_type_post_type();
+	echo esc_attr( bp_groups_get_group_type_post_type() );
 }
 
 /**
@@ -3895,7 +3902,7 @@ function bp_group_get_group_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
 			$key    = $key . $unique;
 		}
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
@@ -4029,7 +4036,7 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
 		'on'     => 'ON tt.term_id = t.term_id',
 		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
 	);
-	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- select/on parts are literals with $wpdb->term_taxonomy/terms table names; the where part is $wpdb->prepare()'d (taxonomy %s).
 
 	restore_current_blog();
 
@@ -4306,13 +4313,13 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 		return false;
 	}
 
-	$taxonomy_id        = $bp_group_type_query->term_taxonomy_id;
+	$taxonomy_id        = (int) $bp_group_type_query->term_taxonomy_id;
 	$groups             = $bp->table_prefix . 'bp_groups';
 	$group_meta         = $bp->table_prefix . 'bp_groups_groupmeta';
 	$term_relationships = $wpdb->term_relationships;
 
 	$query   = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
-	$results = $wpdb->get_results( $query, ARRAY_A );
+	$results = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $bp->table_prefix and $wpdb->term_relationships; $taxonomy_id is (int)-cast above; the rest is literal.
 
 	return $results;
 }
@@ -4443,7 +4450,7 @@ function bp_group_directory_page_content() {
 
 	if ( ! empty( $page_ids['groups'] ) && ! bp_is_group_subgroups() ) {
 		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
-		echo apply_filters( 'the_content', $group_page_content );
+		echo apply_filters( 'the_content', $group_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 
@@ -4679,7 +4686,7 @@ function bp_groups_migrate_invitations() {
 	$query      = "INSERT INTO {$table_name} (user_id, inviter_id, invitee_email, class, item_id, secondary_item_id, type, content, date_modified, invite_sent, accepted) VALUES ";
 	$query     .= implode( ', ', $values );
 	$query     .= ';';
-	$wpdb->query( $query );
+	$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from BP_Invitation_Manager::get_table_name(); each VALUES row is $wpdb->prepare()'d in the loop above.
 
 	$ids_to_delete = implode( ',', $processed );
 	if ( $ids_to_delete ) {
@@ -4999,7 +5006,7 @@ function bb_get_all_members_for_groups( $args = array() ) {
 		}
 
 		// Get the specific user ids.
-		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: table name from buddypress(), constant flags, group ids from wp_parse_id_list(), LIMIT $wpdb->prepare()'d; the where filter is public API.
 	}
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
@@ -5552,7 +5559,7 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 					<?php
 					printf(
 						'%s<span class="bb-rl-group-member-count-label"> %s</span>',
-						$member_count,
+						esc_html( $member_count ),
 						esc_html( $member_label )
 					);
 					?>

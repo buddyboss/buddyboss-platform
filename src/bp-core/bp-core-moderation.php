@@ -310,7 +310,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
  * @return string IP address.
  */
 function bp_core_current_user_ip() {
-	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR'] );
+	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '' );
 
 	/**
 	 * Filters the current user's IP address.
@@ -333,7 +333,7 @@ function bp_core_current_user_ua() {
 
 	// Sanity check the user agent.
 	if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		$retval = substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 );
+		$retval = substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 254 );
 	} else {
 		$retval = '';
 	}

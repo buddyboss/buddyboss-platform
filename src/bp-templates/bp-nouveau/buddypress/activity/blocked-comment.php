@@ -11,6 +11,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $activities_template;
 
 $activity_comment_id      = bp_get_activity_comment_id();

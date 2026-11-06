@@ -5,6 +5,9 @@
  * @deprecated BuddyBoss 2.5.20
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Get like count for activity
  *

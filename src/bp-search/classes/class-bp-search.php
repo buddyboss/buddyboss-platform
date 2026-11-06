@@ -102,7 +102,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
 		}
 
 		/**
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
 		}
 
 		/**
@@ -253,7 +253,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				self::instance()->prepare_search_page();
 				$content = bp_search_buffer_template_part( 'results-page-content', '', false );
 
-				echo $content;
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 
 				die();
 			}
@@ -519,7 +519,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 * This also means that all such classes must have a common set of methods.
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
-					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
+					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . absint( $args['number'] ) : '';
 					if (
 						bp_is_active( 'forums' ) &&
 						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
@@ -543,10 +543,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- UNION of each search helper's union_sql() (core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names; helpers added via bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL); ORDER BY is literal and every LIMIT value is absint()'d.
 				/*
 				 $results will have a structure like below */
 				/*
@@ -623,6 +623,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$start_html          = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 										  . "<header class='results-group-header clearfix'>"
 										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
+										  /* translators: %s: number. */
 										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
 										  . '</header>'
 										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
@@ -639,6 +640,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
+											   /* translators: %s: number. */
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
 											 '</a>';
 								$end_html .= '</footer>';
@@ -699,13 +701,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
-					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
+					$offset            = ( (int) $args['current_page'] * absint( $args['per_page'] ) ) - absint( $args['per_page'] );
+					$pre_search_query .= ' LIMIT ' . $offset . ', ' . absint( $args['per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- the search helper's union_sql() (core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names; helpers added via bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL); ORDER BY is literal and the LIMIT values are integers (absint()/int cast).
 
 				/*
 				 $results will have a structure like below */
@@ -912,7 +914,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$tab_url = $search_url;
-			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+			printf( "<li class='%s'><a href='%s'>%s</a></li>", esc_attr( $class ), esc_url( $tab_url ), wp_kses_post( $label ) );
 
 			// then other tabs.
 			$search_items = bp_search_items();
@@ -938,7 +940,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				$tab_url = esc_url( add_query_arg( 'subset', $item, $search_url ) );
-				echo "<li class='{$class} {$item}' data-item='{$item}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+				printf( "<li class='%s %s' data-item='%s'><a href='%s'>%s</a></li>", esc_attr( $class ), esc_attr( $item ), esc_attr( $item ), esc_url( $tab_url ), wp_kses_post( $label ) );
 			}
 		}
 
@@ -948,7 +950,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$current_tab = $this->search_args['search_subset'];
 
 				foreach ( $this->search_results[ $current_tab ]['items'] as $item_id => $item ) {
-					echo $item['html'];
+					echo $item['html']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 				}
 
 				if ( $current_tab != 'all' ) {

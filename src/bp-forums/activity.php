@@ -958,6 +958,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$group_link = bp_get_group_link( $group );
 
 			return sprintf(
+				/* translators: 1: user profile link, 2: topic link, 3: group link. */
 				esc_html__( '%1$s started the discussion %2$s in the group %3$s', 'buddyboss' ),
 				$user_link,
 				$topic_link,
@@ -990,6 +991,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$group_link = bp_get_group_link( $group );
 
 			return sprintf(
+				/* translators: 1: user profile link, 2: topic link, 3: group link. */
 				esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss' ),
 				$user_link,
 				$topic_link,
@@ -1260,7 +1262,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Filter & return.
 			return (array) apply_filters( 'bbp_get_activity_actions', array(
+				/* translators: 1: user profile link, 2: topic link, 3: forum link. */
 				'topic' => esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+				/* translators: 1: user profile link, 2: topic link, 3: forum link. */
 				'reply' => esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' )
 			) );
 		}

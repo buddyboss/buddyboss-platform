@@ -118,7 +118,8 @@ function bp_core_admin_backpat_page() {
 		<h2><?php esc_html_e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
 
 		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss' ); ?></p>
-		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss' ), esc_url( $settings_url ), esc_url( bb_get_feature_settings_url( 'members', 'profile_fields' ) ) ); ?></p>
+		<?php /* translators: 1: Settings > BuddyPress URL, 2: Settings 2.0 profile fields URL. */ ?>
+		<p><?php echo wp_kses_post( sprintf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss' ), esc_url( $settings_url ), esc_url( bb_get_feature_settings_url( 'members', 'profile_fields' ) ) ) ); ?></p>
 	</div>
 
 	<?php
@@ -158,7 +159,7 @@ function bp_core_print_admin_notices() {
 		printf( '<div id="message" class="fade %s">', sanitize_html_class( $type ) );
 
 		foreach ( $notices as $notice ) {
-			printf( '<p>%s</p>', $notice['message'] );
+			printf( '<p>%s</p>', wp_kses_post( $notice['message'] ) );
 		}
 
 		printf( '</div>' );
@@ -252,6 +253,7 @@ function bp_core_activation_notice() {
 
 	// Add notice if no rewrite rules are enabled.
 	if ( empty( $wp_rewrite->permalink_structure ) ) {
+		/* translators: %s: URL of the Pages settings screen. */
 		bp_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss' ), admin_url( 'options-permalink.php' ) ), 'error' );
 	}
 
@@ -357,6 +359,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s',
 				sprintf(
+					/* translators: %s: comma-separated component names (wrapped in <strong>). */
 					__(
 						'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
 						'buddyboss'
@@ -371,6 +374,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
 				sprintf(
+					/* translators: %s: comma-separated component names (wrapped in <strong>). */
 					__(
 						'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
 						'buddyboss'
@@ -421,6 +425,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s',
 				sprintf(
+					/* translators: %s: comma-separated page names (wrapped in <strong>). */
 					__(
 						'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
 						'buddyboss'
@@ -432,6 +437,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
 				sprintf(
+					/* translators: %s: comma-separated page names (wrapped in <strong>). */
 					__(
 						'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
 						'buddyboss'
@@ -524,17 +530,23 @@ function bp_check_for_legacy_theme() {
  * @since BuddyBoss 1.0.0
  */
 function bp_print_legacy_theme_deprecated_notice() {
+	// Builds without pricing links (the wordpress.org edition) name the theme without a link.
+	$theme_link = 'BuddyBoss Theme';
+	// @bbwt-com-start pricing-links
+	$theme_link = '<a href="https://www.buddyboss.com/pricing/" target="_blank" rel="noopener">BuddyBoss Theme</a>';
+	// @bbwt-com-end pricing-links
 	$message = sprintf(
+		/* translators: 1: link to the BuddyPress Legacy template documentation, 2: link to the BuddyBoss Theme. */
 		__( 'You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods.', 'buddyboss' ),
 		'<a href="https://www.buddyboss.com/resources/docs/development/theme-development/theme-compatibility/" target="_blank" rel="noopener">BuddyPress Legacy</a>',
-		'<a href="https://www.buddyboss.com/pricing/" target="_blank" rel="noopener">BuddyBoss Theme</a>'
+		$theme_link
 	);
 
 	printf(
 		'<div class="notice notice-error">
 	        <p>%s</p>
 	    </div>',
-		$message
+		wp_kses_post( $message )
 	);
 }
 
@@ -580,7 +592,7 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 		$i = $i + 1;
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -679,7 +691,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -835,7 +847,7 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 		$i = $i + 1;
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -1313,7 +1325,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 					)
 				);
 				?>
-				#buddypress-menu" class="select-all"><?php _e( 'Select All', 'buddyboss' ); ?></a>
+				#buddypress-menu" class="select-all"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></a>
 			</span>
 			<span class="add-to-menu">
 				<input type="submit"
@@ -1351,6 +1363,7 @@ function bp_admin_email_maybe_add_translation_notice() {
 
 	bp_core_add_admin_notice(
 		sprintf(
+			/* translators: %s: URL of the BuddyBoss Tools screen. */
 			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
 			esc_url(
 				add_query_arg(
@@ -1381,6 +1394,7 @@ function bp_admin_email_add_codex_notice() {
 
 	bp_core_add_admin_notice(
 		sprintf(
+			/* translators: %s: URL of the email tokens documentation. */
 			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
@@ -1422,13 +1436,13 @@ function bp_email_tax_type_metabox( $post, $box ) {
 	$tax_name = esc_attr( $r['taxonomy'] );
 	$taxonomy = get_taxonomy( $r['taxonomy'] );
 	?>
-	<div id="taxonomy-<?php echo $tax_name; ?>" class="categorydiv">
-		<div id="<?php echo $tax_name; ?>-all" class="tabs-panel">
+	<div id="taxonomy-<?php echo esc_attr( $tax_name ); ?>" class="categorydiv">
+		<div id="<?php echo esc_attr( $tax_name ); ?>-all" class="tabs-panel">
 			<?php
 			$name = ( $tax_name == 'category' ) ? 'post_category' : 'tax_input[' . $tax_name . ']';
-			echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
+			echo "<input type='hidden' name='" . esc_attr( $name ) . "[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
 			?>
-			<ul id="<?php echo $tax_name; ?>checklist" data-wp-lists="list:<?php echo $tax_name; ?>"
+			<ul id="<?php echo esc_attr( $tax_name ); ?>checklist" data-wp-lists="list:<?php echo esc_attr( $tax_name ); ?>"
 				class="categorychecklist form-no-clear">
 				<?php
 				wp_terms_checklist(
@@ -1475,13 +1489,13 @@ function bp_email_plaintext_metabox( $post ) {
 	<label class="screen-reader-text" for="excerpt">
 		<?php
 		/* translators: accessibility text */
-		_e( 'Plain text email content', 'buddyboss' );
+		esc_html_e( 'Plain text email content', 'buddyboss' );
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
-						id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
+						id="excerpt"><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
 
-	<p><?php _e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ); ?></p>
 	<!-- accesslint:endignore -->
 	<?php
 }
@@ -1503,19 +1517,22 @@ function bp_email_plaintext_metabox( $post ) {
  * @since BuddyPress 1.9.0
  */
 function bp_admin_wp_nav_menu_restrict_items() {
-	?>
-	<script>
-		jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
-			var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
-			var css_class = settings.find( '.edit-menu-item-classes' );
+	$inline_js = <<<'JS'
+jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
+	var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
+	var css_class = settings.find( '.edit-menu-item-classes' );
 
-			if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
-				css_class.attr( 'readonly', 'readonly' );
-				settings.find( '.field-url' ).css( 'display', 'none' );
-			}
-		} );
-	</script>
-	<?php
+	if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
+		css_class.attr( 'readonly', 'readonly' );
+		settings.find( '.field-url' ).css( 'display', 'none' );
+	}
+} );
+JS;
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
 }
 
 /**
@@ -1707,15 +1724,18 @@ function bp_core_admin_user_manage_spammers() {
  * @since BuddyPress 2.0.0
  */
 function bp_core_admin_user_spammed_js() {
-	?>
-	<script>
-		jQuery( document ).ready( function ( $ ) {
-			$( '.row-actions .ham' ).each( function () {
-				$( this ).closest( 'tr' ).addClass( 'site-spammed' );
-			} );
-		} );
-	</script>
-	<?php
+	$inline_js = <<<'JS'
+jQuery( document ).ready( function ( $ ) {
+	$( '.row-actions .ham' ).each( function () {
+		$( this ).closest( 'tr' ).addClass( 'site-spammed' );
+	} );
+} );
+JS;
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
 }
 
 /**
@@ -1732,7 +1752,7 @@ function bp_core_admin_notice_dismiss_callback() {
 		wp_send_json_error();
 	}
 
-	$notice_id = wp_unslash( $_POST['notice_id'] );
+	$notice_id = sanitize_text_field( wp_unslash( $_POST['notice_id'] ) );
 
 	if ( ! wp_verify_nonce( $_POST['nonce'], 'bp-dismissible-notice-' . $notice_id ) ) {
 		wp_send_json_error();
@@ -1936,6 +1956,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'BuddyBoss' === bb_get_profile_avatar_type() ) {
 
 		$avatar_notice = sprintf(
+			/* translators: %s: URL of the Discussion settings screen. */
 			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss' ),
 			add_query_arg(
 				array(
@@ -1954,17 +1975,24 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 		$avatar_notice_html .= '</div>';
 		?>
 
-		<script type="text/javascript">
-			( function ( $ ) {
-				jQuery( document ).ready( function() {
-					var discussion_avatar_tbl = $( 'body.options-discussion-php #wpbody-content .wrap form table:eq(1)' );
-					if ( discussion_avatar_tbl.find( 'tr:eq(1)' ).hasClass( 'avatar-settings' ) ) {
-						discussion_avatar_tbl.prev().after( '<?php echo wp_kses_post( $avatar_notice_html ); ?>' );
-					}
-				} );
-			} )( jQuery );
-		</script>
-		<?php
+		// Pass the (sanitized) notice markup to JS via wp_json_encode() and attach
+		// the DOM-injection behaviour through a dependency-only (src-less) handle,
+		// replacing the previous raw inline <script> tag.
+		$inline_js = sprintf(
+			'( function ( $ ) {
+	jQuery( document ).ready( function() {
+		var discussion_avatar_tbl = $( \'body.options-discussion-php #wpbody-content .wrap form table:eq(1)\' );
+		if ( discussion_avatar_tbl.find( \'tr:eq(1)\' ).hasClass( \'avatar-settings\' ) ) {
+			discussion_avatar_tbl.prev().after( %s );
+		}
+	} );
+} )( jQuery );',
+			wp_json_encode( wp_kses_post( $avatar_notice_html ) )
+		);
+
+		wp_register_script( 'bb-discussion-avatar-notice', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bb-discussion-avatar-notice' );
+		wp_add_inline_script( 'bb-discussion-avatar-notice', $inline_js );
 	}
 }
 
@@ -2126,7 +2154,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -2332,14 +2360,18 @@ function bb_disable_multiple_select_situation() {
 	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
 		?>
 
-		<script type="text/javascript">
-			jQuery( document ).ready( function ( $ ) {
-				jQuery( document ).on( 'change', '#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input[type="checkbox"]', function () {
-					var group = 'input[type="checkbox"][name="' + jQuery( this ).attr( 'name' ) + '"]';
-					jQuery( group ).not( this ).prop( 'checked', false );
-				} );
-			} );
-		</script>
+		// Pass the email post type to JS via wp_json_encode() and attach the
+		// behaviour through a dependency-only (src-less) handle instead of a raw
+		// inline <script> tag.
+		$inline_js = sprintf(
+			'jQuery( document ).ready( function ( $ ) {
+	jQuery( document ).on( \'change\', \'#taxonomy-\' + %s + \'-type input[type="checkbox"]\', function () {
+		var group = \'input[type="checkbox"][name="\' + jQuery( this ).attr( \'name\' ) + \'"]\';
+		jQuery( group ).not( this ).prop( \'checked\', false );
+	} );
+} );',
+			wp_json_encode( bp_get_email_post_type() )
+		);
 
 		<?php
 	}

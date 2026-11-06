@@ -234,21 +234,22 @@ function bp_invites_member_invite_register_screen_message() {
 
 	?>
 	<?php if ( empty( $email ) ) : ?>
-		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
+		<div id="message" class="error"><p><?php esc_html_e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
 
-		<?php do_action( 'accept_email_invite_before' ); ?>
-
-		<script>
-			jQuery(document).ready( function() {
-				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ); ?>");
-			});
-		</script>
-
-
 		<?php
+		do_action( 'accept_email_invite_before' );
+
+		// Prefill the signup email through the script API (was a raw <script>).
+		$inline_js = 'jQuery( document ).ready( function () { jQuery( "input#signup_email" ).val( ' . wp_json_encode( str_replace( ' ', '+', $email ) ) . ' ); } );';
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $inline_js );
+		} else {
+			echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the email is wp_json_encode()'d above. WordPress < 5.7 only.
+		}
+
 		$bp_get_invitee_email = bp_invites_member_invite_get_invitations_by_invited_email( $email );
 
 		$inviters = array();
@@ -272,6 +273,7 @@ function bp_invites_member_invite_register_screen_message() {
 		}
 
 		if ( ! empty( $inviters_names ) ) {
+			/* translators: %s: comma-separated list of inviter display names. */
 			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
 
 			echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
@@ -297,21 +299,27 @@ function bp_invites_member_invite_register_screen_message() {
 			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
-				?>
-				<script>
-					jQuery( document ).ready( function () {
-						// On form submission remove disabled attribute from the select.
-						jQuery( "#signup-form" ).on( "submit", function() {
-							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
-						} );
 
-						if ( jQuery( ".field_type_membertypes" ).length ) {
-							jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
-							jQuery( ".field_type_membertypes fieldset select" ).val( "<?php echo esc_js( $member_type_post_id ); ?>" );
-						}
-					} );
-				</script>
-				<?php
+				// Lock the profile type select to the invited type (was a raw <script>).
+				$inline_js = <<<'JS'
+jQuery( document ).ready( function () {
+	// On form submission remove disabled attribute from the select.
+	jQuery( "#signup-form" ).on( "submit", function() {
+		jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
+	} );
+
+	if ( jQuery( ".field_type_membertypes" ).length ) {
+		jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
+		jQuery( ".field_type_membertypes fieldset select" ).val( %s );
+	}
+} );
+JS;
+				$inline_js = sprintf( $inline_js, wp_json_encode( (string) $member_type_post_id ) );
+				if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+					wp_print_inline_script_tag( $inline_js );
+				} else {
+					echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the id is wp_json_encode()'d above. WordPress < 5.7 only.
+				}
 
 				// Set member type param for signup fields display.
 				add_filter(
@@ -541,7 +549,7 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
-			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', gmdate( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
@@ -625,7 +633,7 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
-			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', gmdate( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
@@ -700,7 +708,8 @@ function bb_get_member_invitation_query() {
 				array(
 					'taxonomy' => bp_get_email_tax_type(),
 					'field'    => 'term_id',
-					'terms'    => $term->term_id,
+					// The email type term is missing when the emails were never installed or were deleted.
+					'terms'    => ! empty( $term->term_id ) ? $term->term_id : 0,
 				),
 			),
 		);

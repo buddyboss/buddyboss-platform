@@ -80,7 +80,7 @@ function bp_search_buffer_template_part( $template, $variation = '', $echo = tru
 
 	// Echo or return the output buffer contents
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template part (may contain form/input/button); wp_kses_post would strip form controls.
 	} else {
 		return $output;
 	}
@@ -143,6 +143,14 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 			'slug' => $slug,
 		);
 		$prepare_template = _build_block_template_result_from_file( $template_file, $template_type );
+
+		// The template is a PHP file (direct-access guard, template tags): run it and use the
+		// output as the block content; _build_block_template_result_from_file() only reads it as text.
+		if ( ! empty( $template_file['path'] ) && is_readable( $template_file['path'] ) ) {
+			ob_start();
+			include $template_file['path'];
+			$prepare_template->content = ob_get_clean();
+		}
 
 		// Set template to query results.
 		$query_result[] = $prepare_template;

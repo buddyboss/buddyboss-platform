@@ -119,7 +119,7 @@ function bp_ps_set_request() {
 		&& ! ( function_exists( 'bb_is_rest' ) && bb_is_rest() )
 		&& isset( $_SERVER['REQUEST_URI'] )
 	) {
-		$redirect_path = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+		$redirect_path = wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( ! empty( $redirect_path ) ) {
 			$redirect_url = $redirect_path;
 			if ( ! $persistent && ! empty( $redirect_query ) ) {
@@ -283,8 +283,8 @@ function bp_ps_hidden_filters() {
  */
 function bp_ps_current_page() {
 	 $current = defined( 'DOING_AJAX' ) ?
-		parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
-		parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		wp_parse_url( isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '', PHP_URL_PATH ) :
+		wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 	return $current;
 }

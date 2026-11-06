@@ -17,6 +17,9 @@
  * @since BuddyPress 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Fire the 'bp_include' action, where plugins should include files.
  *

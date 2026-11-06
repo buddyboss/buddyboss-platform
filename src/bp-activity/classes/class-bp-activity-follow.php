@@ -175,7 +175,7 @@ class BP_Activity_Follow {
 		$cached = bp_core_get_incremented_cache( $followers_sql, 'bp_activity_follow' );
 
 		if ( false === $cached ) {
-			$follower_ids = $wpdb->get_col( $followers_sql );
+			$follower_ids = $wpdb->get_col( $followers_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_user_query_join_sql / bp_user_query_where_sql; as built here: follow table name from $bp->activity, leader_id bound as %d, LIMIT %d-prepared.
 			bp_core_set_incremented_cache( $followers_sql, 'bp_activity_follow', $follower_ids );
 		} else {
 			$follower_ids = $cached;
@@ -220,7 +220,7 @@ class BP_Activity_Follow {
 		$cached = bp_core_get_incremented_cache( $following_sql, 'bp_activity_follow' );
 
 		if ( false === $cached ) {
-			$following_ids = $wpdb->get_col( $following_sql );
+			$following_ids = $wpdb->get_col( $following_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_user_query_join_sql / bp_user_query_where_sql; as built here: follow table name from $bp->activity, follower_id bound as %d, LIMIT %d-prepared.
 			bp_core_set_incremented_cache( $following_sql, 'bp_activity_follow', $following_ids );
 		} else {
 			$following_ids = $cached;
@@ -280,7 +280,7 @@ class BP_Activity_Follow {
 			$where_sql = 'WHERE ' . join( ' AND ', $sql['where'] );
 
 			$sql       = "{$sql['select']} {$where_sql}";
-			$followers = $wpdb->get_var( $sql );
+			$followers = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_user_query_join_sql / bp_user_query_where_sql; as built here: literal COUNT select, follow table name from $bp->activity, leader_id bound as %d.
 			wp_cache_set( 'bp_total_follower_for_user_' . $user_id, $followers, 'bp' );
 		}
 
@@ -325,7 +325,7 @@ class BP_Activity_Follow {
 			$where_sql = 'WHERE ' . join( ' AND ', $sql['where'] );
 
 			$sql       = "{$sql['select']} {$where_sql}";
-			$following = $wpdb->get_var( $sql );
+			$following = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_user_query_join_sql / bp_user_query_where_sql; as built here: literal COUNT select, follow table name from $bp->activity, follower_id bound as %d.
 			wp_cache_set( 'bp_total_following_for_user_' . $user_id, $following, 'bp' );
 		}
 

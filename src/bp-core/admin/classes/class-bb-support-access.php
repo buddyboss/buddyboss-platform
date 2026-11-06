@@ -158,7 +158,7 @@ class BB_Support_Access {
 	 *
 	 * @var string
 	 */
-	const SUPPORT_SYSTEM_API_BASE = 'https://oq8tjkh4kk.execute-api.us-east-2.amazonaws.com/v1';
+	const SUPPORT_SYSTEM_API_BASE = 'https://oq8tjkh4kk.execute-api.us-east-2.amazonaws.com/v1'; // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- BuddyBoss support-access API endpoint (opt-in), not an asset.
 
 	/**
 	 * Outbound request timeout (seconds) for the support system proxy call. Kept

@@ -218,6 +218,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
 
+			// @bbwt-com-start mothership-hub
 			// Fix the "View details"/"View version details" links on the Plugins page, which
 			// otherwise point to a WordPress.org plugin_information lookup that always fails.
 			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
@@ -264,6 +265,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Keep the licensed package URL out of the plugin dependency cache.
 			add_filter( 'pre_set_site_transient_wp_plugin_dependencies_plugin_data', array( $this, 'bb_strip_dependency_api_data' ) );
+			// @bbwt-com-end mothership-hub
 		}
 
 		/**
@@ -341,8 +343,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss' ),
-				__( '', 'buddyboss' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''
@@ -544,8 +546,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss' ),
-				__( '', 'buddyboss' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''
@@ -1015,6 +1017,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 		}
 
+		// @bbwt-com-start mothership-hub
 		/**
 		 * Normalize BuddyBoss update transient entries so their details links work.
 		 *
@@ -1550,6 +1553,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		protected function bb_get_platform_plugin_slug() {
 			return dirname( $this->bb_get_platform_plugin_file() );
 		}
+		// @bbwt-com-end mothership-hub
 
 		/**
 		 * Display plugin information after plugin successfully updated.
@@ -1589,6 +1593,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			delete_option( '_bb_is_update' );
 		}
 
+		// @bbwt-com-start mothership-hub
 		/**
 		 * Serve plugin information for BuddyBoss Platform locally.
 		 *
@@ -4038,5 +4043,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			return array();
 		}
+		// @bbwt-com-end mothership-hub
 	}
 endif; // End class_exists check.

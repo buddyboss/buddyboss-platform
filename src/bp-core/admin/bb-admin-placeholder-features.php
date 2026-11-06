@@ -502,6 +502,7 @@ function bb_admin_sort_features_response( $features ) {
 }
 add_filter( 'bb_admin_features_response', 'bb_admin_sort_features_response', 30 );
 
+// @bbwt-com-start drm
 /**
  * Mark DRM-locked features in the AJAX features response.
  *
@@ -613,6 +614,7 @@ function bb_admin_mark_drm_locked_features( $features ) {
  * @since BuddyBoss 3.0.0
  */
 add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 20 );
+// @bbwt-com-end drm
 
 /**
  * Clear Settings 2.0 caches via query parameter.
@@ -751,8 +753,10 @@ function bb_clear_help_content_transients() {
 /**
  * Clear the placeholder features cache when the license status changes.
  *
+ * @bbwt-com-start mothership-hub
  * Hooks into the existing {plugin_id}_license_status_changed action fired by
  * BB_Mothership_Loader::handle_license_status_change(). This ensures that
+ * @bbwt-com-end mothership-hub
  * plugin_status is re-evaluated when the license is activated or deactivated,
  * so the correct card state (upgrade badge vs install/activate button) is
  * shown immediately.

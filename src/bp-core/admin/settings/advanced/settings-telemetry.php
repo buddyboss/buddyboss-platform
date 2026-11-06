@@ -43,13 +43,16 @@ function bb_advanced_register_telemetry_fields() {
 	$current_mode = bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
 
 	$option_descriptions = array(
+		// @bbwt-com-start telemetry-complete
 		'complete'  => __( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product and associate it with your customer record to help us serve you better. We do not gather or send any of your users\' personally identifiable information. To stop contributing towards improving the product, you can disable telemetry.', 'buddyboss' ),
+		// @bbwt-com-end telemetry-complete
 		'anonymous' => __( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product. By choosing anonymous reporting, your data will not be associated with your customer record, and the way we serve you will be less relevant to you. We do not gather or send any of your users\' personally identifiable information. If you stop contributing towards improving the product, you can disable telemetry.', 'buddyboss' ),
 		'disable'   => __( 'Disabling telemetry will stop gathering and reporting usage statistics about your configuration and the features and functionality you use. By disabling telemetry, you will not be contributing towards the improvement of the product and the way we serve you will be less relevant to you.', 'buddyboss' ),
 	);
 
 	// Field 1: Telemetry Reporting Mode.
-	// All 3 options matching legacy (Complete / Anonymous / Disable telemetry).
+	// Options match legacy (Complete / Anonymous / Disable telemetry); builds
+	// without "complete" reporting offer Anonymous and Disable only.
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
@@ -63,10 +66,12 @@ function bb_advanced_register_telemetry_fields() {
 			'sanitize_callback'   => 'bb_advanced_sanitize_telemetry_reporting',
 			'option_descriptions' => $option_descriptions,
 			'options'             => array(
+				// @bbwt-com-start telemetry-complete
 				array(
 					'value' => 'complete',
 					'label' => __( 'Complete reporting', 'buddyboss' ),
 				),
+				// @bbwt-com-end telemetry-complete
 				array(
 					'value' => 'anonymous',
 					'label' => __( 'Anonymous reporting', 'buddyboss' ),

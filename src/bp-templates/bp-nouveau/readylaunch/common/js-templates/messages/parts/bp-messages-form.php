@@ -6,6 +6,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $os = bb_core_get_os();
 
 ?>
@@ -52,7 +55,7 @@ $os = bb_core_get_os();
 					)
 				);
 				?>
-				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo $user_id; ?>" data-image="<?php echo esc_url( $avatar_url ); ?>"><?php echo esc_html( $name ); ?></option>
+				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo esc_attr( $user_id ); ?>" data-image="<?php echo esc_url( $avatar_url ); ?>"><?php echo esc_html( $name ); ?></option>
 			<?php endif; ?>
 
 		</select>

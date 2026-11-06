@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_reply_post_type() To get the reply post type
  */
 function bbp_reply_post_type() {
-	echo bbp_get_reply_post_type();
+	echo esc_attr( bbp_get_reply_post_type() );
 }
 
 /**
@@ -355,7 +355,7 @@ function bbp_the_reply() {
  * @uses  bbp_get_reply_id() To get the reply id
  */
 function bbp_reply_id( $reply_id = 0 ) {
-	echo bbp_get_reply_id( $reply_id );
+	echo esc_attr( bbp_get_reply_id( $reply_id ) );
 }
 
 /**
@@ -569,7 +569,7 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_reply_title() To get the reply title
  */
 function bbp_reply_title( $reply_id = 0 ) {
-	echo bbp_get_reply_title( $reply_id );
+	echo esc_html( bbp_get_reply_title( $reply_id ) );
 }
 
 /**
@@ -614,6 +614,7 @@ function bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
 	$topic_title = bbp_get_reply_topic_title( $post_id );
 
 	// Get empty reply title fallback.
+	/* translators: %s: discussion title. */
 	$reply_title = sprintf( __( 'Reply To: %s', 'buddyboss' ), $topic_title );
 
 	return apply_filters( 'bbp_get_reply_title_fallback', $reply_title, $post_id, $topic_title );
@@ -629,7 +630,7 @@ function bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
  * @uses  bbp_get_reply_content() To get the reply content
  */
 function bbp_reply_content( $reply_id = 0 ) {
-	echo bbp_get_reply_content( $reply_id );
+	echo bbp_get_reply_content( $reply_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save and run through the display filter chain (autoembed); wp_kses_post() would strip embeds.
 }
 
 /**
@@ -671,7 +672,7 @@ function bbp_get_reply_content( $reply_id = 0 ) {
  * @uses  bbp_get_reply_excerpt() To get the reply excerpt
  */
 function bbp_reply_excerpt( $reply_id = 0, $length = 100 ) {
-	echo bbp_get_reply_excerpt( $reply_id, $length );
+	echo wp_kses_post( bbp_get_reply_excerpt( $reply_id, $length ) );
 }
 
 /**
@@ -699,7 +700,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
 		$excerpt = bbp_get_reply_content( $reply_id );
 	}
 
-	$excerpt = trim( strip_tags( $excerpt ) );
+	$excerpt = trim( wp_strip_all_tags( $excerpt ) );
 
 	// Multibyte support
 	if ( function_exists( 'mb_strlen' ) ) {
@@ -728,7 +729,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
  * @uses  bbp_get_reply_post_date() to get the output
  */
 function bbp_reply_post_date( $reply_id = 0, $humanize = false, $gmt = false ) {
-	echo bbp_get_reply_post_date( $reply_id, $humanize, $gmt );
+	echo esc_html( bbp_get_reply_post_date( $reply_id, $humanize, $gmt ) );
 }
 
 /**
@@ -759,6 +760,7 @@ function bbp_get_reply_post_date( $reply_id = 0, $humanize = false, $gmt = false
 	} else {
 		$date   = get_post_time( get_option( 'date_format' ), $gmt, $reply_id, true );
 		$time   = get_post_time( get_option( 'time_format' ), $gmt, $reply_id, true );
+		/* translators: 1: date or time, 2: date or time. */
 		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss' ), $date, $time );
 	}
 
@@ -801,7 +803,7 @@ function bbp_reply_content_append_revisions( $content = '', $reply_id = 0 ) {
  * @uses  bbp_get_reply_revision_log() To get the reply revision log
  */
 function bbp_reply_revision_log( $reply_id = 0 ) {
-	echo bbp_get_reply_revision_log( $reply_id );
+	echo wp_kses_post( bbp_get_reply_revision_log( $reply_id ) );
 }
 
 /**
@@ -870,8 +872,10 @@ function bbp_get_reply_revision_log( $reply_id = 0 ) {
 
 		$r .= "\t" . '<li id="bbp-reply-revision-log-' . esc_attr( $reply_id ) . '-item-' . esc_attr( $revision->ID ) . '" class="bbp-reply-revision-log-item">' . "\n";
 		if ( ! empty( $reason ) ) {
+			/* translators: 1: time since the edit, 2: editor display name, 3: edit reason. */
 			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s. Reason: %3$s', 'buddyboss' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
 		} else {
+			/* translators: 1: time since the edit, 2: editor display name. */
 			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s.', 'buddyboss' ), esc_html( $since ), $author ) . "\n";
 		}
 		$r .= "\t" . '</li>' . "\n";
@@ -954,7 +958,7 @@ function bbp_get_reply_revision_count( $reply_id = 0, $integer = false ) {
  * @uses  bbp_get_reply_status() To get the reply status
  */
 function bbp_reply_status( $reply_id = 0 ) {
-	echo bbp_get_reply_status( $reply_id );
+	echo esc_attr( bbp_get_reply_status( $reply_id ) );
 }
 
 /**
@@ -1069,7 +1073,7 @@ function bbp_is_reply_anonymous( $reply_id = 0 ) {
  * @uses       bbp_get_reply_author() To get the reply author
  */
 function bbp_reply_author( $reply_id = 0 ) {
-	echo bbp_get_reply_author( $reply_id );
+	echo esc_html( bbp_get_reply_author( $reply_id ) );
 }
 
 /**
@@ -1115,7 +1119,7 @@ function bbp_get_reply_author( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_id() To get the reply author id
  */
 function bbp_reply_author_id( $reply_id = 0 ) {
-	echo bbp_get_reply_author_id( $reply_id );
+	echo esc_attr( bbp_get_reply_author_id( $reply_id ) );
 }
 
 /**
@@ -1148,7 +1152,7 @@ function bbp_get_reply_author_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_display_name()
  */
 function bbp_reply_author_display_name( $reply_id = 0 ) {
-	echo bbp_get_reply_author_display_name( $reply_id );
+	echo esc_html( bbp_get_reply_author_display_name( $reply_id ) );
 }
 
 /**
@@ -1210,9 +1214,11 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
 		$author_name = __( 'Anonymous', 'buddyboss' );
 	}
 
-	// Encode possible UTF8 display names.
-	if ( seems_utf8( $author_name ) === false ) {
-		$author_name = utf8_encode( $author_name );
+	// Encode possible UTF8 display names (utf8_encode() is deprecated since PHP 8.2).
+	// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+	$bbp_is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $author_name ) : seems_utf8( $author_name );
+	if ( false === $bbp_is_valid_utf8 && function_exists( 'mb_convert_encoding' ) ) {
+		$author_name = mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' );
 	}
 
 	return apply_filters( 'bbp_get_reply_author_display_name', $author_name, $reply_id );
@@ -1229,7 +1235,7 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
  * @uses  bbp_get_reply_author_avatar() To get the reply author id
  */
 function bbp_reply_author_avatar( $reply_id = 0, $size = 40 ) {
-	echo bbp_get_reply_author_avatar( $reply_id, $size );
+	echo bbp_get_reply_author_avatar( $reply_id, $size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
 
 /**
@@ -1276,7 +1282,7 @@ function bbp_get_reply_author_avatar( $reply_id = 0, $size = 40 ) {
  * @uses  bbp_get_reply_author_link() To get the reply author link
  */
 function bbp_reply_author_link( $args = '' ) {
-	echo bbp_get_reply_author_link( $args );
+	echo bbp_get_reply_author_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
 
 /**
@@ -1334,6 +1340,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
+			/* translators: %s: reply author display name. */
 			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), bbp_get_reply_author_display_name( $reply_id ) );
 
 			// Use what was passed if not
@@ -1461,7 +1468,7 @@ function bbp_get_reply_author_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_email() To get the reply author email
  */
 function bbp_reply_author_email( $reply_id = 0 ) {
-	echo bbp_get_reply_author_email( $reply_id );
+	echo esc_html( bbp_get_reply_author_email( $reply_id ) );
 }
 
 /**
@@ -1517,7 +1524,7 @@ function bbp_get_reply_author_email( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_role() To get the reply author role
  */
 function bbp_reply_author_role( $args = array() ) {
-	echo bbp_get_reply_author_role( $args );
+	echo wp_kses_post( bbp_get_reply_author_role( $args ) );
 }
 
 /**
@@ -1565,7 +1572,7 @@ function bbp_get_reply_author_role( $args = array() ) {
  * @uses  bbp_get_reply_topic_title() To get the reply topic title
  */
 function bbp_reply_topic_title( $reply_id = 0 ) {
-	echo bbp_get_reply_topic_title( $reply_id );
+	echo esc_html( bbp_get_reply_topic_title( $reply_id ) );
 }
 
 /**
@@ -1599,7 +1606,7 @@ function bbp_get_reply_topic_title( $reply_id = 0 ) {
  * @uses  bbp_get_reply_topic_id() To get the reply topic id
  */
 function bbp_reply_topic_id( $reply_id = 0 ) {
-	echo bbp_get_reply_topic_id( $reply_id );
+	echo esc_attr( bbp_get_reply_topic_id( $reply_id ) );
 }
 
 /**
@@ -1645,7 +1652,7 @@ function bbp_get_reply_topic_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_forum_id() To get the reply forum id
  */
 function bbp_reply_forum_id( $reply_id = 0 ) {
-	echo bbp_get_reply_forum_id( $reply_id );
+	echo esc_attr( bbp_get_reply_forum_id( $reply_id ) );
 }
 
 /**
@@ -1690,7 +1697,7 @@ function bbp_get_reply_forum_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_ancestor_id() To get the reply's ancestor id
  */
 function bbp_reply_ancestor_id( $reply_id = 0 ) {
-	echo bbp_get_reply_ancestor_id( $reply_id );
+	echo esc_attr( bbp_get_reply_ancestor_id( $reply_id ) );
 }
 
 /**
@@ -1732,7 +1739,7 @@ function bbp_get_reply_ancestor_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to() To get the reply to id
  */
 function bbp_reply_to( $reply_id = 0 ) {
-	echo bbp_get_reply_to( $reply_id );
+	echo esc_html( bbp_get_reply_to( $reply_id ) );
 }
 
 /**
@@ -1774,7 +1781,7 @@ function bbp_get_reply_to( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to_link() To get the reply to link
  */
 function bbp_reply_to_link( $args = array() ) {
-	echo bbp_get_reply_to_link( $args );
+	echo bbp_get_reply_to_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- link markup built with esc_url()/esc_attr(); wp_kses_post() strips its onclick handler.
 }
 
 /**
@@ -1856,7 +1863,7 @@ function bbp_get_reply_to_link( $args = array() ) {
  * @uses  bbp_get_cancel_reply_to_link() To get the reply cancellation link
  */
 function bbp_cancel_reply_to_link( $text = '' ) {
-	echo bbp_get_cancel_reply_to_link( $text );
+	echo bbp_get_cancel_reply_to_link( $text ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- link markup built with esc_url()/esc_attr(); wp_kses_post() strips its onclick handler.
 }
 
 /**
@@ -1903,7 +1910,7 @@ function bbp_get_cancel_reply_to_link( $text = '' ) {
  * @uses  bbp_get_reply_position() To get the reply position
  */
 function bbp_reply_position( $reply_id = 0, $topic_id = 0 ) {
-	echo bbp_get_reply_position( $reply_id, $topic_id );
+	echo esc_html( bbp_get_reply_position( $reply_id, $topic_id ) );
 }
 
 /**
@@ -1971,7 +1978,7 @@ function bbp_get_reply_position( $reply_id = 0, $topic_id = 0 ) {
  * @uses  bbp_get_reply_admin_links() To get the reply admin links
  */
 function bbp_reply_admin_links( $args = array() ) {
-	echo bbp_get_reply_admin_links( $args );
+	echo bbp_get_reply_admin_links( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin links built with esc_url()/esc_attr(); they include the reply-to link whose onclick handler wp_kses_post() strips.
 }
 
 /**
@@ -2085,7 +2092,7 @@ function bbp_get_reply_admin_links( $args = array() ) {
  * @uses  bbp_get_reply_edit_link() To get the reply edit link
  */
 function bbp_reply_edit_link( $args = '' ) {
-	echo bbp_get_reply_edit_link( $args );
+	echo wp_kses_post( bbp_get_reply_edit_link( $args ) );
 }
 
 /**
@@ -2156,7 +2163,7 @@ function bbp_get_reply_edit_link( $args = '' ) {
  * @uses  bbp_get_reply_edit_url() To get the reply edit url
  */
 function bbp_reply_edit_url( $reply_id = 0 ) {
-	echo bbp_get_reply_edit_url( $reply_id );
+	echo esc_url( bbp_get_reply_edit_url( $reply_id ) );
 }
 
 /**
@@ -2215,7 +2222,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_trash_link() To get the reply trash link
  */
 function bbp_reply_trash_link( $args = '' ) {
-	echo bbp_get_reply_trash_link( $args );
+	echo wp_kses_post( bbp_get_reply_trash_link( $args ) );
 }
 
 /**
@@ -2343,7 +2350,7 @@ function bbp_get_reply_trash_link( $args = '' ) {
  * @uses  bbp_get_reply_spam_link() To get the reply spam link
  */
 function bbp_reply_spam_link( $args = '' ) {
-	echo bbp_get_reply_spam_link( $args );
+	echo wp_kses_post( bbp_get_reply_spam_link( $args ) );
 }
 
 /**
@@ -2417,7 +2424,7 @@ function bbp_get_reply_spam_link( $args = '' ) {
  * @uses  bbp_get_reply_move_link() To get the reply move link
  */
 function bbp_reply_move_link( $args = '' ) {
-	echo bbp_get_reply_move_link( $args );
+	echo wp_kses_post( bbp_get_reply_move_link( $args ) );
 }
 
 /**
@@ -2494,7 +2501,7 @@ function bbp_get_reply_move_link( $args = '' ) {
  * @uses  bbp_get_topic_split_link() To get the topic split link
  */
 function bbp_topic_split_link( $args = '' ) {
-	echo bbp_get_topic_split_link( $args );
+	echo wp_kses_post( bbp_get_topic_split_link( $args ) );
 }
 
 /**
@@ -2570,7 +2577,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  * @uses  bbp_get_reply_class() To get the reply class
  */
 function bbp_reply_class( $reply_id = 0, $classes = array() ) {
-	echo bbp_get_reply_class( $reply_id, $classes );
+	echo bbp_get_reply_class( $reply_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 
 /**
@@ -2615,7 +2622,7 @@ function bbp_get_reply_class( $reply_id = 0, $classes = array() ) {
  * @uses  bbp_get_topic_pagination_count() To get the topic pagination count
  */
 function bbp_topic_pagination_count() {
-	echo bbp_get_topic_pagination_count();
+	echo esc_html( bbp_get_topic_pagination_count() );
 }
 
 /**
@@ -2638,6 +2645,7 @@ function bbp_get_topic_pagination_count() {
 	$total_pages = $bbp->reply_query->total_pages; // total_pages
 
 	if( (int) $total_pages > 1 ) {
+		/* translators: 1: current page number, 2: total number of pages. */
 		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
 	}
 
@@ -2653,7 +2661,7 @@ function bbp_get_topic_pagination_count() {
  * @uses  bbp_get_topic_pagination_links() To get the topic pagination links
  */
 function bbp_topic_pagination_links() {
-	echo bbp_get_topic_pagination_links();
+	echo wp_kses_post( bbp_get_topic_pagination_links() );
 }
 
 /**
@@ -2685,7 +2693,7 @@ function bbp_get_topic_pagination_links() {
  * @uses  bbp_get_form_reply_content() To get value of reply content field
  */
 function bbp_form_reply_content() {
-	echo bbp_get_form_reply_content();
+	echo bbp_get_form_reply_content(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the getter's own esc_attr()/esc_textarea() filter.
 }
 
 /**
@@ -2728,7 +2736,7 @@ function bbp_get_form_reply_content() {
  * @uses  bbp_get_form_reply_to() To get value of the reply to field
  */
 function bbp_form_reply_to() {
-	echo bbp_get_form_reply_to();
+	echo esc_attr( bbp_get_form_reply_to() );
 }
 
 /**
@@ -2766,7 +2774,7 @@ function bbp_get_form_reply_to() {
  * @uses  bbp_get_form_reply_log_edit() To get the reply log edit value
  */
 function bbp_form_reply_log_edit() {
-	echo bbp_get_form_reply_log_edit();
+	echo bbp_get_form_reply_log_edit(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 
 /**
@@ -2800,7 +2808,7 @@ function bbp_get_form_reply_log_edit() {
  * @uses  bbp_get_form_reply_edit_reason() To get the reply edit reason value
  */
 function bbp_form_reply_edit_reason() {
-	echo bbp_get_form_reply_edit_reason();
+	echo esc_attr( bbp_get_form_reply_edit_reason() );
 }
 
 /**
@@ -2843,20 +2851,21 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 		if ( 'add' === $action ) {
 			if ( empty( $parent_reply_count ) ) {
 
-				// Get child reply.
-				$post_status   = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
-				$bbp_gtcpq_sql = $wpdb->prepare(
-					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
+				// Get child reply. The (filterable) public status goes in as a placeholder too.
+				$reply_count = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
 				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status
-				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s'
-				AND {$wpdb->postmeta}.meta_key = '%s';",
-					$topic_id,
-					bbp_get_reply_post_type(),
-					'reply',
-					'_bbp_reply_to'
+				IN ( %s ) AND {$wpdb->posts}.post_type = %s AND {$wpdb->posts}.post_type = %s
+				AND {$wpdb->postmeta}.meta_key = %s;",
+						$topic_id,
+						bbp_get_public_status_id(),
+						bbp_get_reply_post_type(),
+						'reply',
+						'_bbp_reply_to'
+					)
 				);
-				$reply_count   = $wpdb->get_var( $bbp_gtcpq_sql );
-				$replies       = (int) get_post_meta( $topic_id, '_bbp_reply_count', true );
+				$replies     = (int) get_post_meta( $topic_id, '_bbp_reply_count', true );
 
 				// Find parent reply - Subtract child reply from total reply count.
 				$parent_count = (int) $new_topic_reply_count - (int) $reply_count;

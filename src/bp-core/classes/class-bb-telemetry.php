@@ -71,13 +71,33 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			/**
 			 * Filters the telemetry reporting mode.
 			 *
-			 * Pro uses this to force 'complete' mode for paid users.
+			 * Pro uses this to force 'complete' mode for paid users. Builds without
+			 * "complete" reporting (the WordPress.org edition) let it switch
+			 * telemetry off, never on or up (see below).
 			 *
 			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
 			 */
 			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
+
+			/*
+			 * Builds without "complete" reporting (the WordPress.org edition) keep
+			 * telemetry strictly opt-in: it runs only when an administrator saved
+			 * "Anonymous reporting". The filter above may still switch it off, but
+			 * never on or up, and a stored "complete" value is read as "disable".
+			 */
+			$bb_telemetry_opt_in_only = true;
+			// @bbwt-com-start telemetry-complete
+			$bb_telemetry_opt_in_only = false;
+			// @bbwt-com-end telemetry-complete
+
+			if ( $bb_telemetry_opt_in_only ) {
+				add_filter( 'option_bb_advanced_telemetry_reporting', array( __CLASS__, 'bb_telemetry_opt_in_mode' ) );
+
+				$bb_telemetry_saved_mode   = bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
+				self::$bb_telemetry_option = ( 'anonymous' === $bb_telemetry_saved_mode && 'disable' !== self::$bb_telemetry_option ) ? 'anonymous' : 'disable';
+			}
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -111,6 +131,23 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		}
 
 		/**
+		 * Read a stored telemetry mode without "complete" reporting.
+		 *
+		 * Used only by builds without "complete" reporting (the WordPress.org
+		 * edition), so a "complete" value saved by an earlier install is shown
+		 * and treated as "disable" rather than as consent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $mode Stored telemetry mode.
+		 *
+		 * @return mixed Stored mode, or 'disable' instead of 'complete'.
+		 */
+		public static function bb_telemetry_opt_in_mode( $mode ) {
+			return ( 'complete' === $mode ) ? 'disable' : $mode;
+		}
+
+		/**
 		 * Send telemetry data to the analytics site when the CRON job is triggered.
 		 *
 		 * @since BuddyBoss 2.7.40
@@ -124,27 +161,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$data    = $this->bb_collect_site_data();
-			$api_url =
-				'aHR0cHM6Ly9h' .
-				'bmFseXRpY3Mu' .
-				'YnVkZHlib3Nz' .
-				'LmNvbS93cC1q' .
-				'c29uL3dwL3Yx' .
-				'L2JiLXRlbGVt' .
-				'ZXRyeQ==';
+			// Plain URL (disclosed under "External services" in readme.txt); TLS is verified
+			// (WordPress default) because this is a remote server, not a loopback request.
+			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry';
 			$args    = array(
-				'headers'   => array(
+				'headers'  => array(
 					'Accept'       => 'application/json;ver=1.0',
 					'Content-Type' => 'application/json; charset=UTF-8',
 					'Site-URL'     => get_site_url(),
 				),
-				'timeout'   => 10,
-				'blocking'  => true,
-				'body'      => wp_json_encode( $data ),
-				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
+				'timeout'  => 10,
+				'blocking' => true,
+				'body'     => wp_json_encode( $data ),
 			);
 
-			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			$raw_response = wp_safe_remote_post( $api_url, $args );
 			if ( is_wp_error( $raw_response ) ) {
 				$this->bb_record_delivery_failure( $raw_response->get_error_message() );
 				unset( $data, $api_url, $args );
@@ -209,10 +240,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'is_multisite'  => is_multisite(),
 			);
 
+			// @bbwt-com-start telemetry-complete
 			if ( 'complete' === self::$bb_telemetry_option ) {
 				$bb_telemetry_data['admin_email'] = get_option( 'admin_email' );
 			}
 
+			// @bbwt-com-end telemetry-complete
 			$bb_telemetry_data = $this->bb_telemetry_platform_data( $bb_telemetry_data );
 
 			if ( function_exists( 'bb_telemetry_platform_pro_data' ) ) {
@@ -225,6 +258,36 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			if ( function_exists( 'bbapp_telemetry_data' ) ) {
 				$bb_telemetry_data = bbapp_telemetry_data( $bb_telemetry_data );
+			}
+
+			/*
+			 * Builds without "complete" reporting (the WordPress.org edition) send no
+			 * personal data or credentials, whatever a contributor above added: the
+			 * admin email (BuddyBoss App adds it unconditionally), the legacy licence
+			 * option with its keys (Platform Pro and the Theme), a licence key added
+			 * through `bb_telemetry_license_data`, and the App's connection token,
+			 * AppCenter account id and app id. The database host name goes too: on
+			 * managed hosting it can name the server or the customer account, which
+			 * "anonymous" does not promise. This runs after every contributor and
+			 * filter that can touch the payload.
+			 */
+			$bb_telemetry_scrub_private = true;
+			// @bbwt-com-start telemetry-complete
+			$bb_telemetry_scrub_private = false;
+			// @bbwt-com-end telemetry-complete
+
+			if ( $bb_telemetry_scrub_private ) {
+				foreach ( array( 'admin_email', 'bboss_updater_saved_licenses', 'app_key', 'vendor_id', 'app_id', 'db_provider' ) as $bb_telemetry_private_key ) {
+					unset( $bb_telemetry_data[ $bb_telemetry_private_key ] );
+				}
+
+				if ( isset( $bb_telemetry_data['bb_license'] ) && is_array( $bb_telemetry_data['bb_license'] ) ) {
+					foreach ( $bb_telemetry_data['bb_license'] as $bb_telemetry_product => $bb_telemetry_licence ) {
+						if ( is_array( $bb_telemetry_licence ) ) {
+							unset( $bb_telemetry_data['bb_license'][ $bb_telemetry_product ]['license_key'] );
+						}
+					}
+				}
 			}
 
 			/*
@@ -388,12 +451,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				}
 			}
 
+			// @bbwt-com-start drm
 			// DRM's detector is the single definition of "not a real site":
 			// environment type, reserved TLDs, staging keywords as whole labels,
 			// host/staging provider domains, local IPs and non-standard ports.
 			if ( class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
 				return ! \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::is_dev_environment();
 			}
+			// @bbwt-com-end drm
 
 			// Fallback when DRM is unavailable: the one legacy rule the list
 			// above does not express — a `staging.` host prefix.
@@ -741,7 +806,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return array Licence data for the Platform and, when present, the Theme.
 		 */
 		public function bb_get_license_data() {
+			$include_key = false;
+			// @bbwt-com-start telemetry-complete
 			$include_key = ( 'complete' === self::$bb_telemetry_option );
+			// @bbwt-com-end telemetry-complete
 
 			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
 			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
@@ -753,6 +821,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * would otherwise report as unlicensed.
 			 */
 			$platform_key = '';
+			// @bbwt-com-start mothership-hub
 			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
 				try {
 					/*
@@ -770,6 +839,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					$platform_key = '';
 				}
 			}
+			// @bbwt-com-end mothership-hub
 
 			if ( '' === $platform_key && ! empty( $platform_id ) ) {
 				$platform_key = (string) get_option( $platform_id . '_license_key', '' );
@@ -937,10 +1007,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Reporting the stage is what makes the ladder measurable: how many sites
 		 * sit at each rung, and how many reach lockout rather than licensing.
 		 *
+		 * @bbwt-com-start drm
 		 * Derived from local state only — two indexed lookups on the DRM event
 		 * table plus two option reads. Deliberately avoids
 		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
 		 * `is_addon_licensed()` and can reach the Mothership API.
+		 * @bbwt-com-end drm
 		 *
 		 * @since BuddyBoss 3.4.3
 		 *
@@ -954,6 +1026,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'addons'   => array(),
 			);
 
+			// @bbwt-com-start drm
 			if (
 				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Event' ) ||
 				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' )
@@ -974,6 +1047,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$data = array_merge( $data, $this->bb_get_drm_stage( $data['scenario'] ) );
+			// @bbwt-com-end drm
 
 			/**
 			 * Filters the DRM data reported by telemetry.
@@ -985,6 +1059,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			return apply_filters( 'bb_telemetry_drm_data', $data );
 		}
 
+		// @bbwt-com-start drm
 		/**
 		 * Resolve the DRM escalation stage for a single DRM event.
 		 *
@@ -1145,6 +1220,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			return $events;
 		}
+		// @bbwt-com-end drm
 
 		/**
 		 * Get the status of integrations.
@@ -1211,11 +1287,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					</p>
 					<p>
 						<?php
+						/*
+						 * Builds where telemetry is off until an administrator opts in (the
+						 * WordPress.org edition) must not word this notice as opt-out.
+						 */
+						/* translators: %1$s: telemetry settings URL. */
+						$bb_telemetry_notice_text = __( 'You can help us improve the product by sharing anonymous usage statistics. Nothing is sent unless an administrator turns this on in your <a href="%1$s">telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' );
+						// @bbwt-com-start telemetry-complete
+						/* translators: %1$s: telemetry settings URL. */
+						$bb_telemetry_notice_text = __( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' );
+						// @bbwt-com-end telemetry-complete
+
 						// Message with link to telemetry settings.
 						printf(
 							wp_kses(
-							/* translators: %1$s and %2$s are links. */
-								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								$bb_telemetry_notice_text,
 								array(
 									'a' => array(
 										'href' => array(),

@@ -101,7 +101,7 @@ function bb_member_blogging_is_license_active() {
  * @return string Admin URL for the license activation screen.
  */
 function bb_member_blogging_get_license_url() {
-	return bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+	return bb_admin_license_screen_url();
 }
 
 /**
@@ -111,6 +111,7 @@ function bb_member_blogging_get_license_url() {
  * header): an unlicensed site can now switch the add-on on from this panel, so
  * the panel must not promise functionality that DRM will immediately deny.
  *
+ * @bbwt-com-start drm
  * Two paths, because the registry is only half an answer:
  *
  * - Add-on ACTIVE — its `plugins_loaded` hook has run `BB_DRM_Registry::register_addon()`,
@@ -122,12 +123,15 @@ function bb_member_blogging_get_license_url() {
  *   `cleanup_addon_drm()`). Instantiate `BB_DRM_Addon` for the slug instead so
  *   the real policy — including the grace-period threshold — is reused rather
  *   than duplicated here.
+ * @bbwt-com-end drm
  *
  * @since BuddyBoss 3.3.0
  *
  * @return bool True when the add-on's features are DRM-locked.
  */
 function bb_member_blogging_addon_is_drm_locked() {
+	$is_locked = false;
+	// @bbwt-com-start drm
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
 		return false;
 	}
@@ -146,7 +150,10 @@ function bb_member_blogging_addon_is_drm_locked() {
 	// `bb_drm_addon_event_{slug}` callback, which fires from run(), never here.
 	$drm = new \BuddyBoss\Core\Admin\DRM\BB_DRM_Addon( $slug, __( 'Member Blogging', 'buddyboss' ) );
 
-	return (bool) $drm->should_lock_features();
+	$is_locked = (bool) $drm->should_lock_features();
+	// @bbwt-com-end drm
+
+	return $is_locked;
 }
 
 /**
@@ -322,7 +329,7 @@ function bb_member_blogging_get_upsell_field_data() {
 			$data = array(
 				'empty_state_description' => __( 'The Member Blogging add-on is active but this version does not provide these settings. Update the add-on to continue.', 'buddyboss' ),
 				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
+				'button_url'              => bb_admin_addons_screen_url(),
 			);
 			break;
 
@@ -351,12 +358,21 @@ function bb_member_blogging_get_upsell_field_data() {
 		case 'not_installed':
 			$data = array(
 				'empty_state_description' => __( 'Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend.', 'buddyboss' ),
-				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
-				'addon_action'            => 'bb_member_blogging_install_plugin',
-				'addon_slug'              => bb_member_blogging_plugin_slug(),
-				'addon_nonce_key'         => 'ajaxNonce',
-				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
+				// Builds without the in-dashboard installer (the wordpress.org edition) link
+				// to the BuddyBoss account, where the add-on is downloaded for upload.
+				'button_label'            => __( 'Go to My Account', 'buddyboss' ),
+				'button_url'              => 'https://www.buddyboss.com/my-account/',
+				'button_target'           => '_blank',
 			);
+			// @bbwt-com-start installers
+			// In-place install. The empty-state card renders an `addon_action` button
+			// ahead of `button_url`, so the link above is only a fallback.
+			$data['button_label']     = __( 'Install & Activate', 'buddyboss' );
+			$data['addon_action']     = 'bb_member_blogging_install_plugin';
+			$data['addon_slug']       = bb_member_blogging_plugin_slug();
+			$data['addon_nonce_key']  = 'ajaxNonce';
+			$data['addon_busy_label'] = __( 'Installing…', 'buddyboss' );
+			// @bbwt-com-end installers
 			break;
 
 		case 'needs_license':
@@ -380,7 +396,7 @@ function bb_member_blogging_get_upsell_field_data() {
 			$data = array(
 				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss' ),
 				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
+				'button_url'              => bb_admin_addons_screen_url(),
 			);
 			break;
 
@@ -390,11 +406,16 @@ function bb_member_blogging_get_upsell_field_data() {
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
 				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
 				// Fallback for when the catalog has no entry for this panel — see
-				// `button_url_from_catalog` in the defaults above.
-				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				// `button_url_from_catalog` in the defaults above. Builds without
+				// pricing links (the wordpress.org edition) keep it empty, so the
+				// empty-state card renders no button.
+				'button_url'              => '',
 				'button_url_from_catalog' => true,
 				'button_target'           => '_blank',
 			);
+			// @bbwt-com-start pricing-links
+			$data['button_url'] = 'https://www.buddyboss.com/pricing/';
+			// @bbwt-com-end pricing-links
 			break;
 	}
 
@@ -515,6 +536,7 @@ function bb_member_blogging_ajax_activate_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_member_blogging_activate_plugin', 'bb_member_blogging_ajax_activate_plugin' );
+// @bbwt-com-start installers
 
 /**
  * AJAX: install and activate the Member Blogging add-on.
@@ -608,3 +630,4 @@ function bb_member_blogging_ajax_install_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_member_blogging_install_plugin', 'bb_member_blogging_ajax_install_plugin' );
+// @bbwt-com-end installers

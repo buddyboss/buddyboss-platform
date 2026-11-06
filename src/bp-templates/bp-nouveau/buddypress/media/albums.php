@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_is_group = bp_is_group();
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) {
 	$bp_is_group_albums_support_enabled   = bp_is_group_albums_support_enabled();

@@ -137,8 +137,8 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 				AND
 				(
 					( ac.privacy IN ( '" . implode( "','", $privacy ) . "' ) and ac.component != 'groups' ) " .
-					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ac.component = 'groups' )" : '' ) .
-					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ac.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ac.privacy = 'friends' )" : '' ) .
+					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", array_map( 'intval', $user_groups ) ) . "' ) AND ac.component = 'groups' )" : '' ) .
+					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ac.user_id IN ( '" . implode( "','", array_map( 'intval', $friends ) ) . "' ) AND ac.privacy = 'friends' )" : '' ) .
 					( is_user_logged_in() ? " OR ( ac.user_id = '" . bp_loggedin_user_id() . "' AND ac.privacy = 'onlyme' )" : '' ) .
 				')';
 
@@ -158,7 +158,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- as built by this method: table name from $bp->activity, the search term bound here as %s (esc_like()'d), privacy values are the literals 'public'/'loggedin', group/friend ids int-cast, bp_loggedin_user_id() returns an int. FROM/WHERE pass through the documented bp_activity_comments_search_join_sql / bp_activity_comments_search_where_conditions filters (core listener: BP_Suspend_Activity_Comment); listeners may alter them.
 
 			return apply_filters(
 				'Bp_Search_Activity_Comment_sql',

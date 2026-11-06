@@ -152,7 +152,7 @@ function bbp_new_forum_handler( $action = '' ) {
 	/** Forum Title */
 
 	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( strip_tags( $_POST['bbp_forum_title'] ) );
+		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Filter and sanitize.
@@ -344,6 +344,7 @@ function bbp_new_forum_handler( $action = '' ) {
 
 	// WP_Error.
 	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
+		/* translators: %s: error message. */
 		bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $forum_id->get_error_message() ) );
 
 	// Generic error.
@@ -465,7 +466,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 	/** Forum Title */
 
 	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( strip_tags( $_POST['bbp_forum_title'] ) );
+		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Filter and sanitize
@@ -531,7 +532,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 	 * @todo omitted for 2.1
 	// Revision Reason
 	if ( !empty( $_POST['bbp_forum_edit_reason'] ) )
-		$forum_edit_reason = esc_attr( strip_tags( $_POST['bbp_forum_edit_reason'] ) );
+		$forum_edit_reason = esc_attr( strip_tags( $_POST['bbp_forum_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 	// Update revision log
 	if ( !empty( $_POST['bbp_log_forum_edit'] ) && ( "1" === $_POST['bbp_log_forum_edit'] ) && ( $revision_id = wp_save_post_revision( $forum_id ) ) ) {
@@ -602,7 +603,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:' . $append_error . 'Please try again.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_forum_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:%sPlease try again.', 'buddyboss' ), $append_error ) );
 	}
 }
 
@@ -1010,7 +1011,7 @@ function bbp_repair_forum_visibility() {
 	// Next, get all the private and hidden forums
 	$private_forums = new WP_Query(
 		array(
-			'suppress_filters'       => true,
+			'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'nopaging'               => true,
 			'post_type'              => bbp_get_forum_post_type(),
 			'post_status'            => bbp_get_private_status_id(),
@@ -1026,7 +1027,7 @@ function bbp_repair_forum_visibility() {
 
 	$hidden_forums = new WP_Query(
 		array(
-			'suppress_filters'       => true,
+			'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'nopaging'               => true,
 			'post_type'              => bbp_get_forum_post_type(),
 			'post_status'            => bbp_get_hidden_status_id(),
@@ -1573,7 +1574,7 @@ function bbp_update_forum_topic_count_hidden( $forum_id = 0, $topic_count = 0 ) 
 
 				// Performance.
 				'nopaging'               => true,
-				'suppress_filters'       => true,
+				'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 				'update_post_term_cache' => false,
 				'update_post_meta_cache' => false,
 				'ignore_sticky_posts'    => true,
@@ -2410,7 +2411,7 @@ function bbp_delete_forum_topics( $forum_id = 0 ) {
 	// Note that we get all post statuses here
 	$topics = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_topic_post_type(),
 			'post_parent'      => $forum_id,
 			'post_status'      => array_keys( get_post_stati() ),
@@ -2472,7 +2473,7 @@ function bbp_trash_forum_topics( $forum_id = 0 ) {
 	// Forum is being trashed, so its topics and replies are trashed too
 	$topics = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_topic_post_type(),
 			'post_parent'      => $forum_id,
 			'post_status'      => $post_stati,

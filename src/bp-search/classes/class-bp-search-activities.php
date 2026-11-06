@@ -148,8 +148,8 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 				AND
 				(
 					( a.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND a.component != 'groups' AND a.hide_sitewide = 0 ) " .
-					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
-					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", $friends ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
+					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( a.item_id IN ( '" . implode( "','", array_map( 'intval', $user_groups ) ) . "' ) AND a.component = 'groups' AND a.privacy = 'public' )" : '' ) .
+					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( a.user_id IN ( '" . implode( "','", array_map( 'intval', $friends ) ) . "' ) AND a.privacy = 'friends' AND a.hide_sitewide = 0 )" : '' ) .
 					( is_user_logged_in() ? " OR ( a.user_id = '" . bp_loggedin_user_id() . "' AND a.privacy = 'onlyme' )" : '' ) .
 				')';
 
@@ -172,7 +172,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
-			$sql                     = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                     = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- as built by this method: table names from $bp->activity, the select part already $wpdb->prepare()'d, the search term bound here as %s (esc_like()'d), privacy values are the literals 'public'/'loggedin', group/friend ids int-cast, bp_loggedin_user_id() returns an int. FROM/WHERE pass through the documented bp_activity_search_join_sql / bp_activity_search_where_conditions filters (core listener: BP_Suspend_Activity); listeners may alter them.
 
 			return apply_filters(
 				'Bp_Search_Activities_sql',

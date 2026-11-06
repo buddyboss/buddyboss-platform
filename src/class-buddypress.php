@@ -168,7 +168,7 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * A dummy magic method to prevent BuddyPress from being unserialized.
@@ -176,7 +176,7 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field.
@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23631;
+		$this->db_version = 23641;
 
 		/** Loading */
 
@@ -514,8 +514,10 @@ class BuddyPress {
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
+		// @bbwt-com-start mothership-hub
 		// Initialize BuddyBoss Mothership (License & Add-ons).
 		require $this->plugin_dir . 'bp-core/admin/mothership/mothership-init.php';
+		// @bbwt-com-end mothership-hub
 
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
@@ -563,6 +565,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
 		require $this->plugin_dir . 'bp-core/bb-core-bookmarks.php';
+		require $this->plugin_dir . 'bp-core/bb-core-drafts.php';
 		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
@@ -824,6 +827,10 @@ class BuddyPress {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} elseif ( 'suspend' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-moderation/classes/suspend/class-{$class}.php";
+		} elseif ( 'bp-phpmailer' === $class ) {
+			// File deliberately named without the "phpmailer.php" suffix so it is not mistaken
+			// for the bundled PHPMailer library; the class name BP_PHPMailer is unchanged.
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-bp-php-mailer.php";
 		} else {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
 		}

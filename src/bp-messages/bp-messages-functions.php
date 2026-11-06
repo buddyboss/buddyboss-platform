@@ -359,10 +359,7 @@ function messages_new_message( $args = '' ) {
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {
-				$message->subject = sprintf(
-					__( '%s', 'buddyboss' ),
-					wp_trim_words( $thread->messages[0]->subject, messages_get_default_subject_length() )
-				);
+				$message->subject = wp_trim_words( $thread->messages[0]->subject, messages_get_default_subject_length() );
 			}
 		}
 	}
@@ -1406,6 +1403,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'object'     => 'group',
 							'type'       => 'full',
 							'avatar_dir' => 'group-avatars',
+							/* translators: %s: group name. */
 							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 							'title'      => $group_name,
 							'html'       => false,
@@ -3043,6 +3041,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 	if ( ! empty( $r['sender_id'] ) ) {
 		/* translators: 1. Member Name. */
 		$content = sprintf(
+			// translators: %s: the member name.
 			( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
 			'<strong>' . bp_core_get_user_displayname( $r['sender_id'] ) . '</strong>'
 		);
@@ -3083,6 +3082,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			if ( ! empty( $user_id ) ) {
 				/* translators: 1. Member Name. */
 				$content = sprintf(
+					// translators: %s: the member name.
 					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
 					'<strong>' . bp_core_get_user_displayname( $user_id ) . '</strong>'
 				);
@@ -3098,6 +3098,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			if ( ! empty( $first_user_id ) && ! empty( $last_user_id ) ) {
 				/* translators: 1. Member Name. 2. Member Name. */
 				$content = sprintf(
+					// translators: 1: first member name, 2: second member name.
 					( 'left' === $r['type'] ? __( '%1$s and %2$s left the group.', 'buddyboss' ) : __( '%1$s and %2$s joined the group.', 'buddyboss' ) ),
 					'<strong>' . bp_core_get_user_displayname( $first_user_id ) . '</strong>',
 					'<strong>' . bp_core_get_user_displayname( $last_user_id ) . '</strong>'
@@ -3105,12 +3106,14 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			} elseif ( ! empty( $first_user_id ) ) {
 				/* translators: 1. Member Name */
 				$content = sprintf(
+					// translators: %s: the member name.
 					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
 					'<strong>' . bp_core_get_user_displayname( $first_user_id ) . '</strong>',
 				);
 			} elseif ( ! empty( $last_user_id ) ) {
 				/* translators: 1. Member Name. */
 				$content = sprintf(
+					// translators: %s: the member name.
 					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
 					'<strong>' . bp_core_get_user_displayname( $last_user_id ) . '</strong>'
 				);
@@ -3145,6 +3148,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 				'<strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s">%2$s</strong>',
 				$member_names,
 				sprintf(
+					/* translators: %d: number of other members. */
 					__( '%d others', 'buddyboss' ),
 					( $total_user_ids - 1 )
 				)
@@ -3164,6 +3168,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 
 			/* translators: 1. Member Name, 2. Other member list. */
 			$content = sprintf(
+				// translators: 1: member name, 2: comma-separated list of the other members who joined/left.
 				( 'left' === $r['type'] ? __( '%1$s left the group, along with %2$s', 'buddyboss' ) : __( '%1$s joined the group, along with %2$s', 'buddyboss' ) ),
 				'<strong>' . bp_core_get_user_displayname( $first_user_id ) . '</strong>',
 				$to_others

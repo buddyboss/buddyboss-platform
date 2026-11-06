@@ -307,7 +307,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 							}
 
 							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
-							echo $link_html;
+							echo wp_kses_post( $link_html );
 						}
 						?>
 						<?php if ( $use_bootstrap ) : ?>
@@ -341,7 +341,10 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 	?>
 	<div class="pag-count bottom">
 		<div class="pag-data">
-			<?php printf( __( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss' ), $from_num, min( $total_items, $to_num ), $total_items ); ?>
+			<?php
+			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
+			?>
 		</div>
 	</div>
 	<?php
@@ -577,9 +580,10 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 		$hidden_filters = bps_get_hidden_filters();
 
 		$cookie  = apply_filters( 'bps_cookie_name', 'bps_request' );
-		$request = isset( $_REQUEST['bps_form'] ) ? $_REQUEST : array();
+		$request = isset( $_REQUEST['bps_form'] ) ? map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) : array();
 		if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
-			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $request );
+			$request = map_deep( $request, 'sanitize_text_field' );
 		}
 
 		switch ( $type ) {
@@ -612,10 +616,10 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 	}
 
 	function bps_current_page() {
-		$current = defined( 'DOING_AJAX' ) ? parse_url(
-			$_SERVER['HTTP_REFERER'],
+		$current = defined( 'DOING_AJAX' ) ? wp_parse_url(
+			isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
 			PHP_URL_PATH
-		) : parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		) : wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 		return apply_filters( 'bps_current_page', $current );        // published interface, 20190324
 	}
@@ -637,7 +641,8 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 			$data = isset( $bps_directory_data ) ? $bps_directory_data : array();
 		} elseif ( isset( $_COOKIE[ $cookie ] ) ) {
 			$current = bps_current_page();
-			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $data );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $data );
+			$data = map_deep( $data, 'sanitize_text_field' );
 			if ( $data['page'] != $current ) {
 				$data = array();
 			}

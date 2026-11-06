@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-reply-author-avatar item-avatar">
 			<?php
 			$args = array( 'type' => 'avatar' );
-			echo bbp_get_reply_author_link( $args );
+			echo bbp_get_reply_author_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress author link incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 			?>
 		</div><!-- .bbp-reply-author -->
 
@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 			<h3>
 				<?php
 				$args = array( 'type' => 'name' );
-				echo bbp_get_reply_author_link( $args );
+				echo bbp_get_reply_author_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped bbPress author link incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 				?>
 			</h3>
 			<span class="bb-rl-timestamp"><?php bbp_reply_post_date(); ?></span>

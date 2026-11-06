@@ -33,6 +33,7 @@ $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
 					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save; wp_kses_post() here turns a tag cut by the excerpt into visible text.
 					echo bp_create_excerpt(
 						bp_get_activity_content_body(),
 						100,
@@ -49,8 +50,8 @@ $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 					$activity_comment_date_recorded = bp_get_activity_date_recorded();
 					printf(
 						'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-						bp_core_get_iso8601_date( $activity_comment_date_recorded ),
-						bp_core_time_since( $activity_comment_date_recorded )
+						esc_html( bp_core_get_iso8601_date( $activity_comment_date_recorded ) ),
+						esc_html( bp_core_time_since( $activity_comment_date_recorded ) )
 					);
 					?>
 				</a>

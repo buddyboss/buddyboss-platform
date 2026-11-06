@@ -276,10 +276,10 @@ $settings = bp_email_get_appearance_settings();
 									if ( !empty( $image_src ) ) { ?>
 										<img src="<?php echo esc_attr( $image_src[ 0 ] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" /><?php
 									} else {
-										echo $blogname;
+										echo esc_html( $blogname );
 									}
 								} else {
-									echo $blogname;
+									echo esc_html( $blogname );
 								}
 
 								/**
@@ -323,7 +323,7 @@ $settings = bp_email_get_appearance_settings();
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                     <tr>
                                         <td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size repsonsive-padding">
-											<?php echo $email_content; ?>
+											<?php echo wp_kses_post( $email_content ); ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -348,7 +348,7 @@ $settings = bp_email_get_appearance_settings();
 								do_action( 'bp_before_email_footer' );
 								?>
 
-                                <span class="footer_text"><?php echo nl2br( stripslashes( $settings['footer_text'] ) ); ?></span>
+                                <span class="footer_text"><?php echo wp_kses_post( nl2br( stripslashes( $settings['footer_text'] ) ) ); ?></span>
 
 								<?php
 								/**

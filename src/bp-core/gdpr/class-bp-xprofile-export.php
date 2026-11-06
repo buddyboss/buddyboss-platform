@@ -108,7 +108,8 @@ final class BP_Xprofile_Export extends BP_Export {
 		foreach ( $data_items['items'] as $xgroup => $items ) {
 
 			$group_id    = $xgroup;
-			$group_label = __( "User Profile - {$xgroup}", 'buddyboss' );
+			// translators: %s: the XProfile field group name.
+			$group_label = sprintf( __( 'User Profile - %s', 'buddyboss' ), $xgroup );
 			$item_id     = "{$this->exporter_name}-{$group_id}";
 
 			$data = array();
@@ -209,7 +210,7 @@ final class BP_Xprofile_Export extends BP_Export {
 
 		foreach ( $xprofile_groups as $xgroup ) {
 
-			$fields = $wpdb->get_results(
+			$fields = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $field_table is the xprofile fields table name from buddypress().
 				$wpdb->prepare(
 					"SELECT *FROM {$field_table} WHERE group_id=%d AND parent_id=0",
 					$xgroup->id

@@ -94,13 +94,13 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	<?php
 }
 ?>
-<script>window.history.replaceState(null, null, window.location.pathname);</script>
+
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Sent Invites', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Sent Invites', 'buddyboss' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'You have sent invitation emails to the following people:', 'buddyboss' ); ?>
+	<?php esc_html_e( 'You have sent invitation emails to the following people:', 'buddyboss' ); ?>
 </p>
 
 <table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
@@ -135,16 +135,16 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 			?>
 			<tr>
 				<td class="field-name">
-					<span><?php echo get_post_meta( $post_id, '_bp_invitee_name', true ); ?></span>
+					<span><?php echo esc_html( get_post_meta( $post_id, '_bp_invitee_name', true ) ); ?></span>
 				</td>
 				<td class="field-email">
-					<span><?php echo get_post_meta( $post_id, '_bp_invitee_email', true ); ?></span>
+					<span><?php echo esc_html( get_post_meta( $post_id, '_bp_invitee_email', true ) ); ?></span>
 				</td>
 				<td class="field-email">
 					<span>
 						<?php
 						$date = get_the_date( '', $post_id );
-						echo $date;
+						echo esc_html( $date );
 						?>
 					</span>
 				</td>
@@ -170,21 +170,21 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						?>
 						<span class="bp-invitee-status">
 							<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
-							<?php echo $title; ?>
+							<?php echo esc_html( $title ); ?>
 						</span>
 						<?php
 					} elseif ( 'registered' === $class ) {
 
 						?>
 							<span class="bp-invitee-status">
-								<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+								<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo esc_html( $title ); ?>
 							</span>
 							<?php
 					} else {
 						?>
 							<span class="bp-invitee-status">
 								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( $post_id ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
-									<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+									<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo esc_html( $title ); ?>
 								</a>
 							</span>
 							<?php
@@ -215,7 +215,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					<p class="pag-data">
 						<?php
 							$current_page = max( 1, get_query_var( 'paged' ) );
-							echo paginate_links(
+							echo wp_kses_post( paginate_links(
 								array(
 									'base'      => get_pagenum_link( 1 ) . '%_%',
 									'format'    => '?paged=%#%',
@@ -224,7 +224,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 									'prev_text' => __( '« Prev', 'buddyboss' ),
 									'next_text' => __( 'Next »', 'buddyboss' ),
 								)
-							);
+							) );
 						?>
 					</p>
 				</div>

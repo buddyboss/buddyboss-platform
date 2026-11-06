@@ -392,6 +392,7 @@ class BP_Akismet {
 			return;
 		}
 
+		/* translators: %s: member display name. */
 		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-spam' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
@@ -410,6 +411,7 @@ class BP_Akismet {
 			return;
 		}
 
+		/* translators: %s: member display name. */
 		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-ham' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
@@ -446,6 +448,7 @@ class BP_Akismet {
 			// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_error', bp_core_current_time() );
+			/* translators: %s: Akismet response. */
 			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 
@@ -471,7 +474,7 @@ class BP_Akismet {
 		$activity_data['blog']         = bp_get_option( 'home' );
 		$activity_data['blog_charset'] = bp_get_option( 'blog_charset' );
 		$activity_data['blog_lang']    = get_locale();
-		$activity_data['referrer']     = $_SERVER['HTTP_REFERER'];
+		$activity_data['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$activity_data['user_agent']   = bp_core_current_user_ua();
 		$activity_data['user_ip']      = bp_core_current_user_ip();
 
@@ -482,7 +485,7 @@ class BP_Akismet {
 		// Loop through _POST args and rekey strings.
 		foreach ( $_POST as $key => $value ) {
 			if ( is_string( $value ) && 'cookie' != $key ) {
-				$activity_data[ 'POST_' . $key ] = $value;
+				$activity_data[ 'POST_' . $key ] = sanitize_text_field( wp_unslash( $value ) );
 			}
 		}
 
@@ -494,7 +497,7 @@ class BP_Akismet {
 
 			// Key should not be ignored.
 			if ( ! in_array( $key, $ignore ) && is_string( $value ) ) {
-				$activity_data[ $key ] = $value;
+				$activity_data[ $key ] = sanitize_text_field( wp_unslash( $value ) );
 
 				// Key should be ignored.
 			} else {

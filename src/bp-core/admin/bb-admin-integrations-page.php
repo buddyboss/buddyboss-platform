@@ -148,6 +148,7 @@ function bb_admin_integrations_page() {
 	// ask the IPN View service for the actual ID; on failure the JS falls back to
 	// a structural [id$="_ipn_root"] selector. Mirrors the Settings page.
 	$ipn_root_id = '';
+	// @bbwt-com-start mothership-hub
 	if (
 		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
 		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
@@ -162,6 +163,7 @@ function bb_admin_integrations_page() {
 			$ipn_root_id = '';
 		}
 	}
+	// @bbwt-com-end mothership-hub
 
 	// "Works with" is fully driven by the buddyboss.com API — each integration's
 	// acf.works_with is a { slug: { name, met } } map derived from its ACF

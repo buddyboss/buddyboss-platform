@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of the signup screen.
  *
@@ -23,7 +26,7 @@ function bp_core_screen_signup() {
 
 		// Check it's not a Email Invites
 		if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) {
-			if ( parse_url( bp_custom_register_page_url(), PHP_URL_QUERY ) ) {
+			if ( wp_parse_url( bp_custom_register_page_url(), PHP_URL_QUERY ) ) {
 				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
 				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
 				$url = bp_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
@@ -261,7 +264,7 @@ function bp_core_screen_signup() {
 				add_action(
 					'bp_' . $fieldname . '_errors',
 					function() use ( $error_message ) {
-						echo apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $error_message . '</div>' );
+						echo wp_kses_post( apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $error_message . '</div>' ) );
 					}
 				);
 			}

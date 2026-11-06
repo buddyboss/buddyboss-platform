@@ -87,8 +87,7 @@ class BP_XProfile_ProfileData {
 
 		if ( false === $profiledata ) {
 
-			$sql         = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
-			$profiledata = $wpdb->get_row( $sql );
+			$profiledata = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id ) );
 
 			if ( $profiledata ) {
 				wp_cache_set( $cache_key, $profiledata, 'bp_xprofile_data' );
@@ -644,8 +643,7 @@ class BP_XProfile_ProfileData {
 			$field_sql .= $wpdb->prepare( 'AND f.name = %s', $fields );
 		}
 
-		$sql    = $wpdb->prepare( "SELECT d.value, f.name FROM {$bp->profile->table_name_data} d, {$bp->profile->table_name_fields} f WHERE d.field_id = f.id AND d.user_id = %d AND f.parent_id = 0 $field_sql", $user_id );
-		$values = $wpdb->get_results( $sql );
+		$values = $wpdb->get_results( $wpdb->prepare( "SELECT d.value, f.name FROM {$bp->profile->table_name_data} d, {$bp->profile->table_name_fields} f WHERE d.field_id = f.id AND d.user_id = %d AND f.parent_id = 0 $field_sql", $user_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $field_sql is built above from $wpdb->prepare()'d name clauses (%s); table names from buddypress().
 
 		if ( empty( $values ) || is_wp_error( $values ) ) {
 			return false;
@@ -756,7 +754,7 @@ class BP_XProfile_ProfileData {
 
 		$bp = buddypress();
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT pf.type, pf.name, pd.value FROM {$bp->profile->table_name_data} pd INNER JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id AND pd.user_id = %d {$exclude_sql} ORDER BY RAND() LIMIT 1", $user_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT pf.type, pf.name, pd.value FROM {$bp->profile->table_name_data} pd INNER JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id AND pd.user_id = %d {$exclude_sql} ORDER BY RAND() LIMIT 1", $user_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $exclude_sql is a constant clause chosen by code; table names from buddypress().
 	}
 
 	/**

@@ -97,7 +97,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			// Need to get all topics id of hidden forums.
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
-			'suppress_filters'       => true,
+			'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 		);
 
 		if ( $page > 0 ) {

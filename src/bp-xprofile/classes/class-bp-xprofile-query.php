@@ -455,8 +455,8 @@ class BP_XProfile_Query {
 			switch ( $field_compare ) {
 				case 'IN':
 				case 'NOT IN':
-					$field_compare_string = '(' . substr( str_repeat( ',%s', count( $field_value ) ), 1 ) . ')';
-					$where                = $wpdb->prepare( $field_compare_string, $field_value );
+					// One %s placeholder per value.
+					$where = $wpdb->prepare( '(' . implode( ',', array_fill( 0, count( $field_value ), '%s' ) ) . ')', $field_value );
 					break;
 
 				case 'BETWEEN':

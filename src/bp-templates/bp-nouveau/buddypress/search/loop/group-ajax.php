@@ -8,6 +8,10 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_group">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_group_permalink() ) ); ?>">
@@ -18,7 +22,7 @@
 			<div class="item-title"><?php bp_group_link(); ?></div>
 			<div class="item-meta group-details">
 				<?php
-				echo bp_create_excerpt(
+				echo bp_create_excerpt( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save; wp_kses_post() here turns a tag cut by the excerpt into visible text.
 					bp_get_group_description(),
 					255,
 					array(

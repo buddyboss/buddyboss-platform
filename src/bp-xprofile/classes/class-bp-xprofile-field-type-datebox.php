@@ -123,7 +123,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																		esc_html_e( 'Day', 'buddyboss' );
 																		?>
 				</label>
-				<select <?php echo $this->get_edit_field_html_elements( $day_r ); ?>>
+				<select <?php echo $this->get_edit_field_html_elements( $day_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 					<?php
 					bp_the_profile_field_options(
 						array(
@@ -139,7 +139,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																		esc_html_e( 'Month', 'buddyboss' );
 																		?>
 				</label>
-				<select <?php echo $this->get_edit_field_html_elements( $month_r ); ?>>
+				<select <?php echo $this->get_edit_field_html_elements( $month_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 					<?php
 					bp_the_profile_field_options(
 						array(
@@ -155,7 +155,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																		esc_html_e( 'Year', 'buddyboss' );
 																		?>
 				</label>
-				<select <?php echo $this->get_edit_field_html_elements( $year_r ); ?>>
+				<select <?php echo $this->get_edit_field_html_elements( $year_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 					<?php
 					bp_the_profile_field_options(
 						array(
@@ -200,9 +200,9 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 			// If Unix timestamp.
 			if ( is_numeric( $date ) ) {
-				$day   = date( 'j', $date );
-				$month = date( 'F', $date );
-				$year  = date( 'Y', $date );
+				$day   = gmdate( 'j', $date );
+				$month = gmdate( 'F', $date );
+				$year  = gmdate( 'Y', $date );
 
 				// If MySQL timestamp.
 			} else {
@@ -273,8 +273,8 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				$settings = $this->get_field_settings( $this->field_obj->id );
 
 				if ( 'relative' === $settings['range_type'] ) {
-					$start = date( 'Y' ) + $settings['range_relative_start'];
-					$end   = date( 'Y' ) + $settings['range_relative_end'];
+					$start = gmdate( 'Y' ) + $settings['range_relative_start'];
+					$end   = gmdate( 'Y' ) + $settings['range_relative_end'];
 				} else {
 					$start = $settings['range_absolute_start'];
 					$end   = $settings['range_absolute_end'];
@@ -299,7 +299,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		 * @param int    $id    ID of the field object being rendered.
 		 * @param string $date  Current date.
 		 */
-		echo apply_filters( 'bp_get_the_profile_field_datebox', $html, $args['type'], $day, $month, $year, $this->field_obj->id, $date );
+		echo apply_filters( 'bp_get_the_profile_field_datebox', $html, $args['type'], $day, $month, $year, $this->field_obj->id, $date ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- <option>/<select> markup built with esc_attr()/esc_html() per value; wp_kses_post() strips the controls.
 	}
 
 	/**
@@ -343,7 +343,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Day', 'buddyboss' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $day_r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $day_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'day' ) ); ?>
 		</select>
 
@@ -352,7 +352,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Month', 'buddyboss' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $month_r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $month_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'month' ) ); ?>
 		</select>
 
@@ -361,7 +361,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Year', 'buddyboss' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $year_r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $year_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'year' ) ); ?>
 		</select>
 
@@ -381,8 +381,8 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 			'date_format'          => 'Y-m-d',
 			'date_format_custom'   => '',
 			'range_type'           => 'absolute',
-			'range_absolute_start' => date( 'Y' ) - 60,
-			'range_absolute_end'   => date( 'Y' ) + 10,
+			'range_absolute_start' => gmdate( 'Y' ) - 60,
+			'range_absolute_end'   => gmdate( 'Y' ) + 10,
 			'range_relative_start' => '-10',
 			'range_relative_end'   => '20',
 		);
@@ -519,7 +519,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 						<div class="bp-date-format-option">
 							<label for="date-format-<?php echo esc_attr( $format ); ?>">
 								<input type="radio" name="field-settings[date_format]" id="date-format-<?php echo esc_attr( $format ); ?>" value="<?php echo esc_attr( $format ); ?>" <?php checked( $format, $settings['date_format'] ); ?> />
-								<span class="date-format-label"><?php echo date_i18n( $format ); ?></span>
+								<span class="date-format-label"><?php echo esc_html( date_i18n( $format ) ); ?></span>
 								<code><?php echo esc_html( $format ); ?></code>
 							</label>
 						</div>
@@ -528,7 +528,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 					<div class="bp-date-format-option">
 						<label for="date-format-elapsed">
 							<input type="radio" name="field-settings[date_format]" id="date-format-elapsed" <?php checked( 'elapsed', $settings['date_format'] ); ?> value="elapsed" aria-describedby="date-format-elapsed-setting" />
-							<span class="date-format-label" id="date-format-elapsed-setting"><?php esc_html_e( 'Time elapsed', 'buddyboss' ); ?></span> <?php _e( '<code>4 years ago</code>, <code>4 years from now</code>', 'buddyboss' ); ?>
+							<span class="date-format-label" id="date-format-elapsed-setting"><?php esc_html_e( 'Time elapsed', 'buddyboss' ); ?></span> <?php echo wp_kses_post( __( '<code>4 years ago</code>, <code>4 years from now</code>', 'buddyboss' ) ); ?>
 						</label>
 					</div>
 

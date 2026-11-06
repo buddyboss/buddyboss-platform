@@ -152,7 +152,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'messages_send_message' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'messages_send_message' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -459,7 +459,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'messages_send_message' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'messages_send_message' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -655,7 +655,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 function bp_nouveau_ajax_get_user_message_threads() {
 	global $messages_template, $wpdb;
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
@@ -766,7 +766,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
+				$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok.
 				$group_link               = 'javascript:void(0);';
 				$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 				$legacy_group_avatar_name = '-groupavatar-full';
@@ -826,7 +826,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table             = $prefix . 'bp_groups';
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
+					$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok.
 					$group_link               = 'javascript:void(0);';
 					$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 					$legacy_group_avatar_name = '-groupavatar-full';
@@ -1162,7 +1162,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_thread_read() {
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1199,7 +1199,7 @@ function bp_nouveau_ajax_messages_thread_read() {
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template, $media_template, $document_template, $wpdb, $bp;
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
@@ -1265,7 +1265,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1318,7 +1318,7 @@ function bp_nouveau_ajax_delete_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1486,7 +1486,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 
 	// Use global nonce for bulk actions involving more than one id.
 	if ( 1 !== count( $ids ) ) {
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 			wp_send_json_error( $response );
 		}
 
@@ -1525,7 +1525,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 	} else {
 		$id = reset( $ids );
 
-		if ( empty( $_POST['star_nonce'] ) || ! wp_verify_nonce( $_POST['star_nonce'], 'bp-messages-star-' . $id ) ) {
+		if ( empty( $_POST['star_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['star_nonce'] ) ), 'bp-messages-star-' . $id ) ) {
 			wp_send_json_error( $response );
 		}
 
@@ -1586,7 +1586,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 		);
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1650,7 +1650,7 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1710,7 +1710,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'messages_load_recipient' ) ) {
+	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'messages_load_recipient' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2023,7 +2023,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 			$groups_table             = $prefix . 'bp_groups';
-			$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+			$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok.
 			$group_link               = 'javascript:void(0);';
 			$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 			$legacy_group_avatar_name = '-groupavatar-full';
@@ -2088,7 +2088,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok.
 				$group_link               = 'javascript:void(0);';
 				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
@@ -2363,7 +2363,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok.
 				$group_link               = 'javascript:void(0);';
 				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
@@ -2386,6 +2386,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			if ( empty( $group_name ) ) {
 				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
 				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
+					/* translators: %s: group name. */
 					$group_text = sprintf( __( 'Sent from %s', 'buddyboss' ), $group_name );
 				}
 			} else {
@@ -2945,7 +2946,7 @@ function bp_nouveau_ajax_hide_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2973,6 +2974,7 @@ function bp_nouveau_ajax_hide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: group name. */
 			__( 'Messages for "%s" have been archived.', 'buddyboss' ),
 			$group_name
 		);
@@ -2989,6 +2991,7 @@ function bp_nouveau_ajax_hide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: recipient name(s). */
 			__( 'The conversation with %s has been archived.', 'buddyboss' ),
 			implode( ', ', $recipients )
 		);
@@ -3505,7 +3508,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -3533,6 +3536,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: group name. */
 			__( 'Messages for "%s" have been unarchived.', 'buddyboss' ),
 			$group_name
 		);
@@ -3549,6 +3553,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: recipient name(s). */
 			__( 'The conversation with %s has been unarchived.', 'buddyboss' ),
 			implode( ', ', $recipients )
 		);

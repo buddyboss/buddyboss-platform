@@ -435,7 +435,7 @@ function bp_nouveau_group_manage_screen() {
 	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
 		printf(
 			'<form action="%s" method="post" enctype="multipart/form-data">',
-			bp_get_group_creation_form_action()
+			esc_url( bp_get_group_creation_form_action() )
 		);
 	}
 
@@ -454,7 +454,7 @@ function bp_nouveau_group_manage_screen() {
 	);
 
 	// The submit actions
-	echo $output;
+	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template-part output (may contain forms and scripts); every template escapes its own values.
 
 	if ( ! $is_group_create ) {
 		/**
@@ -936,6 +936,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 					'rel'   => '',
 					'title' => '',
 				),
+				/* translators: %s: label. */
 				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
 			),
 			'promote_admin' => array(
@@ -945,6 +946,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
+				/* translators: %s: label. */
 				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
 				'parent_attr'       => array(
 					'id'    => '',

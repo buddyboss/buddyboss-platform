@@ -6,6 +6,9 @@
  * @since BuddyBoss 2.1.4
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the Messages > Archived screen.
  *

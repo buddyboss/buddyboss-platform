@@ -6,6 +6,9 @@
  * @package BuddyBoss
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="content-report" class="content-report-popup moderation-popup mfp-hide">
@@ -32,8 +35,8 @@
 				</div>
 				<?php
 				$reports_terms = get_terms(
-					'bpm_category',
 					array(
+						'taxonomy'   => 'bpm_category',
 						'hide_empty' => false,
 					)
 				);

@@ -6,6 +6,10 @@
  * @package BuddyBoss\Members
  * @since BuddyBoss 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 class BP_Core_Members_Switching {
 
 	/**
@@ -287,7 +291,7 @@ class BP_Core_Members_Switching {
 					 * @param bool $just_switched Whether the user made the switch on this page request.
 					 */
 					$message = apply_filters( 'bp_member_switching_switched_message', $message, $user, $old_user, $switch_back_url, $just_switched );
-					echo $message; // WPCS: XSS ok.
+					echo wp_kses_post( $message );
 					?>
 				</p>
 			</div>
@@ -459,8 +463,8 @@ class BP_Core_Members_Switching {
 				<style>
 					/* Member Switching */
 					#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
-						background: <?php echo $colors['background']; ?>;
-						color: <?php echo $colors['color']; ?>;;
+						background: <?php echo esc_attr( $colors['background'] ); ?>;
+						color: <?php echo esc_attr( $colors['color'] ); ?>;;
 					}
 				</style>
 				<?php
@@ -568,7 +572,7 @@ class BP_Core_Members_Switching {
 
 		$components = array_keys( buddypress()->active_components );
 
-		echo bp_get_button(
+		echo wp_kses_post( bp_get_button(
 			array(
 				'id'         => 'bp_member_switching',
 				'component'  => reset( $components ),
@@ -576,7 +580,7 @@ class BP_Core_Members_Switching {
 				'link_text'  => esc_html__( 'View As', 'buddyboss' ),
 				'wrapper_id' => 'bp_member_switching_switch_to',
 			)
-		);
+		) );
 	}
 
 	/**
@@ -728,7 +732,10 @@ class BP_Core_Members_Switching {
 	 * @return string The current URL.
 	 */
 	public static function current_url() {
-		return ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; // @codingStandardsIgnoreLine
+		$http_host   = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+		return ( is_ssl() ? 'https://' : 'http://' ) . $http_host . $request_uri;
 	}
 
 	/**
@@ -760,7 +767,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Should the old user cookie be secure?
 	 */
 	public static function secure_olduser_cookie() {
-		return ( is_ssl() && ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) ) );
+		return ( is_ssl() && ( 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) ) );
 	}
 
 	/**
@@ -773,7 +780,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Should the auth cookie be secure?
 	 */
 	public static function secure_auth_cookie() {
-		return ( is_ssl() && ( 'https' === parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
+		return ( is_ssl() && ( 'https' === wp_parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
 	}
 
 	/**

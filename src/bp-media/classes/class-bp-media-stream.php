@@ -81,7 +81,7 @@ class BP_Media_Stream {
 	 */
 	private function open() {
 		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure, WordPress.CodeAnalysis.AssignmentInCondition.Found, WordPress.WP.AlternativeFunctions.file_system_read_fopen
-		if ( ! ( $this->stream = fopen( $this->path, 'rb' ) ) ) {
+		if ( ! ( $this->stream = fopen( $this->path, 'rb' ) ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streams a media file to the browser in chunks; WP_Filesystem has no streaming read API.
 			die( 'Could not open stream for reading' );
 		}
 	}
@@ -145,7 +145,7 @@ class BP_Media_Stream {
 	 */
 	private function end() {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
-		fclose( $this->stream );
+		fclose( $this->stream ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- streams a media file to the browser in chunks; WP_Filesystem has no streaming read API.
 		exit;
 	}
 
@@ -161,7 +161,7 @@ class BP_Media_Stream {
 				$bytes_to_read = $this->end - $i + 1;
 			}
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
-			$data = fread( $this->stream, $bytes_to_read );
+			$data = fread( $this->stream, $bytes_to_read ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- streams a media file to the browser in chunks; WP_Filesystem has no streaming read API.
 			echo $data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			flush();
 			$i += $bytes_to_read;

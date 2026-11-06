@@ -245,6 +245,7 @@ function bb_admin_settings_page() {
 	// will render. The React Header reads this via bbAdminData.ipnRootId to
 	// locate and relocate the live IPN node.
 	$ipn_root_id = '';
+	// @bbwt-com-start mothership-hub
 	if (
 		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
 		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
@@ -259,6 +260,7 @@ function bb_admin_settings_page() {
 			unset( $e );
 		}
 	}
+	// @bbwt-com-end mothership-hub
 
 	$localize_data = array(
 		'apiUrl'                    => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
@@ -330,9 +332,12 @@ function bb_admin_settings_page() {
 	//
 	// Help tab logic (HelpScreen.js): no active license -> show the "Pro"
 	// promo; active license without Scale -> show the "Scale" promo.
+	$bb_has_active_license = false;
+	$bb_has_plus_tier      = false;
+	// @bbwt-com-start mothership-hub
 	$bb_license_connector  = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 	$bb_has_active_license = $bb_license_connector->getLicenseActivationStatus();
-	$bb_has_plus_tier      = false;
+	// @bbwt-com-end mothership-hub
 	if ( $bb_has_active_license && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		$bb_has_plus_tier = null !== \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-gamification' );
 
@@ -345,6 +350,35 @@ function bb_admin_settings_page() {
 	}
 	$localize_data['hasActiveLicense'] = $bb_has_active_license;
 	$localize_data['hasPlusTier']      = $bb_has_plus_tier;
+
+	// Pricing links for the React upsells: the upgrade modal and section badge
+	// fallback (`default`), the Appearance "Buy Theme" button (`buyTheme`) and the
+	// Help tab promos (`help*`). Builds without pricing links (the wordpress.org
+	// edition) send an empty list, and each component then hides its link.
+	$bb_pricing_urls = array();
+	// @bbwt-com-start pricing-links
+	$bb_pricing_urls = array(
+		'default'       => 'https://www.buddyboss.com/pricing/',
+		'buyTheme'      => 'https://buddyboss.com/pricing/',
+		'helpPlusToApp' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help',
+		'helpProToPlus' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help',
+		'helpFreeToPro' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help',
+	);
+	// @bbwt-com-end pricing-links
+	$localize_data['pricingUrls'] = $bb_pricing_urls;
+
+	// Help tab promo images, hosted on the BuddyBoss marketing bucket. Builds
+	// without remote marketing assets (the wordpress.org edition) send an empty
+	// list, and the Help promos then render without an image.
+	$bb_help_promo_images = array();
+	// @bbwt-com-start remote-upsell-features
+	$bb_help_promo_images = array(
+		'app'         => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/app%203.0.png',
+		'upgradePlus' => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-plus.jpg',
+		'upgradePro'  => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-pro.jpg',
+	);
+	// @bbwt-com-end remote-upsell-features
+	$localize_data['helpPromoImages'] = $bb_help_promo_images;
 
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
@@ -605,12 +639,14 @@ function bb_admin_settings_page() {
 		?>
 		<hr class="wp-header-end">
 		<?php
+		// @bbwt-com-start mothership-hub
 		// Free-install "Register your email" banner — rendered outside the
 		// React mount so React never manages (or clobbers) it. Renders
 		// nothing on properly licensed sites (see bb_admin_register_banner_mode()).
 		if ( function_exists( 'bb_admin_render_register_banner' ) ) {
 			bb_admin_render_register_banner();
 		}
+		// @bbwt-com-end mothership-hub
 		?>
 		<div id="bb-admin-settings"></div>
 		<?php

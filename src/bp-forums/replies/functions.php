@@ -274,7 +274,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	/** Reply Title */
 
 	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( strip_tags( $_POST['bbp_reply_title'] ) );
+		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Filter and sanitize.
@@ -289,7 +289,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : [];
 
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
@@ -389,7 +389,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// ...or remove them.
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
@@ -504,26 +504,16 @@ function bbp_new_reply_handler( $action = '' ) {
 			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
 		}
 
-		// Delete draft data from the database.
+		// Delete draft data from the database - through the shared removal path
+		// that re-reads on a fresh cache, so publishing this reply does not
+		// overwrite a sibling draft another request wrote meanwhile (M2).
 		if ( 0 < $topic_id ) {
 			$draft_data_key = 'draft_reply_' . $topic_id;
 			if ( 0 < $reply_to ) {
 				$draft_data_key .= '_' . $reply_to;
 			}
 
-			$usermeta_key   = 'bb_user_topic_reply_draft';
-			$user_id        = bp_loggedin_user_id();
-			$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
-
-			if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
-				unset( $existing_draft[ $draft_data_key ] );
-			}
-
-			if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
-				$existing_draft = array();
-			}
-
-			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+			bb_forums_delete_published_draft_key( bp_loggedin_user_id(), $draft_data_key );
 		}
 
 		/** Additional Actions (After Save) */
@@ -550,6 +540,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		// WP_Error.
 	} elseif ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) {
+		/* translators: %s: error message. */
 		bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $reply_id->get_error_message() ) );
 
 		// Generic error.
@@ -699,7 +690,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	/** Reply Title */
 
 	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( strip_tags( $_POST['bbp_reply_title'] ) );
+		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Filter and sanitize.
@@ -714,7 +705,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : [];
 
 	// No reply content.
 	if (
@@ -765,7 +756,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// ...or remove them.
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
@@ -839,7 +830,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Revision Reason.
 	if ( ! empty( $_POST['bbp_reply_edit_reason'] ) ) {
-		$reply_edit_reason = esc_attr( strip_tags( $_POST['bbp_reply_edit_reason'] ) );
+		$reply_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Update revision log.
@@ -888,7 +879,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) ? $reply_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_reply_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:' . $append_error . 'Please try again.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss' ), $append_error ) );
 	}
 }
 
@@ -1463,6 +1454,7 @@ function bbp_move_reply_handler( $action = '' ) {
 				wp_update_post(
 					array(
 						'ID'          => $move_reply->ID,
+						/* translators: %s: destination topic title. */
 						'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
 						'post_name'   => false, // will be automatically generated
 						'post_parent' => $destination_topic->ID,
@@ -1485,7 +1477,7 @@ function bbp_move_reply_handler( $action = '' ) {
 
 					// Use the new title that was passed.
 					if ( ! empty( $_POST['bbp_reply_move_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( strip_tags( $_POST['bbp_reply_move_destination_title'] ) );
+						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_move_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 						// Use the source topic title.
 					} else {
@@ -1538,7 +1530,7 @@ function bbp_move_reply_handler( $action = '' ) {
 	if ( strtotime( $move_reply->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before from reply.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $move_reply->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $move_reply->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -2178,7 +2170,7 @@ function bbp_reply_content_autoembed_paragraph( $content, $reply_id = 0 ) {
 		$embed_urls = $embeds_array = array();
 		$flag       = true;
 
-		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
 			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 		}
 
@@ -2322,7 +2314,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 
 	// Adjust the title based on context
 	if ( bbp_is_single_topic() && bbp_user_can_view_forum( array( 'forum_id' => bbp_get_topic_forum_id() ) ) ) {
-		$title = apply_filters( 'wp_title_rss', get_wp_title_rss( ' &#187; ' ) );
+		$title = apply_filters( 'wp_title_rss', get_wp_title_rss() );
 	} elseif ( ! bbp_show_lead_topic() ) {
 		$title = ' &#187; ' . __( 'All Posts', 'buddyboss' );
 	} else {
@@ -2332,7 +2324,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 	// Display the feed
 	header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
 	header( 'Status: 200 OK' );
-	echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>'; ?>
+	echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>'; ?>
 
 	<rss version="2.0"
 		xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -2347,13 +2339,13 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 		<title>
 		<?php
 		bloginfo_rss( 'name' );
-		echo $title;
+		echo wp_kses_post( $title );
 		?>
 		</title>
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>
-		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ); ?></pubDate>
+		<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ) ); ?></pubDate>
 		<generator>http://bbpress.org/?v=<?php bbp_version(); ?></generator>
 		<language><?php bloginfo_rss( 'language' ); ?></language>
 
@@ -2367,12 +2359,12 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 						<guid><?php bbp_topic_permalink(); ?></guid>
 						<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
 						<link><?php bbp_topic_permalink(); ?></link>
-						<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
+						<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ); ?></pubDate>
 						<dc:creator><?php echo esc_html( (string) get_the_author() ); ?></dc:creator>
 
 						<description>
 							<![CDATA[
-							<p><?php printf( __( 'Replies: %s', 'buddyboss' ), bbp_get_topic_reply_count() ); ?></p>
+							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss' ), esc_html( bbp_get_topic_reply_count() ) ); ?></p>
 							<?php bbp_topic_content(); ?>
 							]]>
 						</description>
@@ -2397,7 +2389,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 					<guid><?php bbp_reply_url(); ?></guid>
 					<title><![CDATA[<?php bbp_reply_title(); ?>]]></title>
 					<link><?php bbp_reply_url(); ?></link>
-					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
+					<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ); ?></pubDate>
 					<dc:creator><?php echo esc_html( (string) get_the_author() ); ?></dc:creator>
 
 					<description>

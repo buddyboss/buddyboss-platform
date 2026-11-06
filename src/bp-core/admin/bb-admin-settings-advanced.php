@@ -102,13 +102,19 @@ function bb_admin_settings_register_advanced_feature() {
 	);
 
 	/*
-	 * Side Panel 3: Telemetry (unlicensed sites only).
+	 * Side Panel 3: Telemetry.
 	 *
-	 * Paid sites are forced to "complete" reporting by
-	 * bb_force_telemetry_for_licensed_sites(), so showing the control there
-	 * would offer a choice that has no effect.
+	 * Builds without "complete" reporting (the WordPress.org edition) force
+	 * nothing, so they always show it.
 	 */
-	if ( ! bb_has_paid_product() ) {
+	$bb_show_telemetry = true;
+	// @bbwt-com-start telemetry-complete
+	// Unlicensed sites only. Paid sites are forced to "complete" reporting by
+	// bb_force_telemetry_for_licensed_sites(), so showing the control there
+	// would offer a choice that has no effect.
+	$bb_show_telemetry = ! bb_has_paid_product();
+	// @bbwt-com-end telemetry-complete
+	if ( $bb_show_telemetry ) {
 		bb_register_side_panel(
 			'advanced',
 			'telemetry',
@@ -131,8 +137,12 @@ function bb_admin_settings_register_advanced_feature() {
 	bb_advanced_register_general_fields();
 	bb_advanced_register_privacy_fields();
 
+	// @bbwt-com-start telemetry-complete
+	$bb_show_telemetry = ! bb_has_paid_product();
+
+	// @bbwt-com-end telemetry-complete
 	// Telemetry fields only where the panel above was registered.
-	if ( ! bb_has_paid_product() ) {
+	if ( $bb_show_telemetry ) {
 		bb_advanced_register_telemetry_fields();
 	}
 

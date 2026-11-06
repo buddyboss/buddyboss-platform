@@ -37,7 +37,7 @@ if ( bp_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_
 						<div class="bb-field-wrap">
 							<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
 							<input id="bb-album-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss' ); ?>" />
-							<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+							<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 						</div>
 					</div>
 					<footer class="bb-model-footer">

@@ -109,7 +109,7 @@ class BP_Core_Notification {
 			$sql = $wpdb->prepare( "INSERT INTO {$bp->core->table_name_notifications} ( item_id, secondary_item_id, user_id, component_name, component_action, date_notified, is_new ) VALUES ( %d, %d, %d, %s, %s, %s, %d )", $this->item_id, $this->secondary_item_id, $this->user_id, $this->component_name, $this->component_action, $this->date_notified, $this->is_new );
 		}
 
-		if ( ! $result = $wpdb->query( $sql ) ) {
+		if ( ! $result = $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the return of $wpdb->prepare() in either branch above (table name from buddypress()->core, every value bound).
 			return false;
 		}
 
@@ -178,7 +178,7 @@ class BP_Core_Notification {
 			? ' AND is_new = 1 '
 			: '';
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE user_id = %d {$is_new}", $user_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE user_id = %d {$is_new}", $user_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $is_new is a constant clause chosen by code; table name from buddypress().
 	}
 
 	/**
@@ -243,13 +243,13 @@ class BP_Core_Notification {
 
 		$notification_ids = array();
 		if ( bp_is_active( 'notifications' ) ) {
-			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND item_id = %d AND component_name = %s AND component_action = %s{$secondary_item_sql}", $user_id, $item_id, $component_name, $component_action ) );
+			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND item_id = %d AND component_name = %s AND component_action = %s{$secondary_item_sql}", $user_id, $item_id, $component_name, $component_action ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $secondary_item_sql is $wpdb->prepare()'d above (%d) or empty; table name from buddypress().
 		}
 
 		// The clause-based DELETE is kept intentionally: behaviour-identical to release and preserves the int|false return.
 		// The narrow race between the SELECT above and this DELETE can at worst orphan meta for a concurrently-inserted
 		// match; the daily bb_notifications_remove_orphaned_meta_on_cron backfill sweeps any such orphan.
-		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND item_id = %d AND component_name = %s AND component_action = %s{$secondary_item_sql}", $user_id, $item_id, $component_name, $component_action ) );
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND item_id = %d AND component_name = %s AND component_action = %s{$secondary_item_sql}", $user_id, $item_id, $component_name, $component_action ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- same prepared clause as the SELECT above.
 
 		// Remove the now-orphaned metadata after the notifications are gone.
 		if ( ! empty( $notification_ids ) ) {
@@ -327,13 +327,13 @@ class BP_Core_Notification {
 
 		$notification_ids = array();
 		if ( bp_is_active( 'notifications' ) ) {
-			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s {$component_action_sql} {$secondary_item_sql}", $item_id, $component_name ) );
+			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s {$component_action_sql} {$secondary_item_sql}", $item_id, $component_name ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $component_action_sql (%s) and $secondary_item_sql (%d) are $wpdb->prepare()'d above or empty; table name from buddypress().
 		}
 
 		// The clause-based DELETE is kept intentionally: behaviour-identical to release and preserves the int|false return.
 		// The narrow race between the SELECT above and this DELETE can at worst orphan meta for a concurrently-inserted
 		// match; the daily bb_notifications_remove_orphaned_meta_on_cron backfill sweeps any such orphan.
-		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s {$component_action_sql} {$secondary_item_sql}", $item_id, $component_name ) );
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s {$component_action_sql} {$secondary_item_sql}", $item_id, $component_name ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- same prepared clauses as the SELECT above.
 
 		// Remove the now-orphaned metadata after the notifications are gone.
 		if ( ! empty( $notification_ids ) ) {

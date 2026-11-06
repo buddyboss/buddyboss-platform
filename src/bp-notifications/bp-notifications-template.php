@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.9.0
  */
 function bp_notifications_slug() {
-	echo bp_get_notifications_slug();
+	echo esc_attr( bp_get_notifications_slug() );
 }
 	/**
 	 * Return the notifications component slug.
@@ -45,7 +45,7 @@ function bp_get_notifications_slug() {
  * @param int $user_id The user ID.
  */
 function bp_notifications_permalink( $user_id = 0 ) {
-	echo bp_get_notifications_permalink( $user_id );
+	echo esc_url( bp_get_notifications_permalink( $user_id ) );
 }
 	/**
 	 * Return the notifications permalink.
@@ -87,7 +87,7 @@ function bp_get_notifications_permalink( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_notifications_unread_permalink( $user_id = 0 ) {
-	echo bp_get_notifications_unread_permalink( $user_id );
+	echo esc_url( bp_get_notifications_unread_permalink( $user_id ) );
 }
 	/**
 	 * Return the unread notifications permalink.
@@ -128,7 +128,7 @@ function bp_get_notifications_unread_permalink( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_notifications_read_permalink( $user_id = 0 ) {
-	echo bp_get_notifications_read_permalink( $user_id );
+	echo esc_url( bp_get_notifications_read_permalink( $user_id ) );
 }
 	/**
 	 * Return the read notifications permalink.
@@ -292,7 +292,7 @@ function bp_the_notification() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_id() {
-	echo bp_get_the_notification_id();
+	echo esc_attr( bp_get_the_notification_id() );
 }
 	/**
 	 * Return the ID of the notification currently being iterated on.
@@ -319,7 +319,7 @@ function bp_get_the_notification_id() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_item_id() {
-	echo bp_get_the_notification_item_id();
+	echo esc_attr( bp_get_the_notification_item_id() );
 }
 	/**
 	 * Return the associated item ID of the notification currently being iterated on.
@@ -346,7 +346,7 @@ function bp_get_the_notification_item_id() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_secondary_item_id() {
-	echo bp_get_the_notification_secondary_item_id();
+	echo esc_attr( bp_get_the_notification_secondary_item_id() );
 }
 	/**
 	 * Return the secondary associated item ID of the notification currently being iterated on.
@@ -373,7 +373,7 @@ function bp_get_the_notification_secondary_item_id() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_component_name() {
-	echo bp_get_the_notification_component_name();
+	echo esc_html( bp_get_the_notification_component_name() );
 }
 	/**
 	 * Return the name of the component associated with the notification currently being iterated on.
@@ -400,7 +400,7 @@ function bp_get_the_notification_component_name() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_component_action() {
-	echo bp_get_the_notification_component_action();
+	echo esc_attr( bp_get_the_notification_component_action() );
 }
 	/**
 	 * Return the name of the action associated with the notification currently being iterated on.
@@ -427,7 +427,7 @@ function bp_get_the_notification_component_action() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_date_notified() {
-	echo bp_get_the_notification_date_notified();
+	echo esc_html( bp_get_the_notification_date_notified() );
 }
 	/**
 	 * Return the timestamp of the current notification.
@@ -454,7 +454,7 @@ function bp_get_the_notification_date_notified() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_time_since() {
-	echo bp_get_the_notification_time_since();
+	echo esc_html( bp_get_the_notification_time_since() );
 }
 	/**
 	 * Return the timestamp of the current notification.
@@ -493,7 +493,7 @@ function bp_get_the_notification_time_since() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_description() {
-	echo bp_get_the_notification_description();
+	echo wp_kses_post( bp_get_the_notification_description() );
 }
 
 /**
@@ -561,7 +561,7 @@ function bp_get_the_notification_description( $notification = '' ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_read_link( $user_id = 0 ) {
-	echo bp_get_the_notification_mark_read_link( $user_id );
+	echo wp_kses_post( bp_get_the_notification_mark_read_link( $user_id ) );
 }
 	/**
 	 * Return the mark read link for the current notification.
@@ -653,7 +653,7 @@ function bp_get_the_notification_mark_read_url( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_unread_link( $user_id = 0 ) {
-	echo bp_get_the_notification_mark_unread_link( $user_id );
+	echo wp_kses_post( bp_get_the_notification_mark_unread_link( $user_id ) );
 }
 	/**
 	 * Return the mark unread link for the current notification.
@@ -745,7 +745,7 @@ function bp_get_the_notification_mark_unread_url( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_link( $user_id = 0 ) {
-	echo bp_get_the_notification_mark_link( $user_id );
+	echo wp_kses_post( bp_get_the_notification_mark_link( $user_id ) );
 }
 	/**
 	 * Return the mark link for the current notification.
@@ -787,7 +787,7 @@ function bp_get_the_notification_mark_link( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_delete_link( $user_id = 0 ) {
-	echo bp_get_the_notification_delete_link( $user_id );
+	echo wp_kses_post( bp_get_the_notification_delete_link( $user_id ) );
 }
 	/**
 	 * Return the delete link for the current notification.
@@ -885,7 +885,7 @@ function bp_get_the_notification_delete_url( $user_id = 0 ) {
  * @param array|string $args Array of arguments.
  */
 function bp_the_notification_action_links( $args = '' ) {
-	echo bp_get_the_notification_action_links( $args );
+	echo wp_kses_post( bp_get_the_notification_action_links( $args ) );
 }
 	/**
 	 * Return the action links for the current notification.
@@ -941,7 +941,7 @@ function bp_get_the_notification_action_links( $args = '' ) {
  * @since BuddyPress 1.9.0
  */
 function bp_notifications_pagination_count() {
-	echo bp_get_notifications_pagination_count();
+	echo esc_html( bp_get_notifications_pagination_count() );
 }
 	/**
 	 * Return the pagination count for the current notification loop.
@@ -957,7 +957,8 @@ function bp_get_notifications_pagination_count() {
 	$to_num     = bp_core_number_format( ( $start_num + ( $query_loop->pag_num - 1 ) > $query_loop->total_notification_count ) ? $query_loop->total_notification_count : $start_num + ( $query_loop->pag_num - 1 ) );
 	$total      = bp_core_number_format( $query_loop->total_notification_count );
 
-	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total );
+	/* translators: 1: number, 2: number, 3: number. */
+	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the pagination count for the current notification loop.
@@ -975,7 +976,7 @@ function bp_get_notifications_pagination_count() {
  * @since BuddyPress 1.9.0
  */
 function bp_notifications_pagination_links() {
-	echo bp_get_notifications_pagination_links();
+	echo wp_kses_post( bp_get_notifications_pagination_links() );
 }
 	/**
 	 * Return the pagination links for the current notification loop.
@@ -1020,8 +1021,8 @@ function bp_notifications_sort_order_form() {
 		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
 
 		<select id="notifications-sort-order-list" name="sort_order" onchange="this.form.submit();">
-			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss' ); ?></option>
-			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php _e( 'Oldest First', 'buddyboss' ); ?></option>
+			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php esc_html_e( 'Newest First', 'buddyboss' ); ?></option>
+			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php esc_html_e( 'Oldest First', 'buddyboss' ); ?></option>
 		</select>
 
 		<noscript>
@@ -1042,18 +1043,18 @@ function bp_notifications_bulk_management_dropdown() {
 	<label class="bp-screen-reader-text" for="notification-select">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select Bulk Action', 'buddyboss' );
+		esc_html_e( 'Select Bulk Action', 'buddyboss' );
 	?>
 	</label>
 	<select name="notification_bulk_action" id="notification-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+		<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></option>
 
 		<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-			<option value="read"><?php _e( 'Mark read', 'buddyboss' ); ?></option>
+			<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss' ); ?></option>
 		<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-			<option value="unread"><?php _e( 'Mark unread', 'buddyboss' ); ?></option>
+			<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss' ); ?></option>
 		<?php endif; ?>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss' ); ?></option>
+		<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></option>
 	</select>
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
@@ -1112,8 +1113,8 @@ function bb_on_screen_notification_template() {
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">
-					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss' ); ?></span>
-					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss' ); ?></span>
+					<span class="bb-for-desktop"><?php esc_html_e( 'Clear', 'buddyboss' ); ?></span>
+					<span class="bb-for-mobile"><?php esc_html_e( 'Clear All', 'buddyboss' ); ?></span>
 					<span class="dashicons dashicons-no" aria-hidden="true"></span>
 				</a>
 			</div>

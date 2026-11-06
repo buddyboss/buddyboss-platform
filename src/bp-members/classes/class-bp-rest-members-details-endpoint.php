@@ -241,7 +241,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$url = bp_core_get_user_domain( $current_user_id );
 
-		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
 
 		/**
 		 * Member navigation tabs creation start
@@ -1562,6 +1562,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'registered_date'    => bp_rest_prepare_date_response( $user->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user_id ),
 			'last_activity'      => function_exists( 'bp_get_last_activity' ) ? bp_get_last_activity( $user_id ) : '',
+			/* translators: %s: number. */
 			'followers'          => sprintf( _n( '%d follower', '%d followers', $followers_count, 'buddyboss' ), $followers_count ),
 			'avatar_urls'        => $avatar_urls,
 			'message_url'        => wp_specialchars_decode( $message_url ),

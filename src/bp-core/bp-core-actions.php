@@ -296,13 +296,13 @@ function bb_media_symlink_validate( $updated_value ) {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	foreach ( $keys as $k ) {
@@ -367,7 +367,7 @@ function bb_media_symlink_validate( $updated_value ) {
 					}
 
 					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-						unlink( $attachment_path );
+						wp_delete_file( $attachment_path );
 						bp_update_option( 'bp_media_symlink_support', 0 );
 
 						foreach ( $keys as $k ) {
@@ -420,7 +420,7 @@ function bb_media_symlink_validate( $updated_value ) {
 						}
 
 						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-							unlink( $attachment_path );
+							wp_delete_file( $attachment_path );
 							bp_update_option( 'bp_media_symlink_support', 0 );
 							bp_update_option( 'bb_display_support_error', 1 );
 							foreach ( $keys as $k ) {
@@ -1233,7 +1233,7 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 		)
 	);
 
-	$wpdb->query( $del_sql );
+	$wpdb->query( $del_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $del_sql is $wpdb->prepare()'d above (every value bound with %s/%d); table name from the background updater class.
 }
 
 add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
@@ -1345,6 +1345,7 @@ function bb_telemetry_load() {
 
 add_action( 'bp_init', 'bb_telemetry_load' );
 
+// @bbwt-com-start telemetry-complete
 /**
  * Force telemetry into "complete" mode on sites with a paid BuddyBoss product.
  *
@@ -1377,6 +1378,7 @@ function bb_force_telemetry_for_licensed_sites( $mode ) {
 }
 
 add_filter( 'bb_advanced_telemetry_reporting_value', 'bb_force_telemetry_for_licensed_sites' );
+// @bbwt-com-end telemetry-complete
 
 /**
  * Initialize the Topics Manager.

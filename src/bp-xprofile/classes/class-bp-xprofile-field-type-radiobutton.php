@@ -164,7 +164,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 		printf(
 			'<div id="%1$s" class="input-options radio-button-options">%2$s</div>',
 			esc_attr( 'field_' . $this->field_obj->id ),
-			$html
+			$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- radio markup pre-escaped per option (esc_attr/esc_html); contains <input> which wp_kses_post would strip.
 		);
 	}
 

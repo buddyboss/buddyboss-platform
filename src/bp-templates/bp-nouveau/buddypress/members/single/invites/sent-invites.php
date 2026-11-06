@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 
 $email = trim( bb_filter_input_string( INPUT_GET, 'email' ) );
@@ -88,14 +91,21 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	</aside>
 	<?php
 }
+
+// Drop the feedback query string from the address bar, through the script API (was a raw <script>).
+$inline_js = 'window.history.replaceState( null, null, window.location.pathname );';
+if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+	wp_print_inline_script_tag( $inline_js );
+} else {
+	echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+}
 ?>
-<script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Sent Invites', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Sent Invites', 'buddyboss' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'You have sent invitation emails to the following people:', 'buddyboss' ); ?>
+	<?php esc_html_e( 'You have sent invitation emails to the following people:', 'buddyboss' ); ?>
 </p>
 
 <table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
@@ -139,7 +149,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					<span>
 						<?php
 						$date = get_the_date( '', $post_id );
-						echo $date;
+						echo esc_html( $date );
 						?>
 					</span>
 				</td>
@@ -165,7 +175,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						?>
 						<span class="bp-invitee-status">
 							<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
-							<?php echo $title; ?>
+							<?php echo esc_html( $title ); ?>
 						</span>
 						<?php
 					} else {
@@ -173,14 +183,14 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						if ( 'registered' === $class ) {
 							?>
 							<span class="bp-invitee-status">
-								<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+								<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo esc_html( $title ); ?>
 							</span>
 							<?php
 						} else {
 							?>
 							<span class="bp-invitee-status">
 								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( $post_id ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
-									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo esc_html( $title ); ?>
 								</a>
 							</span>
 							<?php
@@ -205,7 +215,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	$total_pages = $the_query->max_num_pages;
 	if ( $total_pages > 1 ) {
 		$current_page = max( 1, get_query_var( 'paged' ) );
-		echo paginate_links(
+		echo wp_kses_post( paginate_links(
 			array(
 				'base'      => get_pagenum_link( 1 ) . '%_%',
 				'format'    => '?paged=%#%',
@@ -214,7 +224,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 				'prev_text' => __( '« Prev', 'buddyboss' ),
 				'next_text' => __( 'Next »', 'buddyboss' ),
 			)
-		);
+		) );
 	}
 
 	wp_reset_postdata();

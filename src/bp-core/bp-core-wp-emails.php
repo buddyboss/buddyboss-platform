@@ -121,6 +121,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		switch ( $comment->comment_type ) {
 			case 'trackback':
 				$title          = __( 'added trackback on your post', 'buddyboss' );
+				/* translators: %s: URL of the post's trackbacks. */
 				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
 				$moderate_text  = __( 'Moderate this trackback: ', 'buddyboss' );
 
@@ -129,6 +130,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 				break;
 			case 'pingback':
 				$title          = __( 'added pingback on your post', 'buddyboss' );
+				/* translators: %s: URL of the post's pingbacks. */
 				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
 				$moderate_text  = __( 'Moderate this pingback: ', 'buddyboss' );
 
@@ -137,6 +139,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 				break;
 			default: // Comments
 				$title          = __( 'added comment on your post', 'buddyboss' );
+				/* translators: %s: URL of the post's comments. */
 				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
 				$moderate_text  = __( 'Moderate this comment: ', 'buddyboss' );
 
@@ -150,15 +153,15 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		<p>
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
 				<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>">
-					<?php echo $comment->comment_author; ?>
+					<?php echo esc_html( $comment->comment_author ); ?>
 				</a>
 				<?php
 			} else {
-				echo $comment->comment_author;
+				echo esc_html( $comment->comment_author );
 			}
 			?>
-			<?php echo $title; ?>
-			<a href="<?php echo get_permalink( $comment->comment_post_ID ); ?>"><?php echo $post->post_title; ?></a>
+			<?php echo esc_html( $title ); ?>
+			<a href="<?php echo esc_url( get_permalink( $comment->comment_post_ID ) ); ?>"><?php echo esc_html( $post->post_title ); ?></a>
 		</p>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
@@ -188,7 +191,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
+										<?php echo esc_html( bp_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
 									</div>
 								</td>
 							</tr>
@@ -217,7 +220,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 									<tr>
 										<td>
 											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-												<?php echo wpautop( $comment_content ); ?>
+												<?php echo wp_kses_post( wpautop( $comment_content ) ); ?>
 											</div>
 										</td>
 									</tr>
@@ -240,15 +243,16 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
 					<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-						<p><?php echo $footer_message; ?></p>
+						<p><?php echo wp_kses_post( $footer_message ); ?></p>
 						<?php
+						/* translators: %s: comment approval URL. */
 						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
 						$trash_comment   = '';
 						$delete_comment  = '';
@@ -269,17 +273,17 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 						?>
 						<p>
 							<?php
-							echo $moderate_text . $approve_comment;
+							echo wp_kses_post( $moderate_text . $approve_comment );
 							if ( ! empty( $trash_comment ) ) {
-								echo ', ' . $trash_comment;
+								echo ', ' . wp_kses_post( $trash_comment );
 							}
 
 							if ( ! empty( $delete_comment ) ) {
-								echo ', ' . $delete_comment;
+								echo ', ' . wp_kses_post( $delete_comment );
 							}
 
 							if ( ! empty( $spam_comment ) ) {
-								echo ', ' . $spam_comment;
+								echo ', ' . wp_kses_post( $spam_comment );
 							}
 							?>
 						</p>
@@ -291,7 +295,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		<?php
 		$notify_message = ob_get_clean();
 
-		$wp_email = 'wordpress@' . preg_replace( '#^www\.#', '', strtolower( $_SERVER['SERVER_NAME'] ) );
+		$server_name = isset( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '';
+		$wp_email    = 'wordpress@' . preg_replace( '#^www\.#', '', strtolower( $server_name ) );
 
 		if ( '' == $comment->comment_author ) {
 			$from = "From: \"$blogname\" <$wp_email>";
@@ -434,19 +439,25 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 
 		switch ( $comment->comment_type ) {
 			case 'trackback':
+				/* translators: 1: post URL, 2: post title. */
 				$title          = sprintf( __( 'added new trackback on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
+				/* translators: %s: URL of the post's trackbacks. */
 				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
 				$moderate_text  = __( 'Moderate this trackback: ', 'buddyboss' );
 
 				break;
 			case 'pingback':
+				/* translators: 1: post URL, 2: post title. */
 				$title          = sprintf( __( 'added new pingback on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
+				/* translators: %s: URL of the post's pingbacks. */
 				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
 				$moderate_text  = __( 'Moderate this pingback: ', 'buddyboss' );
 
 				break;
 			default: // Comments
+				/* translators: 1: post URL, 2: post title. */
 				$title          = sprintf( __( 'added new comment on the post <a href="%1$s">"%2$s"</a> is waiting for your approval.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ), $post->post_title );
+				/* translators: %s: URL of the post's comments. */
 				$footer_message = sprintf( __( '<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
 				$moderate_text  = __( 'Moderate this comment: ', 'buddyboss' );
 
@@ -458,14 +469,14 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		<p>
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
 				<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>">
-					<?php echo $comment->comment_author; ?>
+					<?php echo esc_html( $comment->comment_author ); ?>
 				</a>
 				<?php
 			} else {
-				echo $comment->comment_author;
+				echo esc_html( $comment->comment_author );
 			}
 			?>
-			<?php echo $title; ?>
+			<?php echo wp_kses_post( $title ); ?>
 		</p>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
@@ -495,7 +506,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
+										<?php echo esc_html( bp_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
 									</div>
 								</td>
 							</tr>
@@ -524,7 +535,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 									<tr>
 										<td>
 											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-												<?php echo wpautop( $comment_content ); ?>
+												<?php echo wp_kses_post( wpautop( $comment_content ) ); ?>
 											</div>
 										</td>
 									</tr>
@@ -546,16 +557,17 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 
 			<tr>
 				<td>
-					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
 					<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-						<p><?php echo $footer_message; ?></p>
+						<p><?php echo wp_kses_post( $footer_message ); ?></p>
 						<?php
+						/* translators: %s: comment approval URL. */
 						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
 						$trash_comment   = '';
 						$delete_comment  = '';
@@ -573,17 +585,17 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 						?>
 						<p>
 							<?php
-							echo $moderate_text . $approve_comment;
+							echo wp_kses_post( $moderate_text . $approve_comment );
 
 							if ( ! empty( $trash_comment ) ) {
-								echo ', ' . $trash_comment;
+								echo ', ' . wp_kses_post( $trash_comment );
 							}
 
 							if ( ! empty( $delete_comment ) ) {
-								echo ', ' . $delete_comment;
+								echo ', ' . wp_kses_post( $delete_comment );
 							}
 
-							echo ', ' . $spam_comment;
+							echo ', ' . wp_kses_post( $spam_comment );
 							?>
 						</p>
 					</div>
@@ -829,6 +841,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 
 		/* translators: %s: user login */
 		$message  = '<p>' . sprintf( __( 'Username: %s', 'buddyboss' ), $user->user_login ) . '</p>';
+		/* translators: %s: password setup URL. */
 		$message .= '<p>' . sprintf( __( 'To set your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) ) . '</p>';
 		$message .= wp_login_url();
 
@@ -908,6 +921,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 		/* translators: %s: user login */
 		$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss' ), $user_login ) . '</p>';
 		$message .= '<p>' . __( 'If this was a mistake, just ignore this email and nothing will happen.', 'buddyboss' ) . '</p>';
+		/* translators: %s: password reset URL. */
 		$message .= '<p>' . sprintf( __( 'To reset your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) ) . '</p>';
 
 		$message = bp_email_core_wp_get_template( $message, $user_data );
@@ -1347,8 +1361,11 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 
 		/* translators: New site notification email. */
 		$msg  = '<p>' . sprintf( __( 'New Site: %s', 'buddyboss' ), $blogname ) . '</p>';
+		/* translators: %s: site URL. */
 		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $siteurl ) . '</p>';
+		/* translators: %s: remote IP address. */
 		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		/* translators: %s: notification settings URL. */
 		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss' ), $options_site_url ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
@@ -1607,11 +1624,7 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 	 */
 	function bp_email_wp_privacy_personal_data_email_content( $email_text, $request_id ) {
 		// Get the request data.
-		if ( function_exists( 'wp_get_user_request' ) ) {
-			$request = wp_get_user_request( $request_id );
-		} else {
-			$request = wp_get_user_request_data( $request_id );
-		}
+		$request = wp_get_user_request( $request_id );
 
 		$email_text  = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss' ) . '</p>';

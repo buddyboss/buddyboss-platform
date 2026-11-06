@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Bulk manage handler to set the star status for multiple messages.
  *
@@ -53,6 +56,7 @@ function bp_messages_star_bulk_manage_handler() {
 				);
 			}
 
+			/* translators: %s: number of messages starred. */
 			bp_core_add_message( sprintf( _n( '%s message was successfully starred', '%s messages were successfully starred', $count, 'buddyboss' ), $count ) );
 			break;
 
@@ -69,6 +73,7 @@ function bp_messages_star_bulk_manage_handler() {
 				);
 			}
 
+			/* translators: %s: number of messages unstarred. */
 			bp_core_add_message( sprintf( _n( '%s message was successfully unstarred', '%s messages were successfully unstarred', $count, 'buddyboss' ), $count ) );
 			break;
 	}

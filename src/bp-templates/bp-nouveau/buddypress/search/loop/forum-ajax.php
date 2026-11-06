@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $forum_id    = get_the_ID();
 $total       = bbp_get_forum_topic_count( $forum_id );
 $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), 'forum' );
@@ -37,20 +40,24 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 				<div class="entry-meta">
 					<span class="topic-count">
 						<?php
-						printf(
-						/* translators: total topics */
-							_n( '%d topic', '%d topics', $total, 'buddyboss' ),
-							$total
+						echo esc_html(
+							sprintf(
+							/* translators: total topics */
+								_n( '%d topic', '%d topics', $total, 'buddyboss' ),
+								$total
+							)
 						);
 						?>
 					</span>
 					<span class="middot">&middot;</span>
 					<span class="reply-count">
 						<?php
-						printf(
-						/* translators: total replies */
-							_n( '%d reply', '%d replies', $total_reply, 'buddyboss' ),
-							$total_reply
+						echo esc_html(
+							sprintf(
+							/* translators: total replies */
+								_n( '%d reply', '%d replies', $total_reply, 'buddyboss' ),
+								$total_reply
+							)
 						);
 						?>
 					</span>

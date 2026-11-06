@@ -178,7 +178,7 @@ class BP_Media_Album {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created );
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $q is the return of $wpdb->prepare() in either branch above (albums table name from buddypress()->media, every value bound as %d/%s).
 			return false;
 		}
 
@@ -392,7 +392,7 @@ class BP_Media_Album {
 
 		$cached = bp_core_get_incremented_cache( $album_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$album_ids = $wpdb->get_col( $album_ids_sql );
+			$album_ids = $wpdb->get_col( $album_ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_media_album_get_where_conditions / bp_media_album_get_join_sql / bp_media_album_paged_activities_sql; as built here: literal select, albums table name from buddypress()->media, search LIKE %s-prepared via bp_esc_like(), user/group ids (int)-cast, privacy %s list prepared, exclude/in ids via wp_parse_id_list(), ORDER BY column whitelisted, sort ASC/DESC only, LIMIT %d-prepared.
 			bp_core_set_incremented_cache( $album_ids_sql, $cache_group, $album_ids );
 		} else {
 			$album_ids = $cached;
@@ -437,7 +437,7 @@ class BP_Media_Album {
 			$total_albums_sql = apply_filters( 'bp_media_album_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name_albums} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_albums_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_albums = $wpdb->get_var( $total_albums_sql );
+				$total_albums = $wpdb->get_var( $total_albums_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_media_album_total_medias_sql (plus the where/join filters above); as built here: literal COUNT select, albums table name from buddypress()->media and the same $join_sql/$where_sql as the ids query above (see the reason there).
 				bp_core_set_incremented_cache( $total_albums_sql, $cache_group, $total_albums );
 			} else {
 				$total_albums = $cached;
@@ -632,7 +632,7 @@ class BP_Media_Album {
 		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = %d", $group_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
 			wp_cache_set( $cache_key, $total_count, 'bp_media_album' );
 		}
 

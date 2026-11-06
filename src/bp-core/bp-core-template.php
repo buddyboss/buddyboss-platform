@@ -101,7 +101,7 @@ function bp_get_options_nav( $parent_slug = '' ) {
 		 * @param array  $subnav_item   Submenu array item being displayed.
 		 * @param string $selected_item Current action.
 		 */
-		echo apply_filters( 'bp_get_options_nav_' . $subnav_item->css_id, '<li id="' . esc_attr( $subnav_item->css_id . '-' . $list_type . '-li' ) . '" ' . $selected . '><a id="' . esc_attr( $subnav_item->css_id ) . '" href="' . esc_url( $subnav_item->link ) . '">' . $subnav_item->name . '</a></li>', $subnav_item, $selected_item );
+		echo wp_kses_post( apply_filters( 'bp_get_options_nav_' . $subnav_item->css_id, '<li id="' . esc_attr( $subnav_item->css_id . '-' . $list_type . '-li' ) . '" ' . $selected . '><a id="' . esc_attr( $subnav_item->css_id ) . '" href="' . esc_url( $subnav_item->link ) . '">' . $subnav_item->name . '</a></li>', $subnav_item, $selected_item ) );
 	}
 }
 
@@ -119,7 +119,7 @@ function bp_get_options_title() {
 		$bp->bp_options_title = __( 'Options', 'buddyboss' );
 	}
 
-	echo apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) );
+	echo esc_html( apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) ) );
 }
 
 /**
@@ -142,6 +142,7 @@ function bp_get_directory_title( $component = '' ) {
 
 		// If none is found, concatenate.
 	} elseif ( isset( buddypress()->{$component}->name ) ) {
+		/* translators: %s: component name. */
 		$title = sprintf( __( '%s Directory', 'buddyboss' ), buddypress()->{$component}->name );
 	}
 
@@ -180,7 +181,7 @@ function bp_has_options_avatar() {
  * @todo Deprecate.
  */
 function bp_get_options_avatar() {
-	echo apply_filters( 'bp_get_options_avatar', buddypress()->bp_options_avatar );
+	echo wp_kses_post( apply_filters( 'bp_get_options_avatar', buddypress()->bp_options_avatar ) );
 }
 
 /**
@@ -192,13 +193,16 @@ function bp_comment_author_avatar() {
 	global $comment;
 
 	if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-		echo apply_filters(
-			'bp_comment_author_avatar',
-			bp_core_fetch_avatar(
-				array(
-					'item_id' => $comment->user_id,
-					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $comment->user_id ) ),
+		echo wp_kses_post(
+			apply_filters(
+				'bp_comment_author_avatar',
+				bp_core_fetch_avatar(
+					array(
+						'item_id' => $comment->user_id,
+						'type'    => 'thumb',
+						/* translators: %s: member display name. */
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $comment->user_id ) ),
+					)
 				)
 			)
 		);
@@ -216,13 +220,16 @@ function bp_post_author_avatar() {
 	global $post;
 
 	if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-		echo apply_filters(
-			'bp_post_author_avatar',
-			bp_core_fetch_avatar(
-				array(
-					'item_id' => $post->post_author,
-					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $post->post_author ) ),
+		echo wp_kses_post(
+			apply_filters(
+				'bp_post_author_avatar',
+				bp_core_fetch_avatar(
+					array(
+						'item_id' => $post->post_author,
+						'type'    => 'thumb',
+						/* translators: %s: member display name. */
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $post->post_author ) ),
+					)
 				)
 			)
 		);
@@ -237,7 +244,7 @@ function bp_post_author_avatar() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_admin_step() {
-	echo bp_get_avatar_admin_step();
+	echo esc_html( bp_get_avatar_admin_step() );
 }
 	/**
 	 * Return the current avatar upload step.
@@ -269,7 +276,7 @@ function bp_get_avatar_admin_step() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_to_crop() {
-	echo bp_get_avatar_to_crop();
+	echo esc_url( bp_get_avatar_to_crop() );
 }
 	/**
 	 * Return the URL of the avatar to crop.
@@ -300,7 +307,7 @@ function bp_get_avatar_to_crop() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_to_crop_src() {
-	echo bp_get_avatar_to_crop_src();
+	echo esc_url( bp_get_avatar_to_crop_src() );
 }
 	/**
 	 * Return the relative file path to the avatar to crop.
@@ -344,7 +351,7 @@ function bp_avatar_cropper() {
  * @since BuddyPress 1.0.0
  */
 function bp_site_name() {
-	echo bp_get_site_name();
+	echo esc_html( bp_get_site_name() );
 }
 	/**
 	 * Returns the name of the BP site. Used in RSS headers.
@@ -437,6 +444,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 		$formatted_time = date_i18n( bp_get_option( 'time_format' ), $calculated_time, $gmt );
 
 		// Return string formatted with date and time.
+		/* translators: 1: formatted date, 2: formatted time. */
 		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss' ), $formatted_date, $formatted_time );
 	}
 
@@ -486,7 +494,7 @@ function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true 
 			 *
 			 * @param string $youtext Context-determined string to display.
 			 */
-			echo apply_filters( 'bp_word_or_name', $youtext );
+			echo esc_html( apply_filters( 'bp_word_or_name', $youtext ) );
 		} else {
 
 			/** This filter is documented in bp-core/bp-core-template.php */
@@ -499,7 +507,7 @@ function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true 
 		if ( true == $echo ) {
 
 			/** This filter is documented in bp-core/bp-core-template.php */
-			echo apply_filters( 'bp_word_or_name', $nametext );
+			echo esc_html( apply_filters( 'bp_word_or_name', $nametext ) );
 		} else {
 
 			/** This filter is documented in bp-core/bp-core-template.php */
@@ -674,7 +682,7 @@ function bp_get_search_placeholder( $component = '' ) {
  * @param string $component See {@link bp_get_search_default_text()}.
  */
 function bp_search_default_text( $component = '' ) {
-	echo bp_get_search_default_text( $component );
+	echo esc_html( bp_get_search_default_text( $component ) );
 }
 	/**
 	 * Return the default text for the search box for a given component.
@@ -752,7 +760,7 @@ function bp_custom_profile_sidebar_boxes() {
  * @param array  $attributes Array of existing attributes to add.
  */
 function bp_form_field_attributes( $name = '', $attributes = array() ) {
-	echo bp_get_form_field_attributes( $name, $attributes );
+	echo bp_get_form_field_attributes( $name, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 	/**
 	 * Get the attributes for a form field.
@@ -834,7 +842,7 @@ function bp_get_form_field_attributes( $name = '', $attributes = array() ) {
  * @param array|string $args See {@link BP_Button}.
  */
 function bp_button( $args = '' ) {
-	echo bp_get_button( $args );
+	echo wp_kses_post( bp_get_button( $args ) );
 }
 	/**
 	 * Create and return a button.
@@ -952,7 +960,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			return $text;
 		}
 
-		$totalLength = mb_strlen( strip_tags( $ending ) );
+		$totalLength = mb_strlen( strip_tags( $ending ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- wp_strip_all_tags() also trims, which changes the excerpt length arithmetic below.
 		$openTags    = array();
 		$truncate    = '';
 
@@ -1002,7 +1010,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	} else {
 		// Strip HTML tags if necessary.
 		if ( ! empty( $r['strip_tags'] ) ) {
-			$text = strip_tags( $text );
+			$text = strip_tags( $text ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- wp_strip_all_tags() also trims, which changes the excerpt length arithmetic below.
 		}
 
 		// Remove links if necessary.
@@ -1138,7 +1146,7 @@ add_filter( 'bp_create_excerpt', 'force_balance_tags' );
  * @since BuddyPress 1.2.0
  */
 function bp_total_member_count() {
-	echo bp_get_total_member_count();
+	echo esc_html( bp_get_total_member_count() );
 }
 
 /**
@@ -1180,7 +1188,7 @@ add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
  * @todo Deprecate. It doesn't make any sense to echo a boolean.
  */
 function bp_blog_signup_allowed() {
-	echo bp_get_blog_signup_allowed();
+	echo esc_html( bp_get_blog_signup_allowed() );
 }
 	/**
 	 * Is blog signup allowed?
@@ -1455,7 +1463,7 @@ function bp_action_variable( $position = 0 ) {
  * @since BuddyPress 1.1.0
  */
 function bp_root_domain() {
-	echo bp_get_root_domain();
+	echo esc_url( bp_get_root_domain() );
 }
 	/**
 	 * Return the "root domain", the URL of the BP root blog.
@@ -1492,7 +1500,7 @@ function bp_get_root_domain() {
  * @param string $component The component name.
  */
 function bp_root_slug( $component = '' ) {
-	echo bp_get_root_slug( $component );
+	echo esc_attr( bp_get_root_slug( $component ) );
 }
 	/**
 	 * Get the root slug for given component.
@@ -1621,7 +1629,7 @@ function bp_user_has_access() {
  * @since BuddyPress 1.5.0
  */
 function bp_search_slug() {
-	echo bp_get_search_slug();
+	echo esc_attr( bp_get_search_slug() );
 }
 	/**
 	 * Return the search slug.
@@ -2046,7 +2054,9 @@ function bp_is_component_front_page( $component = '' ) {
 	$show_on_front = get_option( 'show_on_front' );
 	$page_on_front = get_option( 'page_on_front' );
 
-	if ( ( 'page' !== $show_on_front ) || empty( $component ) || empty( $bp->pages->{$component} ) || ( $_SERVER['REQUEST_URI'] !== $path ) ) {
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+	if ( ( 'page' !== $show_on_front ) || empty( $component ) || empty( $bp->pages->{$component} ) || ( $request_uri !== $path ) ) {
 		return false;
 	}
 
@@ -3562,7 +3572,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 			// If we have a subnav name, add it separately for localization.
 			if ( ! empty( $component_subnav_name ) ) {
-				$bp_title_parts[] = strip_tags( $component_subnav_name );
+				$bp_title_parts[] = wp_strip_all_tags( $component_subnav_name );
 			}
 		}
 
@@ -3645,7 +3655,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
  * @since BuddyPress 1.1.0
  */
 function bp_the_body_class() {
-	echo bp_get_the_body_class();
+	echo esc_attr( bp_get_the_body_class() );
 }
 	/**
 	 * Customize the body class, according to the currently displayed BP content.
@@ -4225,7 +4235,7 @@ function bp_nav_menu( $args = array() ) {
 	$nav_menu = apply_filters( 'bp_nav_menu', $nav_menu, $args );
 
 	if ( ! empty( $args->echo ) ) {
-		echo $nav_menu;
+		echo wp_kses_post( $nav_menu );
 	} else {
 		return $nav_menu;
 	}
@@ -4239,7 +4249,7 @@ function bp_nav_menu( $args = array() ) {
  * @param array $settings Email Settings.
  */
 function bp_email_the_salutation( $settings = array() ) {
-	echo bp_email_get_salutation( $settings );
+	echo wp_kses_post( bp_email_get_salutation( $settings ) );
 }
 
 	/**

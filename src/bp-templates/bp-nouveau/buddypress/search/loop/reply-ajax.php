@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $reply_id = get_the_ID();
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_reply">

@@ -116,6 +116,22 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				$privacy[] = 'loggedin';
 			}
 
+			// Who may see a document: each visibility clause is prepared on its own, the
+			// privacy values bound as %s and the group/user ids as %d.
+			$visibility_sql = array(
+				$wpdb->prepare( '( d.privacy IN ( ' . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ' ) )', $privacy ),
+			);
+			if ( ! empty( $user_groups ) ) {
+				$visibility_sql[] = $wpdb->prepare( '( d.group_id IN ( ' . implode( ', ', array_fill( 0, count( $user_groups ), '%d' ) ) . " ) AND d.privacy = 'grouponly' )", $user_groups );
+			}
+			if ( bp_is_active( 'friends' ) && ! empty( $friends ) ) {
+				$visibility_sql[] = $wpdb->prepare( '( d.user_id IN ( ' . implode( ', ', array_fill( 0, count( $friends ), '%d' ) ) . " ) AND d.privacy = 'friends' )", $friends );
+			}
+			if ( is_user_logged_in() ) {
+				$visibility_sql[] = $wpdb->prepare( "( d.user_id = %d AND d.privacy = 'onlyme' )", bp_loggedin_user_id() );
+			}
+
+			$like_term          = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = $wpdb->prepare(
 				" (
@@ -128,18 +144,12 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 						AND dm.meta_value LIKE %s
 					)
 					AND
-					(
-							( d.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
-				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
-				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' )" : '' ) .
-				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
-				')
-				)',
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				'%' . $wpdb->esc_like( $search_term ) . '%',
-				'%' . $wpdb->esc_like( $search_term ) . '%'
-			);
+					( ",
+				$like_term,
+				$like_term,
+				$like_term,
+				$like_term
+			) . implode( ' OR ', $visibility_sql ) . ' ) )';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the document Search query.

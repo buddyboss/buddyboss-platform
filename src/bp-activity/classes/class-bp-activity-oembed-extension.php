@@ -78,6 +78,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * Validates the URL to determine if the activity item is valid.
 	 *
 	 * @since BuddyPress 2.6.0
+	 * @since BuddyBoss 3.7.1 Refuses activities the current user cannot view.
 	 *
 	 * @param  string $url The URL to check.
 	 * @return int|bool Activity ID on success; boolean false on failure.
@@ -112,8 +113,9 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			// Check if activity item still exists.
 			$activity = new BP_Activity_Activity( $activity_id );
 
-			// Okay, we're good to go!
-			if ( ! empty( $activity->component ) && 0 === (int) $activity->is_spam ) {
+			// Okay, we're good to go! The JSON route is public, so also check the activity, its
+			// root post and its group the same way the activity page does (PROD-10649).
+			if ( ! empty( $activity->component ) && 0 === (int) $activity->is_spam && bb_activity_user_can_view( $activity ) ) {
 				return $activity_id;
 			}
 		}
@@ -310,15 +312,16 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
 				printf(
-					_n(
+					/* translators: %s: number. */
+					wp_kses_post( _n(
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comment</span>',
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comments</span>',
 						$count,
 						'buddyboss'
-					),
-					bp_core_number_format( $count )
+					) ),
+					esc_html( bp_core_number_format( $count ) )
 				);
 				?>
 			</a>

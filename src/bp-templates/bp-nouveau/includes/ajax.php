@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Load the template loop for the current object.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.7.1 Refuses a single-activity context the current user cannot view.
  *
  * @return string Template loop for the specified object.
  */
@@ -33,13 +34,19 @@ function bp_nouveau_ajax_object_template_loader() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_' . $object ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error();
 	}
 
 	$result = array();
 
 	if ( 'activity' === $object ) {
+		// AJAX takes the single-activity context from the Referer, and the query string then
+		// asks for that ID with hidden items shown. Check it the way the activity page does (PROD-10649).
+		if ( bp_is_single_activity() && ! bb_activity_user_can_view( (int) bp_current_action() ) ) {
+			wp_send_json_error();
+		}
+
 		$scope = '';
 		if ( ! empty( $_POST['scope'] ) ) {
 			$scope = sanitize_text_field( $_POST['scope'] );
@@ -319,16 +326,34 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 	return http_build_query( $querystring );
 }
 
+add_action( 'wp_ajax_bb_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
+// Legacy action name, still registered for custom clients; it needs the same nonce.
 add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
 
 /**
  * Save Cover image position for group and member.
  *
+ * Registered for the `bb_save_cover_position` action and the legacy
+ * `save_cover_position` action. Both require the `bb_save_cover_position`
+ * nonce (localized as BP_Nouveau.coverPositionNonce, posted as `nonce`) and a
+ * logged-in user who can edit the group's or member's cover image.
+ *
  * @since BuddyBoss 1.5.1
+ * @since BuddyBoss [BBVERSION] Added the `bb_save_cover_position` action; both actions require a nonce.
  */
 function bp_nouveau_ajax_save_cover_position() {
 
 	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error();
+	}
+
+	// Both action names need the nonce (CSRF protection).
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'bb_save_cover_position' ) ) {
 		wp_send_json_error();
 	}
 
@@ -340,8 +365,34 @@ function bp_nouveau_ajax_save_cover_position() {
 	$updated  = false;
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) ) {
+		// Only members allowed to manage the group's cover may reposition it.
+		if (
+			! bp_attachments_current_user_can(
+				'edit_cover_image',
+				array(
+					'object'  => 'group',
+					'item_id' => bp_get_current_group_id(),
+				)
+			)
+		) {
+			wp_send_json_error();
+		}
+
 		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
 	} else if ( bp_is_user() && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
+		// Only the profile owner (or a user allowed to edit their cover) may reposition it.
+		if (
+			! bp_attachments_current_user_can(
+				'edit_cover_image',
+				array(
+					'object'  => 'user',
+					'item_id' => bp_displayed_user_id(),
+				)
+			)
+		) {
+			wp_send_json_error();
+		}
+
 		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
 	}
 

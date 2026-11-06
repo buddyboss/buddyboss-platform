@@ -165,7 +165,13 @@ class BP_Signup {
 			$r['orderby'] = 'user_' . $r['orderby'];
 		}
 
-		$r['orderby'] = sanitize_title( $r['orderby'] );
+		/*
+		 * The ORDER BY token reaches SQL unquoted. sanitize_title() (default
+		 * sanitize_title_with_dashes()) already leaves only [%a-z0-9_-]; the
+		 * extra pass keeps that guarantee if a third-party sanitize_title
+		 * filter returns anything else (no-op with the default filter).
+		 */
+		$r['orderby'] = preg_replace( '/[^%a-z0-9_-]/', '', sanitize_title( $r['orderby'] ) );
 
 		$sql            = array();
 		$signups_table  = buddypress()->members->table_name_signups;
@@ -216,7 +222,7 @@ class BP_Signup {
 		 * @param array  $args  Array of original arguments for get() method.
 		 * @param array  $r     Array of parsed arguments for get() method.
 		 */
-		$paged_signups = $wpdb->get_results( apply_filters( 'bp_members_signups_paged_query', join( ' ', $sql ), $sql, $args, $r ) );
+		$paged_signups = $wpdb->get_results( apply_filters( 'bp_members_signups_paged_query', join( ' ', $sql ), $sql, $args, $r ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_members_signups_paged_query; as built here: table name from buddypress()->members, search/activation_key/user_login/LIMIT $wpdb->prepare()'d (%s with bp_esc_like() search, %d offset/number), include IDs via wp_parse_id_list(), ORDER BY token limited to [%a-z0-9_-] above, order via bp_esc_sql_order().
 
 		if ( empty( $paged_signups ) ) {
 			return array(
@@ -286,7 +292,7 @@ class BP_Signup {
 		 * @param array  $args  Array of original arguments for get() method.
 		 * @param array  $r     Array of parsed arguments for get() method.
 		 */
-		$total_signups = $wpdb->get_var( apply_filters( 'bp_members_signups_count_query', join( ' ', $sql ), $sql, $args, $r ) );
+		$total_signups = $wpdb->get_var( apply_filters( 'bp_members_signups_count_query', join( ' ', $sql ), $sql, $args, $r ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_members_signups_count_query; the same $sql parts as the paged query above (see the reason there) minus LIMIT, with the literal SELECT rewritten to COUNT(*).
 
 		return array(
 			'signups' => $paged_signups,

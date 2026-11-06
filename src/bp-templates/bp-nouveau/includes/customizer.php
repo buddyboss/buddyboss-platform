@@ -6,6 +6,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Add a specific panel for the BP Nouveau Template Pack.
  *

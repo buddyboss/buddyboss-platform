@@ -58,7 +58,13 @@ function bb_tools_is_license_active() {
  * @return string Admin URL for the license activation screen.
  */
 function bb_tools_get_license_url() {
-	return admin_url( 'admin.php?page=buddyboss-license' );
+	// Empty in builds without the BuddyBoss licence screen (the wordpress.org edition).
+	$url = '';
+	// @bbwt-com-start mothership-hub
+	$url = admin_url( 'admin.php?page=buddyboss-license' );
+	// @bbwt-com-end mothership-hub
+
+	return $url;
 }
 
 /**
@@ -67,9 +73,11 @@ function bb_tools_get_license_url() {
  * The Activation Required CTA component calls this on mount to decide
  * whether the action button shows "Install Now", "Activate Now", or
  * "Activate License" (when the addon is not installed and no valid license
- * is present to install it with).
+ * is present to install it with). Builds without the in-dashboard installer
+ * report `download` with a `download_url` instead of `not-installed`.
  *
  * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION] Reports the `download` state when the installer is not in the build.
  *
  * @return void
  */
@@ -107,7 +115,17 @@ function bb_tools_ajax_check_plugin_state() {
 		);
 	}
 
+	// @bbwt-com-start installers
 	wp_send_json_success( array( 'state' => 'not-installed' ) );
+	// @bbwt-com-end installers
+	// Builds without the in-dashboard installer (the wordpress.org edition) reach this
+	// instead: the addon is downloaded from the BuddyBoss account and uploaded by hand.
+	wp_send_json_success(
+		array(
+			'state'        => 'download',
+			'download_url' => 'https://www.buddyboss.com/my-account/',
+		)
+	);
 }
 add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bb_tools_ajax_check_plugin_state' );
 
@@ -146,6 +164,7 @@ function bb_tools_ajax_activate_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_tools_activate_plugin', 'bb_tools_ajax_activate_plugin' );
+// @bbwt-com-start installers
 
 /**
  * AJAX: Install the buddyboss-tools plugin via the WP plugin installer.
@@ -260,3 +279,4 @@ function bb_tools_ajax_install_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_tools_install_plugin', 'bb_tools_ajax_install_plugin' );
+// @bbwt-com-end installers

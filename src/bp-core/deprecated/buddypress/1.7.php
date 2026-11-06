@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @deprecated BuddyPress 1.7.0
  */
 function bp_maintenance_mode() {
-	echo bp_get_maintenance_mode();
+	echo esc_html( bp_get_maintenance_mode() );
 }
 	/**
 	 * Return the BuddyPress maintenance mode

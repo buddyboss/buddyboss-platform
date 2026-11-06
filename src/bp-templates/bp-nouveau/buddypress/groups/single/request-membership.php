@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_group_hook( 'before', 'request_membership_content' );
 
 $current_group_id = bp_get_current_group_id();
@@ -23,20 +26,21 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			if ( ! empty( $inviter ) ) :
 				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
 				printf(
-					__( 'You are already invited to this group by %1$s %2$s. %3$s', 'buddyboss' ),
+					/* translators: 1: inviter profile link, 2: time since the invitation, 3: link to view the invitation. */
+					esc_html__( 'You are already invited to this group by %1$s %2$s. %3$s', 'buddyboss' ),
 					sprintf(
 						'<a href="%s">%s</a>',
-						$inviter['url'],
-						$inviter['name']
+						esc_url( $inviter['url'] ),
+						esc_html( $inviter['name'] )
 					),
 					sprintf(
 						'<span class="last-activity">%s</span>',
-						bp_core_time_since( $inviter['date_modified'] )
+						esc_html( bp_core_time_since( $inviter['date_modified'] ) )
 					),
 					sprintf(
 						'<a href="%s" >%s</a>',
 						esc_url( trailingslashit( $groups_link . 'invites' ) ),
-						__( 'View Invitation', 'buddyboss' )
+						esc_html__( 'View Invitation', 'buddyboss' )
 					)
 				);
 				?>
@@ -83,11 +87,11 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		} else {
 			?>
 			<p>
-				<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
+				<?php /* translators: %s: group name. */ echo sprintf( esc_html__( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), esc_html( bp_get_group_name() ) ); ?>
 			</p>
 
 			<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
-				<label for="group-request-membership-comments"><?php esc_html( 'Comments (optional)', 'buddyboss' ); ?></label>
+				<label for="group-request-membership-comments"><?php esc_html_e( 'Comments (optional)', 'buddyboss' ); ?></label>
 				<textarea name="group-request-membership-comments" id="group-request-membership-comments" aria-label="<?php esc_attr_e( 'Group Request Comments', 'buddyboss' ); ?>"></textarea>
 
 				<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
@@ -106,7 +110,8 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		);
 
 		if ( ! empty( $parent_group_id ) ) {
-			printf( __( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name );
+			/* translators: %s: parent group name link. */
+			echo wp_kses_post( sprintf( esc_html__( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name ) );
 		}
 	}
 } else {

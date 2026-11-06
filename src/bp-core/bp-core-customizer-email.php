@@ -541,10 +541,12 @@ function bp_email_get_redirect_to_customizer_url() {
  */
 function bp_email_redirect_to_customizer() {
 
-	printf(
-		'<script>window.location = "%s";</script>',
-		esc_url_raw( bp_email_get_redirect_to_customizer_url() )
-	);
+	$inline_js = 'window.location = ' . wp_json_encode( esc_url_raw( bp_email_get_redirect_to_customizer_url() ) ) . ';';
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the URL is esc_url_raw()'d and wp_json_encode()'d above. WordPress < 5.7 only.
+	}
 
 	exit;
 }

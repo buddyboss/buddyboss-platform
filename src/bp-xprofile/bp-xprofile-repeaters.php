@@ -37,14 +37,18 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
 		return $bp_group_template_field_ids[ $cache_key ];
 	}
 
-	$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
+	$group_field_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND parent_id = 0", $field_group_id ) );
 	if ( empty( $group_field_ids ) || is_wp_error( $group_field_ids ) ) {
 		return array();
 	}
 
+	// Table name from $bp->profile; one %d placeholder per field ID (IDs read from the fields table above).
 	$clone_field_ids = $wpdb->get_col(
-		"SELECT object_id FROM {$bp->profile->table_name_meta} "
-		. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
+		$wpdb->prepare(
+			"SELECT object_id FROM {$bp->profile->table_name_meta} "
+			. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', array_fill( 0, count( $group_field_ids ), '%d' ) ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1",
+			$group_field_ids
+		)
 	);
 
 	if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
@@ -93,7 +97,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 		   JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
 		   WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
 		   AND m2.meta_key = '_clone_number' ORDER BY m2.object_id, m2.meta_value ASC", $template_field_id );
-		$results = $wpdb->get_results( $sql, ARRAY_A );
+		$results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d on the preceding lines.
 
 
 		for ( $i = 1; $i <= $count; $i++ ) {
@@ -158,7 +162,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 
 	foreach ( $template_field_ids as $template_field_id ) {
 		$sql     = $wpdb->prepare( "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d", $template_field_id );
-		$results = $wpdb->get_col( $sql );
+		$results = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d on the preceding line.
 
 		if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 			$ids = array_merge( $ids, $results );
@@ -212,31 +216,42 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 	// This is done to ensure that search etc, work smoothly.
 	$main_field_data = array();
 
+	// Posted field IDs go into an IN() list: integers only.
+	$posted_field_ids_in = implode( ',', array_map( 'absint', (array) $posted_field_ids ) );
+
 	$counter = 1;
 	foreach ( (array) $field_set_sequence as $field_set_number ) {
 		// Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
 		$fields_of_current_set = $wpdb->get_col(
-			"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
-			. ' AND object_id IN (' . implode( ',', $posted_field_ids ) . ") and object_type = 'field' "
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- internal table name; $posted_field_ids_in is absint-mapped above.
+				"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = %d AND object_id IN (" . $posted_field_ids_in . ") and object_type = 'field' ",
+				absint( $field_set_number )
+			)
 		);
 
 		if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
 			foreach ( $fields_of_current_set as $field_of_current_set ) {
-				$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+				$cloned_from = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND meta_key = '_cloned_from' ", $field_of_current_set ) );
 
-				$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
-					. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
-					. " AND m2.meta_key = '_clone_number' AND m2.meta_value = {$counter} ";
-				$corresponding_field_id = $wpdb->get_var( $sql );
+				$sql                    = $wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_meta; values bound via %d below.
+					"SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
+					. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = %d "
+					. ' AND m2.meta_key = \'_clone_number\' AND m2.meta_value = %d ',
+					absint( $cloned_from ),
+					absint( $counter )
+				);
+				$corresponding_field_id = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 				if ( ! empty( $corresponding_field_id ) ) {
 					$new_data             = isset( $new_values[ $field_of_current_set ]['value'] ) ? $new_values[ $field_of_current_set ]['value'] : '';
 					$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
 					xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp->table_prefix is the BuddyBoss table prefix; the id is bound (%d).
 
 					if ( 'datebox' === $type && ! empty( $new_data ) ) {
-						$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+						$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 					}
 
 					xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
@@ -411,10 +426,14 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			$new_field_column_data_types
 		);
 		if ( $inserted ) {
-			$new_field_id    = $wpdb->insert_id;
+			$new_field_id = $wpdb->insert_id;
+
+			// A field was added: invalidate every cached bp_profile_get_field_groups() key.
+			wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
+
 			$metas_cache_key = 'field_meta_' . $template_field_id;
 			if ( ! isset( $metas_cache[ $metas_cache_key ] ) ) {
-				$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+				$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $template_field_id ), ARRAY_A );
 
 				$metas_cache[ $metas_cache_key ] = $metas;
 			} else {
@@ -441,10 +460,14 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			} else {
 				$current_clone_number = 1;
 				// get all clones of the template field.
-				$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
+				$all_clones = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = %d", $template_field_id ) );
 				if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
+					// Table name from $bp->profile; one %d placeholder per clone field ID (IDs read from the meta table above).
 					$last_max_clone_number = $wpdb->get_var(
-						"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
+						$wpdb->prepare(
+							"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', array_fill( 0, count( $all_clones ), '%d' ) ) . ')',
+							$all_clones
+						)
 					);
 					$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
 					$current_clone_number  = $last_max_clone_number + 1;
@@ -505,11 +528,10 @@ function xprofile_update_clones_on_template_update( $field ) {
 	}
 
 	if ( ! empty( $db_row ) && ! is_wp_error( $db_row ) ) {
-		$sql = $wpdb->prepare(
-			"UPDATE {$bp->profile->table_name_fields} SET "
-			. ' group_id = %d, parent_id = %d, type = %s, name = %s, description = %s, is_required = %d, '
-			. ' is_default_option = %d, option_order = %d, order_by = %d, can_delete = %d '
-			. ' WHERE id IN ( ' . implode( ',', $clone_ids ) . ' )',
+		$clone_ids_in = implode( ',', array_map( 'absint', $clone_ids ) );
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields (internal); IN() list is absint-mapped above; scalars bound via placeholders.
+		$sql          = $wpdb->prepare(
+			"UPDATE {$bp->profile->table_name_fields} SET group_id = %d, parent_id = %d, type = %s, name = %s, description = %s, is_required = %d, is_default_option = %d, option_order = %d, order_by = %d, can_delete = %d WHERE id IN ( " . $clone_ids_in . ' )',
 			$db_row->group_id,
 			$db_row->parent_id,
 			$db_row->type,
@@ -523,8 +545,9 @@ function xprofile_update_clones_on_template_update( $field ) {
 		);
 
 		$wpdb->query( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field'", ARRAY_A );
+		$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $field->id ), ARRAY_A );
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 			$field_member_types = array();
 			foreach ( $clone_ids as $clone_id ) {
@@ -632,12 +655,14 @@ function xprofile_update_clone_positions_on_template_position_update( $template_
 
 		if ( $is_repeater_enabled ) {
 			// update group id for all clone fields
-			$sql = $wpdb->prepare(
-				"UPDATE {$bp->profile->table_name_fields} SET group_id = %d WHERE id IN ( " . implode( ',', $clone_field_ids ) . ' )',
+			$clone_field_ids_in = implode( ',', array_map( 'absint', $clone_field_ids ) );
+			$sql                = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields; IN() list is absint-mapped above.
+				"UPDATE {$bp->profile->table_name_fields} SET group_id = %d WHERE id IN ( " . $clone_field_ids_in . ' )',
 				$template_field_group_id
 			);
 
-			$wpdb->query( $sql );
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 			$update_field_orders = true;
 		}
@@ -706,9 +731,9 @@ function bp_xprofile_repeater_field_get_children( $children, $for_editing, $fiel
 		$parent_id = $template_field_id;
 
 		$bp  = buddypress();
-		$sql = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $template_field->group_id );
+		$sql = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $template_field->group_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields; $sort_sql is a hardcoded ORDER BY whitelist; ids bound via %d.
 
-		$template_children = $wpdb->get_results( $sql );
+		$template_children = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		wp_cache_set( $template_field_id, $template_children, 'field_children_options' );
 	}
@@ -801,8 +826,8 @@ function bp_print_add_repeater_set_button( $args = array() ) {
 		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
-			__( 'Add Another', 'buddyboss' ),
-			bp_get_the_profile_group_name()
+			esc_html__( 'Add Another', 'buddyboss' ),
+			esc_html( bp_get_the_profile_group_name() )
 		);
 		echo '</button>';
 	}
@@ -1158,19 +1183,20 @@ function bb_admin_xprofile_add_repeater_set() {
 									<span id="<?php echo esc_attr( $field->id ); ?>-2">
 									<?php
 									printf(
-										__( 'This field can be seen by: %s', 'buddyboss' ),
-										'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
+										/* translators: %s: visibility level label (wrapped in <span>). */
+										esc_html__( 'This field can be seen by: %s', 'buddyboss' ),
+										'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 									);
 									?>
 									</span>
 								<?php if ( $can_change_visibility ) : ?>
-									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
 								<?php endif; ?>
 							</p>
 							<?php if ( $can_change_visibility ) : ?>
 								<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
 									<fieldset>
-										<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
+										<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 										<?php bp_profile_visibility_radio_buttons(); ?>
 									</fieldset>
 									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
@@ -1255,31 +1281,44 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 			// This is done to ensure that search etc, work smoothly.
 			$main_field_data = array();
 
+			// Posted field IDs go into an IN() list: integers only.
+			$posted_field_ids_in = implode( ',', array_map( 'absint', (array) $posted_field_ids ) );
+
 			$counter = 1;
 			foreach ( (array) $field_set_sequence as $field_set_number ) {
 				// Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
 				$fields_of_current_set = $wpdb->get_col(
-					"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
-					. ' AND object_id IN (' . implode( ',', $posted_field_ids ) . ") and object_type = 'field' "
+					$wpdb->prepare(
+						"SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = %d "
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- internal table name; $posted_field_ids_in is absint-mapped above.
+						. ' AND object_id IN (' . $posted_field_ids_in . ") and object_type = 'field' ",
+						absint( $field_set_number )
+					)
 				);
 
 				if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
 					foreach ( $fields_of_current_set as $field_of_current_set ) {
-						$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_meta (internal); object_id bound via %d.
+						$cloned_from = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND meta_key = '_cloned_from' ", $field_of_current_set ) );
 
-						$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
-													. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
-													. " AND m2.meta_key = '_clone_number' AND m2.meta_value = {$counter} ";
-						$corresponding_field_id = $wpdb->get_var( $sql );
+						$sql                    = $wpdb->prepare(
+							// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_meta; values bound via %d below.
+							"SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
+							. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = %d "
+							. ' AND m2.meta_key = \'_clone_number\' AND m2.meta_value = %d ',
+							absint( $cloned_from ),
+							absint( $counter )
+						);
+						$corresponding_field_id = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 						if ( ! empty( $corresponding_field_id ) ) {
 							$new_data             = isset( $new_values[ $field_of_current_set ]['value'] ) ? $new_values[ $field_of_current_set ]['value'] : '';
 							$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
 							xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp->table_prefix is the BuddyBoss table prefix; the id is bound (%d).
 
 							if ( 'datebox' === $type && ! empty( $new_data ) ) {
-								$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+								$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 							}
 
 							xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );

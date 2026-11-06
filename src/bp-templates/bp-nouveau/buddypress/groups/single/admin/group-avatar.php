@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_is_group_create   = bp_is_group_create();
 $group_has_avatar     = bp_get_group_has_avatar();
 $bp_avatar_admin_step = bp_get_avatar_admin_step();

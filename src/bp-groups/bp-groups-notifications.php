@@ -30,6 +30,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 		if ( $group->name !== $old_group->name ) {
 			$changed[] = sprintf(
+				/* translators: 1: old group name, 2: new group name. */
 				__( '* Name changed from "%1$s" to "%2$s".', 'buddyboss' ),
 				esc_html( $old_group->name ),
 				esc_html( $group->name )
@@ -38,6 +39,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 		if ( $group->description !== $old_group->description ) {
 			$changed[] = sprintf(
+				/* translators: 1: old group description, 2: new group description. */
 				__( '* Description changed from "%1$s" to "%2$s".', 'buddyboss' ),
 				esc_html( $old_group->description ),
 				esc_html( $group->description )
@@ -46,6 +48,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 		if ( $group->slug !== $old_group->slug ) {
 			$changed[] = sprintf(
+				/* translators: 1: old group permalink, 2: new group permalink. */
 				__( '* Permalink changed from "%1$s" to "%2$s".', 'buddyboss' ),
 				esc_url( bp_get_group_permalink( $old_group ) ),
 				esc_url( bp_get_group_permalink( $group ) )
@@ -494,6 +497,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			// because different values are passed to the filters,
 			// we'll return values inline.
 			if ( (int) $total_items > 1 ) {
+				/* translators: 1: number of membership requests, 2: group name. */
 				$text              = sprintf( __( '%1$d new membership requests for the group "%2$s"', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
@@ -548,6 +552,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 				}
 			} else {
 				$user_fullname     = bp_core_get_user_displayname( $requesting_user_id );
+				/* translators: 1: requesting user full name, 2: group name. */
 				$text              = sprintf( __( '%1$s requests membership for the group: %2$s', 'buddyboss' ), $user_fullname, $group->name );
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
@@ -611,6 +616,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: %d: number of accepted group membership requests. */
 				$text              = sprintf( __( '%d accepted group membership requests', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
@@ -657,6 +663,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: %s: group name. */
 				$text              = sprintf( __( 'Membership for group "%s" accepted', 'buddyboss' ), $group->name );
 				$filter            = 'bp_groups_single_membership_request_accepted_notification';
 				$notification_link = $group_link . '?n=1';
@@ -714,6 +721,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: %d: number of rejected group membership requests. */
 				$text              = sprintf( __( '%d rejected group membership requests', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
@@ -760,6 +768,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: %s: group name. */
 				$text              = sprintf( __( 'Membership for group "%s" rejected', 'buddyboss' ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
@@ -816,6 +825,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: 1: group organizer role label, 2: number of groups. */
 				$text              = sprintf( __( 'You were promoted to the role of %1$s in %2$d groups', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), (int) $total_items );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
@@ -857,6 +867,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: 1: group organizer role label, 2: group name. */
 				$text              = sprintf( __( 'You were promoted to the role of %1$s in the group "%2$s"', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
@@ -911,6 +922,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: 1: group moderator role label, 2: number of groups. */
 				$text              = sprintf( __( 'You were promoted to a %1$s in %2$d groups', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), (int) $total_items );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
@@ -952,6 +964,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: 1: group moderator role label, 2: group name. */
 				$text              = sprintf( __( 'You were promoted to a %1$s in the group "%2$s"', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
@@ -1007,6 +1020,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: %d: number of new group invitations. */
 				$text   = sprintf( __( 'You have %d new group invitations', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 
@@ -1047,6 +1061,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: %s: group name. */
 				$text   = sprintf( __( 'You have an invitation to the group: %s', 'buddyboss' ), $group->name );
 				$filter = 'bp_groups_single_group_invite_notification';
 

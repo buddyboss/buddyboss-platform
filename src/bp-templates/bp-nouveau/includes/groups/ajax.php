@@ -116,13 +116,13 @@ function bp_nouveau_ajax_joinleave_group() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -334,13 +334,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -549,16 +549,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	foreach ( $potential_invites->users as $user ) {
 		?>
-		<li class="<?php echo $user['id']; ?>">
+		<li class="<?php echo esc_attr( $user['id'] ); ?>">
 			<div class="item-avatar">
 				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt=""/> </a>
+					<img src="<?php echo esc_url( $user['avatar'] ); ?>" class="avatar" alt=""/> </a>
 			</div>
 
 			<div class="item">
 				<div class="list-title member-name">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-						<?php echo $user['name']; ?>
+						<?php echo esc_html( $user['name'] ); ?>
 					</a>
 				</div>
 
@@ -569,10 +569,10 @@ function bp_nouveau_ajax_get_users_to_invite() {
 								<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
 								<?php foreach ( $user['invited_by'] as $inviter ) { ?>
 									<li>
-										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
-										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
-											<img src="<?php echo $inviter['avatar']; ?>" width="30px"
-												 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+										<a href="<?php echo esc_url( $inviter['user_link'] ); ?>" class="bp-tooltip"
+										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( $inviter['name'] ); ?>">
+											<img src="<?php echo esc_url( $inviter['avatar'] ); ?>" width="30px"
+												 class="avatar mini" alt="<?php echo esc_attr( $inviter['name'] ); ?>">
 										</a>
 									</li>
 								<?php } ?>
@@ -592,8 +592,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			</div>
 			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-					<button data-bp-user-id="<?php echo $user['id']; ?>"
-							data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+					<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+							data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
@@ -615,8 +615,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
 					if ( 'invited' === $request['scope'] ) {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
 								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
@@ -626,8 +626,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<?php
 					} else {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
 								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
@@ -711,7 +711,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_send_invites' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_send_invites' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -808,7 +808,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -888,7 +888,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( wp_unslash( $_POST['nonce'] ) ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'retrieve_group_members' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'retrieve_group_members' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -958,19 +958,19 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="group-message-member-li
 			<?php
-			echo $member->ID;
+			echo esc_attr( $member->ID );
 			echo ( $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
 			?>
 			">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-						<?php echo $image; ?>
+						<?php echo wp_kses_post( $image ); ?>
 					</a>
 				</div>
 				<div class="item">
 					<div class="list-title member-name">
 						<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-							<?php echo $name; ?>
+							<?php echo esc_html( $name ); ?>
 						</a>
 					</div>
 				</div>
@@ -1195,6 +1195,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	} else {
 
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$members = ! empty( $members ) ? array_map( 'absint', (array) $members ) : array();
 
 		// Check Membership Access.
 		$not_access_list = array();

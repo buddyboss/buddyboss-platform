@@ -626,12 +626,13 @@ function bp_core_learndash_bbpress_notices() {
 	if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 		$links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
-		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
-		$activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss' ) );
+		$text     = sprintf( '<a href="%s">%s</a>', esc_url( $links ), esc_html__( 'Forum Discussions', 'buddyboss' ) );
+		$activate = sprintf( '<a href="%s">%s</a>', esc_url( $links ), esc_html__( 'activate', 'buddyboss' ) );
 		?>
 		<div id="message" class="error notice">
 			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-			<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
+			<?php /* translators: 1: Forum Discussions component link, 2: activate component link. */ ?>
+			<p><?php echo wp_kses_post( sprintf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ) ); ?></p>
 		</div>
 		<?php
 	}

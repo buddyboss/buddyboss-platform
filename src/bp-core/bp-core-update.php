@@ -532,6 +532,7 @@ function bp_version_updater() {
 			bb_update_to_2_10_1();
 		}
 
+		// @bbwt-com-start mothership-hub
 		if (
 			$raw_db_version < 23541 &&
 			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
@@ -539,6 +540,7 @@ function bp_version_updater() {
 		) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::migrate_legacy_license();
 		}
+		// @bbwt-com-end mothership-hub
 
 		if ( $raw_db_version < 23551 ) {
 			bb_update_to_2_16_1();
@@ -562,6 +564,7 @@ function bp_version_updater() {
 			bb_update_to_3_0_3();
 		}
 
+		// @bbwt-com-start installers
 		// DB version 23604 — install the BuddyBoss Addons bundle for entitled
 		// customers, once, on the upgrade into this release (PROD-10242). Runs on
 		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
@@ -569,6 +572,7 @@ function bp_version_updater() {
 		if ( $raw_db_version < 23604 ) {
 			bb_install_addons_bundle_on_upgrade();
 		}
+		// @bbwt-com-end installers
 
 		// DB version 23605 — the topics and reply REST endpoints now return the
 		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
@@ -577,6 +581,7 @@ function bp_version_updater() {
 			bb_purge_forums_api_cache_for_legacy_embed();
 		}
 
+		// @bbwt-com-start installers
 		// DB version 23631 — install BuddyBoss Add-ons for entitled sites that do not have
 		// it (the 23604 step above already ran on 3.4.2+ sites, so it would not run again),
 		// then queue the update of an active Add-ons to the version this Platform requires
@@ -585,6 +590,19 @@ function bp_version_updater() {
 		if ( $raw_db_version < 23631 ) {
 			bb_install_addons_bundle_on_upgrade();
 			bb_queue_addons_bundle_update();
+		}
+		// @bbwt-com-end installers
+
+		// DB version 23632 — the activity REST endpoints now refuse comments whose root
+		// activity the user cannot read (PROD-10649). Purge their App API cache so comments
+		// cached before the update are not served for 30 days.
+		// Heal oversized/aggregate-oversized draft usermeta rows and
+		// start the draft retention machinery.
+		// Gated above 23631, the db_version 3.7.0 shipped with, so sites
+		// already on 3.7.0 still run it.
+		if ( $raw_db_version < 23641 ) {
+			bb_drafts_cleanup_on_upgrade();
+			bb_purge_activity_api_cache_for_comment_access();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -995,12 +1013,12 @@ function bp_update_to_1_4_3() {
 	global $wpdb;
 	$bp      = buddypress();
 	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
-	$records = $wpdb->get_col( $squery );
+	$records = $wpdb->get_col( $squery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- constant query, table names from $wpdb.
 	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
-		$records = reset( $records );
+		$records = wp_parse_id_list( explode( ',', (string) reset( $records ) ) );
 		if ( ! empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ')';
-			$wpdb->query( $update_query );
+			$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', array_fill( 0, count( $records ), '%d' ) ) . ')', $records ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %d per media id (the stored meta is parsed to ints first).
+			$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $update_query is $wpdb->prepare()'d above.
 		}
 	}
 }
@@ -1917,7 +1935,7 @@ function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
-			chmod( $upload_dir, 0777 );
+			chmod( $upload_dir, 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 		}
 
 		if ( is_dir( $upload_dir ) ) {
@@ -3096,7 +3114,7 @@ function bb_background_update_group_member_count() {
 
 	// Fetch all groups.
 	$sql       = "SELECT DISTINCT id FROM {$wpdb->base_prefix}bp_groups ORDER BY id DESC";
-	$group_ids = $wpdb->get_col( $sql );
+	$group_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- constant query, table prefix from $wpdb.
 
 	if ( empty( $group_ids ) ) {
 		return;
@@ -3198,9 +3216,10 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 			isset( $result->meta_value ) &&
 			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
 		) {
-			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
+			$ids   = wp_parse_id_list( explode( ',', $result->meta_value ) );
+			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )', array_merge( array( $result->message_id ), $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from $wpdb->base_prefix; one %d per stored media/document id.
 
-			$wpdb->query( $query );
+			$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above.
 		}
 	}
 
@@ -3242,7 +3261,7 @@ function bb_core_update_repair_duplicate_following_notification() {
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
 	$sql .= ' ORDER BY n1.id DESC';
 
-	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
+	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the literal query built just above (component name/action as %s), table name from buddypress().
 
 	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
 	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
@@ -3301,7 +3320,7 @@ function bb_update_to_2_4_10() {
 	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
 
 	// Get the group ids with 0 members.
-	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the literal query built just above (meta key %s, value %d), table names from $wpdb->base_prefix.
 
 	if ( ! empty( $groups ) ) {
 		$admin = get_users(
@@ -3535,17 +3554,21 @@ function bb_core_removed_orphaned_member_slug() {
 
 	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
 
-	$query = "SELECT user_id FROM (
+	$query = $wpdb->prepare(
+		"SELECT user_id FROM (
 		SELECT user_id, COUNT(*) AS count FROM {$wpdb->usermeta}
-		    WHERE meta_key LIKE 'bb_profile_%'
+		    WHERE meta_key LIKE %s
 		    GROUP BY user_id
 		    ORDER BY count DESC
-		    LIMIT {$limit}
+		    LIMIT %d
 		) AS t
-		WHERE count > 3;";
+		WHERE count > 3;",
+		$wpdb->esc_like( 'bb_profile_' ) . '%',
+		absint( $limit )
+	);
 
 	// Retrieve users with more than 3 profile slug metas.
-	$users = $wpdb->get_col( $query );
+	$users = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above (LIMIT %d).
 
 	if (
 		empty( $users ) ||
@@ -3749,7 +3772,7 @@ function bb_remove_symlinks( $folder_path ) {
 			// Check if the entry is a symlink.
 			if ( is_link( $entry_path ) ) {
 				// Delete the symlink.
-				unlink( $entry_path );
+				wp_delete_file( $entry_path );
 			}
 		}
 		// Close the folder handle.
@@ -4633,6 +4656,7 @@ function bb_is_addons_plugin_active() {
 	return is_plugin_active( 'buddyboss-addons/buddyboss-addons.php' );
 }
 
+// @bbwt-com-start installers
 /**
  * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
  * for entitled customers.
@@ -4708,6 +4732,7 @@ function bb_install_addons_bundle_on_upgrade() {
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
 	}
 }
+// @bbwt-com-end installers
 
 /**
  * Purge the App API cache of forum topics and replies.
@@ -4725,6 +4750,88 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
+	}
+}
+
+/**
+ * Start the draft cleanup on upgrade.
+ *
+ * Records the epoch that timestamp-less legacy drafts age from, queues the
+ * `bb_draft_oneshot` continuation, and only THEN runs the first healing
+ * slice synchronously (bounded by its time budget) so already-affected
+ * sites - where oversized draft rows poison the per-user meta cache entry -
+ * begin recovering on the upgrade request itself, even on hosts where
+ * loopback requests and cron are unreliable. The continuation is queued
+ * first because this routine runs inside a non-resumable window: see the
+ * inline note. It is unscheduled again when the slice completes, and the
+ * `wp bb drafts cleanup` WP-CLI command can drain it manually.
+ *
+ * Idempotent: the epoch is only recorded once, disposal of an absent row
+ * is a no-op, and the `bb_drafts_cleanup_on_upgrade` option timestamps the
+ * last synchronous slice so the updater firing more than once inside an
+ * upgrade window cannot repeat it.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @return void
+ */
+function bb_drafts_cleanup_on_upgrade() {
+	if ( ! get_site_option( 'bb_draft_cleanup_epoch' ) ) {
+		update_site_option( 'bb_draft_cleanup_epoch', time() );
+	}
+
+	// Guarded with an autoload-false OPTION rather than a transient, for the
+	// same reason bb_draft_oneshot_done is one: transients live in the very
+	// object cache this routine repairs, so on the installs it exists for the
+	// guard can evaporate and this 10-second synchronous slice would re-run on
+	// every admin request in the upgrade window.
+	$last_started = (int) get_site_option( 'bb_drafts_cleanup_on_upgrade', 0 );
+
+	if ( $last_started && ( time() - $last_started ) < HOUR_IN_SECONDS ) {
+		return;
+	}
+
+	update_site_option( 'bb_drafts_cleanup_on_upgrade', time() );
+
+	// Scheduled BEFORE the first slice runs, not after it. _bp_db_version is
+	// bumped by bp_version_bump() inside bp_is_update() - before this updater
+	// body executes - so bp_setup_updater() never re-enters it. A fatal or a
+	// max_execution_time timeout inside the slice below would therefore skip
+	// both the continuation AND the remaining migrations in this routine, with
+	// no retry. Scheduling first means the healing still finishes on cron even
+	// if this request dies (H1).
+	// Scheduled on the ROOT blog: the healing is network-wide but this updater
+	// runs on whichever subsite's admin loads first after the version bump, and
+	// cron events are per-blog - so a naive schedule here could strand the
+	// continuation on a low-traffic subsite's cron (L10).
+	bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
+
+	$result = bb_drafts_oneshot_batch( 10 );
+
+	// Finished inside this request after all, so the queued continuation has
+	// nothing left to do.
+	if ( ! empty( $result['complete'] ) ) {
+		bb_draft_oneshot_unschedule();
+	}
+}
+
+/**
+ * Purge the App API cache of activities.
+ *
+ * The activity REST endpoints now refuse an activity comment to users who cannot read
+ * its root activity, such as non-members of a private or hidden group. Responses cached
+ * before the update still hold those comments for up to 30 days, and the cache is read
+ * before the REST permission check, so clear them once on the upgrade (PROD-10649).
+ *
+ * `bp-activity` also matches the per-item `bp-activity_<id>` groups.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @return void
+ */
+function bb_purge_activity_api_cache_for_comment_access() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-activity' );
 	}
 }
 
@@ -4783,6 +4890,7 @@ function bb_is_addons_below_required_version( $version = null ) {
 	return '' !== $version && version_compare( $version, bb_get_addons_required_version(), '<' );
 }
 
+// @bbwt-com-start installers
 /**
  * Update an active BuddyBoss Add-ons below the required version.
  *
@@ -5034,3 +5142,4 @@ function bb_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
 	}
 }
 add_action( 'activated_plugin', 'bb_retry_queued_addons_bundle_update_soon' );
+// @bbwt-com-end installers

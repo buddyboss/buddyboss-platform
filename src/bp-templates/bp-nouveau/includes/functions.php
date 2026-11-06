@@ -27,6 +27,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Query string for the component loops
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.7.1 Builds the query string with http_build_query() so request values stay values.
  */
 function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	if ( empty( $object ) ) {
@@ -100,64 +101,76 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		}
 	}
 
-	// Init the query string
+	// Request values are loop arguments' values, never arguments of their own.
+	foreach ( array( 'filter', 'scope', 'page', 'search_terms', 'extras', 'order_by', 'box', 'thread_type' ) as $querystring_key ) {
+		if ( isset( $post_query[ $querystring_key ] ) && ! is_scalar( $post_query[ $querystring_key ] ) ) {
+			$post_query[ $querystring_key ] = '';
+		}
+	}
+
+	// An activity scope nothing handles would add no condition to the query (PROD-10649).
+	if ( 'activity' === $object ) {
+		$post_query['scope'] = bb_activity_get_request_scope( $post_query['scope'] );
+	}
+
+	// Init the query arguments.
 	$qs = array();
 
 	// Activity feed filtering on action.
 	if ( ! empty( $post_query['filter'] ) && '-1' !== $post_query['filter'] ) {
 		if ( 'notifications' === $object ) {
-			$qs[] = 'component_action=' . $post_query['filter'];
+			$qs['component_action'] = $post_query['filter'];
 		} else {
-			$qs[] = 'type=' . $post_query['filter'];
-			$qs[] = 'action=' . $post_query['filter'];
+			$qs['type']   = $post_query['filter'];
+			$qs['action'] = $post_query['filter'];
 		}
 	}
 
 	// Sort the notifications if needed
 	if ( ! empty( $post_query['extras'] ) && 'notifications' === $object ) {
-		$qs[] = 'sort_order=' . $post_query['extras'];
+		$qs['sort_order'] = $post_query['extras'];
 	}
 
 	if ( 'personal' === $post_query['scope'] && 'document' !== $object ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-		$qs[]    = 'user_id=' . $user_id;
+		$user_id       = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+		$qs['user_id'] = $user_id;
 	}
 
 	// Activity feed scope only on activity directory.
 	if ( 'all' !== $post_query['scope'] && ! bp_is_single_item() ) {
-		$qs[] = 'scope=' . $post_query['scope'];
+		$qs['scope'] = $post_query['scope'];
 	}
 
 	// If page have been passed via the AJAX post request, use those.
 	if ( '-1' != $post_query['page'] ) {
-		$qs[] = 'page=' . absint( $post_query['page'] );
+		$qs['page'] = absint( $post_query['page'] );
 	}
 
 	// Excludes activity just posted and avoids duplicate ids.
 	if ( ! empty( $post_query['exclude_just_posted'] ) ) {
-		$just_posted = wp_parse_id_list( $post_query['exclude_just_posted'] );
-		$qs[]        = 'exclude=' . implode( ',', $just_posted );
+		$just_posted   = wp_parse_id_list( $post_query['exclude_just_posted'] );
+		$qs['exclude'] = implode( ',', $just_posted );
 	}
 
 	// To get newest activities.
 	if ( ! empty( $post_query['offset'] ) ) {
-		$qs[] = 'offset=' . intval( $post_query['offset'] );
+		$qs['offset'] = intval( $post_query['offset'] );
 	}
 
 	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
-		$member_type_id  = $_POST['member_type_id'];
-		$member_type_key = get_post_meta( $member_type_id, '_bp_member_type_key', true );
-		$qs[]            = 'member_type=' . $member_type_key;
+		$member_type_id    = $_POST['member_type_id'];
+		$member_type_key   = get_post_meta( $member_type_id, '_bp_member_type_key', true );
+		$qs['member_type'] = $member_type_key;
 	}
 
-	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] ) {
-		$group_type = $_POST['group_type'];
-		$qs[]       = 'group_type=' . $group_type;
+	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] && is_scalar( $_POST['group_type'] ) ) {
+		$group_type       = $_POST['group_type'];
+		$qs['group_type'] = $group_type;
 	}
 
 	$object_search_text = bp_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
-		$qs[] = 'search_terms=' . urlencode( $_POST['search_terms'] );
+		$qs['search_terms'] = $_POST['search_terms'];
 	}
 
 	if (
@@ -182,31 +195,33 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 				}
 			}
 		}
-		$qs[] = 'order_by=' . $order_by;
+		$qs['order_by'] = $order_by;
 
 	}
 
 	// Specific to messages
 	if ( 'messages' === $object ) {
 		if ( ! empty( $post_query['box'] ) ) {
-			$qs[] = 'box=' . $post_query['box'];
+			$qs['box'] = $post_query['box'];
 		}
 		if ( ! empty( $post_query['thread_type'] ) ) {
-			$qs[] = 'thread_type=' . $post_query['thread_type'];
+			$qs['thread_type'] = $post_query['thread_type'];
 		}
 	}
 
 	// Single activity.
 	if ( 'activity' === $object && bp_is_single_activity() ) {
 		$qs = array(
-			'display_comments=threaded',
-			'show_hidden=true',
-			'include=' . bp_current_action(),
+			'display_comments' => 'threaded',
+			'show_hidden'      => 'true',
+			'include'          => bp_current_action(),
 		);
 	}
 
-	// Now pass the querystring to override default values.
-	$query_string = empty( $qs ) ? '' : join( '&', (array) $qs );
+	// Encode each value so a request value can never add a loop argument of its own,
+	// such as `include` or `show_hidden`, which skip the read checks (PROD-10649).
+	// Pass the separator: the arg_separator.output default can be `&amp;` on some hosts.
+	$query_string = empty( $qs ) ? '' : http_build_query( $qs, '', '&' );
 
 	// List the variables for the filter
 	list( $filter, $scope, $page, $search_terms, $extras ) = array_values( $post_query );
@@ -364,7 +379,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	}
 
 	// Print the wrapper and its content.
-	printf( '<%1$s%2$s%3$s>%4$s</%1$s>', $container, $container_id, $container_classes, $output );
+	printf( '<%1$s%2$s%3$s>%4$s</%1$s>', esc_attr( $container ), $container_id, $container_classes, $output ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $container_id/$container_classes are attribute fragments built with esc_attr(); $output is the buffered, self-escaping template part.
 }
 
 /**
@@ -1003,6 +1018,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			),
 			'member-wp-profile-none'            => array(
 				'type'    => 'info',
+				/* translators: %s: member display name. */
 				'message' => __( '%s did not save any profile information yet.', 'buddyboss' ),
 			),
 			'member-delete-account'             => array(
@@ -1158,7 +1174,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			$feedback_messages['member-notifications-none']['message'] = __( 'You have no notifications.', 'buddyboss' );
 		}
 	} elseif ( 'member-wp-profile-none' === $feedback_id && bp_is_user_profile() ) {
-		$feedback_messages['member-wp-profile-none']['message'] = sprintf( $feedback_messages['member-wp-profile-none']['message'], bp_get_displayed_user_fullname() );
+		$feedback_messages['member-wp-profile-none']['message'] = sprintf( /* translators: %s: member display name. */ $feedback_messages['member-wp-profile-none']['message'], bp_get_displayed_user_fullname() );
 	} elseif ( 'member-delete-account' === $feedback_id && bp_is_my_profile() ) {
 		$feedback_messages['member-delete-account']['message'] = __( 'Deleting your account will delete all of the content you have created. It will be completely irrecoverable.', 'buddyboss' );
 	} elseif ( 'member-activity-loading' === $feedback_id && bp_is_my_profile() ) {

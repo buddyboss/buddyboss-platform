@@ -36,6 +36,16 @@ function bb_recaptcha_verification_admin_settings() {
 		);
 	}
 
+	// This handler saves the site-wide reCAPTCHA settings, so only site admins may run it.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error(
+			array(
+				'code'    => 403,
+				'message' => esc_html__( 'Sorry, you are not allowed to do that.', 'buddyboss' ),
+			)
+		);
+	}
+
 	$selected_version = bb_filter_input_string( INPUT_POST, 'selected_version' );
 	$site_key         = bb_filter_input_string( INPUT_POST, 'site_key' );
 	$secret_key       = bb_filter_input_string( INPUT_POST, 'secret_key' );

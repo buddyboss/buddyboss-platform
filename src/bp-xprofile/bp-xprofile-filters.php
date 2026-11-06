@@ -945,11 +945,13 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	// Empty nickname.
 	if ( '' === trim( $value ) ) {
+		/* translators: %s: field name. */
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
 	// only alpha numeric, underscore, dash.
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
+		/* translators: %s: field name. */
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
@@ -986,11 +988,13 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
 	if ( $value_length > $nickname_length ) {
+		/* translators: 1: field name, 2: maximum character length. */
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
 	// Minimum of 3 characters.
 	if ( $value_length < 3 ) {
+		/* translators: %s: field name. */
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
 
@@ -1000,6 +1004,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		$user = get_user_by( 'login', $value );
 
 		if ( false !== $user ) {
+			/* translators: %s: field name. */
 			return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 		}
 	}
@@ -1019,7 +1024,8 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		implode( ' AND ', $where )
 	);
 
-	if ( $wpdb->get_var( $sql ) > 0 ) {
+	if ( $wpdb->get_var( $sql ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $wpdb->usermeta; $where conditions are %s/%d-prepared above.
+		/* translators: %s: field name. */
 		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 	}
 
@@ -1070,6 +1076,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	if ( empty( $str ) ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
+		/* translators: %s: field name. */
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
@@ -1079,6 +1086,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	if ( ! $international ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
+		/* translators: %s: field name. */
 		return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 	}
 
@@ -1089,6 +1097,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	}
 
 	/* SET ERROR: The field must be a valid phone number (e.g. 888-888-8888) */
+	/* translators: %s: field name. */
 	return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 }
 
@@ -1187,6 +1196,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 			$val = trim( $val );
 			if ( empty( $val ) ) {
 				$key = bp_social_network_search_key( $key, $providers );
+				/* translators: %s: social network provider name. */
 				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $providers[ $key ]->name );
 			}
 		}
@@ -1197,6 +1207,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		// Skip validation for empty fields unless required.
 		if ( ! empty( $v ) && ! wp_http_validate_url( $v ) ) {
 			$key = bp_social_network_search_key( $k, $providers );
+			/* translators: %s: social network provider name. */
 			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
 	}
@@ -1331,10 +1342,15 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
+	// Table names from $bp->profile; OFFSET bound as %d.
+	$added_fields = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
     LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
-    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
-	$added_fields       = $wpdb->get_results( $clone_fields_query );
+    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET %d",
+			$offset
+		)
+	);
 
 	if ( $offset == 0 ) {
 		$duplicate_fields = array();
@@ -1349,7 +1365,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 			$clone_id   = (int) $field->id;
 			$main_field = bb_xprofile_top_most_template_field_id( (int) $clone_id );
 
-			$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$main_field} AND object_type = 'field'", ARRAY_A );
+			$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $main_field ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				$field_member_types = array();
 				foreach ( $metas as $meta ) {
@@ -1388,6 +1404,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
 		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
 
+		/* translators: %s: number of fields updated. */
 		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1442,13 +1459,16 @@ function bb_xprofile_repair_user_nicknames_callback() {
 
 	$records_updated = 0;
 
-	$users_query = "SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
+	$records = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
 					FROM `{$wpdb->users}` as users
 					LEFT JOIN `{$wpdb->usermeta}` as meta ON users.ID = meta.user_ID AND meta.meta_key = 'nickname'
 					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
-					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
-
-	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
+					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)",
+			bp_xprofile_nickname_field_id()
+		)
+	);
 
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {

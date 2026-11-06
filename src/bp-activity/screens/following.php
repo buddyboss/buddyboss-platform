@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.1.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the 'My Following' activity page.
  *

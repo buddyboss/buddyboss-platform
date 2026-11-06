@@ -35,9 +35,11 @@
  *                                   (both via the Mothership handlers the BuddyBoss
  *                                   Add-ons list screen uses), and UPDATE when it is
  *                                   running on a build that does not ship the digest
- *                                   module. The update runs through a Platform-owned
- *                                   handler, Mothership having no update action, and is
- *                                   withdrawn when nothing newer exists to install.
+ *                                   module. UPDATE links to the WordPress updates
+ *                                   screen; builds with the in-dashboard installer also
+ *                                   run it in place through a Platform-owned handler
+ *                                   (Mothership has no update action) and withdraw it
+ *                                   when nothing newer exists to install.
  *
  * A previous revision rendered state 2 as an inert replica of the add-on's settings form.
  * It read as a working panel — an admin on a plan without the digest saw a full set of
@@ -525,24 +527,28 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 
 		case 'addon_outdated':
 			// Entitled, add-on running, but this build does not ship the digest module.
-			// The fix is a plugin update, so that is what the card offers — through a
-			// Platform-owned handler rather than Mothership, which has activate,
-			// deactivate and install actions but no update action.
+			// The fix is a plugin update, so that is what the card offers: a link to the
+			// WordPress updates screen.
 			//
+			// Builds with the in-dashboard installer also get the `addon_*` keys below:
+			// an in-place update through a Platform-owned handler rather than Mothership,
+			// which has activate, deactivate and install actions but no update action.
 			// Whether an update actually EXISTS is not settled here: answering that
 			// needs a remote lookup, and this function runs during feature registration
-			// on every admin request. bb_email_digest_soften_stale_update_card() below
-			// re-decides it lazily, on the AJAX path that only this panel triggers, and
-			// replaces the button when there is nothing newer to install.
+			// on every admin request. bb_email_digest_soften_stale_update_card() (in the
+			// same build-only block) re-decides it lazily, on the AJAX path that only this
+			// panel triggers, and replaces the button when there is nothing newer to install.
 			$card = array(
 				'empty_state_title'       => __( 'Update Required', 'buddyboss' ),
 				'empty_state_description' => __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the add-on to continue.', 'buddyboss' ),
 				'button_label'            => __( 'Update Add-on', 'buddyboss' ),
 				'button_url'              => admin_url( 'update-core.php' ),
+				// @bbwt-com-start installers
 				'addon_action'            => 'bb_email_digest_update_addon',
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
 				'addon_nonce_key'         => 'ajaxNonce',
 				'addon_busy_label'        => __( 'Updating…', 'buddyboss' ),
+				// @bbwt-com-end installers
 			);
 			break;
 
@@ -575,7 +581,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'empty_state_title'       => __( 'License Activation Required', 'buddyboss' ),
 				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter. Activate your license to unlock Email Digest.', 'buddyboss' ),
 				'button_label'            => __( 'Activate License', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+				'button_url'              => bb_admin_license_screen_url(),
 			);
 			break;
 	}
@@ -637,6 +643,7 @@ function bb_admin_settings_register_email_digest_signpost() {
 }
 add_action( 'bb_notifications_after_register_settings_fields', 'bb_admin_settings_register_email_digest_signpost' );
 
+// @bbwt-com-start installers
 /**
  * Replace the Update button when there is nothing newer to install.
  *
@@ -732,7 +739,7 @@ function bb_email_digest_ajax_update_addon() {
 		wp_send_json_error(
 			array(
 				'message'     => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss' ),
-				'license_url' => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+				'license_url' => bb_admin_license_screen_url(),
 			)
 		);
 	}
@@ -794,6 +801,7 @@ function bb_email_digest_ajax_update_addon() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update_addon' );
+// @bbwt-com-end installers
 
 /**
  * Register the inert replica of the digest settings form.

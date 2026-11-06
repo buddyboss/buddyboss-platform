@@ -316,37 +316,40 @@ class BP_Nouveau extends BP_Theme_Compat {
 	}
 
 	public function platform_login_scripts() {
-		?>
-		<script>
-			jQuery( document ).ready( function () {
-				if ( jQuery('.popup-modal-register').length ) {
-					jQuery('.popup-modal-register').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedContentPos: true,
-						modal: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-				if ( jQuery('.popup-modal-login').length ) {
-					jQuery('.popup-modal-login').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedBgPos: true,
-						fixedContentPos: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-			});
-		</script>
-		<?php
-
+		// Login/register popups on the login screen, printed through the script API (was a raw <script>).
+		$inline_js = <<<'JS'
+jQuery( document ).ready( function () {
+	if ( jQuery('.popup-modal-register').length ) {
+		jQuery('.popup-modal-register').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			fixedContentPos: true,
+			modal: true
+		});
+		jQuery('.popup-modal-dismiss').click(function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+		});
+	}
+	if ( jQuery('.popup-modal-login').length ) {
+		jQuery('.popup-modal-login').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			fixedBgPos: true,
+			fixedContentPos: true
+		});
+		jQuery('.popup-modal-dismiss').click(function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+		});
+	}
+});
+JS;
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $inline_js );
+		} else {
+			echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+		}
 	}
 
 	/**
@@ -751,6 +754,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$params['objects'] = $supported_objects;
 		$params['nonces']  = $object_nonces;
 
+		// Nonce for the cover image reposition AJAX action (bb_save_cover_position).
+		// @since BuddyBoss [BBVERSION].
+		$params['coverPositionNonce'] = wp_create_nonce( 'bb_save_cover_position' );
+
 		// Used to transport the settings inside the Ajax requests
 		if ( is_customize_preview() ) {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
@@ -969,7 +976,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			return $path;
 		}
 
-		$uri = parse_url( $path );
+		$uri = wp_parse_url( $path );
 
 		if ( false === strpos( $uri['path'], 'customize.php' ) ) {
 			return $path;

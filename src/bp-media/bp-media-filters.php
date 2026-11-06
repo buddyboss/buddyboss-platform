@@ -119,7 +119,7 @@ function bp_media_activity_entry() {
 	);
 
 	if ( ! empty( $is_media ) ) {
-		print $is_media;
+		print (int) $is_media;
 	}
 }
 
@@ -658,7 +658,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		?>
 		<div class="bb-activity-media-wrap forums-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
+		echo esc_attr( 'bb-media-length-' . $media_template->media_count );
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
@@ -910,7 +910,7 @@ function bp_media_import_submenu_page() {
 						<?php
 						if ( $check ) {
 							?>
-							<p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
 							<?php
 						} elseif ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
@@ -930,37 +930,37 @@ function bp_media_import_submenu_page() {
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
-									<th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
+										<span id="bp-media-import-albums-done"><?php echo (int) $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-albums-total"><?php echo (int) $total_albums; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Media', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+										<span id="bp-media-import-media-done"><?php echo (int) $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $total_media; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $forums_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $topics_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $replies_total; ?></span></td>
 								</tr>
 							</table>
 							<p>
@@ -971,7 +971,7 @@ function bp_media_import_submenu_page() {
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
 								<input type="submit" style="display: none;"
-									   value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+									   value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
@@ -980,20 +980,20 @@ function bp_media_import_submenu_page() {
 							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
 							$media_ids  = get_option( 'bp_media_import_media_ids', array() );
 							?>
-							<p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
 
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
-								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+								<input type="submit" value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
 							}
 						} else {
 							?>
-							<p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
+							<p><?php echo wp_kses_post( __( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ) ); ?></p>
+							<input type="submit" value="<?php esc_html_e( 'Run Migration', 'buddyboss' ); ?>"
 								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
 					</div>
@@ -1148,6 +1148,7 @@ function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
  * Set up activity arguments for use with the 'media' scope.
  *
  * @since BuddyBoss 1.4.2
+ * @since BuddyBoss 3.7.1 Only matches when specific activity IDs are requested.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1155,6 +1156,16 @@ function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
  * @return array $retval
  */
 function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) {
+
+	// This scope matches hidden sub-activities of every group and profile, so it only serves
+	// lookups of specific IDs the caller has already checked. Combined with a scope that shows
+	// hidden items, such as `favorites,media`, it would list them all (PROD-10649).
+	if ( empty( $filter['in'] ) ) {
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
+	}
 
 	$retval = array(
 		'relation' => 'AND',
@@ -1214,8 +1225,8 @@ function bp_media_message_privacy_repair() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	// Table name from $bp->media; OFFSET bound as %d.
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET %d ", $offset ) );
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1229,6 +1240,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number. */
 		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1254,8 +1266,8 @@ function bp_media_admin_repair_media() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	// Table name from $bp->media; OFFSET bound as %d.
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET %d ", $offset ) );
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1266,8 +1278,7 @@ function bp_media_admin_repair_media() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-						$wpdb->query( $update_query );
+						$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id=%d, privacy='grouponly' WHERE id=%d ", $activity->item_id, $media->id ) );
 					}
 					if ( 'media' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1277,8 +1288,7 @@ function bp_media_admin_repair_media() {
 									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
-									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-									$wpdb->query( $update_query );
+									$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id=%d, privacy='grouponly' WHERE id=%d ", $media_activity->item_id, $media->id ) );
 									$activity->item_id   = $media_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1292,6 +1302,7 @@ function bp_media_admin_repair_media() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number. */
 		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1317,19 +1328,25 @@ function bp_media_forum_privacy_repair() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records = $wpdb->get_col( $squery );
+	// Table names from $wpdb; OFFSET bound as %d.
+	$records = $wpdb->get_col( $wpdb->prepare( "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET %d ", $offset ) );
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
-				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
-				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ')';
-					$wpdb->query( $update_query );
+				// The meta is a comma-separated list of media ids; bind one %d per id (it was spliced in raw).
+				$media_ids = array_filter( wp_parse_id_list( get_post_meta( $record, 'bp_media_ids', true ) ) );
+				if ( ! empty( $media_ids ) ) {
+					$wpdb->query(
+						$wpdb->prepare(
+							"UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', array_fill( 0, count( $media_ids ), '%d' ) ) . ')',
+							$media_ids
+						)
+					);
 				}
 			}
 			$offset ++;
 		}
+		/* translators: %s: number. */
 		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1338,6 +1355,7 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: progress text. */
 		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
 
 		return array(
@@ -1464,7 +1482,7 @@ function bp_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
 		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => (int) $status ) );
 }
 
 /**
@@ -1497,7 +1515,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( ! defined( 'BP_MEDIA_CHUNK_SIZE' ) ) {
 		define( 'BP_MEDIA_CHUNK_SIZE', 1024 * 1024 );
 	}
-	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 
 	if ( false === $handle ) {
 		return false;
@@ -1521,7 +1539,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_operations_fread
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {
@@ -1539,7 +1557,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		}
 	}
 
-	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 }
 
 /**
@@ -2040,10 +2058,10 @@ Options -ExecCGI
 
 	foreach ( $files as $file ) {
 		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 			if ( $file_handle ) {
-				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 			}
 		}
 	}

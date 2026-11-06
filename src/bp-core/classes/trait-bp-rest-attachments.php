@@ -120,6 +120,7 @@ trait BP_REST_Attachments {
 			$error_reason  = 'unknown';
 
 			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+				/* translators: %s: error message. */
 				$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
 				$error_reason  = 'image_no_editor';
 			}
@@ -277,7 +278,7 @@ trait BP_REST_Attachments {
 		$avatar_object = $this->get_avatar_object( $args );
 
 		if ( file_exists( $avatar_original['file'] ) ) {
-			unlink( $avatar_original['file'] );
+			wp_delete_file( $avatar_original['file'] );
 		}
 
 		return $avatar_object;
@@ -331,7 +332,7 @@ trait BP_REST_Attachments {
 		} else {
 			$image_file = $resized['path'];
 			$img_dir    = str_replace( $upload_path, '', $resized['path'] );
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 
 		// Check for WP_Error on what should be an image.

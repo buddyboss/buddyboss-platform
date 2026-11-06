@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handles bulk management (mark as read/unread, delete) of notifications.
  *
@@ -21,8 +24,8 @@ function bp_notifications_action_bulk_manage() {
 	}
 
 	// Get the action.
-	$action        = ! empty( $_POST['notification_bulk_action'] ) ? $_POST['notification_bulk_action'] : '';
-	$nonce         = ! empty( $_POST['notifications_bulk_nonce'] ) ? $_POST['notifications_bulk_nonce'] : '';
+	$action        = ! empty( $_POST['notification_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_bulk_action'] ) ) : '';
+	$nonce         = ! empty( $_POST['notifications_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['notifications_bulk_nonce'] ) ) : '';
 	$notifications = ! empty( $_POST['notifications'] ) ? $_POST['notifications'] : '';
 
 	// Bail if no action or no IDs.

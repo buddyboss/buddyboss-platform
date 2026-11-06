@@ -171,6 +171,7 @@ class BP_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -184,6 +185,7 @@ class BP_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -196,11 +198,13 @@ class BP_Core_User {
 			array(
 				'item_id' => $this->id,
 				'type'    => 'thumb',
+				/* translators: %s: member display name. */
 				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ),
 				'width'   => 30,
 				'height'  => 30,
 			)
 		);
+		/* translators: %s: human-readable time since last activity. */
 		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss' ) );
 	}
 
@@ -215,6 +219,7 @@ class BP_Core_User {
 
 		if ( bp_is_active( 'groups' ) ) {
 			$this->total_groups = BP_Groups_Member::total_group_count( $this->id );
+			/* translators: %s: number. */
 			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss' ), $this->total_groups );
 		}
 	}
@@ -403,7 +408,7 @@ class BP_Core_User {
 		 * @param array  $sql   Array of SQL statement parts for the query.
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_get_paged_users_sql', join( ' ', (array) $sql ), $sql );
-		$paged_users     = $wpdb->get_results( $paged_users_sql );
+		$paged_users     = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_get_paged_users_sql; as built here: literal select/join/order parts, table names from $wpdb/buddypress(), bp_core_get_status_sql() literal, nickname field id (int), include/exclude/friend ids via wp_parse_id_list(), meta key/value, search and LIMIT $wpdb->prepare()'d.
 
 		// Re-jig the SQL so we can get the total user count.
 		unset( $sql['select_main'] );
@@ -435,7 +440,7 @@ class BP_Core_User {
 		 * @param array  $sql   Array of SQL statement parts for the query.
 		 */
 		$total_users_sql = apply_filters( 'bp_core_get_total_users_sql', join( ' ', (array) $sql ), $sql );
-		$total_users     = $wpdb->get_var( $total_users_sql );
+		$total_users     = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_get_total_users_sql; the same $sql parts as the paged query above (see the reason there) with SELECT COUNT and no LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be faster than querying the data for every user in a list.
@@ -522,8 +527,8 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_users_by_letter_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id LEFT JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id WHERE {$status_sql} AND pf.name = %s {$exclude_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", bp_xprofile_fullname_field_name(), $letter_like ) );
 
-		$total_users = $wpdb->get_var( $total_users_sql );
-		$paged_users = $wpdb->get_results( $paged_users_sql );
+		$total_users = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_users_by_letter_count_sql; as built here: one $wpdb->prepare() (field name and LIKE pattern %s) with table names, bp_core_get_status_sql() literal and exclude ids via wp_parse_id_list().
+		$paged_users = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_users_by_letter_sql; same build as the count query above plus the %d-prepared LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be
@@ -627,8 +632,8 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_user_get_specific_users_paged_sql', $paged_users_sql, $user_ids, $limit, $page, $populate_extras );
 
-		$total_users = $wpdb->get_var( $total_users_sql );
-		$paged_users = $wpdb->get_results( $paged_users_sql );
+		$total_users = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_user_get_specific_users_count_sql (and deprecated bp_core_get_specific_users_count_sql); as built here: $wpdb->users, bp_core_get_status_sql() literal, ids via wp_parse_id_list().
+		$paged_users = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_user_get_specific_users_paged_sql (and deprecated bp_core_get_specific_users_count_sql); same build as the count query above plus the %d-prepared LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be
@@ -690,8 +695,8 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_search_users_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id WHERE {$status_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", $search_terms_like ), $search_terms, $pag_sql );
 
-		$total_users = $wpdb->get_var( $total_users_sql );
-		$paged_users = $wpdb->get_results( $paged_users_sql );
+		$total_users = $wpdb->get_var( $total_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_search_users_count_sql; as built here: one $wpdb->prepare() (LIKE pattern %s via bp_esc_like()) with table names and bp_core_get_status_sql() literal.
+		$paged_users = $wpdb->get_results( $paged_users_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_core_search_users_sql; same build as the count query above plus the %d-prepared LIMIT.
 
 		/**
 		 * Lets fetch some other useful data in a separate queries, this will be faster than querying the data for every user in a list.
@@ -832,7 +837,7 @@ class BP_Core_User {
 			$user_ids_sql = implode( ',', $uncached_user_ids );
 			$user_count   = count( $uncached_user_ids );
 
-			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) );
+			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $user_ids_sql is an int list (wp_parse_id_list(), filtered, then the uncached subset) and $user_count its count; table name from buddypress().
 
 			foreach ( $last_activities as $last_activity ) {
 				wp_cache_set(

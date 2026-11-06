@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle marking a single message thread as unread.
  *
@@ -20,8 +23,8 @@ function bp_messages_action_mark_unread() {
 		return false;
 	}
 
-	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
-	$nonce  = ! empty( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '';
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 	$id     = ! empty( $_GET['message_id'] ) ? intval( $_GET['message_id'] ) : 0;
 
 	// Bail if no action or no ID.

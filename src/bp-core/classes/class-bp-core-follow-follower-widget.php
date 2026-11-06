@@ -75,6 +75,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
 			? __( "My Followers", 'buddyboss' )
+			/* translators: %s: member display name. */
 			: sprintf( __( "%s's Followers", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
@@ -109,11 +110,13 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		) ) {
 			do_action( 'bp_before_follower_widget' );
 
-			echo $args['before_widget'];
-			echo $args['before_title']
-			   . $title
-			   . $follower_count
-			   . $args['after_title'];
+			echo wp_kses_post( $args['before_widget'] );
+			echo wp_kses_post(
+				$args['before_title']
+				. $title
+				. $follower_count
+				. $args['after_title']
+			);
 			?>
 
 			<div class="avatar-block">
@@ -130,7 +133,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 				<div class="more-block more-followers"><a href="<?php bp_members_directory_permalink(); ?>#followers" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
-			<?php echo $args['after_widget']; ?>
+			<?php echo wp_kses_post( $args['after_widget'] ); ?>
 
 			<?php do_action( 'bp_after_follower_widget' ); ?>
 
@@ -161,7 +164,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		?>
 
 		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss' ); ?></small></p>
+		<p><small><?php esc_html_e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss' ); ?></small></p>
 
 		<?php
 	}

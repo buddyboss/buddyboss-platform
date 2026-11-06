@@ -189,7 +189,7 @@ function bbp_tools_modify_menu_highlight() {
  * @param string $active_tab Name of the tab that is active
  */
 function bbp_tools_admin_tabs( $active_tab = '' ) {
-	echo bbp_get_tools_admin_tabs( $active_tab );
+	echo wp_kses_post( bbp_get_tools_admin_tabs( $active_tab ) );
 }
 
 	/**

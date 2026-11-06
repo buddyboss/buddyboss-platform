@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_activity_slug() {
-	echo bp_get_activity_slug();
+	echo esc_attr( bp_get_activity_slug() );
 }
 /**
  * Return the activity component slug.
@@ -42,7 +42,7 @@ function bp_get_activity_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_root_slug() {
-	echo bp_get_activity_root_slug();
+	echo esc_attr( bp_get_activity_root_slug() );
 }
 
 /**
@@ -215,7 +215,7 @@ function bp_has_activities( $args = '' ) {
 		: (
 		( ! empty( bp_current_action() ) && ! is_numeric( bp_current_action() ) )
 			? bp_current_action()
-			: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+			: ( isset( $_REQUEST['scope'] ) ? bb_activity_get_request_scope( wp_unslash( $_REQUEST['scope'] ) ) : 'all' ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Only registered scope names pass.
 		);
 
 	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
@@ -471,7 +471,7 @@ function bp_get_activity_load_more_link() {
  * @global object $activities_template {@link BP_Activity_Template}
  */
 function bp_activity_pagination_count() {
-	echo bp_get_activity_pagination_count();
+	echo esc_html( bp_get_activity_pagination_count() );
 }
 
 /**
@@ -491,7 +491,8 @@ function bp_get_activity_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
+	/* translators: 1: number, 2: number, 3: number. */
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -502,7 +503,7 @@ function bp_get_activity_pagination_count() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_pagination_links() {
-	echo bp_get_activity_pagination_links();
+	echo wp_kses_post( bp_get_activity_pagination_links() );
 }
 
 /**
@@ -567,7 +568,7 @@ function bp_activity_has_more_items() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_count() {
-	echo bp_get_activity_count();
+	echo esc_html( bp_get_activity_count() );
 }
 
 /**
@@ -598,7 +599,7 @@ function bp_get_activity_count() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_per_page() {
-	echo bp_get_activity_per_page();
+	echo esc_html( bp_get_activity_per_page() );
 }
 
 /**
@@ -631,7 +632,7 @@ function bp_get_activity_per_page() {
  * @todo Deprecate.
  */
 function bp_activities_title() {
-	echo bp_get_activities_title();
+	echo esc_html( bp_get_activities_title() );
 }
 
 /**
@@ -665,7 +666,7 @@ function bp_get_activities_title() {
  * @todo Deprecate.
  */
 function bp_activities_no_activity() {
-	echo bp_get_activities_no_activity();
+	echo esc_html( bp_get_activities_no_activity() );
 }
 
 /**
@@ -697,7 +698,7 @@ function bp_get_activities_no_activity() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_id() {
-	echo bp_get_activity_id();
+	echo esc_attr( bp_get_activity_id() );
 }
 
 /**
@@ -733,7 +734,7 @@ function bp_get_activity_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_item_id() {
-	echo bp_get_activity_item_id();
+	echo esc_attr( bp_get_activity_item_id() );
 }
 
 /**
@@ -764,7 +765,7 @@ function bp_get_activity_item_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_secondary_item_id() {
-	echo bp_get_activity_secondary_item_id();
+	echo esc_attr( bp_get_activity_secondary_item_id() );
 }
 
 /**
@@ -795,7 +796,7 @@ function bp_get_activity_secondary_item_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_date_recorded() {
-	echo bp_get_activity_date_recorded();
+	echo esc_html( bp_get_activity_date_recorded() );
 }
 
 /**
@@ -804,7 +805,7 @@ function bp_activity_date_recorded() {
  * @since BuddyBoss 2.8.20
  */
 function bb_activity_date_updated() {
-	echo bb_get_activity_date_updated();
+	echo esc_html( bb_get_activity_date_updated() );
 }
 
 /**
@@ -857,7 +858,7 @@ function bb_get_activity_date_updated() {
  * @since BuddyPress 2.1.0
  */
 function bp_activity_member_display_name() {
-	echo bp_get_activity_member_display_name();
+	echo esc_html( bp_get_activity_member_display_name() );
 }
 
 /**
@@ -897,7 +898,7 @@ add_filter( 'bp_get_activity_member_display_name', 'esc_html' );
  * @since BuddyPress 1.2.0
  */
 function bp_activity_object_name() {
-	echo bp_get_activity_object_name();
+	echo esc_html( bp_get_activity_object_name() );
 }
 
 /**
@@ -928,7 +929,7 @@ function bp_get_activity_object_name() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_type() {
-	echo bp_get_activity_type();
+	echo esc_attr( bp_get_activity_type() );
 }
 
 /**
@@ -965,7 +966,7 @@ function bp_get_activity_type() {
  *       remove redundant echo
  */
 function bp_activity_action_name() {
-	echo bp_activity_type(); }
+	echo esc_attr( bp_activity_type() ); }
 
 /**
  * Return the activity type.
@@ -988,7 +989,7 @@ function bp_get_activity_action_name() {
  * @since BuddyPress 1.1.0
  */
 function bp_activity_user_id() {
-	echo bp_get_activity_user_id();
+	echo esc_attr( bp_get_activity_user_id() );
 }
 
 /**
@@ -1019,7 +1020,7 @@ function bp_get_activity_user_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_user_link() {
-	echo bp_get_activity_user_link();
+	echo wp_kses_post( bp_get_activity_user_link() );
 }
 
 /**
@@ -1060,7 +1061,7 @@ function bp_get_activity_user_link() {
  * @param array|string $args See {@link bp_get_activity_avatar()} for description.
  */
 function bp_activity_avatar( $args = '' ) {
-	echo bp_get_activity_avatar( $args );
+	echo wp_kses_post( bp_get_activity_avatar( $args ) );
 }
 /**
  * Return the avatar of the user that performed the action.
@@ -1101,6 +1102,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$dn_default = bb_activity_get_item_user_displayname( $current_activity_item );
 
 	// Prepend some descriptive text to alt.
+	/* translators: %s: member display name. */
 	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
 
 	$defaults = array(
@@ -1193,7 +1195,7 @@ function bp_get_activity_avatar( $args = '' ) {
  * @param array|string $args See {@link bp_get_activity_secondary_avatar} for description.
  */
 function bp_activity_secondary_avatar( $args = '' ) {
-	echo bp_get_activity_secondary_avatar( $args );
+	echo wp_kses_post( bp_get_activity_secondary_avatar( $args ) );
 }
 
 /**
@@ -1263,6 +1265,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = __( 'Group logo', 'buddyboss' );
 
 				if ( ! empty( $name ) ) {
+					/* translators: %s: group name. */
 					$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
 				}
 			}
@@ -1274,6 +1277,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = home_url();
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: site name. */
 				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 			}
 
@@ -1284,6 +1288,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = bp_core_get_userlink( $item_id, false, true );
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: member display name. */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
@@ -1393,7 +1398,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
  * @param array $args See bp_get_activity_action().
  */
 function bp_activity_action( $args = array() ) {
-	echo bp_get_activity_action( $args );
+	echo wp_kses_post( bp_get_activity_action( $args ) );
 }
 
 /**
@@ -1463,7 +1468,7 @@ function bp_get_activity_action( $args = array() ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_content_body() {
-	echo bp_get_activity_content_body();
+	echo bp_get_activity_content_body(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save and run through the display filter chain (autoembed); wp_kses_post() would strip embeds.
 }
 
 /**
@@ -1527,7 +1532,7 @@ function bp_activity_has_content() {
  * @todo properly deprecate this function.
  */
 function bp_activity_content() {
-	echo bp_get_activity_content();
+	echo wp_kses_post( bp_get_activity_content() );
 }
 
 /**
@@ -1561,7 +1566,7 @@ function bp_get_activity_content() {
  * @since BuddyBoss 1.2.0
  */
 function bp_activity_privacy() {
-	echo bp_get_activity_privacy();
+	echo esc_html( bp_get_activity_privacy() );
 }
 
 /**
@@ -1815,7 +1820,7 @@ function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
  * @param array|string $args See {@link bp_get_activity_parent_content} for description.
  */
 function bp_activity_parent_content( $args = '' ) {
-	echo bp_get_activity_parent_content( $args );
+	echo wp_kses_post( bp_get_activity_parent_content( $args ) );
 }
 
 /**
@@ -1879,7 +1884,7 @@ function bp_get_activity_parent_content( $args = '' ) {
  * @since BuddyPress 1.7.0
  */
 function bp_activity_parent_user_id() {
-	echo bp_get_activity_parent_user_id();
+	echo esc_attr( bp_get_activity_parent_user_id() );
 }
 
 /**
@@ -1931,7 +1936,7 @@ function bp_get_activity_parent_user_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_is_favorite() {
-	echo bp_get_activity_is_favorite();
+	echo esc_attr( bp_get_activity_is_favorite() );
 }
 
 /**
@@ -1966,7 +1971,7 @@ function bp_get_activity_is_favorite() {
  * @param array|string $args See {@link bp_activity_get_comments} for description.
  */
 function bp_activity_comments( $args = '' ) {
-	echo bp_activity_get_comments( $args );
+	echo bp_activity_get_comments( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
 }
 
 /**
@@ -2077,7 +2082,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		 *
 		 * @param string $output The HTML output of the start of the UL element.
 		 */
-		echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+		echo wp_kses_post( apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" ) );
 	}
 
 	$comment_loaded_count = 0;
@@ -2102,7 +2107,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$hidden_class = 'acomments-view-more--hide';
 			}
 
-			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . $view_more_icon . esc_html( $view_more_text ) . '</li>';
+			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . wp_kses_post( $view_more_icon ) . esc_html( $view_more_text ) . '</li>';
 			break;
 		}
 		// Put the comment into the global so it's available to filters.
@@ -2139,7 +2144,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		 *
 		 * @param string $value Closing tag for the HTML markup to use.
 		 */
-		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+		echo wp_kses_post( apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' ) );
 	}
 }
 
@@ -2177,7 +2182,7 @@ function bp_activity_current_comment() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_id() {
-	echo bp_get_activity_comment_id();
+	echo esc_attr( bp_get_activity_comment_id() );
 }
 
 /**
@@ -2211,7 +2216,7 @@ function bp_get_activity_comment_id() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_user_id() {
-	echo bp_get_activity_comment_user_id();
+	echo esc_attr( bp_get_activity_comment_user_id() );
 }
 
 /**
@@ -2245,7 +2250,7 @@ function bp_get_activity_comment_user_id() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_user_link() {
-	echo bp_get_activity_comment_user_link();
+	echo wp_kses_post( bp_get_activity_comment_user_link() );
 }
 
 /**
@@ -2274,7 +2279,7 @@ function bp_get_activity_comment_user_link() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_name() {
-	echo bp_get_activity_comment_name();
+	echo esc_html( bp_get_activity_comment_name() );
 }
 
 /**
@@ -2315,7 +2320,7 @@ function bp_get_activity_comment_name() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_date_recorded() {
-	echo bp_get_activity_comment_date_recorded();
+	echo esc_html( bp_get_activity_comment_date_recorded() );
 }
 
 /**
@@ -2348,7 +2353,7 @@ function bp_get_activity_comment_date_recorded() {
  * @since BuddyPress 2.3.0
  */
 function bp_activity_comment_date_recorded_raw() {
-	echo bp_get_activity_comment_date_recorded_raw();
+	echo esc_html( bp_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -2380,7 +2385,7 @@ function bp_get_activity_comment_date_recorded_raw() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_delete_link() {
-	echo bp_get_activity_comment_delete_link();
+	echo wp_kses_post( bp_get_activity_comment_delete_link() );
 }
 
 /**
@@ -2410,7 +2415,7 @@ function bp_get_activity_comment_delete_link() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_content() {
-	echo bp_get_activity_comment_content();
+	echo wp_kses_post( bp_get_activity_comment_content() );
 }
 
 /**
@@ -2470,7 +2475,7 @@ function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_comment_count() {
-	echo bp_activity_get_comment_count();
+	echo esc_html( bp_activity_get_comment_count() );
 }
 
 /**
@@ -2488,7 +2493,8 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 
 	// Deprecated notice about $args.
 	if ( ! empty( $deprecated ) ) {
-		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
+		/* translators: 1: function name, 2: file path. */
+		_deprecated_argument( __FUNCTION__, '1.2', sprintf( esc_html__( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 	}
 
 	$count = $activities_template->activity->all_child_count ?? 0;
@@ -2550,7 +2556,7 @@ function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
  *                            when used in activity comment loop.
  */
 function bp_activity_comment_depth( $comment = 0 ) {
-	echo bp_activity_get_comment_depth( $comment );
+	echo esc_html( bp_activity_get_comment_depth( $comment ) );
 }
 
 /**
@@ -2616,7 +2622,7 @@ function bp_activity_get_comment_depth( $comment = 0 ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_comment_link() {
-	echo bp_get_activity_comment_link();
+	echo wp_kses_post( bp_get_activity_comment_link() );
 }
 
 /**
@@ -2647,7 +2653,7 @@ function bp_get_activity_comment_link() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_comment_form_nojs_display() {
-	echo bp_get_activity_comment_form_nojs_display();
+	echo bp_get_activity_comment_form_nojs_display(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 
 /**
@@ -2676,7 +2682,7 @@ function bp_get_activity_comment_form_nojs_display() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_comment_form_action() {
-	echo bp_get_activity_comment_form_action();
+	echo esc_url( bp_get_activity_comment_form_action() );
 }
 
 /**
@@ -2704,7 +2710,7 @@ function bp_get_activity_comment_form_action() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_permalink_id() {
-	echo bp_get_activity_permalink_id();
+	echo esc_attr( bp_get_activity_permalink_id() );
 }
 
 /**
@@ -2799,7 +2805,7 @@ function bp_get_activity_comment_permalink() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_favorite_link() {
-	echo bp_get_activity_favorite_link();
+	echo wp_kses_post( bp_get_activity_favorite_link() );
 }
 
 /**
@@ -2836,7 +2842,7 @@ function bp_get_activity_favorite_link( $activity_id = 0 ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_unfavorite_link() {
-	echo bp_get_activity_unfavorite_link();
+	echo wp_kses_post( bp_get_activity_unfavorite_link() );
 }
 
 /**
@@ -2873,7 +2879,7 @@ function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_css_class() {
-	echo bp_get_activity_css_class();
+	echo esc_attr( bp_get_activity_css_class() );
 }
 
 /**
@@ -2972,7 +2978,7 @@ function bp_get_activity_css_class() {
  * @since BuddyBoss 1.0.0
  */
 function bp_activity_comment_css_class() {
-	echo bp_get_activity_comment_css_class();
+	echo esc_attr( bp_get_activity_comment_css_class() );
 }
 
 /**
@@ -3018,7 +3024,7 @@ function bp_get_activity_comment_css_class() {
  * @since BuddyPress 1.1.0
  */
 function bp_activity_delete_link() {
-	echo bp_get_activity_delete_link();
+	echo wp_kses_post( bp_get_activity_delete_link() );
 }
 
 /**
@@ -3104,7 +3110,7 @@ function bp_get_activity_delete_url() {
  * @param int $user_id See {@link bp_get_activity_latest_update()} for description.
  */
 function bp_activity_latest_update( $user_id = 0 ) {
-	echo bp_get_activity_latest_update( $user_id );
+	echo wp_kses_post( bp_get_activity_latest_update( $user_id ) );
 }
 
 /**
@@ -3139,7 +3145,7 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
 	 * @param string $value   The excerpt for the latest update.
 	 * @param int    $user_id ID of the queried user.
 	 */
-	$latest_update = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], bp_activity_get_excerpt_length() ) ) ), $user_id );
+	$latest_update = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bp_create_excerpt( $update['content'], bp_activity_get_excerpt_length() ) ) ), $user_id );
 
 	$latest_update = sprintf(
 		'%s <a href="%s">%s</a>',
@@ -3170,7 +3176,7 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
  * @param array|bool $args See {@link bp_get_activity_filter_links()} for description.
  */
 function bp_activity_filter_links( $args = false ) {
-	echo bp_get_activity_filter_links( $args );
+	echo wp_kses_post( bp_get_activity_filter_links( $args ) );
 }
 
 /**
@@ -3372,7 +3378,7 @@ function bp_activity_can_favorite() {
  * @see   bp_get_total_favorite_count_for_user() for description of parameters.
  */
 function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
-	echo bp_get_total_favorite_count_for_user( $user_id, $activity_type );
+	echo esc_html( bp_get_total_favorite_count_for_user( $user_id, $activity_type ) );
 }
 
 /**
@@ -3425,7 +3431,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'a
  * @param int $user_id See {@link bp_get_total_mention_count_for_user()}.
  */
 function bp_total_mention_count_for_user( $user_id = 0 ) {
-	echo bp_get_total_mention_count_for_user( $user_id );
+	echo esc_html( bp_get_total_mention_count_for_user( $user_id ) );
 }
 
 /**
@@ -3534,7 +3540,7 @@ function bp_activity_recurse_comments_activity_ids( $activity = array(), $activi
  * @param int|string|bool $user_id_or_username See {@link bp_get_mentioned_user_display_name()}.
  */
 function bp_mentioned_user_display_name( $user_id_or_username = false ) {
-	echo bp_get_mentioned_user_display_name( $user_id_or_username );
+	echo esc_html( bp_get_mentioned_user_display_name( $user_id_or_username ) );
 }
 
 /**
@@ -3572,7 +3578,7 @@ function bp_get_mentioned_user_display_name( $user_id_or_username = false ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_post_form_action() {
-	echo bp_get_activity_post_form_action();
+	echo esc_url( bp_get_activity_post_form_action() );
 }
 
 /**
@@ -3668,7 +3674,7 @@ function bp_activity_comments_user_avatars( $args = array() ) {
 	 * @param array  $r      Array of arguments used for each avatar.
 	 * @param array  $output Array of each avatar found, before imploded into single string.
 	 */
-	echo apply_filters( 'bp_activity_comments_user_avatars', $retval, $r, $output );
+	echo wp_kses_post( apply_filters( 'bp_activity_comments_user_avatars', $retval, $r, $output ) );
 }
 
 /**
@@ -3745,7 +3751,7 @@ function bp_activity_recurse_comments_user_ids( array $comments = array() ) {
  * @since BuddyPress 1.9.0
  */
 function bp_displayed_user_mentionname() {
-	echo bp_get_displayed_user_mentionname();
+	echo esc_html( bp_get_displayed_user_mentionname() );
 }
 
 /**
@@ -3804,10 +3810,10 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
 		// Switch output based on the element.
 		switch ( $output ) {
 			case 'select':
-				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $type ), $selected, esc_html( $description ) );
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $type ), $selected, esc_html( $description ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $selected is selected() output.
 				break;
 			case 'checkbox':
-				printf( '<label style="" for="%1$s[]">%2$s<input type="checkbox" id="%1$s[]" name="%1$s[]" value="%3$s" %4$s/></label>', esc_attr( $args['checkbox_name'] ), esc_html( $description ), esc_attr( $args['checkbox_name'] ), esc_attr( $args['checkbox_name'] ), esc_attr( $type ), $checked );
+				printf( '<label style="" for="%1$s[]">%2$s<input type="checkbox" id="%1$s[]" name="%1$s[]" value="%3$s" %4$s/></label>', esc_attr( $args['checkbox_name'] ), esc_html( $description ), esc_attr( $args['checkbox_name'] ), esc_attr( $args['checkbox_name'] ), esc_attr( $type ), $checked ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the last argument is checked() output; the others are escaped.
 				break;
 		}
 
@@ -3846,7 +3852,7 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
  * @since BuddyPress 1.0.0
  */
 function bp_sitewide_activity_feed_link() {
-	echo bp_get_sitewide_activity_feed_link();
+	echo wp_kses_post( bp_get_sitewide_activity_feed_link() );
 }
 
 /**
@@ -3874,7 +3880,7 @@ function bp_get_sitewide_activity_feed_link() {
  * @since BuddyPress 1.2.0
  */
 function bp_member_activity_feed_link() {
-	echo bp_get_member_activity_feed_link();
+	echo esc_url( bp_get_member_activity_feed_link() );
 }
 
 /**
@@ -3886,7 +3892,7 @@ function bp_member_activity_feed_link() {
  * @todo properly deprecate in favor of bp_member_activity_feed_link().
  */
 function bp_activities_member_rss_link() {
-	echo bp_get_member_activity_feed_link();
+	echo esc_url( bp_get_member_activity_feed_link() );
 }
 
 /**
@@ -3955,7 +3961,7 @@ function bp_get_activities_member_rss_link() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_feed_item_guid() {
-	echo bp_get_activity_feed_item_guid();
+	echo esc_url( bp_get_activity_feed_item_guid() );
 }
 
 /**
@@ -3986,7 +3992,7 @@ function bp_get_activity_feed_item_guid() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_feed_item_title() {
-	echo bp_get_activity_feed_item_title();
+	echo wp_kses_post( bp_get_activity_feed_item_title() );
 }
 
 /**
@@ -4008,14 +4014,14 @@ function bp_get_activity_feed_item_title() {
 	}
 
 	$content = explode( '<span', $content );
-	$title   = strip_tags( ent2ncr( trim( convert_chars( $content[0] ) ) ) );
+	$title   = wp_strip_all_tags( ent2ncr( trim( convert_chars( $content[0] ) ) ) );
 
 	if ( ':' === substr( $title, -1 ) ) {
 		$title = substr( $title, 0, -1 );
 	}
 
 	if ( 'activity_update' === $activities_template->activity->type ) {
-		$title .= ': ' . strip_tags( ent2ncr( trim( convert_chars( bp_create_excerpt( $activities_template->activity->content, 70, array( 'ending' => ' [&#133;]' ) ) ) ) ) );
+		$title .= ': ' . wp_strip_all_tags( ent2ncr( trim( convert_chars( bp_create_excerpt( $activities_template->activity->content, 70, array( 'ending' => ' [&#133;]' ) ) ) ) ) );
 	}
 
 	/**
@@ -4034,7 +4040,7 @@ function bp_get_activity_feed_item_title() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_feed_item_link() {
-	echo bp_get_activity_feed_item_link();
+	echo wp_kses_post( bp_get_activity_feed_item_link() );
 }
 
 /**
@@ -4069,7 +4075,7 @@ function bp_get_activity_feed_item_link() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_feed_item_date() {
-	echo bp_get_activity_feed_item_date();
+	echo esc_html( bp_get_activity_feed_item_date() );
 }
 
 /**
@@ -4104,7 +4110,7 @@ function bp_get_activity_feed_item_date() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_feed_item_description() {
-	echo bp_get_activity_feed_item_description();
+	echo wp_kses_post( bp_get_activity_feed_item_description() ); // Feed item HTML (CDATA): keep allowed markup.
 }
 
 /**
@@ -4147,7 +4153,7 @@ function bp_get_activity_feed_item_description() {
 function bp_activity_sitewide_feed() {
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php esc_html_e( 'Site Wide Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
 
 	<?php
 }
@@ -4162,7 +4168,7 @@ add_action( 'bp_head', 'bp_activity_sitewide_feed' );
  *                        'member_groups', 'group'.
  */
 function bp_activity_show_filters( $context = '' ) {
-	echo bp_get_activity_show_filters( $context );
+	echo bp_get_activity_show_filters( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
 }
 
 /**
@@ -4224,7 +4230,7 @@ function bp_get_activity_show_filters( $context = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_follow_slug() {
-	echo bp_get_follow_slug();
+	echo esc_attr( bp_get_follow_slug() );
 }
 
 /**
@@ -4254,7 +4260,7 @@ function bp_get_follow_slug() {
  * @uses bp_get_follower_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
  */
 function bp_follower_ids( $args = '' ) {
-	echo bp_get_follower_ids( $args );
+	echo esc_attr( bp_get_follower_ids( $args ) );
 }
 
 /**
@@ -4296,7 +4302,7 @@ function bp_get_follower_ids( $args = '' ) {
  * @uses bp_get_following_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
  */
 function bp_following_ids( $args = '' ) {
-	echo bp_get_following_ids( $args );
+	echo esc_attr( bp_get_following_ids( $args ) );
 }
 
 /**
@@ -4342,7 +4348,7 @@ function bp_get_following_ids( $args = '' ) {
  * @param array $button_args See BP_Button class for more information.
  */
 function bp_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
-	echo bp_get_add_follow_button( $leader_id, $follower_id, $button_args );
+	echo wp_kses_post( bp_get_add_follow_button( $leader_id, $follower_id, $button_args ) );
 }
 
 /**
@@ -4439,7 +4445,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
  * @since BuddyBoss 1.5.0
  */
 function bp_activity_entry_css_class() {
-	echo bp_get_activity_entry_css_class();
+	echo esc_attr( bp_get_activity_entry_css_class() );
 }
 
 /**

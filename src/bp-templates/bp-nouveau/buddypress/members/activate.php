@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_activation_hook( 'before', 'page' ); ?>
 
 <div class="page" id="activate-page">

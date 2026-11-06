@@ -192,7 +192,7 @@ function bp_core_admin_buddyboss_app() {
  * @param bool   $slug    Form option slug.
  */
 function bp_form_option( $option, $default = '', $slug = false ) {
-	echo bp_get_form_option( $option, $default, $slug );
+	echo esc_attr( bp_get_form_option( $option, $default, $slug ) );
 }
 
 /**
@@ -273,7 +273,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : esc_html( $post_type_obj->labels->name ); ?>
 	</label>
 	<?php
 
@@ -326,6 +326,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		<?php disabled( $is_cpt_comment_enabled, false ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
+		<?php /* translators: %s: custom post type label. */ ?>
 		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
 	</label>
 	<?php

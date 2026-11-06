@@ -651,6 +651,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 		$bp_title_parts['site'] = $blogname;
 
 		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
+			/* translators: %s: page number. */
 			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}
@@ -1357,7 +1358,7 @@ function bp_core_render_email_template( $template ) {
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
 	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss' ) . '</title>', $template );
-	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
+	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- embed template HTML built by the plugin with wpautop()'d post content (kses on save); wp_kses_post() would strip embeds.
 
 	/*
 	 * Link colours are applied directly in the email template before sending, so we
@@ -2774,8 +2775,8 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	if ( count( $allow_custom_url_domains ) > 0 ) {
 		foreach ( $allow_custom_url_domains as $url ) {
-			$parsed_url   = parse_url( $url );
-			$current_host = $_SERVER['HTTP_HOST'];
+			$parsed_url   = wp_parse_url( $url );
+			$current_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 
 			if (
 				isset( $parsed_url['host'] ) &&

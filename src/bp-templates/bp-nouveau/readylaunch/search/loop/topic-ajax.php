@@ -45,7 +45,8 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 			<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 			<span class="middot">&middot;</span>
 			<?php
-			printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total );
+			/* translators: %d: number of replies. */
+			echo esc_html( sprintf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ) );
 			?>
 			<span class="middot">&middot;</span>
 			<span>

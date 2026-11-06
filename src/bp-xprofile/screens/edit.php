@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handles the display of the profile edit page by loading the correct template file.
  * Also checks to make sure this can only be accessed for the logged in users profile.
@@ -74,6 +77,7 @@ function xprofile_screen_edit_profile() {
 				$errors                                = true;
 				$field                                 = new BP_XProfile_Field( $field_id );
 				$is_required_fields_error[]            = $field->name;
+				/* translators: %s: field name. */
 				$social_fields_validation[ $field_id ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field->name );
 			}
 
@@ -251,6 +255,7 @@ function xprofile_screen_edit_profile() {
 			if ( count( $is_required_fields_error ) > 1 ) {
 				$validations[] = __( 'Please fill in all required fields, and save your changes again.', 'buddyboss' );
 			} else {
+				/* translators: %s: comma-separated list of required field names. */
 				$validations[] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
 			}
 		}

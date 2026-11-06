@@ -88,7 +88,7 @@ function bp_moderation_wp_redirect( $location ) {
 	$modbypass = filter_input( INPUT_GET, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
 	if ( ! empty( $modbypass ) ) {
 
-		$query_str = parse_url( $location, PHP_URL_QUERY );
+		$query_str = wp_parse_url( $location, PHP_URL_QUERY );
 		parse_str( $query_str, $params );
 
 		$params['modbypass'] = $modbypass;
@@ -131,8 +131,8 @@ function bp_moderation_content_report() {
 	}
 
 	$reports_terms = get_terms(
-		'bpm_category',
 		array(
+			'taxonomy'   => 'bpm_category',
 			'hide_empty' => false,
 			'fields'     => 'ids',
 		)
@@ -681,10 +681,11 @@ function bb_moderation_admin_repair_old_moderation_data() {
 	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$sql_offset               = $offset - 1;
 	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
-	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $moderated_activities_sql is $wpdb->prepare()'d above (OFFSET %d); table name from $wpdb->base_prefix.
 
 	if ( ! empty( $moderated_activities ) ) {
 		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
+		/* translators: %s: number. */
 		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(

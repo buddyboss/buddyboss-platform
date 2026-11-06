@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 	?>
@@ -16,9 +19,10 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 		if ( ! $is_send_ajax_request ) {
 			$count = bp_media_get_total_group_media_count();
 
-			/* translators: %d is the photo count */
+
 			printf(
 				wp_kses(
+					/* translators: %d is the photo count */
 					_n(
 						'<span class="bb-count">%d</span> Photo',
 						'<span class="bb-count">%d</span> Photos',

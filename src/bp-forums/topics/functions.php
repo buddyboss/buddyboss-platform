@@ -355,7 +355,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input.
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// Explode by comma.
 		if ( strstr( $terms, ',' ) ) {
@@ -462,21 +462,10 @@ function bbp_new_topic_handler( $action = '' ) {
 			}
 		}
 
-		// Delete draft data from the database.
-		$draft_data_key = 'draft_discussion_' . $forum_id;
-		$usermeta_key   = 'bb_user_topic_reply_draft';
-		$user_id        = bp_loggedin_user_id();
-		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
-
-		if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
-			unset( $existing_draft[ $draft_data_key ] );
-		}
-
-		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
-			$existing_draft = array();
-		}
-
-		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		// Delete draft data from the database - through the shared removal path
+		// that re-reads on a fresh cache, so publishing this topic does not
+		// overwrite a sibling draft another request wrote meanwhile (M2).
+		bb_forums_delete_published_draft_key( bp_loggedin_user_id(), 'draft_discussion_' . $forum_id );
 
 		/** Additional Actions (After Save) */
 
@@ -513,6 +502,7 @@ function bbp_new_topic_handler( $action = '' ) {
 
 		// WP_Error.
 	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
+		/* translators: %s: error message. */
 		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $topic_id->get_error_message() ) );
 
 	// Generic error.
@@ -744,7 +734,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input.
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// Explode by comma.
 		if ( strstr( $terms, ',' ) ) {
@@ -818,7 +808,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 		// Revision Reason.
 		if ( ! empty( $_POST['bbp_topic_edit_reason'] ) ) {
-			$topic_edit_reason = esc_attr( strip_tags( $_POST['bbp_topic_edit_reason'] ) );
+			$topic_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 		}
 
 		// Update revision log.
@@ -910,7 +900,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) ? $topic_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_topic_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:' . $append_error . 'Please try again.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_topic_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:%sPlease try again.', 'buddyboss' ), $append_error ) );
 	}
 }
 
@@ -1354,7 +1344,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 	if ( strtotime( $source_topic->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before source topic.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -1474,6 +1464,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 			wp_update_post(
 				array(
 					'ID'          => $reply->ID,
+					/* translators: %s: destination topic title. */
 					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
 					'post_name'   => false,
 					'post_type'   => bbp_get_reply_post_type(),
@@ -1701,7 +1692,7 @@ function bbp_split_topic_handler( $action = '' ) {
 
 					// Use the new title that was passed.
 					if ( ! empty( $_POST['bbp_topic_split_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( strip_tags( $_POST['bbp_topic_split_destination_title'] ) );
+						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_split_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 						// Use the source topic title.
 					} else {
@@ -1755,7 +1746,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	if ( strtotime( $from_reply->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before from reply.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -1840,6 +1831,7 @@ function bbp_split_topic_handler( $action = '' ) {
 			wp_update_post(
 				array(
 					'ID'          => $reply->ID,
+					/* translators: %s: destination topic title. */
 					'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
 					'post_name'   => false, // will be automatically generated.
 					'post_parent' => $destination_topic->ID,
@@ -2014,6 +2006,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 	// Tag does not exist.
 	if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
+		/* translators: %s: error message. */
 		bbp_add_error( 'bbp_manage_topic_invalid_tag', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while getting the tag: %s', 'buddyboss' ), $tag->get_error_message() ) );
 		return;
 	}
@@ -2054,6 +2047,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 			// Cannot update tag.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
+				/* translators: %s: error message. */
 				bbp_add_error( 'bbp_manage_topic_tag_update_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while updating the tag: %s', 'buddyboss' ), $tag->get_error_message() ) );
 				return;
 			}
@@ -2093,6 +2087,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 			// Problem inserting the new term.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
+				/* translators: %s: error message. */
 				bbp_add_error( 'bbp_manage_topic_tag_merge_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while merging the tags: %s', 'buddyboss' ), $tag->get_error_message() ) );
 				return;
 			}
@@ -2118,6 +2113,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 			// Error merging the terms.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
+				/* translators: %s: error message. */
 				bbp_add_error( 'bbp_manage_topic_tag_merge_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while merging the tags: %s', 'buddyboss' ), $tag->get_error_message() ) );
 				return;
 			}
@@ -2149,6 +2145,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 
 			// Error deleting term.
 			if ( is_wp_error( $tag ) && $tag->get_error_message() ) {
+				/* translators: %s: error message. */
 				bbp_add_error( 'bbp_manage_topic_tag_delete_error', sprintf( __( '<strong>ERROR</strong>: The following problem(s) have been found while deleting the tag: %s', 'buddyboss' ), $tag->get_error_message() ) );
 				return;
 			}
@@ -3111,7 +3108,7 @@ function bbp_spam_topic( $topic_id = 0 ) {
 	// Topic is being spammed, so its replies are trashed.
 	$replies = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_reply_post_type(),
 			'post_status'      => bbp_get_public_status_id(),
 			'post_parent'      => $topic_id,
@@ -3439,7 +3436,7 @@ function bbp_delete_topic( $topic_id = 0 ) {
 	// Note that we get all post statuses here.
 	$replies = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_reply_post_type(),
 			'post_status'      => array_keys( get_post_stati() ),
 			'post_parent'      => $topic_id,
@@ -3490,7 +3487,7 @@ function bbp_trash_topic( $topic_id = 0 ) {
 	// Topic is being trashed, so its replies are trashed too.
 	$replies = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_reply_post_type(),
 			'post_status'      => bbp_get_public_status_id(),
 			'post_parent'      => $topic_id,
@@ -3780,7 +3777,7 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		$embed_urls = $embeds_array = array();
 		$flag       = true;
 
-		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
 			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 		}
 
@@ -3850,7 +3847,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 	// Display the feed.
 	header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
 	header( 'Status: 200 OK' );
-	echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>'; ?>
+	echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>'; ?>
 
 	<rss version="2.0"
 		xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -3863,11 +3860,11 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 
 	<channel>
 
-		<title><?php bloginfo_rss( 'name' ); ?> &#187; <?php _e( 'All Discussions', 'buddyboss' ); ?></title>
+		<title><?php bloginfo_rss( 'name' ); ?> &#187; <?php esc_html_e( 'All Discussions', 'buddyboss' ); ?></title>
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>
-		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ); ?></pubDate>
+		<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ) ); ?></pubDate>
 		<generator>http://bbpress.org/?v=<?php bbp_version(); ?></generator>
 		<language><?php bloginfo_rss( 'language' ); ?></language>
 
@@ -3884,14 +3881,14 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 					<guid><?php bbp_topic_permalink(); ?></guid>
 					<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
 					<link><?php bbp_topic_permalink(); ?></link>
-					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ); ?></pubDate>
+					<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ) ); ?></pubDate>
 					<dc:creator><?php echo esc_html( (string) get_the_author() ); ?></dc:creator>
 
 					<?php if ( ! post_password_required() ) : ?>
 
 					<description>
 						<![CDATA[
-						<p><?php printf( esc_html__( 'Replies: %s', 'buddyboss' ), bbp_get_topic_reply_count() ); ?></p>
+						<p><?php /* translators: %s: number. */ printf( esc_html__( 'Replies: %s', 'buddyboss' ), esc_html( bbp_get_topic_reply_count() ) ); ?></p>
 						<?php bbp_topic_content(); ?>
 						]]>
 					</description>

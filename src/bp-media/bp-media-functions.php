@@ -205,6 +205,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
+				/* translators: %d: maximum upload size in MB. */
 				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bp_media_file_upload_max_size() ),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
@@ -1460,31 +1461,33 @@ function bp_media_delete_orphaned_attachments() {
 	 * @since BuddyBoss 1.7.6
 	 */
 	global $wpdb;
-	$post_table              = $wpdb->posts;
-	$postmeta_table          = $wpdb->postmeta;
 	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
-	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
+	$six_hours_ago           = gmdate( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
-	$query = "SELECT {$post_table}.ID
-				FROM {$post_table}
-				LEFT JOIN {$postmeta_table} ON ( {$post_table}.ID = {$postmeta_table}.post_id )
-				LEFT JOIN {$postmeta_table} AS mt1
-					ON ( {$post_table}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
+	// Table names from $wpdb; the cut-off date bound as %s.
+	$media_wp_query_posts = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT {$wpdb->posts}.ID
+				FROM {$wpdb->posts}
+				LEFT JOIN {$wpdb->postmeta} ON ( {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id )
+				LEFT JOIN {$wpdb->postmeta} AS mt1
+					ON ( {$wpdb->posts}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
 					WHERE 1=1 AND
-						( {$post_table}.post_date_gmt < '{$six_hours_ago}' ) AND
+						( {$wpdb->posts}.post_date_gmt < %s ) AND
 						(
 							(
-								{$postmeta_table}.meta_key = 'bp_media_saved' AND
-								{$postmeta_table}.meta_value = '0'
+								{$wpdb->postmeta}.meta_key = 'bp_media_saved' AND
+								{$wpdb->postmeta}.meta_value = '0'
 							) AND
 							mt1.post_id IS NULL
 						) AND
-						{$post_table}.post_type = 'attachment' AND
-						( {$post_table}.post_status = 'inherit' )
-				GROUP BY {$post_table}.ID
-				ORDER BY {$post_table}.post_date DESC";
-
-	$media_wp_query_posts = $wpdb->get_col( $query );
+						{$wpdb->posts}.post_type = 'attachment' AND
+						( {$wpdb->posts}.post_status = 'inherit' )
+				GROUP BY {$wpdb->posts}.ID
+				ORDER BY {$wpdb->posts}.post_date DESC",
+			$six_hours_ago
+		)
+	);
 
 	if ( ! empty( $media_wp_query_posts ) ) {
 		foreach ( $media_wp_query_posts as $post_id ) {
@@ -2433,7 +2436,7 @@ function bp_media_directory_page_content() {
 
 	if ( ! empty( $page_ids['media'] ) ) {
 		$media_page_content = get_post_field( 'post_content', $page_ids['media'] );
-		echo apply_filters( 'the_content', $media_page_content );
+		echo apply_filters( 'the_content', $media_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 
@@ -2458,7 +2461,7 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
 	$attachment_media_id = wp_cache_get( $cache_key, 'bp_media' );
 
 	if ( false === $attachment_media_id ) {
-		$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+		$attachment_media_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = %d", $attachment_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
 		wp_cache_set( $cache_key, $attachment_media_id, 'bp_media' );
 	}
 
@@ -2900,7 +2903,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 	}
 
 	// db call ok; no-cache ok;
-	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $media_album_query is the return of $wpdb->prepare() in either branch above (albums table name from $bp->media, user_id/group_id bound as %d).
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -3385,13 +3388,13 @@ function bp_media_symlink_path() {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	return $media_symlinks_path;
@@ -3578,13 +3581,13 @@ function bp_media_delete_symlinks( $media ) {
 		foreach ( $all_attachments as $attachment_path ) {
 			// Delete symlink without an extension.
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 
 			// Delete symlink with an extension.
 			$attachment_path = ! empty( $symlink_extension ) ? $attachment_path . '.' . $symlink_extension : $attachment_path;
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 		}
 	}

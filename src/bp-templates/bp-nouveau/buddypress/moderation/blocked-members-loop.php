@@ -11,10 +11,13 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // phpcs:ignore WordPress.Security.NonceVerification.Missing
 if ( empty( $_POST['page'] ) || 1 === (int) bb_filter_input_string( INPUT_POST, 'page' ) ) {
 	?>
-	<div class="bp-feedback bp-messages error moderation_notice is_hidden"><span class="bp-icon" aria-hidden="true"></span><p><?php _e( 'Sorry, you were not able to report this member.', 'buddyboss' ); ?></p></div>
+	<div class="bp-feedback bp-messages error moderation_notice is_hidden"><span class="bp-icon" aria-hidden="true"></span><p><?php esc_html_e( 'Sorry, you were not able to report this member.', 'buddyboss' ); ?></p></div>
 	<table id="moderation-list" class="bp-tables-user">
 		<thead>
 			<th class="title">

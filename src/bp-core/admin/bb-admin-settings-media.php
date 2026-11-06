@@ -354,7 +354,11 @@ function bb_media_get_addons_upgrade_url( $panel_id ) {
 	}
 
 	$content = 'settings-' . sanitize_key( $panel_id );
-	$url     = add_query_arg(
+	// Builds without pricing links (the wordpress.org edition) return an empty URL,
+	// so the upsell card renders no button.
+	$url = '';
+	// @bbwt-com-start pricing-links
+	$url = add_query_arg(
 		array(
 			'utm_source'   => 'product',
 			'utm_medium'   => 'platform-plugin',
@@ -363,6 +367,7 @@ function bb_media_get_addons_upgrade_url( $panel_id ) {
 		),
 		'https://www.buddyboss.com/pricing/'
 	);
+	// @bbwt-com-end pricing-links
 
 	/** This filter is documented in bp-core/admin/bb-admin-moved-media-features-notice.php */
 	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );
@@ -566,7 +571,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 				$title
 			);
 			$card['button_label']     = __( 'Install & Activate', 'buddyboss' );
-			$card['button_url']       = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+			$card['button_url']       = bb_admin_addons_screen_url();
 			$card['addon_action']     = isset( $actions['install'] ) ? $actions['install'] : null;
 			$card['addon_slug']       = 'buddyboss-addons';
 			$card['addon_busy_label'] = __( 'Installing…', 'buddyboss' );
@@ -597,12 +602,14 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Update the plugin to use it.', 'buddyboss' ),
 					$title
 				);
-				$card['button_label']     = __( 'Update Plugin', 'buddyboss' );
-				$card['button_url']       = self_admin_url( 'update-core.php' );
+				$card['button_label'] = __( 'Update Plugin', 'buddyboss' );
+				$card['button_url']   = self_admin_url( 'update-core.php' );
+				// @bbwt-com-start installers
 				$card['addon_action']     = 'bb_media_update_addons';
 				$card['addon_slug']       = 'buddyboss-addons';
 				$card['addon_nonce_key']  = 'ajaxNonce';
 				$card['addon_busy_label'] = __( 'Updating…', 'buddyboss' );
+				// @bbwt-com-end installers
 			} else {
 				// Nothing newer is known yet; the update check may be stale, and the
 				// WordPress updates screen can re-run it.
@@ -638,7 +645,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 				$title
 			);
 			$card['button_label'] = __( 'Manage License', 'buddyboss' );
-			$card['button_url']   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+			$card['button_url']   = bb_admin_license_screen_url();
 			break;
 	}
 
@@ -729,6 +736,7 @@ function bb_media_ajax_enable_component() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_media_enable_component', 'bb_media_ajax_enable_component' );
+// @bbwt-com-start installers
 
 /**
  * AJAX: update BuddyBoss Add-ons so the Media panels it provides become available.
@@ -773,3 +781,4 @@ function bb_media_ajax_update_addons() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_media_update_addons', 'bb_media_ajax_update_addons' );
+// @bbwt-com-end installers

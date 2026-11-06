@@ -582,6 +582,7 @@ function bp_nouveau_member_localize_scripts( $params = array() ) {
 			'unsubscribe'     => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
 			'error'           => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
 			'per_page'        => apply_filters( 'bb_subscriptions_per_page', 5 ),
+			/* translators: %s: plural label of the item type being subscribed to. */
 			'no_result'       => __( 'You are not currently subscribed to any %s.', 'buddyboss' ),
 			'subscribe_error' => __( 'There was a problem subscribing to ', 'buddyboss' ),
 		);

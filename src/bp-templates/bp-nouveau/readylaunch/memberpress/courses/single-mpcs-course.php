@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use memberpress\courses\helpers;
 use memberpress\courses\models as models;
 
@@ -138,7 +141,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div class="bb-rl-course-overview-footer">
 					<div class="mpcs-sidebar-wrapper">
 						<div class="course-progress">
-							<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+							<?php echo helpers\Courses::classroom_sidebar_progress( $post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- MemberPress Courses sidebar markup (third-party, contains progress controls). ?>
 						</div>
 					</div>
 					<div class="bb-rl-course-enrolled"></div>

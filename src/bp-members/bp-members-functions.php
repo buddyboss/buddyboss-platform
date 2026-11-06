@@ -830,7 +830,7 @@ function bp_core_get_total_member_count() {
 
 	if ( false === $count ) {
 		$status_sql = bp_core_get_status_sql();
-		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" );
+		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_sql is the constant clause from bp_core_get_status_sql(); table name from $wpdb.
 		wp_cache_set( 'bp_total_member_count', $count, 'bp' );
 	}
 
@@ -925,9 +925,9 @@ function bp_core_get_active_member_count() {
 			$sql = "SELECT ID FROM {$wpdb->users} WHERE user_status != 0";
 		}
 
-		$exclude_users     = $wpdb->get_col( $sql );
+		$exclude_users     = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is one of the two literal statements above (table name $wpdb->users, no variable input).
 		$exclude_users_sql = ! empty( $exclude_users ) ? 'AND user_id NOT IN (' . implode( ',', wp_parse_id_list( $exclude_users ) ) . ')' : '';
-		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) );
+		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $exclude_users_sql is an int list from wp_parse_id_list() or empty; table name from buddypress().
 
 		set_transient( 'bp_active_member_count', $count );
 	}
@@ -1005,7 +1005,12 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 
 		// Finally, mark this user as a spammer.
 		if ( is_multisite() ) {
-			update_user_status( $user_id, 'spam', $is_spam );
+			wp_update_user(
+				array(
+					'ID'   => $user_id,
+					'spam' => $is_spam,
+				)
+			);
 		}
 	}
 
@@ -1366,7 +1371,7 @@ function _bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key
 	if ( 'last_activity' === $meta_key ) {
 		// Don't send the warning more than once per pageload.
 		if ( false === $warned ) {
-			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
 			$warned = true;
 		}
 
@@ -1401,7 +1406,7 @@ add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 
  */
 function _bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
 	if ( 'last_activity' === $meta_key ) {
-		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
 		bp_update_user_last_activity( $object_id, $meta_value );
 	}
 }
@@ -1541,7 +1546,15 @@ function bp_core_delete_account( $user_id = 0 ) {
 		}
 
 		// Bail if current user cannot delete this user.
-		if ( ! current_user_can_for_blog( bp_get_root_blog_id(), 'delete_user', $user_id ) ) {
+		// Capability on the root site (current_user_can_for_blog() is deprecated since WP 6.7).
+		if ( is_multisite() && bp_get_root_blog_id() !== get_current_blog_id() ) {
+			switch_to_blog( bp_get_root_blog_id() );
+			$can_delete_user = current_user_can( 'delete_user', $user_id );
+			restore_current_blog();
+		} else {
+			$can_delete_user = current_user_can( 'delete_user', $user_id );
+		}
+		if ( ! $can_delete_user ) {
 			return false;
 		}
 	}
@@ -1947,6 +1960,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
 			$field_name = xprofile_get_field( bp_xprofile_nickname_field_id() )->name;
+			/* translators: %s: nickname field name. */
 			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
 		}
 
@@ -2414,8 +2428,8 @@ function bp_members_migrate_signups() {
 
 		// Fetch activation keys separately, to avoid the all_with_meta
 		// overhead.
-		$status_2_ids_sql = implode( ',', $status_2_ids );
-		$ak_data          = $wpdb->get_results( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'activation_key' AND user_id IN ({$status_2_ids_sql})" );
+		$status_2_ids_sql = implode( ',', wp_parse_id_list( $status_2_ids ) );
+		$ak_data          = $wpdb->get_results( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'activation_key' AND user_id IN ({$status_2_ids_sql})" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_2_ids_sql is an int list (ids read from the users table, wp_parse_id_list()'d); table name from $wpdb.
 
 		// Rekey.
 		$activation_keys = array();
@@ -2651,6 +2665,7 @@ function bp_core_signup_disable_inactive( $user = null, $username = '', $passwor
 		'bp-resend-activation'
 	);
 
+	/* translators: %s: URL to resend the activation email. */
 	$resend_string = '<br /><br />' . sprintf( __( 'If you have not received an email yet, <a href="%s">click here to resend it</a>.', 'buddyboss' ), esc_url( $resend_url ) );
 
 	return new WP_Error( 'bp_account_not_activated', __( '<strong>ERROR</strong>: Your account has not been activated. Check your email for the activation link.', 'buddyboss' ) . $resend_string );
@@ -2846,7 +2861,7 @@ function bp_get_displayed_user() {
  * @since BuddyPress 2.7.0
  */
 function bp_member_type_tax_name() {
-	echo bp_get_member_type_tax_name();
+	echo esc_attr( bp_get_member_type_tax_name() );
 }
 
 	/**
@@ -3284,7 +3299,7 @@ add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
  * @return string   custom post type of profile type.
  */
 function bp_member_type_post_type() {
-	echo bp_get_member_type_post_type();
+	echo esc_attr( bp_get_member_type_post_type() );
 }
 
 /**
@@ -3389,7 +3404,7 @@ function bp_get_member_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
 			$key    = $key . $unique;
 		}
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
@@ -3579,16 +3594,12 @@ function bp_member_type_post_by_type( $member_type ) {
 		return $member_type_post[ $cache_key ];
 	}
 
-	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
-	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
-	$post_id = $wpdb->get_var( $query );
+	$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s", '_bp_member_type_key', $member_type ) );
 
 	// Fallback to legacy way to retrieve profile type from name by using singular label.
 	if ( ! $post_id ) {
 		$name    = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
-		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
-		$query   = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
-		$post_id = $wpdb->get_var( $query );
+		$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s", '_bp_member_type_label_singular_name', $name ) );
 	}
 
 	$member_type_post[ $cache_key ] = apply_filters( 'bp_member_type_post_by_type', $post_id );
@@ -3618,7 +3629,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d", $type_id ) );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -3825,8 +3836,8 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		}
 		?>
-		<li id="members-<?php echo $type_id; ?>">
-			<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); // @todo no variables in the text domain please ?></a>
+		<li id="members-<?php echo esc_attr( $type_id ); ?>">
+			<a href="<?php echo esc_url( bp_member_type_directory_permalink( $type_name ) ); ?>"><?php printf( '%s <span>%s</span>', esc_html( $member_type_name ), esc_html( $members_count ) ); // @todo no variables in the text domain please ?></a>
 		</li>
 		<?php
 	}
@@ -4745,7 +4756,7 @@ function bp_members_directory_page_content() {
 
 	if ( ! empty( $page_ids['members'] ) ) {
 		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
-		echo apply_filters( 'the_content', $members_page_content );
+		echo apply_filters( 'the_content', $members_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
@@ -4761,7 +4772,7 @@ function bp_activate_page_content() {
 
 	if ( ! empty( $page_ids['activate'] ) ) {
 		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
-		echo apply_filters( 'the_content', $activate_page_content );
+		echo apply_filters( 'the_content', $activate_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
@@ -4777,7 +4788,7 @@ function bp_register_page_content() {
 
 	if ( ! empty( $page_ids['register'] ) ) {
 		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
-		echo apply_filters( 'the_content', $register_page_content );
+		echo apply_filters( 'the_content', $register_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );
@@ -5533,10 +5544,10 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	foreach ( $user_ids as $key => $user_id ) {
 
 		// removed old user meta which have value length 40.
-		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s AND user_id = %d AND LENGTH(meta_value) = 40", 'bb_profile_slug', $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb.
 
 		// Remove duplicate log slug with same value.
-		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE %s AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $wpdb->esc_like( 'bb_profile_long_slug_' ) . '%', $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb.
 
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );
@@ -5761,26 +5772,24 @@ function bb_is_short_user_unique_identifier( $unique_identifier ) {
 function bb_remove_orphaned_profile_slug( $user_id ) {
 	global $wpdb;
 
-	$p_slug         = bb_core_get_user_slug( $user_id );
-	$table_name     = $wpdb->usermeta;
-	$condition      = array();
-	$condition_join = '';
+	$p_slug = bb_core_get_user_slug( $user_id );
 
 	if ( empty( $p_slug ) || empty( $user_id ) ) {
 		return;
 	}
 
-	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
-	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
-	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
-
-	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
-
-	// Initial deletion query
-	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
-
-	// Execute the initial deletion
-	$wpdb->query( $delete_query );
+	// Initial deletion: LIKE patterns are bound as %s (literal wildcards, same patterns as before).
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$wpdb->usermeta} WHERE (( meta_key LIKE %s AND meta_key != %s ) OR ( meta_key LIKE %s AND LENGTH(meta_key) < 61 ) OR ( meta_key LIKE %s AND meta_value != %s )) AND user_id = %d LIMIT 500",
+			'bb_profile_slug_%',
+			"bb_profile_slug_{$p_slug}",
+			'bb_profile_long_slug_%',
+			'bb_profile_slug',
+			$p_slug,
+			$user_id
+		)
+	);
 
 	// Recursive deletion until no more rows are affected
 	while ( $wpdb->rows_affected > 0 ) {

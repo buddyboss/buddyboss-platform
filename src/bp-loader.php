@@ -5,10 +5,11 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.7.0
+ * Version:     3.7.1
  * Text Domain: buddyboss
  * Domain Path: /languages/
- * License:     GPLv2 or later (license.txt)
+ * License:     GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /**
@@ -26,7 +27,7 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '3.7.0' );
+	define( 'BP_PLATFORM_VERSION', '3.7.1' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -439,7 +440,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			<div id="message" class="error notice">
 				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), wp_kses_post( $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -453,7 +454,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			<div id="message" class="error notice">
 				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+				<p><?php /* translators: %s: link to the Plugins screen. */ printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), wp_kses_post( $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -469,7 +470,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				<div id="message" class="error notice">
 					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
 					<?php
-					printf( '<p>%s</p>', $incompatible_plugins_list_messages[ $incompatible_plugin_key ] );
+					printf( '<p>%s</p>', wp_kses_post( $incompatible_plugins_list_messages[ $incompatible_plugin_key ] ) );
 					?>
 				</div>
 				<?php

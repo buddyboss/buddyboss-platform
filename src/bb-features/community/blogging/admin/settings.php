@@ -322,6 +322,13 @@ function bb_blogging_register_admin_settings() {
 		// The values below are the safe fallback for the case where that filter
 		// never runs: the Plus upsell, which is correct for any site that
 		// cannot install the add-on.
+		//
+		// Builds without pricing links (the wordpress.org edition) leave the
+		// fallback URL empty, so the card renders no button.
+		$member_blogs_upgrade_url = '';
+		// @bbwt-com-start pricing-links
+		$member_blogs_upgrade_url = 'https://www.buddyboss.com/pricing/';
+		// @bbwt-com-end pricing-links
 		bb_register_feature_field(
 			'blogging',
 			'member_blogs',
@@ -338,7 +345,7 @@ function bb_blogging_register_admin_settings() {
 				// replaces this with the campaign-tagged URL from the field-upgrades
 				// catalog when it holds an entry for this panel, so marketing can retarget
 				// the link from S3 without a plugin release.
-				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				'button_url'              => $member_blogs_upgrade_url,
 				'upgrade_from_catalog'    => true,
 				'button_target'           => '_blank',
 				'sanitize_callback'       => '__return_empty_string',

@@ -72,6 +72,6 @@ function extension_tags() {
 $skip_tags = array_merge( $skip_tags, extension_tags() );
 
 if ( ! empty( $skip_tags ) ) {
-	echo '--tags=~' . implode( '&&~', $skip_tags );
+	echo '--tags=~' . implode( '&&~', $skip_tags ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Behat helper run outside WordPress (no escaping functions); prints a tag expression for the command line.
 }
 

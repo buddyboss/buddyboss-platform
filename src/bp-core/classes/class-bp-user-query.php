@@ -525,7 +525,7 @@ class BP_User_Query {
 				$meta_sql .= $wpdb->prepare( ' AND meta_value = %s', $meta_value );
 			}
 
-			$found_user_ids = $wpdb->get_col( $meta_sql );
+			$found_user_ids = $wpdb->get_col( $meta_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $meta_sql is $wpdb->prepare() output only (meta_key %s, optional meta_value %s) on the $wpdb->usermeta table.
 
 			if ( ! empty( $found_user_ids ) ) {
 				$sql['where'][] = "u.{$this->uid_name} IN (" . implode( ',', wp_parse_id_list( $found_user_ids ) ) . ')';
@@ -624,12 +624,12 @@ class BP_User_Query {
 			 * @param string        $value SQL statement to select FOUND_ROWS().
 			 * @param BP_User_Query $this  Current BP_User_Query instance.
 			 */
-			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) );
+			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_found_user_query; as built here the literal 'SELECT FOUND_ROWS()'.
 		} elseif ( 'count_query' == $this->query_vars['count_total'] ) {
 			$count_select = preg_replace( '/^SELECT.*?FROM (\S+) u/', "SELECT COUNT(u.{$this->uid_name}) FROM $1 u", $this->uid_clauses['select'] );
 
 			/** This filter is documented in bp-core/classes/class-bp-user-query.php */
-			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', "{$count_select} {$this->uid_clauses['where']}", $this ) );
+			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', "{$count_select} {$this->uid_clauses['where']}", $this ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_user_query_join_sql / bp_user_query_where_sql / bp_user_query_uid_clauses / bp_pre_user_query / bp_found_user_query; as built here: COUNT select rewritten from uid_clauses[select] (uid table/column names chosen by query type), WHERE parts from prepare_user_ids_query(): $wpdb->prepare() fragments (%s/%d), ids via wp_parse_id_list()/intval, BP_Date_Query, WP_Tax_Query (member types) and the prepared search-match subquery.
 		}
 	}
 

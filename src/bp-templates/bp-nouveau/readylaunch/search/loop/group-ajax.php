@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="entry-meta">
 			<div class="item-meta group-details">
 				<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save; wp_kses_post() here turns a tag cut by the excerpt into visible text.
 				echo bp_create_excerpt(
 					bp_get_group_description(),
 					255,

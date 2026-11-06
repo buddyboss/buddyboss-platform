@@ -88,7 +88,7 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 		}
 		?>
 		<input id="bp_user_profile_actions_order" type="hidden"
-		       value="<?php echo $bp_user_profile_actions_order_value; ?>"
+		       value="<?php echo esc_attr( $bp_user_profile_actions_order_value ); ?>"
 		       data-customize-setting-link="<?php echo esc_attr( $setting ); ?>"/>
 
 		<?php

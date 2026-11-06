@@ -188,7 +188,7 @@ function bp_activity_adjust_mention_count( $activity_id = 0, $action = 'add' ) {
 	$activity = new BP_Activity_Activity( $activity_id );
 
 	// Try to find mentions.
-	$usernames = bp_activity_find_mentions( strip_tags( $activity->content ) );
+	$usernames = bp_activity_find_mentions( wp_strip_all_tags( $activity->content ) );
 
 	// Still empty? Stop now.
 	if ( empty( $usernames ) ) {
@@ -958,6 +958,7 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  *
  * @since BuddyPress 1.2.0
  * @since BuddyBoss 2.5.20 Added the `$args` parameter.
+ * @since BuddyBoss 3.7.1 Refuses users who cannot view the activity, such as non-members of a private group.
  *
  * @param int   $activity_id ID of the activity item being favorited.
  * @param int   $user_id     ID of the user favoriting the activity item.
@@ -988,6 +989,17 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
+	}
+
+	// The reaction privacy check skips groups, so check the user can view the item (PROD-10649).
+	if (
+		in_array( $r['type'], array( 'activity', 'activity_comment' ), true ) &&
+		! bb_activity_user_can_view( (int) $activity_id, $user_id )
+	) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_not_allowed',
+			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' )
+		);
 	}
 
 	// Check if migration is in progress.
@@ -1712,6 +1724,7 @@ function bp_activity_generate_action_string( $activity ) {
 		}
 		$actions->{$activity->component}->{$activity->type} = array(
 			'key'             => $activity->type,
+			/* translators: %s: post type name. */
 			'value'           => sprintf( __( 'New %s published', 'buddyboss' ), str_replace( 'new_blog_', '', $activity->type ) ),
 			'format_callback' => 'bb_blogs_format_activity_action_disabled_post_type_feed',
 			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
@@ -1763,6 +1776,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 		$last_user_link = array_pop( $mentioned_users_link );
 
 		$action = sprintf(
+			/* translators: 1: author user link, 2: mentioned users links, 3: " and " separator, 4: last mentioned user link. */
 			__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss' ),
 			bp_core_get_userlink( $activity->user_id ),
 			$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
@@ -1770,6 +1784,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 			$last_user_link
 		);
 	} else {
+		/* translators: %s: author user link. */
 		$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 	}
 
@@ -1794,6 +1809,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_comment( $action, $activity ) {
+	/* translators: %s: author user link. */
 	$action = sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 
 	/**
@@ -1843,12 +1859,14 @@ function bp_activity_format_activity_action_custom_post_type_post( $action, $act
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action_ms, $user_link, $post_url, $blog_link );
 		} else {
+			/* translators: 1: member profile link, 2: post URL, 3: site link. */
 			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, esc_url( $post_url ), $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action, $user_link, $post_url );
 		} else {
+			/* translators: 1: member profile link, 2: post URL. */
 			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>', 'buddyboss' ), $user_link, esc_url( $post_url ) );
 		}
 	}
@@ -1894,12 +1912,14 @@ function bp_activity_format_activity_action_custom_post_type_comment( $action, $
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms, $user_link, $activity->primary_link, $blog_link );
 		} else {
+			/* translators: 1: author user link, 2: item URL, 3: site link. */
 			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, $activity->primary_link, $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action, $user_link, $activity->primary_link );
 		} else {
+			/* translators: 1: author user link, 2: item URL. */
 			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>', 'buddyboss' ), $user_link, $activity->primary_link );
 		}
 	}
@@ -2978,6 +2998,8 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyBoss 3.7.1 Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
+ *              Also refuses a new comment whose $activity_id is itself a comment.
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -3090,6 +3112,27 @@ function bp_activity_new_comment( $args = '' ) {
 				return false;
 			}
 		}
+
+		// The parent must be a comment in the same thread. A comment from another thread never
+		// leads back to this root, so the cache walk below would loop forever (PROD-10649).
+		if (
+			(int) $r['parent_id'] !== (int) $r['activity_id'] &&
+			(
+				'activity_comment' !== $comment_activity->type ||
+				(int) $comment_activity->item_id !== (int) $r['activity_id']
+			)
+		) {
+			$error = new WP_Error( 'invalid_parent_activity', $feedback );
+
+			if ( 'wp_error' === $r['error_type'] ) {
+				return $error;
+
+				// Backpat.
+			} else {
+				$bp->activity->errors['new_comment'] = $error;
+				return false;
+			}
+		}
 	}
 
 	// Maybe set current activity ID as the parent.
@@ -3118,6 +3161,45 @@ function bp_activity_new_comment( $args = '' ) {
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
 		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// A new comment must hang off a post, not off another comment. Read checks look one level up
+	// from a comment (its item_id), so a comment-on-comment row would skip the root's group check.
+	if ( empty( $r['id'] ) && 'activity_comment' === $activity->type ) {
+		$error = new WP_Error( 'invalid_parent_activity', $feedback );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// The privacy check above skips groups, so a non-member could still reply in a private or
+	// hidden group. Check the root and the comment being replied to (PROD-10649).
+	if (
+		empty( $r['id'] ) &&
+		(
+			! bb_activity_user_can_view( $activity, (int) $r['user_id'] ) ||
+			(
+				(int) $r['parent_id'] !== (int) $activity_id &&
+				! bb_activity_user_can_view( (int) $r['parent_id'], (int) $r['user_id'] )
+			)
+		)
+	) {
+		$error = new WP_Error( 'bp_activity_comment_not_allowed', __( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3231,7 +3313,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( (int) $clear_id !== (int) $activity_id ) {
+	while ( ! empty( $clear_id ) && (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3882,6 +3964,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
  * Can a user see a particular activity item?
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.7.1 An activity comment is checked against its root activity.
  *
  * @param  BP_Activity_Activity $activity Activity object.
  * @param  integer              $user_id  User ID.
@@ -3895,10 +3978,22 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// A comment is stored with component 'activity' and no group of its own, so the
+	// group check runs on its root activity (item_id, also for nested replies).
+	$access_activity = $activity;
+	if ( isset( $activity->type ) && 'activity_comment' === $activity->type ) {
+		$access_activity = new BP_Activity_Activity( (int) $activity->item_id );
+
+		// Fail closed when the root no longer exists.
+		if ( empty( $access_activity->id ) ) {
+			$retval = false;
+		}
+	}
+
 	// If activity is from a group, do extra cap checks.
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( $retval && bp_is_active( 'groups' ) && buddypress()->groups->id === $access_activity->component ) {
 		// Check to see if the user has access to the activity's parent group.
-		$group = groups_get_group( $activity->item_id );
+		$group = groups_get_group( $access_activity->item_id );
 		if ( $group ) {
 			// For logged-in user, we can check against the 'user_has_access' prop.
 			if ( bp_loggedin_user_id() === $user_id ) {
@@ -3907,15 +4002,15 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 				// Manually check status.
 			} elseif ( 'private' === $group->status || 'hidden' === $group->status ) {
 				// Only group members that are not banned can view.
-				if ( ! groups_is_user_member( $user_id, $activity->item_id ) || groups_is_user_banned( $user_id, $activity->item_id ) ) {
+				if ( ! groups_is_user_member( $user_id, $access_activity->item_id ) || groups_is_user_banned( $user_id, $access_activity->item_id ) ) {
 					$retval = false;
 				}
 			}
 		}
 	}
 
-	// Spammed items are not visible to the public.
-	if ( $activity->is_spam ) {
+	// Spammed items are not visible to the public, nor are comments on a spammed root.
+	if ( $activity->is_spam || ! empty( $access_activity->is_spam ) ) {
 		$retval = false;
 	}
 
@@ -5612,7 +5707,7 @@ function bp_activity_directory_page_content() {
 
 	if ( ! empty( $page_ids['activity'] ) ) {
 		$activity_page_content = get_post_field( 'post_content', $page_ids['activity'] );
-		echo apply_filters( 'the_content', $activity_page_content );
+		echo apply_filters( 'the_content', $activity_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 
@@ -5700,6 +5795,39 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
+}
+
+/**
+ * Keep the parts of a request's activity scope that a component handles.
+ *
+ * A scope name nothing is hooked to adds no condition to the activity query, which then
+ * returns every privacy level. Scopes sent by a visitor (AJAX loops, heartbeat, `?scope=`)
+ * go through here so an unknown name falls back to the default 'all' scope (PROD-10649).
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @param string|array $scope Comma-separated scopes, or a list of them, from the request.
+ *
+ * @return string Comma-separated handled scopes, or 'all' when none is handled.
+ */
+function bb_activity_get_request_scope( $scope ) {
+	$parts = is_array( $scope ) ? $scope : explode( ',', (string) $scope );
+	$kept  = array();
+
+	foreach ( $parts as $part ) {
+		if ( ! is_scalar( $part ) ) {
+			continue;
+		}
+
+		$part = trim( (string) $part );
+		if ( 'all' === $part || ( '' !== $part && has_filter( "bp_activity_set_{$part}_scope_args" ) ) ) {
+			$kept[] = $part;
+		}
+	}
+
+	$kept = array_unique( $kept );
+
+	return empty( $kept ) || in_array( 'all', $kept, true ) ? 'all' : implode( ',', $kept );
 }
 
 /**
@@ -6078,6 +6206,8 @@ function bb_bp_get_add_follow_button( $button ) {
  * Function to send email and notification to followers when new activity post created.
  *
  * @since BuddyBoss 2.2.3
+ * @since BuddyBoss [BBVERSION] Accepts 'activity_id' and loads the activity from it when no
+ *                              'activity' object is passed (queued jobs store the id).
  *
  * @param array $args Array of arguments.
  */
@@ -6086,12 +6216,20 @@ function bb_activity_following_post_notification( $args ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'activity'  => '',
-			'usernames' => array(),
-			'item_id'   => '',
-			'paged'     => 1,
+			'activity'    => '',
+			'activity_id' => 0,
+			'usernames'   => array(),
+			'item_id'     => '',
+			'paged'       => 1,
 		)
 	);
+
+	if ( empty( $r['activity'] ) && ! empty( $r['activity_id'] ) ) {
+		$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+		if ( ! empty( $activity->id ) ) {
+			$r['activity'] = $activity;
+		}
+	}
 
 	$per_page       = apply_filters( 'bb_following_min_count', 20 );
 	$follower_users = bp_get_followers(
@@ -6269,11 +6407,21 @@ function bb_is_group_activity_comment( $comment = 0 ) {
  *
  * @since BuddyBoss 2.3.70
  * @since BuddyBoss 2.4.70 removed the $paged parameter.
+ * @since BuddyBoss [BBVERSION] Queues the activity id instead of the activity object.
  *
  * @param array $args  Array of arguments.
  */
 function bb_activity_create_following_post_notification( $args ) {
 	global $bb_background_updater;
+
+	// Store the id, not the object: a stored BP_Activity_Activity can only be read back
+	// while that class name exists. bb_activity_following_post_notification() loads it again.
+	if ( ! empty( $args['activity'] ) && is_object( $args['activity'] ) ) {
+		if ( empty( $args['activity_id'] ) && ! empty( $args['activity']->id ) ) {
+			$args['activity_id'] = (int) $args['activity']->id;
+		}
+		unset( $args['activity'] );
+	}
 
 	$bb_background_updater->data(
 		array(
@@ -7058,6 +7206,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 	$activity      = new BP_Activity_Activity( $activity_id );
 	if ( ! empty( $activity->id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity->id ) ) {
 		$closer_id     = bb_get_activity_comments_closer_id( $activity->id );
+		/* translators: %s: member display name. */
 		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 		if ( $closer_id === bp_loggedin_user_id() ) {
 			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
@@ -7070,6 +7219,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 			} elseif ( bp_user_can( $closer_id, 'administrator' ) && 'public' === $group->status ) {
 				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 			} else {
+				/* translators: %s: member display name. */
 				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 			}
 		} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
@@ -7498,6 +7648,7 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
  * Function to validate activity privacy.
  *
  * @since BuddyBoss 2.6.00
+ * @since BuddyBoss 3.7.1 The `loggedin` check uses the validated user instead of the current request.
  *
  * @param array $args Array for argument.
  *
@@ -7544,7 +7695,8 @@ function bb_validate_activity_privacy( $args ) {
 			if ( 'view_activity' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss' ) );
 			}
-		} elseif ( 'loggedin' === $activity->privacy && ! is_user_logged_in() ) {
+		} elseif ( 'loggedin' === $activity->privacy && empty( $args['user_id'] ) ) {
+			// Check the user being validated, not the current request, so CLI and cron callers that pass a member still pass.
 			if ( 'view_activity' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss' ) );
 			}
@@ -7558,11 +7710,15 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	/**
 	 * Check whether a user may view an activity item, including its group and privacy rules.
 	 *
-	 * AJAX handlers that render an activity by a client-supplied ID with `privacy => false`
-	 * and `show_hidden => true` must call this first. Comments are checked against their root post,
-	 * and the hidden media/video/document sub-activities of a multi-item post against their parent.
+	 * AJAX handlers that render an activity by a client-supplied ID must call this first.
+	 * A comment is checked against its root post (item_id), and the hidden
+	 * media/video/document sub-activity of a multi-item post against the post or comment it
+	 * belongs to (secondary_item_id). A comment on one of those sub-activities shares its
+	 * privacy value, so comments are walked first.
 	 *
 	 * @since BuddyBoss 3.6.2
+	 * @since BuddyBoss 3.7.1 Walks a comment to its root before the sub-activity hop and skips the privacy check on comment rows.
+	 * @since BuddyBoss 3.7.1 The moderator bypass checks the given user, not the current one.
 	 *
 	 * @param int|BP_Activity_Activity $activity Activity ID or object.
 	 * @param int                      $user_id  User ID. Default the logged-in user.
@@ -7571,50 +7727,68 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 */
 	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
 		if ( ! $activity instanceof BP_Activity_Activity ) {
-			$activity = new BP_Activity_Activity( absint( $activity ) );
+			// Accept an ID, or a row from bp_activity_get() / bp_activity_get_specific().
+			$activity = new BP_Activity_Activity( is_object( $activity ) && isset( $activity->id ) ? (int) $activity->id : absint( $activity ) );
 		}
 
 		if ( empty( $activity->id ) ) {
 			return false;
 		}
 
-		$user_id  = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
-		$can_view = true;
-
+		$user_id    = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_view   = true;
 		$activities = array( $activity );
 		$current    = $activity;
 
-		// A post with several photos, videos or documents gives each one a hidden sub-activity
-		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to.
-		// Those privacy values carry no rule of their own, so the parent decides.
-		if (
-			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
-			! empty( $activity->secondary_item_id ) &&
-			(int) $activity->secondary_item_id !== (int) $activity->id
-		) {
-			$parent = new BP_Activity_Activity( (int) $activity->secondary_item_id );
-			if ( empty( $parent->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $parent;
-				$current      = $parent;
+		// Walk up from a comment to its root, and from a sub-activity to its post or comment.
+		// The longest real chain is comment > sub-activity > comment > post.
+		for ( $hop = 0; $hop <= 4; $hop++ ) {
+			$parent_id = 0;
+
+			if ( 'activity_comment' === $current->type ) {
+				$parent_id = (int) $current->item_id;
+			} elseif (
+				in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
+				! empty( $current->secondary_item_id ) &&
+				(int) $current->secondary_item_id !== (int) $current->id
+			) {
+				$parent_id = (int) $current->secondary_item_id;
 			}
+
+			if ( empty( $parent_id ) ) {
+				break;
+			}
+
+			// Fail closed when the chain is longer than any real one, or a parent no longer exists.
+			if ( 4 === $hop ) {
+				$can_view = false;
+				break;
+			}
+
+			$current = new BP_Activity_Activity( $parent_id );
+			if ( empty( $current->id ) ) {
+				$can_view = false;
+				break;
+			}
+
+			$activities[] = $current;
 		}
 
-		if ( $can_view && 'activity_comment' === $current->type && ! empty( $current->item_id ) && (int) $current->item_id !== (int) $current->id ) {
-			$root = new BP_Activity_Activity( (int) $current->item_id );
-			if ( empty( $root->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $root;
-			}
-		}
+		// Site moderators may view everything. Ask about the user being checked, which is not the
+		// current user under WP-CLI or cron, or when checking on behalf of someone else.
+		$is_moderator = ( bp_loggedin_user_id() === $user_id ) ? bp_current_user_can( 'bp_moderate' ) : bp_user_can( $user_id, 'bp_moderate' );
 
-		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( $can_view && ! $is_moderator ) {
 			foreach ( $activities as $item ) {
 				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
 					$can_view = false;
 					break;
+				}
+
+				// A comment copies its root's privacy but keeps the commenter as user_id, so its
+				// own check would test friendship with the commenter. The root on the chain decides.
+				if ( 'activity_comment' === $item->type ) {
+					continue;
 				}
 
 				$privacy = bb_validate_activity_privacy(
@@ -7987,8 +8161,10 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
+		/* translators: 1: member profile link, 2: site link. */
 		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
+		/* translators: %s: author user link. */
 		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 	}
 

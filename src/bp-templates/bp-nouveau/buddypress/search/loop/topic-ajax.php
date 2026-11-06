@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $topic_id = get_the_ID();
 $total    = bbp_get_topic_reply_count( $topic_id );
 ?>
@@ -42,7 +45,8 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 				<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<?php
-				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total );
+				/* translators: %s: number. */
+				printf( esc_html( _n( '%d reply', '%d replies', $total, 'buddyboss' ) ), (int) $total );
 				?>
 				<span class="middot">&middot;</span>
 				<span>

@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 								<?php bbp_topic_author_link( array( 'size' => '48' ) ); ?>
 							</div>
 							<div class="bb-rl-reply-header-content">
-								<h4 class="bb-rl-reply-header-title"><?php echo bbp_get_topic_author_display_name(); ?></h4>
+								<h4 class="bb-rl-reply-header-title"><?php echo bbp_get_topic_author_display_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() is self-escaping. ?></h4>
 								<p class="bb-rl-reply-header-excerpt"><?php bbp_reply_excerpt( bbp_get_topic_id(), 50 ); ?></p>
 							</div>
 						</div>
@@ -87,7 +87,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ) ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -134,7 +134,7 @@ defined( 'ABSPATH' ) || exit;
 						</div>
 
 						<div class="bb-rl-forum-edit-reason">
-							<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />
+							<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss' ), esc_html( bbp_get_current_user_name() ) ); ?></label><br />
 							<input type="text" value="<?php bbp_form_reply_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
 						</div>
 					</fieldset>
@@ -250,7 +250,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Topic title */
-				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss' ), bbp_get_topic_title() );
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss' ), bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping.
 				?>
 			</p>
 		</div>
@@ -264,7 +264,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id() ) );
+				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id() ) ) );
 				?>
 			</p>
 		</div>

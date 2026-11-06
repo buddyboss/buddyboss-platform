@@ -280,7 +280,7 @@ class BP_Media {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, status ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->status );
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $q is the return of $wpdb->prepare() in either branch above (media table name from buddypress()->media, every value bound as %d/%s).
 			return false;
 		}
 
@@ -444,22 +444,22 @@ class BP_Media {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = 'm.activity_id = ' . (int) $r['activity_id'];
+			$where_conditions['activity'] = $wpdb->prepare( 'm.activity_id = %d', (int) $r['activity_id'] );
 		}
 
 		// existing-media check to query media which has no albums assigned.
 		if ( ! empty( $r['album_id'] ) && 'existing-media' !== $r['album_id'] ) {
-			$where_conditions['album'] = 'm.album_id = ' . (int) $r['album_id'];
+			$where_conditions['album'] = $wpdb->prepare( 'm.album_id = %d', (int) $r['album_id'] );
 		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = 'm.user_id = ' . (int) $r['user_id'];
+			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d', (int) $r['user_id'] );
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = 'm.group_id = ' . (int) $r['group_id'];
+			$where_conditions['group'] = $wpdb->prepare( 'm.group_id = %d', (int) $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -562,7 +562,7 @@ class BP_Media {
 		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );
 
 		if ( false === $cached ) {
-			$media_ids = $wpdb->get_col( $media_ids_sql );
+			$media_ids = $wpdb->get_col( $media_ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_media_set_{$scope}_scope_args / bp_media_get_where_conditions / bp_media_get_join_sql / bp_media_paged_activities_sql; as built here: literal select, media table name from buddypress()->media, WHERE parts $wpdb->prepare()'d (search LIKE %s via bp_esc_like(), activity/album/user/group %d, privacy/status %s lists) or literal (type, existing-media), exclude/in ids via wp_parse_id_list(), scope SQL from BP_Media_Query (whitelisted columns and operators, values prepared), ORDER BY column whitelisted or FIELD() of wp_parse_id_list() ids, sort ASC/DESC only, LIMIT %d-prepared.
 			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids );
 		} else {
 			$media_ids = $cached;
@@ -607,7 +607,7 @@ class BP_Media {
 			$total_medias_sql = apply_filters( 'bp_media_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_medias_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_medias = $wpdb->get_var( $total_medias_sql );
+				$total_medias = $wpdb->get_var( $total_medias_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_media_total_medias_sql (plus the where/join filters above); as built here: literal COUNT select, media table name from buddypress()->media and the same $join_sql/$where_sql as the ids query above (see the reason there).
 				bp_core_set_incremented_cache( $total_medias_sql, $cache_group, $total_medias );
 			} else {
 				$total_medias = $cached;
@@ -637,7 +637,7 @@ class BP_Media {
 				$total_videos_sql = apply_filters( 'bp_media_total_videos_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 				$cached           = bp_core_get_incremented_cache( $total_videos_sql, $cache_group );
 				if ( false === $cached ) {
-					$total_videos = $wpdb->get_var( $total_videos_sql );
+					$total_videos = $wpdb->get_var( $total_videos_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_media_total_videos_sql (plus the where/join filters above); as built here: the count query above with the literal "AND m.type = 'video'" appended to $where_sql.
 					bp_core_set_incremented_cache( $total_videos_sql, $cache_group, $total_videos );
 				} else {
 					$total_videos = $cached;
@@ -1307,14 +1307,13 @@ class BP_Media {
 	public static function total_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$privacy = bp_media_query_privacy( $user_id );
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
+		$privacy = (array) bp_media_query_privacy( $user_id );
 
 		$cache_key   = 'bp_total_media_count_' . $user_id;
 		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN (" . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ')', array_merge( array( $user_id ), $privacy ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %s per privacy value.
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
 
@@ -1395,10 +1394,9 @@ class BP_Media {
 		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $total_count ) {
-			$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
-			$privacy = "'" . implode( "', '", $privacy ) . "'";
+			$privacy = (array) bp_media_query_privacy( $user_id, 0, 'groups' );
 
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN (" . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ')', array_merge( array( $user_id ), $privacy ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %s per privacy value.
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
 
@@ -1425,7 +1423,7 @@ class BP_Media {
 		$cached = bp_core_get_incremented_cache( $album_media_sql, 'bp_media' );
 
 		if ( false === $cached ) {
-			$media_ids = $wpdb->get_col( $album_media_sql );
+			$media_ids = $wpdb->get_col( $album_media_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $album_media_sql is the return of $wpdb->prepare() above (album_id bound as %d); kept in a variable because it is also the cache key.
 			bp_core_set_incremented_cache( $album_media_sql, 'bp_media', $media_ids );
 		} else {
 			$media_ids = $cached;
@@ -1466,7 +1464,7 @@ class BP_Media {
 			$activity_media_id = wp_cache_get( $cache_key, 'bp_media' );
 
 			if ( false === $activity_media_id ) {
-				$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id} AND m.type = 'photo' " );
+				$activity_media_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = %d AND m.type = 'photo' ", $activity_id ) );
 				wp_cache_set( $cache_key, $activity_media_id, 'bp_media' );
 			}
 
@@ -1504,7 +1502,7 @@ class BP_Media {
 		$result    = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $result ) {
-			$result = (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+			$result = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = %d", $activity_id ) );
 			wp_cache_set( $cache_key, $result, 'bp_media' );
 		}
 

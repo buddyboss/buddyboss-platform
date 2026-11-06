@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $media_album_template;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
@@ -52,10 +55,10 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php endif; ?>
 					<p>
 						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-photo-count"><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
+						<span class="bb-album-photo-count"><?php /* translators: %s: number. */ printf( esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ), esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span>
 						<?php if ( $bp_album_shows_videos ) : ?>
 						<span class="bb-sep">&middot;</span>
-						<span class="bb-album-video-count"><?php printf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span class="bb-album-video-count"><?php /* translators: %s: number. */ printf( esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ), esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
 						<?php endif; ?>
 					</p>
 				</div>

@@ -64,7 +64,7 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
 /**
  * Highlight the "Moderation" admin menu item when on Settings 2.0 moderation pages.
  *
- * Outputs inline JS on all bb-settings pages. The script checks the current URL
+ * Prints inline JS on all bb-settings pages. The script checks the current URL
  * for tab=moderation and swaps the WordPress `current` class accordingly.
  * Also observes URL changes from SPA navigation (history.replaceState).
  *
@@ -76,8 +76,8 @@ function bp_moderation_highlight_admin_menu() {
 	if ( ! isset( $_GET['page'] ) || 'bb-settings' !== $_GET['page'] ) {
 		return;
 	}
-	?>
-	<script>
+
+	$inline_js = <<<'JS'
 	( function() {
 		var bbModLastUrl = '';
 
@@ -141,8 +141,14 @@ function bp_moderation_highlight_admin_menu() {
 			}
 		};
 	} )();
-	</script>
-	<?php
+JS;
+
+	// Printed in place on admin_head: it patches history.replaceState before the settings SPA starts navigating.
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
 }
 
 add_action( 'admin_head', 'bp_moderation_highlight_admin_menu' );

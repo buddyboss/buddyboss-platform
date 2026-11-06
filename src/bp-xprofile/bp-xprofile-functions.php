@@ -1911,7 +1911,7 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
 			if ( false !== $timestamp ) {
 
 				// Add the timestamp to the global $_POST that should contain the datebox data.
-				$_POST[ 'field_' . $field_id ] = date( 'Y-m-d H:i:s', $timestamp );
+				$_POST[ 'field_' . $field_id ] = gmdate( 'Y-m-d H:i:s', $timestamp );
 			}
 		}
 	}
@@ -2119,7 +2119,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	global $wpdb;
 	global $bp;
 
-	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- constant query; $bp->table_prefix is the BuddyBoss table prefix.
 	$social_networks_id    = $social_networks_field->id;
 	$social_networks_text  = $social_networks_field->name;
 
@@ -3570,17 +3570,17 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 
 	$bp_table = $bp->profile->table_name_data;
 
-	$query = $wpdb->prepare(
-		"SELECT U.ID " .
-		"FROM $bp_table B, $wpdb->users U " .
-		"WHERE B.user_id = U.ID " .
-		"AND B.field_id = %d " .
-		"AND B.value = %s"
-		, $field_id
-		, $field_val
+	$get_desired = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT U.ID " .
+			"FROM $bp_table B, $wpdb->users U " .
+			"WHERE B.user_id = U.ID " .
+			"AND B.field_id = %d " .
+			"AND B.value = %s"
+			, $field_id
+			, $field_val
+		)
 	);
-
-	$get_desired = $wpdb->get_results( $query );
 
 	if( count( $get_desired ) ) {
 		return $get_desired;

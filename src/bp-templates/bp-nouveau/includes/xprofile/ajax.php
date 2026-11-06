@@ -82,8 +82,8 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	//FOr prev data
 	$get_prev_ids = [];
 	if ( 0 < strlen( $prev_type_key ) ) {
-		$query           = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$prev_type_key}' AND object_type = 'field'";
-		$get_db_prev_ids = $wpdb->get_results( $query );
+		$query           = $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = %s AND object_type = 'field'", $prev_type_key );
+		$get_db_prev_ids = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is $wpdb->prepare()'d above (member type key as %s); table name from buddypress().
 		if ( isset( $get_db_prev_ids ) ) {
 			foreach ( $get_db_prev_ids as $id ) {
 				$get_prev_ids[] = $id->object_id;
@@ -91,8 +91,8 @@ function bp_nouveau_ajax_xprofile_get_field() {
 		}
 	}
 
-	$query      = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$member_type_key}' AND object_type = 'field'";
-	$get_db_ids = $wpdb->get_results( $query );
+	$query      = $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = %s AND object_type = 'field'", $member_type_key );
+	$get_db_ids = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is $wpdb->prepare()'d above (member type key as %s); table name from buddypress().
 
 	$new_fields = array();
 	if ( isset( $get_db_ids ) ) {

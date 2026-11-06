@@ -9,21 +9,24 @@
  * @todo    password field lables need thinking, name for password fields do not conform to standards
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Login Information', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Login Information', 'buddyboss' ); ?>
 </h2>
 
 <p class="info email-pwd-info">
-	<?php _e( 'Update your email and or password.', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Update your email and or password.', 'buddyboss' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/general' ); ?>" method="post" class="standard-form" id="settings-form">
 
 	<?php if ( ! is_super_admin() ) : ?>
 		<div class="bb-field-wrap bb-super-admin-pass">
-			<label for="pwd"><?php _e( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ); ?></label>
+			<label for="pwd"><?php echo wp_kses_post( __( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ) ); ?></label>
 			<div class="bb-password-wrap">
 				<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
 				<input type="password" name="pwd" id="pwd" size="16" value="" class="settings-input small" <?php bp_form_field_attributes( 'password' ); ?> />
@@ -33,7 +36,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 	<?php endif; ?>
 
 	<div class="bb-field-wrap">
-		<label for="email"><?php _e( 'Account Email', 'buddyboss' ); ?></label>
+		<label for="email"><?php esc_html_e( 'Account Email', 'buddyboss' ); ?></label>
 		<input type="email" name="email" id="email" value="<?php echo esc_attr( bp_get_displayed_user_email() ); ?>" class="settings-input" <?php bp_form_field_attributes( 'email' ); ?> />
 	</div>
 

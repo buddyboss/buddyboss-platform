@@ -640,7 +640,7 @@ class BB_Mothership_Loader {
 		} else {
 			// REST_REQUEST is only defined once the request is parsed, long after this runs, so
 			// detect both the pretty (`/wp-json/`) and the plain-permalink (`?rest_route=`) form.
-			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 			$should_boot = ! empty( $_GET['rest_route'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only request routing check.
 				|| ( '' !== $request_uri && false !== strpos( $request_uri, '/' . rest_get_url_prefix() . '/' ) );
 		}

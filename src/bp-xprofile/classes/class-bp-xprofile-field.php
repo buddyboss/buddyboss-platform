@@ -388,10 +388,9 @@ class BP_XProfile_Field {
 		 */
 		do_action_ref_array( 'xprofile_field_before_delete', array( &$this, $delete_data ) );
 
-		$bp  = buddypress();
-		$sql = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE id = %d OR parent_id = %d", $this->id, $this->id );
+		$bp = buddypress();
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE id = %d OR parent_id = %d", $this->id, $this->id ) ) ) {
 			return false;
 		}
 
@@ -508,7 +507,7 @@ class BP_XProfile_Field {
 		 * Check for null so field options can be changed without changing any
 		 * other part of the field. The described situation will return 0 here.
 		 */
-		if ( $wpdb->query( $sql ) !== null ) {
+		if ( $wpdb->query( $sql ) !== null ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare()'d UPDATE or INSERT above (all values %d/%s); table name from $bp->profile.
 
 			if ( $is_new_field ) {
 				$this->id = $wpdb->insert_id;
@@ -574,8 +573,7 @@ class BP_XProfile_Field {
 						}
 
 						if ( '' != $option_value ) {
-							$sql = $wpdb->prepare( "INSERT INTO {$bp->profile->table_name_fields} (group_id, parent_id, type, name, description, is_required, option_order, is_default_option) VALUES (%d, %d, 'option', %s, '', 0, %d, %d)", $this->group_id, $parent_id, $option_value, $counter, $is_default );
-							if ( ! $wpdb->query( $sql ) ) {
+							if ( ! $wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->profile->table_name_fields} (group_id, parent_id, type, name, description, is_required, option_order, is_default_option) VALUES (%d, %d, 'option', %s, '', 0, %d, %d)", $this->group_id, $parent_id, $option_value, $counter, $is_default ) ) ) {
 								return false;
 							}
 						}
@@ -656,7 +654,7 @@ class BP_XProfile_Field {
 		$bp        = buddypress();
 		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id . '_' . $for_editing . '_' . $this->order_by;
 		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
-			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
+			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sort_sql is one of three constant ORDER BY clauses chosen by code; table name from buddypress().
 
 			$bp_get_children_cache[ $cache_key ] = $children;
 		} else {
@@ -686,10 +684,9 @@ class BP_XProfile_Field {
 	public function delete_children() {
 		global $wpdb;
 
-		$bp  = buddypress();
-		$sql = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE parent_id = %d", $this->id );
+		$bp = buddypress();
 
-		$wpdb->query( $sql );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE parent_id = %d", $this->id ) );
 	}
 
 	/**
@@ -874,6 +871,7 @@ class BP_XProfile_Field {
 				$member_type_labels[] = __( 'Users with no profile type', 'buddyboss' );
 			}
 
+			/* translators: %s: profile type names. */
 			$label = sprintf( __( '(Profile types: %s)', 'buddyboss' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
 		} else {
 			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddyboss' ) . '</span>';
@@ -988,8 +986,7 @@ class BP_XProfile_Field {
 
 		if ( false === $type ) {
 			$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-			$sql        = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
-			$type       = $wpdb->get_var( $sql );
+			$type       = $wpdb->get_var( $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id ) );
 			wp_cache_set( $cache_key, $type, 'bp_xprofile' );
 		}
 
@@ -1029,8 +1026,7 @@ class BP_XProfile_Field {
 			$ids = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
 			wp_cache_set( $cache_key, $ids, 'bp_xprofile' );
 		}
-		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id );
-		$deleted = $wpdb->get_var( $sql );
+		$deleted = $wpdb->get_var( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
 
 		// Return true if fields were deleted.
 		if ( false !== $deleted ) {
@@ -1068,8 +1064,7 @@ class BP_XProfile_Field {
 
 		$id = bp_core_get_incremented_cache( $field_name, 'bp_xprofile_fields_by_name' );
 		if ( false === $id ) {
-			$sql = $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s AND parent_id = 0", $field_name );
-			$id  = $wpdb->get_var( $sql );
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s AND parent_id = 0", $field_name ) );
 			bp_core_set_incremented_cache( $field_name, 'bp_xprofile_fields_by_name', $id );
 		}
 
@@ -1099,18 +1094,20 @@ class BP_XProfile_Field {
 
 		// Get table name and field parent.
 		$table_name = buddypress()->profile->table_name_fields;
-		$sql        = $wpdb->prepare( "UPDATE {$table_name} SET field_order = %d, group_id = %d WHERE id = %d", $position, $field_group_id, $field_id );
-		$parent     = $wpdb->query( $sql );
+		$parent     = $wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET field_order = %d, group_id = %d WHERE id = %d", $position, $field_group_id, $field_id ) );
 
 		// Update $field_id with new $position and $field_group_id.
 		if ( ! empty( $parent ) && ! is_wp_error( $parent ) ) {
 
 			// Update any children of this $field_id.
-			$sql = $wpdb->prepare( "UPDATE {$table_name} SET group_id = %d WHERE parent_id = %d", $field_group_id, $field_id );
-			$wpdb->query( $sql );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET group_id = %d WHERE parent_id = %d", $field_group_id, $field_id ) );
 
 			// Invalidate profile field cache.
 			wp_cache_delete( $field_id, 'bp_xprofile_fields' );
+
+			// The field's order or group changed: invalidate the cached field groups.
+			wp_cache_delete( 'all', 'bp_xprofile_groups' );
+			wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 
 			do_action( 'xprofile_updated_field_position', $field_id, $position, $field_group_id );
 
@@ -1244,6 +1241,7 @@ class BP_XProfile_Field {
 
 		// Check that field is of valid type.
 		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) {
+			/* translators: %s: field type (wrapped in <code>). */
 			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_attr( $_POST['fieldtype'] ) . '</code>' );
 
 			return false;
@@ -1272,6 +1270,7 @@ class BP_XProfile_Field {
 
 			// Check for missing or malformed options.
 			if ( 0 === $field_count ) {
+				/* translators: %s: field type name. */
 				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 
 				return false;
@@ -1279,6 +1278,7 @@ class BP_XProfile_Field {
 
 			// If only one option exists, it cannot be an empty string.
 			if ( ( 1 === $field_count ) && ( '' === $field_options[0] ) ) {
+				/* translators: %s: field type name. */
 				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 
 				return false;
@@ -1405,7 +1405,7 @@ class BP_XProfile_Field {
 					$message_type = 'updated';
 				}
 				?>
-				<div id="message" class="<?php echo $message_type; ?> fade">
+				<div id="message" class="<?php echo esc_attr( $message_type ); ?> fade">
 					<p><?php echo esc_html( $message ); ?></p>
 				</div>
 
@@ -1605,20 +1605,20 @@ class BP_XProfile_Field {
 				<table class="widefat bp-postbox-table" style="margin-top: 6px;">
 					<tbody>
 					<tr>
-						<th><?php _e( 'Alternate Title', 'buddyboss' ); ?></th>
+						<th><?php esc_html_e( 'Alternate Title', 'buddyboss' ); ?></th>
 						<td>
 							<input type="text" name="title_secondary" id="title_secondary"
 								   value="<?php echo esc_attr( $this->get_alternate_name() ); ?>" autocomplete="off"
 								   style="width: 100%;">
-							<p class="description"><?php _e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
+							<p class="description"><?php esc_html_e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th><?php _e( 'Instructions', 'buddyboss' ); ?></th>
+						<th><?php esc_html_e( 'Instructions', 'buddyboss' ); ?></th>
 						<td>
 							<textarea name="description" id="description" rows="6"
 									  cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
-							<p class="description"><?php _e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					</tbody>
@@ -1656,19 +1656,19 @@ class BP_XProfile_Field {
 		?>
 
 		<div id="member-types-div" class="postbox">
-			<h2><?php _e( 'Profile Types', 'buddyboss' ); ?></h2>
+			<h2><?php esc_html_e( 'Profile Types', 'buddyboss' ); ?></h2>
 			<div class="inside">
-				<p class="description"><?php _e( 'This field should be available to:', 'buddyboss' ); ?></p>
+				<p class="description"><?php esc_html_e( 'This field should be available to:', 'buddyboss' ); ?></p>
 
 				<ul>
 					<?php foreach ( $member_types as $member_type ) : ?>
 						<li>
-							<label for="member-type-<?php echo $member_type->labels['name']; ?>">
+							<label for="member-type-<?php echo esc_attr( $member_type->labels['name'] ); ?>">
 								<input name="member-types[]"
-									   id="member-type-<?php echo $member_type->labels['name']; ?>"
+									   id="member-type-<?php echo esc_attr( $member_type->labels['name'] ); ?>"
 									   class="member-type-selector" type="checkbox"
-									   value="<?php echo $member_type->name; ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
-								<?php echo $member_type->labels['singular_name']; ?>
+									   value="<?php echo esc_attr( $member_type->name ); ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
+								<?php echo esc_html( $member_type->labels['singular_name'] ); ?>
 							</label>
 						</li>
 					<?php endforeach; ?>
@@ -1678,7 +1678,7 @@ class BP_XProfile_Field {
 							<input name="member-types[]" id="member-type-none" class="member-type-selector"
 								   type="checkbox"
 								   value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
-							<?php _e( 'Users with no profile type', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Users with no profile type', 'buddyboss' ); ?>
 						</label>
 					</li>
 
@@ -1687,7 +1687,7 @@ class BP_XProfile_Field {
 				<?php
 				if ( ! empty( $field_member_types ) ) :
 					?>
-					 hide<?php endif; ?>"><?php _e( 'Unavailable to all members.', 'buddyboss' ); ?></p>
+					 hide<?php endif; ?>"><?php esc_html_e( 'Unavailable to all members.', 'buddyboss' ); ?></p>
 			</div>
 
 			<input type="hidden" name="has-member-types" value="1"/>

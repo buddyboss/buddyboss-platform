@@ -189,7 +189,7 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 		printf(
 			'<div id="%1$s" class="input-options checkbox-options">%2$s</div>',
 			esc_attr( 'field_' . $this->field_obj->id ),
-			$html
+			$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is field-escaped checkbox markup; wp_kses_post would strip <input>.
 		);
 	}
 
