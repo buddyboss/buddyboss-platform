@@ -615,7 +615,7 @@ function bb_admin_addon_upsell_feature_ids() {
 function bb_admin_addon_upsell_field_names() {
 	return apply_filters(
 		'bb_admin_addon_upsell_field_names',
-		array( 'bb-social-login', '_bb-sso-providers', '_bb_enable_activity_post_polls', '_bb_enable_activity_pinned_posts' )
+		array( 'bb-social-login', '_bb-sso-providers', '_bb_enable_activity_post_polls', '_bb_enable_activity_pinned_posts', 'bb_enable_group_subscriptions' )
 	);
 }
 
@@ -667,6 +667,10 @@ function bb_admin_addon_field_has_provider( $field_name ) {
 			// function at bp_include:20, while the shim installs later at bp_init:1.
 			return function_exists( 'bb_activity_pin_unpin_post' )
 				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' );
+
+		case 'bb_enable_group_subscriptions':
+			// Only the add-on's Group Subscription module defines the sender.
+			return function_exists( 'bb_send_subscribed_group_notifications' );
 
 		default:
 			// Unknown field — a third party extended the allow-list via
