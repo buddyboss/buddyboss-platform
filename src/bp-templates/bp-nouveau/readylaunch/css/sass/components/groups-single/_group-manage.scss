@@ -206,6 +206,12 @@
 
 	.bb-rl-search-group-members-wrapper {
 		position: relative;
+		display: inline-block;
+		max-width: 100%;
+
+		input[type="search"] {
+			padding-right: var(--bb-rl-space-400);
+		}
 
 		&::before {
 			content: "\e30c";
@@ -227,6 +233,16 @@
 
 	.members-search .search-form_reset {
 		display: none;
+		background-color: transparent;
+		border: 0;
+		padding: 0;
+		line-height: 1;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: var(--bb-rl-space-100);
+		opacity: 0.4;
+		cursor: pointer;
 	}
 
 	input[type="search"] {
