@@ -239,12 +239,14 @@ function bb_admin_settings_page() {
 	if ( 0 === $groups_per_page ) {
 		$groups_per_page = 20;
 	}
+	// @bbwt-com-start in-product-notifications
 	// Resolve the Mothership IPN root element ID. The prefix is derived from
 	// the active plugin_id (free / plus / pro / per-site editions all produce
 	// different IDs), so we ask the IPN View service for the actual ID it
 	// will render. The React Header reads this via bbAdminData.ipnRootId to
 	// locate and relocate the live IPN node.
 	$ipn_root_id = '';
+	// @bbwt-com-end in-product-notifications
 	// @bbwt-com-start mothership-hub
 	if (
 		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
@@ -308,8 +310,10 @@ function bb_admin_settings_page() {
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
 		'groupsPerPage'             => $groups_per_page,
+		// @bbwt-com-start in-product-notifications
 		// Mothership IPN root element ID — prefix is dynamic per plugin_id.
 		'ipnRootId'                 => $ipn_root_id,
+		// @bbwt-com-end in-product-notifications
 	);
 
 	// Component active status for conditional UI in React.
@@ -651,20 +655,18 @@ function bb_admin_settings_page() {
 		<div id="bb-admin-settings"></div>
 		<?php
 		/*
-		 * Mothership IPN inbox — render outside the React tree.
-		 *
-		 * The IPN service (Caseproof GroundLevel) attaches a Shadow DOM to
-		 * its root <div> synchronously when ipn-inbox.js loads. If we render
-		 * the root inside the React Header tree, React mounts asynchronously
-		 * AFTER the bundle runs, so getElementById() returns null and the
-		 * IPN throws "Cannot read properties of null (reading 'attachShadow')".
-		 *
-		 * Instead, fire bb_admin_header_actions outside the React tree (here,
-		 * inside .wrap but next to the React mount). This emits the standard
-		 * IPN <div id="bb-web-plus_ipn_root"> + <script>. The IPN attaches
-		 * cleanly. Then the React Header relocates the live IPN node into
-		 * its bell slot via appendChild — preserving the Shadow DOM.
+		 * Header actions, fired outside the React tree (inside .wrap, next to
+		 * the React mount) so a callback can render a root <div> + <script>
+		 * synchronously and the React Header can relocate the live node.
 		 */
+		// @bbwt-com-start in-product-notifications
+		/*
+		 * On buddyboss.com builds the Mothership IPN inbox renders here: the
+		 * IPN service (Caseproof GroundLevel) attaches a Shadow DOM to its
+		 * root <div> synchronously when ipn-inbox.js loads, which fails if the
+		 * root sits inside the asynchronously mounted React tree.
+		 */
+		// @bbwt-com-end in-product-notifications
 		do_action( 'bb_admin_header_actions' );
 		?>
 		<noscript>

@@ -282,6 +282,7 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php';
 		}
 
+		// @bbwt-com-start in-product-notifications
 		// LearnDash addon promotion IPN. Registers an in-product notification
 		// on the buddyboss-addons page for licensed sites that still use the
 		// pre-3.0 bundled LearnDash integration and haven't installed the
@@ -290,6 +291,7 @@ function bb_admin_settings_init() {
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-learndash-addon-ipn.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-learndash-addon-ipn.php';
 		}
+		// @bbwt-com-end in-product-notifications
 	}
 }
 
