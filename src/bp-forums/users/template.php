@@ -763,7 +763,7 @@ function bbp_get_author_email( $post_id = 0 ) {
  * @uses bbp_get_author_url() to get the author url
  */
 function bbp_author_url( $post_id = 0 ) {
-	echo esc_url( bbp_get_author_url( $post_id ) );
+	echo esc_url( (string) bbp_get_author_url( $post_id ) ); // Null for a guest with no saved URL.
 }
 
 	/**

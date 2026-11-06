@@ -1490,7 +1490,7 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 	$rendered_text = apply_filters( 'bp_nouveau_activity_is_edited', $activity_text, $activity_id );
 
 	if ( $echo ) {
-		echo wp_kses_post( $rendered_text );
+		echo wp_kses_post( (string) $rendered_text ); // Null when the activity was never edited.
 	} else {
 		return $rendered_text;
 	}
