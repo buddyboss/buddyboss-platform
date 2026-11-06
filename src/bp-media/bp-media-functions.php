@@ -4338,7 +4338,7 @@ function bboss_media_delete_older_files_in_dir( $dir, $limit, $links_only = fals
 add_action(
 	'bp_init',
 	function () {
-		bboss_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
+		bboss_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bboss_media_delete_older_symlinks', 'bb_schedule_15days' );
 	}
 );
 

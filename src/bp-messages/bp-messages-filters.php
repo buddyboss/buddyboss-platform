@@ -1120,7 +1120,7 @@ function bboss_schedule_event_on_update_notification_settings() {
 		$new_schedule_found = bboss_get_delay_notification_time_by_minutes( $new_scheduled_time );
 		// Schedule an action if it's not already scheduled.
 		if ( ! empty( $new_schedule_found ) ) {
-			bboss_core_schedule_cron( 'digest_email_notifications', 'bb_digest_message_email_notifications', $new_schedule_found['schedule_key'] );
+			bboss_core_schedule_cron( 'digest_email_notifications', 'bboss_digest_message_email_notifications', $new_schedule_found['schedule_key'] );
 		}
 	}
 }

@@ -842,7 +842,7 @@ function bboss_media_import_admin_menu() {
 		__( 'Import Media', 'buddyboss' ),
 		'manage_options',
 		'bp-media-import',
-		'bp_media_import_submenu_page'
+		'bboss_media_import_submenu_page'
 	);
 
 }

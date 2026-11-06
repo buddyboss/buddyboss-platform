@@ -373,7 +373,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				__( 'Settings', 'buddyboss' ),
 				$this->capability,
 				'bb-settings',
-				function_exists( 'bboss_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
+				function_exists( 'bboss_admin_settings_page' ) ? 'bboss_admin_settings_page' : 'bboss_core_admin_settings'
 			);
 
 			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. Integrations
@@ -410,7 +410,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 					'BuddyBoss',
 					$this->capability,
 					$this->settings_page,
-					'bp_core_admin_backpat_menu',
+					'bboss_core_admin_backpat_menu',
 					'none',
 					3
 				);
@@ -447,7 +447,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				'BuddyBoss',
 				$this->capability,
 				$this->settings_page,
-				'bp_core_admin_backpat_menu',
+				'bboss_core_admin_backpat_menu',
 				'none',
 				3
 			);
@@ -458,7 +458,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				__( 'Help', 'buddyboss' ),
 				$this->capability,
 				'bp-general-settings',
-				'bp_core_admin_backpat_page'
+				'bboss_core_admin_backpat_page'
 			);
 
 			// Add the Separator.
@@ -503,7 +503,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				__( 'Settings', 'buddyboss' ),
 				$this->capability,
 				'bb-settings',
-				function_exists( 'bboss_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
+				function_exists( 'bboss_admin_settings_page' ) ? 'bboss_admin_settings_page' : 'bboss_core_admin_settings'
 			);
 
 			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. The
@@ -523,7 +523,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				__( 'Integrations', 'buddyboss' ),
 				$this->capability,
 				'bb-integrations',
-				'bb_admin_integrations_page'
+				'bboss_admin_integrations_page'
 			);
 
 			// ReadyLaunch legacy admin page retired in BuddyBoss 3.0.0 —
@@ -654,7 +654,7 @@ if ( ! class_exists( 'BBoss_Admin' ) ) :
 				__( 'Emails', 'buddyboss' ),
 				$this->capability,
 				'bp-emails-customizer-redirect',
-				'bp_email_redirect_to_customizer'
+				'bboss_email_redirect_to_customizer'
 			);
 
 			if ( ! is_network_admin() && ! bboss_is_network_activated() ) {

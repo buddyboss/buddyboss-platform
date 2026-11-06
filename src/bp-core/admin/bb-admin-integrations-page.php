@@ -137,17 +137,19 @@ function bboss_admin_integrations_page() {
 	// the Settings app's bbAdminData) so the two standalone bundles stay isolated.
 	// Keys: apiUrl (buddyboss/v1 REST root, for the integrations/proxy URL), nonce
 	// (wp_rest), adminUrl, version (busts the client localStorage cache on upgrade),
-	// logoUrl + ipnRootId (shared header), and ajaxUrl + searchNonce + settingsUrl
+	// logoUrl (shared header; ipnRootId on buddyboss.com builds), and ajaxUrl + searchNonce + settingsUrl
 	// (shared header's global "Search for settings" → Settings search AJAX).
 	$api_namespace = function_exists( 'bboss_rest_namespace' ) && function_exists( 'bboss_rest_version' )
 		? bboss_rest_namespace() . '/' . bboss_rest_version() . '/'
 		: 'buddyboss/v1/';
 
+	// @bbwt-com-start in-product-notifications
 	// Resolve the Mothership IPN root element ID so the shared header can locate
 	// and relocate the live IPN bell node. The prefix is edition-specific, so we
 	// ask the IPN View service for the actual ID; on failure the JS falls back to
 	// a structural [id$="_ipn_root"] selector. Mirrors the Settings page.
 	$ipn_root_id = '';
+	// @bbwt-com-end in-product-notifications
 	// @bbwt-com-start mothership-hub
 	if (
 		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
@@ -178,7 +180,9 @@ function bboss_admin_integrations_page() {
 			'adminUrl'     => esc_url( admin_url() ),
 			'version'      => defined( 'BBOSS_PLATFORM_VERSION' ) ? BBOSS_PLATFORM_VERSION : '0',
 			'logoUrl'      => esc_url( bboss()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
+			// @bbwt-com-start in-product-notifications
 			'ipnRootId'    => $ipn_root_id,
+			// @bbwt-com-end in-product-notifications
 			// Gates client-side diagnostic console logging; off in production.
 			'debug'        => defined( 'WP_DEBUG' ) && WP_DEBUG,
 			// The shared header's global "Search for settings" box queries the
@@ -233,9 +237,9 @@ function bboss_admin_integrations_page() {
 	}
 
 	// Render the React mount, then fire bb_admin_header_actions OUTSIDE the React
-	// tree (inside .wrap) so the Mothership IPN bell renders its root <div> +
-	// script synchronously; the shared header relocates that live node into its
-	// bell slot. Mirrors the Settings page.
+	// tree (inside .wrap) so a header callback can render its root <div> + script
+	// synchronously; the shared header relocates that live node into its slot.
+	// Mirrors the Settings page.
 	// The `bb-admin-app` class scopes the shared Knowledge Base modal styles
 	// (defined under `.bb-admin-app` in the shared common CSS) so the modal is
 	// styled here the same as on the Settings page.
