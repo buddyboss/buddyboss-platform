@@ -112,9 +112,12 @@ function bp_notifications_get_count_cache_key( $user_id, $sql ) {
  */
 function bp_notifications_clear_all_for_user_cache( $user_id = 0 ) {
 	wp_cache_delete( 'all_for_user_' . $user_id, 'bp_notifications' );
-	wp_cache_delete( $user_id, 'bp_notifications_unread_count' );
-	wp_cache_delete( $user_id, 'bp_notifications_read_count' );
 	wp_cache_delete( $user_id, 'bp_notifications_grouped_notifications' );
+
+	// Unread/read counts are cached under a hash of the query (see
+	// bp_notifications_get_count_cache_key()), not under $user_id, so bumping
+	// the incrementor - rather than a direct delete() - is what invalidates
+	// them all at once. See PROD-10344.
 	bp_notifications_bump_user_count_cache_incrementor( $user_id );
 }
 
