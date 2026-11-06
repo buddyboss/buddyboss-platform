@@ -1973,7 +1973,6 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 		$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
 		$avatar_notice_html .= '</div>';
 		$avatar_notice_html .= '</div>';
-		?>
 
 		// Pass the (sanitized) notice markup to JS via wp_json_encode() and attach
 		// the DOM-injection behaviour through a dependency-only (src-less) handle,
@@ -2358,11 +2357,9 @@ function bb_disable_multiple_select_situation() {
 	global $typenow;
 
 	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
-		?>
-
 		// Pass the email post type to JS via wp_json_encode() and attach the
 		// behaviour through a dependency-only (src-less) handle instead of a raw
-		// inline <script> tag.
+		// inline <script> tag (the handler runs on DOM ready, so the footer is fine).
 		$inline_js = sprintf(
 			'jQuery( document ).ready( function ( $ ) {
 	jQuery( document ).on( \'change\', \'#taxonomy-\' + %s + \'-type input[type="checkbox"]\', function () {
@@ -2373,7 +2370,9 @@ function bb_disable_multiple_select_situation() {
 			wp_json_encode( bp_get_email_post_type() )
 		);
 
-		<?php
+		wp_register_script( 'bb-email-type-single-select', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bb-email-type-single-select' );
+		wp_add_inline_script( 'bb-email-type-single-select', $inline_js );
 	}
 }
 
